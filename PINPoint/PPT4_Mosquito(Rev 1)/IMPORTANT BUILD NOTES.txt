@@ -1,0 +1,15 @@
+PINPoint Version 4
+---------------------
+
+Build Notes
+1) On the previous batch the some of the mosfets were not populated correctly
+   please make sure that the part numbers match the board
+
+2) The corners of the board need to be rounded.
+
+3) Light sensor has changed to the MAX44007 I2C sensor
+
+4) Capacitor C14 is now a tantalum cap - 478-3054-1-ND
+   Orientation provided on silk 
+
+

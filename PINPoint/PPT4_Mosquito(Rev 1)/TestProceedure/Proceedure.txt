@@ -1,0 +1,25 @@
+Place two jumpers on the FTDI/BT header vertically towards the side labeled FTDI. See the picture 'jumpers.png'.
+
+Power the PINPoint using 3 AA batteries, and turn on the power switch (up).
+
+Attach an AVR Dragon programmer using the ISP connection.
+
+Attach the Dragon and the PINPoint using USB to a computer running Linux (preferably Ubuntu).
+
+In the 'ButtonTest' directory, run './test.sh'. If the system is not Ubuntu/Debian you will need to change 'test.sh' to install packages using the correct package manager for your distribution. It will ask for root privileges in order to install the necessary packages and program the PINPoint. Follow the instructions given by the script.
+
+Now disconnect the AVR Dragon from the PINPoint, and attach the PINPoint to a computer running Windows (XP or higher should work).
+
+You will need Microsoft .NET Framework 3.5 (It is included as 'dotNetFx35setup.exe' if you need it).
+
+Run 'FT_PROG-CmdLine.exe' in the 'FT_PROG_v2.0' directory. A terminal should appear. You want to scan for devices and then apply the 'Templates/PPT.xml' to the PINPoint. The process should look like the following,
+
+	FT:>scan
+	Scanning for devices...
+	Device 0: FT_DEVICE_232R, FT232R USB UART, A4006Vd1
+	FT:>prog 0 Templates/PPT.xml
+	Device 0 programmed successfully!
+	Finished
+
+Now turn the PINPoint off and remove the batteries (keep it plugged in via USB).
+Turn the PINPoint back on. It should still be powered. If the PINPoint will not power on without batteries, check the MOSFET at Q2.
