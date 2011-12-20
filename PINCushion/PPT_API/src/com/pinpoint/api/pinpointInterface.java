@@ -1,5 +1,3 @@
-package com.pinpoint.api;
-
 /*
  * Copyright (c) 2009, iSENSE Project. All rights reserved.
  *
@@ -27,11 +25,11 @@ package com.pinpoint.api;
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-import com.pinpoint.exceptions.IncompatibleConversionException;
+package com.pinpoint.api;
 
+import com.pinpoint.exceptions.IncompatibleConversionException;
 import com.pinpoint.exceptions.IncorrectDeviceException;
 import com.pinpoint.exceptions.InvalidHexException;
-import com.pinpoint.exceptions.MissingLogFileException;
 import com.pinpoint.exceptions.NoConnectionException;
 import com.pinpoint.exceptions.NoDataException;
 import java.io.BufferedReader;
@@ -40,8 +38,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -74,31 +70,25 @@ public class pinpointInterface {
 
         if (shouldConnect) {
             try {
-
                 // Create a vector of PinComm devices based on the results of the auto detect.
-                Vector<PinComm> deviceInstances = AutoDetectDevices.detect();
+                ArrayList<PinComm> deviceInstances = AutoDetectDevices.detect();
 
                 // Temporary handle to a PinComm
                 PinComm temp;
 
                 // If no devices were found that match the PinComm handshake throw
                 // no connection exception to let the UI know that there was a problem.
-                if (deviceInstances.isEmpty()) {
-                    throw new NoConnectionException();
-                }
-
-                // Atleast one device was found so iterate through the list
-                Iterator<PinComm> portIterator = deviceInstances.iterator();
-
-                // Test each device to make sure it was a pinpoint. (Not completely necessary)
-                while (portIterator.hasNext()) {
-                    temp = portIterator.next();
-                    if (temp.getDescription().compareTo("pinpoint") == 0) {
-                        pinpoint = temp;
-                        pinpoint.setRealTimeClock();
-                        break; //For now we only care about one pinpoint connected to the computer.
+                // Otherwise take the first pinpoint you see.
+                if (!deviceInstances.isEmpty()) {
+                    for (PinComm pc : deviceInstances) {
+                        if (pc.getDescription().compareTo("pinpoint") == 0) {
+                            pinpoint = pc;
+                            pinpoint.setRealTimeClock(); //Fred wants to set the time every time. 
+                            break; //For now we only care about one pinpoint connected to the computer.
+                        }
                     }
-                    portIterator.next();
+                } else {
+                    throw new NoConnectionException();
                 }
 
                 myPrefs = Preferences.userNodeForPackage(this.getClass());
@@ -276,9 +266,9 @@ public class pinpointInterface {
     }
 
     /**
-     * Gets an integer array containing all of the settings.
-     *
-     * @return int[]
+     * Get all of the PINPoints settings in one call. 
+     * 
+     * @return HashMap<Integer,Integer>
      */
     public HashMap<Integer, Integer> GetSettings() {
         return pinpoint.GetSettings();
@@ -354,7 +344,7 @@ public class pinpointInterface {
 
             }
 
-            System.out.println("Adding <" + key + "," + values + ">" );
+            System.out.println("Adding <" + key + "," + values + ">");
             myPrefs.put(key, values);
         }
     }

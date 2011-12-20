@@ -29,10 +29,32 @@
 package com.pinpoint.exceptions;
 
 /**
- * The No Connection Exception is a custom exception thrown
- * when there is no connection to a pinpoint. 
- *
+ * Custom exception used to bubble up errors to the whatever
+ * the UI is.
+ * 
+ * @deprecated Not sure whether or not this should be called. SVN is screwey and I wrote it a long time ago. 
  * @author James Dalphond <jdalphon@cs.uml.edu>
  */
-public class NoConnectionException extends Exception {
+public class BootloaderException extends Exception{
+
+    public int error;
+    public static int NO_COLON = 2;
+    public static int INVALID_CHECKSUM = 3;
+    public static int BYTE_COUNT_ERROR = 4;
+
+    public BootloaderException(int x){
+        error = x;
+    }
+
+    public String GetErrorType(){
+        if (error == NO_COLON){
+            return "Hex line did not begin with a \':\'";
+        } else if(error == INVALID_CHECKSUM) {
+            return "Invalid Checksum";
+        } else if(error == BYTE_COUNT_ERROR) {
+            return "Incorrect number of bytes in record";
+        } else {
+            return "Unknown Error";
+        }
+    }
 }
