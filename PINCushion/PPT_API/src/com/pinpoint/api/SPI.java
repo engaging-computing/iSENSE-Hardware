@@ -34,11 +34,10 @@ import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * The Serial Port Interface (SPI) class is used for selecting, opening and
@@ -47,177 +46,179 @@ import java.util.Vector;
  * @author William Brendel <wbrendel@cs.uml.edu>
  */
 public class SPI {
-  private SerialPort serialPort;
-  private CommPortIdentifier portIdentifier;
-  private static final int COMM_TIMEOUT_MS = 100;
-  private static final int RECEIVE_TIMEOUT_SECONDS_MS = 5;
 
-  public SPI() {
-    serialPort = null;
-    portIdentifier = null;
-  }
+    private SerialPort serialPort;
+    private CommPortIdentifier portIdentifier;
+    private static final int COMM_TIMEOUT_MS = 100;
+    private static final int RECEIVE_TIMEOUT_SECONDS_MS = 5;
 
-  /**
-   * Retrieves a Map from serial port names to CommPortIdentifier objects.
-   * @return A Map of serial port names to CommPortIdentifier objects.
-   */
-  public static Map<String, CommPortIdentifier> enumeratePorts() {
-
-    HashMap<String, CommPortIdentifier> portMap     = new HashMap<String, CommPortIdentifier>();
-    Enumeration<CommPortIdentifier> portEnumeration = CommPortIdentifier.getPortIdentifiers();
-
-    while (portEnumeration.hasMoreElements()) {
-      CommPortIdentifier currentPort = portEnumeration.nextElement();
-
-      if (currentPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-        portMap.put(currentPort.getName(), currentPort);
-      }
+    public SPI() {
+        serialPort = null;
+        portIdentifier = null;
     }
 
-    return portMap;
-  }
+    /**
+     * Retrieves a Map from serial port names to CommPortIdentifier objects.
+     * @return A Map of serial port names to CommPortIdentifier objects.
+     */
+    public static Map<String, CommPortIdentifier> enumeratePorts() {
 
-  /**
-   * Retrieves a list of valid serial port names.
-   * @return A Vector of serial port names.
-   */
-  public static Vector<String> enumeratePortNames() {
-    Map<String, CommPortIdentifier> portMap = enumeratePorts();
-    Iterator<String> portMapIterator = portMap.keySet().iterator();
-    Vector<String> portNames = new Vector<String>();
+        HashMap<String, CommPortIdentifier> portMap = new HashMap<String, CommPortIdentifier>();
+        Enumeration<CommPortIdentifier> portEnumeration = CommPortIdentifier.getPortIdentifiers();
 
-    while (portMapIterator.hasNext() == true) {
-      portNames.add(portMapIterator.next());
-    }
+        while (portEnumeration.hasMoreElements()) {
+            CommPortIdentifier currentPort = portEnumeration.nextElement();
 
-    return portNames;
-  }
-
-  /**
-   * Opens the specified serial port using a given baud rate and flow control.
-   * @param portName The port name. For example, "/dev/ttyUSB0".
-   * @param baudRate The baud rate. For example, 9600.
-   * @param useFlowControl Flow control flag.
-   * @throws java.io.IOException If the port cannot be opened.
-   * @throws gnu.io.PortInUseException If the port is already in use.
-   * @throws gnu.io.UnsupportedCommOperationException If the specified port
-   * cannot be opened in this way.
-   */
-  public void open(String portName, int baudRate, boolean useFlowControl)
-      throws IOException, PortInUseException,
-      UnsupportedCommOperationException {
-    Map<String, CommPortIdentifier> portMap = SPI.enumeratePorts();
-    portIdentifier = portMap.get(portName);
-
-    if (portIdentifier == null) {
-      throw new IOException();
-    }
-
-    serialPort = (SerialPort)portIdentifier.open(portName, SPI.COMM_TIMEOUT_MS);
-    serialPort.setSerialPortParams(baudRate, SerialPort.DATABITS_8,
-        SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-    serialPort.enableReceiveTimeout(SPI.RECEIVE_TIMEOUT_SECONDS_MS);
-
-    if (useFlowControl == true) {
-      serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN |
-          SerialPort.FLOWCONTROL_RTSCTS_OUT);
-    }
-  }
-
-  /**
-   * Closes the open serial port.
-   */
-  public void close() {
-    if (serialPort != null) {
-      serialPort.close();
-      serialPort = null;
-    }
-  }
-
-  /**
-   * Attempts to read a single byte from the serial port.
-   * @return A byte from the serial port.
-   * @throws java.io.IOException If an error occurs while reading the byte.
-   */
-  public byte readByte() throws IOException {
-    if (isOpen() == false) {
-      throw new IOException();
-    }
-
-    InputStream inputStream = serialPort.getInputStream();
-    Byte result = null;
-    int attempts = 0;
-
-    while (attempts < 10) {
-      if (inputStream.available() > 0) {
-        result = (byte) (inputStream.read() & 0xFF);
-        System.out.println(result);
-        break;
-      } else {
-        attempts++;
-        try {
-          Thread.sleep(10);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+            if (currentPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                portMap.put(currentPort.getName(), currentPort);
+            }
         }
-      }
+
+        return portMap;
     }
 
-    if (result == null) {
-      throw new IOException();
-    }
+    /**
+     * Retrieves a list of valid serial port names.
+     * @return A Vector of serial port names.
+     */
+    public static ArrayList<String> enumeratePortNames() {
+        Map<String, CommPortIdentifier> portMap = enumeratePorts();
 
-    return result;
-  }
+        ArrayList<String> portNames = new ArrayList<String>();
 
-  /**
-   * Writes a byte to the serial port.
-   * @param aByte The byte to write.
-   * @throws java.io.IOException If an error occurs while writing the byte.
-   */
-  public void writeByte(byte aByte) throws IOException {
-    if (isOpen() == false) {
-      throw new IOException();
-    }
-
-    OutputStream outputStream = serialPort.getOutputStream();
-    outputStream.write(aByte);
-  }
-
-  /**
-   * Clears the serial port input buffer.
-   * @throws java.io.IOException If an error occurs while clearing the buffer.
-   */
-  public void clear() throws IOException {
-    if (serialPort != null) {
-      InputStream inputStream = serialPort.getInputStream();
-      while (inputStream.available() > 0) {
-        if (readByte() == -1) {
-          break;
+        for (String portName : portMap.keySet()) {
+            portNames.add(portName);
         }
-      }
-    } else {
-      throw new IOException();
-    }
-  }
 
-  /**
-   * Determines if the serial port is currently open.
-   * @return True if the port is open, otherwise false.
-   */
-  public boolean isOpen() {
-    return serialPort != null;
-  }
-
-  /**
-   * Retrieves the name of the serial port that this object represents.
-   * @return The name of the port (e.g., "COM1", "/dev/ttyUSB0")
-   */
-  public String getPortName() {
-    if (portIdentifier != null) {
-      return portIdentifier.getName();
-    } else {
-      return null;
+        return portNames;
     }
-  }
+
+    /**
+     * Opens the specified serial port using a given baud rate and flow control.
+     * @param portName The port name. For example, "/dev/ttyUSB0".
+     * @param baudRate The baud rate. For example, 9600.
+     * @param useFlowControl Flow control flag.
+     * @throws java.io.IOException If the port cannot be opened.
+     * @throws gnu.io.PortInUseException If the port is already in use.
+     * @throws gnu.io.UnsupportedCommOperationException If the specified port
+     * cannot be opened in this way.
+     */
+    public void open(String portName, int baudRate, boolean useFlowControl)
+            throws IOException, PortInUseException,
+            UnsupportedCommOperationException {
+
+        Map<String, CommPortIdentifier> portMap = SPI.enumeratePorts();
+        portIdentifier = portMap.get(portName);
+
+        if (portIdentifier == null) {
+            throw new IOException();
+        }
+
+        serialPort = (SerialPort) portIdentifier.open(portName, SPI.COMM_TIMEOUT_MS);
+        serialPort.setSerialPortParams(baudRate, SerialPort.DATABITS_8,
+                SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+        serialPort.enableReceiveTimeout(SPI.RECEIVE_TIMEOUT_SECONDS_MS);
+
+        if (useFlowControl == true) {
+            serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN
+                    | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+        }
+    }
+
+    /**
+     * Closes the open serial port.
+     */
+    public void close() {
+        if (serialPort != null) {
+            serialPort.close();
+            serialPort = null;
+        }
+    }
+
+    /**
+     * Attempts to read a single byte from the serial port.
+     * @return A byte from the serial port.
+     * @throws java.io.IOException If an error occurs while reading the byte.
+     */
+    public byte readByte() throws IOException {
+        if (isOpen() == false) {
+            throw new IOException();
+        }
+
+        InputStream inputStream = serialPort.getInputStream();
+        Byte result = null;
+        int attempts = 0;
+
+        while (attempts < 10) {
+            if (inputStream.available() > 0) {
+                result = (byte) (inputStream.read() & 0xFF);
+                System.out.println(result);
+                break;
+            } else {
+                attempts++;
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (result == null) {
+            throw new IOException();
+        }
+
+        return result;
+    }
+
+    /**
+     * Writes a byte to the serial port.
+     * @param aByte The byte to write.
+     * @throws java.io.IOException If an error occurs while writing the byte.
+     */
+    public void writeByte(byte aByte) throws IOException {
+        if (isOpen() == false) {
+            throw new IOException();
+        }
+
+        OutputStream outputStream = serialPort.getOutputStream();
+        outputStream.write(aByte);
+    }
+
+    /**
+     * Clears the serial port input buffer.
+     * @throws java.io.IOException If an error occurs while clearing the buffer.
+     */
+    public void clear() throws IOException {
+        if (serialPort != null) {
+            InputStream inputStream = serialPort.getInputStream();
+            while (inputStream.available() > 0) {
+                if (readByte() == -1) {
+                    break;
+                }
+            }
+        } else {
+            throw new IOException();
+        }
+    }
+
+    /**
+     * Determines if the serial port is currently open.
+     * @return True if the port is open, otherwise false.
+     */
+    public boolean isOpen() {
+        return serialPort != null;
+    }
+
+    /**
+     * Retrieves the name of the serial port that this object represents.
+     * @return The name of the port (e.g., "COM1", "/dev/ttyUSB0")
+     */
+    public String getPortName() {
+        if (portIdentifier != null) {
+            return portIdentifier.getName();
+        } else {
+            return null;
+        }
+    }
 }
