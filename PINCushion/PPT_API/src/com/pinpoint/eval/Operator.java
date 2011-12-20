@@ -14,6 +14,8 @@ package com.pinpoint.eval;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Extensions Copyright (c) 2008, iSENSE Project.
  */
 
 import java.math.BigDecimal;

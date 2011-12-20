@@ -25,23 +25,20 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package com.pinpoint.api;
 
+package com.pinpoint.api;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * The Serial Port Interface (SPI) class is used for selecting, opening and
@@ -87,15 +84,14 @@ public class SerialChannel {
    * Retrieves a list of valid serial port names.
    * @return A Vector of serial port names.
    */
-  public static Vector<String> enumeratePortNames() {
+  public static ArrayList<String> enumeratePortNames() {
     Map<String, CommPortIdentifier> portMap = enumeratePorts();
-    Iterator<String> portMapIterator = portMap.keySet().iterator();
-    Vector<String> portNames = new Vector<String>();
-
-    while (portMapIterator.hasNext() == true) {
-      portNames.add(portMapIterator.next());
+    ArrayList<String> portNames = new ArrayList<String>();
+    
+    for(String key: portMap.keySet()){
+        portNames.add(key);
     }
-
+    
     return portNames;
   }
 

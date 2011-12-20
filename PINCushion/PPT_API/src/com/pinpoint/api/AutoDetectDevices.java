@@ -25,43 +25,36 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package com.pinpoint.api;
 
+package com.pinpoint.api;
 
 import com.pinpoint.exceptions.IncorrectDeviceException;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Class responsible for the detection and instantiation of sensor devices.
  * @author James Dalphond  <jdalphon@cs.uml.edu>
- * @author William Brendel <wbrendel@cs.uml.edu>
- *
  */
 public class AutoDetectDevices {
 
-    public static Vector<PinComm> detect() throws IncorrectDeviceException, IOException {
+    public static ArrayList<PinComm> detect() throws IncorrectDeviceException, IOException {
 
         /* Holds PinComm objects representing the detected devices */
-        Vector<PinComm> devices = new Vector<PinComm>();
+        ArrayList<PinComm> devices = new ArrayList<PinComm>();
 
         /* Get all available serial ports */
-        Vector<String> serialPorts = SPI.enumeratePortNames();
-        Iterator<String> serialIterator = serialPorts.iterator();
-
+        ArrayList<String> serialPorts = SPI.enumeratePortNames();
+       
         /* Try to instantiate a device on each serial port */
-        while (serialIterator.hasNext() == true) {
-            String port = serialIterator.next();
-
-
+        for(String port : serialPorts) {
+            
             /* Fix for Mac to only connect to usbserial ports. This will decrease
              * connection time and reduce error with opening Bluetooth ports.
              */
             if (System.getProperty("os.name").contains("Mac") && !port.contains("usbserial")) {
                 continue;
             }
-
 
             /* Fix for Linux to only connect to USB ports since we will never
              * connect to a Serial port
