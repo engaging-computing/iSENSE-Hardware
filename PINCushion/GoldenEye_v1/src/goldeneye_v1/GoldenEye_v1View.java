@@ -1,5 +1,29 @@
-/*
- * GoldenEye_v1View.java
+/**
+ * Copyright (c) 2008, iSENSE Project. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution. Neither the name of the University of
+ * Massachusetts Lowell nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific
+ * prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  */
 package goldeneye_v1;
 
@@ -7,15 +31,12 @@ import com.pinpoint.api.PinComm;
 import com.pinpoint.api.PinpointConverter;
 import com.pinpoint.api.bootloaderInterface;
 import com.pinpoint.api.pinpointInterface;
-import com.pinpoint.exceptions.BootloaderException;
 import com.pinpoint.exceptions.IncompatibleConversionException;
+import com.pinpoint.exceptions.InvalidHexException;
 import com.pinpoint.exceptions.MissingLogFileException;
 import com.pinpoint.exceptions.NoConnectionException;
 import com.pinpoint.exceptions.NoDataException;
 import java.awt.Cursor;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,14 +45,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Timer;
+import java.util.prefs.BackingStoreException;
 import javax.swing.JFileChooser;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -101,7 +120,6 @@ public class GoldenEye_v1View extends FrameView {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        millisCheckBox = new javax.swing.JCheckBoxMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         updateBootloaderMenuItem = new javax.swing.JMenuItem();
         configureMenuItem = new javax.swing.JMenuItem();
@@ -283,11 +301,6 @@ public class GoldenEye_v1View extends FrameView {
         jSeparator3.setName("jSeparator3"); // NOI18N
         toolsMenu.add(jSeparator3);
 
-        millisCheckBox.setSelected(false);
-        millisCheckBox.setText(resourceMap.getString("millisCheckBox.text")); // NOI18N
-        millisCheckBox.setName("millisCheckBox"); // NOI18N
-        toolsMenu.add(millisCheckBox);
-
         jSeparator7.setName("jSeparator7"); // NOI18N
         toolsMenu.add(jSeparator7);
 
@@ -344,6 +357,8 @@ public class GoldenEye_v1View extends FrameView {
                 configure.setLocationRelativeTo(mainFrame);
 
                 GoldenEye_v1App.getApplication().show(configure);
+            } catch (BackingStoreException ex) {
+                JOptionPane.showMessageDialog(this.getFrame(), "Could not open Java Preferences.", "Conversions error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this.getFrame(), "PINPoint not found.", "PINPoint error", JOptionPane.ERROR_MESSAGE);
             } catch (MissingLogFileException ex) {
@@ -378,22 +393,18 @@ public class GoldenEye_v1View extends FrameView {
 
                 pinpoint.disconnect();
             }
-
-        } catch (MissingLogFileException ex) {
+      
+        } catch (BackingStoreException ex) {
             GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            JOptionPane.showMessageDialog(this.getFrame(), "Could not find conversions file.\nPlease go to \"Tools -> Update Conversions\"", "Conversions Error", JOptionPane.ERROR_MESSAGE);
-            pinpoint.disconnect();
-
+            JOptionPane.showMessageDialog(this.getFrame(), "Could not open Java Preferences.", "Conversions error", JOptionPane.ERROR_MESSAGE);
         } catch (NoDataException ex) {
             GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            JOptionPane.showMessageDialog(this.getFrame(), "No data was found on the connected PINpoint.");
-
-            pinpoint.disconnect();
+            JOptionPane.showMessageDialog(this.getFrame(), "No data was found on the connected PINpoint.");            
         } catch (IncompatibleConversionException ex) {
             GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            JOptionPane.showMessageDialog(this.getFrame(), "Conversions file mismatch, please go to \"Tools -> Update Conversions\"");
-            pinpoint.disconnect();
+            JOptionPane.showMessageDialog(this.getFrame(), "Conversions file mismatch, please go to \"Tools -> Update Conversions\"");          
         }
+        pinpoint.disconnect();
     }//GEN-LAST:event_uploadDataButtonActionPerformed
 
     private void clearPPTDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPPTDataButtonActionPerformed
@@ -412,40 +423,35 @@ public class GoldenEye_v1View extends FrameView {
     }//GEN-LAST:event_startRecordingButtonActionPerformed
 
     private void saveDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDataButtonActionPerformed
-        viewToMemory();
-        FileSaver fs = new FileSaver(this.getFrame());
-
-        if (!fs.saveFile(data, millisCheckBox.isSelected())) {
-            JOptionPane.showMessageDialog(this.getFrame(), "Could not save the file! Please check permissions.", "Error Saving File", JOptionPane.ERROR_MESSAGE);
-        }
+       saveMenuItemActionPerformed(evt);
     }//GEN-LAST:event_saveDataButtonActionPerformed
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         JFrame mainFrame = GoldenEye_v1App.getApplication().getMainFrame();
-        AboutBox aboutBox = new AboutBox(mainFrame);
+        aboutBox = new AboutBox(mainFrame);
         aboutBox.setLocationRelativeTo(mainFrame);
 
         GoldenEye_v1App.getApplication().show(aboutBox);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void updateConversionsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateConversionsMenuItemActionPerformed
-        Updater up = new Updater();
-        GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+      
         try {
-            up.getDataFromGoogleDoc();
-            GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            if (up.makeTempFilePermenant()) {
-                //System.out.println("Successfully made new conversions permenant");
-                JOptionPane.showMessageDialog(this.getFrame(), "Conversions Successfully Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                //System.err.println("Failed to make new conversions permenant");
-                JOptionPane.showMessageDialog(this.getFrame(), "Temporary Conversions Successfully Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (IOException ex) {
-            GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            JOptionPane.showMessageDialog(this.getFrame(), "Could not reach Google Docs for conversions.", "Internet Connection Error", JOptionPane.ERROR_MESSAGE);
-        }
 
+            pinpointInterface ppI = new pinpointInterface(false);
+            GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            ppI.DownloadLatestConversions();
+            GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            JOptionPane.showMessageDialog(this.getFrame(), "Conversions Successfully Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+        } catch (NoConnectionException ex) {
+            //This will never happen. 
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this.getFrame(), "Could not reach Google Docs for conversions.", "Internet Connection Error", JOptionPane.ERROR_MESSAGE);
+        } catch (BackingStoreException ex) {
+            JOptionPane.showMessageDialog(this.getFrame(), "Could not store the conversions.", "Preferences Error", JOptionPane.ERROR_MESSAGE);
+        }
+        GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_updateConversionsMenuItemActionPerformed
 
     private void checkMultipleSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkMultipleSessionsActionPerformed
@@ -490,7 +496,7 @@ public class GoldenEye_v1View extends FrameView {
             if (x == JOptionPane.YES_OPTION) {
                 FileSaver saver = new FileSaver(this.getFrame());
                 for (ArrayList<String[]> temp : multiSessions) {
-                    saver.saveFile(temp, millisCheckBox.isSelected());
+                    saver.saveFile(temp);
                 }
             }
         } else {
@@ -515,7 +521,7 @@ public class GoldenEye_v1View extends FrameView {
         viewToMemory();
         FileSaver fs = new FileSaver(this.getFrame());
 
-        if (!fs.saveFile(data, millisCheckBox.isSelected())) {
+        if (!fs.saveFile(data)) {
             JOptionPane.showMessageDialog(this.getFrame(), "Could not save the file! Please check permissions.", "Error Saving File", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
@@ -576,7 +582,6 @@ public class GoldenEye_v1View extends FrameView {
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JCheckBoxMenuItem millisCheckBox;
     private javax.swing.JButton saveDataButton;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JButton startRecordingButton;
@@ -589,7 +594,7 @@ public class GoldenEye_v1View extends FrameView {
 
     private boolean pptIsAvailable() {
         try {
-            pinpoint = new pinpointInterface();
+            pinpoint = new pinpointInterface(true);
         } catch (NoConnectionException ex) {
 
             JOptionPane.showMessageDialog(GoldenEye_v1App.getApplication().getMainFrame(),
@@ -654,9 +659,9 @@ public class GoldenEye_v1View extends FrameView {
 
                     }
                 }
-            } catch (BootloaderException ex) {
+            } catch (InvalidHexException ex){
                 GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                JOptionPane.showMessageDialog(parent, ex.GetErrorType(), "Bootloader Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parent, ex.GetErrorType(), "Bootloader Error", JOptionPane.ERROR_MESSAGE);         
             } catch (NoConnectionException ex) {
                 GoldenEye_v1App.getApplication().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 JOptionPane.showMessageDialog(parent, "Could not connect to PINPoint", "No Connection Error", JOptionPane.ERROR_MESSAGE);
@@ -682,10 +687,8 @@ public class GoldenEye_v1View extends FrameView {
             JFrame mainFrame = GoldenEye_v1App.getApplication().getMainFrame();
             ProgressBar pb = new ProgressBar(count, time, job);
             pb.setLocationRelativeTo(mainFrame);
-            GoldenEye_v1App.getApplication().show(pb);        
+            GoldenEye_v1App.getApplication().show(pb);
             pb.Start();
         }
     }
-
-
 }
