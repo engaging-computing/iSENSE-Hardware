@@ -258,15 +258,6 @@
                 <Property name="name" type="java.lang.String" value="jSeparator3" noResource="true"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="millisCheckBox">
-              <Properties>
-                <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="false" type="code"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="millisCheckBox.text"/>
-                <Property name="name" type="java.lang.String" value="millisCheckBox" noResource="true"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator7">
               <Properties>
                 <Property name="name" type="java.lang.String" value="jSeparator7" noResource="true"/>
