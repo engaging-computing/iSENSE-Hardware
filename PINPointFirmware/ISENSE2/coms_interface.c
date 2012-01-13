@@ -60,7 +60,7 @@ void coms_Init(void)
         usart_Init(SERIAL, COMS_BAUD_115200);
     }
 
-    for (i = 0; i < COMS_BUFFER_SIZE; i++) comsData[i] = 0xA3;
+    for (i = 0; i < COMS_BUFFER_SIZE; i++) comsData[i] = COMS_EMPTY;
 
     usart_Interrupt_RX(SERIAL, ENABLE);
 }
@@ -215,7 +215,7 @@ ComsMsg coms_Poll(void)
     {
         switch (comsData[0])
         {
-            case 0xA3:
+            case COMS_EMPTY:
                 if (comsSize == 0) msg.type = NONE;
                 else
                 {
@@ -363,7 +363,7 @@ void coms_Clear(int num)
         comsData[j] = comsData[i];
     }
 
-    for (; j < COMS_BUFFER_SIZE; j++) comsData[j] = 0xA3;
+    for (; j < COMS_BUFFER_SIZE; j++) comsData[j] = COMS_EMPTY;
     comsSize -= num;
 }
 

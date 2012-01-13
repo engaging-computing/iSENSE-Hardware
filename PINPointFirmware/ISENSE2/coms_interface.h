@@ -93,6 +93,7 @@ typedef struct
 #define COMS_CONTROL_REQ_PAYLOAD "CONFIRM" ///< Correct payload for a reset request message.
 
 #define COMS_ERROR 0xFF ///< Message code for an error.
+#define COMS_EMPTY 0xA3 ///< Empty buffer marker.
 
 extern void coms_Init(void);
 extern void coms_Bluetooth_Init(void);
