@@ -164,12 +164,20 @@ void user_Handle_Buttons(RunData *runData)
     {
         runData->record = true;
         runData->liveData = false;
+		
+		// temp
+		gsm_modem_Init();
+		gsm_modem_On();
+		gsm_modem_Comms_Setup();
     }
 
     if (user_Get_Button(BUTTON_STOP))
     {
         runData->record = false;
         runData->liveData = false;
+	
+		// temp	
+		gsm_modem_Off();
     }
 
     if (runData->record || runData->liveData)

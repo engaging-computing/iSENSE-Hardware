@@ -47,10 +47,10 @@ C_SRCS +=  \
 ../adc_interface.c \
 ../adx_interface.c \
 ../bmp085_interface.c \
-../coms_interface.c \
 ../data_interface.c \
 ../globals.c \
 ../gps_interface.c \
+../gsm_modem_interface.c \
 ../isense.c \
 ../light_interface.c \
 ../rtc_interface.c \
@@ -72,10 +72,10 @@ OBJS +=  \
 adc_interface.o \
 adx_interface.o \
 bmp085_interface.o \
-coms_interface.o \
 data_interface.o \
 globals.o \
 gps_interface.o \
+gsm_modem_interface.o \
 isense.o \
 light_interface.o \
 rtc_interface.o \
@@ -91,10 +91,10 @@ OBJS_AS_ARGS +=  \
 adc_interface.o \
 adx_interface.o \
 bmp085_interface.o \
-coms_interface.o \
 data_interface.o \
 globals.o \
 gps_interface.o \
+gsm_modem_interface.o \
 isense.o \
 light_interface.o \
 rtc_interface.o \
@@ -110,10 +110,10 @@ C_DEPS +=  \
 adc_interface.d \
 adx_interface.d \
 bmp085_interface.d \
-coms_interface.d \
 data_interface.d \
 globals.d \
 gps_interface.d \
+gsm_modem_interface.d \
 isense.d \
 light_interface.d \
 rtc_interface.d \
@@ -129,10 +129,10 @@ C_DEPS_AS_ARGS +=  \
 adc_interface.d \
 adx_interface.d \
 bmp085_interface.d \
-coms_interface.d \
 data_interface.d \
 globals.d \
 gps_interface.d \
+gsm_modem_interface.d \
 isense.d \
 light_interface.d \
 rtc_interface.d \
@@ -144,27 +144,27 @@ usart_interface.d \
 user_interface.d
 
 
-OUTPUT_FILE_PATH +=ISENSE2.elf
+OUTPUT_FILE_PATH +=AVRStudio.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=ISENSE2.elf
+OUTPUT_FILE_PATH_AS_ARGS +=AVRStudio.elf
 
-HEX_FLASH_FILE_PATH +=ISENSE2.hex
+HEX_FLASH_FILE_PATH +=AVRStudio.hex
 
-HEX_FLASH_FILE_PATH_AS_ARGS +=ISENSE2.hex
+HEX_FLASH_FILE_PATH_AS_ARGS +=AVRStudio.hex
 
-HEX_EEPROM_FILE_PATH +=ISENSE2.eep
+HEX_EEPROM_FILE_PATH +=AVRStudio.eep
 
-HEX_EEPROM_FILE_PATH_AS_ARGS +=ISENSE2.eep
+HEX_EEPROM_FILE_PATH_AS_ARGS +=AVRStudio.eep
 
-LSS_FILE_PATH +=ISENSE2.lss
+LSS_FILE_PATH +=AVRStudio.lss
 
-LSS_FILE_PATH_AS_ARGS +=ISENSE2.lss
+LSS_FILE_PATH_AS_ARGS +=AVRStudio.lss
 
-MAP_FILE_PATH =ISENSE2.map
+MAP_FILE_PATH =AVRStudio.map
 
-MAP_FILE_PATH_AS_ARGS =ISENSE2.map
+MAP_FILE_PATH_AS_ARGS =AVRStudio.map
 
-LIB_AS_ARGS +=libISENSE2.a
+LIB_AS_ARGS +=libAVRStudio.a
 
 ADDITIONAL_DEPENDENCIES:= $(HEX_FLASH_FILE_PATH) $(LSS_FILE_PATH) $(HEX_EEPROM_FILE_PATH) size
 
@@ -207,7 +207,7 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 ./%.o: .././%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler
-	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -O0 -fpack-struct -fshort-enums -g2 -Wall -c -std=gnu99  -mmcu=atmega324p   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE) -funsigned-char -funsigned-bitfields -Os -fpack-struct -fshort-enums -Wall -c -std=gnu99  -mmcu=atmega324p   -MD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo Finished building: $<
 
 
@@ -232,7 +232,7 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU C/C++ Linker
-	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE)  -mmcu=atmega324p  -Wl,-Map=$(MAP_FILE_PATH_AS_ARGS) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS)
+	$(QUOTE)$(AVR_APP_PATH)avr-gcc.exe$(QUOTE) -Wl,--gc-sections  -mmcu=atmega324p  -Wl,-Map=$(MAP_FILE_PATH_AS_ARGS) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS)
 	@echo Finished building target: $@
 
 

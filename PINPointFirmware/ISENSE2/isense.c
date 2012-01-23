@@ -12,7 +12,6 @@
 #include "gps_interface.h"
 #include "data_interface.h"
 #include "sensor_interface.h"
-#include "coms_interface.h"
 #include "bmp085_interface.h"
 #include "rtc_interface.h"
 #include "adx_interface.h"
@@ -47,7 +46,7 @@ status init(void)
 
     user_Init();
     timer_Wait_MS(1000);
-    coms_Init();
+    gsm_modem_Init();
     usart_Print_Num(SERIAL, UBRR1L);
     sensor_Init(true);
     data_Init();
@@ -107,7 +106,7 @@ int main (void)
     {
         user_Handle_Buttons(&runData);
 
-        coms_Handle(&runData);
+        gsm_modem_Comms_Handle(&runData);
 
         dataReady = sensor_Read(&data);
 

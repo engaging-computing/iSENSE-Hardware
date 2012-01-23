@@ -8,13 +8,13 @@ adx_interface.c
 
 bmp085_interface.c
 
-coms_interface.c
-
 data_interface.c
 
 globals.c
 
 gps_interface.c
+
+gsm_modem_interface.c
 
 isense.c
 
