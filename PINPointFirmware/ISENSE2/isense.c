@@ -77,8 +77,8 @@ status init(void)
     user_Init();
     timer_Wait_MS(1000);
     coms_Init();
-    usart_Print_Num(SERIAL, UBRR1L);
     sensor_Init(true);
+    
     data_Init();
 
     if (user_Get_Button(BUTTON_CLEAR))
