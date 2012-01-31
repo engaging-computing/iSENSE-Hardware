@@ -8,6 +8,13 @@
 #define _GSM_MODEM_INTERFACE_H_
 
 #include "globals.h"
+#include "sensor_interface.h"
+
+#define MODEM_DATA_GLOBAL_RATE_H 0x20 ///< Upper byte of the default global recording rate.
+#define MODEM_DATA_GLOBAL_RATE_L 0xE8 ///< Lower byte of the default global recording rate.
+
+#define MODEM_CALL_NUMBER "9784733712"
+#define MODEM_TWILIO_PIN "2113-1493"
 
 #define MODEM_PORT_1    C    ///< Port for control lines.
 #define MODEM_DTR0_PIN  6    ///<
@@ -24,6 +31,7 @@ extern void gsm_modem_Init(void);
 extern void gsm_modem_On(void);
 extern void gsm_modem_Off(void);
 extern void gsm_modem_Comms_Setup(void);
+extern void gsm_modem_Comms_Transmit_Data(DataPoint* datap);
 
 #endif // _GSM_MODEM_INTERFACE_H_
 

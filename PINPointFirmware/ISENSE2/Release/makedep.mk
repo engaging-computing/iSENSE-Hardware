@@ -8,6 +8,8 @@ adx_interface.c
 
 bmp085_interface.c
 
+coms_interface.c
+
 data_interface.c
 
 globals.c

@@ -166,9 +166,9 @@ void user_Handle_Buttons(RunData *runData)
         runData->liveData = false;
 		
 		// temp
-		gsm_modem_Init();
-		gsm_modem_On();
-		gsm_modem_Comms_Setup();
+//		gsm_modem_Init();
+//		gsm_modem_On();
+//		gsm_modem_Comms_Setup();
     }
 
     if (user_Get_Button(BUTTON_STOP))
@@ -177,7 +177,7 @@ void user_Handle_Buttons(RunData *runData)
         runData->liveData = false;
 	
 		// temp	
-		gsm_modem_Off();
+//		gsm_modem_Off();
     }
 
     if (runData->record || runData->liveData)

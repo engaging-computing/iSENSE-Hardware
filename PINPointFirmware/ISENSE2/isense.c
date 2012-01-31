@@ -16,6 +16,7 @@
 #include "rtc_interface.h"
 #include "adx_interface.h"
 #include "spi_master.h"
+#include "gsm_modem_interface.h"
 #include <avr/pgmspace.h>
 #include <avr/wdt.h>
 
@@ -40,12 +41,14 @@ void get_mcusr(void)
  */
 status init(void)
 {
+	Time time;
     int i;
 
     cli();
 
     user_Init();
     timer_Wait_MS(1000);
+//	coms_Init();
     gsm_modem_Init();
     usart_Print_Num(SERIAL, UBRR1L);
     sensor_Init(true);
@@ -70,20 +73,35 @@ status init(void)
         wdt_enable(WDTO_120MS);
     }
 
-    sei();
+    // Hard-coded time and date for now since we don't have
+	// an application to set the time with...
+	// We should really try to get this from the GSM modem
+	time.hours = 12; // set to noon
+	time.minutes = 0;
+	time.seconds = 0;
+	
+	time.month = 2; // March
+	time.dow = 5;   // Thursday
+	time.year = 12; // 2012
+	time.date = 1; // The 1st
+	rtc_Set_Time(&time);
 
+    sei();
     return OK;
 }
 
 /**
- * Main function of the program. Communications and buttons are continously
+ * Main function of the program. Communications and buttons are continuously
  * handled while data is collected according to settings and then stored at
- * the perscribed intervals if recording is enabled.
+ * the prescribed intervals if recording is enabled.
  */
 int main (void)
 {
     init();
     
+	// keep track of if batched data sent via GSM today
+	bool gsmSentData = false;
+	
     int i;
     bool dataReady = false, recordReady = false;
     
@@ -94,8 +112,14 @@ int main (void)
     DataPoint data;
     sensor_Reset(&data);
 
-    runData.recordPeriod = (unsigned int)data_Read_EEPROM(DATA_GLOBAL_RATE_ADDR_H) << 8;
-    runData.recordPeriod += (unsigned int)data_Read_EEPROM(DATA_GLOBAL_RATE_ADDR_L);
+    // set the global rate for our river monitoring application
+    runData.recordPeriod = (unsigned int) MODEM_DATA_GLOBAL_RATE_H << 8;
+    runData.recordPeriod += (unsigned int) MODEM_DATA_GLOBAL_RATE_L;
+	data_Clear(); // erase all old data initially	
+
+	// don't read from EEPROM for our application
+//    runData.recordPeriod = (unsigned int)data_Read_EEPROM(DATA_GLOBAL_RATE_ADDR_H) << 8;
+//    runData.recordPeriod += (unsigned int)data_Read_EEPROM(DATA_GLOBAL_RATE_ADDR_L);
 
     if (runData.recordPeriod < MINIMUM_GLOBAL_INTERVAL)
     {
@@ -106,6 +130,7 @@ int main (void)
     {
         user_Handle_Buttons(&runData);
 
+//		coms_Handle(&runData);
         gsm_modem_Comms_Handle(&runData);
 
         dataReady = sensor_Read(&data);
@@ -114,13 +139,26 @@ int main (void)
 
         if (dataReady && recordReady)
         {
-
             if (runData.record)
             {
-                if (data_Write(&data) == ERROR)
-                {
-                    runData.record = false;
-                }
+				if (data_Write(&data) == ERROR)
+				{
+					// since this is an un-monitored system we need to keep trying...
+	                //runData.record = false;
+				}		
+				
+				// at hours == 12 (noon) we power up the GSM modem and send all the data we have collected
+				// then we clear EEPROM
+				if (data.bitpack.data.hours == 12 && !gsmSentData)
+				{
+					gsm_modem_Comms_Transmit_Data(&data);
+					gsmSentData = true;
+				}
+				else if (data.bitpack.data.hours == 13)
+				{
+					// reset for next day
+					gsmSentData = false;
+				}		
             }
             else if (runData.liveData)
             {

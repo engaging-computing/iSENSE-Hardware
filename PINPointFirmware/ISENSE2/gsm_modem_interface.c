@@ -29,7 +29,7 @@ SIGNAL(USART0_RX_vect)
 	int space = (gsmModemHead - gsmModemTail);
 
 	if (space < 0) // head pointer wrapped
-		space = -space;*
+		space = -space;
 
     if ((space - 1) > 0) // we keep one byte to distinguish full from empty
 	{
@@ -50,7 +50,7 @@ void gsm_modem_Init(void)
 	gsmModemTail = 0;
 
 	usart_Init(SERIAL, MODEM_BAUD_115200);
-    usart_Interrupt_RX(SERIAL, ENABLE);
+//    usart_Interrupt_RX(SERIAL, ENABLE);
 
     setPinMode(MODE_HIGH, MODEM_PORT_1, MODEM_DTR0_PIN);
     setPinMode(MODE_HIGH, MODEM_PORT_1, MODEM_DSR0_PIN);
@@ -103,13 +103,23 @@ void gsm_modem_Comms_Setup(void)
 	usart_Text(SERIAL, PSTR("AT+CSQ\r\n"));
 	usart_Text(SERIAL, PSTR("AT+CMGF=1\r\n"));
 	timer_Wait_MS(400);
-	usart_Text(SERIAL, PSTR("AT+CMGS=\"9788700293\"\r\n"));
-	timer_Wait_MS(400);
-	usart_Text(SERIAL, PSTR("Hello World, from the PINPoint!"));
-	usart_Write(SERIAL, 0x1A); // send control-z
-	timer_Wait_MS(400);
+//	usart_Text(SERIAL, PSTR("AT+CMGS=\"9784733712\"\r\n"));
+//	timer_Wait_MS(400);
+//	usart_Text(SERIAL, PSTR(MODEM_TWILIO_PIN " Test"));
+//	usart_Write(SERIAL, 0x1A); // send control-z
+//	timer_Wait_MS(400);
 }
 
+void gsm_modem_Comms_Send_Msg(char *msg)
+{
+	usart_Text(SERIAL, PSTR("AT+CMGS=\"" MODEM_CALL_NUMBER "\"\r\n"));
+	timer_Wait_MS(400);
+	usart_Text(SERIAL, PSTR(MODEM_TWILIO_PIN " "));
+	usart_String(SERIAL, msg);
+	usart_Write(SERIAL, 0x1A); // send control-z
+//	timer_Wait_MS(6000);
+}
+	
 int gsm_modem_Comms_Available(void)
 {
 	int amount = (gsmModemTail - gsmModemHead);
@@ -443,3 +453,93 @@ void gsm_modem_Comms_Handle(RunData *runData)
 	
 	*/
 }
+
+/*
+ * Transmit all of the data we have collected and clear the EEPROM
+ */
+void gsm_modem_Comms_Transmit_Data(DataPoint* datap)
+{
+	char msg[64+1];
+	DataPoint data;
+	int i;
+	int k;
+
+	gsm_modem_Init();
+	gsm_modem_On();
+	gsm_modem_Comms_Setup();
+	
+	// send the encoded data to twilio
+//	gsm_modem_Comms_Send_Msg("Test1");
+
+	// read data stored in EEPROM from the last 24 hours
+	sst_Read((char*)0, (char*)&data, sizeof(DataPoint));
+	
+	i = 0;
+	gsm_modem_Convert_To_Hex(datap->temperature, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->latHigh, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->latLow, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->lonHigh, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->lonLow, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->altitude, &msg[i]);
+	i+=2;
+    msg[i++] = ' ';
+	
+	for (k = 10; k < 16; k++)
+	{
+		gsm_modem_Convert_To_Hex(datap->bitpack.rawData[k], &msg[i]);
+		i+=2;	
+	}
+
+/*
+	for (addr = 0, i = 0; addr < data_Cur_Addr() && i < sizeof(DataPoint); addr++, i++)
+	{	
+		gsm_modem_Convert_To_Hex(data_Read_EEPROM(addr), &msg[i]);
+	}
+*/
+
+	msg[i] = '\0';
+
+/*
+    msg[0] = 'A';
+	msg[1] = 'Z';
+	gsm_modem_Convert_To_Hex(0x6C, &msg[2]);
+	msg[4] = '\0';
+*/
+
+	gsm_modem_Comms_Send_Msg(msg);
+
+	data_Clear(); // clear EEPROM after sending
+
+//	gsm_modem_Comms_Send_Msg("Test2");
+//	gsm_modem_Comms_Send_Msg("Test3");
+//	gsm_modem_Comms_Send_Msg("Test4");
+
+	timer_Wait_MS(6000); // wait for transmission to finish
+	gsm_modem_Off();
+}
+	
+/*
+ * Convert a given byte to ascii hex format.
+ */
+void gsm_modem_Convert_To_Hex(char in, char* out)
+{
+    out[1] = (in & 0x0F);
+
+	if (out[1] < 10)
+		out[1] += '0';
+	else
+		out[1] = out[1] - 10 + 'A';
+	
+    out[0] = (in & 0xF0) >> 4;
+	
+	if (out[0] < 10)
+		out[0] += '0';
+	else
+		out[0] = out[0] - 10 + 'A';
+}
+

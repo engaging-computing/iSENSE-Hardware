@@ -26,6 +26,7 @@ static int comsSize = 0; ///< Size of message in coms buffer.
  * the buffer reaches an overflow condition then new characters
  * are placed at the end of the buffer.
  */
+/*
 SIGNAL(USART0_RX_vect)
 {
     if (comsSize < COMS_BUFFER_SIZE)
@@ -39,6 +40,7 @@ SIGNAL(USART0_RX_vect)
     
     timer_Wake();
 }
+*/
 
 /**
  * Initializes the usart responsible for serial communication.

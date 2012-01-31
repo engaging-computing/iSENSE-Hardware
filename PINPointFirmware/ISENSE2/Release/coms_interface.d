@@ -1,5 +1,5 @@
-gsm_modem_interface.d gsm_modem_interface.o: .././gsm_modem_interface.c \
- .././gsm_modem_interface.h .././globals.h \
+coms_interface.d coms_interface.o: .././coms_interface.c \
+ .././coms_interface.h .././globals.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/include/stdbool.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/avr/pgmspace.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/inttypes.h \
@@ -17,13 +17,13 @@ gsm_modem_interface.d gsm_modem_interface.o: .././gsm_modem_interface.c \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/avr/lock.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/avr/interrupt.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/stdlib.h \
- .././sensor_interface.h .././usart_interface.h .././data_interface.h \
+ .././usart_interface.h .././data_interface.h .././sensor_interface.h \
  .././spi_master.h .././timer_interface.h .././rtc_interface.h \
  .././twi_interface.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/util/twi.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/avr/wdt.h
 
-.././gsm_modem_interface.h:
+.././coms_interface.h:
 
 .././globals.h:
 
@@ -61,11 +61,11 @@ c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/av
 
 c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/stdlib.h:
 
-.././sensor_interface.h:
-
 .././usart_interface.h:
 
 .././data_interface.h:
+
+.././sensor_interface.h:
 
 .././spi_master.h:
 

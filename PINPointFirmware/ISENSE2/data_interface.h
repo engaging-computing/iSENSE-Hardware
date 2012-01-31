@@ -37,7 +37,7 @@
 #define DATA_SN_8_ADDR    1022 ///< EEPROM address of the middle lower byte of the serial number.
 #define DATA_SN_0_ADDR    1023 ///< EEPROM address of the lower byte of the serial number.
 
-#define DATA_DEFAULT_GLOBAL_RATE_H 0x03 ///< Upper byte of the default global recording rate.
+#define DATA_DEFAULT_GLOBAL_RATE_H 0x04 ///< Upper byte of the default global recording rate.
 #define DATA_DEFAULT_GLOBAL_RATE_L 0xE8 ///< Lower byte of the default global recording rate.
 #define DATA_DEFAULT_EXT_TYPE      0x01 ///< Default external sensor type.
 #define DATA_DEFAULT_GPS_THRESHOLD 0x05 ///< Default GPS threshold.

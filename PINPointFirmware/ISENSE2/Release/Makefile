@@ -47,6 +47,7 @@ C_SRCS +=  \
 ../adc_interface.c \
 ../adx_interface.c \
 ../bmp085_interface.c \
+../coms_interface.c \
 ../data_interface.c \
 ../globals.c \
 ../gps_interface.c \
@@ -72,6 +73,7 @@ OBJS +=  \
 adc_interface.o \
 adx_interface.o \
 bmp085_interface.o \
+coms_interface.o \
 data_interface.o \
 globals.o \
 gps_interface.o \
@@ -91,6 +93,7 @@ OBJS_AS_ARGS +=  \
 adc_interface.o \
 adx_interface.o \
 bmp085_interface.o \
+coms_interface.o \
 data_interface.o \
 globals.o \
 gps_interface.o \
@@ -110,6 +113,7 @@ C_DEPS +=  \
 adc_interface.d \
 adx_interface.d \
 bmp085_interface.d \
+coms_interface.d \
 data_interface.d \
 globals.d \
 gps_interface.d \
@@ -129,6 +133,7 @@ C_DEPS_AS_ARGS +=  \
 adc_interface.d \
 adx_interface.d \
 bmp085_interface.d \
+coms_interface.d \
 data_interface.d \
 globals.d \
 gps_interface.d \
@@ -171,6 +176,8 @@ ADDITIONAL_DEPENDENCIES:= $(HEX_FLASH_FILE_PATH) $(LSS_FILE_PATH) $(HEX_EEPROM_F
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR/GNU C Compiler
+
+
 
 
 

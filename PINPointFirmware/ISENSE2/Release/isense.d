@@ -21,6 +21,7 @@ isense.d isense.o: .././isense.c .././globals.h \
  .././data_interface.h .././bmp085_interface.h .././twi_interface.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/util/twi.h \
  .././rtc_interface.h .././adx_interface.h .././spi_master.h \
+ .././gsm_modem_interface.h \
  c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/avr/wdt.h
 
 .././globals.h:
@@ -84,5 +85,7 @@ c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/av
 .././adx_interface.h:
 
 .././spi_master.h:
+
+.././gsm_modem_interface.h:
 
 c:\program\ files\ (x86)\atmel\avr\ studio\ 5.0\avr\ toolchain\bin\../lib/gcc/avr/4.5.1/../../../../avr/include/avr/wdt.h:
