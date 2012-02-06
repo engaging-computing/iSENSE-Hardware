@@ -177,6 +177,11 @@ public class BluetoothService {
 		if (mState != STATE_CONNECTED) return;
 		mConnectedComm.clear();
 	}
+	
+	public void clearBuff() {
+		if (mState != STATE_CONNECTED) return;
+		mConnectedComm.clearBuffer();
+	}
 
 	public void close() {
 		if (mState != STATE_CONNECTED) return;
@@ -406,8 +411,8 @@ public class BluetoothService {
 				try {
 					// Read from the InputStream
 					//nextByte = (byte) mmInStream.read(bbuff);
-					buffer.add( (byte)mmInStream.read() );
-					//System.out.println("got byte: "+nextByte);
+					buffer.add( (byte) mmInStream.read() );
+					//System.out.println("buffer head: "+buffer.peek());
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
 					connectionLost();
@@ -441,9 +446,14 @@ public class BluetoothService {
 				e.printStackTrace();
 			}
 		}
+		
+		public void clearBuffer() {
+			buffer.clear();
+		}
 
 		public void clear() {
 			try {
+				clearBuffer();
 				mmOutStream.flush();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -48,7 +48,6 @@ public class PinpointConverter {
     private byte[] raw = null;
     private Expression b1Conv, b2Conv, m1Conv, m2Conv;
     private HashMap<Integer, Integer> settings;
-    private ArrayList<String[]> conversions;
     public static int VALUE = 0;
     public static int JACK = 1;
     public static int HUMAN_READABLE = 2;
@@ -64,45 +63,10 @@ public class PinpointConverter {
     public static String[] tableHeaders = new String[]{"Time (GMT)", "Latitude", "Longitude", "Altitude GPS (m)", "Altitude (m)", "Pressure (atm)", "Temperature (c)", "Humidity (%rh)", "Light (lux)", "X-Accel", "Y-Accel", "Z-Accel", "Acceleration", "BTA1", "BTA2", "Mini1", "Mini2"};
     public static String[] fileHeaders  = new String[]{"Time","Latitude","Longitude","Altitude GPS","Altitude","Pressure","Temperature","Humidity","Light","x","y","z","Acceleration","BTA1","BTA2","Mini1","Mini2"};
 
-    public PinpointConverter(HashMap<Integer, Integer> settings, ArrayList<String[]> conversions) throws IncompatibleConversionException {
-
+    public PinpointConverter(HashMap<Integer, Integer> settings) throws IncompatibleConversionException {
 
         this.settings = settings;
-        this.conversions = conversions;
-        boolean b1, b2, m1, m2;
-        b1 = m1 = b2 = m2 = false;
-
-        for (String[] i : conversions) {
-
-            if (settings.get(PinComm.BTA1) == Integer.parseInt(i[0])) {
-                b1Conv = new Expression(i[EQUATION]);
-                tableHeaders[BTA1] = i[HUMAN_READABLE];
-                fileHeaders[BTA1] = i[ISENSE_READABLE] + "(b1)";
-                b1 = true;
-            }
-            if (settings.get(PinComm.BTA2) == Integer.parseInt(i[0])) {
-                b2Conv = new Expression(i[EQUATION]);
-                tableHeaders[BTA2] = i[HUMAN_READABLE];
-                fileHeaders[BTA2] = i[ISENSE_READABLE] + "(b2)";
-                b2 = true;
-            }
-            if (settings.get(PinComm.MINI1) == Integer.parseInt(i[0])) {
-                m1Conv = new Expression(i[EQUATION]);
-                tableHeaders[MINI1] = i[HUMAN_READABLE];
-                fileHeaders[MINI1] = i[ISENSE_READABLE] + "(m1)";
-                m1 = true;
-            }
-            if (settings.get(PinComm.MINI2) == Integer.parseInt(i[0])) {
-                m2Conv = new Expression(i[EQUATION]);
-                tableHeaders[MINI2] = i[HUMAN_READABLE];
-                fileHeaders[MINI2] = i[ISENSE_READABLE] + "(m2)";
-                m2 = true;
-            }
-        }
         
-        if (m1 == false || m2 == false || b1 == false || b2 == false) {    
-            throw new IncompatibleConversionException();
-        }
     }
 
     private String latitudeConversion() {
@@ -274,39 +238,46 @@ public class PinpointConverter {
     }
 
     private String MiniOneConversion() {
-        //22 = 1111 HHHH
+        /*
+    	//22 = 1111 HHHH
         //23 = 2211 1111
         int reading = ((raw[22] & 0xF0) >> 4) + ((raw[23] & 0x3F) << 4);
 
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = m1Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";
+        return result.setScale(3, RoundingMode.UP) + "";*/
+    	return "";
     }
 
     private String MiniTwoConversion() {
-        //23 = 2211 1111
+        /*
+    	//23 = 2211 1111
         //24 = 2222 2222
         int reading = ((raw[23] & 0xC0) >> 6) + ((raw[24] & 0xFF) << 2);
 
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = m2Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";
+        return result.setScale(3, RoundingMode.UP) + "";*/
+    	return "";
     }
 
     private String BtaOneConversion() {
-        //25 = 1111 1111
+        /*
+    	//25 = 1111 1111
         //26 = 2222 2211
         int reading = (raw[25] & 0xFF) + ((raw[26] & 0x03) << 8);
 
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = b1Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";
+        return result.setScale(3, RoundingMode.UP) + "";*/
+    	return "";
     }
 
     private String BtaTwoConversion() {
+    	/*
         //26 = 2222 2211
         //27 = ssss 2222
         int reading = ((raw[26] & 0xFC) >> 2) + ((raw[27] & 0x0F) << 6);
@@ -314,7 +285,8 @@ public class PinpointConverter {
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = b2Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";
+        return result.setScale(3, RoundingMode.UP) + "";*/
+    	return "";
     }
 
     private String TimeConversion() {

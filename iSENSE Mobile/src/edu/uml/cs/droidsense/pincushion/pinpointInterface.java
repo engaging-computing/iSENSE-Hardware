@@ -94,11 +94,11 @@ public class pinpointInterface {
             settings = pinpoint.GetSettings();
 
             //Get the conversions from the conversions file.
-            System.out.println("Getting conversions");
-            conversions = this.GetConversions();
+            //System.out.println("Getting conversions");
+            //conversions = this.GetConversions();
 
             //Set up PinpointConverter
-            conv = new PinpointConverter(settings, conversions);
+            conv = new PinpointConverter(settings);
             
             //Get the data header from the pinpoint.
             byte[] dh = pinpoint.getDataHeader();

@@ -53,7 +53,7 @@ import android.widget.Toast;
 
 public class Isense extends Activity implements OnClickListener {
 	Button testBtn, serialBtn, firmwareBtn, sampleBtn, rcrdBtn;
-	EditText testResult;
+	TextView testResult;
 	TextView mConnected;
 	static pinpointInterface ppi;
 	private String mConnectedDeviceName = null;
@@ -78,7 +78,7 @@ public class Isense extends Activity implements OnClickListener {
 		sampleBtn = (Button) findViewById(R.id.btn_getSample);
 		firmwareBtn = (Button) findViewById(R.id.btn_getFirmware);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
-		testResult = (EditText) findViewById(R.id.resultText);
+		testResult = (TextView) findViewById(R.id.resultText);
 		mConnected = (TextView) findViewById(R.id.title_connected_to);
 		
 		if (mBluetoothAdapter == null) {
@@ -140,7 +140,11 @@ public class Isense extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			testResult.setText(""+data);
+			for (String[] strray : data) {
+				for (String str : strray) {
+					testResult.append("\n"+str);
+				}
+			}
 		}
 	}
 
