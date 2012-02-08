@@ -95,6 +95,9 @@ void gsm_modem_Off(void)
 }
 
 
+/**
+ * Sets up the modem for text message transmission.
+ */
 void gsm_modem_Comms_Setup(void)
 {
 	timer_Wait_MS(2500);
@@ -110,6 +113,9 @@ void gsm_modem_Comms_Setup(void)
 //	timer_Wait_MS(400);
 }
 
+/**
+ * Sends a text message to Twilio service.
+ */
 void gsm_modem_Comms_Send_Msg(char *msg)
 {
 	usart_Text(SERIAL, PSTR("AT+CMGS=\"" MODEM_CALL_NUMBER "\"\r\n"));
@@ -119,7 +125,10 @@ void gsm_modem_Comms_Send_Msg(char *msg)
 	usart_Write(SERIAL, 0x1A); // send control-z
 //	timer_Wait_MS(6000);
 }
-	
+
+/**
+ * Returns the number of bytes in the ring-buffer.
+ */
 int gsm_modem_Comms_Available(void)
 {
 	int amount = (gsmModemTail - gsmModemHead);
@@ -130,6 +139,9 @@ int gsm_modem_Comms_Available(void)
 	return amount;
 }
 
+/**
+ * Read 'amount' bytes from the input ring buffer into 'buffer'.
+ */
 int gsm_modem_Comms_ReadBuffer(int amount, char* buffer)
 {
 	int i;
@@ -147,159 +159,9 @@ int gsm_modem_Comms_ReadBuffer(int amount, char* buffer)
 	return i;
 }
 
-void gsm_modem_Poll(void)
-{
-	/*
-    ComsMsg msg = {NONE, {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'}};
-
-    cli();
-
-    if (comsSize >= COMS_BUFFER_SIZE)
-    {
-        //usart_Digits(SERIAL, comsSize, 10, SIGNED_ZEROS, 5);
-        comsSize = 20;
-
-        msg.type = OVERFLOW;
-        coms_Clear(COMS_BUFFER_SIZE);
-    }
-    else
-    {
-        switch (comsData[0])
-        {
-            case 0xA3:
-                if (comsSize == 0) msg.type = NONE;
-                else
-                {
-                    msg.type = BAD;
-                    msg.msg[0] = comsData[0];
-                    coms_Clear(1);
-                }
-                break;
-
-            case COMS_VERIFY_IN:
-                msg.type = VERIFY;
-                coms_Clear(COMS_VERIFY_SIZE);
-                break;
-
-            case COMS_READ_FLASH_PAGE_IN:
-                if (comsSize >= COMS_READ_FLASH_PAGE_SIZE)
-                {
-                    msg.type = READ_FLASH;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    msg.msg[2] = comsData[3];
-                    msg.msg[3] = comsData[4];
-                    msg.msg[4] = comsData[5];
-                    msg.msg[5] = comsData[6];
-                    coms_Clear(COMS_READ_FLASH_PAGE_SIZE);
-                }
-                break;
-
-            case COMS_WRITE_TIME_IN:
-                if (comsSize >= COMS_WRITE_TIME_SIZE)
-                {
-                    msg.type = WRITE_TIME;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    msg.msg[2] = comsData[3];
-                    msg.msg[3] = comsData[4];
-                    msg.msg[4] = comsData[5];
-                    msg.msg[5] = comsData[6];
-                    msg.msg[6] = comsData[7];
-                    coms_Clear(COMS_WRITE_TIME_SIZE);
-                }
-                break;
-
-            case COMS_READ_CONFIG_IN:
-                if (comsSize >= COMS_READ_CONFIG_SIZE)
-                {
-                    msg.type = READ_CONFIG;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    coms_Clear(COMS_READ_CONFIG_SIZE);
-                }
-                break;
-
-            case COMS_WRITE_CONFIG_IN:
-                if (comsSize >= COMS_WRITE_CONFIG_SIZE)
-                {
-                    msg.type = WRITE_CONFIG;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    msg.msg[2] = comsData[3];
-                    coms_Clear(COMS_WRITE_CONFIG_SIZE);
-                }
-                break;
-
-            case COMS_LIVE_DATA_IN:
-                msg.type = LIVE_DATA;
-                coms_Clear(COMS_LIVE_DATA_SIZE);
-                break;
-
-            case COMS_HEADER_REQ_IN:
-                msg.type = HEADER_REQ;
-                coms_Clear(COMS_HEADER_REQ_SIZE);
-                break;
-
-            case COMS_RESET_REQ_IN:
-                if (comsSize >= COMS_RESET_REQ_SIZE)
-                {
-                    msg.type = RESET_REQ;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    msg.msg[2] = comsData[3];
-                    msg.msg[3] = comsData[4];
-                    msg.msg[4] = comsData[5];
-                    msg.msg[5] = comsData[6];
-                    msg.msg[6] = comsData[7];
-                    coms_Clear(COMS_RESET_REQ_SIZE);
-                }
-                break;
-
-            case COMS_ERASE_REQ_IN:
-                if (comsSize >= COMS_ERASE_REQ_SIZE)
-                {
-                    msg.type = ERASE_REQ;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    msg.msg[2] = comsData[3];
-                    msg.msg[3] = comsData[4];
-                    msg.msg[4] = comsData[5];
-                    msg.msg[5] = comsData[6];
-                    msg.msg[6] = comsData[7];
-                    coms_Clear(COMS_ERASE_REQ_SIZE);
-                }
-                break;
-
-            case COMS_START_REQ_IN:
-                if (comsSize >= COMS_START_REQ_SIZE)
-                {
-                    msg.type = START_REQ;
-                    msg.msg[0] = comsData[1];
-                    msg.msg[1] = comsData[2];
-                    msg.msg[2] = comsData[3];
-                    msg.msg[3] = comsData[4];
-                    msg.msg[4] = comsData[5];
-                    msg.msg[5] = comsData[6];
-                    msg.msg[6] = comsData[7];
-                    coms_Clear(COMS_START_REQ_SIZE);
-                }
-                break;
-
-            default:
-                msg.type = BAD;
-                msg.msg[0] = comsData[0];
-                coms_Clear(1);
-                break;
-        }
-    }
-
-    sei();
-
-    return msg;
-	*/
-}
-
+/*
+ * Clear the read ring-buffer.
+ */
 void gsm_modem_Comms_Clear(void)
 {
 	// ring buffer initialization
@@ -307,223 +169,132 @@ void gsm_modem_Comms_Clear(void)
 	gsmModemTail = 0;
 }
 
-/**
+/*
+ * Not currently used.
+ */
+void gsm_modem_Poll(void)
+{
+
+}
+
+/*
+ * Not currently used.
  */
 void gsm_modem_Comms_Handle(RunData *runData)
 {
 	
-	
-    //ComsMsg msg = gsm_modem_Poll();
-    //bool valid = true;
-    //int i;
-/*
-    switch (msg.type)
-    {
-        case BAD:
-        case NONE:
-            //Ignore bad coms
-            break;
-
-        case OVERFLOW:
-            //ignore - stub for debug
-            break;
-
-        case VERIFY:
-            runData->record = false;
-            runData->liveData = false;
-            usart_Write(SERIAL, COMS_VERIFY_OUT);
-            usart_Write(SERIAL, COMS_VERIFY_MAJOR_VERSION);
-            usart_Write(SERIAL, COMS_VERIFY_MINOR_VERSION);
-            break;
-
-        case READ_FLASH:
-            ;
-            uint32_t addr = ((uint32_t)msg.msg[0] << 16) + ((uint32_t)msg.msg[1] << 8) + msg.msg[2];
-            uint32_t size = ((uint32_t)msg.msg[3] << 16) + ((uint32_t)msg.msg[4] << 8) + msg.msg[5];
-
-            runData->record = false;
-            runData->liveData = false;
-            sst_Read_To_Coms((char*)&addr, size);
-
-            break;
-
-        case WRITE_TIME:
-            ;
-            Time t;
-
-            runData->record = false;
-            runData->liveData = false;
-
-            t.seconds = msg.msg[0];
-            t.minutes = msg.msg[1];
-            t.hours   = msg.msg[2];
-            t.dow     = msg.msg[3];
-            t.date    = msg.msg[4];
-            t.month   = msg.msg[5];
-            t.year    = msg.msg[6];
-
-            rtc_Set_Time(&t);
-
-            usart_Write(SERIAL, COMS_WRITE_TIME_OUT);
-            break;
-
-        case READ_CONFIG:
-            runData->record = false;
-            runData->liveData = false;
-            usart_Write(SERIAL, data_Read_EEPROM((msg.msg[0] << 8) + msg.msg[1]));
-            break;
-
-        case WRITE_CONFIG:
-            runData->record = false;
-            runData->liveData = false;
-            data_Write_EEPROM((msg.msg[0] << 8) + msg.msg[1], msg.msg[2]);
-            usart_Write(SERIAL, COMS_WRITE_CONFIG_OUT);
-            break;
-
-        case LIVE_DATA:
-            runData->record = false;
-            runData->liveData = true;
-
-            usart_Write(SERIAL, COMS_LIVE_DATA_OUT);
-
-            break;
-
-        case HEADER_REQ:
-            ;
-            uint32_t header = data_Cur_Addr();
-
-            usart_Write(SERIAL, ((char*)(&header))[2]);
-            usart_Write(SERIAL, ((char*)(&header))[1]);
-            usart_Write(SERIAL, ((char*)(&header))[0]);
-            usart_Write(SERIAL, sizeof(DataPoint));
-            break;
-        case RESET_REQ:
-            for (i = 0; i < COMS_RESET_REQ_SIZE; i++)
-            {
-                if (msg.msg[i] != resetConfirmation[i])
-                {
-                    valid = false;
-                }
-            }
-
-            if (valid)
-            {
-                wdt_enable(WDTO_120MS);
-            }
-
-            break;
-
-        case ERASE_REQ:
-            for (i = 0; i < COMS_RESET_REQ_SIZE; i++)
-            {
-                if (msg.msg[i] != resetConfirmation[i])
-                {
-                    valid = false;
-                }
-            }
-
-            if (valid)
-            {
-                data_Clear();
-            }
-
-            usart_Write(SERIAL, COMS_ERASE_REQ_OUT);
-
-            break;
-
-        case START_REQ:
-            for (i = 0; i < COMS_RESET_REQ_SIZE; i++)
-            {
-                if (msg.msg[i] != resetConfirmation[i])
-                {
-                    valid = false;
-                }
-            }
-
-            if (valid)
-            {
-                runData->record = true;
-                runData->liveData = false;
-            }
-
-            usart_Write(SERIAL, COMS_START_REQ_OUT);
-
-            break;
-    }
-	
-	*/
 }
 
-/*
- * Transmit all of the data we have collected and clear the EEPROM
+/**
+ * Transmit the data we have collected and clear the EEPROM.
  */
 void gsm_modem_Comms_Transmit_Data(DataPoint* datap)
 {
 	char msg[64+1];
 	DataPoint data;
 	int i;
-	int k;
+	uint16_t d;
 
 	gsm_modem_Init();
 	gsm_modem_On();
 	gsm_modem_Comms_Setup();
-	
-	// send the encoded data to twilio
-//	gsm_modem_Comms_Send_Msg("Test1");
 
 	// read data stored in EEPROM from the last 24 hours
-	sst_Read((char*)0, (char*)&data, sizeof(DataPoint));
+//	sst_Read((char*)0, (char*)&data, sizeof(DataPoint));
 	
 	i = 0;
-	gsm_modem_Convert_To_Hex(datap->temperature, &msg[i]);
-	i+=2;
-	gsm_modem_Convert_To_Hex(datap->latHigh, &msg[i]);
-	i+=2;
-	gsm_modem_Convert_To_Hex(datap->latLow, &msg[i]);
-	i+=2;
-	gsm_modem_Convert_To_Hex(datap->lonHigh, &msg[i]);
-	i+=2;
-	gsm_modem_Convert_To_Hex(datap->lonLow, &msg[i]);
-	i+=2;
-	gsm_modem_Convert_To_Hex(datap->altitude, &msg[i]);
-	i+=2;
-    msg[i++] = ' ';
-	
-	for (k = 10; k < 16; k++)
-	{
-		gsm_modem_Convert_To_Hex(datap->bitpack.rawData[k], &msg[i]);
-		i+=2;	
-	}
 
-/*
-	for (addr = 0, i = 0; addr < data_Cur_Addr() && i < sizeof(DataPoint); addr++, i++)
-	{	
-		gsm_modem_Convert_To_Hex(data_Read_EEPROM(addr), &msg[i]);
-	}
-*/
+	gsm_modem_Convert_To_Hex((datap->latHigh >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->latHigh & 0x00FF, &msg[i]);
+	i+=2;
+
+    msg[i++] = ' ';	
+	gsm_modem_Convert_To_Hex((datap->latLow >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->latLow & 0x00FF, &msg[i]);
+	i+=2;
+	
+    msg[i++] = ' ';
+	gsm_modem_Convert_To_Hex((datap->lonHigh >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->lonHigh & 0x00FF, &msg[i]);
+	i+=2;
+	
+	msg[i++] = ' ';
+	gsm_modem_Convert_To_Hex((datap->lonLow >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->lonLow & 0x00FF, &msg[i]);
+	i+=2;
+
+    msg[i++] = ' ';
+	gsm_modem_Convert_To_Hex((datap->altitude >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->altitude & 0x00FF, &msg[i]);
+	i+=2;
+
+//	gsm_modem_Convert_To_Hex(datap->pressure, &msg[i]);
+//	i+=2;
+
+    msg[i++] = ' ';
+	gsm_modem_Convert_To_Hex((datap->temperature >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(datap->temperature & 0x00FF, &msg[i]);
+	i+=2;
+	
+    msg[i++] = ' ';
+	d = datap->bitpack.data.lightExp;
+	gsm_modem_Convert_To_Hex((d >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(d & 0x00FF, &msg[i]);
+	i+=2;
+
+    msg[i++] = ' ';
+	d = datap->bitpack.data.lightMan;
+	gsm_modem_Convert_To_Hex((d >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(d & 0x00FF, &msg[i]);
+	i+=2;
+
+    msg[i++] = ' ';
+	d = datap->bitpack.data.mini1;
+	gsm_modem_Convert_To_Hex((d >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(d & 0x00FF, &msg[i]);
+	i+=2;
+
+    msg[i++] = ' ';
+	d = datap->bitpack.data.mini2;
+	gsm_modem_Convert_To_Hex((d >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(d & 0x00FF, &msg[i]);
+	i+=2;
+	
+    msg[i++] = ' ';
+	d = datap->bitpack.data.bta1;
+	gsm_modem_Convert_To_Hex((d >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(d & 0x00FF, &msg[i]);
+	i+=2;
+
+    msg[i++] = ' ';
+	d = datap->bitpack.data.bta2;
+	gsm_modem_Convert_To_Hex((d >> 8) & 0x00FF, &msg[i]);
+	i+=2;
+	gsm_modem_Convert_To_Hex(d & 0x00FF, &msg[i]);
+	i+=2;
 
 	msg[i] = '\0';
-
-/*
-    msg[0] = 'A';
-	msg[1] = 'Z';
-	gsm_modem_Convert_To_Hex(0x6C, &msg[2]);
-	msg[4] = '\0';
-*/
 
 	gsm_modem_Comms_Send_Msg(msg);
 
 	data_Clear(); // clear EEPROM after sending
 
-//	gsm_modem_Comms_Send_Msg("Test2");
-//	gsm_modem_Comms_Send_Msg("Test3");
-//	gsm_modem_Comms_Send_Msg("Test4");
-
 	timer_Wait_MS(6000); // wait for transmission to finish
 	gsm_modem_Off();
 }
 	
-/*
+/**
  * Convert a given byte to ascii hex format.
  */
 void gsm_modem_Convert_To_Hex(char in, char* out)

@@ -48,6 +48,7 @@ status init(void)
 
     user_Init();
     timer_Wait_MS(1000);
+	// The serial port is now connected to the GSM modem, not the FTDI chip...
 //	coms_Init();
     gsm_modem_Init();
     usart_Print_Num(SERIAL, UBRR1L);
@@ -117,7 +118,7 @@ int main (void)
     runData.recordPeriod += (unsigned int) MODEM_DATA_GLOBAL_RATE_L;
 	data_Clear(); // erase all old data initially	
 
-	// don't read from EEPROM for our application
+	// don't read from settings from EEPROM for our application
 //    runData.recordPeriod = (unsigned int)data_Read_EEPROM(DATA_GLOBAL_RATE_ADDR_H) << 8;
 //    runData.recordPeriod += (unsigned int)data_Read_EEPROM(DATA_GLOBAL_RATE_ADDR_L);
 
@@ -130,7 +131,9 @@ int main (void)
     {
         user_Handle_Buttons(&runData);
 
+        // The serial port is now connected to the GSM modem, not the FTDI chip...
 //		coms_Handle(&runData);
+
         gsm_modem_Comms_Handle(&runData);
 
         dataReady = sensor_Read(&data);

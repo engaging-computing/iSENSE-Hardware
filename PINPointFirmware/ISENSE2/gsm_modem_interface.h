@@ -13,7 +13,8 @@
 #define MODEM_DATA_GLOBAL_RATE_H 0x20 ///< Upper byte of the default global recording rate.
 #define MODEM_DATA_GLOBAL_RATE_L 0xE8 ///< Lower byte of the default global recording rate.
 
-#define MODEM_CALL_NUMBER "9784733712"
+#define MODEM_CALL_NUMBER "4155992671" // Twilio phone number
+//#define MODEM_CALL_NUMBER "9784733712" // Chris Granz' phone number
 #define MODEM_TWILIO_PIN "2113-1493"
 
 #define MODEM_PORT_1    C    ///< Port for control lines.
@@ -31,7 +32,12 @@ extern void gsm_modem_Init(void);
 extern void gsm_modem_On(void);
 extern void gsm_modem_Off(void);
 extern void gsm_modem_Comms_Setup(void);
+extern void gsm_modem_Comms_Send_Msg(char *msg);
+extern int gsm_modem_Comms_Available(void);
+extern int gsm_modem_Comms_ReadBuffer(int amount, char* buffer);
+extern void gsm_modem_Comms_Clear(void);
 extern void gsm_modem_Comms_Transmit_Data(DataPoint* datap);
+extern void gsm_modem_Convert_To_Hex(char in, char* out);
 
 #endif // _GSM_MODEM_INTERFACE_H_
 
