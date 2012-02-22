@@ -37,6 +37,7 @@ import java.util.Vector;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import android.content.Context;
 import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 import edu.uml.cs.raac.exceptions.InvalidHexException;
 import edu.uml.cs.raac.exceptions.NoConnectionException;
@@ -61,10 +62,11 @@ public class pinpointInterface {
     private static final int FLASH_PAGES = 4096;
     private boolean attempted = true;
     private PinpointConverter conv;
+    private Context myContext;
 
-    public pinpointInterface(BluetoothService bts) {
+    public pinpointInterface(BluetoothService bts, Context context) {
     	pinpoint = PinComm.instantiate(bts);
-            
+        myContext = context;
         // Initiate the vector in which the data will be stored. 
         dataPoints = new Vector<String>();
 
@@ -84,7 +86,6 @@ public class pinpointInterface {
 
         HashMap<Integer, Integer> settings = null;
         System.out.println("Getting records");
-        ArrayList<String[]> conversions = null;
 
         ArrayList<String[]> records = new ArrayList<String[]>();
 
@@ -98,7 +99,7 @@ public class pinpointInterface {
             //conversions = this.GetConversions();
 
             //Set up PinpointConverter
-            conv = new PinpointConverter(settings);
+            conv = new PinpointConverter(settings, myContext);
             
             //Get the data header from the pinpoint.
             byte[] dh = pinpoint.getDataHeader();

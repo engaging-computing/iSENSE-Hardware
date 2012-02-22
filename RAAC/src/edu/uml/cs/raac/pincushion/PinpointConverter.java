@@ -29,15 +29,17 @@
 package edu.uml.cs.raac.pincushion;
 
 
-import edu.uml.cs.raac.eval.Expression;
-import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import edu.uml.cs.raac.eval.Expression;
+import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 
 /**
  * Contains all of the conversions needed to upload data from a PINPoint
@@ -47,8 +49,8 @@ import java.util.Map;
 public class PinpointConverter {
 
     private byte[] raw = null;
-    private Expression b1Conv = new Expression("-33.47 * ln (x) + 213.85"); //Vernier Stainless Steel Temp Sensor
-    private Expression b2Conv = new Expression("-0.0185*x+13.769"); //Vernier Temperature Probe
+    private Expression b1Conv;
+    private Expression b2Conv;
     private Expression m1Conv, m2Conv;
     private HashMap<Integer, Integer> settings;
     public static int VALUE = 0;
@@ -66,10 +68,15 @@ public class PinpointConverter {
     public static String[] tableHeaders = new String[]{"Time (GMT)", "Latitude", "Longitude", "Altitude GPS (m)", "Altitude (m)", "Pressure (atm)", "Temperature (c)", "Humidity (%rh)", "Light (lux)", "X-Accel", "Y-Accel", "Z-Accel", "Acceleration", "BTA1", "BTA2", "Mini1", "Mini2"};
     public static String[] fileHeaders  = new String[]{"Time","Latitude","Longitude","Altitude GPS","Altitude","Pressure","Temperature","Humidity","Light","x","y","z","Acceleration","BTA1","BTA2","Mini1","Mini2"};
 
-    public PinpointConverter(HashMap<Integer, Integer> settings) throws IncompatibleConversionException {
+    public PinpointConverter(HashMap<Integer, Integer> settings, Context context) throws IncompatibleConversionException {
 
         this.settings = settings;
         
+        SharedPreferences prefs = context.getSharedPreferences("SENSORS",0);
+        b1Conv = new Expression(prefs.getString("sensor_bta1", "x"));
+        b2Conv = new Expression(prefs.getString("sensor_bta2", "x"));
+        m1Conv = new Expression(prefs.getString("sensor_mini1", "x"));
+        m2Conv = new Expression(prefs.getString("sensor_mini2", "x"));
     }
 
     private String latitudeConversion() {
@@ -241,20 +248,17 @@ public class PinpointConverter {
     }
 
     private String MiniOneConversion() {
-        /*
-    	//22 = 1111 HHHH
+        //22 = 1111 HHHH
         //23 = 2211 1111
         int reading = ((raw[22] & 0xF0) >> 4) + ((raw[23] & 0x3F) << 4);
 
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = m1Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";*/
-    	return "";
+        return result.setScale(3, RoundingMode.UP) + "";
     }
 
     private String MiniTwoConversion() {
-        /*
     	//23 = 2211 1111
         //24 = 2222 2222
         int reading = ((raw[23] & 0xC0) >> 6) + ((raw[24] & 0xFF) << 2);
@@ -262,8 +266,7 @@ public class PinpointConverter {
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = m2Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";*/
-    	return "";
+        return result.setScale(3, RoundingMode.UP) + "";
     }
 
     private String BtaOneConversion() {

@@ -34,6 +34,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -155,7 +156,7 @@ public class Isense extends Activity implements OnClickListener {
 				case BluetoothService.STATE_CONNECTED:
 					mConnected.setText("");
 					mConnected.append(mConnectedDeviceName);
-					ppi = new pinpointInterface(mChatService);
+					ppi = new pinpointInterface(mChatService, getApplicationContext());
 					rcrdBtn.setEnabled(true);
 					break;
 				case BluetoothService.STATE_CONNECTING:
@@ -209,7 +210,15 @@ public class Isense extends Activity implements OnClickListener {
 			// When the dialog for selecting sensors is closed
 			if (resultCode == Activity.RESULT_OK) {
 				// Save the selected sensors into their appropriate preferences
+				SharedPreferences prefs = getSharedPreferences("SENSORS",0);
+				SharedPreferences.Editor editor = prefs.edit();
 				
+				editor.putString("sensor_bta1", data.getExtras().getString("bta1"));
+				editor.putString("sensor_bta2", data.getExtras().getString("bta2"));
+				editor.putString("sensor_mini1", data.getExtras().getString("mini1"));
+				editor.putString("sensor_mini2", data.getExtras().getString("mini2"));
+				
+				editor.commit();
 			}
 			break;
 		}

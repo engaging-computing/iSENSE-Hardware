@@ -135,7 +135,7 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 		} else if(sensor.equals("Voltage Sensor (-7.5V to 7.5V)")) {
 			return "((x*3.3*(3/2)/1023)-2.5)*3";
 		} else {
-			return "";
+			return "x";
 		}
 	}
 
