@@ -47,7 +47,9 @@ import java.util.Map;
 public class PinpointConverter {
 
     private byte[] raw = null;
-    private Expression b1Conv, b2Conv, m1Conv, m2Conv;
+    private Expression b1Conv = new Expression("-33.47 * ln (x) + 213.85"); //Vernier Stainless Steel Temp Sensor
+    private Expression b2Conv = new Expression("-0.0185*x+13.769"); //Vernier Temperature Probe
+    private Expression m1Conv, m2Conv;
     private HashMap<Integer, Integer> settings;
     public static int VALUE = 0;
     public static int JACK = 1;
@@ -265,7 +267,6 @@ public class PinpointConverter {
     }
 
     private String BtaOneConversion() {
-        /*
     	//25 = 1111 1111
         //26 = 2222 2211
         int reading = (raw[25] & 0xFF) + ((raw[26] & 0x03) << 8);
@@ -273,12 +274,10 @@ public class PinpointConverter {
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = b1Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";*/
-    	return "";
+        return result.setScale(3, RoundingMode.UP) + "";
     }
 
     private String BtaTwoConversion() {
-    	/*
         //26 = 2222 2211
         //27 = ssss 2222
         int reading = ((raw[26] & 0xFC) >> 2) + ((raw[27] & 0x0F) << 6);
@@ -286,8 +285,7 @@ public class PinpointConverter {
         Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
         variables.put("x", new BigDecimal(reading));
         BigDecimal result = b2Conv.eval(variables);
-        return result.setScale(3, RoundingMode.UP) + "";*/
-    	return "";
+        return result.setScale(3, RoundingMode.UP) + "";
     }
 
     private String TimeConversion() {
@@ -366,8 +364,6 @@ public class PinpointConverter {
                 fixed[0] = x;
                 records.set(k, fixed);
             }
-
-
 
             i = j;
             currentCounter = 1;

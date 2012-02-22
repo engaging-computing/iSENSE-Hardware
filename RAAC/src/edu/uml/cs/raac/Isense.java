@@ -46,7 +46,7 @@ import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
-	Button testBtn, serialBtn, rcrdBtn;
+	Button testBtn, sensorBtn, rcrdBtn;
 	TextView testResult;
 	TextView mConnected;
 	static pinpointInterface ppi;
@@ -57,6 +57,7 @@ public class Isense extends Activity implements OnClickListener {
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE = 1;
+	private static final int SENSOR_CHANGE = 2;
 	private static final int REQUEST_ENABLE_BT = 4;
 
 	/** Called when the activity is first created. */
@@ -68,7 +69,7 @@ public class Isense extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		testBtn = (Button) findViewById(R.id.btn_selectppt);
-		serialBtn = (Button) findViewById(R.id.btn_getSerial);
+		sensorBtn = (Button) findViewById(R.id.btn_sensors);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		testResult = (TextView) findViewById(R.id.resultText);
 		mConnected = (TextView) findViewById(R.id.title_connected_to);
@@ -83,8 +84,7 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		testBtn.setOnClickListener(this);
-		serialBtn.setOnClickListener(this);
-		serialBtn.setEnabled(false);
+		sensorBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		rcrdBtn.setEnabled(false);
 
@@ -119,11 +119,12 @@ public class Isense extends Activity implements OnClickListener {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
-		if( v == serialBtn ) {
-			testResult.append("\n"+ppi.getSerialNumber());
-			
+		if( v == sensorBtn ) {
+			Intent i = new Intent(this, SensorSelector.class);
+			startActivityForResult(i, SENSOR_CHANGE);
 		}
 		if( v == rcrdBtn ) {
+			int x=0;
 			try {
 				data = ppi.getData();
 			} catch (Exception e) {
@@ -133,7 +134,8 @@ public class Isense extends Activity implements OnClickListener {
 			try {
 				for (String[] strray : data) {
 					for (String str : strray) {
-						testResult.append("\n"+str);
+						x++;
+						testResult.append("\n"+x+": "+str);
 					}
 				}
 			} catch (NullPointerException e) {
@@ -154,7 +156,6 @@ public class Isense extends Activity implements OnClickListener {
 					mConnected.setText("");
 					mConnected.append(mConnectedDeviceName);
 					ppi = new pinpointInterface(mChatService);
-					serialBtn.setEnabled(true);
 					rcrdBtn.setEnabled(true);
 					break;
 				case BluetoothService.STATE_CONNECTING:
@@ -203,6 +204,14 @@ public class Isense extends Activity implements OnClickListener {
 				Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
 				finish();
 			}
+			break;
+		case SENSOR_CHANGE:
+			// When the dialog for selecting sensors is closed
+			if (resultCode == Activity.RESULT_OK) {
+				// Save the selected sensors into their appropriate preferences
+				
+			}
+			break;
 		}
 	}
 }
