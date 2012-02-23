@@ -52,7 +52,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Isense extends Activity implements OnClickListener {
-	Button testBtn, serialBtn, firmwareBtn, sampleBtn, rcrdBtn;
+	Button testBtn, serialBtn, rcrdBtn;
 	TextView testResult;
 	TextView mConnected;
 	static pinpointInterface ppi;
@@ -70,17 +70,15 @@ public class Isense extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		
+
 		testBtn = (Button) findViewById(R.id.button1);
 		serialBtn = (Button) findViewById(R.id.btn_getSerial);
-		sampleBtn = (Button) findViewById(R.id.btn_getSample);
-		firmwareBtn = (Button) findViewById(R.id.btn_getFirmware);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		testResult = (TextView) findViewById(R.id.resultText);
 		mConnected = (TextView) findViewById(R.id.title_connected_to);
-		
+
 		if (mBluetoothAdapter == null) {
 			testResult.setText("Bluetooth is not available on this device");
 		} else {
@@ -89,49 +87,47 @@ public class Isense extends Activity implements OnClickListener {
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
 		}
-        
+
 		testBtn.setOnClickListener(this);
 		serialBtn.setOnClickListener(this);
 		serialBtn.setEnabled(false);
-		firmwareBtn.setOnClickListener(this);
-		firmwareBtn.setEnabled(false);
-		sampleBtn.setOnClickListener(this);
-		sampleBtn.setEnabled(false);
 		rcrdBtn.setOnClickListener(this);
 		rcrdBtn.setEnabled(false);
-		
+
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
 	@Override
-    public synchronized void onResume() {
-        super.onResume();
-        // Performing this check in onResume() covers the case in which BT was
-        // not enabled during onStart(), so we were paused to enable it...
-        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (mChatService != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mChatService.getState() == BluetoothService.STATE_NONE) {
-              // Start the Bluetooth chat services
-              mChatService.start();
-            }
-        }
-    }
-	
+	public synchronized void onResume() {
+		super.onResume();
+		// Performing this check in onResume() covers the case in which BT was
+		// not enabled during onStart(), so we were paused to enable it...
+		// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+		if (mChatService != null) {
+			// Only if the state is STATE_NONE, do we know that we haven't started already
+			if (mChatService.getState() == BluetoothService.STATE_NONE) {
+				// Start the Bluetooth chat services
+				mChatService.start();
+			}
+		}
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();
-		ppi.disconnect();
+		if(ppi != null)
+			ppi.disconnect();
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		if( v == testBtn ) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-	        startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
 		if( v == serialBtn ) {
 			testResult.append("\n"+ppi.getSerialNumber());
+			
 		}
 		if( v == rcrdBtn ) {
 			try {
@@ -140,10 +136,14 @@ public class Isense extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for (String[] strray : data) {
-				for (String str : strray) {
-					testResult.append("\n"+str);
+			try {
+				for (String[] strray : data) {
+					for (String str : strray) {
+						testResult.append("\n"+str);
+					}
 				}
+			} catch (NullPointerException e) {
+				testResult.append("\nNo data read, please try again.");
 			}
 		}
 	}
@@ -160,8 +160,6 @@ public class Isense extends Activity implements OnClickListener {
 					mConnected.append(mConnectedDeviceName);
 					ppi = new pinpointInterface(mChatService);
 					serialBtn.setEnabled(true);
-					firmwareBtn.setEnabled(true);
-					sampleBtn.setEnabled(true);
 					rcrdBtn.setEnabled(true);
 					break;
 				case BluetoothService.STATE_CONNECTING:
