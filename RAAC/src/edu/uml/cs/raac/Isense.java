@@ -48,13 +48,15 @@ import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
 	Button testBtn, sensorBtn, rcrdBtn;
-	TextView testResult;
+	TextView testResult, minField, maxField, aveField, medField;
 	TextView mConnected;
 	static pinpointInterface ppi;
 	private String mConnectedDeviceName = null;
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private ArrayList<String[]> data;
+	
+	ArrayList<Double> bta1Data = new ArrayList<Double>();
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE = 1;
@@ -74,7 +76,11 @@ public class Isense extends Activity implements OnClickListener {
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		testResult = (TextView) findViewById(R.id.resultText);
 		mConnected = (TextView) findViewById(R.id.title_connected_to);
-
+		minField = (TextView) findViewById(R.id.et_min);
+		maxField = (TextView) findViewById(R.id.et_max);
+		aveField = (TextView) findViewById(R.id.et_ave);
+		medField = (TextView) findViewById(R.id.et_medi);
+		
 		if (mBluetoothAdapter == null) {
 			testResult.setText("Bluetooth is not available on this device");
 		} else {
@@ -137,15 +143,52 @@ public class Isense extends Activity implements OnClickListener {
 					for (String str : strray) {
 						x++;
 						testResult.append("\n"+x+": "+str);
+						if(x == 14) {
+							System.out.println(str);
+							bta1Data.add(Double.parseDouble(str));
+						}
 					}
+					x = 0;
+					testResult.append("\n");
 				}
+				findStatistics();
 			} catch (NullPointerException e) {
-				testResult.append("\nNo data read, please try again.");
+				testResult.append("\nThere was an error reading the data, please try again.");
 				e.printStackTrace();
 			}
 		}
 	}
 
+	private void findStatistics() {
+		double min, max, ave, med;
+		double temp = 0;
+		
+		min = bta1Data.get(0);
+		max = bta1Data.get(0);
+		
+		for (double i : bta1Data) {
+			if(i < min) {
+				min = i;
+			}
+			if(i > max) {
+				max = i;
+			}
+			temp += i;
+		}
+		ave = temp/bta1Data.size();
+		
+		minField.setText(""+min);
+		maxField.setText(""+max);
+		aveField.setText(""+ave);
+		
+		if(bta1Data.size()%2 == 0) {
+			med = bta1Data.get((bta1Data.size()+1)/2);
+		} else {
+			med = (bta1Data.get((bta1Data.size()/2)) + bta1Data.get((bta1Data.size()+1)/2))/2;
+		}
+		medField.setText(""+med);
+	}
+	
 	// The Handler that gets information back from the BluetoothChatService
 	private final Handler mHandler = new Handler() {
 		@Override

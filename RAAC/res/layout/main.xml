@@ -147,11 +147,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mean Value"
+                android:text="Median Value"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
-                android:id="@+id/et_mean"
+                android:id="@+id/et_medi"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" android:inputType="none" android:clickable="false" android:focusable="false"/>
