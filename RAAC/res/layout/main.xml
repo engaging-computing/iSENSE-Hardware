@@ -2,20 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" android:clickable="false">
+    android:clickable="false"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/launchlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_launch" 
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/raaclogo" />
+
+        <ImageButton
+            android:id="@+id/pinpoint_select_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/nopptbtn" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/actionBar"
         android:layout_width="fill_parent"
         android:layout_height="70dp"
         android:layout_marginLeft="0dp"
-        android:orientation="horizontal" android:background="@drawable/actionbg" android:gravity="center_vertical">
+        android:background="@drawable/actionbg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/btn_selectppt"
             android:layout_width="172dp"
             android:layout_height="59dp"
-            android:background="@drawable/btn_selectppt"/>
+            android:background="@drawable/btn_selectppt" />
 
         <TextView
             android:id="@+id/title_connected_to"
@@ -78,18 +107,20 @@
                 android:id="@+id/textView1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Min Value"
-                android:textAppearance="?android:attr/textAppearanceMedium" android:layout_weight="1"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:id="@+id/et_min"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" android:inputType="none" android:focusable="false">
+                android:layout_weight="1"
+                android:focusable="false"
+                android:inputType="none" >
 
                 <requestFocus />
             </EditText>
-
         </LinearLayout>
 
         <LinearLayout
@@ -110,8 +141,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:inputType="none" android:clickable="false" android:focusable="false"/>
-
+                android:clickable="false"
+                android:focusable="false"
+                android:inputType="none" />
         </LinearLayout>
 
         <LinearLayout
@@ -132,8 +164,10 @@
                 android:id="@+id/et_ave"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" android:inputType="none" android:clickable="false" android:focusable="false"/>
-
+                android:layout_weight="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:inputType="none" />
         </LinearLayout>
 
         <LinearLayout
@@ -154,9 +188,11 @@
                 android:id="@+id/et_medi"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" android:inputType="none" android:clickable="false" android:focusable="false"/>
+                android:layout_weight="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:inputType="none" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>
