@@ -6,6 +6,7 @@
         android:fromYDelta="0%"
         android:toYDelta="-100%" 
         android:startOffset="300"
+        android:interpolator="@android:anim/linear_interpolator"
      />
 
 </set>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flipper"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:clickable="false"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
     <RelativeLayout
         android:id="@+id/launchlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_launch" 
-        android:visibility="gone">
+        android:background="@drawable/bg_launch"
+        android:visibility="gone" >
 
         <ImageView
             android:id="@+id/imageView1"
@@ -29,170 +29,187 @@
             android:layout_centerVertical="true"
             android:background="@null"
             android:src="@drawable/nopptbtn" />
+
+        <ImageView
+            android:id="@+id/mySpin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/pinpoint_select_btn"
+            android:layout_alignLeft="@+id/pinpoint_select_btn"
+            android:layout_marginBottom="-112dp"
+            android:src="@drawable/superspin" android:layout_marginLeft="12dp" android:visibility="gone"/>
+
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/actionBar"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
-        android:layout_marginLeft="0dp"
-        android:background="@drawable/actionbg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btn_selectppt"
-            android:layout_width="172dp"
-            android:layout_height="59dp"
-            android:background="@drawable/btn_selectppt" />
-
-        <TextView
-            android:id="@+id/title_connected_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >
-
-        <Button
-            android:id="@+id/btn_sensors"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Set Sensors" />
-
-        <Button
-            android:id="@+id/btn_getRcrd"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Get Data" />
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="180dp" >
+        android:layout_height="fill_parent"
+        android:clickable="false"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/actionBar"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:layout_marginLeft="0dp"
+            android:background="@drawable/actionbg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_selectppt"
+                android:layout_width="172dp"
+                android:layout_height="59dp"
+                android:background="@drawable/btn_selectppt" />
+
+            <TextView
+                android:id="@+id/title_connected_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp" >
+
+            <Button
+                android:id="@+id/btn_sensors"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Set Sensors" />
+
+            <Button
+                android:id="@+id/btn_getRcrd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Get Data" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" >
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/resultText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/resultText"
+            <LinearLayout
+                android:id="@+id/linearLayout4"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </ScrollView>
+                android:layout_height="wrap_content" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Min Value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+                <EditText
+                    android:id="@+id/et_min"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:inputType="none" >
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="0dp"
+                    <requestFocus />
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Max Value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/et_max"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout01"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Min Value"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_weight="1" >
 
-            <EditText
-                android:id="@+id/et_min"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/TextView01"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Average Value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/et_ave"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout03"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:inputType="none" >
+                android:layout_weight="1" >
 
-                <requestFocus />
-            </EditText>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/TextView03"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Median Value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <LinearLayout
-            android:id="@+id/LinearLayout02"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/TextView02"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Max Value"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/et_max"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:focusable="false"
-                android:inputType="none" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayout01"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <TextView
-                android:id="@+id/TextView01"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Average Value"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/et_ave"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:focusable="false"
-                android:inputType="none" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayout03"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <TextView
-                android:id="@+id/TextView03"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Median Value"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/et_medi"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:focusable="false"
-                android:inputType="none" />
+                <EditText
+                    android:id="@+id/et_medi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:inputType="none" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</ViewFlipper>

@@ -44,16 +44,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
 	Button testBtn, sensorBtn, rcrdBtn; 
 	ImageButton pinpointBtn;
+	ImageView spinner;
 	RelativeLayout launchLayout;
+	ViewFlipper flipper;
 	TextView testResult, minField, maxField, aveField, medField;
 	TextView mConnected;
 	static pinpointInterface ppi;
@@ -61,7 +65,7 @@ public class Isense extends Activity implements OnClickListener {
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private ArrayList<String[]> data;
-	Animation mSlideInTop, mSlideOutTop;
+	Animation mSlideInTop, mSlideOutTop, rotateInPlace;
 	
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 
@@ -78,9 +82,11 @@ public class Isense extends Activity implements OnClickListener {
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
         mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
+        rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		testBtn = (Button) findViewById(R.id.btn_selectppt);
 		sensorBtn = (Button) findViewById(R.id.btn_sensors);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -92,6 +98,10 @@ public class Isense extends Activity implements OnClickListener {
 		maxField = (TextView) findViewById(R.id.et_max);
 		aveField = (TextView) findViewById(R.id.et_ave);
 		medField = (TextView) findViewById(R.id.et_medi);
+		spinner = (ImageView) findViewById(R.id.mySpin);
+ 		
+		flipper.setInAnimation(mSlideInTop);
+		flipper.setOutAnimation(mSlideOutTop);
 		
 		if (mBluetoothAdapter == null) {
 			testResult.setText("Bluetooth is not available on this device");
@@ -142,8 +152,7 @@ public class Isense extends Activity implements OnClickListener {
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
 		if( v == testBtn ) {
-			launchLayout.setVisibility(View.VISIBLE);
-			launchLayout.startAnimation(mSlideInTop);
+			//
 		}
 		if( v == sensorBtn ) {
 			Intent i = new Intent(this, SensorSelector.class);
@@ -216,20 +225,25 @@ public class Isense extends Activity implements OnClickListener {
 			case BluetoothService.MESSAGE_STATE_CHANGE:
 				switch (msg.arg1) {
 				case BluetoothService.STATE_CONNECTED:
+					spinner.clearAnimation();
+					spinner.setVisibility(View.GONE);
 					mConnected.setText("");
 					mConnected.append(mConnectedDeviceName);
 					pinpointBtn.setImageResource(R.drawable.pptbtn);
 					ppi = new pinpointInterface(mChatService, getApplicationContext());
 					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
-					launchLayout.startAnimation(mSlideOutTop);
-					launchLayout.setVisibility(View.GONE);
+					flipper.showNext();
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
+					spinner.setVisibility(View.VISIBLE);
+					spinner.startAnimation(rotateInPlace);
 					break;
 				case BluetoothService.STATE_LISTEN:
 				case BluetoothService.STATE_NONE:
+					spinner.clearAnimation();
+					spinner.setVisibility(View.GONE);
 					pinpointBtn.setImageResource(R.drawable.nopptbtn);
 					break;
 				}
