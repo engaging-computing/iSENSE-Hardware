@@ -9,7 +9,7 @@
         android:id="@+id/launchlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_launch">
+        android:background="@drawable/bg_launch" >
 
         <ImageView
             android:id="@+id/imageView1"
@@ -36,8 +36,9 @@
             android:layout_above="@+id/pinpoint_select_btn"
             android:layout_alignLeft="@+id/pinpoint_select_btn"
             android:layout_marginBottom="-112dp"
-            android:src="@drawable/superspin" android:layout_marginLeft="12dp" android:visibility="gone"/>
-
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/superspin"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <LinearLayout
@@ -92,7 +93,7 @@
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
-            android:layout_height="180dp" >
+            android:layout_height="500dp" >
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -110,13 +111,14 @@
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="300dp"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
 
                 <TextView
                     android:id="@+id/textView1"
@@ -132,16 +134,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:inputType="none" >
-
-                    <requestFocus />
-                </EditText>
+                    android:inputType="none" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/LinearLayout02"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
 
                 <TextView
                     android:id="@+id/TextView02"
