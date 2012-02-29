@@ -11,15 +11,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_launch" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/raaclogo" />
-
         <ImageButton
             android:id="@+id/pinpoint_select_btn"
             android:layout_width="wrap_content"
@@ -48,32 +39,10 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/actionBar"
-            android:layout_width="fill_parent"
-            android:layout_height="70dp"
-            android:layout_marginLeft="0dp"
-            android:background="@drawable/actionbg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/btn_selectppt"
-                android:layout_width="172dp"
-                android:layout_height="59dp"
-                android:background="@drawable/btn_selectppt" />
-
-            <TextView
-                android:id="@+id/title_connected_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp" >
+            android:layout_marginTop="20dp" >
 
             <Button
                 android:id="@+id/btn_sensors"
@@ -93,7 +62,9 @@
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
-            android:layout_height="500dp" >
+            android:layout_height="500dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp" >
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -134,7 +105,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:inputType="none" />
+                    android:inputType="none" >
+
+                    <requestFocus />
+                </EditText>
             </LinearLayout>
 
             <LinearLayout

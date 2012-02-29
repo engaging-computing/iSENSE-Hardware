@@ -38,6 +38,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -53,15 +56,13 @@ import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
-	Button testBtn, sensorBtn, rcrdBtn; 
+	Button sensorBtn, rcrdBtn; 
 	ImageButton pinpointBtn;
 	ImageView spinner;
 	RelativeLayout launchLayout;
 	ViewFlipper flipper;
 	TextView testResult, minField, maxField, aveField, medField;
-	TextView mConnected;
 	static pinpointInterface ppi;
-	private String mConnectedDeviceName = null;
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private ArrayList<String[]> data;
@@ -87,13 +88,11 @@ public class Isense extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
-		testBtn = (Button) findViewById(R.id.btn_selectppt);
 		sensorBtn = (Button) findViewById(R.id.btn_sensors);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		pinpointBtn = (ImageButton) findViewById(R.id.pinpoint_select_btn);
 		launchLayout = (RelativeLayout) findViewById(R.id.launchlayout);
 		testResult = (TextView) findViewById(R.id.resultText);
-		mConnected = (TextView) findViewById(R.id.title_connected_to);
 		minField = (TextView) findViewById(R.id.et_min);
 		maxField = (TextView) findViewById(R.id.et_max);
 		aveField = (TextView) findViewById(R.id.et_ave);
@@ -113,7 +112,6 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		pinpointBtn.setOnClickListener(this);
-		testBtn.setOnClickListener(this);
 		sensorBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		rcrdBtn.setEnabled(false);
@@ -137,6 +135,24 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+	    if(item.getItemId() == R.id.menu_connect) {
+	    	Intent serverIntent = new Intent(this, DeviceListActivity.class);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+	    }
+		return true;
+		
+	}
 
 	@Override
 	protected void onStop() {
@@ -150,9 +166,6 @@ public class Isense extends Activity implements OnClickListener {
 		if( v == pinpointBtn ) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-		}
-		if( v == testBtn ) {
-			//
 		}
 		if( v == sensorBtn ) {
 			Intent i = new Intent(this, SensorSelector.class);
@@ -227,8 +240,6 @@ public class Isense extends Activity implements OnClickListener {
 				case BluetoothService.STATE_CONNECTED:
 					spinner.clearAnimation();
 					spinner.setVisibility(View.GONE);
-					mConnected.setText("");
-					mConnected.append(mConnectedDeviceName);
 					pinpointBtn.setImageResource(R.drawable.pptbtn);
 					ppi = new pinpointInterface(mChatService, getApplicationContext());
 					rcrdBtn.setEnabled(true);
@@ -255,7 +266,6 @@ public class Isense extends Activity implements OnClickListener {
 				testResult.setText(readMessage);
 				break;
 			case BluetoothService.MESSAGE_DEVICE_NAME:
-				mConnectedDeviceName = msg.getData().getString("device_name");
 				break;
 			case BluetoothService.MESSAGE_TOAST:
 			}

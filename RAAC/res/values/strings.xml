@@ -9,4 +9,5 @@
     <string name="select_device">Select a device to connect</string>
     <string name="none_found">No devices found</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    <string name="menu_connect">Select Pinpoint</string>
 </resources>
