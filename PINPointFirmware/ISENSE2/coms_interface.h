@@ -83,7 +83,7 @@ typedef struct
 #define COMS_VERIFY_OUT 0x02 ///< Message code for confirming a verification request.
 
 #define COMS_VERIFY_MAJOR_VERSION 0x06 ///< Current device major version number.
-#define COMS_VERIFY_MINOR_VERSION 0x05 ///< Current device minor version number.
+#define COMS_VERIFY_MINOR_VERSION 0x06 ///< Current device minor version number.
 
 #define COMS_VERIFY_SIZE 1 ///< Size of verification request message.
 

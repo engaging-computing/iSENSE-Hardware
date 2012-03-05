@@ -164,10 +164,10 @@ void coms_Bluetooth_Init(void)
         usart_Text(SERIAL, PSTR("SS,SerialPort\r"));
         timer_Wait_MS(100);
         
-        usart_Text(SERIAL, PSTR("SI,0030\r"));
+        usart_Text(SERIAL, PSTR("SI,0050\r"));
         timer_Wait_MS(100);
         
-        usart_Text(SERIAL, PSTR("SJ,0030\r"));
+        usart_Text(SERIAL, PSTR("SJ,0050\r"));
         timer_Wait_MS(100);
         
         usart_Text(SERIAL, PSTR("SN,PINPoint4"));
