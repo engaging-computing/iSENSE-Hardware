@@ -53,7 +53,7 @@ def flashPPTs(path = '../isense.hex'):
     ppts = findPPTs()
     thds = []
     for ppt in ppts[:-1]:
-        thds.append(BootThread(ppt, path))
+        thds.append(pinpoint.BootThread(ppt, path))
 
     for thd in thds:
         thd.start()
