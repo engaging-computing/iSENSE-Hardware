@@ -185,8 +185,6 @@ public class Isense extends Activity implements OnClickListener {
 			int x = 0;
 			int y = 1;
 			String label = "";
-			testResult.append("\nhello");
-			testResult2.append("\nhello");
 			try {
 				data = ppi.getData();
 			} catch (Exception e) {
@@ -235,7 +233,7 @@ public class Isense extends Activity implements OnClickListener {
 				findStatistics();
 			} catch (NullPointerException e) {
 				testResult
-						.append("\nThere was an error reading the data, please try again.");
+						.append("\nError, please try again.");
 				testResult2.append("\n");
 				e.printStackTrace();
 			}
