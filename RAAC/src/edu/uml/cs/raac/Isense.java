@@ -35,6 +35,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,6 +50,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -56,22 +58,25 @@ import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
-	Button sensorBtn, rcrdBtn; 
+	boolean showConnectOption = false, connectFromSplash = true;
+	Button sensorBtn, rcrdBtn;
+	ScrollView dataScroller;
 	ImageButton pinpointBtn;
 	ImageView spinner;
 	RelativeLayout launchLayout;
 	ViewFlipper flipper;
-	TextView testResult, minField, maxField, aveField, medField;
+	TextView testResult, testResult2, minField, maxField, aveField, medField;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private ArrayList<String[]> data;
 	Animation mSlideInTop, mSlideOutTop, rotateInPlace;
-	
+
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE = 1;
+	private static final int REQUEST_CONNECT_DEVICE_2 = 3;
 	private static final int SENSOR_CHANGE = 2;
 	private static final int REQUEST_ENABLE_BT = 4;
 
@@ -82,40 +87,43 @@ public class Isense extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
-        mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
-        rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
-		
+		mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
+		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
+
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		sensorBtn = (Button) findViewById(R.id.btn_sensors);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		pinpointBtn = (ImageButton) findViewById(R.id.pinpoint_select_btn);
 		launchLayout = (RelativeLayout) findViewById(R.id.launchlayout);
 		testResult = (TextView) findViewById(R.id.resultText);
+		testResult2 = (TextView) findViewById(R.id.resultText2);
 		minField = (TextView) findViewById(R.id.et_min);
 		maxField = (TextView) findViewById(R.id.et_max);
 		aveField = (TextView) findViewById(R.id.et_ave);
 		medField = (TextView) findViewById(R.id.et_medi);
 		spinner = (ImageView) findViewById(R.id.mySpin);
- 		
+
 		flipper.setInAnimation(mSlideInTop);
 		flipper.setOutAnimation(mSlideOutTop);
-		
+
 		if (mBluetoothAdapter == null) {
 			testResult.setText("Bluetooth is not available on this device");
 		} else {
 			if (!mBluetoothAdapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				Intent enableBtIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
 		}
-
+		
 		pinpointBtn.setOnClickListener(this);
 		sensorBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		rcrdBtn.setEnabled(false);
-		
+
 		launchLayout.setVisibility(View.VISIBLE);
 
 		mChatService = new BluetoothService(this, mHandler);
@@ -126,53 +134,59 @@ public class Isense extends Activity implements OnClickListener {
 		super.onResume();
 		// Performing this check in onResume() covers the case in which BT was
 		// not enabled during onStart(), so we were paused to enable it...
-		// onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+		// onResume() will be called when ACTION_REQUEST_ENABLE activity
+		// returns.
 		if (mChatService != null) {
-			// Only if the state is STATE_NONE, do we know that we haven't started already
+			// Only if the state is STATE_NONE, do we know that we haven't
+			// started already
 			if (mChatService.getState() == BluetoothService.STATE_NONE) {
 				// Start the Bluetooth chat services
 				mChatService.start();
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.menu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
-	    if(item.getItemId() == R.id.menu_connect) {
-	    	Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-	    }
+
+		if (item.getItemId() == R.id.menu_connect) {
+			Intent serverIntent = new Intent(this, DeviceListActivity.class);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_2);
+		}
 		return true;
-		
+
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if(ppi != null)
+		if (ppi != null)
 			ppi.disconnect();
 	}
 
 	@Override
 	public void onClick(View v) {
-		if( v == pinpointBtn ) {
+		if (v == pinpointBtn) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
-		if( v == sensorBtn ) {
+		if (v == sensorBtn) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
 		}
-		if( v == rcrdBtn ) {
-			int x=0;
+		if (v == rcrdBtn) {
+			int x = 0;
+			int y = 1;
+			String label = "";
+			testResult.append("\nhello");
+			testResult2.append("\nhello");
 			try {
 				data = ppi.getData();
 			} catch (Exception e) {
@@ -181,20 +195,48 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			try {
 				for (String[] strray : data) {
+					testResult.append("\nDatapoint "+y);
+					testResult2.append("\n");
 					for (String str : strray) {
 						x++;
-						testResult.append("\n"+x+": "+str);
-						if(x == 14) {
-							System.out.println(str);
-							bta1Data.add(Double.parseDouble(str));
+						switch(x) {
+							case 1: label = "Time (GMT)"; break;
+							case 2: label = "Latitude"; break;
+							case 3: label = "Longitude"; break;
+							case 4: label = "Altitude GPS (m)"; break;
+							case 5: label = "Altitude (m)"; break;
+							case 6: label = "Pressure (atm)"; break;
+							case 7: label = "Temperature (c)"; break;
+							case 8: label = "Humidity (%rh)"; break;
+							case 9: label = "Light (lux)"; break;
+							case 10: label = "X-Accel"; break;
+							case 11: label = "Y-Accel"; break;
+							case 12: label = "Z-Accel"; break;
+							case 13: label = "Acceleration"; break;
+							case 14: label = "BTA 1"; bta1Data.add(Double.parseDouble(str)); break;
+							case 15: label = "BTA 2"; break;
+							case 16: label = "Mini 1"; break;
+							case 17: label = "Mini 2"; break;
 						}
+						testResult.append("\n" + label);
+						testResult2.append("\n"+ str);
 					}
 					x = 0;
+					y++;
 					testResult.append("\n");
+					testResult2.append("\n");
+					dataScroller.post(new Runnable() {
+						@Override
+						public void run() {
+							dataScroller.fullScroll(ScrollView.FOCUS_DOWN);
+						}
+					});
 				}
 				findStatistics();
 			} catch (NullPointerException e) {
-				testResult.append("\nThere was an error reading the data, please try again.");
+				testResult
+						.append("\nThere was an error reading the data, please try again.");
+				testResult2.append("\n");
 				e.printStackTrace();
 			}
 		}
@@ -203,33 +245,40 @@ public class Isense extends Activity implements OnClickListener {
 	private void findStatistics() {
 		double min, max, ave, med;
 		double temp = 0;
-		
+
 		min = bta1Data.get(0);
 		max = bta1Data.get(0);
-		
+
 		for (double i : bta1Data) {
-			if(i < min) {
+			if (i < min) {
 				min = i;
 			}
-			if(i > max) {
+			if (i > max) {
 				max = i;
 			}
 			temp += i;
 		}
-		ave = temp/bta1Data.size();
-		
-		minField.setText(""+min);
-		maxField.setText(""+max);
-		aveField.setText(""+ave);
-		
-		if(bta1Data.size()%2 == 0) {
-			med = bta1Data.get((bta1Data.size()+1)/2);
+		ave = temp / bta1Data.size();
+
+		minField.setText("" + min);
+		maxField.setText("" + max);
+		aveField.setText("" + ave);
+
+		if (bta1Data.size() % 2 == 0) {
+			med = bta1Data.get((bta1Data.size() + 1) / 2);
 		} else {
-			med = (bta1Data.get((bta1Data.size()/2)) + bta1Data.get((bta1Data.size()+1)/2))/2;
+			med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
+					.size() + 1) / 2)) / 2;
 		}
-		medField.setText(""+med);
+		medField.setText("" + med);
 	}
-	
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.getItem(0).setEnabled(showConnectOption);
+		return true;
+	}
+
 	// The Handler that gets information back from the BluetoothChatService
 	private final Handler mHandler = new Handler() {
 		@Override
@@ -241,10 +290,18 @@ public class Isense extends Activity implements OnClickListener {
 					spinner.clearAnimation();
 					spinner.setVisibility(View.GONE);
 					pinpointBtn.setImageResource(R.drawable.pptbtn);
-					ppi = new pinpointInterface(mChatService, getApplicationContext());
+					ppi = new pinpointInterface(mChatService,
+							getApplicationContext());
 					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
-					flipper.showNext();
+					if(connectFromSplash) {
+						showConnectOption = true;
+						if(Build.VERSION.SDK_INT >= 11) {
+							invalidateOptionsMenu();
+						}
+						flipper.showNext();
+						connectFromSplash = false;
+					}
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
@@ -275,13 +332,29 @@ public class Isense extends Activity implements OnClickListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
+			connectFromSplash = true;
 			// When DeviceListActivity returns with a device to connect
 			if (resultCode == Activity.RESULT_OK) {
 				// Get the device MAC address
-				String address = data.getExtras()
-						.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+				String address = data.getExtras().getString(
+						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+				BluetoothDevice device = mBluetoothAdapter
+						.getRemoteDevice(address);
+				// Attempt to connect to the device
+				mChatService.connect(device);
+			}
+			break;
+		case REQUEST_CONNECT_DEVICE_2:
+			connectFromSplash = false;
+			// When DeviceListActivity returns with a device to connect
+			if (resultCode == Activity.RESULT_OK) {
+				// Get the device MAC address
+				String address = data.getExtras().getString(
+						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+				// Get the BLuetoothDevice object
+				BluetoothDevice device = mBluetoothAdapter
+						.getRemoteDevice(address);
 				// Attempt to connect to the device
 				mChatService.connect(device);
 			}
@@ -292,7 +365,8 @@ public class Isense extends Activity implements OnClickListener {
 				// Bluetooth is now enabled, so set up a chat session
 			} else {
 				// User did not enable Bluetooth or an error occured
-				Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.bt_not_enabled_leaving,
+						Toast.LENGTH_SHORT).show();
 				finish();
 			}
 			break;
@@ -300,14 +374,18 @@ public class Isense extends Activity implements OnClickListener {
 			// When the dialog for selecting sensors is closed
 			if (resultCode == Activity.RESULT_OK) {
 				// Save the selected sensors into their appropriate preferences
-				SharedPreferences prefs = getSharedPreferences("SENSORS",0);
+				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 				SharedPreferences.Editor editor = prefs.edit();
-				
-				editor.putString("sensor_bta1", data.getExtras().getString("bta1"));
-				editor.putString("sensor_bta2", data.getExtras().getString("bta2"));
-				editor.putString("sensor_mini1", data.getExtras().getString("mini1"));
-				editor.putString("sensor_mini2", data.getExtras().getString("mini2"));
-				
+
+				editor.putString("sensor_bta1",
+						data.getExtras().getString("bta1"));
+				editor.putString("sensor_bta2",
+						data.getExtras().getString("bta2"));
+				editor.putString("sensor_mini1",
+						data.getExtras().getString("mini1"));
+				editor.putString("sensor_mini2",
+						data.getExtras().getString("mini2"));
+
 				editor.commit();
 			}
 			break;

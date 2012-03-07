@@ -63,8 +63,9 @@
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:layout_weight="0" android:layout_marginBottom="20dp">
+            android:layout_weight="0" >
 
             <ScrollView
                 android:id="@+id/scrollView1"
@@ -77,13 +78,20 @@
                 <LinearLayout
                     android:id="@+id/linearLayout1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
 
                     <TextView
                         android:id="@+id/resultText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/resultText2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
                 </LinearLayout>
             </ScrollView>
 
@@ -100,14 +108,15 @@
                     android:id="@+id/linearLayout4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1" >
 
                     <TextView
                         android:id="@+id/textView1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Min Value"
+                        android:text="@string/minval"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
@@ -116,7 +125,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:focusable="false"
-                        android:inputType="none" />
+                        android:inputType="none" >
+
+                        <requestFocus />
+                    </EditText>
                 </LinearLayout>
 
                 <LinearLayout
@@ -130,7 +142,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Max Value"
+                        android:text="@string/maxval"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
@@ -154,7 +166,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Average Value"
+                        android:text="@string/aveval"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
@@ -178,7 +190,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Median Value"
+                        android:text="@string/medval"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
