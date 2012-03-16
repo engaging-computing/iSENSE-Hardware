@@ -72,6 +72,12 @@ class PPT4:
     bootOn  = 255
     bootOff = 0
 
+    bluetoothBauds = {9600:  59,
+                      19200: 29,
+                      38400: 14,
+                      57600:  9,
+                      115200: 4}
+
     #EEPROM constants (addr, size)
 
     eepromFormat = dict()
@@ -265,6 +271,18 @@ class PPT4:
         return ret == PPT4.startReqIn
 
     #Below are meta-commands
+
+    def configBluetooth(self, baud):
+        if baud in PPT4.bluetoothBauds.keys():
+            baud = PPT4.bluetoothBauds[baud]
+        else:
+            print 'Unsupported baud requested, defaulting to 57600.'
+            baud = PPT4.bluetoothBauds[57600]
+
+        self.writeEepromKey('bluetoothBaud', baud)
+        self.writeEepromKey('bluetoothFlag', PPT4.bootOn)
+
+        print 'Switch the jumpers to bluetooth and restart to complete the configuration.'
 
     def writeFirmware(self, hexPath, prog = True):
 

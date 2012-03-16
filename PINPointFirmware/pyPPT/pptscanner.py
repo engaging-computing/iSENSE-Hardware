@@ -53,7 +53,7 @@ def flashPPTs(path = '../isense.hex'):
     ppts = findPPTs()
     thds = []
     for ppt in ppts[:-1]:
-        thds.append(BootThread(ppt, path))
+        thds.append(pinpoint.BootThread(ppt, path))
 
     for thd in thds:
         thd.start()
@@ -62,3 +62,17 @@ def flashPPTs(path = '../isense.hex'):
 
     for thd in thds:
         thd.join()
+
+def noiseTest(num):
+
+    p = findPPTs()[0]
+    dats = []
+
+    for dat in p.getLiveGenerator(num):
+        dats.append(dat.dataDict['accel'])
+        print dats[-1],
+        print '...',
+    print
+    print [min(dats), max(dats), sum(dats) / len(dats)]
+
+    
