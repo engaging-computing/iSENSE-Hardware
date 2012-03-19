@@ -58,7 +58,7 @@ import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
-	boolean showConnectOption = false, connectFromSplash = true;
+	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true;
 	Button sensorBtn, rcrdBtn;
 	ScrollView dataScroller;
 	ImageButton pinpointBtn;
@@ -159,6 +159,8 @@ public class Isense extends Activity implements OnClickListener {
 		if (item.getItemId() == R.id.menu_connect) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_2);
+		} else if (item.getItemId() == R.id.menu_setTime) {
+			ppi.setRealTimeClock();
 		}
 		return true;
 
@@ -274,6 +276,7 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.getItem(0).setEnabled(showConnectOption);
+		menu.getItem(1).setEnabled(showTimeOption);
 		return true;
 	}
 
@@ -294,6 +297,7 @@ public class Isense extends Activity implements OnClickListener {
 					pinpointBtn.setEnabled(false);
 					if(connectFromSplash) {
 						showConnectOption = true;
+						showTimeOption = true;
 						if(Build.VERSION.SDK_INT >= 11) {
 							invalidateOptionsMenu();
 						}

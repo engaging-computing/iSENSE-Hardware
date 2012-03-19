@@ -26,10 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/pinpoint_select_btn"
             android:layout_alignLeft="@+id/pinpoint_select_btn"
-            android:layout_marginBottom="-112dp"
-            android:layout_marginLeft="12dp"
-            android:src="@drawable/superspin"
-            android:visibility="gone" />
+            android:layout_marginBottom="-114dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/superspin" android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout
