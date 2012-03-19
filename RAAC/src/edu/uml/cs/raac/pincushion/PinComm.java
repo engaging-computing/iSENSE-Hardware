@@ -485,6 +485,8 @@ public class PinComm {
 			spi.writeByte((byte) cal.get(Calendar.DAY_OF_WEEK));
 			spi.writeByte((byte) (cal.get(Calendar.DATE)));
 			spi.writeByte((byte) (cal.get(Calendar.MONTH) + 1));
+			
+			System.out.println("Time: " + cal.get(Calendar.DAY_OF_MONTH));
 
 			int date = (cal.get(Calendar.YEAR)) % 100;
 			spi.writeByte((byte) date);
