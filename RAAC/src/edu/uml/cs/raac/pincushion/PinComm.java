@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
 
+import android.app.ProgressDialog;
+
 import edu.uml.cs.raac.exceptions.IncorrectDeviceException;
 import edu.uml.cs.raac.exceptions.NoConnectionException;
 import edu.uml.cs.raac.exceptions.NoDataException;

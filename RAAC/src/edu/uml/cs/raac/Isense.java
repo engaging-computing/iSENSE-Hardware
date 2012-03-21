@@ -31,6 +31,7 @@ package edu.uml.cs.raac;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -69,7 +70,7 @@ public class Isense extends Activity implements OnClickListener {
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
-	private ArrayList<String[]> data;
+	ArrayList<String[]> data;
 	Animation mSlideInTop, mSlideOutTop, rotateInPlace;
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
@@ -118,7 +119,7 @@ public class Isense extends Activity implements OnClickListener {
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
 		}
-		
+
 		pinpointBtn.setOnClickListener(this);
 		sensorBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
@@ -184,61 +185,84 @@ public class Isense extends Activity implements OnClickListener {
 			startActivityForResult(i, SENSOR_CHANGE);
 		}
 		if (v == rcrdBtn) {
-			int x = 0;
-			int y = 1;
-			String label = "";
-			try {
-				data = ppi.getData();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				for (String[] strray : data) {
-					testResult.append("\nDatapoint "+y);
-					testResult2.append("\n");
-					for (String str : strray) {
-						x++;
-						switch(x) {
-							case 1: label = "Time (GMT)"; break;
-							case 2: label = "Latitude"; break;
-							case 3: label = "Longitude"; break;
-							case 4: label = "Altitude GPS (m)"; break;
-							case 5: label = "Altitude (m)"; break;
-							case 6: label = "Pressure (atm)"; break;
-							case 7: label = "Temperature (c)"; break;
-							case 8: label = "Humidity (%rh)"; break;
-							case 9: label = "Light (lux)"; break;
-							case 10: label = "X-Accel"; break;
-							case 11: label = "Y-Accel"; break;
-							case 12: label = "Z-Accel"; break;
-							case 13: label = "Acceleration"; break;
-							case 14: label = "BTA 1"; bta1Data.add(Double.parseDouble(str)); break;
-							case 15: label = "BTA 2"; break;
-							case 16: label = "Mini 1"; break;
-							case 17: label = "Mini 2"; break;
-						}
-						testResult.append("\n" + label);
-						testResult2.append("\n"+ str);
+
+			ppi.setContext(this);
+			final ProgressDialog progressDialog = ProgressDialog.show(this, "Please wait", "Collecting data from PINPoint");
+
+			Thread thread=new Thread(new Runnable(){
+
+				public void run(){
+
+					try {
+						data = ppi.getData();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					x = 0;
-					y++;
-					testResult.append("\n");
-					testResult2.append("\n");
-					dataScroller.post(new Runnable() {
+
+					runOnUiThread(new Runnable(){
+
 						@Override
 						public void run() {
-							dataScroller.fullScroll(ScrollView.FOCUS_DOWN);
+							int x = 0;
+							int y = 1;
+							String label = "";
+
+							if(progressDialog.isShowing())
+								progressDialog.dismiss();
+							try {
+								for (String[] strray : data) {
+									testResult.append("\nDatapoint "+y);
+									testResult2.append("\n");
+									for (String str : strray) {
+										x++;
+										switch(x) {
+										case 1: label = "Time (GMT)"; break;
+										case 2: label = "Latitude"; break;
+										case 3: label = "Longitude"; break;
+										case 4: label = "Altitude GPS (m)"; break;
+										case 5: label = "Altitude (m)"; break;
+										case 6: label = "Pressure (atm)"; break;
+										case 7: label = "Temperature (c)"; break;
+										case 8: label = "Humidity (%rh)"; break;
+										case 9: label = "Light (lux)"; break;
+										case 10: label = "X-Accel"; break;
+										case 11: label = "Y-Accel"; break;
+										case 12: label = "Z-Accel"; break;
+										case 13: label = "Acceleration"; break;
+										case 14: label = "BTA 1"; bta1Data.add(Double.parseDouble(str)); break;
+										case 15: label = "BTA 2"; break;
+										case 16: label = "Mini 1"; break;
+										case 17: label = "Mini 2"; break;
+										}
+										testResult.append("\n" + label);
+										testResult2.append("\n"+ str);
+									}
+									x = 0;
+									y++;
+									testResult.append("\n");
+									testResult2.append("\n");
+									dataScroller.post(new Runnable() {
+										@Override
+										public void run() {
+											dataScroller.fullScroll(ScrollView.FOCUS_DOWN);
+										}
+									});
+								}
+								findStatistics();
+							} catch (NullPointerException e) {
+								testResult
+								.append("\nError, please try again.");
+								testResult2.append("\n");
+								e.printStackTrace();
+							}
 						}
+
 					});
 				}
-				findStatistics();
-			} catch (NullPointerException e) {
-				testResult
-						.append("\nError, please try again.");
-				testResult2.append("\n");
-				e.printStackTrace();
-			}
+
+			});
+			thread.start();
 		}
 	}
 
@@ -291,8 +315,7 @@ public class Isense extends Activity implements OnClickListener {
 					spinner.clearAnimation();
 					spinner.setVisibility(View.GONE);
 					pinpointBtn.setImageResource(R.drawable.pptbtn);
-					ppi = new pinpointInterface(mChatService,
-							getApplicationContext());
+					ppi = new pinpointInterface(mChatService);
 					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
 					if(connectFromSplash) {

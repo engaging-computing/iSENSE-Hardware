@@ -37,6 +37,7 @@ import java.util.Vector;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 import edu.uml.cs.raac.exceptions.InvalidHexException;
@@ -64,14 +65,17 @@ public class pinpointInterface {
     private PinpointConverter conv;
     private Context myContext;
 
-    public pinpointInterface(BluetoothService bts, Context context) {
+    public pinpointInterface(BluetoothService bts) {
     	pinpoint = PinComm.instantiate(bts);
-        myContext = context;
         // Initiate the vector in which the data will be stored. 
         dataPoints = new Vector<String>();
 
     }
 
+    public void setContext(Context context){
+    	myContext = context;
+    }
+    
     /**
      * Get all of the data from the connected PINPoint. Runs all of the data
      * through known conversions to provide human readable output.
@@ -86,7 +90,6 @@ public class pinpointInterface {
 
         HashMap<Integer, Integer> settings = null;
         System.out.println("Getting records");
-
         ArrayList<String[]> records = new ArrayList<String[]>();
 
         try {
@@ -126,7 +129,7 @@ public class pinpointInterface {
         } catch (IOException ex) {
             System.err.println("IOException thrown while getting data");
         }
-
+        
         return null;
 
     }
