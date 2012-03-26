@@ -188,7 +188,10 @@ public class Isense extends Activity implements OnClickListener {
 
 			ppi.setContext(this);
 			final ProgressDialog progressDialog = ProgressDialog.show(this, "Please wait", "Collecting data from PINPoint");
-
+			
+			testResult.setText("");
+			testResult2.setText("");
+			
 			Thread thread=new Thread(new Runnable(){
 
 				public void run(){
@@ -251,9 +254,7 @@ public class Isense extends Activity implements OnClickListener {
 								}
 								findStatistics();
 							} catch (NullPointerException e) {
-								testResult
-								.append("\nError, please try again.");
-								testResult2.append("\n");
+								Toast.makeText(getApplicationContext(), "Error collecting data, please try again", Toast.LENGTH_SHORT).show();
 								e.printStackTrace();
 							}
 						}
@@ -326,6 +327,8 @@ public class Isense extends Activity implements OnClickListener {
 						}
 						flipper.showNext();
 						connectFromSplash = false;
+					} else {
+						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case BluetoothService.STATE_CONNECTING:
@@ -382,6 +385,8 @@ public class Isense extends Activity implements OnClickListener {
 						.getRemoteDevice(address);
 				// Attempt to connect to the device
 				mChatService.connect(device);
+				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
+				rcrdBtn.setEnabled(false);
 			}
 			break;
 		case REQUEST_ENABLE_BT:
