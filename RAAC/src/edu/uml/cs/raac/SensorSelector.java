@@ -2,6 +2,7 @@ package edu.uml.cs.raac;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +18,7 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 	Button btnOk, btnCancel;
 
 	String return1, return2, return3, return4;
+	String retName1, retName2, retName3, retName4;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -57,12 +59,16 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		if(parent == bta1) {
 			return1 = getFormula(parent.getItemAtPosition(position).toString());
+			retName1 = parent.getItemAtPosition(position).toString();
 		} else if(parent == bta2) {
 			return2 = getFormula(parent.getItemAtPosition(position).toString());
+			retName2 = parent.getItemAtPosition(position).toString();
 		} else if(parent == mini1) {
 			return3 = getFormula(parent.getItemAtPosition(position).toString());
+			retName3 = parent.getItemAtPosition(position).toString();
 		} else if(parent == mini2) {
 			return4 = getFormula(parent.getItemAtPosition(position).toString());
+			retName4 = parent.getItemAtPosition(position).toString();
 		}
 	}
 
@@ -84,6 +90,10 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 			result.putExtra("bta2", return2);
 			result.putExtra("mini1", return3);
 			result.putExtra("mini2", return4);
+			result.putExtra("btaname1", retName1);
+			result.putExtra("btaname2", retName2);
+			result.putExtra("mininame1", retName3);
+			result.putExtra("mininame2", retName4);
 			setResult(RESULT_OK,result);
 			finish();
 		}

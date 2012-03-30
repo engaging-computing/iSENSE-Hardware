@@ -44,18 +44,23 @@
             android:layout_marginTop="20dp" >
 
             <Button
-                android:id="@+id/btn_sensors"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:text="Set Sensors" />
-
-            <Button
                 android:id="@+id/btn_getRcrd"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
                 android:layout_weight="1"
                 android:text="Get Data" />
+
+            <TextView
+                android:id="@+id/statusField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight="1"
+                android:text="Status: Not Connected"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,21 +83,7 @@
                     android:id="@+id/linearLayout1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@+id/resultText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/resultText2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textSize="15sp" />
+                    android:orientation="vertical" >
                 </LinearLayout>
             </ScrollView>
 
