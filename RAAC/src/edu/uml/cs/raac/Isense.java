@@ -70,7 +70,7 @@ public class Isense extends Activity implements OnClickListener {
 	ImageView spinner;
 	RelativeLayout launchLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField;
+	TextView minField, maxField, aveField, medField, btStatus;
 	LinearLayout dataLayout;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
@@ -107,6 +107,7 @@ public class Isense extends Activity implements OnClickListener {
 		maxField = (TextView) findViewById(R.id.et_max);
 		aveField = (TextView) findViewById(R.id.et_ave);
 		medField = (TextView) findViewById(R.id.et_medi);
+		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
 
@@ -357,6 +358,7 @@ public class Isense extends Activity implements OnClickListener {
 					ppi = new pinpointInterface(mChatService);
 					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
+					btStatus.setText("Status: Connected");
 					if(connectFromSplash) {
 						showConnectOption = true;
 						showTimeOption = true;
@@ -373,12 +375,14 @@ public class Isense extends Activity implements OnClickListener {
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
 					spinner.setVisibility(View.VISIBLE);
 					spinner.startAnimation(rotateInPlace);
+					btStatus.setText("Status: Connecting...");
 					break;
 				case BluetoothService.STATE_LISTEN:
 				case BluetoothService.STATE_NONE:
 					spinner.clearAnimation();
 					spinner.setVisibility(View.GONE);
 					pinpointBtn.setImageResource(R.drawable.nopptbtn);
+					btStatus.setText("Status: Disconnected");
 					break;
 				}
 				break;
