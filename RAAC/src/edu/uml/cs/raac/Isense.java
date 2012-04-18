@@ -319,31 +319,33 @@ public class Isense extends Activity implements OnClickListener {
 		double min, max, ave, med;
 		double temp = 0;
 
-		min = bta1Data.get(0);
-		max = bta1Data.get(0);
+		if (bta1Data.size() != 0) {
+			min = bta1Data.get(0);
+			max = bta1Data.get(0);
 
-		for (double i : bta1Data) {
-			if (i < min) {
-				min = i;
+			for (double i : bta1Data) {
+				if (i < min) {
+					min = i;
+				}
+				if (i > max) {
+					max = i;
+				}
+				temp += i;
 			}
-			if (i > max) {
-				max = i;
-			}
-			temp += i;
-		}
-		ave = temp / bta1Data.size();
+			ave = temp / bta1Data.size();
 
-		minField.setText("" + min);
-		maxField.setText("" + max);
-		aveField.setText("" + ave);
+			minField.setText("" + min);
+			maxField.setText("" + max);
+			aveField.setText("" + ave);
 
-		if (bta1Data.size() % 2 == 0) {
-			med = bta1Data.get((bta1Data.size() + 1) / 2);
-		} else {
-			med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
+			if (bta1Data.size() % 2 == 0) {
+				med = bta1Data.get((bta1Data.size() + 1) / 2);
+			} else {
+				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
 					.size() + 1) / 2)) / 2;
+			}
+			medField.setText("" + med);
 		}
-		medField.setText("" + med);
 	}
 
 	@Override

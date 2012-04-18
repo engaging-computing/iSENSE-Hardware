@@ -336,7 +336,10 @@ public class PinpointConverter {
     public void fixTime(ArrayList<String[]> records, int SampleRate) {
         int currentSecond = Integer.parseInt(records.get(0)[0].split(":")[2]);
         int currentCounter = 0;
-        int SamplesPerSecond = 1000 / SampleRate;
+        int SamplesPerSecond = 1000;
+        if(SampleRate != 0) {
+        	SamplesPerSecond = 1000 / SampleRate;
+        }
         int i, j, k;
         String[] fixed = new String[12];
         int testSecond = 0;
