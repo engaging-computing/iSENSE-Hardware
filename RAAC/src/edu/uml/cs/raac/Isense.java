@@ -36,6 +36,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -78,6 +79,8 @@ public class Isense extends Activity implements OnClickListener {
 	private BluetoothAdapter mBluetoothAdapter = null;
 	ArrayList<String[]> data;
 	Animation mSlideInTop, mSlideOutTop, rotateInPlace;
+	int flipView = 0; //Currently displayed child of the viewFlipper
+	int btStatNum = 0; //The current status of the bluetooth connection
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 
@@ -99,6 +102,32 @@ public class Isense extends Activity implements OnClickListener {
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+		initializeLayout();
+		
+		flipper.setInAnimation(mSlideInTop);
+		flipper.setOutAnimation(mSlideOutTop);
+		
+		flipView = flipper.getDisplayedChild();
+		
+		if (mBluetoothAdapter == null) {
+			//
+		} else {
+			if (!mBluetoothAdapter.isEnabled()) {
+				Intent enableBtIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+			}
+		}
+
+		rcrdBtn.setEnabled(false);
+
+		launchLayout.setVisibility(View.VISIBLE);
+
+		mChatService = new BluetoothService(this, mHandler);
+	}
+	
+	//Set up all views from the XML layout
+	public void initializeLayout() {
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -111,27 +140,21 @@ public class Isense extends Activity implements OnClickListener {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-
-		flipper.setInAnimation(mSlideInTop);
-		flipper.setOutAnimation(mSlideOutTop);
-
-		if (mBluetoothAdapter == null) {
-			//
-		} else {
-			if (!mBluetoothAdapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-			}
-		}
-
+		
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
-		rcrdBtn.setEnabled(false);
-
-		launchLayout.setVisibility(View.VISIBLE);
-
-		mChatService = new BluetoothService(this, mHandler);
+		
+		setBtStatus();
+	}
+	
+	//Override to make sure that the correct layout file is used when the screen orientation changes
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  super.onConfigurationChanged(newConfig);
+	  setContentView(R.layout.main);
+	  initializeLayout();
+	  
+	  flipper.setDisplayedChild(flipView);
 	}
 
 	@Override
@@ -347,6 +370,16 @@ public class Isense extends Activity implements OnClickListener {
 			medField.setText("" + med);
 		}
 	}
+	
+	public void setBtStatus() {
+		if (btStatNum == 0) {
+			btStatus.setText("Status: Disconnected");
+		} else if (btStatNum == 1) {
+			btStatus.setText("Status: Connected");
+		} else {
+			
+		}
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -369,7 +402,8 @@ public class Isense extends Activity implements OnClickListener {
 					ppi = new pinpointInterface(mChatService);
 					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
-					btStatus.setText("Status: Connected");
+					btStatNum = 1;
+					setBtStatus();
 					if(connectFromSplash) {
 						showConnectOption = true;
 						showTimeOption = true;
@@ -377,6 +411,7 @@ public class Isense extends Activity implements OnClickListener {
 							invalidateOptionsMenu();
 						}
 						flipper.showNext();
+						flipView = flipper.getDisplayedChild();
 						connectFromSplash = false;
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
@@ -386,14 +421,16 @@ public class Isense extends Activity implements OnClickListener {
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
 					spinner.setVisibility(View.VISIBLE);
 					spinner.startAnimation(rotateInPlace);
-					btStatus.setText("Status: Connecting...");
+					btStatNum = 2;
+					setBtStatus();
 					break;
 				case BluetoothService.STATE_LISTEN:
 				case BluetoothService.STATE_NONE:
 					spinner.clearAnimation();
 					spinner.setVisibility(View.GONE);
 					pinpointBtn.setImageResource(R.drawable.nopptbtn);
-					btStatus.setText("Status: Disconnected");
+					btStatNum = 0;
+					setBtStatus();
 					break;
 				}
 				break;

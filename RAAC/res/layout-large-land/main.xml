@@ -50,6 +50,7 @@
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="1"
+                android:background="@drawable/custombtn"
                 android:text="Get Data" />
 
             <TextView
@@ -95,6 +96,15 @@
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:text="BTA 1 Values"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout4"

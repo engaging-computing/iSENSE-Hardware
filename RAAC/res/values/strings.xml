@@ -12,8 +12,8 @@
     <string name="menu_connect">Select PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensors</string>
-    <string name="minval">Minimum BTA 1 Value</string>
-    <string name="maxval">Maximum BTA 1 Value</string>
-    <string name="aveval">Average BTA 1 Value</string>
-    <string name="medval">Median BTA 1 Value</string>
+    <string name="minval">Minimum</string>
+    <string name="maxval">Maximum</string>
+    <string name="aveval">Average</string>
+    <string name="medval">Median</string>
 </resources>
