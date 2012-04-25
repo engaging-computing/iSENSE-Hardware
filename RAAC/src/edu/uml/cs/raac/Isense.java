@@ -60,7 +60,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import edu.uml.cs.raac.exceptions.NoDataException;
 import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
@@ -81,6 +80,7 @@ public class Isense extends Activity implements OnClickListener {
 	Animation mSlideInTop, mSlideOutTop, rotateInPlace;
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
+	String datMed, datAve, datMax, datMin;
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 
@@ -143,6 +143,11 @@ public class Isense extends Activity implements OnClickListener {
 		
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
+		
+		minField.setText(datMin);
+		maxField.setText(datMax);
+		medField.setText(datMed);
+		aveField.setText(datAve);
 		
 		setBtStatus();
 	}
@@ -357,9 +362,13 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			ave = temp / bta1Data.size();
 
-			minField.setText("" + min);
-			maxField.setText("" + max);
-			aveField.setText("" + ave);
+			datMin = "" + min;
+			datMax = "" + max;
+			datAve = "" + ave;
+			
+			minField.setText(datMin);
+			maxField.setText(datMax);
+			aveField.setText(datAve);
 
 			if (bta1Data.size() % 2 == 0) {
 				med = bta1Data.get((bta1Data.size() + 1) / 2);
@@ -367,7 +376,10 @@ public class Isense extends Activity implements OnClickListener {
 				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
 					.size() + 1) / 2)) / 2;
 			}
-			medField.setText("" + med);
+			
+			datMed = "" + med;
+			medField.setText(datMed);
+					
 		}
 	}
 	

@@ -29,7 +29,6 @@
             android:layout_marginBottom="-114dp"
             android:layout_marginLeft="10dp"
             android:src="@drawable/superspin" android:visibility="gone"/>
-
     </RelativeLayout>
 
     <LinearLayout

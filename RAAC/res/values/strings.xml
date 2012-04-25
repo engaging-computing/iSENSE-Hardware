@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">River as a Classroom</string>
+    <string name="app_name">Science of Rivers</string>
     <string name="button_scan">Scan for Devices</string>
 	<string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
