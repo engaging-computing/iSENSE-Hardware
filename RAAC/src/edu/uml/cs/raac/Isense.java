@@ -60,6 +60,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+import edu.uml.cs.raac.exceptions.NoDataException;
 import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
@@ -158,6 +159,7 @@ public class Isense extends Activity implements OnClickListener {
 	  super.onConfigurationChanged(newConfig);
 	  setContentView(R.layout.main);
 	  initializeLayout();
+	  writeDataToScreen();
 	  
 	  flipper.setDisplayedChild(flipView);
 	}
@@ -219,7 +221,7 @@ public class Isense extends Activity implements OnClickListener {
 
 			ppi.setContext(this);
 			final ProgressDialog progressDialog = ProgressDialog.show(this, "Please wait", "Collecting data from PINPoint");
-
+			
 			final Runnable toastRun = new Runnable() { 
 	              public void run() { 
 	                 Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
@@ -235,104 +237,21 @@ public class Isense extends Activity implements OnClickListener {
 
 							try {
 								data = ppi.getData();
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
+							} catch (NoDataException e) {
 								e.printStackTrace();
 								runOnUiThread(toastRun);
-							} 
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
 							runOnUiThread(new Runnable(){
 
 								@Override
 								public void run() {
-									int x = 0;
-									int y = 1;
-									int z = 0;
-									String label = "";
-									SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-									Resources res = getResources();
-
-									if(progressDialog.isShowing())
+									if(progressDialog.isShowing()) {
 										progressDialog.dismiss();
-									try {
-										for (String[] strray : data) {
-											LinearLayout newRow = new LinearLayout(getBaseContext());
-											newRow.setOrientation(LinearLayout.HORIZONTAL);
-											if(z%2 != 0) {
-												newRow.setBackgroundColor(res.getColor(R.color.rowcols));
-											}
-											TextView tvLeft1 = new TextView(getBaseContext());
-											tvLeft1.setText("Datapoint " + y);
-											tvLeft1.setTextColor(Color.BLACK);
-											TextView tvRight1 = new TextView(getBaseContext());
-											newRow.addView(tvLeft1);
-											newRow.addView(tvRight1);
-											dataLayout.addView(newRow);
-											for (String str : strray) {
-												x++;
-												z++;
-												switch(x) {
-												case 1: label = "Time (GMT)"; break;
-												case 2: label = "Latitude"; break;
-												case 3: label = "Longitude"; break;
-												case 4: label = "Altitude GPS (m)"; break;
-												case 5: label = "Altitude (m)"; break;
-												case 6: label = "Pressure (atm)"; break;
-												case 7: label = "Air Temperature (c)"; break;
-												case 8: label = "Humidity (%rh)"; break;
-												case 9: label = "Light (lux)"; break;
-												case 10: label = "X-Accel"; break;
-												case 11: label = "Y-Accel"; break;
-												case 12: label = "Z-Accel"; break;
-												case 13: label = "Acceleration"; break;
-												case 14: label = prefs.getString("name_bta1", "BTA 1"); bta1Data.add(Double.parseDouble(str)); break;
-												case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
-												case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
-												case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
-												}
-												LinearLayout newRow2 = new LinearLayout(getBaseContext());
-												newRow2.setOrientation(LinearLayout.HORIZONTAL);
-												if(x%2 != 0) {
-													newRow2.setBackgroundColor(res.getColor(R.color.rowcols));
-												}
-												TextView tvLeft2 = new TextView(getBaseContext());
-												tvLeft2.setText(label);
-												tvLeft2.setTextColor(Color.BLACK);
-												tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
-												TextView tvRight2 = new TextView(getBaseContext());
-												tvRight2.setText(str);
-												tvRight2.setTextColor(Color.BLACK);
-												newRow2.addView(tvLeft2);
-												newRow2.addView(tvRight2);
-												dataLayout.addView(newRow2);
-											}
-											z++;
-											LinearLayout newRow3 = new LinearLayout(getBaseContext());
-											newRow3.setOrientation(LinearLayout.HORIZONTAL);
-											if(z%2 != 0) {
-												newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
-											}
-											TextView tvLeft3 = new TextView(getBaseContext());
-											tvLeft3.setText("\n");
-											TextView tvRight3 = new TextView(getBaseContext());
-											tvRight3.setText("\n");
-											newRow3.addView(tvLeft3);
-											newRow3.addView(tvRight3);
-											dataLayout.addView(newRow3);
-											dataScroller.post(new Runnable() {
-												@Override
-												public void run() {
-													dataScroller.fullScroll(ScrollView.FOCUS_DOWN);
-												}
-											});
-											x = 0;
-											y++;
-										}
-										findStatistics();
-									} catch (NullPointerException e) {
-										Toast.makeText(getApplicationContext(), "Error collecting data, please try again", Toast.LENGTH_SHORT).show();
-										e.printStackTrace();
 									}
+									writeDataToScreen();
 								}
 
 							});
@@ -340,6 +259,96 @@ public class Isense extends Activity implements OnClickListener {
 
 					});
 			thread.start();
+		}
+	}
+	
+	public void writeDataToScreen() {
+		
+		int x = 0;
+		int y = 1;
+		int z = 0;
+		String label = "";
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		Resources res = getResources();
+
+		try {
+			for (String[] strray : data) {
+				LinearLayout newRow = new LinearLayout(getBaseContext());
+				newRow.setOrientation(LinearLayout.HORIZONTAL);
+				if(z%2 != 0) {
+					newRow.setBackgroundColor(res.getColor(R.color.rowcols));
+				}
+				TextView tvLeft1 = new TextView(getBaseContext());
+				tvLeft1.setText("Datapoint " + y);
+				tvLeft1.setTextColor(Color.BLACK);
+				TextView tvRight1 = new TextView(getBaseContext());
+				newRow.addView(tvLeft1);
+				newRow.addView(tvRight1);
+				dataLayout.addView(newRow);
+				for (String str : strray) {
+					x++;
+					z++;
+					switch(x) {
+					case 1: label = "Time (GMT)"; break;
+					case 2: label = "Latitude"; break;
+					case 3: label = "Longitude"; break;
+					case 4: label = "Altitude GPS (m)"; break;
+					case 5: label = "Altitude (m)"; break;
+					case 6: label = "Pressure (atm)"; break;
+					case 7: label = "Air Temperature (c)"; break;
+					case 8: label = "Humidity (%rh)"; break;
+					case 9: label = "Light (lux)"; break;
+					case 10: label = "X-Accel"; break;
+					case 11: label = "Y-Accel"; break;
+					case 12: label = "Z-Accel"; break;
+					case 13: label = "Acceleration"; break;
+					case 14: label = prefs.getString("name_bta1", "BTA 1"); bta1Data.add(Double.parseDouble(str)); break;
+					case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
+					case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
+					case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
+					}
+					LinearLayout newRow2 = new LinearLayout(getBaseContext());
+					newRow2.setOrientation(LinearLayout.HORIZONTAL);
+					if(x%2 != 0) {
+						newRow2.setBackgroundColor(res.getColor(R.color.rowcols));
+					}
+					TextView tvLeft2 = new TextView(getBaseContext());
+					tvLeft2.setText(label);
+					tvLeft2.setTextColor(Color.BLACK);
+					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
+					TextView tvRight2 = new TextView(getBaseContext());
+					tvRight2.setText(str);
+					tvRight2.setTextColor(Color.BLACK);
+					newRow2.addView(tvLeft2);
+					newRow2.addView(tvRight2);
+					dataLayout.addView(newRow2);
+				}
+				z++;
+				LinearLayout newRow3 = new LinearLayout(getBaseContext());
+				newRow3.setOrientation(LinearLayout.HORIZONTAL);
+				if(z%2 != 0) {
+					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
+				}
+				TextView tvLeft3 = new TextView(getBaseContext());
+				tvLeft3.setText("\n");
+				TextView tvRight3 = new TextView(getBaseContext());
+				tvRight3.setText("\n");
+				newRow3.addView(tvLeft3);
+				newRow3.addView(tvRight3);
+				dataLayout.addView(newRow3);
+				dataScroller.post(new Runnable() {
+					@Override
+					public void run() {
+						dataScroller.fullScroll(ScrollView.FOCUS_DOWN);
+					}
+				});
+				x = 0;
+				y++;
+			}
+			findStatistics();
+		} catch (NullPointerException e) {
+			Toast.makeText(getApplicationContext(), "Error collecting data, please try again", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
 	}
 

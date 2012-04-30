@@ -40,7 +40,7 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_marginTop="20dp" >
 
             <Button
@@ -61,7 +61,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_weight="1"
                 android:text="Status: Not Connected"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,7 +126,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:focusable="false"
-                        android:inputType="none" >
+                        android:inputType="none"
+                        android:lines="1" >
 
                         <requestFocus />
                     </EditText>
@@ -153,7 +154,8 @@
                         android:layout_weight="1"
                         android:clickable="false"
                         android:focusable="false"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:lines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -177,7 +179,8 @@
                         android:layout_weight="1"
                         android:clickable="false"
                         android:focusable="false"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:lines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -201,7 +204,8 @@
                         android:layout_weight="1"
                         android:clickable="false"
                         android:focusable="false"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:lines="1" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

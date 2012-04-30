@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:inputType="none" >
+                    android:inputType="none" android:lines="1">
 
                     <requestFocus />
                 </EditText>
@@ -147,7 +147,7 @@
                     android:layout_weight="1"
                     android:clickable="false"
                     android:focusable="false"
-                    android:inputType="none" />
+                    android:inputType="none" android:lines="1"/>
             </LinearLayout>
 
             <LinearLayout
@@ -171,7 +171,7 @@
                     android:layout_weight="1"
                     android:clickable="false"
                     android:focusable="false"
-                    android:inputType="none" />
+                    android:inputType="none" android:lines="1"/>
             </LinearLayout>
 
             <LinearLayout
@@ -195,7 +195,7 @@
                     android:layout_weight="1"
                     android:clickable="false"
                     android:focusable="false"
-                    android:inputType="none" />
+                    android:inputType="none" android:lines="1"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
