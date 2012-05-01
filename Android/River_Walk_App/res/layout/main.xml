@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    >
+    
+    <ImageView android:id="@+id/ImageViewLogo"
+		android:layout_width="fill_parent" 
+		android:background="@android:color/white"
+		android:src="@drawable/logo"
+		android:layout_height="wrap_content"
+		android:scaleType="center"/>
+		
+	<RelativeLayout android:orientation="vertical" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white">
+				
+		<TextView android:layout_height="wrap_content" 
+			android:layout_width="wrap_content" 
+			android:id="@+id/nameLabel" 
+			android:text="First Name: "
+			android:textSize="18dip"
+			android:textColor="@android:color/black"
+			android:paddingTop="12dip"/>
+				
+		<EditText android:layout_height="wrap_content" 
+			android:id="@+id/name" 
+			android:layout_width="fill_parent"
+			android:layout_toRightOf="@+id/nameLabel" 
+			android:inputType="text"/>
+	</RelativeLayout>
+	
+	<RelativeLayout android:orientation="vertical" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white">
+		
+		<Button android:layout_height="wrap_content" 
+			android:layout_width="wrap_content"
+			android:layout_alignParentRight="true"
+			android:text="Browse..." 
+			android:id="@+id/BrowseButton"/>
+			
+		<EditText android:id="@+id/ExperimentInput"
+			android:layout_width="135dip"
+			android:layout_toLeftOf="@id/BrowseButton"
+			android:inputType="number"
+			android:layout_height="wrap_content"/>
+			
+		<TextView android:text="Experiment ID: "
+			android:id="@+id/ExperimentLabel"
+			android:layout_width="wrap_content"
+		    android:paddingTop="15dip"
+			android:layout_toLeftOf="@id/ExperimentInput"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/black"/>
+			
+	</RelativeLayout>
+	
+	<Button
+		android:text="Describe The Picture"
+		android:id="@+id/describeButton"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	>
+	</Button>
+
+	
+	<Button android:text="Take Picture and Upload" 
+		android:textSize="30dip"
+		android:id="@+id/takePicture" 
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:paddingTop="16dip"/>
+
+</LinearLayout>
+
