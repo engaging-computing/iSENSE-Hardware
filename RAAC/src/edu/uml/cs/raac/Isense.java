@@ -220,7 +220,10 @@ public class Isense extends Activity implements OnClickListener {
 		if (v == rcrdBtn) {
 
 			ppi.setContext(this);
-			final ProgressDialog progressDialog = ProgressDialog.show(this, "Please wait", "Collecting data from PINPoint");
+			final ProgressDialog progressDialog = new ProgressDialog(this);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setMessage("Collecting data from the PINPoint");
+			progressDialog.show();
 			
 			final Runnable toastRun = new Runnable() { 
 	              public void run() { 
@@ -236,7 +239,9 @@ public class Isense extends Activity implements OnClickListener {
 						public void run(){
 
 							try {
+								
 								data = ppi.getData();
+
 							} catch (NoDataException e) {
 								e.printStackTrace();
 								runOnUiThread(toastRun);
@@ -263,16 +268,23 @@ public class Isense extends Activity implements OnClickListener {
 	}
 	
 	public void writeDataToScreen() {
+		int i = 0;
+		int y = 1;
+		if (data.size() > 10) {
+			i = data.size()-10;
+			y = data.size()-9;
+		}
 		
 		int x = 0;
-		int y = 1;
 		int z = 0;
 		String label = "";
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
 
 		try {
-			for (String[] strray : data) {
+			for (; i<data.size(); i++) {
+				String[] strray = data.get(i);
+				
 				LinearLayout newRow = new LinearLayout(getBaseContext());
 				newRow.setOrientation(LinearLayout.HORIZONTAL);
 				if(z%2 != 0) {

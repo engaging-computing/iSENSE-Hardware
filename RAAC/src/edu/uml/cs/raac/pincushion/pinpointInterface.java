@@ -39,6 +39,7 @@ import java.util.prefs.Preferences;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import edu.uml.cs.raac.exceptions.ChecksumException;
 import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 import edu.uml.cs.raac.exceptions.InvalidHexException;
 import edu.uml.cs.raac.exceptions.NoConnectionException;
@@ -116,7 +117,8 @@ public class pinpointInterface {
 
             //Convert all data recieved from the pinpoint.
             for (int i = 0; i < numRecords; i++) {
-                records.add(conv.convertAll(rawData.get(i)));
+            	byte[] dataLine = rawData.get(i);
+                records.add(conv.convertAll(dataLine));
             }
 
             if (settings.get(PinComm.SAMPLE_RATE) < 1000) {
@@ -128,6 +130,8 @@ public class pinpointInterface {
             System.err.println("NoConnectionException thrown while getting data");
         } catch (IOException ex) {
             System.err.println("IOException thrown while getting data");
+        } catch (ChecksumException ex) {
+        	System.err.println("Checksum exception thrown while getting data");
         }
         
         return null;

@@ -35,8 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
 
-import android.app.ProgressDialog;
-
+import edu.uml.cs.raac.exceptions.ChecksumException;
 import edu.uml.cs.raac.exceptions.IncorrectDeviceException;
 import edu.uml.cs.raac.exceptions.NoConnectionException;
 import edu.uml.cs.raac.exceptions.NoDataException;
@@ -110,7 +109,7 @@ public class PinComm {
 			byte reply = -1;
 			try {
 				Thread.sleep(50);
-				spi.clear();
+				spi.clearBuff();
 				spi.writeByte(HANDSHAKE);
 				reply = spi.readByte();
 				if (reply == RESPONSE) {
@@ -181,7 +180,7 @@ public class PinComm {
 	 * @throws IOException
 	 * @throws NoConnectionException
 	 */
-	public ArrayList<byte[]> requestData(byte[] dataHeader, int numRecords) throws NoConnectionException, IOException {
+	public ArrayList<byte[]> requestData(byte[] dataHeader, int numRecords) throws NoConnectionException, IOException, ChecksumException {
 
 		ArrayList<byte[]> data = new ArrayList<byte[]>();
 
@@ -189,7 +188,7 @@ public class PinComm {
 		if (spi.isOpen()) {
 
 			//Clear the line
-			spi.clear();
+			spi.clearBuff();
 
 			System.out.println("Requesting data...");
 
@@ -219,7 +218,8 @@ public class PinComm {
 						records[j] = spi.readByte();
 						System.out.print(records[j]);
 						computedChecksum = (byte) (computedChecksum + (byte) records[j]);
-					}System.out.println();
+					}
+					System.out.println();
 					data.add(records);
 				}
 				System.out.println(data.size());
@@ -229,12 +229,14 @@ public class PinComm {
 				System.out.println("Upload finished in " + ((FinishTime - StartTime) / 1000) + " seconds");
 
 				if (computedChecksum != readChecksum) {
-					System.err.println("Checksum did not match");
-					return null;
+					
+					throw new ChecksumException();
 
 				} else {
+					
 					System.out.println("Finished uploading data");
 					return data;
+					
 				}
 
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -265,7 +267,6 @@ public class PinComm {
 	private int getSetting(byte hByte, byte lByte)  {
 		short high, low;
 		if (spi.isOpen()) {
-			spi.clear();
 			spi.clearBuff();
 			spi.writeByte(READ_EEPROM);
 
@@ -273,7 +274,7 @@ public class PinComm {
 			spi.writeByte(hByte);
 			high = (short) (spi.readByte() & 255);
 
-			spi.clear();
+			spi.clearBuff();
 
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x00);
@@ -300,7 +301,7 @@ public class PinComm {
 	private int getSetting(byte sByte) {
 		short high;
 		if (spi.isOpen()) {
-			spi.clear();
+			spi.clearBuff();
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(sByte);
@@ -346,12 +347,12 @@ public class PinComm {
 	 */
 	private void setSetting(byte hByte, byte lByte, int value) throws NoConnectionException {
 		if (spi.isOpen()) {
-			spi.clear();
+			spi.clearBuff();
 			spi.writeByte(WRITE_EEPROM);
 			spi.writeByte((byte) 0x0);
 			spi.writeByte(hByte);
 			spi.writeByte((byte) ((value >> 8) & 0xFF));
-			spi.clear();
+			spi.clearBuff();
 			spi.writeByte(WRITE_EEPROM);
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(lByte);
@@ -372,12 +373,12 @@ public class PinComm {
 	 */
 	private void setSetting(byte sByte, int value) throws NoConnectionException {
 		if (spi.isOpen()) {
-			spi.clear();
+			spi.clearBuff();
 			spi.writeByte(WRITE_EEPROM);
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(sByte);
 			spi.writeByte((byte) (value & 0xFF));
-			spi.clear();
+			spi.clearBuff();
 			spi.readByte();
 		} else {
 			throw new NoConnectionException();
