@@ -159,9 +159,12 @@ public class Isense extends Activity implements OnClickListener {
 	  super.onConfigurationChanged(newConfig);
 	  setContentView(R.layout.main);
 	  initializeLayout();
-	  writeDataToScreen();
 	  
 	  flipper.setDisplayedChild(flipView);
+	  
+	  if (data != null) {
+		  writeDataToScreen();
+	  }
 	}
 
 	@Override
