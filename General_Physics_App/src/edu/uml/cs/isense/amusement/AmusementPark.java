@@ -513,6 +513,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     public void onStop() {
     	super.onStop();
     	mLocationManager.removeUpdates(AmusementPark.this);
+    	mRoughLocManager.removeUpdates(AmusementPark.this);
     	mSensorManager.unregisterListener(AmusementPark.this);
     	if (timeTimer != null) timeTimer.cancel();
     	inPausedState = true;
