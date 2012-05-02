@@ -408,8 +408,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         
     }
     
-    long getUploadTime()
-    {
+    long getUploadTime() {
     		Calendar c = Calendar.getInstance();
     		return ((long) c.getTimeInMillis());
     }
@@ -544,8 +543,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     @Override
     public void onStart() {
     	super.onStart();
-    	inPausedState = false;
-    	
+    	inPausedState = false;	
     }
     
     @Override
@@ -1313,23 +1311,22 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
 			
 			while(pic > 0) {
-				boolean hUp;
 				if(nameOfSession.equals(""))
-					hUp = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 							experimentInput.getText().toString(), 
 							sessionId, "*Session Name Not Provided*", "N/A");
 				else
-					hUp = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 							experimentInput.getText().toString(), 
 							sessionId, sessionName.getText().toString(), "N/A");
-				Log.e("Pics", "has uploaded: " + hUp);
+				
 				pic--;
 				
 			}
+			
 			pictureArray.clear();
 			videoArray.clear();
-			
-			
+					
 		}
 		
 	};
@@ -1340,7 +1337,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    	
 	        dia = new ProgressDialog(AmusementPark.this);
 	        dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	        dia.setMessage("Please wait while your data is uploaded to iSENSE...");
+	        dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 	        dia.setCancelable(false);
 	        dia.show();
 	        
@@ -1389,9 +1386,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    }
 	}
 	
-	//everything you need initialized for onCreate
-	private void initVars()
-	{
+	// Everything needed to be initialized for onCreate
+	private void initVars() {
+		
         mHandler = new Handler();
         
         Display deviceDisplay = getWindowManager().getDefaultDisplay(); 
@@ -1423,9 +1420,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         mRoughLocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	}
 	
-	//takes care of everything to do with EULA
-	private void displayEula()
-	{
+	// Takes care of everything to do with EULA
+	private void displayEula() {
+		
 		AlertDialog.Builder adb = new SimpleEula(this).show();
 		if(adb != null) {
 			Dialog dialog = adb.create();	
@@ -1435,9 +1432,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		}
 	}
 	
-	//apiTabletDisplay for Dialog Building on Tablets
-	boolean apiTabletDisplay(Dialog dialog)
-	{
+	// apiTabletDisplay for Dialog Building on Tablets
+	boolean apiTabletDisplay(Dialog dialog) {
 		int apiLevel = getApiLevel();
 		if(apiLevel >= 11) {
 			dialog.show();
@@ -1458,9 +1454,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	}
 	
-	//deals with Dialog creation whether api is tablet or not
-	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id)
-	{
+	// Deals with Dialog creation whether api is tablet or not
+	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
 		if(apiTabletDisplay(dialog)) {
 		    	
 			dialog.setOnDismissListener(new OnDismissListener() {
