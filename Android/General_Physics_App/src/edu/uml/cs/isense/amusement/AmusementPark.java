@@ -251,7 +251,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					
 					if (running) {
 						
-						finishFile();
+						writeToSDCard(null, 'f');
 						setupDone = false;
 						useMenu = true;
 					
@@ -360,9 +360,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 									
 								
 									if(beginWrite) {
-										writeToFile(data);
+										writeToSDCard(data, 's');
 									} else {
-										updateFile(data);
+										writeToSDCard(data, 'u');
 									}
 									
 						
@@ -399,62 +399,62 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         
     }
     
-<<<<<<< HEAD
-    long getUploadTime() {
-    		Calendar c = Calendar.getInstance();
-    		return ((long) c.getTimeInMillis());
-    }
-    
-=======
->>>>>>> d1663b0cb88c75abb916b71061c8a9e7264f5c9b
-    public void updateFile( String data ) {
-    	
-    	try {
-            out.append(data);
-    	} catch (IOException e) {
-    		/*stub*/
-    	}
-    	
-    }
-    
-    public void finishFile() {
-    	
-    	try {
-    		if(out != null)
-    			out.close();
-            if(gpxwriter != null)
-            	gpxwriter.close();
-    	} catch (IOException e) {
-    	    /*stub*/
-    	}
-    	
-    }
-    
-    public void writeToFile( String data ) {
-    	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-    	Date dt = new Date();
-    	
-    	dateString = sdf.format(dt);
+    // (s)tarts, (u)pdates, and (f)inishes writing the .csv to the SD Card containing "data"
+    public void writeToSDCard(String data, char code) {
+    	switch (code) {
+    	case 's':
+    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+        	Date dt = new Date();
+        	
+        	dateString = sdf.format(dt);
 
-    	File folder = new File(Environment.getExternalStorageDirectory() + "/iSENSE");
-    	
-    	if(!folder.exists()) {
-    	    folder.mkdir();
-    	}     
-    	
-    	SDFile = new File(folder,  rides.getSelectedItem() + "-" + seats.getText().toString() + "-" + dateString + ".csv");
- 	
-    	try {
-            gpxwriter = new FileWriter(SDFile);
-            out = new BufferedWriter(gpxwriter);
-            out.write(data);
-            beginWrite = false;
-    	} catch (IOException e) {
-    		Toast.makeText(this, "Failure to write to file", Toast.LENGTH_SHORT); /*stub*/
+        	File folder = new File(Environment.getExternalStorageDirectory() + "/iSENSE");
+        	
+        	if(!folder.exists()) {
+        	    folder.mkdir();
+        	}     
+        	
+        	SDFile = new File(folder,  rides.getSelectedItem() + "-" + seats.getText().toString() + "-" + dateString + ".csv");
+     	
+        	try {
+                gpxwriter = new FileWriter(SDFile);
+                out = new BufferedWriter(gpxwriter);
+                out.write(data);
+                beginWrite = false;
+        	} catch (IOException e) {
+        		Toast.makeText(this, "Error creating the SD Card file.", Toast.LENGTH_LONG).show();
+        	}
+    		
+    		break;
+    		
+    	case 'u':
+    		try {
+                out.append(data);
+        	} catch (IOException e) {
+        		Toast.makeText(this, "Error updating the SD Card file.", Toast.LENGTH_LONG).show();
+        	}
+    		
+    		break;
+    		
+    	case 'f':
+    		try {
+        		if(out != null)
+        			out.close();
+                if(gpxwriter != null)
+                	gpxwriter.close();
+        	} catch (IOException e) {
+        		Toast.makeText(this, "Error completing the SD Card file.", Toast.LENGTH_LONG).show();
+        	}
+    		
+    		break;
+    		
+    	default:
+    		Toast.makeText(mContext, "Fatal error writing file to SD Card!", Toast.LENGTH_LONG).show();
+    		break;
     	}
-    	
     }
     
+    // Adds pictures to the SD Card
     public void pushPicture() {
     	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
     	Date dt = new Date();
@@ -480,6 +480,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	pictures.clear();
     }
     
+    // Adds videos to the SD Card
     public void pushVideo() {
     	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
     	Date dt = new Date();
@@ -550,6 +551,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	picCount.setText("Pictures and Videos Taken: " + mediaCount);
     }
     
+    // Overridden to prevent user from exiting app unless back button is pressed twice
     @Override
     public void onBackPressed() {
     	if(!dontToastMeTwice) {
@@ -914,6 +916,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    
 	}
 
+	// Method to create a data-saving prompt with "message" as the message
     private AlertDialog getSavePrompt(final Handler h, String message) {	
     	
     	final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1111,6 +1114,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         return builder.create();
 	}    
     
+    // Converts the captured picture's uri to a file that is save-able to the SD Card
     public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		
     	int apiLevel = getApiLevel();
@@ -1166,6 +1170,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	}
 	}
     
+    // Converts the recorded video's uri to a file that is save-able to the SD Card
     public static File convertVideoUriToFile (Uri videoUri, Activity activity)  {
     	
     	int apiLevel = getApiLevel();
@@ -1242,13 +1247,13 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	}
 	
-  	//assists with differentiating between displays for dialogues
+  	// Assists with differentiating between displays for dialogues
   	private static int getApiLevel()
   	{
     	return Integer.parseInt(android.os.Build.VERSION.SDK);
     }
   	
-  	//calls the rapi primitives for actual uploading
+  	// Calls the rapi primitives for actual uploading
 	private Runnable uploader = new Runnable()
 	{
 		
@@ -1315,10 +1320,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 							experimentInput.getText().toString(), 
 							sessionId, sessionName.getText().toString(), "N/A");
-<<<<<<< HEAD
-				
-=======
->>>>>>> d1663b0cb88c75abb916b71061c8a9e7264f5c9b
+
 				pic--;
 				
 			}
@@ -1330,7 +1332,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	};
 
-	//control task for uploading
+	// Control task for uploading data
 	private class Task extends AsyncTask <Void, Integer, Void> {
 	    
 	    @Override protected void onPreExecute()
@@ -1368,7 +1370,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    }
 	}	
 
-	//prevents toasts from being queued infinitely
+	// Prevents toasts from being queued infinitesimally
 	private class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
 	    @Override protected void onPreExecute() {
 	    	dontToastMeTwice = true;
@@ -1423,7 +1425,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         mRoughLocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	}
 	
-<<<<<<< HEAD
 	// Takes care of everything to do with EULA
 	private void displayEula() {
 		
@@ -1437,7 +1438,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	}
 	
 	// apiTabletDisplay for Dialog Building on Tablets
-	boolean apiTabletDisplay(Dialog dialog) {
+	static boolean apiTabletDisplay(Dialog dialog) {
 		int apiLevel = getApiLevel();
 		if(apiLevel >= 11) {
 			dialog.show();
@@ -1457,8 +1458,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		} else return false;
 		
 	}
-=======
-	//deals with login and UI display
+
+	// Deals with login and UI display
 	void login()
 	{
 		boolean success = rapi.login(loginName, loginPass); 
@@ -1469,13 +1470,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		}
 	}
 	
-    //gets the milliseconds since Epoch
+    // Gets the milliseconds since Epoch
 	private long getUploadTime()
     {
     		Calendar c = Calendar.getInstance();
     		return ((long) c.getTimeInMillis());
     }
->>>>>>> d1663b0cb88c75abb916b71061c8a9e7264f5c9b
 	
 	// Deals with Dialog creation whether api is tablet or not
 	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
@@ -1501,39 +1501,5 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			return dialog;
 		}
 	}
-
-	//takes care of everything to do with EULA
-	private void displayEula()
-		{
-			AlertDialog.Builder adb = new SimpleEula(this).show();
-			if(adb != null) {
-				Dialog dialog = adb.create();	
-				dialog.show();
-
-				apiTabletDisplay(dialog);
-			}
-		}
 		
-	//apiTabletDisplay for Dialog Building on Tablets
-	static boolean apiTabletDisplay(Dialog dialog)
-	{
-		int apiLevel = getApiLevel();
-		if(apiLevel >= 11) {
-			dialog.show();
-			
-			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-	
-			lp.copyFrom(dialog.getWindow().getAttributes());
-			lp.width = mwidth;
-			lp.height = WindowManager.LayoutParams.MATCH_PARENT;;
-			lp.gravity = Gravity.CENTER_VERTICAL;
-			lp.dimAmount=0.7f;
-			
-			dialog.getWindow().setAttributes(lp);
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			
-			return true;
-		} else return false;
-			
-	}
 }
