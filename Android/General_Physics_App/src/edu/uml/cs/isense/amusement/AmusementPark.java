@@ -531,6 +531,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     public void onStop() {
     	super.onStop();
     	mLocationManager.removeUpdates(AmusementPark.this);
+    	mRoughLocManager.removeUpdates(AmusementPark.this);
     	mSensorManager.unregisterListener(AmusementPark.this);
     	if (timeTimer != null) timeTimer.cancel();
     	inPausedState = true;
@@ -1280,7 +1281,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			}
 			
 			if(nameOfSession.equals("")) {
-				if(address.size() <= 0 || address == null) {
+				if(address == null || address.size() <= 0) {
 					sessionId = rapi.createSession(experimentInput.getText().toString(), 
 							"*Session Name Not Provided*", 
 							"Automated Submission Through Android App", 
@@ -1306,7 +1307,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			}
 			
 			
-			rapi.putSessionData( sessionId, experimentInput.getText().toString(), dataSet);
+			rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
 			
 			int pic = pictureArray.size();
 
