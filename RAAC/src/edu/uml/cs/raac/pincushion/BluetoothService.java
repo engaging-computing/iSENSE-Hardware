@@ -202,7 +202,7 @@ public class BluetoothService {
 
 	public byte readByte() {
 		if (mState != STATE_CONNECTED) return 0x00;
-		return mConnectedComm.read(0);
+		return mConnectedComm.read();
 	}
 
 	/**
@@ -416,15 +416,17 @@ public class BluetoothService {
 			}
 		}
 
-		public byte read(int attemptNum) {
+		public byte read() {
 			byte result = 0x00;
 			try {
-				if(buffer.isEmpty() && attemptNum < 3) {
-					Thread.sleep(10);
-					result = read(attemptNum+1);
+				for(int i = 0; i<100; i++) {
+					if(!buffer.isEmpty()) {
+						result = buffer.remove();
+						break;
+					} else {
+						Thread.sleep(20);
+					}
 				}
-				Thread.sleep(10);
-				result = buffer.remove();
 			} catch (NoSuchElementException e) {
 				return 0x00;
 			} catch (InterruptedException e) {

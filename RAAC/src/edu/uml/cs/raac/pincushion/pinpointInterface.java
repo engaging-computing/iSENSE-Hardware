@@ -39,6 +39,7 @@ import java.util.prefs.Preferences;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.widget.ProgressBar;
 import edu.uml.cs.raac.exceptions.ChecksumException;
 import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 import edu.uml.cs.raac.exceptions.InvalidHexException;
@@ -83,11 +84,12 @@ public class pinpointInterface {
      *
      * The returned ArrayList contains all data as an array of strings.
      *
+     * @param pbar Progress Bar from UI activity to update
      * @return ArrayList<String[]>
      * @throws NoDataException
      * @throws FileNotFoundException
      */
-    public ArrayList<String[]> getData() throws NoDataException, IncompatibleConversionException, BackingStoreException {
+    public ArrayList<String[]> getData( ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException {
 
         HashMap<Integer, Integer> settings = null;
         System.out.println("Getting records");
@@ -110,7 +112,8 @@ public class pinpointInterface {
 
             //Figure out how many records are stored on the pinpoint.
             int numRecords = (((dh[0]) << 16) + ((dh[1] & 255) << 8) + (dh[2] & 255)) / 32;
-
+            pdiag.setMax(numRecords);
+            
             //Request all data from the pinpoint.
             System.out.println("Getting settings");
             ArrayList<byte[]> rawData = pinpoint.requestData(dh, numRecords);
@@ -119,6 +122,7 @@ public class pinpointInterface {
             for (int i = 0; i < numRecords; i++) {
             	byte[] dataLine = rawData.get(i);
                 records.add(conv.convertAll(dataLine));
+                pdiag.setProgress(i);
             }
 
             if (settings.get(PinComm.SAMPLE_RATE) < 1000) {
