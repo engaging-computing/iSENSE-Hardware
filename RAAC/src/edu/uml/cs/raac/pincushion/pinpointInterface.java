@@ -89,7 +89,7 @@ public class pinpointInterface {
      * @throws NoDataException
      * @throws FileNotFoundException
      */
-    public ArrayList<String[]> getData( ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException {
+    public ArrayList<String[]> getData( ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException, IOException {
 
         HashMap<Integer, Integer> settings = null;
         System.out.println("Getting records");
@@ -133,7 +133,7 @@ public class pinpointInterface {
         } catch (NoConnectionException ex) {
             System.err.println("NoConnectionException thrown while getting data");
         } catch (IOException ex) {
-            System.err.println("IOException thrown while getting data");
+            throw ex;
         } catch (ChecksumException ex) {
         	System.err.println("Checksum exception thrown while getting data");
         }

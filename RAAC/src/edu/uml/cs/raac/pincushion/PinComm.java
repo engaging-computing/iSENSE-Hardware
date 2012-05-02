@@ -156,7 +156,12 @@ public class PinComm {
 		if (spi.isOpen()) {
 			spi.writeByte((byte) DATA_HEADER);
 			for (int i = 0; i < 4; i++) {
-				temp[i] = spi.readByte();
+				try {
+					temp[i] = spi.readByte();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			int numRecords = (((temp[0] & 255) << 16) + ((temp[1] & 255) << 8) + (temp[2] & 255)) / 32;
@@ -241,6 +246,8 @@ public class PinComm {
 
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.err.println("ArrayIndexOutOfBoundsException thrown while requesting data");
+			} catch (IOException e) {
+				throw e;
 			} catch (Exception e) {
 				System.err.append("Exception thrown while requesting data");
 			}
@@ -265,14 +272,19 @@ public class PinComm {
 	 * @throws NoConnectionException
 	 */
 	private int getSetting(byte hByte, byte lByte)  {
-		short high, low;
+		short high = 0, low = 0;
 		if (spi.isOpen()) {
 			spi.clearBuff();
 			spi.writeByte(READ_EEPROM);
 
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(hByte);
-			high = (short) (spi.readByte() & 255);
+			try {
+				high = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			spi.clearBuff();
 
@@ -280,7 +292,12 @@ public class PinComm {
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(lByte);
 
-			low = (short) (spi.readByte() & 255);
+			try {
+				low = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			spi.clearBuff();
 
@@ -299,13 +316,17 @@ public class PinComm {
 	 * @throws NoConnectionException
 	 */
 	private int getSetting(byte sByte) {
-		short high;
+		short high = 0;
 		if (spi.isOpen()) {
 			spi.clearBuff();
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(sByte);
-			high = (short) (spi.readByte() & 255);
+			try {
+				high = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return high;
 		}
 		return -1;
@@ -357,7 +378,12 @@ public class PinComm {
 			spi.writeByte((byte) 0x00);
 			spi.writeByte(lByte);
 			spi.writeByte((byte) (value & 0xFF));
-			spi.readByte();
+			try {
+				spi.readByte();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			throw new NoConnectionException();
 		}
@@ -379,7 +405,11 @@ public class PinComm {
 			spi.writeByte(sByte);
 			spi.writeByte((byte) (value & 0xFF));
 			spi.clearBuff();
-			spi.readByte();
+			try {
+				spi.readByte();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} else {
 			throw new NoConnectionException();
 		}
@@ -492,7 +522,12 @@ public class PinComm {
 			int date = (cal.get(Calendar.YEAR)) % 100;
 			spi.writeByte((byte) date);
 
-			byte response = spi.readByte();
+			byte response = 0x00;
+			try {
+				response = spi.readByte();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			if (response == (byte) 0x06) {
 				System.out.println("Successfully set time");
@@ -519,8 +554,12 @@ public class PinComm {
 			spi.writeByte((byte) 'R');
 			spi.writeByte((byte) 'M');
 
-			if (spi.readByte() == (byte) 0x12) {
-				System.out.println("Cleared data from pinpoint!");
+			try {
+				if (spi.readByte() == (byte) 0x12) {
+					System.out.println("Cleared data from pinpoint!");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -542,8 +581,12 @@ public class PinComm {
 			spi.writeByte((byte) 'R');
 			spi.writeByte((byte) 'M');
 
-			if (spi.readByte() == (byte) 0x14) {
-				System.out.println("Started recording data");
+			try {
+				if (spi.readByte() == (byte) 0x14) {
+					System.out.println("Started recording data");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -555,29 +598,49 @@ public class PinComm {
 	 * @throws NoConnectionException
 	 */
 	public int getSerialNumber() throws NoConnectionException {
-		short one, two, three, four;
+		short one = 0, two = 0, three = 0, four = 0;
 		int serialNumber = -1;
 		spi.clearBuff();
 		if (spi.isOpen()) {
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x03);
 			spi.writeByte((byte) EEPROM_SN_ONE);
-			one = (short) (spi.readByte() & 255);
+			try {
+				one = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x03);
 			spi.writeByte((byte) EEPROM_SN_TWO);
-			two = (short) (spi.readByte() & 255);
+			try {
+				two = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x03);
 			spi.writeByte((byte) EEPROM_SN_THREE);
-			three = (short) (spi.readByte() & 255);
+			try {
+				three = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			spi.writeByte(READ_EEPROM);
 			spi.writeByte((byte) 0x03);
 			spi.writeByte((byte) EEPROM_SN_FOUR);
-			four = (short) (spi.readByte() & 255);
+			try {
+				four = (short) (spi.readByte() & 255);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			serialNumber = ((one << 24) + (two << 16) + (three << 8) + four);
 		}
@@ -595,7 +658,11 @@ public class PinComm {
 			spi.writeByte((byte) 0x03);
 			spi.writeByte(BOOTLOADER_FLAG);
 			spi.writeByte((byte) 0xFF);
-			spi.readByte();
+			try {
+				spi.readByte();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

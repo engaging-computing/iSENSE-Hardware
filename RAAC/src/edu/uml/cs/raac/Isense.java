@@ -28,6 +28,7 @@
 
 package edu.uml.cs.raac;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -104,12 +105,12 @@ public class Isense extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		initializeLayout();
-		
+
 		flipper.setInAnimation(mSlideInTop);
 		flipper.setOutAnimation(mSlideOutTop);
-		
+
 		flipView = flipper.getDisplayedChild();
-		
+
 		if (mBluetoothAdapter == null) {
 			//
 		} else {
@@ -126,7 +127,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		mChatService = new BluetoothService(this, mHandler);
 	}
-	
+
 	//Set up all views from the XML layout
 	public void initializeLayout() {
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
@@ -141,30 +142,30 @@ public class Isense extends Activity implements OnClickListener {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-		
+
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
-		
+
 		minField.setText(datMin);
 		maxField.setText(datMax);
 		medField.setText(datMed);
 		aveField.setText(datAve);
-		
+
 		setBtStatus();
 	}
-	
+
 	//Override to make sure that the correct layout file is used when the screen orientation changes
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-	  super.onConfigurationChanged(newConfig);
-	  setContentView(R.layout.main);
-	  initializeLayout();
-	  
-	  flipper.setDisplayedChild(flipView);
-	  
-	  if (data != null) {
-		  writeDataToScreen();
-	  }
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.main);
+		initializeLayout();
+
+		flipper.setDisplayedChild(flipView);
+
+		if (data != null) {
+			writeDataToScreen();
+		}
 	}
 
 	@Override
@@ -227,27 +228,35 @@ public class Isense extends Activity implements OnClickListener {
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setMessage("Collecting data from PINPoint...");
 			progressDialog.show();
-			
+
 			final Runnable toastRun = new Runnable() { 
-	              public void run() { 
-	                 Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
-	              }
-	          };
-			
+				public void run() { 
+					Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
+				}
+			};
+			final Runnable toastRun2 = new Runnable() { 
+				public void run() { 
+					Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
+				}
+			};
+
 			dataLayout.removeAllViews();
-			
+
 			Thread thread=new Thread(
 					new Runnable(){
 
 						public void run(){
 
 							try {
-								
+
 								data = ppi.getData(progressDialog);
 
 							} catch (NoDataException e) {
 								e.printStackTrace();
 								runOnUiThread(toastRun);
+							} catch (IOException e) {
+								e.printStackTrace();
+								runOnUiThread(toastRun2);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -259,7 +268,9 @@ public class Isense extends Activity implements OnClickListener {
 									if(progressDialog.isShowing()) {
 										progressDialog.dismiss();
 									}
-									writeDataToScreen();
+									if (data != null) {
+										writeDataToScreen();
+									}
 								}
 
 							});
@@ -269,7 +280,7 @@ public class Isense extends Activity implements OnClickListener {
 			thread.start();
 		}
 	}
-	
+
 	public void writeDataToScreen() {
 		int i = 0;
 		int y = 1;
@@ -277,7 +288,7 @@ public class Isense extends Activity implements OnClickListener {
 			i = data.size()-10;
 			y = data.size()-9;
 		}
-		
+
 		int x = 0;
 		int z = 0;
 		String label = "";
@@ -287,7 +298,7 @@ public class Isense extends Activity implements OnClickListener {
 		try {
 			for (; i<data.size(); i++) {
 				String[] strray = data.get(i);
-				
+
 				LinearLayout newRow = new LinearLayout(getBaseContext());
 				newRow.setOrientation(LinearLayout.HORIZONTAL);
 				if(z%2 != 0) {
@@ -389,7 +400,7 @@ public class Isense extends Activity implements OnClickListener {
 			datMin = "" + min;
 			datMax = "" + max;
 			datAve = "" + ave;
-			
+
 			minField.setText(datMin);
 			maxField.setText(datMax);
 			aveField.setText(datAve);
@@ -398,22 +409,22 @@ public class Isense extends Activity implements OnClickListener {
 				med = bta1Data.get((bta1Data.size() + 1) / 2);
 			} else {
 				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
-					.size() + 1) / 2)) / 2;
+						.size() + 1) / 2)) / 2;
 			}
-			
+
 			datMed = "" + med;
 			medField.setText(datMed);
-					
+
 		}
 	}
-	
+
 	public void setBtStatus() {
 		if (btStatNum == 0) {
 			btStatus.setText("Status: Disconnected");
 		} else if (btStatNum == 1) {
 			btStatus.setText("Status: Connected");
 		} else {
-			
+
 		}
 	}
 
