@@ -97,30 +97,29 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static EditText experimentInput;
 	private static EditText seats;
 	private static Spinner rides;
+	private static TextView rideName;
+	private static CheckBox canobieCheck;
+	
 	private Button startStop;
 	private Button browseButton;
 	private TextView values;
 	private Boolean running = false;
-	private static TextView rideName;
 	private Vibrator vibrator;
 	private TextView picCount;
-	private TextView loginInfo;
-	private static CheckBox canobieCheck;
-	
+	private TextView loginInfo;	
 	private String rideNameString = "NOT SET";
 	private String seatString = "1";
-	
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
-	
 	private Location loc;
 	private Location roughLoc;
-	private float accel[];
-	private float orientation[];
 	private Timer timeTimer;
+	
 	private float rawAccel[];
 	private float rawMag[];
+	private float accel[];
+	private float orientation[];
 	
 	private static final int INTERVAL = 200;
 	private static final int MENU_ITEM_SETUP = 1;
@@ -135,12 +134,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static final int DIALOG_NO_GPS = 10;
 	private static final int DIALOG_FORCE_STOP = 11;
 
-    static final public int DIALOG_CANCELED = 0;
-    static final public int DIALOG_OK = 1;
-    static final public int DIALOG_PICTURE = 2;
+    public static final int DIALOG_CANCELED = 0;
+    public static final int DIALOG_OK = 1;
+    public static final int DIALOG_PICTURE = 2;
     
-    static final public int CAMERA_PIC_REQUESTED = 1;
-    static final public int CAMERA_VID_REQUESTED = 2;
+    public static final int CAMERA_PIC_REQUESTED = 1;
+    public static final int CAMERA_VID_REQUESTED = 2;
     	
     private int count = 0;
     private String data;
@@ -161,17 +160,17 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private int    elapsedMillis  = 0;
     private int    totalMillis    = 0;
     private int    dataPointCount = 0;
+    private int    i              = 0;  
+    private int    len            = 0;  
+    private int    len2           = 0;
 
     private long   currentTime    = 0;
     
-    private String dateString;
+    private String dateString, s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;;
     RestAPI rapi ;
     
-    String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
     DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
-    
-    int i = 0;  int len = 0;  int len2 = 0;
-    
+
     ProgressDialog dia;
     double partialProg = 1.0;
     
@@ -181,16 +180,16 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     String nameOfSession = "";
     String partialSessionName = "";
     
-    static int     mediaCount        = 0;
-    static boolean inPausedState     = false;
-    static boolean toastSuccess      = false;
-    static boolean useMenu           = true ;
-    static boolean beginWrite        = true ;
-    static boolean setupDone         = false;
-    static boolean choiceViaMenu     = false;
-    static boolean dontToastMeTwice  = false;
-    static boolean exitAppViaBack    = false;
-    static boolean backWasPressed    = false;
+    public static boolean inPausedState     = false;
+    
+	private static int     mwidth            = 1;
+    private static int     mediaCount        = 0;
+    private static boolean useMenu           = true ;
+    private static boolean beginWrite        = true ;
+    private static boolean setupDone         = false;
+    private static boolean choiceViaMenu     = false;
+    private static boolean dontToastMeTwice  = false;
+    private static boolean exitAppViaBack    = false;
     private static boolean canobieIsChecked  = true;
     private static boolean canobieBackup     = true;
     
@@ -207,13 +206,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     public static String loginPass = "";
     public static String experimentId = "";
     public static JSONArray dataSet;
-    
-    static int mheight = 1;
-	static int mwidth = 1;
 	
 	public static Context mContext;
-	static ArrayList<File> pictureArray = new ArrayList<File>();
-	static ArrayList<File> videoArray   = new ArrayList<File>();
+	
+	private static ArrayList<File> pictureArray = new ArrayList<File>();
+	private static ArrayList<File> videoArray   = new ArrayList<File>();
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -231,14 +229,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         //This block useful for if onBackPressed - retains some things from previous session
         if(running)
     		showDialog(DIALOG_FORCE_STOP);
-    	if(loginName != "") {
-    		boolean success = rapi.login(loginName, loginPass); 
-    		if(success) {                                       
-    			loginInfo.setText(" "+ loginName);
-    			loginInfo.setTextColor(Color.GREEN);
-    			successLogin = true;
-    		}
-    	}
+        
     	picCount.setText("Pictures and Videos Taken: " + mediaCount);
         
         startStop.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
@@ -408,18 +399,20 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         
     }
     
+<<<<<<< HEAD
     long getUploadTime() {
     		Calendar c = Calendar.getInstance();
     		return ((long) c.getTimeInMillis());
     }
     
+=======
+>>>>>>> d1663b0cb88c75abb916b71061c8a9e7264f5c9b
     public void updateFile( String data ) {
     	
     	try {
             out.append(data);
-            toastSuccess = true;
     	} catch (IOException e) {
-    	    toastSuccess = false;
+    		/*stub*/
     	}
     	
     }
@@ -431,9 +424,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     			out.close();
             if(gpxwriter != null)
             	gpxwriter.close();
-            toastSuccess = true;
     	} catch (IOException e) {
-    	    toastSuccess = false;
+    	    /*stub*/
     	}
     	
     }
@@ -456,10 +448,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
             gpxwriter = new FileWriter(SDFile);
             out = new BufferedWriter(gpxwriter);
             out.write(data);
-            toastSuccess = true;
             beginWrite = false;
     	} catch (IOException e) {
-    	    toastSuccess = false;
+    		Toast.makeText(this, "Failure to write to file", Toast.LENGTH_SHORT); /*stub*/
     	}
     	
     }
@@ -552,8 +543,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	inPausedState = false;
     	if(running)
     		showDialog(DIALOG_FORCE_STOP);
-    	if(loginName != "")
-    		rapi.login(loginName, loginPass);
+    	
+    	//will call the login dialogue if necessary and update UI
+    	if(loginName != "") login();
+    	
     	picCount.setText("Pictures and Videos Taken: " + mediaCount);
     }
     
@@ -669,7 +662,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
     
-	
 	protected Dialog onCreateDialog(final int id) {
 	    
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1224,10 +1216,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	}
     
-    static int getApiLevel() {
-    	return Integer.parseInt(android.os.Build.VERSION.SDK);
-    }
-    
   	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1253,11 +1241,20 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		}
 		
 	}
-		
-	private Runnable uploader = new Runnable() {
+	
+  	//assists with differentiating between displays for dialogues
+  	private static int getApiLevel()
+  	{
+    	return Integer.parseInt(android.os.Build.VERSION.SDK);
+    }
+  	
+  	//calls the rapi primitives for actual uploading
+	private Runnable uploader = new Runnable()
+	{
 		
 		@Override
-		public void run() {
+		public void run()
+		{
 		
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
@@ -1308,7 +1305,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
 			
 			int pic = pictureArray.size();
-
 			
 			while(pic > 0) {
 				if(nameOfSession.equals(""))
@@ -1319,7 +1315,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 							experimentInput.getText().toString(), 
 							sessionId, sessionName.getText().toString(), "N/A");
+<<<<<<< HEAD
 				
+=======
+>>>>>>> d1663b0cb88c75abb916b71061c8a9e7264f5c9b
 				pic--;
 				
 			}
@@ -1331,9 +1330,11 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	};
 
+	//control task for uploading
 	private class Task extends AsyncTask <Void, Integer, Void> {
 	    
-	    @Override protected void onPreExecute() {
+	    @Override protected void onPreExecute()
+	    {
 	    	
 	        dia = new ProgressDialog(AmusementPark.this);
 	        dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -1343,7 +1344,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	    }
 
-	    @Override protected Void doInBackground(Void... voids) {
+	    @Override protected Void doInBackground(Void... voids)
+	    {
 
 	        uploader.run();
 	        publishProgress(100);
@@ -1351,7 +1353,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	    }
 
-	    @Override  protected void onPostExecute(Void voids) {
+	    @Override  protected void onPostExecute(Void voids)
+	    {
 	        
 	    	dia.setMessage("Done");
 	        dia.cancel();
@@ -1364,7 +1367,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	    }
 	}	
-	
+
+	//prevents toasts from being queued infinitely
 	private class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
 	    @Override protected void onPreExecute() {
 	    	dontToastMeTwice = true;
@@ -1393,7 +1397,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         
         Display deviceDisplay = getWindowManager().getDefaultDisplay(); 
     	mwidth  = deviceDisplay.getWidth();
-    	mheight = deviceDisplay.getHeight();
         
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 
@@ -1420,6 +1423,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         mRoughLocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	}
 	
+<<<<<<< HEAD
 	// Takes care of everything to do with EULA
 	private void displayEula() {
 		
@@ -1453,6 +1457,25 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		} else return false;
 		
 	}
+=======
+	//deals with login and UI display
+	void login()
+	{
+		boolean success = rapi.login(loginName, loginPass); 
+		if(success) {                                       
+			loginInfo.setText(" "+ loginName);
+			loginInfo.setTextColor(Color.GREEN);
+			successLogin = true;
+		}
+	}
+	
+    //gets the milliseconds since Epoch
+	private long getUploadTime()
+    {
+    		Calendar c = Calendar.getInstance();
+    		return ((long) c.getTimeInMillis());
+    }
+>>>>>>> d1663b0cb88c75abb916b71061c8a9e7264f5c9b
 	
 	// Deals with Dialog creation whether api is tablet or not
 	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
@@ -1479,4 +1502,38 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		}
 	}
 
+	//takes care of everything to do with EULA
+	private void displayEula()
+		{
+			AlertDialog.Builder adb = new SimpleEula(this).show();
+			if(adb != null) {
+				Dialog dialog = adb.create();	
+				dialog.show();
+
+				apiTabletDisplay(dialog);
+			}
+		}
+		
+	//apiTabletDisplay for Dialog Building on Tablets
+	static boolean apiTabletDisplay(Dialog dialog)
+	{
+		int apiLevel = getApiLevel();
+		if(apiLevel >= 11) {
+			dialog.show();
+			
+			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+	
+			lp.copyFrom(dialog.getWindow().getAttributes());
+			lp.width = mwidth;
+			lp.height = WindowManager.LayoutParams.MATCH_PARENT;;
+			lp.gravity = Gravity.CENTER_VERTICAL;
+			lp.dimAmount=0.7f;
+			
+			dialog.getWindow().setAttributes(lp);
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			
+			return true;
+		} else return false;
+			
+	}
 }
