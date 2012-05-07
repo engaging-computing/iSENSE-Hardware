@@ -243,5 +243,14 @@
 		http://isenseproject.org\n
 		
 	</string>
+	
+	<string name="xyz">X: , Y: , Z:</string>
+	<string name="startString">START\n(Press and Hold)</string>
+	<string name="stopString">STOP\n(Press and Hold)</string>
+	<string name="notLoggedIn"> Not Logged In</string>
+	<string name="rideAndSeat">Ride/St#: </string>
+	<string name="iSENSELogo">iSENSE Logo</string>
+	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
+	<string name="menuDirections">Use Menu to Setup, Login, or Upload</string>
 
 </resources>
