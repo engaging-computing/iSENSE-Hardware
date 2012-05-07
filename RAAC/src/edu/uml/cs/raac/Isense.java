@@ -242,6 +242,9 @@ public class Isense extends Activity implements OnClickListener {
 			};
 
 			dataLayout.removeAllViews();
+			if( bta1Data != null ) {
+				bta1Data.clear();
+			}
 
 			Thread thread=new Thread(
 					new Runnable(){
