@@ -26,6 +26,8 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sensors_selector);
 
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		
 		bta1 = (Spinner) findViewById(R.id.btaSpin1);
 		bta2 = (Spinner) findViewById(R.id.btaSpin2);
 		mini1 = (Spinner) findViewById(R.id.miniSpin1);
@@ -52,11 +54,17 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 		bta2.setAdapter(btaAdapter);
 		mini1.setAdapter(miniAdapter);
 		mini2.setAdapter(miniAdapter);
+		
+		bta1.setSelection(prefs.getInt("bta1pos", 0));
+		bta2.setSelection(prefs.getInt("bta2pos", 0));
+		mini1.setSelection(prefs.getInt("mini1pos", 0));
+		mini2.setSelection(prefs.getInt("mini2pos", 0));
 
 	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		
 		if(parent == bta1) {
 			return1 = getFormula(parent.getItemAtPosition(position).toString());
 			retName1 = parent.getItemAtPosition(position).toString();
@@ -70,6 +78,7 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 			return4 = getFormula(parent.getItemAtPosition(position).toString());
 			retName4 = parent.getItemAtPosition(position).toString();
 		}
+
 	}
 
 	@Override
@@ -85,6 +94,16 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 			setResult(RESULT_CANCELED,result);
 			finish();
 		} else {
+			SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+			SharedPreferences.Editor editor = prefs.edit();
+			
+			editor.putInt("bta1pos", bta1.getSelectedItemPosition());
+			editor.putInt("bta2pos", bta2.getSelectedItemPosition());
+			editor.putInt("mini1pos", mini1.getSelectedItemPosition());
+			editor.putInt("mini2pos", mini2.getSelectedItemPosition());
+			
+			editor.commit();
+			
 			Intent result = new Intent();
 			result.putExtra("bta1", return1);
 			result.putExtra("bta2", return2);
@@ -94,6 +113,7 @@ public class SensorSelector extends Activity implements OnClickListener, OnItemS
 			result.putExtra("btaname2", retName2);
 			result.putExtra("mininame1", retName3);
 			result.putExtra("mininame2", retName4);
+			
 			setResult(RESULT_OK,result);
 			finish();
 		}
