@@ -406,7 +406,9 @@ public class BluetoothService {
 				try {
 					// Read from the InputStream
 					//nextByte = (byte) mmInStream.read(bbuff);
-					buffer.add( (byte) mmInStream.read() );
+					if(mmInStream.available() >= 1) {
+						buffer.add( (byte) mmInStream.read() );
+					}
 					//System.out.println("buffer head: "+buffer.peek());
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
@@ -417,22 +419,20 @@ public class BluetoothService {
 		}
 
 		public byte read() throws IOException {
-			byte result = 0x00;
+			int i = 0;
 			try {
-				for(int i = 0; i < 200; i++) {
+				for(i = 0; i < 200; i++) {
 					if(!buffer.isEmpty()) {
-						result = buffer.remove();
-						break;
+						return buffer.poll();
 					} else {
-						Thread.sleep(10);
+						Thread.sleep(50);
 					}
 				}
-			} catch (NoSuchElementException e) {
-				throw new IOException();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			return result;
+			System.err.println("Failed after " + i + " tries");
+			throw new IOException();
 		}
 
 		/**

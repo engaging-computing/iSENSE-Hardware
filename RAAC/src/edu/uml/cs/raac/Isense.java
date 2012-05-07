@@ -29,6 +29,7 @@
 package edu.uml.cs.raac;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -379,6 +380,7 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	private void findStatistics() {
+		DecimalFormat form = new DecimalFormat("0.0000");
 		double min, max, ave, med;
 		double temp = 0;
 
@@ -397,9 +399,9 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			ave = temp / bta1Data.size();
 
-			datMin = "" + min;
-			datMax = "" + max;
-			datAve = "" + ave;
+			datMin = "" + form.format(min);
+			datMax = "" + form.format(max);
+			datAve = "" + form.format(ave);
 
 			minField.setText(datMin);
 			maxField.setText(datMax);
@@ -412,7 +414,7 @@ public class Isense extends Activity implements OnClickListener {
 						.size() + 1) / 2)) / 2;
 			}
 
-			datMed = "" + med;
+			datMed = "" + form.format(med);
 			medField.setText(datMed);
 
 		}
