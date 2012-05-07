@@ -74,7 +74,7 @@ public class Isense extends Activity implements OnClickListener {
 	ImageView spinner;
 	RelativeLayout launchLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, btStatus;
+	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
 	LinearLayout dataLayout;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
@@ -131,6 +131,8 @@ public class Isense extends Activity implements OnClickListener {
 
 	//Set up all views from the XML layout
 	public void initializeLayout() {
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -143,7 +145,10 @@ public class Isense extends Activity implements OnClickListener {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
+		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 
+		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
+		
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 
@@ -564,6 +569,8 @@ public class Isense extends Activity implements OnClickListener {
 						data.getExtras().getString("mininame1"));
 				editor.putString("name_mini2",
 						data.getExtras().getString("mininame2"));
+				
+				sensorHead.setText("BTA1: " + data.getExtras().getString("btaname1"));
 
 				editor.commit();
 			}
