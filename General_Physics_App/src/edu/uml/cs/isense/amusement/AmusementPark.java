@@ -174,7 +174,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     ProgressDialog dia;
     double partialProg = 1.0;
     
-    boolean successLogin = false;
+
     
     private EditText sessionName; 
     String nameOfSession = "";
@@ -192,6 +192,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private static boolean exitAppViaBack    = false;
     private static boolean canobieIsChecked  = true;
     private static boolean canobieBackup     = true;
+    private static boolean successLogin      = false;
     
     private Handler mHandler;
     private boolean throughHandler = false;
@@ -230,8 +231,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         if(running)
     		showDialog(DIALOG_FORCE_STOP);
         
-    	picCount.setText("Pictures and Videos Taken: " + mediaCount);
-        
         startStop.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
         startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -257,7 +256,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					
 						mSensorManager.unregisterListener(AmusementPark.this);
 						running = false;
-						startStop.setText("Hold to Start");
+						startStop.setText(R.string.startString);
 						 
 						timeTimer.cancel();
 						count++;
@@ -297,7 +296,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						data = "X Acceleration, Y Acceleration, Z Acceleration, Acceleration, " +
 								"Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
 						running = true;
-						startStop.setText("Hold to Stop");
+						startStop.setText(R.string.stopString);
 			    	
 						timeTimer = new Timer();
 						timeTimer.scheduleAtFixedRate(new TimerTask() {
@@ -548,7 +547,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	//will call the login dialogue if necessary and update UI
     	if(loginName != "") login();
     	
-    	picCount.setText("Pictures and Videos Taken: " + mediaCount);
+    	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
     }
     
     // Overridden to prevent user from exiting app unless back button is pressed twice
@@ -784,7 +783,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	    		public void onClick(DialogInterface dialoginterface,int i) {
 	    			dialoginterface.dismiss();
-	    			picCount.setText("Pictures and Videos Taken: " + mediaCount);
+	    			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	    		}
 	    	})
 	    	.setCancelable(true);
@@ -1230,14 +1229,14 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	            File f = convertImageUriToFile(imageUri, this);
 	            pictures.add(f);
 				mediaCount++;
-	            picCount.setText("Pictures and Videos Taken: " + mediaCount);
+				picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			}
 		} else if (requestCode == CAMERA_VID_REQUESTED) {
 			if(resultCode == RESULT_OK) {
 				File f = convertVideoUriToFile(videoUri, this);
 				videos.add(f);
 				mediaCount++;
-	            picCount.setText("Pictures and Videos Taken: " + mediaCount);
+				picCount.setText("" + getString(R.string.picAndVidCount) + mediaCount);
 			}
 		} else if (requestCode == EXPERIMENT_CODE) {
     		if (resultCode == Activity.RESULT_OK) {
@@ -1364,7 +1363,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        len = 0; len2 = 0; mediaCount = 0;
 	        
 	        Toast.makeText(AmusementPark.this, "Upload Success", Toast.LENGTH_SHORT).show();
-	        picCount.setText("Pictures and Videos Taken: " + mediaCount);
+	        picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	        showDialog(DIALOG_SUMMARY);
 	        
 	    }
@@ -1413,9 +1412,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         rideName.setText("Ride Name: " + rideNameString);
         
         picCount = (TextView) findViewById(R.id.pictureCount);
+    	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
         
         loginInfo = (TextView) findViewById(R.id.loginInfo);
-        loginInfo.setText(" Not Logged In");
+        loginInfo.setText(R.string.notLoggedIn);
         loginInfo.setTextColor(Color.RED);
         
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
