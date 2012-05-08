@@ -89,9 +89,18 @@ public final class R {
         public static final int eula=0x7f050007;
         public static final int experiments_no_items=0x7f050005;
         public static final int hello=0x7f050000;
+        public static final int iSENSELogo=0x7f05000d;
+        public static final int iSENSElogo=0x7f050010;
         public static final int iSenseConfig=0x7f050002;
+        public static final int menuDirections=0x7f05000f;
+        public static final int notLoggedIn=0x7f05000b;
         public static final int otherConfig=0x7f050003;
+        public static final int picAndVidCount=0x7f05000e;
+        public static final int rideAndSeat=0x7f05000c;
         public static final int rides_prompt=0x7f050004;
+        public static final int startString=0x7f050009;
+        public static final int stopString=0x7f05000a;
         public static final int updates=0x7f050006;
+        public static final int xyz=0x7f050008;
     }
 }
