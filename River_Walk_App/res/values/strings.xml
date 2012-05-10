@@ -5,6 +5,11 @@
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="app_name_experiments">Experiments</string>
     
+    <string name="firstName">First Name: \0</string>
+    <string name="descPic">Step 1: Describe the picture you will take.</string>
+    <string name="takePic">Step 2: Take the picture and upload to iSENSE.</string>
+    <string name="iSlogo">iSENSE Logo</string>
+    
     <string name="picture_prompt">Choose a descriptor for the picture:</string>
     <string-array name="descriptor_array">
         <item>Merrimack River</item>

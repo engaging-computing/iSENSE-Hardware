@@ -26,11 +26,8 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -39,28 +36,34 @@ import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class pictures extends Activity implements LocationListener {
-	private final static int CAMERA_PIC_REQUESTED = 1;
-	private static final int EXPERIMENT_CODE = 2;
-
-	static final private int DIALOG_LOGIN_ID = 0;
-	static final private int DIALOG_REJECT = 1;
-
+	private static final int CAMERA_PIC_REQUESTED = 1;
+	
+	private static final int DIALOG_REJECT = 0;
+	private static final int DIALOG_NO_GPS = 1;
+	private static final int DIALOG_DIFFICULTY = 2;
+	private static final int DIALOG_NO_CONNECT = 3;
+	private static final int DIALOG_NOT_LOGGED_IN = 4;
+	
 	private LocationManager mLocationManager;
 	
 	private Uri imageUri; 
 	
 	RestAPI rapi;
+	private static final String loginName = "RiverWalker";
+	private static final String loginPass = "SimonKit";
+	private static final String experimentNum = "347";
+	
+	private static boolean gpsWorking = false;
+	private static boolean userLoggedIn = false;
 	
 	private EditText name; 
-	
-	private EditText experimentInput;
-	
+	//private EditText experimentInput;
 	private Location loc ;
 	
-	private String teacherInfo       ;
-	private String schoolInfo        ;
-	private String teacher           ;
-	private String school            ;
+	//private String teacherInfo       ;
+	//private String schoolInfo        ;
+	//private String teacher           ;
+	//private String school            ;
 	private double Lat  =  42.6404   ; 
 	private double Long = -71.3533   ;
 	private long   curTime           ;
@@ -71,8 +74,6 @@ public class pictures extends Activity implements LocationListener {
 	private File picture;
 	
 	private Button takePicture;
-	
-	/** MIK **/
 	private Button describe;
 	
 	public static Button takePhoto;
@@ -90,35 +91,113 @@ public class pictures extends Activity implements LocationListener {
 	static boolean c11 = false;
 	
 	private ProgressDialog dia ;
-	/**     **/
-	
+
 	protected Dialog onCreateDialog(final int id) {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    Dialog dialog;
 	    switch(id) {
-	    case DIALOG_LOGIN_ID:
-	    	LoginActivity la = new LoginActivity(mContext);
-	        dialog = la.getDialog(new Handler() {
-			      public void handleMessage(Message msg) { 
-			    	  switch (msg.what) {
-			    	  	case LoginActivity.LOGIN_SUCCESSFULL:
-			    	  	  Toast.makeText(mContext, "Loggin successful", Toast.LENGTH_LONG);
-			    	  	  break;
-			    	  	case LoginActivity.LOGIN_CANCELED:
-			    		  break;
-			    	  	case LoginActivity.LOGIN_FAILED:
-				    	  showDialog(DIALOG_LOGIN_ID);
-			    		  break;
-			    	  }
-			      }
-        		});
-                
-	        break;
+	    
 	    case DIALOG_REJECT:
-	        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	        builder.setMessage("Please enter a name and experiment ID");
+	    	builder.setMessage("Please enter a name.");
 	        builder.setPositiveButton("Ok", null);
 	        dialog = builder.create();
 	        break;
+	    
+	    case DIALOG_NO_GPS:
+	    	builder.setTitle("No GPS Provider Found")
+	    	.setMessage("Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?")
+	    	.setCancelable(false)
+	    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialoginterface, final int id) {
+	            	   dialoginterface.cancel();
+	            	   startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+	               }
+	           })
+	           .setNegativeButton("No", new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialoginterface, final int id) {
+	                    dialoginterface.cancel();
+	               }
+	           });
+
+	    	dialog = builder.create();
+	       	break;
+	    	
+	    case DIALOG_NO_CONNECT:
+	    	
+	    	builder.setTitle("No Connectivity")
+	    	.setMessage("Could not connect to the internet through either wifi or mobile service. " +
+	    			"You will not be able to use this app until either is enabled.")
+	    	.setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialoginterface, final int id) {
+	            	   dialoginterface.dismiss();
+	            	   ((Activity) mContext).finish();
+	               }
+	    	})
+	    	.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
+	               public void onClick(DialogInterface dialoginterface, final int id) {
+	            	   try {
+							Thread.sleep(100);
+	            	   } catch (InterruptedException e) {
+							e.printStackTrace();
+	            	   }
+	            	   if(rapi.isConnectedToInternet()) {
+	            		   dialoginterface.dismiss();
+	            		   boolean success = rapi.login(loginName, loginPass);
+	            		   if(success) {
+	            			   Toast.makeText(pictures.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
+	            			   userLoggedIn = true;
+	            		   }
+	            	   } else {
+	            		   userLoggedIn = false;
+	            		   dialoginterface.dismiss();
+	            		   new NotConnectedTask().execute();
+	            	   }
+	               }
+	    	})
+	        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+	    		@Override
+					public void onCancel(DialogInterface dialoginterface) {
+	    				dialoginterface.dismiss();
+	            	    ((Activity)mContext).finish();
+					}
+	    	})
+	        .setCancelable(true);
+	           
+	    	dialog = builder.create();
+	       	break;
+	
+	    case DIALOG_DIFFICULTY:
+	    	
+	    	builder.setTitle("Difficulties")
+	    	.setMessage("This application has experienced WiFi connection difficulties.  Try to reconfigure your WiFi " +
+	    			    "settings or turn it off and on, then hit \"Try Again\".")
+	    	.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+	    		public void onClick(DialogInterface dialoginterface, final int id) {
+	    			dialoginterface.dismiss();
+	    			if (!userLoggedIn) attemptLogin();
+	    		}
+	    	})
+	        .setCancelable(false);
+	           
+	    	dialog = builder.create();
+	       	break;
+	       	
+	    case DIALOG_NOT_LOGGED_IN:
+	    	
+	    	builder.setTitle("Upload Failed")
+	    	.setMessage("This application is having trouble logging into iSENSE, and therefore cannot upload data at this time.  "
+	    			+ "Press try again to reattempt login.")
+	    	.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+	    		public void onClick(DialogInterface dialoginterface, final int id) {
+	    			dialoginterface.dismiss();
+	    			if (!userLoggedIn) attemptLogin();
+	    		}
+	    	})
+	        .setCancelable(false);
+	           
+	    	dialog = builder.create();
+	       	break;
+	        
 	    default:
 	        dialog = null;
 	    }
@@ -144,47 +223,40 @@ public class pictures extends Activity implements LocationListener {
         takePhoto = (Button) findViewById(R.id.takePicture);
         takePhoto.setEnabled(false);
         
+        /*
         Button browse = (Button) findViewById(R.id.BrowseButton);
         browse.setEnabled(false);
         
         EditText input = (EditText) findViewById(R.id.ExperimentInput);
         input.setText("347");
         input.setEnabled(false);
-        
-        
+        */
         
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        
+       
         mContext = this;
-        
+    
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
-        
-        mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        
+               
         Criteria c = new Criteria();
         c.setAccuracy(Criteria.ACCURACY_FINE);
 
+        mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(c, true), 0, 0, pictures.this);
-        
         new Location(mLocationManager.getBestProvider(c, true));
         
         name = (EditText) findViewById(R.id.name);
-        
-		experimentInput = (EditText) findViewById(R.id.ExperimentInput);
+        //experimentInput = (EditText) findViewById(R.id.ExperimentInput);
 		
 		describe = (Button) findViewById(R.id.describeButton);
-	/** MIK2 **/
 		describe.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
 				startActivity(startDescribe);
-				//takePhoto.setEnabled(true);
 			}
 		});
-	/**********/
         
         takePicture = (Button) findViewById(R.id.takePicture);
         
@@ -192,7 +264,7 @@ public class pictures extends Activity implements LocationListener {
 
 			@Override
 			public void onClick(View v) {
-				if (name.getText().length() == 0 || experimentInput.getText().length() == 0) {
+				if (name.getText().length() == 0 /*|| experimentInput.getText().length() == 0*/) {
 					showDialog(DIALOG_REJECT);
 					return;
 				}
@@ -213,24 +285,23 @@ public class pictures extends Activity implements LocationListener {
         	
         });
         
-        Button browseButton = (Button) findViewById(R.id.BrowseButton);
+        /*Button browseButton = (Button) findViewById(R.id.BrowseButton);
         browseButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				/*Intent experimentIntent = new Intent(getApplicationContext(), Experiments.class);
+				Intent experimentIntent = new Intent(getApplicationContext(), Experiments.class);
 				
 				experimentIntent.putExtra("edu.uml.cs.isense.pictures.experiments.prupose", EXPERIMENT_CODE);
 				
-				startActivityForResult(experimentIntent, EXPERIMENT_CODE);*/
+				startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 			}
 			
-		});
-	
-     showDialog(DIALOG_LOGIN_ID);
+		});*/
     }
     
+    /*
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem.OnMenuItemClickListener menuClicker = new
@@ -239,7 +310,7 @@ public class pictures extends Activity implements LocationListener {
 			public boolean onMenuItemClick(MenuItem item) {
 				
 				if( item.getItemId() == 1 ) setSessionInfo ( "Teacher", "Please enter your teacher's name."   ) ;
-				if( item.getItemId() == 2 )	setSessionInfo2( "School", "Please enter the name of your school.") ;
+				if( item.getItemId() == 2 )	setSchoolInfo( "School", "Please enter the name of your school.") ;
 	    		
 	    		return false;
 			}
@@ -252,7 +323,7 @@ public class pictures extends Activity implements LocationListener {
 		
 	}
     
-    protected void setSessionInfo(String session_title, String session_desc) {
+    protected void setTeacherInfo(String session_title, String session_desc) {
     	AlertDialog.Builder alert = new AlertDialog.Builder( mContext ) ;
 		
 		alert.setTitle( session_title ) ;
@@ -279,7 +350,7 @@ public class pictures extends Activity implements LocationListener {
 			alert.show();
 	}
     
-    protected void setSessionInfo2(String session_title, String session_desc) {
+    protected void setSchoolInfo(String session_title, String session_desc) {
     	AlertDialog.Builder alert = new AlertDialog.Builder( mContext ) ;
 		
 		alert.setTitle( session_title ) ;
@@ -305,11 +376,11 @@ public class pictures extends Activity implements LocationListener {
 
 		 	alert.show();
     }
-    
+   */ 
     @Override
 	protected void onResume() {
+    	if (!userLoggedIn) attemptLogin();
 		super.onResume();
-		//showDialog(DIALOG_LOGIN_ID);
 	}
 
 	@Override
@@ -360,19 +431,19 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		public void run() {
 			new TaskWait().execute();
 			
-			/**JER 3**************************************************************************************************************/
+			/*
 			if (teacherInfo != null) teacher = " - " + teacherInfo ;
 			else teacher = "" ;
 			
 			if (schoolInfo != null ) school = " - " + schoolInfo ;
 			else school = "" ;
-									
+			*/
+			
 			if(Descriptor.desString.equals("")) Descriptor.desString = "No description provided.";
 			
-			int sessionId = rapi.createSession(experimentInput.getText().toString(), 
-					name.getText().toString() + teacher + school, 
+			int sessionId = rapi.createSession(experimentNum, 
+					name.getText().toString() + ": " + Descriptor.desString, //teacher + school, 
 					Descriptor.desString, "n/a", "Lowell, MA", "");
-			/**********************************************************************************************************************/
 		
 			JSONArray dataJSON = new JSONArray();
 			try {
@@ -384,11 +455,11 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 				
 			dia.setProgress(95);
 			
-			Boolean result = rapi.updateSessionData(sessionId, experimentInput.getText().toString(), dataJSON);
+			Boolean result = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
 			
 			if (result) {
-				rapi.uploadPictureToSession(picture, experimentInput.getText().toString(), 
-						sessionId, name.getText().toString() + teacher + school, 
+				rapi.uploadPictureToSession(picture, experimentNum, 
+						sessionId, name.getText().toString() + ": " + Descriptor.desString,// + teacher + school, 
 						name.getText().toString() + Descriptor.desString);
 			}
 			
@@ -402,50 +473,17 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if(resultCode == RESULT_OK) {
 				
-				curTime = System.currentTimeMillis()/1000 ;
+				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
-				/*String picturePath = picture.getAbsolutePath();
-	            
-				
-				Bitmap bitmapOrg ;
-				// load the original BitMap (500 x 500 px)
-				if( BitmapFactory.decodeFile(picturePath) != null ) {
-					bitmapOrg = BitmapFactory.decodeFile(picturePath) ;
-					int width = bitmapOrg.getWidth();
-					int height = bitmapOrg.getHeight();
-					int newWidth = 1024;
-					int newHeight = 768;
-		        
-					// calculate the scale
-					float scaleWidth = ((float) newWidth) / width;
-					float scaleHeight = ((float) newHeight) / height;
-		        
-					// create a matrix for the manipulation
-					Matrix matrix = new Matrix();
-		        
-					// resize the bit map
-					matrix.postScale(scaleWidth, scaleHeight);
-		        
-					// recreate the new Bitmap
-					bitmapOrg = Bitmap.createBitmap(bitmapOrg, 1, 1, 
-							1024, 768, matrix, true);
-					try {
-						bitmapOrg.compress(Bitmap.CompressFormat.JPEG, 10, new FileOutputStream( mpicture )) ;
-						//FileOutputStream.this.close();
-					} catch (FileNotFoundException e) {
-						// Auto-generated catch block
-						e.printStackTrace();
-					}	        		        
-				}*/
-				
 		        takePicture.setEnabled(false);
-		        new Task().execute();
+		        if (userLoggedIn == true) new Task().execute();
+		        else showDialog(DIALOG_NOT_LOGGED_IN);
 			}
-		} else if (requestCode == EXPERIMENT_CODE) {
-    		if (resultCode == Activity.RESULT_OK) {
-    			experimentInput.setText("" + data.getExtras().getInt("edu.uml.cs.isense.pictures.experiments.exp_id"));
-    		}
-		}
+		} /*else if (requestCode == EXPERIMENT_CODE) {
+    			if (resultCode == Activity.RESULT_OK) {
+    				experimentInput.setText("" + data.getExtras().getInt("edu.uml.cs.isense.pictures.experiments.exp_id"));
+    			}
+			}*/
 	}
 	
     
@@ -453,31 +491,28 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
     public void onLocationChanged(Location location) {
 	loc = location ;
 	
-		if( loc.getLatitude() != 0 && loc.getLongitude() != 0 ){
+		if(gpsWorking == true) {
 			Lat  = loc.getLatitude ();
 			Long = loc.getLongitude();
-		}
-		else {
-			Toast.makeText(mContext, "Please make sure GPS is on.", Toast.LENGTH_SHORT).show();
+		} else {
+			showDialog(DIALOG_NO_GPS);
 		}
 	}
       
 	@Override
     public void onProviderDisabled(String provider) {
-      Toast.makeText( getApplicationContext(), "Gps Disabled", Toast.LENGTH_SHORT ).show();
+		gpsWorking = false;
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-      Toast.makeText( getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
+    	gpsWorking = true;
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){
     }
 
-    /** Mike's AsyncTask 1 and 2 */
-    
     private class Task extends AsyncTask <Void, Integer, Void> {
           
         @Override protected void onPreExecute() {
@@ -490,7 +525,7 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 
         @Override protected Void doInBackground(Void... voids) {
            
-            // run the thread crap in the background
+            // run the thread stuff in the background
             /*Thread thread = new Thread(null, uploader, "MagentoBackground");
             thread.start();*/
            
@@ -542,9 +577,44 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
             dia.setMessage("Your content is taking a while.  Please be patient.");
         }
     }
-   
-   
-   
-    /*********************/
     
+    //repeatedly tries to connect
+    private class NotConnectedTask extends AsyncTask <Void, Integer, Void> {
+	    
+		@Override protected Void doInBackground(Void... voids) {
+	    	try {
+	    		Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	        return null;
+		}
+		
+	    @Override  protected void onPostExecute(Void voids) {
+	    	if(rapi.isConnectedToInternet())
+	    		Toast.makeText(pictures.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
+	    	else {
+	    		userLoggedIn = false;
+	    		showDialog(DIALOG_NO_CONNECT);
+	    	}
+	    }
+	}
+    
+    @Override
+    public void onBackPressed() {	
+    }
+    
+  //gets the user's name if not already provided + login to web site
+  	private void attemptLogin() {
+  		if(rapi.isConnectedToInternet()) {
+          	boolean success = rapi.login(loginName, loginPass);
+          	if(!success) {
+          		showDialog(DIALOG_DIFFICULTY);        		
+          	} else userLoggedIn = true;
+          	
+          } else {
+        	userLoggedIn = false;
+          	showDialog(DIALOG_NO_CONNECT);
+          }
+  	}
 }
