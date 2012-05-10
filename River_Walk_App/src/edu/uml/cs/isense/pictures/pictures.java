@@ -3,6 +3,7 @@ package edu.uml.cs.isense.pictures;
 /* Experiment 294 Now 347 */
 
 import java.io.File;
+import java.util.Queue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +47,10 @@ public class pictures extends Activity implements LocationListener {
 	
 	private LocationManager mLocationManager;
 	
-	private Uri imageUri; 
+	private Uri imageUri;
+	
+  	private Queue <Picture> mQ;
+  	private static int QUEUE_COUNT = 0;
 	
 	RestAPI rapi;
 	private static final String loginName = "RiverWalker";
@@ -55,6 +59,7 @@ public class pictures extends Activity implements LocationListener {
 	
 	private static boolean gpsWorking = false;
 	private static boolean userLoggedIn = false;
+	private static boolean smartUploading = false;
 	
 	private EditText name; 
 	//private EditText experimentInput;
@@ -237,14 +242,7 @@ public class pictures extends Activity implements LocationListener {
         mContext = this;
     
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
-               
-        Criteria c = new Criteria();
-        c.setAccuracy(Criteria.ACCURACY_FINE);
-
-        mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(c, true), 0, 0, pictures.this);
-        new Location(mLocationManager.getBestProvider(c, true));
-        
+     
         name = (EditText) findViewById(R.id.name);
         //experimentInput = (EditText) findViewById(R.id.ExperimentInput);
 		
@@ -259,7 +257,6 @@ public class pictures extends Activity implements LocationListener {
 		});
         
         takePicture = (Button) findViewById(R.id.takePicture);
-        
         takePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -379,7 +376,10 @@ public class pictures extends Activity implements LocationListener {
    */ 
     @Override
 	protected void onResume() {
+    	if (!rapi.isConnectedToInternet())
+    		showDialog(DIALOG_NO_CONNECT);
     	if (!userLoggedIn) attemptLogin();
+    	initLocManager();
 		super.onResume();
 	}
 
@@ -476,8 +476,13 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
 		        takePicture.setEnabled(false);
-		        if (userLoggedIn == true) new Task().execute();
-		        else showDialog(DIALOG_NOT_LOGGED_IN);
+		        if (smartUploading) {
+		        	if (userLoggedIn)  new Task().execute();
+		        	else qsave(picture);
+		        } else {
+		        	if (userLoggedIn) new Task().execute();
+		        	else showDialog(DIALOG_NOT_LOGGED_IN);
+		        }
 			}
 		} /*else if (requestCode == EXPERIMENT_CODE) {
     			if (resultCode == Activity.RESULT_OK) {
@@ -526,8 +531,8 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
         @Override protected Void doInBackground(Void... voids) {
            
             // run the thread stuff in the background
-            /*Thread thread = new Thread(null, uploader, "MagentoBackground");
-            thread.start();*/
+            //Thread thread = new Thread(null, uploader, "MagentoBackground");
+            //thread.start();
            
             uploader.run();
            
@@ -604,7 +609,7 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
     public void onBackPressed() {	
     }
     
-  //gets the user's name if not already provided + login to web site
+    //gets the user's name if not already provided + login to web site
   	private void attemptLogin() {
   		if(rapi.isConnectedToInternet()) {
           	boolean success = rapi.login(loginName, loginPass);
@@ -617,4 +622,60 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
           	showDialog(DIALOG_NO_CONNECT);
           }
   	}
+  	
+  	public class Picture {
+  		public File file;
+  		public double latitude;
+  		public double longitude;
+  		public String name;
+  		public String desc;
+  		public long time;
+  		
+  		public Picture(File f, double lat, double lon, String n, String d) {
+  			file = f;
+  			latitude = lat;
+  			longitude = lon;
+  			name = n;
+  			desc = d;
+  			time = System.currentTimeMillis();
+  		}
+  	}
+  	
+  	//initialize location listener to get a point
+  	private void initLocManager() {
+  		Criteria c = new Criteria();
+        c.setAccuracy(Criteria.ACCURACY_FINE);
+
+        mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(c, true), 0, 0, pictures.this);
+        new Location(mLocationManager.getBestProvider(c, true));
+  	}
+  	
+  	//save picture data in a queue for later upload
+  	private void qsave(File pictureFile) {
+  		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText().toString(), Descriptor.desString);		
+  		mQ.add(mPic);
+  		QUEUE_COUNT++;
+  	}
+  	
+  	//upload stuff from the queue
+  	private void quploader() {
+  		while (QUEUE_COUNT != 0) {
+  			Picture mPic = mQ.remove();
+  			uploadPicture(mPic);
+  			QUEUE_COUNT--;
+  		}
+  	}
+  	
+  	private void uploadPicture(Picture pic) {
+  		
+  	}
+  	
+  	@Override
+	protected void onStop() {
+  		mLocationManager.removeUpdates(pictures.this);
+  		gpsWorking = false;
+		super.onStop();
+	}
+
 }
