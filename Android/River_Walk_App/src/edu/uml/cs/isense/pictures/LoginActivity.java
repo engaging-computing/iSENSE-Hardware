@@ -1,4 +1,7 @@
-package edu.uml.cs.isense.pictures;
+//blue comments are previous version
+//green are just comments
+
+/**package edu.uml.cs.isense.pictures;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,8 +14,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-/*import android.view.View.OnClickListener;
-import android.widget.CheckedTextView;*/
+//import android.view.View.OnClickListener;
+//import android.widget.CheckedTextView;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.pictures.R;
@@ -55,7 +58,7 @@ public class LoginActivity {
             v = vi.inflate(R.layout.logindialog, null);
 			
             final EditText usernameInput = (EditText) v.findViewById(R.id.usernameInput);
-			final EditText passwordInput = (EditText) v.findViewById(R.id.passwordInput);
+			final EditText passwordInput = (EditText) v.findViewById(R.id.passwordInput);*/
 			/*
 			final CheckedTextView remember = (CheckedTextView) v.findViewById(R.id.rememberme);
 			
@@ -66,7 +69,7 @@ public class LoginActivity {
 					remember.toggle();
 				}
 			});
-			*/
+			*//**
             final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             
             builder.setView(v);
@@ -75,14 +78,14 @@ public class LoginActivity {
             	   .setPositiveButton("Login", new DialogInterface.OnClickListener() {
             		   public void onClick(DialogInterface dialog, int id) {
             			   rapi.login(usernameInput.getText().toString(), passwordInput.getText().toString());
-            			   
+            			   */
             			   /*if (remember.isChecked() && rapi.isLoggedIn()) {
        		            		Editor edit = settings.edit();
        		    				edit.putString("username", usernameInput.getText().toString());
        		    				edit.putString("password", passwordInput.getText().toString());
        		    				edit.commit();
        		            	}*/
-            			               			               			   
+            			    /**           			               			   
             			   if (rapi.isLoggedIn()) {
             				   loginSuccess.sendToTarget();
             				   dialog.dismiss();
@@ -124,4 +127,4 @@ public class LoginActivity {
 	      .show();
 	}
 	
-}
+}*/

@@ -21,9 +21,6 @@ public final class R {
         public static final int spinner_black_16=0x7f020004;
     }
     public static final class id {
-        public static final int BrowseButton=0x7f06001e;
-        public static final int ExperimentInput=0x7f06001f;
-        public static final int ExperimentLabel=0x7f060020;
         public static final int ExperimentSerchInput=0x7f060014;
         public static final int ImageViewLogo=0x7f06001b;
         public static final int LinearLayout02=0x7f060004;
@@ -40,7 +37,7 @@ public final class R {
         public static final int checkBox7=0x7f06000b;
         public static final int checkBox8=0x7f06000c;
         public static final int checkBox9=0x7f06000d;
-        public static final int describeButton=0x7f060021;
+        public static final int describeButton=0x7f06001e;
         public static final int icon=0x7f060011;
         public static final int itemContent=0x7f060010;
         public static final int layout_root=0x7f060016;
@@ -51,7 +48,7 @@ public final class R {
         public static final int passwordLabel=0x7f060019;
         public static final int selectCancel=0x7f060002;
         public static final int selectOK=0x7f060001;
-        public static final int takePicture=0x7f060022;
+        public static final int takePicture=0x7f06001f;
         public static final int toptext=0x7f060012;
         public static final int trobber=0x7f060015;
         public static final int usernameInput=0x7f060018;
@@ -68,8 +65,12 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int app_name_experiments=0x7f040003;
+        public static final int descPic=0x7f040005;
         public static final int experiments_no_items=0x7f040002;
+        public static final int firstName=0x7f040004;
         public static final int hello=0x7f040000;
-        public static final int picture_prompt=0x7f040004;
+        public static final int iSlogo=0x7f040007;
+        public static final int picture_prompt=0x7f040008;
+        public static final int takePic=0x7f040006;
     }
 }
