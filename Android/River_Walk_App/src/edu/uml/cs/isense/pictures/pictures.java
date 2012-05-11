@@ -3,6 +3,8 @@ package edu.uml.cs.isense.pictures;
 /* Experiment 294 Now 347 */
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import org.json.JSONArray;
@@ -35,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Picture;
 
 public class pictures extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;
@@ -60,6 +63,10 @@ public class pictures extends Activity implements LocationListener {
 	private static boolean gpsWorking = false;
 	private static boolean userLoggedIn = false;
 	private static boolean smartUploading = false;
+	private static boolean calledBySmartUp = false;
+	private static boolean finishedUploadSetup = false;
+	
+	private Picture uploaderPic = null;
 	
 	private EditText name; 
 	//private EditText experimentInput;
@@ -132,10 +139,12 @@ public class pictures extends Activity implements LocationListener {
 	    	builder.setTitle("No Connectivity")
 	    	.setMessage("Could not connect to the internet through either wifi or mobile service. " +
 	    			"You will not be able to use this app until either is enabled.")
-	    	.setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+	    	.setPositiveButton("Turn on Smart-Uploading", new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialoginterface, final int id) {
+	            	   smartUploading = true;
+	            	   waitingForConnectivity();
 	            	   dialoginterface.dismiss();
-	            	   ((Activity) mContext).finish();
+	            	   //((Activity) mContext).finish();
 	               }
 	    	})
 	    	.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
@@ -224,6 +233,8 @@ public class pictures extends Activity implements LocationListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        mQ = new LinkedList<Picture>();
         
         takePhoto = (Button) findViewById(R.id.takePicture);
         takePhoto.setEnabled(false);
@@ -438,31 +449,33 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 			if (schoolInfo != null ) school = " - " + schoolInfo ;
 			else school = "" ;
 			*/
+			if (!smartUploading || (smartUploading && !calledBySmartUp)) {
+				if(Descriptor.desString.equals("")) Descriptor.desString = "No description provided.";
 			
-			if(Descriptor.desString.equals("")) Descriptor.desString = "No description provided.";
-			
-			int sessionId = rapi.createSession(experimentNum, 
-					name.getText().toString() + ": " + Descriptor.desString, //teacher + school, 
-					Descriptor.desString, "n/a", "Lowell, MA", "");
+				int sessionId = rapi.createSession(experimentNum, 
+						name.getText().toString() + ": " + Descriptor.desString, //teacher + school, 
+						Descriptor.desString, "n/a", "Lowell, MA", "");
 		
-			JSONArray dataJSON = new JSONArray();
-			try {
-				dataJSON.put(curTime); dataJSON.put(Lat); dataJSON.put(Long); dataJSON.put(Descriptor.desString) ;
-			}
-			catch (JSONException e) {
-				e.printStackTrace();
-			}
-				
-			dia.setProgress(95);
+				JSONArray dataJSON = new JSONArray();
+				try {
+					dataJSON.put(curTime); dataJSON.put(Lat); dataJSON.put(Long); dataJSON.put(Descriptor.desString) ;
+				}
+				catch (JSONException e) {
+					e.printStackTrace();
+				}
 			
-			Boolean result = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
+				finishedUploadSetup = true;
+				dia.setProgress(95);
 			
-			if (result) {
-				rapi.uploadPictureToSession(picture, experimentNum, 
-						sessionId, name.getText().toString() + ": " + Descriptor.desString,// + teacher + school, 
-						name.getText().toString() + Descriptor.desString);
-			}
+				Boolean result = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
 			
+				if (result) {
+					rapi.uploadPictureToSession(picture, experimentNum, 
+							sessionId, name.getText().toString() + ": " + Descriptor.desString,// + teacher + school, 
+							name.getText().toString() + Descriptor.desString);
+				}
+			} else smartUploader(uploaderPic.file, uploaderPic.latitude, uploaderPic.longitude, 
+					uploaderPic.name, uploaderPic.desc, uploaderPic.time);
 		}
 	};
 	
@@ -535,6 +548,7 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
             //thread.start();
            
             uploader.run();
+            finishedUploadSetup = false;
            
             publishProgress(100);
             return null;
@@ -562,12 +576,14 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
     private class TaskWait extends AsyncTask<Void,Integer, Void> {
         @Override protected Void doInBackground(Void... voids) {
             for(int i = 1; i <= 85; i++) {
-                try {
-                    publishProgress(i);
-                    Thread.sleep(50);
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
+            	if (!finishedUploadSetup) {
+            		try {
+            			publishProgress(i);
+            			Thread.sleep(50);
+            		} catch(InterruptedException e) {
+            			e.printStackTrace();
+            		}
+            	}
             }
             return null;
         }
@@ -623,24 +639,6 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
           }
   	}
   	
-  	public class Picture {
-  		public File file;
-  		public double latitude;
-  		public double longitude;
-  		public String name;
-  		public String desc;
-  		public long time;
-  		
-  		public Picture(File f, double lat, double lon, String n, String d) {
-  			file = f;
-  			latitude = lat;
-  			longitude = lon;
-  			name = n;
-  			desc = d;
-  			time = System.currentTimeMillis();
-  		}
-  	}
-  	
   	//initialize location listener to get a point
   	private void initLocManager() {
   		Criteria c = new Criteria();
@@ -658,17 +656,47 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
   		QUEUE_COUNT++;
   	}
   	
-  	//upload stuff from the queue
-  	private void quploader() {
-  		while (QUEUE_COUNT != 0) {
-  			Picture mPic = mQ.remove();
-  			uploadPicture(mPic);
-  			QUEUE_COUNT--;
-  		}
+  	//get picture data from the q to upload
+  	private Picture getPicFromQ() {
+  		Picture mPic = null;
+  		try {
+  			mPic = mQ.remove();
+  		} catch (NoSuchElementException e) 
+  		{}
+  		return mPic;
   	}
   	
-  	private void uploadPicture(Picture pic) {
-  		
+  	//upload stuff from the queue
+  	private void smartUploader(File f, double lat, double lon, String n, String d, long t) {
+  		if (d == "") d = "No description provided.";
+		int sessionId = rapi.createSession(experimentNum, name + ": " + d, d, "n/a", "Lowell, MA", "");
+		
+		JSONArray dataJSON = new JSONArray();
+		try {
+			dataJSON.put(t); dataJSON.put(lat); dataJSON.put(lon); dataJSON.put(d) ;
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+	
+		finishedUploadSetup = true;
+		dia.setProgress(95);
+	
+		Boolean result = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
+	
+		if (result)
+			rapi.uploadPictureToSession(picture, experimentNum, sessionId,n + ": " + d, d);
+  	}
+ 
+  	//uploads pictures if smartUploading is enabled
+  	private void uploadPicture() {
+		if (QUEUE_COUNT > 0)  {
+  			uploaderPic = getPicFromQ();
+  			if (uploaderPic != null) {
+  				QUEUE_COUNT--;
+  				uploader.run();
+  			}
+		}
   	}
   	
   	@Override
@@ -677,5 +705,38 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
   		gpsWorking = false;
 		super.onStop();
 	}
+  	
+  	private class WaitTenSecondsTask extends AsyncTask <Void, Integer, Void> {  
+		@Override protected Void doInBackground(Void... voids) {
+	    	try {
+	    		Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	    	
+	    	return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+	 		if(rapi.isConnectedToInternet()) {
+	  			boolean success = rapi.login(loginName, loginPass);
+	  			if(success) {
+	  				Toast.makeText(pictures.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
+	  				userLoggedIn = true;
+	  				if (QUEUE_COUNT > 0) {
+	 				   while (QUEUE_COUNT > 0) uploadPicture();
+	 			   }
+	  			}
+	  		} else {
+	  			userLoggedIn = false;
+	  			if (smartUploading) waitingForConnectivity();
+	  			else new NotConnectedTask().execute();
+	 	   }
+			super.onPostExecute(result);	
+		}
+  	}
+  	public void waitingForConnectivity() {
+  		new WaitTenSecondsTask().execute();
+   	}
 
 }
