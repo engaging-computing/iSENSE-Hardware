@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -47,6 +48,7 @@ public class pictures extends Activity implements LocationListener {
 	private static final int DIALOG_DIFFICULTY = 2;
 	private static final int DIALOG_NO_CONNECT = 3;
 	private static final int DIALOG_NOT_LOGGED_IN = 4;
+	private static final int DIALOG_READY_TO_UPLOAD = 5;
 	
 	private LocationManager mLocationManager;
 	
@@ -65,6 +67,7 @@ public class pictures extends Activity implements LocationListener {
 	private static boolean smartUploading = false;
 	private static boolean calledBySmartUp = false;
 	private static boolean finishedUploadSetup = false;
+	private static boolean uploadError = false;
 	
 	private Picture uploaderPic = null;
 	
@@ -211,6 +214,23 @@ public class pictures extends Activity implements LocationListener {
 	           
 	    	dialog = builder.create();
 	       	break;
+	       	
+	    case DIALOG_READY_TO_UPLOAD:
+	    	
+	    	builder.setTitle("Ready to Upload Pictures")
+	    	.setMessage("Now that there is a connection to iSENSE, would you like to upload your pictures?")
+	    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	    		public void onClick(DialogInterface dialoginterface, final int id) {
+	    			dialoginterface.dismiss();
+	  				if (QUEUE_COUNT > 0) {
+	  					uploadPicture();	
+	  				}
+	    		}
+	    	})
+	        .setCancelable(false);
+	           
+	    	dialog = builder.create();
+	       	break;
 	        
 	    default:
 	        dialog = null;
@@ -259,7 +279,7 @@ public class pictures extends Activity implements LocationListener {
 		
 		describe = (Button) findViewById(R.id.describeButton);
 		describe.setOnClickListener(new OnClickListener() {
-			
+		
 			@Override
 			public void onClick(View v) {
 				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
@@ -385,21 +405,25 @@ public class pictures extends Activity implements LocationListener {
 		 	alert.show();
     }
    */ 
+
     @Override
 	protected void onResume() {
-    	if (!rapi.isConnectedToInternet())
+    	if (!smartUploading && !rapi.isConnectedToInternet())
     		showDialog(DIALOG_NO_CONNECT);
     	if (!userLoggedIn) attemptLogin();
-    	initLocManager();
+    	if (userLoggedIn) {
+    		if (smartUploading && (QUEUE_COUNT > 0)) showDialog(DIALOG_READY_TO_UPLOAD);
+    	}
 		super.onResume();
 	}
 
 	@Override
 	protected void onStart() {
+		if (!gpsWorking) initLocManager();
 		super.onStart();
 	}
 
-public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
+	public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		Cursor cursor = null;
 		try {
 		    String [] proj={MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION};
@@ -467,15 +491,19 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 				finishedUploadSetup = true;
 				dia.setProgress(95);
 			
-				Boolean result = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
+				while(!rapi.updateSessionData(sessionId, experimentNum, dataJSON));
+				dia.setProgress(99);
 			
-				if (result) {
-					rapi.uploadPictureToSession(picture, experimentNum, 
+				while(!rapi.uploadPictureToSession(picture, experimentNum, 
 							sessionId, name.getText().toString() + ": " + Descriptor.desString,// + teacher + school, 
-							name.getText().toString() + Descriptor.desString);
-				}
-			} else smartUploader(uploaderPic.file, uploaderPic.latitude, uploaderPic.longitude, 
+							name.getText().toString() + Descriptor.desString));
+				
+			} else {
+				smartUploader(uploaderPic.file, uploaderPic.latitude, uploaderPic.longitude, 	
 					uploaderPic.name, uploaderPic.desc, uploaderPic.time);
+			}
+			
+			Log.e("uploader", "Inside =D: Q = " + QUEUE_COUNT);
 		}
 	};
 	
@@ -490,10 +518,16 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 				picture = convertImageUriToFile(imageUri, this);
 		        takePicture.setEnabled(false);
 		        if (smartUploading) {
-		        	if (userLoggedIn)  new Task().execute();
+		        	if (userLoggedIn) {
+		        		calledBySmartUp = false;
+		        		new Task().execute();
+		        	}
 		        	else qsave(picture);
 		        } else {
-		        	if (userLoggedIn) new Task().execute();
+		        	if (userLoggedIn) {
+		        		calledBySmartUp = false;
+		        		new Task().execute();
+		        	}
 		        	else showDialog(DIALOG_NOT_LOGGED_IN);
 		        }
 			}
@@ -512,8 +546,6 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		if(gpsWorking == true) {
 			Lat  = loc.getLatitude ();
 			Long = loc.getLongitude();
-		} else {
-			showDialog(DIALOG_NO_GPS);
 		}
 	}
       
@@ -534,6 +566,7 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
     private class Task extends AsyncTask <Void, Integer, Void> {
           
         @Override protected void onPreExecute() {
+        	finishedUploadSetup = false;
             dia = new ProgressDialog(pictures.this);
             dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             dia.setMessage("Please wait while your picture is uploaded...");
@@ -547,10 +580,11 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
             //Thread thread = new Thread(null, uploader, "MagentoBackground");
             //thread.start();
            
+        	Log.e("uploader", "called uploader: q = " + QUEUE_COUNT);
             uploader.run();
-            finishedUploadSetup = false;
            
             publishProgress(100);
+            
             return null;
         }
 
@@ -564,7 +598,10 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
             dia.setMessage("Done");
             dia.cancel();
             
-            Toast.makeText(pictures.this, "Your picture has uploaded successfully.", Toast.LENGTH_LONG).show();
+            if (!uploadError) Toast.makeText(pictures.this, "Your picture has uploaded successfully.", Toast.LENGTH_LONG).show();
+            else Toast.makeText(mContext, "An error occured during upload.", Toast.LENGTH_LONG).show();
+            
+            uploadError = false;
                         
             pictures.c1  = false; pictures.c2  = false; pictures.c3 = false;
 	        pictures.c4  = false; pictures.c5  = false; pictures.c6 = false;
@@ -616,7 +653,7 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 	    		Toast.makeText(pictures.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
 	    	else {
 	    		userLoggedIn = false;
-	    		showDialog(DIALOG_NO_CONNECT);
+	    		if (!smartUploading) showDialog(DIALOG_NO_CONNECT);
 	    	}
 	    }
 	}
@@ -631,11 +668,14 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
           	boolean success = rapi.login(loginName, loginPass);
           	if(!success) {
           		showDialog(DIALOG_DIFFICULTY);        		
-          	} else userLoggedIn = true;
+          	} else  {
+          		userLoggedIn = true;
+          		if (smartUploading && (QUEUE_COUNT > 0)) showDialog(DIALOG_READY_TO_UPLOAD);
+          	}
           	
           } else {
         	userLoggedIn = false;
-          	showDialog(DIALOG_NO_CONNECT);
+          	if (!smartUploading) showDialog(DIALOG_NO_CONNECT);
           }
   	}
   	
@@ -645,13 +685,16 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
         c.setAccuracy(Criteria.ACCURACY_FINE);
 
         mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(c, true), 0, 0, pictures.this);
-        new Location(mLocationManager.getBestProvider(c, true));
+      
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        	mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(c, true), 0, 0, pictures.this);
+            new Location(mLocationManager.getBestProvider(c, true));
+        } else showDialog(DIALOG_NO_GPS);
   	}
   	
   	//save picture data in a queue for later upload
   	private void qsave(File pictureFile) {
-  		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText().toString(), Descriptor.desString);		
+  		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText().toString(), Descriptor.desString, System.currentTimeMillis());		
   		mQ.add(mPic);
   		QUEUE_COUNT++;
   	}
@@ -668,9 +711,16 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
   	
   	//upload stuff from the queue
   	private void smartUploader(File f, double lat, double lon, String n, String d, long t) {
+  		Log.e("SmartUploader", "1: Q = " + QUEUE_COUNT);
   		if (d == "") d = "No description provided.";
-		int sessionId = rapi.createSession(experimentNum, name + ": " + d, d, "n/a", "Lowell, MA", "");
-		
+
+  		int sessionId;
+  		if ((sessionId = rapi.createSession(experimentNum, n + ": " + d, d, "n/a", "Lowell, MA", "")) == -1) {
+  			uploadError = true;
+  			return;
+  		}
+  		
+  		Log.e("SmartUploader", "2: Q = " + QUEUE_COUNT);
 		JSONArray dataJSON = new JSONArray();
 		try {
 			dataJSON.put(t); dataJSON.put(lat); dataJSON.put(lon); dataJSON.put(d) ;
@@ -679,24 +729,39 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 			e.printStackTrace();
 		}
 	
+		Log.e("SmartUploader", "3: Q = " + QUEUE_COUNT);
 		finishedUploadSetup = true;
-		dia.setProgress(95);
+		dia.setProgress(90);
 	
-		Boolean result = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
-	
-		if (result)
-			rapi.uploadPictureToSession(picture, experimentNum, sessionId,n + ": " + d, d);
+		boolean success = rapi.updateSessionData(sessionId, experimentNum, dataJSON);
+		if (!success) {
+				uploadError = true;
+				return;
+		}
+		dia.setProgress(99);
+		
+		Log.e("SmartUploader", "4: Q = " + QUEUE_COUNT);
+		success = rapi.uploadPictureToSession(f, experimentNum, sessionId,n + ": " + d, d);
+		if (!success)
+			uploadError = true;
+		
+		Log.e("SmartUploader", "5: Q = " + QUEUE_COUNT);
   	}
- 
+
   	//uploads pictures if smartUploading is enabled
   	private void uploadPicture() {
-		if (QUEUE_COUNT > 0)  {
+
+  		if (QUEUE_COUNT > 0)  {
   			uploaderPic = getPicFromQ();
   			if (uploaderPic != null) {
   				QUEUE_COUNT--;
-  				uploader.run();
+  				calledBySmartUp = true;
+  				new Task().execute();
   			}
+		} else  {
+			smartUploading = false;
 		}
+  		  
   	}
   	
   	@Override
@@ -719,14 +784,20 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		@Override
 		protected void onPostExecute(Void result) {
 	 		if(rapi.isConnectedToInternet()) {
+	 			if (userLoggedIn) {
+	 					if (QUEUE_COUNT > 0) {
+	 						showDialog(DIALOG_READY_TO_UPLOAD);
+	 						waitingForConnectivity();
+	 					}
+	 			}
 	  			boolean success = rapi.login(loginName, loginPass);
 	  			if(success) {
 	  				Toast.makeText(pictures.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
 	  				userLoggedIn = true;
-	  				if (QUEUE_COUNT > 0) {
-	 				   while (QUEUE_COUNT > 0) uploadPicture();
-	 			   }
+	  				showDialog(DIALOG_READY_TO_UPLOAD);
+	  				
 	  			}
+	  			
 	  		} else {
 	  			userLoggedIn = false;
 	  			if (smartUploading) waitingForConnectivity();
@@ -735,6 +806,7 @@ public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 			super.onPostExecute(result);	
 		}
   	}
+  	
   	public void waitingForConnectivity() {
   		new WaitTenSecondsTask().execute();
    	}
