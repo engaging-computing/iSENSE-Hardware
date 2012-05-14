@@ -25,6 +25,61 @@ public class Descriptor extends Activity {
         final CheckBox checkBox3 = (CheckBox) findViewById(R.id.checkBox3);
         final CheckBox checkBox4 = (CheckBox) findViewById(R.id.checkBox4);
         final CheckBox checkBox5 = (CheckBox) findViewById(R.id.checkBox5);
+        
+        checkBox1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				checkBox1.setChecked(true);
+				checkBox2.setChecked(false);
+				checkBox3.setChecked(false);
+				checkBox4.setChecked(false);
+				checkBox5.setChecked(false);
+			}      	
+        });
+      
+        checkBox2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				checkBox1.setChecked(false);
+				checkBox2.setChecked(true);
+				checkBox3.setChecked(false);
+				checkBox4.setChecked(false);
+				checkBox5.setChecked(false);
+			}      	
+        });
+        
+        checkBox3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				checkBox1.setChecked(false);
+				checkBox2.setChecked(false);
+				checkBox3.setChecked(true);
+				checkBox4.setChecked(false);
+				checkBox5.setChecked(false);
+			}      	
+        });
+        
+        checkBox4.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				checkBox1.setChecked(false);
+				checkBox2.setChecked(false);
+				checkBox3.setChecked(false);
+				checkBox4.setChecked(true);
+				checkBox5.setChecked(false);
+			}      	
+        });
+        
+        checkBox5.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				checkBox1.setChecked(false);
+				checkBox2.setChecked(false);
+				checkBox3.setChecked(false);
+				checkBox4.setChecked(false);
+				checkBox5.setChecked(true);
+			}      	
+        });
 
        	if(pictures.c1) checkBox1.setChecked(true);
        	else checkBox1.setChecked(false);
