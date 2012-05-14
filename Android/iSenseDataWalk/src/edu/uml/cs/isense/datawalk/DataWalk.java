@@ -773,11 +773,9 @@ public class DataWalk extends Activity implements LocationListener {
         mTimer.scheduleAtFixedRate(new TimerTask() {
         		@Override
 				public void run() {
-		
         			mHandler.post(new Runnable() {
         				@Override
         				public void run() {
-        										
         					if (gpsWorking)
         						latLong.setText("Lat: " + latitude + "\nLong: " + longitude);
         					else {
@@ -803,8 +801,8 @@ public class DataWalk extends Activity implements LocationListener {
         				}
         			});
         		}	
-        	}, 0, TIMER_LOOP);
-		}
+        }, 0, TIMER_LOOP);
+	}
 	
 	protected void onActivityResult(int resultCode, Intent data) {
 		   if (resultCode == LoginActivity.NAME_SUCCESSFUL) {
