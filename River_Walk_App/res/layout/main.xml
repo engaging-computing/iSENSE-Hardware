@@ -29,6 +29,7 @@
 				
 		<EditText android:layout_height="wrap_content" 
 			android:id="@+id/name" 
+			android:maxLength="50"
 			android:layout_width="fill_parent"
 			android:layout_toRightOf="@+id/nameLabel" 
 			android:inputType="text"/>

@@ -1,6 +1,6 @@
 package edu.uml.cs.isense.pictures;
 
-/* Experiment 294 Now 347 */
+/* Experiment 347 on Dev, 420 on real iSENSE */
 
 import java.io.File;
 import java.util.LinkedList;
@@ -29,6 +29,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -58,9 +59,16 @@ public class pictures extends Activity implements LocationListener {
   	private static int QUEUE_COUNT = 0;
 	
 	RestAPI rapi;
-	private static final String loginName = "RiverWalker";
-	private static final String loginPass = "SimonKit";
-	private static final String experimentNum = "347";
+	
+	private static final String loginName = "RiverWalk App User";
+	private static final String loginPass = "nexusWINS";
+	private static final String experimentNum = "420";
+	//real iSENSE
+	
+	//private static final String loginName = "RiverWalker";
+	//private static final String loginPass = "SimonKit";
+	//private static final String experimentNum = "347";
+	//dev
 	
 	private static boolean gpsWorking = false;
 	private static boolean userLoggedIn = false;
@@ -98,12 +106,6 @@ public class pictures extends Activity implements LocationListener {
 	static boolean c3 = false;
 	static boolean c4 = false;
 	static boolean c5 = false;
-	static boolean c6 = false;
-	static boolean c7 = false;
-	static boolean c8 = false;
-	static boolean c9 = false;
-	static boolean c10 = false;
-	static boolean c11 = false;
 	
 	private ProgressDialog dia ;
 
@@ -297,18 +299,26 @@ public class pictures extends Activity implements LocationListener {
 					return;
 				}
 				
-				//create parameters for Intent with filename
-				ContentValues values = new ContentValues();
-				//values.put(MediaStore.Images.Media.TITLE, img_name);
-				//values.put(MediaStore.Images.Media.DESCRIPTION,img_desc);
-				//imageUri is the current activity attribute, define and save it for later usage (also in onSaveInstanceState)
-				imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-				//create new Intent
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-				intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+				String state = Environment.getExternalStorageState();
+				if (Environment.MEDIA_MOUNTED.equals(state)) {
+					
+					ContentValues values = new ContentValues();
+					
+					imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+					
+					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+					
+					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+				} else {
+					Toast.makeText(pictures.this, 
+							"Permission isn't granted to write to external storage.  Please check to see if there is an SD card.", 
+							Toast.LENGTH_LONG).show();
+					
+				}
 				
-				startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+				
 			}
         	
         });
@@ -479,6 +489,11 @@ public class pictures extends Activity implements LocationListener {
 				int sessionId = rapi.createSession(experimentNum, 
 						name.getText().toString() + ": " + Descriptor.desString, //teacher + school, 
 						Descriptor.desString, "n/a", "Lowell, MA", "");
+				
+				if (sessionId == -1) {
+					uploadError = true;
+					return;
+				}
 		
 				JSONArray dataJSON = new JSONArray();
 				try {
@@ -491,12 +506,17 @@ public class pictures extends Activity implements LocationListener {
 				finishedUploadSetup = true;
 				dia.setProgress(95);
 			
-				while(!rapi.updateSessionData(sessionId, experimentNum, dataJSON));
+				if(!rapi.updateSessionData(sessionId, experimentNum, dataJSON)) {
+					uploadError = true;
+					return;
+				}
 				dia.setProgress(99);
 			
-				while(!rapi.uploadPictureToSession(picture, experimentNum, 
+				if(!rapi.uploadPictureToSession(picture, experimentNum, 
 							sessionId, name.getText().toString() + ": " + Descriptor.desString,// + teacher + school, 
-							name.getText().toString() + Descriptor.desString));
+							name.getText().toString() + Descriptor.desString)) {
+						uploadError = true;
+				}
 				
 			} else {
 				smartUploader(uploaderPic.file, uploaderPic.latitude, uploaderPic.longitude, 	
@@ -604,9 +624,7 @@ public class pictures extends Activity implements LocationListener {
             uploadError = false;
                         
             pictures.c1  = false; pictures.c2  = false; pictures.c3 = false;
-	        pictures.c4  = false; pictures.c5  = false; pictures.c6 = false;
-	        pictures.c7  = false; pictures.c8  = false; pictures.c9 = false;
-	        pictures.c10 = false; pictures.c11 = false;
+	        pictures.c4  = false; pictures.c5  = false;
         }
     }
    
@@ -794,7 +812,7 @@ public class pictures extends Activity implements LocationListener {
 	  			if(success) {
 	  				Toast.makeText(pictures.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
 	  				userLoggedIn = true;
-	  				showDialog(DIALOG_READY_TO_UPLOAD);
+	  				if (QUEUE_COUNT > 0) showDialog(DIALOG_READY_TO_UPLOAD);
 	  				
 	  			}
 	  			

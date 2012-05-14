@@ -6,23 +6,25 @@
     <string name="app_name_experiments">Experiments</string>
     
     <string name="firstName">First Name: \0</string>
-    <string name="descPic">Step 1: Describe the picture you will take.</string>
+    <string name="descPic">Choose a category:</string>
     <string name="takePic">Step 2: Take the picture and upload to iSENSE.</string>
     <string name="iSlogo">iSENSE Logo</string>
     
     <string name="picture_prompt">Choose a descriptor for the picture:</string>
     <string-array name="descriptor_array">
-        <item>Merrimack River</item>
-        <item>Wildlife</item>
-        <item>Litter</item>
-        <item>Plants</item>
-        <item>People</item>
-        <item>Buildings</item>
-        <item>Things in the Sky</item>
-        <item>Boat</item>
-        <item>Streets/Sidewalks</item>
-        <item>Horizon</item>
-        <item>Bridge</item>
+        <item>Ecosystem Changes</item>
+        <item>Foodweb Elements</item>
+        <item>Habitat</item>
+        <item>Invasive Species</item>
+        <item>Other</item>        
+    </string-array>
+    
+    <string-array name="descriptor_array_long">
+        <item>Ecosystem Changes\n-automobile chemicals\n-point source pollution\n-storm water runoff</item>
+        <item>Foodweb Elements\n-aquatic plants\n- insect larvae\n-larger animals\n-waterfowl</item>
+        <item>Habitat\n-habitat disruption\n-natural habitat</item>
+        <item>Invasive Species\n-pigeons\n-norway maple\n-turfgrass</item>
+        <item>Other</item>        
     </string-array>
     
 </resources>
