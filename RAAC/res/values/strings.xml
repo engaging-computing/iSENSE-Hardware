@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Science of Rivers</string>
+    <string name="button_scan">Scan for Devices</string>
+	<string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="none_paired">No paired devices found</string>
+    <string name="scanning">Scanning&#8230;</string>
+    <string name="select_device">Select a device to connect</string>
+    <string name="none_found">No devices found</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    <string name="menu_connect">Select PINPoint</string>
+    <string name="menu_settime">Sync PINPoint Time</string>
+    <string name="menu_setsensors">Select Sensors</string>
+    <string name="minval">Minimum</string>
+    <string name="maxval">Maximum</string>
+    <string name="aveval">Average</string>
+    <string name="medval">Median</string>
+</resources>

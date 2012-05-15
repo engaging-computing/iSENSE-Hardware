@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ISENSE</string>
+    <string name="button_scan">Scan for Devices</string>
+	<string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="none_paired">No paired devices found</string>
+    <string name="scanning">Scanning...</string>
+    <string name="select_device">Select a device to connect</string>
+    <string name="none_found">No devices found</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+</resources>
