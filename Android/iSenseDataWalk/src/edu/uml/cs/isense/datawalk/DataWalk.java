@@ -58,6 +58,7 @@ public class DataWalk extends Activity implements LocationListener {
 	private WakeLock runLock;
 	private Boolean appTimedOut = false;
 	private Boolean gpsWorking = false;
+	private Boolean userLoggedIn = false;
 	private int resultGotName;
 	private double latitude;
 	private double longitude;
@@ -80,6 +81,7 @@ public class DataWalk extends Activity implements LocationListener {
 	private static final int DIALOG_EXPIRED    = 7;
 	private static final int DIALOG_NO_CONNECT = 8;
 	private static final int DIALOG_NO_POINTS  = 9;
+	private static final int DIALOG_DIFFICULTY = 10;
 	
 	private static final int TIMER_LOOP        = 1000;
 	private static final int INTERVAL          = 10000;
@@ -162,7 +164,6 @@ public class DataWalk extends Activity implements LocationListener {
         /* This block useful for if onBackPressed - retains some things from previous session */
         if(running)
     		showDialog(DIALOG_FORCE_STOP);
-    	   	rapi.login(loginName, loginPass);
         
         startStop.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
         startStop.setOnLongClickListener(new OnLongClickListener() {
@@ -275,23 +276,7 @@ public class DataWalk extends Activity implements LocationListener {
         waitingForGPS();
         
         mMediaPlayer = MediaPlayer.create(this, R.raw.beep); 
-        
-        if(rapi.isConnectedToInternet()) {
-        	boolean success = rapi.login(loginName, loginPass);
-        	if(!success) {
-        		showDialog(DIALOG_EXPIRED);
-        		appTimedOut = true;
-        	} else {
-        		if(firstName.length() == 0 || lastInitial.length() == 0)
-        			startActivityForResult(
-            	   			new Intent(mContext, LoginActivity.class),
-            	   			resultGotName);
-        	}
-        } else {
-        	showDialog(DIALOG_NO_CONNECT);
-        }
-        
-        		
+	
     } 
  
 	@Override
@@ -303,39 +288,35 @@ public class DataWalk extends Activity implements LocationListener {
     	
     	mTimer = null;
     	inPausedState = true;
+    	userLoggedIn = false;
     }
     
     @Override
     public void onStop() {
     	super.onStop();
+    	
     	mLocationManager.removeUpdates(DataWalk.this);
+    	
     	if (timeTimer != null) timeTimer.cancel();
     	if (mTimer != null) mTimer.cancel();
-    	
     	mTimer = null;
+    	
     	inPausedState = true;
+    	userLoggedIn = false;
     }
-    
-    @Override
-    public void onStart() {
-    	super.onStart();
-    	inPausedState = false;
-    	initLocationManager();
-    	if (mTimer == null) waitingForGPS();
-   	
-    }
-    
+       
     @Override
     public void onResume() {
     	super.onResume();
+    	
     	inPausedState = false;
+    	
     	if(running)
     		showDialog(DIALOG_FORCE_STOP);
     		
-    	if(!rapi.isConnectedToInternet())
-        		showDialog(DIALOG_NO_CONNECT);
-    	
+    	if (!userLoggedIn) attemptLogin();
     	initLocationManager();
+    	
     	if (mTimer == null) waitingForGPS();
     	
     }
@@ -569,6 +550,23 @@ public class DataWalk extends Activity implements LocationListener {
 	    	})
 	        .setCancelable(true);
 	          
+	    	dialog = builder.create();
+	    
+	    	break;
+	    	
+	    case DIALOG_DIFFICULTY:
+	    	
+	    	builder.setTitle("Difficulties")
+	    	.setMessage("This application has experienced WiFi connection difficulties.  Try to reconfigure your WiFi " +
+	    			    "settings or turn it off and on, then hit \"Try Again\".")
+	    	.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+	    		public void onClick(DialogInterface dialoginterface, final int id) {
+	    			dialoginterface.dismiss();
+	    			if (!userLoggedIn) attemptLogin();
+	    		}
+	    	})
+	        .setCancelable(false);
+	           
 	    	dialog = builder.create();
 	    
 	    	break;
@@ -810,9 +808,33 @@ public class DataWalk extends Activity implements LocationListener {
 	
 	protected void onActivityResult(int resultCode, Intent data) {
 		   if (resultCode == LoginActivity.NAME_SUCCESSFUL) {
-		       //successful getting name and initial
-			   //should something go here?
 		   }
+	}
+	
+	//gets the user's name if not already provided + login to web site
+	private void attemptLogin()
+	{
+		if(rapi.isConnectedToInternet()) {
+        	boolean success = rapi.login(loginName, loginPass);
+        	if(!success) {
+        		if(rapi.connection == "600") {
+        			showDialog(DIALOG_EXPIRED);
+            		appTimedOut = true;
+        		} else {
+        			showDialog(DIALOG_DIFFICULTY);
+        		}
+        		
+        	} else {
+        		userLoggedIn = true;
+        		if(firstName.length() == 0 || lastInitial.length() == 0)
+        			startActivityForResult(
+            	   			new Intent(mContext, LoginActivity.class),
+            	   			resultGotName);
+        	}
+        } else {
+        	showDialog(DIALOG_NO_CONNECT);
+        }
+	
 	}
 }
 
