@@ -97,30 +97,29 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static EditText experimentInput;
 	private static EditText seats;
 	private static Spinner rides;
+	private static TextView rideName;
+	private static CheckBox canobieCheck;
+	
 	private Button startStop;
 	private Button browseButton;
 	private TextView values;
 	private Boolean running = false;
-	private static TextView rideName;
 	private Vibrator vibrator;
 	private TextView picCount;
-	private TextView loginInfo;
-	private static CheckBox canobieCheck;
-	
+	private TextView loginInfo;	
 	private String rideNameString = "NOT SET";
 	private String seatString = "1";
-	
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
-	
 	private Location loc;
 	private Location roughLoc;
-	private float accel[];
-	private float orientation[];
 	private Timer timeTimer;
+	
 	private float rawAccel[];
 	private float rawMag[];
+	private float accel[];
+	private float orientation[];
 	
 	private static final int INTERVAL = 200;
 	private static final int MENU_ITEM_SETUP = 1;
@@ -135,12 +134,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static final int DIALOG_NO_GPS = 10;
 	private static final int DIALOG_FORCE_STOP = 11;
 
-    static final public int DIALOG_CANCELED = 0;
-    static final public int DIALOG_OK = 1;
-    static final public int DIALOG_PICTURE = 2;
+    public static final int DIALOG_CANCELED = 0;
+    public static final int DIALOG_OK = 1;
+    public static final int DIALOG_PICTURE = 2;
     
-    static final public int CAMERA_PIC_REQUESTED = 1;
-    static final public int CAMERA_VID_REQUESTED = 2;
+    public static final int CAMERA_PIC_REQUESTED = 1;
+    public static final int CAMERA_VID_REQUESTED = 2;
     	
     private int count = 0;
     private String data;
@@ -161,38 +160,39 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private int    elapsedMillis  = 0;
     private int    totalMillis    = 0;
     private int    dataPointCount = 0;
+    private int    i              = 0;  
+    private int    len            = 0;  
+    private int    len2           = 0;
 
     private long   currentTime    = 0;
     
-    private String dateString;
+    private String dateString, s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;;
     RestAPI rapi ;
     
-    String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
     DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
-    
-    int i = 0;  int len = 0;  int len2 = 0;
-    
+
     ProgressDialog dia;
     double partialProg = 1.0;
     
-    boolean successLogin = false;
+
     
     private EditText sessionName; 
     String nameOfSession = "";
     String partialSessionName = "";
     
-    static int     mediaCount        = 0;
-    static boolean inPausedState     = false;
-    static boolean toastSuccess      = false;
-    static boolean useMenu           = true ;
-    static boolean beginWrite        = true ;
-    static boolean setupDone         = false;
-    static boolean choiceViaMenu     = false;
-    static boolean dontToastMeTwice  = false;
-    static boolean exitAppViaBack    = false;
-    static boolean backWasPressed    = false;
+    public static boolean inPausedState     = false;
+    
+	private static int     mwidth            = 1;
+    private static int     mediaCount        = 0;
+    private static boolean useMenu           = true ;
+    private static boolean beginWrite        = true ;
+    private static boolean setupDone         = false;
+    private static boolean choiceViaMenu     = false;
+    private static boolean dontToastMeTwice  = false;
+    private static boolean exitAppViaBack    = false;
     private static boolean canobieIsChecked  = true;
     private static boolean canobieBackup     = true;
+    private static boolean successLogin      = false;
     
     private Handler mHandler;
     private boolean throughHandler = false;
@@ -207,13 +207,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     public static String loginPass = "";
     public static String experimentId = "";
     public static JSONArray dataSet;
-    
-    static int mheight = 1;
-	static int mwidth = 1;
 	
 	public static Context mContext;
-	static ArrayList<File> pictureArray = new ArrayList<File>();
-	static ArrayList<File> videoArray   = new ArrayList<File>();
+	
+	private static ArrayList<File> pictureArray = new ArrayList<File>();
+	private static ArrayList<File> videoArray   = new ArrayList<File>();
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -231,15 +230,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         //This block useful for if onBackPressed - retains some things from previous session
         if(running)
     		showDialog(DIALOG_FORCE_STOP);
-    	if(loginName != "") {
-    		boolean success = rapi.login(loginName, loginPass); 
-    		if(success) {                                       
-    			loginInfo.setText(" "+ loginName);
-    			loginInfo.setTextColor(Color.GREEN);
-    			successLogin = true;
-    		}
-    	}
-    	picCount.setText("Pictures and Videos Taken: " + mediaCount);
         
         startStop.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
         startStop.setOnLongClickListener(new OnLongClickListener() {
@@ -260,13 +250,13 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					
 					if (running) {
 						
-						finishFile();
+						writeToSDCard(null, 'f');
 						setupDone = false;
 						useMenu = true;
 					
 						mSensorManager.unregisterListener(AmusementPark.this);
 						running = false;
-						startStop.setText("Hold to Start");
+						startStop.setText(R.string.startString);
 						 
 						timeTimer.cancel();
 						count++;
@@ -306,7 +296,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						data = "X Acceleration, Y Acceleration, Z Acceleration, Acceleration, " +
 								"Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
 						running = true;
-						startStop.setText("Hold to Stop");
+						startStop.setText(R.string.stopString);
 			    	
 						timeTimer = new Timer();
 						timeTimer.scheduleAtFixedRate(new TimerTask() {
@@ -369,9 +359,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 									
 								
 									if(beginWrite) {
-										writeToFile(data);
+										writeToSDCard(data, 's');
 									} else {
-										updateFile(data);
+										writeToSDCard(data, 'u');
 									}
 									
 						
@@ -408,63 +398,62 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         
     }
     
-    long getUploadTime()
-    {
-    		Calendar c = Calendar.getInstance();
-    		return ((long) c.getTimeInMillis());
-    }
-    
-    public void updateFile( String data ) {
-    	
-    	try {
-            out.append(data);
-            toastSuccess = true;
-    	} catch (IOException e) {
-    	    toastSuccess = false;
-    	}
-    	
-    }
-    
-    public void finishFile() {
-    	
-    	try {
-    		if(out != null)
-    			out.close();
-            if(gpxwriter != null)
-            	gpxwriter.close();
-            toastSuccess = true;
-    	} catch (IOException e) {
-    	    toastSuccess = false;
-    	}
-    	
-    }
-    
-    public void writeToFile( String data ) {
-    	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-    	Date dt = new Date();
-    	
-    	dateString = sdf.format(dt);
+    // (s)tarts, (u)pdates, and (f)inishes writing the .csv to the SD Card containing "data"
+    public void writeToSDCard(String data, char code) {
+    	switch (code) {
+    	case 's':
+    		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+        	Date dt = new Date();
+        	
+        	dateString = sdf.format(dt);
 
-    	File folder = new File(Environment.getExternalStorageDirectory() + "/iSENSE");
-    	
-    	if(!folder.exists()) {
-    	    folder.mkdir();
-    	}     
-    	
-    	SDFile = new File(folder,  rides.getSelectedItem() + "-" + seats.getText().toString() + "-" + dateString + ".csv");
- 	
-    	try {
-            gpxwriter = new FileWriter(SDFile);
-            out = new BufferedWriter(gpxwriter);
-            out.write(data);
-            toastSuccess = true;
-            beginWrite = false;
-    	} catch (IOException e) {
-    	    toastSuccess = false;
+        	File folder = new File(Environment.getExternalStorageDirectory() + "/iSENSE");
+        	
+        	if(!folder.exists()) {
+        	    folder.mkdir();
+        	}     
+        	
+        	SDFile = new File(folder,  rides.getSelectedItem() + "-" + seats.getText().toString() + "-" + dateString + ".csv");
+     	
+        	try {
+                gpxwriter = new FileWriter(SDFile);
+                out = new BufferedWriter(gpxwriter);
+                out.write(data);
+                beginWrite = false;
+        	} catch (IOException e) {
+        		Toast.makeText(this, "Error creating the SD Card file.", Toast.LENGTH_LONG).show();
+        	}
+    		
+    		break;
+    		
+    	case 'u':
+    		try {
+                out.append(data);
+        	} catch (IOException e) {
+        		Toast.makeText(this, "Error updating the SD Card file.", Toast.LENGTH_LONG).show();
+        	}
+    		
+    		break;
+    		
+    	case 'f':
+    		try {
+        		if(out != null)
+        			out.close();
+                if(gpxwriter != null)
+                	gpxwriter.close();
+        	} catch (IOException e) {
+        		Toast.makeText(this, "Error completing the SD Card file.", Toast.LENGTH_LONG).show();
+        	}
+    		
+    		break;
+    		
+    	default:
+    		Toast.makeText(mContext, "Fatal error writing file to SD Card!", Toast.LENGTH_LONG).show();
+    		break;
     	}
-    	
     }
     
+    // Adds pictures to the SD Card
     public void pushPicture() {
     	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
     	Date dt = new Date();
@@ -490,6 +479,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	pictures.clear();
     }
     
+    // Adds videos to the SD Card
     public void pushVideo() {
     	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
     	Date dt = new Date();
@@ -531,6 +521,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     public void onStop() {
     	super.onStop();
     	mLocationManager.removeUpdates(AmusementPark.this);
+    	mRoughLocManager.removeUpdates(AmusementPark.this);
     	mSensorManager.unregisterListener(AmusementPark.this);
     	if (timeTimer != null) timeTimer.cancel();
     	inPausedState = true;
@@ -543,8 +534,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     @Override
     public void onStart() {
     	super.onStart();
-    	inPausedState = false;
-    	
+    	inPausedState = false;	
     }
     
     @Override
@@ -553,11 +543,14 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	inPausedState = false;
     	if(running)
     		showDialog(DIALOG_FORCE_STOP);
-    	if(loginName != "")
-    		rapi.login(loginName, loginPass);
-    	picCount.setText("Pictures and Videos Taken: " + mediaCount);
+    	
+    	//will call the login dialogue if necessary and update UI
+    	if(loginName != "") login();
+    	
+    	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
     }
     
+    // Overridden to prevent user from exiting app unless back button is pressed twice
     @Override
     public void onBackPressed() {
     	if(!dontToastMeTwice) {
@@ -670,7 +663,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
     
-	
 	protected Dialog onCreateDialog(final int id) {
 	    
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -791,7 +783,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	    		public void onClick(DialogInterface dialoginterface,int i) {
 	    			dialoginterface.dismiss();
-	    			picCount.setText("Pictures and Videos Taken: " + mediaCount);
+	    			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	    		}
 	    	})
 	    	.setCancelable(true);
@@ -923,6 +915,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    
 	}
 
+	// Method to create a data-saving prompt with "message" as the message
     private AlertDialog getSavePrompt(final Handler h, String message) {	
     	
     	final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1120,6 +1113,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         return builder.create();
 	}    
     
+    // Converts the captured picture's uri to a file that is save-able to the SD Card
     public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		
     	int apiLevel = getApiLevel();
@@ -1175,6 +1169,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	}
 	}
     
+    // Converts the recorded video's uri to a file that is save-able to the SD Card
     public static File convertVideoUriToFile (Uri videoUri, Activity activity)  {
     	
     	int apiLevel = getApiLevel();
@@ -1225,10 +1220,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	}
     
-    static int getApiLevel() {
-    	return Integer.parseInt(android.os.Build.VERSION.SDK);
-    }
-    
   	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1238,14 +1229,14 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	            File f = convertImageUriToFile(imageUri, this);
 	            pictures.add(f);
 				mediaCount++;
-	            picCount.setText("Pictures and Videos Taken: " + mediaCount);
+				picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			}
 		} else if (requestCode == CAMERA_VID_REQUESTED) {
 			if(resultCode == RESULT_OK) {
 				File f = convertVideoUriToFile(videoUri, this);
 				videos.add(f);
 				mediaCount++;
-	            picCount.setText("Pictures and Videos Taken: " + mediaCount);
+				picCount.setText("" + getString(R.string.picAndVidCount) + mediaCount);
 			}
 		} else if (requestCode == EXPERIMENT_CODE) {
     		if (resultCode == Activity.RESULT_OK) {
@@ -1254,11 +1245,20 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		}
 		
 	}
-		
-	private Runnable uploader = new Runnable() {
+	
+  	// Assists with differentiating between displays for dialogues
+  	private static int getApiLevel()
+  	{
+    	return Integer.parseInt(android.os.Build.VERSION.SDK);
+    }
+  	
+  	// Calls the rapi primitives for actual uploading
+	private Runnable uploader = new Runnable()
+	{
 		
 		@Override
-		public void run() {
+		public void run()
+		{
 		
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
@@ -1280,7 +1280,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			}
 			
 			if(nameOfSession.equals("")) {
-				if(address.size() <= 0 || address == null) {
+				if(address == null || address.size() <= 0) {
 					sessionId = rapi.createSession(experimentInput.getText().toString(), 
 							"*Session Name Not Provided*", 
 							"Automated Submission Through Android App", 
@@ -1306,46 +1306,47 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			}
 			
 			
-			rapi.putSessionData( sessionId, experimentInput.getText().toString(), dataSet);
+			rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
 			
 			int pic = pictureArray.size();
-
 			
 			while(pic > 0) {
-				boolean hUp;
 				if(nameOfSession.equals(""))
-					hUp = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 							experimentInput.getText().toString(), 
 							sessionId, "*Session Name Not Provided*", "N/A");
 				else
-					hUp = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 							experimentInput.getText().toString(), 
 							sessionId, sessionName.getText().toString(), "N/A");
-				Log.e("Pics", "has uploaded: " + hUp);
+
 				pic--;
 				
 			}
+			
 			pictureArray.clear();
 			videoArray.clear();
-			
-			
+					
 		}
 		
 	};
 
+	// Control task for uploading data
 	private class Task extends AsyncTask <Void, Integer, Void> {
 	    
-	    @Override protected void onPreExecute() {
+	    @Override protected void onPreExecute()
+	    {
 	    	
 	        dia = new ProgressDialog(AmusementPark.this);
 	        dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	        dia.setMessage("Please wait while your data is uploaded to iSENSE...");
+	        dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 	        dia.setCancelable(false);
 	        dia.show();
 	        
 	    }
 
-	    @Override protected Void doInBackground(Void... voids) {
+	    @Override protected Void doInBackground(Void... voids)
+	    {
 
 	        uploader.run();
 	        publishProgress(100);
@@ -1353,7 +1354,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	    }
 
-	    @Override  protected void onPostExecute(Void voids) {
+	    @Override  protected void onPostExecute(Void voids)
+	    {
 	        
 	    	dia.setMessage("Done");
 	        dia.cancel();
@@ -1361,12 +1363,13 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        len = 0; len2 = 0; mediaCount = 0;
 	        
 	        Toast.makeText(AmusementPark.this, "Upload Success", Toast.LENGTH_SHORT).show();
-	        picCount.setText("Pictures and Videos Taken: " + mediaCount);
+	        picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	        showDialog(DIALOG_SUMMARY);
 	        
 	    }
 	}	
-	
+
+	// Prevents toasts from being queued infinitesimally
 	private class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
 	    @Override protected void onPreExecute() {
 	    	dontToastMeTwice = true;
@@ -1388,14 +1391,13 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    }
 	}
 	
-	//everything you need initialized for onCreate
-	private void initVars()
-	{
+	// Everything needed to be initialized for onCreate
+	private void initVars() {
+		
         mHandler = new Handler();
         
         Display deviceDisplay = getWindowManager().getDefaultDisplay(); 
     	mwidth  = deviceDisplay.getWidth();
-    	mheight = deviceDisplay.getHeight();
         
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 
@@ -1410,9 +1412,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         rideName.setText("Ride Name: " + rideNameString);
         
         picCount = (TextView) findViewById(R.id.pictureCount);
+    	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
         
         loginInfo = (TextView) findViewById(R.id.loginInfo);
-        loginInfo.setText(" Not Logged In");
+        loginInfo.setText(R.string.notLoggedIn);
         loginInfo.setTextColor(Color.RED);
         
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1422,9 +1425,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         mRoughLocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	}
 	
-	//takes care of everything to do with EULA
-	private void displayEula()
-	{
+	// Takes care of everything to do with EULA
+	private void displayEula() {
+		
 		AlertDialog.Builder adb = new SimpleEula(this).show();
 		if(adb != null) {
 			Dialog dialog = adb.create();	
@@ -1434,9 +1437,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		}
 	}
 	
-	//apiTabletDisplay for Dialog Building on Tablets
-	boolean apiTabletDisplay(Dialog dialog)
-	{
+	// apiTabletDisplay for Dialog Building on Tablets
+	static boolean apiTabletDisplay(Dialog dialog) {
 		int apiLevel = getApiLevel();
 		if(apiLevel >= 11) {
 			dialog.show();
@@ -1456,10 +1458,27 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		} else return false;
 		
 	}
-	
-	//deals with Dialog creation whether api is tablet or not
-	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id)
+
+	// Deals with login and UI display
+	void login()
 	{
+		boolean success = rapi.login(loginName, loginPass); 
+		if(success) {                                       
+			loginInfo.setText(" "+ loginName);
+			loginInfo.setTextColor(Color.GREEN);
+			successLogin = true;
+		}
+	}
+	
+    // Gets the milliseconds since Epoch
+	private long getUploadTime()
+    {
+    		Calendar c = Calendar.getInstance();
+    		return ((long) c.getTimeInMillis());
+    }
+	
+	// Deals with Dialog creation whether api is tablet or not
+	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
 		if(apiTabletDisplay(dialog)) {
 		    	
 			dialog.setOnDismissListener(new OnDismissListener() {
@@ -1482,5 +1501,5 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			return dialog;
 		}
 	}
-
+		
 }
