@@ -21,6 +21,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -43,6 +44,7 @@ import edu.uml.cs.isense.objects.Picture;
 
 public class pictures extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;
+	public static final int DESCRIPTION_REQUESTED = 2;
 	
 	private static final int DIALOG_REJECT = 0;
 	private static final int DIALOG_NO_GPS = 1;
@@ -83,13 +85,13 @@ public class pictures extends Activity implements LocationListener {
 	//private EditText experimentInput;
 	private Location loc ;
 	
-	//private String teacherInfo       ;
-	//private String schoolInfo        ;
-	//private String teacher           ;
-	//private String school            ;
-	private double Lat  =  42.6404   ; 
-	private double Long = -71.3533   ;
-	private long   curTime           ;
+	//private String teacherInfo;
+	//private String schoolInfo;
+	//private String teacher;
+	//private String school;
+	private double Lat  =  42.6404; 
+	private double Long = -71.3533;
+	private long   curTime;
 
 	
 	private Context mContext;
@@ -280,12 +282,13 @@ public class pictures extends Activity implements LocationListener {
         //experimentInput = (EditText) findViewById(R.id.ExperimentInput);
 		
 		describe = (Button) findViewById(R.id.describeButton);
+		describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
 		describe.setOnClickListener(new OnClickListener() {
 		
 			@Override
 			public void onClick(View v) {
 				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
-				startActivity(startDescribe);
+				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
 			}
 		});
         
@@ -316,8 +319,7 @@ public class pictures extends Activity implements LocationListener {
 							"Permission isn't granted to write to external storage.  Please check to see if there is an SD card.", 
 							Toast.LENGTH_LONG).show();
 					
-				}
-				
+				}		
 				
 			}
         	
@@ -533,9 +535,10 @@ public class pictures extends Activity implements LocationListener {
 		
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if(resultCode == RESULT_OK) {
-				
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
+				describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
+				takePicture.setBackgroundResource(android.R.drawable.btn_default);
 		        takePicture.setEnabled(false);
 		        if (smartUploading) {
 		        	if (userLoggedIn) {
@@ -551,11 +554,20 @@ public class pictures extends Activity implements LocationListener {
 		        	else showDialog(DIALOG_NOT_LOGGED_IN);
 		        }
 			}
-		} /*else if (requestCode == EXPERIMENT_CODE) {
+		} 
+		
+		else if (requestCode == DESCRIPTION_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+					describe.setBackgroundResource(android.R.drawable.btn_default);
+					takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
+			}
+		}
+					
+	  /*else if (requestCode == EXPERIMENT_CODE) {
     			if (resultCode == Activity.RESULT_OK) {
     				experimentInput.setText("" + data.getExtras().getInt("edu.uml.cs.isense.pictures.experiments.exp_id"));
     			}
-			}*/
+		}*/
 	}
 	
     
@@ -564,8 +576,8 @@ public class pictures extends Activity implements LocationListener {
 	loc = location ;
 	
 		if(gpsWorking == true) {
-			Lat  = loc.getLatitude ();
-			Long = loc.getLongitude();
+			Lat  = location.getLatitude();
+			Long = location.getLongitude();
 		}
 	}
       

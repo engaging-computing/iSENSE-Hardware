@@ -175,7 +175,7 @@ public class Descriptor extends Activity {
 					pictures.takePhoto.setEnabled(false); 
 				}
 			
-				
+				setResult(pictures.RESULT_OK);
 				finish();
 			}
         });
