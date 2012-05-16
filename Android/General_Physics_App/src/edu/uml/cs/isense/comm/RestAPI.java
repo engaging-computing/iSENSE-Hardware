@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
-import android.util.Log;
+//import android.util.Log;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.objects.Item;
@@ -40,7 +40,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
+	private final String base_url = "http://isense.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;
@@ -155,7 +155,7 @@ public class RestAPI {
 			String twoHyphens = "--";
 			String boundary = "*****";
 			
-			URL connectURL = new URL(this.base_url); Log.e("url", "url: " + this.base_url);
+			URL connectURL = new URL(this.base_url);// Log.e("url", "url: " + this.base_url);
 			HttpURLConnection conn = (HttpURLConnection) connectURL.openConnection();
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
@@ -164,7 +164,7 @@ public class RestAPI {
 			
 			conn.setRequestProperty("Connection", "Keep-Alive");
 			conn.setRequestProperty("Content-Type", "multipart/form-data, boundary=" + boundary);
-			Log.e("url", "conn: " + conn);
+		//	Log.e("url", "conn: " + conn);
 			DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
 			
 			// submit header
@@ -241,7 +241,7 @@ public class RestAPI {
 			// send multipart form data necesssary after file data...
 	
 			dos.writeBytes(lineEnd);
-			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd); Log.e("url", "dos: " + dos);
+			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd); //Log.e("url", "dos: " + dos);
 	
 			// close streams
 			dos.flush();
@@ -252,17 +252,17 @@ public class RestAPI {
 				String str;
 
 				while ((str = inStream.readLine()) != null) {
-					Log.d("rapi", "Server Response" + str);
+				//	Log.d("rapi", "Server Response" + str);
 				}
 				inStream.close();
 				return true;
 			} catch (IOException ioex) {
-				Log.e("rapi", "error: " + ioex.getMessage(), ioex);
+				//Log.e("rapi", "error: " + ioex.getMessage(), ioex);
 				return false;
 			}
 			
 		} catch (Exception e) {
-			Log.e("Pic", ""+e);
+		//	Log.e("Pic", ""+e);
 			return false;
 		}
 		
@@ -365,12 +365,12 @@ public class RestAPI {
 				String str;
 
 				while ((str = inStream.readLine()) != null) {
-					Log.d("rapi", "Server Response" + str);
+					//Log.d("rapi", "Server Response" + str);
 				}
 				inStream.close();
 				return true;
 			} catch (IOException ioex) {
-				Log.e("rapi", "error: " + ioex.getMessage(), ioex);
+				//Log.e("rapi", "error: " + ioex.getMessage(), ioex);
 				return false;
 			}
 			
@@ -1224,7 +1224,7 @@ public class RestAPI {
 		switch(status) {
 								
 			case 200:
-				Log.d("rapi", "Successful request");
+				//Log.d("rapi", "Successful request");
 			
 				// Build Reader and StringBuilder to output to string
 				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -1242,12 +1242,12 @@ public class RestAPI {
 			
 			case 404:
 				// Handle 404 page not found
-				Log.d("rapi", "Could not find URL!");
+				//Log.d("rapi", "Could not find URL!");
 				break;
 			
 			default:
 				// Catch all for all other HTTP response codes
-				Log.d("rapi", "Returned unhandled error code: " + status);
+			//	Log.d("rapi", "Returned unhandled error code: " + status);
 				break;
 		}
 		

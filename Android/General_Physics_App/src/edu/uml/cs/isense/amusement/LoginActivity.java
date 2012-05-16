@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +18,9 @@ import edu.uml.cs.isense.comm.RestAPI;
 public class LoginActivity {	
 	private RestAPI rapi;
 	private Context mContext;
+	
+    private final String mLoginName = "PhysicsAppUser";
+    private final String mLoginPass = "omgThisIsFun";
 	
 	static final public int LOGIN_SUCCESSFULL = 1;
 	static final public int LOGIN_FAILED = 0;
@@ -64,6 +67,9 @@ public class LoginActivity {
             final EditText usernameInput = (EditText) v.findViewById(R.id.usernameInput);
 			final EditText passwordInput = (EditText) v.findViewById(R.id.passwordInput);
 			
+			usernameInput.setText(mLoginName);
+			passwordInput.setText(mLoginPass);
+			
             final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             
             builder.setView(v);
@@ -100,7 +106,7 @@ public class LoginActivity {
 		final Message msg = Message.obtain();
 		msg.setTarget(h);
 		msg.what = LOGIN_FAILED;
-		Log.e("CNCTN", "connection: " + rapi.connection);
+		//Log.e("CNCTN", "connection: " + rapi.connection);
 		if(rapi.connection == "NONE") message = noConnection;
 		else if(rapi.connection == "600") message = error600;
 		else if(rapi.connection == "") message = unknownUser;
