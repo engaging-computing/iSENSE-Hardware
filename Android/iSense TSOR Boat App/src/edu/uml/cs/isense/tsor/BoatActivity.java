@@ -111,17 +111,16 @@ public class BoatActivity extends Activity implements LocationListener {
 	private static final int T_INVAL_TURB  = 111;
 	private static final int T_INVAL_NUM   = 112;
 	
-	private static final int DIALOG_CHOICE     = 1;
-	private static final int DIALOG_FORCE_STOP = 2;
-	private static final int DIALOG_SUMMARY    = 3;
-	private static final int MENU_ITEM_ABOUT   = 4;
-	private static final int MENU_ITEM_RESTORE = 5;
-	private static final int DIALOG_NO_CONNECT = 6;
-	private static final int DIALOG_EXPIRED    = 7;
-	private static final int DIALOG_DIFFICULTY = 8;
-	private static final int DIALOG_NO_SCHOOL  = 9;
-	private static final int DIALOG_DATA       = 10;
-	private static final int DIALOG_YOU_SURE   = 11;
+	private static final int DIALOG_SUMMARY    = 1;
+	private static final int MENU_ITEM_ABOUT   = 2;
+	private static final int MENU_ITEM_RESTORE = 3;
+	private static final int DIALOG_NO_CONNECT = 4;
+	private static final int DIALOG_EXPIRED    = 5;
+	private static final int DIALOG_DIFFICULTY = 6;
+	private static final int DIALOG_NO_SCHOOL  = 7;
+	private static final int DIALOG_DATA       = 8;
+	private static final int DIALOG_YOU_SURE   = 9;
+	private static final int MENU_ITEM_UPLOAD  = 10;
 	
     static final public int DIALOG_CANCELED = 0;
     static final public int DIALOG_OK = 1;
@@ -157,6 +156,7 @@ public class BoatActivity extends Activity implements LocationListener {
     static boolean nameSuccess       = false;
     static boolean dontPromptMeTwice = false;
     static boolean needNewArray      = true;
+    static boolean usedMenu          = false;
     
     public static String textToSession = "";
     public static String toSendOut = "";
@@ -221,12 +221,12 @@ public class BoatActivity extends Activity implements LocationListener {
 					showDialog(DIALOG_NO_SCHOOL);
 				else {
 					boolean canUpload = canBeginUploading();
-					if (canUpload)
-						//if (rapi.isConnectedToInternet())
+					if (canUpload) {
+					
+						usedMenu = false;
 						new Task().execute();
-						//else
-							//showDialog(DIALOG_NO_CONNECT);
-					else
+						
+					} else
 						displayToast(toastId);
 				}
 				
@@ -252,6 +252,18 @@ public class BoatActivity extends Activity implements LocationListener {
         }
             
     } 
+    
+    void makeToast(String message, int length) {
+    	if (length == Toast.LENGTH_SHORT) {
+    		if(!dontToastMeTwice)
+    			Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+    		new NoToastTwiceTask().execute();
+    	} else {
+    		if(!dontToastMeTwice)
+    			Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+    		new NoToastTwiceTask().execute();
+    	}
+    }
     
     boolean canBeginUploading() {
     	try {
@@ -433,6 +445,7 @@ public class BoatActivity extends Activity implements LocationListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(Menu.NONE, MENU_ITEM_ABOUT, Menu.NONE, "About");
 		menu.add(Menu.NONE, MENU_ITEM_RESTORE, Menu.NONE, "Restore Fields");
+		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		return true;
 	}
     
@@ -441,9 +454,11 @@ public class BoatActivity extends Activity implements LocationListener {
         if (!useMenu) {
             menu.getItem(0).setEnabled(false);
             menu.getItem(1).setEnabled(false);
+            menu.getItem(2).setEnabled(false);
         } else {
             menu.getItem(0).setEnabled(true );
             menu.getItem(1).setEnabled(true );
+            menu.getItem(2).setEnabled(true );
         }
         return true;
     }
@@ -461,6 +476,17 @@ public class BoatActivity extends Activity implements LocationListener {
         		field4.setText(tempField4);
         		field5.setText(tempField5);
         		field6.setText(tempField6);
+        		return true;
+        	case MENU_ITEM_UPLOAD:
+        		if(data == null || data.length() == 0) 
+        			makeToast("No data to upload!", Toast.LENGTH_SHORT);
+        		else {
+        			if(rapi.isConnectedToInternet()) {
+        				usedMenu = true;
+        				new Task().execute();
+        			} else
+        				makeToast("No connectivity found yet.  Try again later.", Toast.LENGTH_LONG);
+        		}
         		return true;
         }
         return false;
@@ -491,60 +517,7 @@ public class BoatActivity extends Activity implements LocationListener {
     	
     	WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
     	
-	    switch(id) {
-	    	
-	    case DIALOG_CHOICE:
-	    	
-			builder.setTitle("Select An Action:")
-	    	.setMessage("Would you like to upload your data to iSENSE or throw away this data set?")
-	    	.setPositiveButton("iSENSE", new DialogInterface.OnClickListener() {
-	    		public void onClick(DialogInterface dialoginterface,int i) {
-	    			
-	    			dialoginterface.dismiss();
-	    			
-	    			if(len == 0 || len2 == 0)
-	    				Toast.makeText(BoatActivity.this, "There are no data to upload!", Toast.LENGTH_LONG).show();
-	    			
-	    			else {
-			    		if(rapi.isConnectedToInternet())
-			    			new Task().execute();
-			    		else
-			    			Toast.makeText(BoatActivity.this, 
-			    					"No connection to Internet found!  Please enable wifi/mobile connectivity.", 
-			    					Toast.LENGTH_LONG)
-			    				 .show();
-	    			}
-	    		}
-	    	})
-			.setNegativeButton("Throw Away", new DialogInterface.OnClickListener() {
-     		   	public void onClick(DialogInterface dialoginterface,int i) {
-     		   		dialoginterface.dismiss();
-     		   		Toast.makeText(BoatActivity.this, "Data thrown away!", Toast.LENGTH_LONG).show();
-     		   	} 
-     	   	}) 
-     	   .setCancelable(true);
-	    	
-	    	dialog = builder.create();
-	    	
-	    	break;
-	    	
-	    case DIALOG_FORCE_STOP:
-	    	
-	    	usedHomeButton = true;
-	    	builder.setTitle("Data Recording Halted")
-	    	.setMessage("You exited the app while data were still being recorded.  Data recording has terminated.")
-	    	.setCancelable(false)
-	    	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-	               public void onClick(DialogInterface dialoginterface, final int id) {
-	            	   dialoginterface.dismiss();
-	            	   usedHomeButton = false;
-	               }
-	         });
-	           
-	    	dialog = builder.create();
-	    
-	    	break;
-	    
+	    switch (id) {
 	    	
 	    case DIALOG_SUMMARY:
 	    	String appendMe;
@@ -753,9 +726,10 @@ public class BoatActivity extends Activity implements LocationListener {
      	            	   	} else {
      	            	   		d.dismiss();
      	            	   		boolean canUpload = canBeginUploading();
-     	            	   			if (canUpload)
+     	            	   			if (canUpload) {
+     	            	   				usedMenu = false;
      	            	   				new Task().execute();
-     	            		   		else
+     	            	   			} else
      	            		   			displayToast(toastId);      	   
      	            	   	}
                         }
@@ -895,18 +869,20 @@ public class BoatActivity extends Activity implements LocationListener {
 				uploadSchool = studentSchool;
 			else
 				uploadSchool = schools.getSelectedItem().toString();
-					
-			dataSet .put(getUploadTime())
-					.put(name.getText().toString())
-					.put(uploadSchool)
-					.put(field1.getText().toString())
-					.put(field2.getText().toString())
-					.put(field3.getText().toString())
-					.put(field4.getText().toString())
-					.put(field5.getText().toString())
-					.put(field6.getText().toString());
+				
+			if (!usedMenu) {
+				dataSet .put(getUploadTime())
+						.put(name.getText().toString())
+						.put(uploadSchool)
+						.put(field1.getText().toString())
+						.put(field2.getText().toString())
+						.put(field3.getText().toString())
+						.put(field4.getText().toString())
+						.put(field5.getText().toString())
+						.put(field6.getText().toString());
 			
-			data.put(dataSet);
+				data.put(dataSet);
+			}
 			
 			if (rapi.isConnectedToInternet()) {
 				needNewArray = true;
@@ -960,8 +936,14 @@ public class BoatActivity extends Activity implements LocationListener {
 	        tempField6 = field6.getText().toString();
 	        field6.setText("");
 	        
-	        //Toast.makeText(BoatActivity.this, "Data upload successful.", Toast.LENGTH_SHORT).show();
-	        showDialog(DIALOG_DATA);
+	        if (needNewArray)
+	        	data = new JSONArray();
+	        
+	        if(usedMenu) {
+	        	makeToast("All data uploaded successfully.", Toast.LENGTH_SHORT);
+	        	showDialog(DIALOG_SUMMARY);
+	        } else
+	        	showDialog(DIALOG_DATA);
 
 	    }
 	}	
