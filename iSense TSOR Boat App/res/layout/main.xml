@@ -29,31 +29,6 @@
 		    android:src="@drawable/logo"
 		    android:contentDescription="iSENSE Logo" />
 	
-		<RelativeLayout android:orientation="vertical"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:background="@android:color/white"
-    		android:layout_marginTop="20dp">
-    	
-    		<TextView android:layout_height="wrap_content" 
-				android:layout_width="wrap_content" 
-				android:id="@+id/studentLabel" 
-				android:text="Name:     "
-				android:textSize="18dip"
-				android:textColor="@android:color/black"
-				android:paddingTop="12dip"/>
-			
-			<EditText android:text="" 
-				android:layout_width="fill_parent" 
-				android:inputType="text"
-				android:imeOptions="actionDone"
-				android:maxLength="50"
-				android:id="@+id/studentName" 
-				android:layout_height="wrap_content" 
-				android:layout_alignParentTop="true" 
-				android:layout_toRightOf="@+id/studentLabel">
-			</EditText>
-		</RelativeLayout>
 		
 		<RelativeLayout android:orientation="vertical"
         	android:layout_width="fill_parent"
@@ -134,14 +109,14 @@
     		<TextView android:layout_height="wrap_content" 
 				android:layout_width="wrap_content" 
 				android:id="@+id/field2Label" 
-				android:text="Turbidity (m): "
+				android:text="Phosphate (ppm): "
 				android:textSize="18dip"
 				android:textColor="@android:color/black"
 				android:paddingTop="12dip"/>
 			
 			<EditText android:text="" 
-				android:layout_width="150dp"
-				android:layout_alignParentRight="true" 
+				android:layout_width="150dp" 
+				android:layout_alignParentRight="true"
 				android:inputType="phone"
 				android:digits="1234567890."
 				android:maxLength="12"
@@ -161,14 +136,14 @@
     		<TextView android:layout_height="wrap_content" 
 				android:layout_width="wrap_content" 
 				android:id="@+id/field3Label" 
-				android:text="Phosphate (ppm): "
+				android:text="Copper (ppm):"
 				android:textSize="18dip"
 				android:textColor="@android:color/black"
 				android:paddingTop="12dip"/>
 			
 			<EditText android:text="" 
-				android:layout_width="150dp" 
-				android:layout_alignParentRight="true"
+				android:layout_width="150dp"
+				android:layout_alignParentRight="true" 
 				android:inputType="phone"
 				android:digits="1234567890."
 				android:maxLength="12"
@@ -188,7 +163,7 @@
     		<TextView android:layout_height="wrap_content" 
 				android:layout_width="wrap_content" 
 				android:id="@+id/field4Label" 
-				android:text="Copper (ppm):"
+				android:text="Water Temp. (°C): "
 				android:textSize="18dip"
 				android:textColor="@android:color/black"
 				android:paddingTop="12dip"/>
@@ -215,7 +190,7 @@
     		<TextView android:layout_height="wrap_content" 
 				android:layout_width="wrap_content" 
 				android:id="@+id/field5Label" 
-				android:text="Temperature (°C): "
+				android:text="Air Temp. (°C): "
 				android:textSize="18dip"
 				android:textColor="@android:color/black"
 				android:paddingTop="12dip"/>
@@ -252,9 +227,63 @@
 				android:layout_alignParentRight="true" 
 				android:inputType="phone"
 				android:digits="1234567890."
-				android:imeOptions="actionDone"
+				android:imeOptions="actionNext"
 				android:maxLength="12"
 				android:id="@+id/field6Field" 
+				android:layout_height="wrap_content" 
+				android:layout_alignParentTop="true" 
+				>
+			</EditText>
+		</RelativeLayout>
+		
+		<RelativeLayout android:orientation="vertical"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:background="@android:color/white">
+    	
+    		<TextView android:layout_height="wrap_content" 
+				android:layout_width="wrap_content" 
+				android:id="@+id/field7Label" 
+				android:text="Vernier Clarity (NTU): "
+				android:textSize="18dip"
+				android:textColor="@android:color/black"
+				android:paddingTop="12dip"/>
+			
+			<EditText android:text="" 
+				android:layout_width="150dp"
+				android:layout_alignParentRight="true" 
+				android:inputType="phone"
+				android:digits="1234567890."
+				android:imeOptions="actionNext"
+				android:maxLength="12"
+				android:id="@+id/field7Field" 
+				android:layout_height="wrap_content" 
+				android:layout_alignParentTop="true" 
+				>
+			</EditText>
+		</RelativeLayout>
+		
+		<RelativeLayout android:orientation="vertical"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:background="@android:color/white">
+    	
+    		<TextView android:layout_height="wrap_content" 
+				android:layout_width="wrap_content" 
+				android:id="@+id/field8Label" 
+				android:text="Secchi Clarity (m): "
+				android:textSize="18dip"
+				android:textColor="@android:color/black"
+				android:paddingTop="12dip"/>
+			
+			<EditText android:text="" 
+				android:layout_width="150dp"
+				android:layout_alignParentRight="true" 
+				android:inputType="phone"
+				android:digits="1234567890."
+				android:imeOptions="actionDone"
+				android:maxLength="12"
+				android:id="@+id/field8Field" 
 				android:layout_height="wrap_content" 
 				android:layout_alignParentTop="true" 
 				>
