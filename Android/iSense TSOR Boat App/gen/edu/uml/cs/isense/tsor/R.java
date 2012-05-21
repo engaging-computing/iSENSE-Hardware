@@ -20,26 +20,28 @@ public final class R {
     }
     public static final class id {
         public static final int ImageViewLogo=0x7f060001;
-        public static final int field1Field=0x7f060009;
-        public static final int field1Label=0x7f060008;
-        public static final int field2Field=0x7f06000b;
-        public static final int field2Label=0x7f06000a;
-        public static final int field3Field=0x7f06000d;
-        public static final int field3Label=0x7f06000c;
-        public static final int field4Field=0x7f06000f;
-        public static final int field4Label=0x7f06000e;
-        public static final int field5Field=0x7f060011;
-        public static final int field5Label=0x7f060010;
-        public static final int field6Field=0x7f060013;
-        public static final int field6Label=0x7f060012;
-        public static final int location=0x7f060007;
-        public static final int locationLabel=0x7f060006;
-        public static final int schoolLabel=0x7f060004;
-        public static final int schools=0x7f060005;
+        public static final int field1Field=0x7f060007;
+        public static final int field1Label=0x7f060006;
+        public static final int field2Field=0x7f060009;
+        public static final int field2Label=0x7f060008;
+        public static final int field3Field=0x7f06000b;
+        public static final int field3Label=0x7f06000a;
+        public static final int field4Field=0x7f06000d;
+        public static final int field4Label=0x7f06000c;
+        public static final int field5Field=0x7f06000f;
+        public static final int field5Label=0x7f06000e;
+        public static final int field6Field=0x7f060011;
+        public static final int field6Label=0x7f060010;
+        public static final int field7Field=0x7f060013;
+        public static final int field7Label=0x7f060012;
+        public static final int field8Field=0x7f060015;
+        public static final int field8Label=0x7f060014;
+        public static final int location=0x7f060005;
+        public static final int locationLabel=0x7f060004;
+        public static final int schoolLabel=0x7f060002;
+        public static final int schools=0x7f060003;
         public static final int setupScroll=0x7f060000;
-        public static final int studentLabel=0x7f060002;
-        public static final int studentName=0x7f060003;
-        public static final int submitButton=0x7f060014;
+        public static final int submitButton=0x7f060016;
     }
     public static final class layout {
         public static final int main=0x7f030000;

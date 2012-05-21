@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -60,27 +61,28 @@ import edu.uml.cs.isense.comm.RestAPI;
 
 public class BoatActivity extends Activity implements LocationListener {
     
-	private static String experimentNumber = "435";        // HARD CODED
+	private static String experimentNumber = "350";        // HARD CODED
 	private static String userName         = "tsorboat";   // HARD CODED
 	private static String password         = "ecgrul3s";   // HARD CODED
 	private static String baseSessionUrl   = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	private static String sessionUrl = "";
 	private static int    sessionNumbers[] = { 
-		3485, // Canal
-		3484, // Docks
-		3483, // Down River
-		3482  // Up River	
+		2904, // Canals
+		2905, // Docks
+		2891, // Down River
+		2906  // Up River	
 	};
 	
 	private Vibrator vibrator;
 	private Button   submit;
-	private TextView name;
-	private TextView field1;
-	private TextView field2;
-	private TextView field3;
-	private TextView field4;
-	private TextView field5;
-	private TextView field6;
+	private TextView field1;	// Diss. Oxygen
+	private TextView field2;	// Phosphate
+	private TextView field3;	// Copper
+	private TextView field4;	// Water Temp
+	private TextView field5;	// Air Temp
+	private TextView field6;	// pH
+	private TextView field7;	// Vernier Clarity
+	private TextView field8;	// Secchi Clarity
 	private Spinner  schools;
 	private Spinner  location;
 	private boolean  running = false;
@@ -95,21 +97,14 @@ public class BoatActivity extends Activity implements LocationListener {
 	private String tempField4    = "";
 	private String tempField5    = "";
 	private String tempField6    = "";
+	private String tempField7    = "";
+	private String tempField8    = "";
 	private String studentSchool = "";
 	
-	private static final int T_NEED_NAME   = 100;
-	private static final int T_NEED_SCHOOL = 101;
-	private static final int T_NEED_LOC    = 102;
-	private static final int T_NEED_FIELD1 = 103;
-	private static final int T_NEED_FIELD2 = 104;
-	private static final int T_NEED_FIELD3 = 105;
-	private static final int T_NEED_FIELD4 = 106;
-	private static final int T_NEED_FIELD5 = 107;
-	private static final int T_NEED_FIELD6 = 108;
-	private static final int T_INVAL_PH    = 109;
-	private static final int T_INVAL_TEMP  = 110;
-	private static final int T_INVAL_TURB  = 111;
-	private static final int T_INVAL_NUM   = 112;
+	private static final int T_INVAL_WATER = 101;
+	private static final int T_INVAL_AIR   = 102;
+	private static final int T_INVAL_PH    = 103;
+	private static final int T_INVAL_NUM   = 104;
 	
 	private static final int DIALOG_SUMMARY    = 1;
 	private static final int MENU_ITEM_ABOUT   = 2;
@@ -192,9 +187,7 @@ public class BoatActivity extends Activity implements LocationListener {
          
         loc = new Location(mLocationManager.getBestProvider(c, true));  
         
-        name = (TextView) findViewById(R.id.studentName);
-        
-        schools = (Spinner)  findViewById(R.id.schools);
+        schools = (Spinner) findViewById(R.id.schools);
         final ArrayAdapter<CharSequence> schoolAdapter = ArrayAdapter.createFromResource(this, R.array.school_array, android.R.layout.simple_spinner_item);
         schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         schools.setAdapter(schoolAdapter);
@@ -210,6 +203,8 @@ public class BoatActivity extends Activity implements LocationListener {
         field4 = (TextView) findViewById(R.id.field4Field);
         field5 = (TextView) findViewById(R.id.field5Field);
         field6 = (TextView) findViewById(R.id.field6Field);
+        field7 = (TextView) findViewById(R.id.field7Field);
+        field8 = (TextView) findViewById(R.id.field8Field);
         
         submit = (Button) findViewById(R.id.submitButton);  
         submit.getBackground().setColorFilter(0xff00ffff, PorterDuff.Mode.MULTIPLY);
@@ -267,49 +262,44 @@ public class BoatActivity extends Activity implements LocationListener {
     
     boolean canBeginUploading() {
     	try {
-    	/*
-    	 * Obscure floating checks occur to attempt to throw a number exception on each field.
-    	 */
-    	if (name.getText().toString().equals("")) {
-    		toastId = T_NEED_NAME;
-    		return false;
-    	} else if (field1.getText().toString().equals("")) {
-    		toastId = T_NEED_FIELD1;
-    		return false;
-    	} else if ((Float.parseFloat(field1.getText().toString())) > 1000000000000.0 ) {
-    		toastId = T_NEED_FIELD1;
-    		return false;
-    	} else if (field2.getText().toString().equals("")) {
-    		toastId = T_NEED_FIELD2;
-    		return false;
-    	} else if ((Float.parseFloat(field2.getText().toString())) < 0.0 || (Float.parseFloat(field2.getText().toString())) > 100.0) {
-    		toastId = T_INVAL_TURB;
-    		return false; 
-    	} else if (field3.getText().toString().equals("")) {
-    		toastId = T_NEED_FIELD3;
-    		return false;
-    	} else if ((Float.parseFloat(field3.getText().toString())) > 1000000000000.0 ) {
-    		toastId = T_NEED_FIELD3;
-    		return false;
-    	} else if (field4.getText().toString().equals("")) {
-    		toastId = T_NEED_FIELD4;
-    		return false;
-    	} else if ((Float.parseFloat(field4.getText().toString())) > 1000000000000.0 ) {
-    		toastId = T_NEED_FIELD4;
-    		return false;
-    	} else if (field5.getText().toString().equals("")) {
-    		toastId = T_NEED_FIELD5;
-    		return false;
-    	} else if ((Float.parseFloat(field5.getText().toString())) < 0.0 || (Float.parseFloat(field5.getText().toString())) > 100.0) {
-    		toastId = T_INVAL_TEMP;
-    		return false;
-    	} else if (field6.getText().toString().equals("")) {
-    		toastId = T_NEED_FIELD6;
-    		return false;
-    	} else if ((Float.parseFloat(field6.getText().toString())) < 0.0 || (Float.parseFloat(field6.getText().toString())) > 14.0) {
-    		toastId = T_INVAL_PH;
-    		return false;
-    	}
+    		
+    	if(!field1.getText().toString().equals(""))
+    		
+    		if(!field1.getText().toString().equals(""))	{
+    			if ((Float.parseFloat(field1.getText().toString())) > 1000000000000.0 ) {
+    	    		return true;
+    	    	}
+    		} else if(!field2.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field2.getText().toString())) > 1000000000000.0 ) {
+    	    		return true;
+    	    	}
+    		} else if(!field3.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field3.getText().toString())) > 1000000000000.0 ) {
+    	    		return true;
+    	    	}
+    		} else if(!field4.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field4.getText().toString())) < 0.0 || (Float.parseFloat(field4.getText().toString())) > 100.0) {
+    	    		toastId = T_INVAL_WATER;
+    	    	}
+    		} else if(!field5.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field5.getText().toString())) < 0.0 || (Float.parseFloat(field5.getText().toString())) > 100.0) {
+    	    		toastId = T_INVAL_AIR;
+    	    		return false;
+    	    	}
+    		} else if(!field6.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field6.getText().toString())) < 0.0 || (Float.parseFloat(field6.getText().toString())) > 14.0) {
+    	    		toastId = T_INVAL_PH;
+    	    		return false;
+    	    	}
+    		} else if(!field7.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field7.getText().toString())) > 1000000000000.0 ) {
+    	    		return true;
+    	    	}
+    		} else if(!field8.getText().toString().equals("")) {
+    			if ((Float.parseFloat(field8.getText().toString())) > 1000000000000.0 ) {
+    	    		return true;
+    	    	}
+    		}
     	
     	} catch (java.lang.NumberFormatException nfe) {
     		toastId = T_INVAL_NUM;
@@ -321,63 +311,22 @@ public class BoatActivity extends Activity implements LocationListener {
     
     void displayToast(int id) {
     	switch (id) {
-    	case T_NEED_NAME:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Name field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
-    		
-    	case T_NEED_FIELD1:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Dissolved oxygen field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
-    		
-    	case T_NEED_FIELD2:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Turbidity field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
-    		
-    	case T_NEED_FIELD3:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Phosphate field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
-    		
-    	case T_NEED_FIELD4:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Copper field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
-    		
-    	case T_NEED_FIELD5:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Temperature field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
-    		
-    	case T_NEED_FIELD6:
-    		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "pH field is blank.", Toast.LENGTH_SHORT).show();
-    		new NoToastTwiceTask().execute();
-    		break;
     		
     	case T_INVAL_PH:
     		if(!dontToastMeTwice)
     			Toast.makeText(mContext, "Invalid pH value.  Enter a value between 0 - 14.", Toast.LENGTH_LONG).show();
     		new NoToastTwiceTask().execute();
     		break;
-    		
-    	case T_INVAL_TEMP:
+    	
+    	case T_INVAL_WATER:
     		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Invalid temperature value.  Enter a value between 0 - 100.", Toast.LENGTH_LONG).show();
+    			Toast.makeText(mContext, "Invalid water temperature value.  Enter a value between 0 - 100.", Toast.LENGTH_LONG).show();
     		new NoToastTwiceTask().execute();
     		break;
     		
-    	case T_INVAL_TURB:
+    	case T_INVAL_AIR:
     		if(!dontToastMeTwice)
-    			Toast.makeText(mContext, "Invalid turbidity value.  Enter a value between 0 - 100. ", Toast.LENGTH_LONG).show();
+    			Toast.makeText(mContext, "Invalid air temperature value.  Enter a value between 0 - 100.", Toast.LENGTH_LONG).show();
     		new NoToastTwiceTask().execute();
     		break;
     		
@@ -476,6 +425,8 @@ public class BoatActivity extends Activity implements LocationListener {
         		field4.setText(tempField4);
         		field5.setText(tempField5);
         		field6.setText(tempField6);
+        		field7.setText(tempField7);
+        		field8.setText(tempField8);
         		return true;
         	case MENU_ITEM_UPLOAD:
         		if(data == null || data.length() == 0) 
@@ -552,7 +503,10 @@ public class BoatActivity extends Activity implements LocationListener {
 	    case MENU_ITEM_ABOUT:
 	    	
 	    	builder.setTitle("About")
-	    	.setMessage(R.string.app_name)
+	    	.setMessage("This is the Android Application designed for the teacher to upload data collected at the river to iSENSE.\n\n" +
+	    				"If connectivity is available, data is immediately uploaded upon holding the the \"Submit\" button. " +
+	    				"If no connectivity is available, data is stored until uploaded at a later time.  The user may attempt " +
+	    				"to upload again by using Menu->Upload.")
 	    	.setCancelable(false)
 	    	.setNegativeButton("Back", new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialoginterface, final int id) {
@@ -743,20 +697,59 @@ public class BoatActivity extends Activity implements LocationListener {
 	    	
 	    case DIALOG_DATA:
 	    	String dataUploaded = "";
-	    	if (needNewArray)
+	    	StringBuilder sb = new StringBuilder();
+	    		
+	    	if(tempField1 != "") {
+	    		sb.append("Diss. Oxygen: ")
+	    		  .append(tempField1)
+	    		  .append("ppm\n");
+	    	}
+	    	if(tempField2 != "") {
+	    		sb.append("Phosphate: ")
+	    		  .append(tempField2)
+	    		  .append("ppm\n");
+	    	}
+	    	if(tempField3 != "") {
+	    		sb.append("Copper: ")
+	    		  .append(tempField3)
+	    		  .append("ppm\n");
+	    	}
+	    	if(tempField4 != "") {
+	    		sb.append("Water Temp.: ")
+	    		  .append(tempField4)
+	    		  .append("¡C\n");
+	    	}
+	    	if(tempField5 != "") {
+	    		sb.append("Air Temp.: ")
+	    		  .append(tempField5)
+	    		  .append("¡C\n");
+	    	}
+	    	if(tempField6 != "") {
+	    		sb.append("pH: ")
+	    		  .append(tempField6)
+	    		  .append("\n");
+	    	}
+	    	if(tempField7 != "") {
+	    		sb.append("Vernier Clarity: ")
+	    		  .append(tempField7)
+	    		  .append("NTU\n");
+	    	}
+	    	if(tempField8 != "") {
+	    		sb.append("Secchi Clarity: ")
+	    		  .append(tempField8)
+	    		  .append("m\n");
+	    	}
+	    	
+	    	if (needNewArray) {
 	    		dataUploaded = "Yes";
-	    	else
+	    	} else {
 	    		dataUploaded = "No";
+	    	}
 	    	
 	    	builder.setTitle("Data and Upload Summary")
 	    	.setMessage("Data Uploaded: " + dataUploaded + "\n\n" +
 	    				"Data Entered -\n" + 
-	    				"Diss. Oxygen: " + tempField1 + "ppm\n" +
-	    				"Turbidity: "    + tempField2 + "m\n"   +
-	    				"Phosphate: "    + tempField3 + "ppm\n" +
-	    				"Copper: "       + tempField4 + "ppm\n" +
-	    				"Temperature: "  + tempField5 + "¡C\n"  +
-	    				"pH: "           + tempField6)
+	    				sb.toString())
 	    	.setCancelable(false)
 	    	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialoginterface, final int id) {
@@ -856,6 +849,7 @@ public class BoatActivity extends Activity implements LocationListener {
 			int sessionId  = -1;
 			int locationId =  0;
 			uploadSchool = "";
+			double myLat = 42.6379998, myLon = -71.3560938;
 			
 			if (needNewArray)
 				data = new JSONArray();
@@ -869,17 +863,30 @@ public class BoatActivity extends Activity implements LocationListener {
 				uploadSchool = studentSchool;
 			else
 				uploadSchool = schools.getSelectedItem().toString();
+			
+			if(loc.getLatitude() != 0.0)
+				myLat = loc.getLatitude();
+			if(loc.getLongitude() != 0.0)
+				myLon = loc.getLongitude();
 				
 			if (!usedMenu) {
-				dataSet .put(getUploadTime())
-						.put(name.getText().toString())
-						.put(uploadSchool)
-						.put(field1.getText().toString())
-						.put(field2.getText().toString())
-						.put(field3.getText().toString())
-						.put(field4.getText().toString())
-						.put(field5.getText().toString())
-						.put(field6.getText().toString());
+				try {
+					dataSet .put(getUploadTime())
+							.put(uploadSchool)
+							.put("Manual")
+							.put(myLat)
+							.put(myLon)
+							.put(field4.getText().toString())
+							.put(field6.getText().toString())
+							.put(field7.getText().toString())
+							.put(field8.getText().toString())
+							.put(field1.getText().toString())
+							.put(field3.getText().toString())
+							.put(field2.getText().toString())
+							.put(field5.getText().toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			
 				data.put(dataSet);
 			}
@@ -935,6 +942,10 @@ public class BoatActivity extends Activity implements LocationListener {
 	        field5.setText("");
 	        tempField6 = field6.getText().toString();
 	        field6.setText("");
+	        tempField7 = field7.getText().toString();
+	        field7.setText("");
+	        tempField8 = field8.getText().toString();
+	        field8.setText("");
 	        
 	        if (needNewArray)
 	        	data = new JSONArray();
