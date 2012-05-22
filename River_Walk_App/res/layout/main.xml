@@ -51,6 +51,23 @@
 		android:layout_height="fill_parent"
 		android:paddingTop="16dip"
 		android:layout_weight="1"/>
+	
+	<LinearLayout android:orientation="vertical"
+	    	android:id="@+id/locationBlock"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:background="@android:color/black">
+
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/myLocation"
+				android:text="@+string/noLocation0"
+				android:textSize="18dip"
+				android:textStyle="bold"
+				android:background="@android:color/black"
+				android:textColor="@android:color/white"
+				android:layout_gravity="center_horizontal"/>
+	</LinearLayout>
 
 </LinearLayout>
 
