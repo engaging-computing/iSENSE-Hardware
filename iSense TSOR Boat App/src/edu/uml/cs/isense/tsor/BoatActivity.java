@@ -699,45 +699,45 @@ public class BoatActivity extends Activity implements LocationListener {
 	    	String dataUploaded = "";
 	    	StringBuilder sb = new StringBuilder();
 	    		
-	    	if(tempField1 != "") {
+	    	if(tempField1.length() != 0) {
 	    		sb.append("Diss. Oxygen: ")
 	    		  .append(tempField1)
-	    		  .append("ppm\n");
+	    		  .append(" ppm\n");
 	    	}
-	    	if(tempField2 != "") {
+	    	if(tempField2.length() != 0) {
 	    		sb.append("Phosphate: ")
 	    		  .append(tempField2)
-	    		  .append("ppm\n");
+	    		  .append(" ppm\n");
 	    	}
-	    	if(tempField3 != "") {
+	    	if(tempField3.length() != 0) {
 	    		sb.append("Copper: ")
 	    		  .append(tempField3)
-	    		  .append("ppm\n");
+	    		  .append(" ppm\n");
 	    	}
-	    	if(tempField4 != "") {
+	    	if(tempField4.length() != 0) {
 	    		sb.append("Water Temp.: ")
 	    		  .append(tempField4)
-	    		  .append("¡C\n");
+	    		  .append(" ¡C\n");
 	    	}
-	    	if(tempField5 != "") {
+	    	if(tempField5.length() != 0) {
 	    		sb.append("Air Temp.: ")
 	    		  .append(tempField5)
-	    		  .append("¡C\n");
+	    		  .append(" ¡C\n");
 	    	}
-	    	if(tempField6 != "") {
+	    	if(tempField6.length() != 0) {
 	    		sb.append("pH: ")
 	    		  .append(tempField6)
 	    		  .append("\n");
 	    	}
-	    	if(tempField7 != "") {
+	    	if(tempField7.length() != 0) {
 	    		sb.append("Vernier Clarity: ")
 	    		  .append(tempField7)
-	    		  .append("NTU\n");
+	    		  .append(" NTU\n");
 	    	}
-	    	if(tempField8 != "") {
+	    	if(tempField8.length() != 0) {
 	    		sb.append("Secchi Clarity: ")
 	    		  .append(tempField8)
-	    		  .append("m\n");
+	    		  .append(" m\n");
 	    	}
 	    	
 	    	if (needNewArray) {
