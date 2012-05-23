@@ -1,6 +1,6 @@
 package edu.uml.cs.isense.picture;
 
-/* Experiment 347 on Dev, 419 on real iSENSE */
+/* Experiment 347 on Dev, 419 on real iSENSE, 424 day 2 */
 
 import java.io.File;
 import java.util.LinkedList;
@@ -70,7 +70,7 @@ public class pictures extends Activity implements LocationListener {
 	
 	private static final String loginName = "RiverWalk App User";
 	private static final String loginPass = "nexusWINS";
-	private static final String experimentNum = "419";
+	private static final String experimentNum = "424";
 	//real iSENSE
 	
 	//private static final String loginName = "RiverWalker";
