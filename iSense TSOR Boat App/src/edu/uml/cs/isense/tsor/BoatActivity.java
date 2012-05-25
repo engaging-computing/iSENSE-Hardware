@@ -17,9 +17,7 @@
 package edu.uml.cs.isense.tsor;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,10 +36,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.view.Display;
 import android.view.Gravity;
@@ -64,8 +60,6 @@ public class BoatActivity extends Activity implements LocationListener {
 	private static String experimentNumber = "350";        // HARD CODED
 	private static String userName         = "tsorboat";   // HARD CODED
 	private static String password         = "ecgrul3s";   // HARD CODED
-	private static String baseSessionUrl   = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	private static String sessionUrl = "";
 	private static int    sessionNumbers[] = { 
 		2904, // Canals
 		2905, // Docks
@@ -89,7 +83,7 @@ public class BoatActivity extends Activity implements LocationListener {
 	
 	private LocationManager mLocationManager;
 	
-	private Location loc;
+	//private Location loc;
 	
 	private String tempField1    = "";
 	private String tempField2    = "";
@@ -123,11 +117,11 @@ public class BoatActivity extends Activity implements LocationListener {
 
     private int toastId = 0;
     
-    private boolean timeHasElapsed = false;
-    private boolean usedHomeButton = false;
-    private boolean appTimedOut    = false;
+    //private boolean timeHasElapsed = false;
+    //private boolean usedHomeButton = false;
+    //private boolean appTimedOut    = false;
     
-    private String dateString;
+    //private String dateString;
     RestAPI rapi ;
     
     DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
@@ -185,7 +179,7 @@ public class BoatActivity extends Activity implements LocationListener {
         Criteria c = new Criteria();
         c.setAccuracy(Criteria.ACCURACY_FINE);
          
-        loc = new Location(mLocationManager.getBestProvider(c, true));  
+        //loc = new Location(mLocationManager.getBestProvider(c, true));  
         
         schools = (Spinner) findViewById(R.id.schools);
         final ArrayAdapter<CharSequence> schoolAdapter = ArrayAdapter.createFromResource(this, R.array.school_array, android.R.layout.simple_spinner_item);
@@ -236,7 +230,7 @@ public class BoatActivity extends Activity implements LocationListener {
         	if(!success) {
         		if(rapi.connection == "600") {
         			showDialog(DIALOG_EXPIRED);
-            		appTimedOut = true;
+            		//appTimedOut = true;
         		} else {
         			showDialog(DIALOG_DIFFICULTY);
         		}
@@ -445,7 +439,7 @@ public class BoatActivity extends Activity implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		loc = location;
+		//loc = location;
 	}
 
 	@Override
@@ -547,7 +541,7 @@ public class BoatActivity extends Activity implements LocationListener {
 	            			   Toast.makeText(BoatActivity.this, "Connectivity found!", Toast.LENGTH_SHORT).show();
 	            		   } else {
 	            			   showDialog(DIALOG_EXPIRED);
-	            			   appTimedOut = true;
+	            			   //appTimedOut = true;
 	            		   }
 	            	   } else {
 	            		   dialoginterface.dismiss();
@@ -581,7 +575,7 @@ public class BoatActivity extends Activity implements LocationListener {
 		    	        	if(!success) {
 		    	        		if(rapi.connection == "600") {
 		    	        			showDialog(DIALOG_EXPIRED);
-		    	            		appTimedOut = true;
+		    	            		//appTimedOut = true;
 		    	        		} else {
 		    	        			showDialog(DIALOG_DIFFICULTY);
 		    	        		}
@@ -593,14 +587,14 @@ public class BoatActivity extends Activity implements LocationListener {
 	    	.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialoginterface, final int id) {
 	            	   dialoginterface.dismiss();
-	            	   //((Activity)mContext).finish();
+	            	   ((Activity)mContext).finish();
 	               }
 	    	})
 	    	.setOnCancelListener(new DialogInterface.OnCancelListener() {
 	    		@Override
 					public void onCancel(DialogInterface dialoginterface) {
 	    				dialoginterface.dismiss();
-	            	    //((Activity)mContext).finish();
+	            	    ((Activity)mContext).finish();
 					}
 	    	})
 	        .setCancelable(true);
@@ -622,7 +616,7 @@ public class BoatActivity extends Activity implements LocationListener {
 	    	        	if(!success) {
 	    	        		if(rapi.connection == "600") {
 	    	        			showDialog(DIALOG_EXPIRED);
-	    	            		appTimedOut = true;
+	    	            		//appTimedOut = true;
 	    	        		} else {
 	    	        			showDialog(DIALOG_DIFFICULTY);
 	    	        		}
@@ -849,7 +843,7 @@ public class BoatActivity extends Activity implements LocationListener {
 			int sessionId  = -1;
 			int locationId =  0;
 			uploadSchool = "";
-			double myLat = 42.6379998, myLon = -71.3560938;
+			double myLat = 0, myLon = 0;
 			
 			if (needNewArray)
 				data = new JSONArray();
@@ -864,10 +858,23 @@ public class BoatActivity extends Activity implements LocationListener {
 			else
 				uploadSchool = schools.getSelectedItem().toString();
 			
-			if(loc.getLatitude() != 0.0)
-				myLat = loc.getLatitude();
-			if(loc.getLongitude() != 0.0)
-				myLon = loc.getLongitude();
+			if (location.getSelectedItem().toString().equals("Up River")) {
+			    myLat = 42.6379998;
+			    myLon = -71.3560938;
+			} else if (location.getSelectedItem().toString().equals("Down River")) {
+			    myLat = 42.639705;
+			    myLon = -71.354086;
+			} else if (location.getSelectedItem().toString().equals("Docks")) {
+			    myLat = 42.640084;
+			    myLon = -71.352403;
+			} else if (location.getSelectedItem().toString().equals("Canals")) {
+			    myLat = 42.641031;
+			    myLon = -71.328886;
+			} else {
+			    myLat = 0;
+			    myLon = 0;
+			    makeToast("Fatal error uploading latitude/longitude!", Toast.LENGTH_LONG);
+			}
 				
 			if (!usedMenu) {
 				try {

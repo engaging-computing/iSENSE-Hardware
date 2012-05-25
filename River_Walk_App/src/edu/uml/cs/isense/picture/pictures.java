@@ -39,6 +39,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -261,6 +262,13 @@ public class pictures extends Activity implements LocationListener {
 	    }
 	    
 	    return dialog;
+	}
+	
+	@Override
+	public void onAttachedToWindow()
+	{  
+	       this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);     
+	       super.onAttachedToWindow();  
 	}
 	
     /** Called when the activity is first created. */
