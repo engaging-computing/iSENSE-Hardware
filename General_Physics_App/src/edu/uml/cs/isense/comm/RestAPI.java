@@ -249,9 +249,9 @@ public class RestAPI {
 			
 			try {
 				DataInputStream inStream = new DataInputStream(conn.getInputStream());
-				String str;
+				//String str;
 
-				while ((str = inStream.readLine()) != null) {
+				while ((/*str = */inStream.readLine()) != null) {
 				//	Log.d("rapi", "Server Response" + str);
 				}
 				inStream.close();
@@ -362,9 +362,9 @@ public class RestAPI {
 		
 			try {
 				DataInputStream inStream = new DataInputStream(conn.getInputStream());
-				String str;
+				//String str;
 
-				while ((str = inStream.readLine()) != null) {
+				while ((/*str = */inStream.readLine()) != null) {
 					//Log.d("rapi", "Server Response" + str);
 				}
 				inStream.close();
