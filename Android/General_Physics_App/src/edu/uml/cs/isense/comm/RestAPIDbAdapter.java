@@ -67,7 +67,7 @@ public class RestAPIDbAdapter {
 	public static final String KEY_EXPERIMENT_COUNT = "experiment_count";
 	public static final String KEY_SESSION_COUNT = "session_count";
 	
-    private static final String TAG = "DataDbAdapter";
+    //private static final String TAG = "DataDbAdapter";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     
