@@ -225,9 +225,7 @@ public class Isense extends Activity implements OnClickListener {
 	
 	@Override
 	public void onStart() {
-		if (!loggedIn) {
-			performLogin();
-		}
+		if (!loggedIn) new PerformLogin().execute();
 		
 		super.onStart();
 	}
@@ -646,25 +644,29 @@ public class Isense extends Activity implements OnClickListener {
 					Toast.LENGTH_LONG).show();
 			return;
 		}
+
+		dataSet = new JSONArray();
 		
-		JSONArray dataJSON = new JSONArray();
+		JSONArray dataJSON;;
 		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
 			for (int i = 0; i < timeData.size(); i++) {
+				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
 				dataJSON.put(bta1Data.get(i));
 				dataJSON.put("");
+				dataSet.put(dataJSON);
 			}
 		else if (sensorType.equals("Vernier pH Sensor")) {
 			for (int i = 0; i < timeData.size(); i++) {
+				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
 				dataJSON.put("");
 				dataJSON.put(bta1Data.get(i));
+				dataSet.put(dataJSON);
 			}
 		}
 		else Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
 		
-		dataSet = new JSONArray();
-		dataSet.put(dataJSON);
 		new UploadTask().execute();
 	}
 	
@@ -677,7 +679,7 @@ public class Isense extends Activity implements OnClickListener {
 			String nameOfSession = nameField.getText().toString();
 		
 			if (!loggedIn)
-				performLogin();
+				new PerformLogin().execute();
 			
 			if (loggedIn) {
 				if (sessionId == -1) {
@@ -697,9 +699,7 @@ public class Isense extends Activity implements OnClickListener {
 				else {
 					rapi.updateSessionData(sessionId, experimentId, dataSet);
 				}
-			} else {
-				Toast.makeText(Isense.this, "Not logged in. Try uploading again.", Toast.LENGTH_LONG).show();
-			}
+			} else sessionUrl = baseSessionUrl;
 		
 		}
 		
@@ -731,7 +731,7 @@ public class Isense extends Activity implements OnClickListener {
 			dia.setMessage("Done");
 			dia.cancel();
 			
-			if (!sessionUrl.equals(baseSessionUrl)) {
+			if (!(sessionUrl.equals(baseSessionUrl))) {
 				Intent i = new Intent(Isense.this, ViewData.class);
 				startActivityForResult(i, REQUEST_VIEW_DATA);  
 			}
@@ -760,14 +760,27 @@ public class Isense extends Activity implements OnClickListener {
 		return "";
 	}
 	
-	public void performLogin() {
-		boolean success = rapi.login(username, password);
-		if (success)
-			loggedIn = true;
-		else
-			loggedIn = false;
-		Toast.makeText(this, "Logged in: " + success, Toast.LENGTH_SHORT).show();
-		return;
+	private class PerformLogin extends AsyncTask<Void, Integer, Void> {
+
+		
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			boolean success = rapi.login(username, password);
+			if (success)
+				loggedIn = true;
+			else
+				loggedIn = false;
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			
+			Toast.makeText(Isense.this, "Logged in: " + loggedIn, Toast.LENGTH_SHORT).show();
+		}
+		
 	}
 		
 
