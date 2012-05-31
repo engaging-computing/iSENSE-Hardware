@@ -15,6 +15,8 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -34,9 +36,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -61,6 +65,10 @@ public class pictures extends Activity implements LocationListener {
 	private static final int TIMER_LOOP = 1000;
 	
 	private LocationManager mLocationManager;
+	private PowerManager pm;
+	private PowerManager.WakeLock wl;
+	private KeyguardManager keyguardManager;
+	private KeyguardLock lock;
 	
 	private Uri imageUri;
 	
@@ -162,6 +170,8 @@ public class pictures extends Activity implements LocationListener {
 	               public void onClick(DialogInterface dialoginterface, final int id) {
 	            	   smartUploading = true;
 	            	   waitingForConnectivity();
+	            	   if (wl.isHeld())
+	            		   wl.acquire();
 	            	   dialoginterface.dismiss();
 	            	   //((Activity) mContext).finish();
 	               }
@@ -268,8 +278,17 @@ public class pictures extends Activity implements LocationListener {
 	public void onAttachedToWindow()
 	{  
 	       this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);     
-	       super.onAttachedToWindow();  
+	       super.onAttachedToWindow();
 	}
+	
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_CALL) {
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 	
     /** Called when the activity is first created. */
     @Override
@@ -292,6 +311,12 @@ public class pictures extends Activity implements LocationListener {
         input.setText("347");
         input.setEnabled(false);
         */
+        
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
+        
+        keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+		lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
         
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
        
@@ -451,6 +476,7 @@ public class pictures extends Activity implements LocationListener {
     	if (userLoggedIn) {
     		if (smartUploading && (QUEUE_COUNT > 0)) showDialog(DIALOG_READY_TO_UPLOAD);
     	}
+    	lock.reenableKeyguard();
 		super.onResume();
 	}
 
@@ -458,6 +484,7 @@ public class pictures extends Activity implements LocationListener {
 	protected void onStart() {
 		if (!gpsWorking) initLocManager();
 		if (mTimer == null) waitingForGPS();
+		lock.reenableKeyguard();
 		super.onStart();
 	}
 
@@ -834,9 +861,12 @@ public class pictures extends Activity implements LocationListener {
   		mLocationManager.removeUpdates(pictures.this);
   		gpsWorking = false;
   		if (mTimer != null) mTimer.cancel();
+  		if (wl.isHeld()) wl.release();
   		mTimer = null;
+  		lock.disableKeyguard();
 		super.onStop();
 	}
+  	
   	
   	//takes care of smart uploading as well as background checking
   	private class WaitTenSecondsTask extends AsyncTask <Void, Integer, Void> {  
