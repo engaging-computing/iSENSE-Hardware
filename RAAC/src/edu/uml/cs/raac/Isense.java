@@ -96,7 +96,7 @@ public class Isense extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	String experimentId = "440";
+	public static String experimentId = "440";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
@@ -117,6 +117,7 @@ public class Isense extends Activity implements OnClickListener {
 	private static final int SENSOR_CHANGE = 2;
 	private static final int REQUEST_ENABLE_BT = 4;
 	private static final int REQUEST_VIEW_DATA = 5;
+	private static final int CHANGE_EXPERIMENT = 6;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -133,6 +134,7 @@ public class Isense extends Activity implements OnClickListener {
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 
 		initializeLayout();
+		pinpointBtn.setImageResource(R.drawable.nopptbtn);
 
 		flipper.setInAnimation(mSlideInTop);
 		flipper.setOutAnimation(mSlideOutTop);
@@ -248,7 +250,12 @@ public class Isense extends Activity implements OnClickListener {
 		} else if (item.getItemId() == R.id.menu_setSensors) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
-		}
+		} else if (item.getItemId() == R.id.menu_login) {
+			new PerformLogin().execute();
+		} else if (item.getItemId() == R.id.menu_experiment) {
+			Intent i = new Intent(this, ChangeExperiment.class);
+			startActivityForResult(i, CHANGE_EXPERIMENT);
+		} 
 		return true;
 
 	}
@@ -498,6 +505,7 @@ public class Isense extends Activity implements OnClickListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.getItem(0).setEnabled(showConnectOption);
 		menu.getItem(2).setEnabled(showTimeOption);
+		menu.getItem(3).setEnabled(!loggedIn);
 		return true;
 	}
 
@@ -647,7 +655,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		dataSet = new JSONArray();
 		
-		JSONArray dataJSON;;
+		JSONArray dataJSON;
 		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
@@ -686,7 +694,7 @@ public class Isense extends Activity implements OnClickListener {
 					sessionId = rapi.createSession(experimentId, 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
-							"801 Mt Vernon Place NW", "Lowell, Massachusetts", "United States");
+							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
 					if (sessionId != -1) {
 						rapi.putSessionData(sessionId, experimentId, dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
@@ -761,8 +769,6 @@ public class Isense extends Activity implements OnClickListener {
 	}
 	
 	private class PerformLogin extends AsyncTask<Void, Integer, Void> {
-
-		
 
 		@Override
 		protected Void doInBackground(Void... params) {

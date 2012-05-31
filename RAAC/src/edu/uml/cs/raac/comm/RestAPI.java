@@ -286,21 +286,17 @@ public class RestAPI {
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
-				Log.e("lol im in rapi hi nick your code is ruined", "Returning False because: " + "malformedurl");
 				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
-				Log.e("lol im in rapi hi nick your code is ruined", "Returning False because: " + "io" + e.toString());
 				return false;
 			} catch (Exception e) {
 				e.printStackTrace();
-				Log.e("lol im in rapi hi nick your code is ruined", "Returning False because: " + "inexception" + e.toString());
 				return false;
 			}
 			
 			return true;
 		}
-		Log.e("lol im in rapi hi nick your code is ruined", "Returning False because: " + "NOT CONNECTED!");
 		return false;
 	}
 	
