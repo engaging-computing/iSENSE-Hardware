@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.picture;
 
 /* Experiment 347 on Dev, 419 on real iSENSE, 424 day 2 */
+/*name string colon description bug with invalid characters in names */
 
 import java.io.File;
 import java.util.LinkedList;
@@ -547,9 +548,12 @@ public class pictures extends Activity implements LocationListener {
 				if(Descriptor.desString.equals("")) Descriptor.desString = "No description provided.";
 			
 				int sessionId = rapi.createSession(experimentNum, 
-						name.getText().toString() + ": " + Descriptor.desString, //teacher + school, 
-						Descriptor.desString, "n/a", "Lowell, MA", "");
-				
+						name.getText().toString() + ": " + Descriptor.desString,
+						Descriptor.desString,
+						"n/a", 
+						"Lowell, MA",
+						"");
+					
 				if (sessionId == -1) {
 					uploadError = true;
 					return;
@@ -575,17 +579,14 @@ public class pictures extends Activity implements LocationListener {
 				dia.setProgress(99);
 			
 				if(!rapi.uploadPictureToSession(picture, experimentNum, 
-							sessionId, name.getText().toString() + ": " + Descriptor.desString,// + teacher + school, 
-							name.getText().toString() + Descriptor.desString)) {
+							sessionId, name.getText().toString() + ": " + Descriptor.desString,
+							Descriptor.desString)) {
 						uploadError = true;
 				}
-				
 			} else {
 				smartUploader(uploaderPic.file, uploaderPic.latitude, uploaderPic.longitude, 	
 					uploaderPic.name, uploaderPic.desc, uploaderPic.time);
 			}
-			
-			//Log.e("uploader", "Inside =D: Q = " + QUEUE_COUNT);
 		}
 	};
 	
@@ -803,7 +804,6 @@ public class pictures extends Activity implements LocationListener {
   	
   	//upload stuff from the queue
   	private void smartUploader(File f, double lat, double lon, String n, String d, long t) {
-  		//Log.e("SmartUploader", "1: Q = " + QUEUE_COUNT);
   		if (d == "") d = "No description provided.";
 
   		int sessionId;
@@ -812,7 +812,6 @@ public class pictures extends Activity implements LocationListener {
   			return;
   		}
   		
-  		//Log.e("SmartUploader", "2: Q = " + QUEUE_COUNT);
 		JSONArray dataJSON = new JSONArray();
 		try {
 			dataJSON.put(t); dataJSON.put(lat); dataJSON.put(lon); dataJSON.put(d) ;
@@ -820,8 +819,7 @@ public class pictures extends Activity implements LocationListener {
 		catch (JSONException e) {
 			e.printStackTrace();
 		}
-	
-		//Log.e("SmartUploader", "3: Q = " + QUEUE_COUNT);
+
 		finishedUploadSetup = true;
 		dia.setProgress(90);
 	
@@ -831,8 +829,7 @@ public class pictures extends Activity implements LocationListener {
 				return;
 		}
 		dia.setProgress(99);
-		
-		//Log.e("SmartUploader", "4: Q = " + QUEUE_COUNT);
+
 		success = rapi.uploadPictureToSession(f, experimentNum, sessionId,n + ": " + d, d);
 		if (!success)
 			uploadError = true;
