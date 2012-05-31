@@ -97,6 +97,9 @@ public class Isense extends Activity implements OnClickListener {
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
 	String experimentId = "440";
+	String username = "sor";
+	String password = "sor";
+	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
 	String sensorType;
@@ -218,6 +221,15 @@ public class Isense extends Activity implements OnClickListener {
 				mChatService.start();
 			}
 		}
+	}
+	
+	@Override
+	public void onStart() {
+		if (!loggedIn) {
+			performLogin();
+		}
+		
+		super.onStart();
 	}
 
 	@Override
@@ -664,22 +676,29 @@ public class Isense extends Activity implements OnClickListener {
 		
 			String nameOfSession = nameField.getText().toString();
 		
-			if (sessionId == -1) {
-				sessionId = rapi.createSession(experimentId, 
+			if (!loggedIn)
+				performLogin();
+			
+			if (loggedIn) {
+				if (sessionId == -1) {
+					sessionId = rapi.createSession(experimentId, 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
 							"801 Mt Vernon Place NW", "Lowell, Massachusetts", "United States");
-				if (sessionId != -1) {
-					rapi.putSessionData(sessionId, experimentId, dataSet);
-					sessionUrl = baseSessionUrl + sessionId;
-				} else {
-					sessionUrl = baseSessionUrl;
-					return;	
-				}
+					if (sessionId != -1) {
+						rapi.putSessionData(sessionId, experimentId, dataSet);
+						sessionUrl = baseSessionUrl + sessionId;
+					} else {
+						sessionUrl = baseSessionUrl;
+						return;	
+					}
 				
-			}
-			 else {
-				rapi.updateSessionData(sessionId, experimentId, dataSet);
+				}
+				else {
+					rapi.updateSessionData(sessionId, experimentId, dataSet);
+				}
+			} else {
+				Toast.makeText(Isense.this, "Not logged in. Try uploading again.", Toast.LENGTH_LONG).show();
 			}
 		
 		}
@@ -739,6 +758,16 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		return "";
+	}
+	
+	public void performLogin() {
+		boolean success = rapi.login(username, password);
+		if (success)
+			loggedIn = true;
+		else
+			loggedIn = false;
+		Toast.makeText(this, "Logged in: " + success, Toast.LENGTH_SHORT).show();
+		return;
 	}
 		
 
