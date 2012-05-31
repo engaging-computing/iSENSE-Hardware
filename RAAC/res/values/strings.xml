@@ -16,4 +16,5 @@
     <string name="maxval">Maximum</string>
     <string name="aveval">Average</string>
     <string name="medval">Median</string>
+    <string name="view_page">View Data on iSENSE</string>
 </resources>
