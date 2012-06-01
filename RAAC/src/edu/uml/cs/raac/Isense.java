@@ -54,7 +54,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -97,12 +96,12 @@ public class Isense extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	public static String experimentId = "440";
+	public static String experimentId = "427";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
 	static String sessionUrl;
-	String baseSessionUrl = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
+	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	String sensorType;
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi = null;
@@ -365,7 +364,6 @@ public class Isense extends Activity implements OnClickListener {
 			String[] strray = data.get(i);
 			
 			for (String str : strray) {
-				Log.e("str", "" + str);
 				x++;
 				switch(x) {
 				case 1:  timeData.add(fmtData(str));            break;
@@ -375,8 +373,7 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			x = 0;
 		}
-		for (int i = 0; i < bta1Data.size(); i++)
-			Log.e("btadata", "" + bta1Data.get(i));
+
 		findStatistics();	
 	}
 
