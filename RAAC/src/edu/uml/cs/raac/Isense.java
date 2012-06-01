@@ -54,6 +54,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -204,6 +205,7 @@ public class Isense extends Activity implements OnClickListener {
 		flipper.setDisplayedChild(flipView);
 
 		if (data != null) {
+			prepDataForUpload();
 			writeDataToScreen();
 		}
 	}
@@ -251,7 +253,10 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
 		} else if (item.getItemId() == R.id.menu_login) {
-			new PerformLogin().execute();
+			if (loggedIn)
+				Toast.makeText(Isense.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
+			else
+				new PerformLogin().execute();
 		} else if (item.getItemId() == R.id.menu_experiment) {
 			Intent i = new Intent(this, ChangeExperiment.class);
 			startActivityForResult(i, CHANGE_EXPERIMENT);
@@ -326,6 +331,7 @@ public class Isense extends Activity implements OnClickListener {
 										progressDialog.dismiss();
 									}
 									if (data != null) {
+										prepDataForUpload();
 										writeDataToScreen();
 										dataRdy = true;
 									}
@@ -351,6 +357,27 @@ public class Isense extends Activity implements OnClickListener {
 					}
 					
 			} 
+	}
+	
+	public void prepDataForUpload() {
+		int x = 0;
+		for (int i = 0; i < data.size(); i++) {
+			String[] strray = data.get(i);
+			
+			for (String str : strray) {
+				Log.e("str", "" + str);
+				x++;
+				switch(x) {
+				case 1:  timeData.add(fmtData(str));            break;
+				case 14: bta1Data.add(Double.parseDouble(str)); break;
+				default:                                        break;
+				}
+			}
+			x = 0;
+		}
+		for (int i = 0; i < bta1Data.size(); i++)
+			Log.e("btadata", "" + bta1Data.get(i));
+		findStatistics();	
 	}
 
 	public void writeDataToScreen() {
@@ -387,7 +414,7 @@ public class Isense extends Activity implements OnClickListener {
 					x++;
 					z++;
 					switch(x) {
-					case 1: label = "Time (GMT)"; timeData.add(fmtData(str)); break;
+					case 1: label = "Time (GMT)"; break;
 					case 2: label = "Latitude"; break;
 					case 3: label = "Longitude"; break;
 					case 4: label = "Altitude GPS (m)"; break;
@@ -400,7 +427,7 @@ public class Isense extends Activity implements OnClickListener {
 					case 11: label = "Y-Accel"; break;
 					case 12: label = "Z-Accel"; break;
 					case 13: label = "Acceleration"; break;
-					case 14: label = prefs.getString("name_bta1", "BTA 1"); bta1Data.add(Double.parseDouble(str)); break;
+					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
 					case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
 					case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
 					case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
@@ -443,7 +470,7 @@ public class Isense extends Activity implements OnClickListener {
 				x = 0;
 				y++;
 			}
-			findStatistics();
+			//findStatistics();
 		} catch (NullPointerException e) {
 			Toast.makeText(getApplicationContext(), "Error collecting data, please try again", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
@@ -478,7 +505,9 @@ public class Isense extends Activity implements OnClickListener {
 			maxField.setText(datMax);
 			aveField.setText(datAve);
 
-			if (bta1Data.size() % 2 == 0) {
+			if (bta1Data.size() == 1) {
+				med = bta1Data.get(0);
+			} else if (bta1Data.size() % 2 == 0) {
 				med = bta1Data.get((bta1Data.size() + 1) / 2);
 			} else {
 				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
