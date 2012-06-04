@@ -89,7 +89,7 @@ public class pinpointInterface {
      * @throws NoDataException
      * @throws FileNotFoundException
      */
-    public ArrayList<String[]> getData( ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException, IOException {
+    public ArrayList<String[]> getData( final ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException, IOException {
 
         HashMap<Integer, Integer> settings = null;
         System.out.println("Getting records");
@@ -111,7 +111,8 @@ public class pinpointInterface {
             byte[] dh = pinpoint.getDataHeader();
 
             //Figure out how many records are stored on the pinpoint.
-            int numRecords = (((dh[0]) << 16) + ((dh[1] & 255) << 8) + (dh[2] & 255)) / 32;
+            final int numRecords = (((dh[0]) << 16) + ((dh[1] & 255) << 8) + (dh[2] & 255)) / 32;
+            //pdiag.setMessage("Reading "+numRecords+" data points"); //Doesn't work...
             pdiag.setMax(numRecords);
             
             //Request all data from the pinpoint.
