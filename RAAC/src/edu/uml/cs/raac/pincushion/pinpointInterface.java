@@ -98,14 +98,14 @@ public class pinpointInterface {
         try {
             //Get the settings from the pinpoint
 
-            settings = pinpoint.GetSettings();
+            //settings = pinpoint.GetSettings();
 
             //Get the conversions from the conversions file.
             //System.out.println("Getting conversions");
             //conversions = this.GetConversions();
 
             //Set up PinpointConverter
-            conv = new PinpointConverter(settings, myContext);
+            conv = new PinpointConverter(myContext);
             
             //Get the data header from the pinpoint.
             byte[] dh = pinpoint.getDataHeader();
@@ -125,8 +125,8 @@ public class pinpointInterface {
                 records.add(conv.convertAll(dataLine));
             }
 
-            if (settings.get(PinComm.SAMPLE_RATE) < 1000) {
-                conv.fixTime(records, settings.get(PinComm.SAMPLE_RATE));
+            if (pinpoint.getSetting(PinComm.SAMPLE_RATE) < 1000) {
+                conv.fixTime(records, pinpoint.getSetting(PinComm.SAMPLE_RATE));
             }
 
             return records;

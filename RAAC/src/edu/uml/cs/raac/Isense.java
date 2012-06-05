@@ -283,7 +283,7 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.setContext(this);
 			final ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMessage("Please wait, preparing to read data");
+			progressDialog.setMessage("Please wait, reading data from PINPoint");
 			progressDialog.setProgressNumberFormat(null);
 			progressDialog.show();
 
