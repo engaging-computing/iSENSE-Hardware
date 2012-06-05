@@ -365,7 +365,7 @@ public class Isense extends Activity implements OnClickListener {
 			String[] strray = data.get(i);
 			
 			for (String str : strray) {
-				Log.e("str", "" + str);
+				//Log.e("str", "" + str);
 				x++;
 				switch(x) {
 				case 1:  timeData.add(fmtData(str));            break;
@@ -375,8 +375,8 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			x = 0;
 		}
-		for (int i = 0; i < bta1Data.size(); i++)
-			Log.e("btadata", "" + bta1Data.get(i));
+//		for (int i = 0; i < bta1Data.size(); i++)
+//			Log.e("btadata", "" + bta1Data.get(i));
 		findStatistics();	
 	}
 
