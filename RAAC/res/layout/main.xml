@@ -4,6 +4,42 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <RelativeLayout
+        android:id="@+id/launchlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_launch" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/raaclogo" />
+
+        <ImageButton
+            android:id="@+id/pinpoint_select_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/nopptbtn" />
+
+        <ImageView
+            android:id="@+id/mySpin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/pinpoint_select_btn"
+            android:layout_alignLeft="@+id/pinpoint_select_btn"
+            android:layout_marginBottom="-113dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/superspin"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -70,21 +106,19 @@
                     android:layout_weight=".50"
                     android:inputType="textCapWords"
                     android:maxLength="20"
-                    android:textAppearance="?android:attr/textAppearanceSmall" >
-
-                    <requestFocus />
-                </EditText>
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
+
             <Button
-               android:id="@+id/btn_pushToISENSE"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="25dp"
-               android:layout_marginRight="25dp"
-               android:layout_weight=".75"
-               android:background="@drawable/custombtn"
-               android:text="Push to iSENSE"
-               android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:id="@+id/btn_pushToISENSE"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight=".75"
+                android:background="@drawable/custombtn"
+                android:text="Push to iSENSE"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
         <ScrollView
@@ -215,41 +249,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/launchlayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_launch" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/raaclogo" />
-
-        <ImageButton
-            android:id="@+id/pinpoint_select_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/nopptbtn" />
-
-        <ImageView
-            android:id="@+id/mySpin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/pinpoint_select_btn"
-            android:layout_alignLeft="@+id/pinpoint_select_btn"
-            android:layout_marginBottom="-113dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/superspin"
-            android:visibility="gone" />
-    </RelativeLayout>
 
 </ViewFlipper>

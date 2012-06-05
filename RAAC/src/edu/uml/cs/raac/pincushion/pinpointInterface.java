@@ -92,7 +92,7 @@ public class pinpointInterface {
     public ArrayList<String[]> getData( final ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException, IOException {
 
         HashMap<Integer, Integer> settings = null;
-        System.out.println("Getting records");
+        System.out.println("Getting Records");
         ArrayList<String[]> records = new ArrayList<String[]>();
 
         try {
@@ -107,6 +107,7 @@ public class pinpointInterface {
             //Set up PinpointConverter
             conv = new PinpointConverter(myContext);
             
+            System.out.println("Getting data header");
             //Get the data header from the pinpoint.
             byte[] dh = pinpoint.getDataHeader();
 
@@ -116,9 +117,10 @@ public class pinpointInterface {
             pdiag.setMax(numRecords);
             
             //Request all data from the pinpoint.
-            System.out.println("Getting settings");
+            System.out.println("Getting raw data");
             ArrayList<byte[]> rawData = pinpoint.requestData(dh, numRecords, pdiag);
 
+            System.out.println("Converting raw data");
             //Convert all data recieved from the pinpoint.
             for (int i = 0; i < numRecords; i++) {
             	byte[] dataLine = rawData.get(i);

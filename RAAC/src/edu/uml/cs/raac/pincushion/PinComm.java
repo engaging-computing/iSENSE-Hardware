@@ -156,6 +156,7 @@ public class PinComm {
 		byte[] temp = new byte[4];
 
 		if (spi.isOpen()) {
+			spi.clearBuff();
 			spi.writeByte((byte) DATA_HEADER);
 			for (int i = 0; i < 4; i++) {
 				try {
