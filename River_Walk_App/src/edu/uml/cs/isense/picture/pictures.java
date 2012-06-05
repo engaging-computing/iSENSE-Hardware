@@ -103,6 +103,7 @@ public class pictures extends Activity implements LocationListener {
 	private Timer mTimer = null;
 	private Handler mHandler;
 	private TextView latLong;
+	private TextView queueCount;
 	
 	//private String teacherInfo;
 	//private String schoolInfo;
@@ -119,10 +120,9 @@ public class pictures extends Activity implements LocationListener {
 	
 	private File picture;
 	
-	private Button takePicture;
-	private Button describe;
+	public static Button takePicture;
 	
-	public static Button takePhoto;
+	//public static Button takePhoto;   // WTF?!?!!??! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	static boolean c1 = false;
 	static boolean c2 = false;
@@ -299,8 +299,8 @@ public class pictures extends Activity implements LocationListener {
 
         mQ = new LinkedList<Picture>();
         
-        takePhoto = (Button) findViewById(R.id.takePicture);
-        takePhoto.setEnabled(false);
+        //takePhoto = (Button) findViewById(R.id.takePicture);
+        //takePhoto.setEnabled(false);
         
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         
@@ -331,19 +331,13 @@ public class pictures extends Activity implements LocationListener {
         //experimentInput = (EditText) findViewById(R.id.ExperimentInput);
         
         latLong = (TextView) findViewById(R.id.myLocation);
+        queueCount = (TextView) findViewById(R.id.queueCountLabel);
+        queueCount.setText("Queue Count: " + QUEUE_COUNT);
 		
-		describe = (Button) findViewById(R.id.describeButton);
-		describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
-		describe.setOnClickListener(new OnClickListener() {
 		
-			@Override
-			public void onClick(View v) {
-				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
-				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
-			}
-		});
         
         takePicture = (Button) findViewById(R.id.takePicture);
+        takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
         takePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -595,13 +589,16 @@ public class pictures extends Activity implements LocationListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if(resultCode == RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
-				describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
-				takePicture.getBackground().clearColorFilter();
-		        takePicture.setEnabled(false);
-		        if (smartUploading) {
+				//takePicture.getBackground().clearColorFilter();
+		        //takePicture.setEnabled(false);
+				takePicture.setEnabled(false);
+				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
+				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
+				
+				/*if (smartUploading) {
 		        	if (userLoggedIn) {
 		        		calledBySmartUp = false;
 		        		new Task().execute();
@@ -613,14 +610,31 @@ public class pictures extends Activity implements LocationListener {
 		        		new Task().execute();
 		        	}
 		        	else showDialog(DIALOG_NOT_LOGGED_IN);
-		        }
+		        }*/
 			}
 		} 
 		
 		else if (requestCode == DESCRIPTION_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-					describe.getBackground().clearColorFilter();
-					takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
+					//takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
+					takePicture.setEnabled(true);
+					if (smartUploading) {
+			        	if (userLoggedIn) {
+			        		calledBySmartUp = false;
+			        		new Task().execute();
+			        	}
+			        	else qsave(picture);
+			        } else {
+			        	if (userLoggedIn) {
+			        		calledBySmartUp = false;
+			        		new Task().execute();
+			        	}
+			        	else showDialog(DIALOG_NOT_LOGGED_IN);
+			        }
+			} else if (resultCode == RESULT_CANCELED) {
+				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
+				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
+				Toast.makeText(pictures.this, "You must enter a description.", Toast.LENGTH_SHORT).show();
 			}
 		}
 					
@@ -658,6 +672,15 @@ public class pictures extends Activity implements LocationListener {
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){
     }
+    
+    /*private void callTask() {
+    	try {
+			Thread.sleep(1);
+			new Task().execute();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }*/
 
     private class Task extends AsyncTask <Void, Integer, Void> {
           
@@ -672,13 +695,7 @@ public class pictures extends Activity implements LocationListener {
 
         @Override protected Void doInBackground(Void... voids) {
            
-            //run the thread stuff in the background
-            //Thread thread = new Thread(null, uploader, "MagentoBackground");
-            //thread.start();
-           
-        	//Log.e("uploader", "called uploader: q = " + QUEUE_COUNT);
             uploader.run();
-           
             publishProgress(100);
             
             return null;
@@ -701,6 +718,8 @@ public class pictures extends Activity implements LocationListener {
                         
             pictures.c1  = false; pictures.c2  = false; pictures.c3 = false;
 	        pictures.c4  = false; pictures.c5  = false;
+	        
+	        if (QUEUE_COUNT > 0) uploadPicture(); //callTask();
         }
     }
    
@@ -726,7 +745,7 @@ public class pictures extends Activity implements LocationListener {
         }
        
         @Override protected void onPostExecute(Void voids) {
-            dia.setMessage("Your content is taking a while.  Please be patient.");
+            dia.setMessage("Finalizing...");
         }
     }
     
@@ -790,6 +809,7 @@ public class pictures extends Activity implements LocationListener {
   		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText().toString(), Descriptor.desString, System.currentTimeMillis());		
   		mQ.add(mPic);
   		QUEUE_COUNT++;
+  		queueCount.setText("Queue Count: " + QUEUE_COUNT);
   	}
   	
   	//get picture data from the q to upload
@@ -844,11 +864,13 @@ public class pictures extends Activity implements LocationListener {
   			uploaderPic = getPicFromQ();
   			if (uploaderPic != null) {
   				QUEUE_COUNT--;
+  				queueCount.setText("Queue Count: " + QUEUE_COUNT);
   				calledBySmartUp = true;
   				new Task().execute();
   			}
 		} else  {
 			smartUploading = false;
+			if (wl.isHeld()) wl.release();
 		}
   		  
   	}
