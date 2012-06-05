@@ -120,10 +120,9 @@ public class pictures extends Activity implements LocationListener {
 	
 	private File picture;
 	
-	private Button takePicture;
-	private Button describe;
+	public static Button takePicture;
 	
-	public static Button takePhoto;
+	//public static Button takePhoto;   // WTF?!?!!??! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	static boolean c1 = false;
 	static boolean c2 = false;
@@ -300,8 +299,8 @@ public class pictures extends Activity implements LocationListener {
 
         mQ = new LinkedList<Picture>();
         
-        takePhoto = (Button) findViewById(R.id.takePicture);
-        takePhoto.setEnabled(false);
+        //takePhoto = (Button) findViewById(R.id.takePicture);
+        //takePhoto.setEnabled(false);
         
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         
@@ -335,18 +334,10 @@ public class pictures extends Activity implements LocationListener {
         queueCount = (TextView) findViewById(R.id.queueCountLabel);
         queueCount.setText("Queue Count: " + QUEUE_COUNT);
 		
-		describe = (Button) findViewById(R.id.describeButton);
-		describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
-		describe.setOnClickListener(new OnClickListener() {
 		
-			@Override
-			public void onClick(View v) {
-				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
-				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
-			}
-		});
         
         takePicture = (Button) findViewById(R.id.takePicture);
+        takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
         takePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -598,13 +589,16 @@ public class pictures extends Activity implements LocationListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if(resultCode == RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
-				describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
-				takePicture.getBackground().clearColorFilter();
-		        takePicture.setEnabled(false);
-		        if (smartUploading) {
+				//takePicture.getBackground().clearColorFilter();
+		        //takePicture.setEnabled(false);
+				takePicture.setEnabled(false);
+				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
+				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
+				
+				/*if (smartUploading) {
 		        	if (userLoggedIn) {
 		        		calledBySmartUp = false;
 		        		new Task().execute();
@@ -616,14 +610,31 @@ public class pictures extends Activity implements LocationListener {
 		        		new Task().execute();
 		        	}
 		        	else showDialog(DIALOG_NOT_LOGGED_IN);
-		        }
+		        }*/
 			}
 		} 
 		
 		else if (requestCode == DESCRIPTION_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-					describe.getBackground().clearColorFilter();
-					takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
+					//takePicture.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
+					takePicture.setEnabled(true);
+					if (smartUploading) {
+			        	if (userLoggedIn) {
+			        		calledBySmartUp = false;
+			        		new Task().execute();
+			        	}
+			        	else qsave(picture);
+			        } else {
+			        	if (userLoggedIn) {
+			        		calledBySmartUp = false;
+			        		new Task().execute();
+			        	}
+			        	else showDialog(DIALOG_NOT_LOGGED_IN);
+			        }
+			} else if (resultCode == RESULT_CANCELED) {
+				Intent startDescribe = new Intent(pictures.this, Descriptor.class);
+				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
+				Toast.makeText(pictures.this, "You must enter a description.", Toast.LENGTH_SHORT).show();
 			}
 		}
 					

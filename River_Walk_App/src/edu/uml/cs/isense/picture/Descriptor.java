@@ -96,14 +96,6 @@ public class Descriptor extends Activity {
        	if(pictures.c5) checkBox5.setChecked(true);
        	else checkBox5.setChecked(false);
         
-        Button selCan = (Button) findViewById(R.id.selectCancel);
-        selCan.setOnClickListener(new OnClickListener() {
-        	@Override
-        	public void onClick(View v) {
-        		setResult(pictures.RESULT_CANCELED);
-        		finish();
-        	}
-        });
        
         Button selOK = (Button) findViewById(R.id.selectOK);
         selOK.setOnClickListener(new OnClickListener() {
@@ -171,17 +163,17 @@ public class Descriptor extends Activity {
 				}
 				
 				if (!(desString.equals(""))) { 
-					pictures.takePhoto.setEnabled(true); 
+					setResult(pictures.RESULT_OK);
 				} else { 
-					pictures.takePhoto.setEnabled(false); 
+					setResult(pictures.RESULT_CANCELED);
 				}
 			
-				if (checkBox1.isChecked() || 
+				/*if (checkBox1.isChecked() || 
 						checkBox2.isChecked() || 
 						checkBox3.isChecked() ||
 						checkBox4.isChecked() ||
 						checkBox5.isChecked()) setResult(pictures.RESULT_OK);
-				else setResult(pictures.RESULT_CANCELED);
+				else setResult(pictures.RESULT_CANCELED);*/
 				finish();
 			}
         });
