@@ -70,6 +70,15 @@
 				android:textColor="@android:color/white"
 				android:layout_gravity="center_horizontal"/>
 	</LinearLayout>
+	
+	<TextView 
+        android:layout_height="wrap_content" 
+		android:layout_width="fill_parent" 
+		android:id="@+id/queueCountLabel"
+		android:text="@string/queueCount"
+		android:textSize="10dip"
+		android:textColor="@android:color/white"
+		android:background="@android:color/black"/>
 
 </LinearLayout>
 

@@ -78,14 +78,14 @@ public class pictures extends Activity implements LocationListener {
 	
 	RestAPI rapi;
 	
-	private static final String loginName = "RiverWalk App User";
-	private static final String loginPass = "nexusWINS";
-	private static final String experimentNum = "424";
+	//private static final String loginName = "RiverWalk App User";
+	//private static final String loginPass = "nexusWINS";
+	//private static final String experimentNum = "424";
 	//real iSENSE
 	
-	//private static final String loginName = "RiverWalker";
-	//private static final String loginPass = "SimonKit";
-	//private static final String experimentNum = "347";
+	private static final String loginName = "RiverWalker";
+	private static final String loginPass = "SimonKit";
+	private static final String experimentNum = "347";
 	//dev
 	
 	private static boolean gpsWorking = false;
@@ -103,6 +103,7 @@ public class pictures extends Activity implements LocationListener {
 	private Timer mTimer = null;
 	private Handler mHandler;
 	private TextView latLong;
+	private TextView queueCount;
 	
 	//private String teacherInfo;
 	//private String schoolInfo;
@@ -331,6 +332,8 @@ public class pictures extends Activity implements LocationListener {
         //experimentInput = (EditText) findViewById(R.id.ExperimentInput);
         
         latLong = (TextView) findViewById(R.id.myLocation);
+        queueCount = (TextView) findViewById(R.id.queueCountLabel);
+        queueCount.setText("Queue Count: " + QUEUE_COUNT);
 		
 		describe = (Button) findViewById(R.id.describeButton);
 		describe.getBackground().setColorFilter(0xFFFFFF33, PorterDuff.Mode.MULTIPLY);
@@ -658,6 +661,15 @@ public class pictures extends Activity implements LocationListener {
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){
     }
+    
+    /*private void callTask() {
+    	try {
+			Thread.sleep(1);
+			new Task().execute();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }*/
 
     private class Task extends AsyncTask <Void, Integer, Void> {
           
@@ -672,13 +684,7 @@ public class pictures extends Activity implements LocationListener {
 
         @Override protected Void doInBackground(Void... voids) {
            
-            //run the thread stuff in the background
-            //Thread thread = new Thread(null, uploader, "MagentoBackground");
-            //thread.start();
-           
-        	//Log.e("uploader", "called uploader: q = " + QUEUE_COUNT);
             uploader.run();
-           
             publishProgress(100);
             
             return null;
@@ -701,6 +707,8 @@ public class pictures extends Activity implements LocationListener {
                         
             pictures.c1  = false; pictures.c2  = false; pictures.c3 = false;
 	        pictures.c4  = false; pictures.c5  = false;
+	        
+	        if (QUEUE_COUNT > 0) uploadPicture(); //callTask();
         }
     }
    
@@ -726,7 +734,7 @@ public class pictures extends Activity implements LocationListener {
         }
        
         @Override protected void onPostExecute(Void voids) {
-            dia.setMessage("Your content is taking a while.  Please be patient.");
+            dia.setMessage("Finalizing...");
         }
     }
     
@@ -790,6 +798,7 @@ public class pictures extends Activity implements LocationListener {
   		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText().toString(), Descriptor.desString, System.currentTimeMillis());		
   		mQ.add(mPic);
   		QUEUE_COUNT++;
+  		queueCount.setText("Queue Count: " + QUEUE_COUNT);
   	}
   	
   	//get picture data from the q to upload
@@ -844,11 +853,13 @@ public class pictures extends Activity implements LocationListener {
   			uploaderPic = getPicFromQ();
   			if (uploaderPic != null) {
   				QUEUE_COUNT--;
+  				queueCount.setText("Queue Count: " + QUEUE_COUNT);
   				calledBySmartUp = true;
   				new Task().execute();
   			}
 		} else  {
 			smartUploading = false;
+			if (wl.isHeld()) wl.release();
 		}
   		  
   	}
