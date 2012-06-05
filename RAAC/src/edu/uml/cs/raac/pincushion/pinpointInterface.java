@@ -117,13 +117,12 @@ public class pinpointInterface {
             
             //Request all data from the pinpoint.
             System.out.println("Getting settings");
-            ArrayList<byte[]> rawData = pinpoint.requestData(dh, numRecords);
+            ArrayList<byte[]> rawData = pinpoint.requestData(dh, numRecords, pdiag);
 
             //Convert all data recieved from the pinpoint.
             for (int i = 0; i < numRecords; i++) {
             	byte[] dataLine = rawData.get(i);
                 records.add(conv.convertAll(dataLine));
-                pdiag.setProgress(i);
             }
 
             if (settings.get(PinComm.SAMPLE_RATE) < 1000) {

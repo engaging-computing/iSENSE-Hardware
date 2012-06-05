@@ -523,10 +523,10 @@ public class Isense extends Activity implements OnClickListener {
 	public void setBtStatus() {
 		if (btStatNum == 0) {
 			btStatus.setText("Status: Disconnected");
+			rcrdBtn.setEnabled(false);
 		} else if (btStatNum == 1) {
 			btStatus.setText("Status: Connected");
-		} else {
-
+			rcrdBtn.setEnabled(true);
 		}
 	}
 
