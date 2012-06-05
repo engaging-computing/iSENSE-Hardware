@@ -37,15 +37,6 @@
 			android:imeOptions="actionDone"/>
 	</RelativeLayout>
 	
-	<Button
-		android:text="@+string/descPic"
-		android:id="@+id/describeButton"
-		android:textSize="30dip"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_weight="1">
-	</Button>
-	
 	<Button android:text="@+string/takePic" 
 		android:textSize="30dip"
 		android:id="@+id/takePicture" 

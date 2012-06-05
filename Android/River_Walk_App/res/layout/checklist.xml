@@ -30,18 +30,6 @@
 			android:layout_weight="1"
 			>
 		</Button>
-    	<Button 
-   			android:text="Cancel" 
-			android:textSize="16dp"
-			android:id="@+id/selectCancel" 
-			android:layout_height="wrap_content"
-			android:paddingTop="16dip"
-			android:gravity="center"
-			android:layout_gravity="center" 
-			android:layout_width="fill_parent"
-			android:layout_weight="1"
-			>
-		</Button>
     </LinearLayout>
     <ScrollView 
     	android:id="@+id/ScrollView01"
