@@ -78,14 +78,14 @@ public class pictures extends Activity implements LocationListener {
 	
 	RestAPI rapi;
 	
-	//private static final String loginName = "RiverWalk App User";
-	//private static final String loginPass = "nexusWINS";
-	//private static final String experimentNum = "424";
+	private static final String loginName = "RiverWalk App User";
+	private static final String loginPass = "nexusWINS";
+	private static final String experimentNum = "424";
 	//real iSENSE
 	
-	private static final String loginName = "RiverWalker";
-	private static final String loginPass = "SimonKit";
-	private static final String experimentNum = "347";
+	//private static final String loginName = "RiverWalker";
+	//private static final String loginPass = "SimonKit";
+	//private static final String experimentNum = "347";
 	//dev
 	
 	private static boolean gpsWorking = false;
