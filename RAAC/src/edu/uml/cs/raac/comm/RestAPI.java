@@ -14,33 +14,25 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//import edu.uml.cs.isense.objects.Image;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+import edu.uml.cs.raac.Isense;
+import edu.uml.cs.raac.ViewData;
+import edu.uml.cs.raac.WifiDisabled;
 import edu.uml.cs.raac.objects.Experiment;
 import edu.uml.cs.raac.objects.ExperimentField;
 import edu.uml.cs.raac.objects.Item;
 import edu.uml.cs.raac.objects.Person;
 import edu.uml.cs.raac.objects.Session;
 import edu.uml.cs.raac.objects.SessionData;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.util.Log;
 /**
  * 
  * @author johnfertitta
@@ -1148,6 +1140,18 @@ public class RestAPI {
 		}
 		
 		return output;
+	}
+	
+	public boolean isConnectedToInternet() {
+		NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting())
+			return true;
+		else {
+			Intent i = new Intent(Isense.mContext, WifiDisabled.class);
+			Isense.mContext.startActivity(i);  
+		}
+		
+		return false;
 	}
 	
 }
