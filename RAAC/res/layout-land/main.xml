@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ViewFlipper
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/flipper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-   <RelativeLayout
+    <RelativeLayout
         android:id="@+id/launchlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,228 +27,286 @@
             android:layout_alignLeft="@+id/pinpoint_select_btn"
             android:layout_marginBottom="-114dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/superspin" android:visibility="gone"/>
+            android:src="@drawable/superspin"
+            android:visibility="gone" />
     </RelativeLayout>
 
-   <LinearLayout
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:clickable="false"
-       android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="false"
+        android:orientation="vertical" >
 
-       <LinearLayout
-           android:id="@+id/linearLayout2"
-           android:layout_width="match_parent"
-           android:layout_height="30dp"
-           android:layout_marginTop="20dp" >
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp" >
 
-           <Button
-               android:id="@+id/btn_getRcrd"
-               android:layout_width="0dp"
-               android:layout_height="fill_parent"
-               android:layout_marginLeft="25dp"
-               android:layout_marginRight="25dp"
-               android:layout_weight="0.75"
-               android:background="@drawable/custombtn"
-               android:text="Get Data" />
+            <Button
+                android:id="@+id/btn_getRcrd"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight="0.75"
+                android:background="@drawable/custombtn"
+                android:text="Get Data" />
 
-           <TextView
-               android:id="@+id/statusField"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="25dp"
-               android:layout_marginRight="25dp"
-               android:layout_weight=".75"
-               android:text="Status: Not Connected"
-               android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/statusField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight=".75"
+                android:text="Status: Not Connected"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <!-- additional buttons by jeremy -->
 
-           <LinearLayout
-               android:id="@+id/nameContainer"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:layout_weight="1" >
+            <LinearLayout
+                android:id="@+id/nameContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
 
-               <TextView
-                   android:id="@+id/namePrompt"
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:layout_marginLeft="25dp"
-                   android:layout_marginRight="0dp"
-                   android:layout_weight=".50"
-                   android:text="Group Name:"
-                   android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/namePrompt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="0dp"
+                    android:layout_weight=".5"
+                    android:text="Group Name:"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-               <EditText
-                   android:id="@+id/nameField"
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:layout_gravity="left"
-                   android:layout_marginLeft="0dp"
-                   android:layout_marginRight="25dp"
-                   android:layout_weight=".50"
-                   android:inputType="textCapWords"
-                   android:maxLength="20"
-                   android:textAppearance="?android:attr/textAppearanceMedium" >
+                <EditText
+                    android:id="@+id/nameField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight="1"
+                    android:inputType="textCapWords"
+                    android:maxLength="20"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </LinearLayout>
 
-                   <requestFocus />
-               </EditText>
-           </LinearLayout>
+        <LinearLayout
+            android:id="@+id/nameContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
 
-           <Button
-               android:id="@+id/btn_pushToISENSE"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="25dp"
-               android:layout_marginRight="25dp"
-               android:layout_weight=".75"
-               android:background="@drawable/custombtn"
-               android:text="Push to iSENSE"
-               android:textAppearance="?android:attr/textAppearanceMedium" />
-       </LinearLayout>
+            <TextView
+                android:id="@+id/namePrompt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="0dp"
+                android:layout_weight=".50"
+                android:text="Group Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-       <LinearLayout
-           android:id="@+id/linearLayout5"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_marginBottom="20dp"
-           android:layout_marginTop="20dp"
-           android:layout_weight="0" >
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-           <ScrollView
-               android:id="@+id/scrollView1"
-               android:layout_width="0dp"
-               android:layout_height="match_parent"
-               android:layout_marginLeft="20dp"
-               android:layout_marginRight="20dp"
-               android:layout_weight="1" >
+                <TextView
+                    android:id="@+id/onlyTenPoints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tenPoints"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </LinearLayout>
 
-               <LinearLayout
-                   android:id="@+id/linearLayout1"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="vertical" >
-               </LinearLayout>
-           </ScrollView>
+        <Button
+            android:id="@+id/btn_pushToISENSE"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight=".75"
+            android:background="@drawable/custombtn"
+            android:text="Push to iSENSE"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
-           <LinearLayout
-               android:id="@+id/linearLayout3"
-               android:layout_width="0dp"
-               android:layout_height="match_parent"
-               android:layout_marginLeft="20dp"
-               android:layout_marginRight="20dp"
-               android:layout_weight="1"
-               android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0" >
 
-               <TextView
-                   android:id="@+id/sensorNameHeader"
-                   android:layout_width="wrap_content"
-                   android:layout_height="35dp"
-                   android:layout_gravity="center_horizontal"
-                   android:layout_weight="1"
-                   android:text="BTA 1 Values"
-                   android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1" >
 
-               <LinearLayout
-                   android:id="@+id/linearLayout4"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_weight="1" >
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </ScrollView>
 
-                   <TextView
-                       android:id="@+id/textView1"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:text="@string/minval"
-                       android:textAppearance="?android:attr/textAppearanceMedium" />
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
 
-                   <EditText
-                       android:id="@+id/et_min"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:focusable="false"
-                       android:inputType="none"
-                       android:lines="1" />
-               </LinearLayout>
+            <TextView
+                android:id="@+id/sensorNameHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="BTA 1 Values"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-               <LinearLayout
-                   android:id="@+id/LinearLayout02"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_weight="1" >
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
 
-                   <TextView
-                       android:id="@+id/TextView02"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:text="@string/maxval"
-                       android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/minval"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                   <EditText
-                       android:id="@+id/et_max"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:clickable="false"
-                       android:focusable="false"
-                       android:inputType="none"
-                       android:lines="1" />
-               </LinearLayout>
+                <EditText
+                    android:id="@+id/et_min"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:lines="1" />
+            </LinearLayout>
 
-               <LinearLayout
-                   android:id="@+id/LinearLayout01"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_weight="1" >
+            <LinearLayout
+                android:id="@+id/LinearLayout02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
 
-                   <TextView
-                       android:id="@+id/TextView01"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:text="@string/aveval"
-                       android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/maxval"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                   <EditText
-                       android:id="@+id/et_ave"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:clickable="false"
-                       android:focusable="false"
-                       android:inputType="none"
-                       android:lines="1" />
-               </LinearLayout>
+                <EditText
+                    android:id="@+id/et_max"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:lines="1" />
+            </LinearLayout>
 
-               <LinearLayout
-                   android:id="@+id/LinearLayout03"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_weight="1" >
+            <LinearLayout
+                android:id="@+id/LinearLayout01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
 
-                   <TextView
-                       android:id="@+id/TextView03"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:text="@string/medval"
-                       android:textAppearance="?android:attr/textAppearanceMedium" />
+                <EditText
+                    android:id="@+id/et_medi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:lines="1" />
+            </LinearLayout>
 
-                   <EditText
-                       android:id="@+id/et_medi"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:clickable="false"
-                       android:focusable="false"
-                       android:inputType="none"
-                       android:lines="1" />
-               </LinearLayout>
-           </LinearLayout>
-       </LinearLayout>
-   </LinearLayout>
+            <Button
+                android:id="@+id/btn_pushToISENSE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/custombtn"
+                android:gravity="center"
+                android:text="Push to iSENSE"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_ave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:focusable="false"
+        android:inputType="none"
+        android:lines="1" />
+
+    <LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout03"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/medval"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/et_medi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:focusable="false"
+            android:inputType="none"
+            android:lines="1" />
+    </LinearLayout>
+
+    <LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout>
+    </LinearLayout>
 
 </ViewFlipper>

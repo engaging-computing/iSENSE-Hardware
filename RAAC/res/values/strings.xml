@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="wifi_page">WiFi Disabled</string>
     <string name="app_name">Science of Rivers</string>
     <string name="button_scan">Scan for Devices</string>
 	<string name="title_paired_devices">Paired Devices</string>
@@ -16,8 +17,9 @@
     <string name="menu_experiment">Set Experiment</string>
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
-    <string name="aveval">Average</string>
+    <string name="aveval">Average/Mean</string>
     <string name="medval">Median</string>
     <string name="view_page">View Data on iSENSE</string>
     <string name="change_eid">Change Experiment ID</string>
+    <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
 </resources>

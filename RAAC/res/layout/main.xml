@@ -220,7 +220,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:inputType="none"
-                    android:lines="1" />
+                    android:lines="1"/>
             </LinearLayout>
 
             <LinearLayout

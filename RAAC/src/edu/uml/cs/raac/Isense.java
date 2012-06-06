@@ -54,7 +54,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.text.Html;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -88,6 +89,7 @@ public class Isense extends Activity implements OnClickListener {
 	ViewFlipper flipper;
 	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
 	LinearLayout dataLayout;
+	TextView tenPoints;
 	EditText nameField;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
@@ -97,17 +99,18 @@ public class Isense extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	public static String experimentId = "440";
+	public static String experimentId = "427";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
 	static String sessionUrl;
-	String baseSessionUrl = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
+	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	String sensorType;
 	String datMed, datAve, datMax, datMin;
-	private RestAPI rapi = null;
+	private RestAPI rapi;
 	private ProgressDialog dia;
 	JSONArray dataSet;
+	public static Context mContext;
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -125,6 +128,8 @@ public class Isense extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		mContext = this;
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
 		mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
@@ -177,6 +182,7 @@ public class Isense extends Activity implements OnClickListener {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
+		tenPoints = (TextView) findViewById(R.id.onlyTenPoints);
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
@@ -229,8 +235,7 @@ public class Isense extends Activity implements OnClickListener {
 	
 	@Override
 	public void onStart() {
-		if (!loggedIn) new PerformLogin().execute();
-		
+		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
 		super.onStart();
 	}
 
@@ -256,7 +261,7 @@ public class Isense extends Activity implements OnClickListener {
 			if (loggedIn)
 				Toast.makeText(Isense.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
 			else
-				new PerformLogin().execute();
+				if (rapi.isConnectedToInternet()) new PerformLogin().execute();
 		} else if (item.getItemId() == R.id.menu_experiment) {
 			Intent i = new Intent(this, ChangeExperiment.class);
 			startActivityForResult(i, CHANGE_EXPERIMENT);
@@ -264,7 +269,7 @@ public class Isense extends Activity implements OnClickListener {
 		return true;
 
 	}
-
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -365,7 +370,6 @@ public class Isense extends Activity implements OnClickListener {
 			String[] strray = data.get(i);
 			
 			for (String str : strray) {
-				//Log.e("str", "" + str);
 				x++;
 				switch(x) {
 				case 1:  timeData.add(fmtData(str));            break;
@@ -375,8 +379,7 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			x = 0;
 		}
-//		for (int i = 0; i < bta1Data.size(); i++)
-//			Log.e("btadata", "" + bta1Data.get(i));
+
 		findStatistics();	
 	}
 
@@ -384,6 +387,8 @@ public class Isense extends Activity implements OnClickListener {
 		int i = 0;
 		int y = 1;
 		if (data.size() > 10) {
+			dataLayout.addView(tenPoints);
+			tenPoints.setVisibility(View.VISIBLE);
 			i = data.size()-10;
 			y = data.size()-9;
 		}
@@ -404,7 +409,7 @@ public class Isense extends Activity implements OnClickListener {
 					newRow.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft1 = new TextView(getBaseContext());
-				tvLeft1.setText("Datapoint " + y);
+				tvLeft1.setText(Html.fromHtml("<b>" + "Datapoint " + y + "</b>"));
 				tvLeft1.setTextColor(Color.BLACK);
 				TextView tvRight1 = new TextView(getBaseContext());
 				newRow.addView(tvLeft1);
@@ -415,22 +420,24 @@ public class Isense extends Activity implements OnClickListener {
 					z++;
 					switch(x) {
 					case 1: label = "Time (GMT)"; break;
-					case 2: label = "Latitude"; break;
-					case 3: label = "Longitude"; break;
-					case 4: label = "Altitude GPS (m)"; break;
-					case 5: label = "Altitude (m)"; break;
-					case 6: label = "Pressure (atm)"; break;
-					case 7: label = "Air Temperature (c)"; break;
-					case 8: label = "Humidity (%rh)"; break;
-					case 9: label = "Light (lux)"; break;
-					case 10: label = "X-Accel"; break;
-					case 11: label = "Y-Accel"; break;
-					case 12: label = "Z-Accel"; break;
-					case 13: label = "Acceleration"; break;
+					//case 2: label = "Latitude"; break;
+					//case 3: label = "Longitude"; break;
+					//case 4: label = "Altitude GPS (m)"; break;
+					//case 5: label = "Altitude (m)"; break;
+					//case 6: label = "Pressure (atm)"; break;
+					//case 7: label = "Air Temperature (c)"; break;
+					//case 8: label = "Humidity (%rh)"; break;
+					//case 9: label = "Light (lux)"; break;
+					//case 10: label = "X-Accel"; break;
+					//case 11: label = "Y-Accel"; break;
+					//case 12: label = "Z-Accel"; break;
+					//case 13: label = "Acceleration"; break;
 					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
-					case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
-					case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
-					case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
+					//case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
+					//case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
+					//case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
+					default:
+						continue;
 					}
 					LinearLayout newRow2 = new LinearLayout(getBaseContext());
 					newRow2.setOrientation(LinearLayout.HORIZONTAL);
@@ -455,16 +462,16 @@ public class Isense extends Activity implements OnClickListener {
 					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft3 = new TextView(getBaseContext());
-				tvLeft3.setText("\n");
+				tvLeft3.setText("");
 				TextView tvRight3 = new TextView(getBaseContext());
-				tvRight3.setText("\n");
+				tvRight3.setText("");
 				newRow3.addView(tvLeft3);
 				newRow3.addView(tvRight3);
 				dataLayout.addView(newRow3);
 				dataScroller.post(new Runnable() {
 					@Override
 					public void run() {
-						dataScroller.fullScroll(ScrollView.FOCUS_DOWN);
+						dataScroller.fullScroll(ScrollView.FOCUS_UP);
 					}
 				});
 				x = 0;
@@ -566,6 +573,7 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
+					ppi.setRealTimeClock();
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
@@ -702,7 +710,10 @@ public class Isense extends Activity implements OnClickListener {
 				dataSet.put(dataJSON);
 			}
 		}
-		else Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
+		else {
+			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
+			return;
+		}
 		
 		new UploadTask().execute();
 	}
@@ -715,7 +726,7 @@ public class Isense extends Activity implements OnClickListener {
 		
 			String nameOfSession = nameField.getText().toString();
 		
-			if (!loggedIn)
+			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
 			
 			if (loggedIn) {
@@ -748,7 +759,7 @@ public class Isense extends Activity implements OnClickListener {
 		@Override protected void onPreExecute() {
 			dia = new ProgressDialog(Isense.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 			
@@ -813,9 +824,7 @@ public class Isense extends Activity implements OnClickListener {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			
-			if(loggedIn) {
-				Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
-			}
+			Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
 		}
 		
 	}

@@ -47,6 +47,11 @@
             android:label="@string/change_eid"
             android:theme="@android:style/Theme.Dialog">
         </activity>
+        <activity
+            android:name=".WifiDisabled"
+            android:label="@string/wifi_page"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
     </application>
 
 </manifest>
