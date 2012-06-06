@@ -279,7 +279,7 @@ public class RestAPI {
 				session_key = o.getJSONObject("data").getString("session");
 				uid = o.getJSONObject("data").getInt("uid");
 				
-				if (isLoggedIn()) {
+				if (isLoggedIn()) { 
 					this.username = username;
 					return true;
 				}

@@ -12,8 +12,12 @@
     <string name="menu_connect">Select PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensors</string>
+    <string name="menu_login">Retry Login</string>
+    <string name="menu_experiment">Set Experiment</string>
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
     <string name="aveval">Average</string>
     <string name="medval">Median</string>
+    <string name="view_page">View Data on iSENSE</string>
+    <string name="change_eid">Change Experiment ID</string>
 </resources>

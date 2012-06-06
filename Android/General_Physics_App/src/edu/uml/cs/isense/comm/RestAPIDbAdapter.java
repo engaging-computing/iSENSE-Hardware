@@ -12,7 +12,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+//import android.util.Log;
 
 public class RestAPIDbAdapter {
 	public static final String KEY_ROWID = "_id";
@@ -67,7 +67,7 @@ public class RestAPIDbAdapter {
 	public static final String KEY_EXPERIMENT_COUNT = "experiment_count";
 	public static final String KEY_SESSION_COUNT = "session_count";
 	
-    private static final String TAG = "DataDbAdapter";
+    //private static final String TAG = "DataDbAdapter";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     
@@ -206,8 +206,8 @@ public class RestAPIDbAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
+           // Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+           //         + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPERIMENTS);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPERIMENT_IMAGES);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPERIMENT_VIDEOS);
