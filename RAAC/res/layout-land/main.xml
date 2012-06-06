@@ -74,8 +74,7 @@
          	       android:id="@+id/namePrompt"
           	  		android:layout_width="0dp"
               	  	android:layout_height="wrap_content"
-                	android:layout_weight=".50"
-                	android:layout_marginLeft="25dp"
+                	android:layout_weight=".5"
                 	android:layout_marginRight="0dp"
                 	android:text="Group Name:"
                 	android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -86,23 +85,12 @@
                 	android:layout_height="wrap_content"
                 	android:layout_marginLeft="0dp"
                 	android:layout_marginRight="25dp"
-	              	android:layout_weight=".50"
+	              	android:layout_weight="1"
 	              	android:layout_gravity="left"
                 	android:inputType="textCapWords"
                 	android:maxLength="20"
                 	android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
-            
-            <Button
-                android:id="@+id/btn_pushToISENSE"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
-                android:background="@drawable/custombtn"
-                android:text="Push to iSENSE"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,6 +114,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
+                    
+                    <TextView 
+                  		android:id="@+id/onlyTenPoints"
+                    	android:layout_width="match_parent"
+                    	android:layout_height="wrap_content"
+                    	android:text="@string/tenPoints"
+                    	android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
             </ScrollView>
 
@@ -248,6 +243,17 @@
                         android:inputType="none"
                         android:lines="1" />
                 </LinearLayout>
+                  
+            	<Button
+       				android:id="@+id/btn_pushToISENSE"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:layout_gravity="center"
+                	android:gravity="center"
+                	android:background="@drawable/custombtn"
+                	android:text="Push to iSENSE"
+                	android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
