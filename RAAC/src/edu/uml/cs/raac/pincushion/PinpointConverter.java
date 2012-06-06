@@ -52,7 +52,6 @@ public class PinpointConverter {
     private Expression b1Conv;
     private Expression b2Conv;
     private Expression m1Conv, m2Conv;
-    private HashMap<Integer, Integer> settings;
     public static int VALUE = 0;
     public static int JACK = 1;
     public static int HUMAN_READABLE = 2;
@@ -68,9 +67,7 @@ public class PinpointConverter {
     public static String[] tableHeaders = new String[]{"Time (GMT)", "Latitude", "Longitude", "Altitude GPS (m)", "Altitude (m)", "Pressure (atm)", "Temperature (c)", "Humidity (%rh)", "Light (lux)", "X-Accel", "Y-Accel", "Z-Accel", "Acceleration", "BTA1", "BTA2", "Mini1", "Mini2"};
     public static String[] fileHeaders  = new String[]{"Time","Latitude","Longitude","Altitude GPS","Altitude","Pressure","Temperature","Humidity","Light","x","y","z","Acceleration","BTA1","BTA2","Mini1","Mini2"};
 
-    public PinpointConverter(HashMap<Integer, Integer> settings, Context context) throws IncompatibleConversionException {
-
-        this.settings = settings;
+    public PinpointConverter(Context context) throws IncompatibleConversionException {
         
         SharedPreferences prefs = context.getSharedPreferences("SENSORS",0);
         b1Conv = new Expression(prefs.getString("sensor_bta1", "x"));

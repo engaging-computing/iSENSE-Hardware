@@ -421,11 +421,11 @@ public class BluetoothService {
 		public byte read() throws IOException {
 			int i = 0;
 			try {
-				for(i = 0; i < 200; i++) {
+				for(i = 0; i < 250; i++) {
 					if(!buffer.isEmpty()) {
 						return buffer.poll();
 					} else {
-						Thread.sleep(50);
+						Thread.sleep(55);
 					}
 				}
 			} catch (InterruptedException e) {

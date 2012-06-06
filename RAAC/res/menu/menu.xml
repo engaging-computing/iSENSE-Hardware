@@ -11,13 +11,13 @@
     <item android:id="@+id/menu_setTime"
           android:icon="@drawable/ic_action_time"
           android:title="@string/menu_settime"
-          android:showAsAction="always|withText" />
+          android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/menu_login"
           android:icon="@drawable/ic_action_refresh"
           android:title="@string/menu_login"
-          android:showAsAction="always|withText" />
+          android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/menu_experiment"
           android:icon="@drawable/ic_action_share"
           android:title="@string/menu_experiment"
-          android:showAsAction="always|withText" />
+          android:showAsAction="ifRoom|withText" />
 </menu>
