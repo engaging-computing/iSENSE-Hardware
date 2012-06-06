@@ -17,6 +17,7 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 		setContentView(R.layout.change_experiment);
 		
 		eid    = (EditText) findViewById(R.id.new_eid);
+		eid.setText(Isense.experimentId);
 		
 		ok     = (Button)   findViewById(R.id.experiment_ok);
 		cancel = (Button)   findViewById(R.id.experiment_cancel);

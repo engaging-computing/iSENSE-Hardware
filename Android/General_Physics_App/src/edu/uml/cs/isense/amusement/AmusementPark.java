@@ -1251,8 +1251,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	}
 	
   	// Assists with differentiating between displays for dialogues
-  	private static int getApiLevel()
-  	{
+  	private static int getApiLevel() {
     	return Integer.parseInt(android.os.Build.VERSION.SDK);
     }
   	
