@@ -28,7 +28,8 @@
             android:layout_alignLeft="@+id/pinpoint_select_btn"
             android:layout_marginBottom="-114dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/superspin" android:visibility="gone"/>
+            android:src="@drawable/superspin"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -120,6 +121,7 @@
                     	android:layout_width="match_parent"
                     	android:layout_height="wrap_content"
                     	android:text="@string/tenPoints"
+                    	android:visibility="gone"
                     	android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
             </ScrollView>
