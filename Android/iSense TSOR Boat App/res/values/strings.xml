@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, BoatActivity!</string>
+    <string name="app_name">TSOR Boat App</string>
+	<string name="button_text">Submit Data\n(Press and Hold)</string>
+    
+    <string name="location_prompt">Select your location</string>
+    <string-array name="location_array">
+        <item>Canals</item>
+        <item>Docks</item>
+        <item>Down River</item>
+        <item>Up River</item>
+    </string-array>
+    
+    <string name="school_prompt">Choose your school</string>
+    <string-array name="school_array">
+        <item>Arlington</item>
+        <item>Bartlett Community Partnership</item>
+        <item>John D O\'Bryant</item>
+        <item>North Andover</item>
+        <item>Sullivan</item>
+        <item>Wang</item>
+        <item>Other</item>
+    </string-array>
+    
+    
+    
+</resources>

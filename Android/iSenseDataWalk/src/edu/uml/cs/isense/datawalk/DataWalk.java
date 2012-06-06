@@ -89,7 +89,6 @@ public class DataWalk extends Activity implements LocationListener {
 	private int	elapsedMillis  =  0;
     private int sessionId      = -1;
     private int dataPointCount =  0;
-    private int waitingCounter =  0;
     
     private MediaPlayer mMediaPlayer;
         
@@ -129,6 +128,8 @@ public class DataWalk extends Activity implements LocationListener {
     private static String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
     private static String marketUrl  = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
 	private static String sessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=406";
+	
+	private static int waitingCounter = 0;
     
     public static JSONArray dataSet;
     
@@ -753,8 +754,7 @@ public class DataWalk extends Activity implements LocationListener {
 	    }
 	}
 	
-	private void initLocationManager()
-	{        
+	private void initLocationManager() {        
         Criteria c = new Criteria();
         c.setAccuracy(Criteria.ACCURACY_FINE);
         
@@ -767,17 +767,14 @@ public class DataWalk extends Activity implements LocationListener {
         loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
 	
-	private void waitingForGPS()
-	{
+	private void waitingForGPS() {
 		mTimer = new Timer();
         mTimer.scheduleAtFixedRate(new TimerTask() {
         		@Override
 				public void run() {
-		
         			mHandler.post(new Runnable() {
         				@Override
         				public void run() {
-        										
         					if (gpsWorking)
         						latLong.setText("Lat: " + latitude + "\nLong: " + longitude);
         					else {
@@ -803,8 +800,8 @@ public class DataWalk extends Activity implements LocationListener {
         				}
         			});
         		}	
-        	}, 0, TIMER_LOOP);
-		}
+        }, 0, TIMER_LOOP);
+	}
 	
 	protected void onActivityResult(int resultCode, Intent data) {
 		   if (resultCode == LoginActivity.NAME_SUCCESSFUL) {

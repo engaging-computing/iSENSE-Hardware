@@ -60,9 +60,51 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_weight="1"
+                android:layout_weight=".75"
                 android:text="Status: Not Connected"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+            
+            <!-- additional buttons by jeremy -->
+            <LinearLayout
+                android:layout_weight="1"
+                android:id="@+id/nameContainer"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+        	    
+        	    <TextView 
+         	       android:id="@+id/namePrompt"
+          	  		android:layout_width="0dp"
+              	  	android:layout_height="wrap_content"
+                	android:layout_weight=".50"
+                	android:layout_marginLeft="25dp"
+                	android:layout_marginRight="0dp"
+                	android:text="Group Name:"
+                	android:textAppearance="?android:attr/textAppearanceLarge" />
+            	
+            	<EditText 
+                	android:id="@+id/nameField"
+                	android:layout_width="0dp"
+                	android:layout_height="wrap_content"
+                	android:layout_marginLeft="0dp"
+                	android:layout_marginRight="25dp"
+	              	android:layout_weight=".50"
+	              	android:layout_gravity="left"
+                	android:inputType="textCapWords"
+                	android:maxLength="20"
+                	android:textAppearance="?android:attr/textAppearanceLarge" />
+            </LinearLayout>
+            
+            <Button
+                android:id="@+id/btn_pushToISENSE"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight=".75"
+                android:background="@drawable/custombtn"
+                android:text="Push to iSENSE"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout

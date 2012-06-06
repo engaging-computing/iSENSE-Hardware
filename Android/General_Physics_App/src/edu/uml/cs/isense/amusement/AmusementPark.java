@@ -70,7 +70,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
+//import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -140,6 +140,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     
     public static final int CAMERA_PIC_REQUESTED = 1;
     public static final int CAMERA_VID_REQUESTED = 2;
+    
+    private final String experimentNum = "422";
+    //isense
     	
     private int count = 0;
     private String data;
@@ -945,8 +948,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         sessionName = (EditText) v.findViewById(R.id.sessionName);
         
         experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
-        experimentInput.setEnabled(false);
-        experimentInput.setFocusable(false);
+        experimentInput.setText(experimentNum);
+        // experimentInput.setEnabled(false);
+        // experimentInput.setFocusable(false);
         if(experimentId != "") experimentInput.setText(experimentId);
         
         experimentInput.setKeyListener(new NumberKeyListener() {
@@ -974,7 +978,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					Intent experimentIntent = new Intent(getApplicationContext(), Experiments.class);
 					experimentIntent.putExtra("edu.uml.cs.isense.amusement.experiments.propose", EXPERIMENT_CODE);
 				
-					Log.w("JSON", "EXPERIMENT_CODE: " + EXPERIMENT_CODE); //honk
+				//	Log.w("JSON", "EXPERIMENT_CODE: " + EXPERIMENT_CODE); //honk
 				
 					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 				}
@@ -1024,7 +1028,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					ContentValues values = new ContentValues();
 					
 					imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-					Log.e("Uri", "imageUri: " + imageUri); //honk
+			//		Log.e("Uri", "imageUri: " + imageUri); //honk
 					
 					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -1057,7 +1061,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					ContentValues valuesVideos = new ContentValues();
 				
 					videoUri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, valuesVideos);
-					Log.e("Uri", "videoUri: " + videoUri); //honk
+			//		Log.e("Uri", "videoUri: " + videoUri); //honk
 				
 					Intent intentVid = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
