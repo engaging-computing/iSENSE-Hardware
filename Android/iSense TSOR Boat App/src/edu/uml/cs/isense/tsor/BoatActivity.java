@@ -39,6 +39,7 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.method.DigitsKeyListener;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -61,10 +62,11 @@ public class BoatActivity extends Activity implements LocationListener {
 	private static String userName         = "tsorboat";   // HARD CODED
 	private static String password         = "ecgrul3s";   // HARD CODED
 	private static int    sessionNumbers[] = { 
-		2904, // Canals
-		2905, // Docks
-		2891, // Down River
-		2906  // Up River	
+		2904,  // Canals
+		5224,  // Claypit Brook
+		2905,  // Docks
+		2891,  // Down River
+		2906   // Up River	
 	};
 	
 	private Vibrator vibrator;
@@ -637,6 +639,7 @@ public class BoatActivity extends Activity implements LocationListener {
 	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
 	        final EditText input = new EditText(this);
 	        input.setSingleLine(true);
+	        input.setKeyListener(DigitsKeyListener.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"));
 	        layout.setPadding(5, 0, 5, 0);
 	        layout.addView(input);
 	    	
@@ -870,9 +873,12 @@ public class BoatActivity extends Activity implements LocationListener {
 			} else if (location.getSelectedItem().toString().equals("Canals")) {
 			    myLat = 42.641031;
 			    myLon = -71.328886;
+			} else if (location.getSelectedItem().toString().equals("Claypit Brook")) {
+				myLat = 42.642420;
+				myLon = -71.352910;
 			} else {
-			    myLat = 0;
-			    myLon = 0;
+			    myLat = 0.0;
+			    myLon = 0.0;
 			    makeToast("Fatal error uploading latitude/longitude!", Toast.LENGTH_LONG);
 			}
 				

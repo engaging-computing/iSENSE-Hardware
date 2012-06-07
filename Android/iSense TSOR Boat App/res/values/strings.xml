@@ -8,6 +8,7 @@
     <string name="location_prompt">Select your location</string>
     <string-array name="location_array">
         <item>Canals</item>
+        <item>Claypit Brook</item>
         <item>Docks</item>
         <item>Down River</item>
         <item>Up River</item>
