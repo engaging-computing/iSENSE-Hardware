@@ -41,74 +41,75 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="20dp" >
+            android:layout_height="35dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1" >
 
             <Button
                 android:id="@+id/btn_getRcrd"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="0.75"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.30"
                 android:background="@drawable/custombtn"
-                android:text="Get Data" />
+                android:text="Get Data"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/statusField"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight=".30"
                 android:text="Status: Not Connected"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
             <!-- additional buttons by jeremy -->
-            <LinearLayout
-                android:layout_weight="1"
+            <RelativeLayout
+                android:layout_weight=".40"
                 android:id="@+id/nameContainer"
-                android:layout_gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
+                android:gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:weightSum="1" >
         	    
         	    <TextView 
          	       android:id="@+id/namePrompt"
-          	  		android:layout_width="0dp"
-              	  	android:layout_height="wrap_content"
-                	android:layout_weight=".5"
-                	android:layout_marginRight="0dp"
+          	  		android:layout_width="wrap_content"
+              	  	android:layout_height="fill_parent"
                 	android:text="Group Name:"
-                	android:textAppearance="?android:attr/textAppearanceMedium" />
+                	android:layout_weight=".40"
+                	android:textAppearance="?android:attr/textAppearanceSmall" />
             	
             	<EditText 
                 	android:id="@+id/nameField"
-                	android:layout_width="0dp"
-                	android:layout_height="wrap_content"
-                	android:layout_marginLeft="0dp"
-                	android:layout_marginRight="25dp"
-	              	android:layout_weight="1"
-	              	android:layout_gravity="left"
+                	android:layout_toRightOf="@id/namePrompt"
+                	android:layout_width="150dp"
+                	android:layout_height="fill_parent"
+                	android:layout_marginRight="5dp"
                 	android:inputType="textCapWords"
+                	android:layout_weight=".60"
                 	android:maxLength="20"
                 	android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="0" >
 
             <ScrollView
                 android:id="@+id/scrollView1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1" >
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight=".45" >
 
                 <LinearLayout
                     android:id="@+id/linearLayout1"
@@ -130,19 +131,19 @@
                 android:id="@+id/linearLayout3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight=".55"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/sensorNameHeader"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
                     android:text="BTA 1 Values"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout4"
@@ -156,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/minval"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <EditText
                         android:id="@+id/et_min"
@@ -183,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/maxval"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <EditText
                         android:id="@+id/et_max"
@@ -208,7 +209,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/aveval"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <EditText
                         android:id="@+id/et_ave"
@@ -233,7 +234,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/medval"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <EditText
                         android:id="@+id/et_medi"
@@ -255,7 +256,7 @@
                 	android:gravity="center"
                 	android:background="@drawable/custombtn"
                 	android:text="Push to iSENSE"
-                	android:textAppearance="?android:attr/textAppearanceMedium" />
+                	android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

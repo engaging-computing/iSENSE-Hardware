@@ -66,11 +66,10 @@ public final class R {
         public static final int et_max=0x7f0a001d;
         public static final int et_medi=0x7f0a0023;
         public static final int et_min=0x7f0a001a;
-        public static final int experiment_button_layout=0x7f0a0003;
         public static final int experiment_cancel=0x7f0a0005;
-        public static final int experiment_layout_root=0x7f0a0000;
+        public static final int experiment_layout_root=0x7f0a0001;
         public static final int experiment_ok=0x7f0a0004;
-        public static final int experiment_prompt=0x7f0a0001;
+        public static final int experiment_prompt=0x7f0a0002;
         public static final int flipper=0x7f0a000d;
         public static final int imageView1=0x7f0a000b;
         public static final int launchlayout=0x7f0a000e;
@@ -92,7 +91,7 @@ public final class R {
         public static final int nameField=0x7f0a0026;
         public static final int namePrompt=0x7f0a0025;
         public static final int new_devices=0x7f0a0009;
-        public static final int new_eid=0x7f0a0002;
+        public static final int new_eid=0x7f0a0003;
         public static final int no=0x7f0a0035;
         public static final int onlyTenPoints=0x7f0a0015;
         public static final int paired_devices=0x7f0a0007;
@@ -107,6 +106,7 @@ public final class R {
         public static final int textView4=0x7f0a002e;
         public static final int title_new_devices=0x7f0a0008;
         public static final int title_paired_devices=0x7f0a0006;
+        public static final int trollview=0x7f0a0000;
         public static final int yes=0x7f0a0034;
     }
     public static final class layout {
