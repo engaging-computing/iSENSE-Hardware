@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
 
+import android.app.ProgressDialog;
+
 import edu.uml.cs.raac.exceptions.ChecksumException;
 import edu.uml.cs.raac.exceptions.IncorrectDeviceException;
 import edu.uml.cs.raac.exceptions.NoConnectionException;
@@ -154,6 +156,7 @@ public class PinComm {
 		byte[] temp = new byte[4];
 
 		if (spi.isOpen()) {
+			spi.clearBuff();
 			spi.writeByte((byte) DATA_HEADER);
 			for (int i = 0; i < 4; i++) {
 				try {
@@ -185,7 +188,7 @@ public class PinComm {
 	 * @throws IOException
 	 * @throws NoConnectionException
 	 */
-	public ArrayList<byte[]> requestData(byte[] dataHeader, int numRecords) throws NoConnectionException, IOException, ChecksumException {
+	public ArrayList<byte[]> requestData(byte[] dataHeader, int numRecords, final ProgressDialog pDiag) throws NoConnectionException, IOException, ChecksumException {
 
 		ArrayList<byte[]> data = new ArrayList<byte[]>();
 
@@ -224,6 +227,7 @@ public class PinComm {
 						System.out.print(records[j]);
 						computedChecksum = (byte) (computedChecksum + (byte) records[j]);
 					}
+					pDiag.setProgress(i);
 					System.out.println();
 					data.add(records);
 				}

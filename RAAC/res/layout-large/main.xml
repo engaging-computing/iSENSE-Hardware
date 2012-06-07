@@ -65,6 +65,57 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/linearLayout21"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp" >
+
+            <LinearLayout
+                android:id="@+id/nameContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/namePrompt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_weight=".50"
+                    android:text="Group Name:"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <EditText
+                    android:id="@+id/nameField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight=".50"
+                    android:inputType="textCapWords"
+                    android:maxLength="20"
+                    android:textAppearance="?android:attr/textAppearanceLarge" >
+
+                    <requestFocus />
+                </EditText>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_pushToISENSE"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight=".75"
+                android:background="@drawable/custombtn"
+                android:text="Push to iSENSE"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
@@ -117,10 +168,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:inputType="none" android:maxLines="1">
-
-                    <requestFocus />
-                </EditText>
+                    android:inputType="none"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -144,7 +193,8 @@
                     android:layout_weight="1"
                     android:clickable="false"
                     android:focusable="false"
-                    android:inputType="none" android:maxLines="1"/>
+                    android:inputType="none"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -168,7 +218,8 @@
                     android:layout_weight="1"
                     android:clickable="false"
                     android:focusable="false"
-                    android:inputType="none" android:maxLines="1"/>
+                    android:inputType="none"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -192,7 +243,8 @@
                     android:layout_weight="1"
                     android:clickable="false"
                     android:focusable="false"
-                    android:inputType="none" android:maxLines="1"/>
+                    android:inputType="none"
+                    android:maxLines="1" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

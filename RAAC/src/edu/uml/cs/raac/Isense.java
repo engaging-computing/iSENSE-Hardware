@@ -288,7 +288,7 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.setContext(this);
 			final ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMessage("Please wait, preparing to read data");
+			progressDialog.setMessage("Please wait, reading data from PINPoint");
 			progressDialog.setProgressNumberFormat(null);
 			progressDialog.show();
 
@@ -530,10 +530,10 @@ public class Isense extends Activity implements OnClickListener {
 	public void setBtStatus() {
 		if (btStatNum == 0) {
 			btStatus.setText("Status: Disconnected");
+			rcrdBtn.setEnabled(false);
 		} else if (btStatNum == 1) {
 			btStatus.setText("Status: Connected");
-		} else {
-
+			rcrdBtn.setEnabled(true);
 		}
 	}
 
@@ -759,7 +759,7 @@ public class Isense extends Activity implements OnClickListener {
 		@Override protected void onPreExecute() {
 			dia = new ProgressDialog(Isense.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 			
@@ -824,7 +824,7 @@ public class Isense extends Activity implements OnClickListener {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			
-			Toast.makeText(Isense.this, "Logged in: " + loggedIn, Toast.LENGTH_SHORT).show();
+			Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
 		}
 		
 	}
