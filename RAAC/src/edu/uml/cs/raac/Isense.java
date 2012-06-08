@@ -253,7 +253,10 @@ public class Isense extends Activity implements OnClickListener {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_2);
 		} else if (item.getItemId() == R.id.menu_setTime) {
-			ppi.setRealTimeClock();
+			if(ppi.setRealTimeClock())
+				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
 		} else if (item.getItemId() == R.id.menu_setSensors) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
@@ -573,7 +576,10 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
-					ppi.setRealTimeClock();
+					if(ppi.setRealTimeClock())
+						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+					else
+						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
