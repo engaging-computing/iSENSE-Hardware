@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+    xmlns:android="http://schemas.android.com/apk/res/android"
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/flipper"
     android:layout_width="fill_parent"
@@ -40,28 +42,30 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="20dp" >
+            android:layout_height="35dp"
+            android:layout_marginTop="5dp"
+            android:weightSum="1" >
 
             <Button
                 android:id="@+id/btn_getRcrd"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="0.75"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.30"
                 android:background="@drawable/custombtn"
-                android:text="Get Data" />
+                android:text="Get Data"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/statusField"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight=".30"
                 android:text="Status: Not Connected"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
             <!-- additional buttons by jeremy -->
 
             <LinearLayout
@@ -91,7 +95,7 @@
                     android:inputType="textCapWords"
                     android:maxLength="20"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -192,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/minval"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <EditText
                     android:id="@+id/et_min"
