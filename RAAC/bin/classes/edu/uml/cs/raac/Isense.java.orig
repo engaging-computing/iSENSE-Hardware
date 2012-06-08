@@ -101,7 +101,7 @@ public class Isense extends Activity implements OnClickListener {
 	int sessionId = -1;
 	public static String experimentId = "427";
 	String username = "sor";
-	String password = "sort";
+	String password = "sor";
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
@@ -253,7 +253,10 @@ public class Isense extends Activity implements OnClickListener {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_2);
 		} else if (item.getItemId() == R.id.menu_setTime) {
-			ppi.setRealTimeClock();
+			if(ppi.setRealTimeClock())
+				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
 		} else if (item.getItemId() == R.id.menu_setSensors) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
@@ -288,7 +291,7 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.setContext(this);
 			final ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMessage("Please wait, reading data from PINPoint");
+			progressDialog.setMessage("Please wait, preparing to read data");
 			progressDialog.setProgressNumberFormat(null);
 			progressDialog.show();
 
@@ -530,10 +533,10 @@ public class Isense extends Activity implements OnClickListener {
 	public void setBtStatus() {
 		if (btStatNum == 0) {
 			btStatus.setText("Status: Disconnected");
-			rcrdBtn.setEnabled(false);
 		} else if (btStatNum == 1) {
 			btStatus.setText("Status: Connected");
-			rcrdBtn.setEnabled(true);
+		} else {
+
 		}
 	}
 
@@ -573,7 +576,14 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
+<<<<<<< HEAD
+					if(ppi.setRealTimeClock())
+						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+					else
+						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
+=======
 					ppi.setRealTimeClock();
+>>>>>>> master
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
@@ -745,9 +755,7 @@ public class Isense extends Activity implements OnClickListener {
 				
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
-						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
-					}
+					rapi.updateSessionData(sessionId, experimentId, dataSet);
 				}
 			} else sessionUrl = baseSessionUrl;
 		
@@ -761,7 +769,7 @@ public class Isense extends Activity implements OnClickListener {
 		@Override protected void onPreExecute() {
 			dia = new ProgressDialog(Isense.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 			
@@ -784,10 +792,6 @@ public class Isense extends Activity implements OnClickListener {
 			if (!(sessionUrl.equals(baseSessionUrl))) {
 				Intent i = new Intent(Isense.this, ViewData.class);
 				startActivityForResult(i, REQUEST_VIEW_DATA);  
-			} else {
-				Toast.makeText(Isense.this, "Could not upload data.  Try logging in again or checking internet connectivity.", Toast.LENGTH_LONG).show();
-				dataRdy = true;
-				pushToISENSE.setEnabled(true);
 			}
 		}
 	}
@@ -830,7 +834,7 @@ public class Isense extends Activity implements OnClickListener {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			
-			Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(Isense.this, "Logged in: " + loggedIn, Toast.LENGTH_SHORT).show();
 		}
 		
 	}
