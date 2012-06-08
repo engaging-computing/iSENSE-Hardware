@@ -99,7 +99,7 @@ public class Isense extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	public static String experimentId = "427";
+	//public static String experimentId = "427";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
@@ -165,10 +165,15 @@ public class Isense extends Activity implements OnClickListener {
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
-	//Set up all views from the XML layout
+	// Set up all views from the XML layout
 	public void initializeLayout() {
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-		
+		/*SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
+		SharedPreferences.Editor editor = expr.edit();
+
+		editor.putString("experiment_number", experimentId);
+		editor.commit();*/
+
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -679,6 +684,9 @@ public class Isense extends Activity implements OnClickListener {
 			break;
 		case REQUEST_VIEW_DATA:
 			//When the data has been uploaded
+			break;
+		case CHANGE_EXPERIMENT:
+			break;
 		}
 	}
 	
@@ -730,13 +738,15 @@ public class Isense extends Activity implements OnClickListener {
 				new PerformLogin().execute();
 			
 			if (loggedIn) {
+				SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
+				
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(experimentId, 
+					sessionId = rapi.createSession(expr.getString("experiment_number", "None"), 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
 							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
 					if (sessionId != -1) {
-						rapi.putSessionData(sessionId, experimentId, dataSet);
+						rapi.putSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
 					} else {
 						sessionUrl = baseSessionUrl;
@@ -745,7 +755,7 @@ public class Isense extends Activity implements OnClickListener {
 				
 				}
 				else {
-					rapi.updateSessionData(sessionId, experimentId, dataSet);
+					rapi.updateSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet);
 				}
 			} else sessionUrl = baseSessionUrl;
 		
