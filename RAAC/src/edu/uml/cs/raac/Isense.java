@@ -372,9 +372,9 @@ public class Isense extends Activity implements OnClickListener {
 			for (String str : strray) {
 				x++;
 				switch(x) {
-				case 1:  timeData.add(fmtData(str));            break;
-				case 14: bta1Data.add(Double.parseDouble(str)); break;
-				default:                                        break;
+				case 1:  timeData.add(fmtData(str));           									break;
+				case 14: bta1Data.add(Double.parseDouble(str));			break;
+				default:                                        								break;
 				}
 			}
 			x = 0;
@@ -394,18 +394,17 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		int x = 0;
-		int z = 0;
 		String label = "";
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
-
+		
 		try {
 			for (; i<data.size(); i++) {
 				String[] strray = data.get(i);
-
+				DecimalFormat df = new DecimalFormat("#0.00");
 				LinearLayout newRow = new LinearLayout(getBaseContext());
 				newRow.setOrientation(LinearLayout.HORIZONTAL);
-				if(z%2 != 0) {
+				if(i%2 != 0) {
 					newRow.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft1 = new TextView(getBaseContext());
@@ -417,7 +416,6 @@ public class Isense extends Activity implements OnClickListener {
 				dataLayout.addView(newRow);
 				for (String str : strray) {
 					x++;
-					z++;
 					switch(x) {
 					case 1: label = "Time (GMT)"; break;
 					//case 2: label = "Latitude"; break;
@@ -441,7 +439,7 @@ public class Isense extends Activity implements OnClickListener {
 					}
 					LinearLayout newRow2 = new LinearLayout(getBaseContext());
 					newRow2.setOrientation(LinearLayout.HORIZONTAL);
-					if(x%2 != 0) {
+					if(i%2 != 0) {
 						newRow2.setBackgroundColor(res.getColor(R.color.rowcols));
 					}
 					TextView tvLeft2 = new TextView(getBaseContext());
@@ -449,16 +447,19 @@ public class Isense extends Activity implements OnClickListener {
 					tvLeft2.setTextColor(Color.BLACK);
 					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
 					TextView tvRight2 = new TextView(getBaseContext());
-					tvRight2.setText(str);
+					if(x==14) {
+						tvRight2.setText(df.format(Double.parseDouble(str)));
+					} else {
+						tvRight2.setText(str);
+					}
 					tvRight2.setTextColor(Color.BLACK);
 					newRow2.addView(tvLeft2);
 					newRow2.addView(tvRight2);
 					dataLayout.addView(newRow2);
 				}
-				z++;
 				LinearLayout newRow3 = new LinearLayout(getBaseContext());
 				newRow3.setOrientation(LinearLayout.HORIZONTAL);
-				if(z%2 != 0) {
+				if(i%2 != 0) {
 					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft3 = new TextView(getBaseContext());
