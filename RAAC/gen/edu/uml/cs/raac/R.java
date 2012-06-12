@@ -139,6 +139,7 @@ public final class R {
         public static final int minval=0x7f07000f;
         public static final int none_found=0x7f070008;
         public static final int none_paired=0x7f070005;
+        public static final int retrieve_data=0x7f070017;
         public static final int scanning=0x7f070006;
         public static final int select_device=0x7f070007;
         public static final int tenPoints=0x7f070015;

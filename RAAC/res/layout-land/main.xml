@@ -51,7 +51,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_weight="0.75"
                 android:background="@drawable/custombtn"
-                android:text="Get Data" />
+                android:text="@string/retrieve_data" />
 
             <TextView
                 android:id="@+id/statusField"
