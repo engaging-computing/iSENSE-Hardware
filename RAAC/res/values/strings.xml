@@ -22,4 +22,5 @@
     <string name="view_page">View Data on iSENSE</string>
     <string name="change_eid">Change Experiment ID</string>
     <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
+    <string name="upload">Upload</string>
 </resources>

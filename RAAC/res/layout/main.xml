@@ -117,7 +117,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_weight=".75"
                 android:background="@drawable/custombtn"
-                android:text="Push to iSENSE"
+                android:text="@string/upload"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
