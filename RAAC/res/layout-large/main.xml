@@ -52,7 +52,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_weight="1"
                 android:background="@drawable/custombtn"
-                android:text="Get Data" />
+                android:text="@string/retrieve_data" />
 
             <TextView
                 android:id="@+id/statusField"
@@ -112,7 +112,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_weight=".75"
                 android:background="@drawable/custombtn"
-                android:text="Push to iSENSE"
+                android:text="@string/upload"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
