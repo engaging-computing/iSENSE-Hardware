@@ -10,11 +10,13 @@
     <string name="select_device">Select a device to connect</string>
     <string name="none_found">No devices found</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensors</string>
-    <string name="menu_login">Retry Login</string>
+    <string name="menu_login">Edit Login Details</string>
     <string name="menu_experiment">Set Experiment</string>
+    
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
     <string name="aveval">Average/Mean</string>
