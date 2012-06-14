@@ -261,7 +261,7 @@ public class RestAPI {
 	
 	public Boolean login(String username, String password) {
 		String url = "method=login&username=" + URLEncoder.encode(username) + "&password=" + URLEncoder.encode(password);
-		
+				
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
 			try {
 				String data = makeRequest(url);
