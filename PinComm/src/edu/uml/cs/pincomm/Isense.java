@@ -54,6 +54,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -122,6 +123,7 @@ public class Isense extends Activity implements OnClickListener {
 	private static final int REQUEST_ENABLE_BT = 4;
 	private static final int REQUEST_VIEW_DATA = 5;
 	private static final int CHANGE_EXPERIMENT = 6;
+	private static final int LOGIN_BOX = 7;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -141,6 +143,19 @@ public class Isense extends Activity implements OnClickListener {
 
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
+		
+		SharedPreferences myPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		username = myPrefs.getString("isense_user", "");
+		password = myPrefs.getString("isense_pass", "");
+		
+		if(myPrefs.getBoolean("FirstRun", true) == true) {
+			Intent i = new Intent(this, Login.class);
+			startActivityForResult(i, LOGIN_BOX);
+		} else {
+			if (!loggedIn && rapi.isConnectedToInternet()
+					&& !username.equals("") && !password.equals("")) new PerformLogin().execute();
+		}
 
 		flipper.setInAnimation(mSlideInTop);
 		flipper.setOutAnimation(mSlideOutTop);
@@ -231,12 +246,6 @@ public class Isense extends Activity implements OnClickListener {
 				mChatService.start();
 			}
 		}
-	}
-
-	@Override
-	public void onStart() {
-		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
-		super.onStart();
 	}
 
 	@Override
@@ -676,7 +685,25 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			break;
 		case REQUEST_VIEW_DATA:
+			break;
 			//When the data has been uploaded
+		case LOGIN_BOX:
+			if (resultCode == RESULT_OK) {
+				SharedPreferences myPrefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences.Editor prefsEditor = myPrefs.edit();
+				prefsEditor.putBoolean("FirstRun",false);
+				prefsEditor.putString("isense_user", data.getExtras().getString("myUsername"));
+				prefsEditor.putString("isense_pass", data.getExtras().getString("myPass"));
+				prefsEditor.commit();
+				
+				username = data.getExtras().getString("myUsername");
+				password = data.getExtras().getString("myPass");
+				
+				if (!loggedIn && rapi.isConnectedToInternet()
+						&& !username.equals("") && !password.equals("")) new PerformLogin().execute();
+			}
+			break;
 		}
 	}
 
@@ -827,8 +854,11 @@ public class Isense extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-
-			Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
+			if(loggedIn) {
+				Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(Isense.this, "Login failed...", Toast.LENGTH_SHORT).show();
+			}
 		}
 
 	}

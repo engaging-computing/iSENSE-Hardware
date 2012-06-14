@@ -30,6 +30,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Login"
+            android:label="Sign In"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
             android:name=".DeviceListActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>

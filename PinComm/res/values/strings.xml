@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="wifi_page">WiFi Disabled</string>
-    <string name="app_name">Science of Rivers</string>
+    <string name="app_name">PinComm</string>
     <string name="button_scan">Scan for Devices</string>
 	<string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
@@ -24,4 +24,10 @@
     <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
+    
+    <string name="login_label">Sign in to iSENSE</string>
+    <string name="login_msg">Enter your sign in details to be able to upload data to iSENSE.</string>
+    <string name="login_usernameLbl">Username</string>
+    <string name="login_passLbl">Password</string>
+    <string name="login_button">Sign In</string>
 </resources>
