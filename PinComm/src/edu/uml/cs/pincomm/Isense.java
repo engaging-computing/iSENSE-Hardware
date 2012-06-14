@@ -267,10 +267,8 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
 		} else if (item.getItemId() == R.id.menu_login) {
-			if (loggedIn)
-				Toast.makeText(Isense.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
-			else
-				if (rapi.isConnectedToInternet()) new PerformLogin().execute();
+			Intent i = new Intent(this, Login.class);
+			startActivityForResult(i, LOGIN_BOX);
 		} else if (item.getItemId() == R.id.menu_experiment) {
 			Intent i = new Intent(this, ChangeExperiment.class);
 			startActivityForResult(i, CHANGE_EXPERIMENT);
@@ -548,7 +546,6 @@ public class Isense extends Activity implements OnClickListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.getItem(0).setEnabled(showConnectOption);
 		menu.getItem(2).setEnabled(showTimeOption);
-		menu.getItem(3).setEnabled(!loggedIn);
 		return true;
 	}
 
@@ -699,6 +696,8 @@ public class Isense extends Activity implements OnClickListener {
 				
 				username = data.getExtras().getString("myUsername");
 				password = data.getExtras().getString("myPass");
+				
+				loggedIn = false;
 				
 				if (!loggedIn && rapi.isConnectedToInternet()
 						&& !username.equals("") && !password.equals("")) new PerformLogin().execute();

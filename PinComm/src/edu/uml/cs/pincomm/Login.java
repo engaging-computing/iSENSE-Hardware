@@ -28,8 +28,6 @@ public class Login extends Activity implements OnClickListener, TextWatcher {
 		
 		SharedPreferences myPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		username.setText (myPrefs.getString("isense_user", ""));
-		password.setText (myPrefs.getString("isense_pass", ""));
 				
 		username = (EditText) findViewById(R.id.usernameField);
 		password = (EditText) findViewById(R.id.passwordField);
@@ -40,6 +38,9 @@ public class Login extends Activity implements OnClickListener, TextWatcher {
 		password.addTextChangedListener(this);
 		
 		loginButton.setEnabled(false);
+		
+		username.setText (myPrefs.getString("isense_user", ""));
+		password.setText (myPrefs.getString("isense_pass", ""));
 		
 	}
 	
