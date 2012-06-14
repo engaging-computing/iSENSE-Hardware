@@ -1,16 +1,4 @@
-if(ppi.setRealTimeClock())
-    Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
-else
-    Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();if(ppi.setRealTimeClock())
-										       Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
-else
-    Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();if(ppi.setRealTimeClock())
-										       Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
-else
-    Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();if(ppi.setRealTimeClock())
-										       Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
-else
-    Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();/*
+/*
  * Copyright (c) 2009, iSENSE Project. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +26,7 @@ else
  * DAMAGE.
  */
 
-package edu.uml.cs.raac;
+package edu.uml.cs.pincomm;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -86,10 +74,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import edu.uml.cs.raac.comm.RestAPI;
-import edu.uml.cs.raac.exceptions.NoDataException;
-import edu.uml.cs.raac.pincushion.BluetoothService;
-import edu.uml.cs.raac.pincushion.pinpointInterface;
+import edu.uml.cs.pincomm.comm.RestAPI;
+import edu.uml.cs.pincomm.exceptions.NoDataException;
+import edu.uml.cs.pincomm.pincushion.BluetoothService;
+import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 
 public class Isense extends Activity implements OnClickListener {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
@@ -113,7 +101,7 @@ public class Isense extends Activity implements OnClickListener {
 	int sessionId = -1;
 	public static String experimentId = "427";
 	String username = "sor";
-	String password = "sor";
+	String password = "sort";
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
@@ -140,7 +128,7 @@ public class Isense extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
+
 		mContext = this;
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
@@ -148,7 +136,7 @@ public class Isense extends Activity implements OnClickListener {
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		
+
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 
 		initializeLayout();
@@ -180,7 +168,7 @@ public class Isense extends Activity implements OnClickListener {
 	//Set up all views from the XML layout
 	public void initializeLayout() {
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-		
+
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -200,7 +188,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
 		sensorType = prefs.getString("name_bta1", "None");
-		
+
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		pushToISENSE.setOnClickListener(this);
@@ -244,7 +232,7 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
@@ -281,7 +269,7 @@ public class Isense extends Activity implements OnClickListener {
 		return true;
 
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -300,7 +288,7 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.setContext(this);
 			final ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMessage("Please wait, preparing to read data");
+			progressDialog.setMessage("Please wait, reading data from PINPoint");
 			progressDialog.setProgressNumberFormat(null);
 			progressDialog.show();
 
@@ -364,29 +352,26 @@ public class Isense extends Activity implements OnClickListener {
 		if (v == pushToISENSE)
 			if (nameField.length() == 0) Toast.makeText(this, "Please enter a name.", Toast.LENGTH_LONG).show();
 			else {
-					if (!dataRdy) {
-						Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
-						pushToISENSE.setEnabled(false);
-					} else {
-						dataRdy = false;
-						uploadData();
-						pushToISENSE.setEnabled(false);
-					}
-					
+				if (!dataRdy) {
+					Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+				} else {
+					uploadData();
+				}
+
 			} 
 	}
-	
+
 	public void prepDataForUpload() {
 		int x = 0;
 		for (int i = 0; i < data.size(); i++) {
 			String[] strray = data.get(i);
-			
+
 			for (String str : strray) {
 				x++;
 				switch(x) {
-				case 1:  timeData.add(fmtData(str));            break;
-				case 14: bta1Data.add(Double.parseDouble(str)); break;
-				default:                                        break;
+				case 1:  timeData.add(fmtData(str));           									break;
+				case 14: bta1Data.add(Double.parseDouble(str));			break;
+				default:                                        								break;
 				}
 			}
 			x = 0;
@@ -406,7 +391,6 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		int x = 0;
-		int z = 0;
 		String label = "";
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
@@ -414,10 +398,10 @@ public class Isense extends Activity implements OnClickListener {
 		try {
 			for (; i<data.size(); i++) {
 				String[] strray = data.get(i);
-
+				DecimalFormat df = new DecimalFormat("#0.00");
 				LinearLayout newRow = new LinearLayout(getBaseContext());
 				newRow.setOrientation(LinearLayout.HORIZONTAL);
-				if(z%2 != 0) {
+				if(i%2 != 0) {
 					newRow.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft1 = new TextView(getBaseContext());
@@ -429,7 +413,6 @@ public class Isense extends Activity implements OnClickListener {
 				dataLayout.addView(newRow);
 				for (String str : strray) {
 					x++;
-					z++;
 					switch(x) {
 					case 1: label = "Time (GMT)"; break;
 					//case 2: label = "Latitude"; break;
@@ -453,7 +436,7 @@ public class Isense extends Activity implements OnClickListener {
 					}
 					LinearLayout newRow2 = new LinearLayout(getBaseContext());
 					newRow2.setOrientation(LinearLayout.HORIZONTAL);
-					if(x%2 != 0) {
+					if(i%2 != 0) {
 						newRow2.setBackgroundColor(res.getColor(R.color.rowcols));
 					}
 					TextView tvLeft2 = new TextView(getBaseContext());
@@ -461,16 +444,19 @@ public class Isense extends Activity implements OnClickListener {
 					tvLeft2.setTextColor(Color.BLACK);
 					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
 					TextView tvRight2 = new TextView(getBaseContext());
-					tvRight2.setText(str);
+					if(x==14) {
+						tvRight2.setText(df.format(Double.parseDouble(str)));
+					} else {
+						tvRight2.setText(str);
+					}
 					tvRight2.setTextColor(Color.BLACK);
 					newRow2.addView(tvLeft2);
 					newRow2.addView(tvRight2);
 					dataLayout.addView(newRow2);
 				}
-				z++;
 				LinearLayout newRow3 = new LinearLayout(getBaseContext());
 				newRow3.setOrientation(LinearLayout.HORIZONTAL);
-				if(z%2 != 0) {
+				if(i%2 != 0) {
 					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft3 = new TextView(getBaseContext());
@@ -542,10 +528,10 @@ public class Isense extends Activity implements OnClickListener {
 	public void setBtStatus() {
 		if (btStatNum == 0) {
 			btStatus.setText("Status: Disconnected");
+			rcrdBtn.setEnabled(false);
 		} else if (btStatNum == 1) {
 			btStatus.setText("Status: Connected");
-		} else {
-
+			rcrdBtn.setEnabled(true);
 		}
 	}
 
@@ -682,7 +668,7 @@ public class Isense extends Activity implements OnClickListener {
 						data.getExtras().getString("mininame1"));
 				editor.putString("name_mini2",
 						data.getExtras().getString("mininame2"));
-				
+
 				sensorHead.setText("BTA1: " + data.getExtras().getString("btaname1"));
 				sensorType = data.getExtras().getString("btaname1");
 
@@ -693,7 +679,7 @@ public class Isense extends Activity implements OnClickListener {
 			//When the data has been uploaded
 		}
 	}
-	
+
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
 		if (timeData.size() != bta1Data.size()) {
@@ -703,7 +689,7 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		dataSet = new JSONArray();
-		
+
 		JSONArray dataJSON;
 		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
 			for (int i = 0; i < timeData.size(); i++) {
@@ -726,21 +712,21 @@ public class Isense extends Activity implements OnClickListener {
 			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
 			return;
 		}
-		
+
 		new UploadTask().execute();
 	}
-	
+
 	//the uploading thread that does all the work
 	private Runnable uploader = new Runnable() {
-		
+
 		@Override
 		public void run() {
-		
+
 			String nameOfSession = nameField.getText().toString();
-		
+
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
-			
+
 			if (loggedIn) {
 				if (sessionId == -1) {
 					sessionId = rapi.createSession(experimentId, 
@@ -754,62 +740,68 @@ public class Isense extends Activity implements OnClickListener {
 						sessionUrl = baseSessionUrl;
 						return;	
 					}
-				
+
 				}
 				else {
-					rapi.updateSessionData(sessionId, experimentId, dataSet);
+					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
+						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
+					}
 				}
 			} else sessionUrl = baseSessionUrl;
-		
+
 		}
-		
+
 	};
-	
+
 	// Control task for uploading data
 	private class UploadTask extends AsyncTask <Void, Integer, Void> {
-		    
+
 		@Override protected void onPreExecute() {
 			dia = new ProgressDialog(Isense.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
-			
+
 		}
-		
+
 		@Override protected Void doInBackground(Void... voids) {
-			
+
 			uploader.run();
 			publishProgress(100);
-		        
+
 			return null;
-			
+
 		}
 
 		@Override  protected void onPostExecute(Void voids)	{
 			sessionId = -1;
 			dia.setMessage("Done");
 			dia.cancel();
-			
+
 			if (!(sessionUrl.equals(baseSessionUrl))) {
 				Intent i = new Intent(Isense.this, ViewData.class);
 				startActivityForResult(i, REQUEST_VIEW_DATA);  
+			} else {
+				Toast.makeText(Isense.this, "Could not upload data.  Try logging in again or checking internet connectivity.", Toast.LENGTH_LONG).show();
+				dataRdy = true;
+				pushToISENSE.setEnabled(true);
 			}
 		}
 	}
-		
+
 	//String formatter
 	public String fmtData(String temp) {
 		String dataString = "";
-		
+
 		long unixts = 0;
 		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SSS");
 		Date parsed;
-		
+
 		try {
 			parsed = format.parse(temp);
 			unixts = parsed.getTime();
-			
+
 			dataString = "" + unixts;
 
 			return dataString;
@@ -819,7 +811,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		return "";
 	}
-	
+
 	private class PerformLogin extends AsyncTask<Void, Integer, Void> {
 
 		@Override
@@ -831,15 +823,15 @@ public class Isense extends Activity implements OnClickListener {
 				loggedIn = false;
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
-			Toast.makeText(Isense.this, "Logged in: " + loggedIn, Toast.LENGTH_SHORT).show();
+
+			Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
 		}
-		
+
 	}
-		
+
 
 }
