@@ -125,13 +125,21 @@
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
-            android:layout_height="180dp" >
+            android:layout_height="150dp" >
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+                
+                <TextView 
+                  		android:id="@+id/onlyTenPoints"
+                    	android:layout_width="match_parent"
+                    	android:layout_height="wrap_content"
+                    	android:text="@string/tenPoints"
+                    	android:visibility="invisible"
+                    	android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
         </ScrollView>
 
@@ -248,6 +256,47 @@
                     android:inputType="none"
                     android:lines="1" />
             </LinearLayout>
+            
+            <!-- additional buttons by jeremy -->
+            <LinearLayout
+                android:layout_weight="1"
+                android:id="@+id/nameContainer"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+        	    
+        	    <TextView 
+         	       android:id="@+id/namePrompt"
+          	  		android:layout_width="0dp"
+              	  	android:layout_height="wrap_content"
+                	android:layout_weight=".5"
+                	android:layout_marginRight="0dp"
+                	android:text="Group Name:"
+                	android:textAppearance="?android:attr/textAppearanceMedium" />
+            	
+            	<EditText 
+                	android:id="@+id/nameField"
+                	android:layout_width="0dp"
+                	android:layout_height="wrap_content"
+	              	android:layout_weight=".5"
+	              	android:layout_gravity="left"
+                	android:inputType="textCapWords"
+                	android:maxLength="20"
+                	android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+          
+            <Button
+       				android:id="@+id/btn_pushToISENSE"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:layout_marginBottom="5dp"
+                	android:layout_gravity="center"
+                	android:gravity="center"
+                	android:background="@drawable/custombtn"
+                	android:text="Push to iSENSE"
+                	android:textAppearance="?android:attr/textAppearanceMedium" />
+            
         </LinearLayout>
     </LinearLayout>
 

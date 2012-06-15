@@ -49,6 +49,7 @@ public final class R {
         public static final int superspin=0x7f020013;
     }
     public static final class id {
+        public static final int btn_cancel=0x7f0a0031;
         public static final int LinearLayout01=0x7f0a0022;
         public static final int LinearLayout02=0x7f0a001f;
         public static final int LinearLayout03=0x7f0a0025;
@@ -68,9 +69,9 @@ public final class R {
         public static final int et_min=0x7f0a001e;
         public static final int experiment_button_layout=0x7f0a0003;
         public static final int experiment_cancel=0x7f0a0005;
-        public static final int experiment_layout_root=0x7f0a0000;
+        public static final int experiment_layout_root=0x7f0a0001;
         public static final int experiment_ok=0x7f0a0004;
-        public static final int experiment_prompt=0x7f0a0001;
+        public static final int experiment_prompt=0x7f0a0002;
         public static final int flipper=0x7f0a000d;
         public static final int imageView1=0x7f0a000b;
         public static final int launchlayout=0x7f0a000e;
@@ -93,7 +94,7 @@ public final class R {
         public static final int nameField=0x7f0a0016;
         public static final int namePrompt=0x7f0a0015;
         public static final int new_devices=0x7f0a0009;
-        public static final int new_eid=0x7f0a0002;
+        public static final int new_eid=0x7f0a0003;
         public static final int no=0x7f0a0036;
         public static final int onlyTenPoints=0x7f0a0028;
         public static final int paired_devices=0x7f0a0007;
