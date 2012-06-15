@@ -55,7 +55,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,7 +82,7 @@ import edu.uml.cs.pincomm.exceptions.NoDataException;
 import edu.uml.cs.pincomm.pincushion.BluetoothService;
 import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 
-public class Isense extends Activity implements OnClickListener {
+public class Isense extends Activity implements OnClickListener, TextWatcher {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
 	ScrollView dataScroller;
@@ -148,6 +150,7 @@ public class Isense extends Activity implements OnClickListener {
 				.getDefaultSharedPreferences(this);
 		username = myPrefs.getString("isense_user", "");
 		password = myPrefs.getString("isense_pass", "");
+		nameField.setText(myPrefs.getString("group_name", ""));
 		
 		if(myPrefs.getBoolean("FirstRun", true) == true) {
 			Intent i = new Intent(this, Login.class);
@@ -203,6 +206,8 @@ public class Isense extends Activity implements OnClickListener {
 
 		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
 		sensorType = prefs.getString("name_bta1", "None");
+		
+		nameField.addTextChangedListener(this);
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
@@ -860,6 +865,32 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 
+	}
+
+	@Override
+	public void afterTextChanged(Editable arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+			int arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		
+		SharedPreferences myPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor prefsEditor = myPrefs.edit();
+		
+		prefsEditor.putString("group_name", nameField.getText().toString());
+		
+		prefsEditor.commit();
+		
 	}
 
 
