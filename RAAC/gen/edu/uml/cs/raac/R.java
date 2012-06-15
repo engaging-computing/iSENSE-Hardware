@@ -140,11 +140,13 @@ public final class R {
         public static final int minval=0x7f07000f;
         public static final int none_found=0x7f070008;
         public static final int none_paired=0x7f070005;
+        public static final int retrieve_data=0x7f070017;
         public static final int scanning=0x7f070006;
         public static final int select_device=0x7f070007;
         public static final int tenPoints=0x7f070015;
         public static final int title_other_devices=0x7f070004;
         public static final int title_paired_devices=0x7f070003;
+        public static final int upload=0x7f070016;
         public static final int view_page=0x7f070013;
         public static final int wifi_page=0x7f070000;
     }
