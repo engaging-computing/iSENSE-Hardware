@@ -15,14 +15,13 @@
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensors</string>
     <string name="menu_login">Edit Login Details</string>
-    <string name="menu_experiment">Choose Experiment</string>
+    <string name="menu_experiment">Select Experiment</string>
     
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
     <string name="aveval">Average/Mean</string>
     <string name="medval">Median</string>
     <string name="view_page">View Data on iSENSE</string>
-    <string name="change_eid">Change Experiment ID</string>
     <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
@@ -32,4 +31,7 @@
     <string name="login_usernameLbl">Username</string>
     <string name="login_passLbl">Password</string>
     <string name="login_button">Sign In</string>
+    
+    <string name="expr_msg">Please select the experiment to which you want to upload data</string>
+    <string name="change_eid">Select Experiment</string>
 </resources>
