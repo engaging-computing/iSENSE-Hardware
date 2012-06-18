@@ -381,6 +381,8 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	public void writeDataToScreen() {
+		dataLayout.removeAllViews();
+		
 		int i = 0;
 		int y = 1;
 		if (data.size() > 10) {
