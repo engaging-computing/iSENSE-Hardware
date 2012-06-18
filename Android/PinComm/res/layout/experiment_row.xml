@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_width="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/exprow_layout">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="26dp"
+            android:id="@+id/toptext"
+            android:textStyle="bold"
+        />
+
+        <TextView
+            android:id="@+id/bottomtext"
+            android:layout_width="fill_parent"
+            android:layout_height="26dip"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+        />
+
+</LinearLayout>
