@@ -708,6 +708,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 						&& !username.equals("") && !password.equals("")) new PerformLogin().execute();
 			}
 			break;
+		case CHANGE_EXPERIMENT:
+			if (resultCode == RESULT_OK) {
+				//do this stuff
+			}
+			break;
 		}
 	}
 
