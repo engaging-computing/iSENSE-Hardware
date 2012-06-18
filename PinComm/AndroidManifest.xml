@@ -31,31 +31,33 @@
         </activity>
         <activity
             android:name=".Login"
-            android:label="Sign In"
-            android:theme="@android:style/Theme.Dialog" >
+            android:label="@string/login_label"
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name=".DeviceListActivity"
-            android:theme="@android:style/Theme.Dialog" >
+            android:label="@string/label_connect"
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name="SensorSelector"
-            android:theme="@android:style/Theme.Dialog" >
+            android:label="@string/label_sensor"
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name=".ViewData"
             android:label="@string/view_page"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/Theme.MyDialogTheme">
         </activity>
         <activity
             android:name=".ChangeExperiment"
             android:label="@string/change_eid"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/Theme.MyDialogTheme">
         </activity>
         <activity
             android:name=".WifiDisabled"
             android:label="@string/wifi_page"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/Theme.MyDialogTheme">
         </activity>
     </application>
 

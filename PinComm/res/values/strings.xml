@@ -34,4 +34,7 @@
     
     <string name="expr_msg">Please select the experiment to which you want to upload data</string>
     <string name="change_eid">Select Experiment</string>
+    
+    <string name="label_connect">Select a PINPoint</string>
+    <string name="label_sensor">Select Sensors</string>
 </resources>

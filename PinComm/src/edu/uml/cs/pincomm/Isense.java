@@ -301,7 +301,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			final ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setMessage("Please wait, reading data from PINPoint");
-			progressDialog.setProgressNumberFormat(null);
+			if(Build.VERSION.SDK_INT >= 11) {
+				progressDialog.setProgressNumberFormat(null);
+			}
 			progressDialog.show();
 
 			final Runnable toastRun = new Runnable() { 

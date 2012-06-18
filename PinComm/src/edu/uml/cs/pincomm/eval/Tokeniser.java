@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 
 final class Tokeniser
 {
-	static final Character START_NEW_EXPRESSION = new Character('(');
+	static final Character START_NEW_EXPRESSION = Character.valueOf('(');
 
 	private final String string;
 	private int position;
