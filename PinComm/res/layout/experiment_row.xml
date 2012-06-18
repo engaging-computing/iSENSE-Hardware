@@ -7,7 +7,7 @@
     android:id="@+id/exprow_layout">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:id="@+id/toptext"
             android:textStyle="bold"
@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/bottomtext"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="26dip"
             android:singleLine="true"
             android:ellipsize="marquee"
