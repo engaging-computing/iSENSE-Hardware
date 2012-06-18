@@ -1,131 +1,137 @@
 package edu.uml.cs.isense.genpics;
-//blue comments are previous version
-//green are just comments
 
-/**package edu.uml.cs.isense.pictures;
-
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
-//import android.content.SharedPreferences.Editor;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-//import android.view.View.OnClickListener;
-//import android.widget.CheckedTextView;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.pictures.R;
 
-public class LoginActivity {	
+public class LoginActivity extends Activity implements OnClickListener {
+
 	private RestAPI rapi;
 	private Context mContext;
-	
+
+	private Button okay;
+	private Button cancel;
+	private EditText usernameInput;
+	private EditText passwordInput;
+
 	static final public int LOGIN_SUCCESSFULL = 1;
 	static final public int LOGIN_FAILED = 0;
 	static final public int LOGIN_CANCELED = -1;
-	
-	//Preferences menu.
-	@SuppressWarnings("unused")
-		private SharedPreferences settings;
-	
-	public LoginActivity(Context c) {
-		mContext = c;
-		rapi = RestAPI.getInstance();
-		
-		settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-   	}
 
-	public AlertDialog getDialog(final Handler h) {
-		return getDialog(h, "");
+	private static boolean dontToastMeTwice = false;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.logindialog);
+
+		Pictures.initialLoginStatus = false;
+
+		mContext = this;
+		rapi = RestAPI.getInstance();
+
+		okay = (Button) findViewById(R.id.okay);
+		cancel = (Button) findViewById(R.id.cancel);
+
+		okay.setOnClickListener(this);
+		cancel.setOnClickListener(this);
+
+		usernameInput = (EditText) findViewById(R.id.usernameInput);
+		passwordInput = (EditText) findViewById(R.id.passwordInput);
+
 	}
-	
-	public AlertDialog getDialog(final Handler h, final String message) {
-		if (!rapi.isLoggedIn()) {
-			final Message loginSuccess = Message.obtain();
-			loginSuccess.setTarget(h);
-			loginSuccess.what = LOGIN_SUCCESSFULL;
-			
-			final Message rejectMsg = Message.obtain();
-			rejectMsg.setTarget(h);
-			rejectMsg.what = LOGIN_CANCELED;
-			
-			final View v;
-			LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.logindialog, null);
-			
-            final EditText usernameInput = (EditText) v.findViewById(R.id.usernameInput);
-			final EditText passwordInput = (EditText) v.findViewById(R.id.passwordInput);*/
-			/*
-			final CheckedTextView remember = (CheckedTextView) v.findViewById(R.id.rememberme);
-			
-			remember.setClickable(true);
-			remember.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					remember.toggle();
+
+	@Override
+	public void onClick(View v) {
+
+		if (v == okay) {
+
+			if (usernameInput.getText().length() != 0
+					&& passwordInput.getText().length() != 0) {
+
+				boolean success = rapi.login(
+						usernameInput.getText().toString(), passwordInput
+								.getText().toString());
+
+				if (success) {
+					makeToast("Login Successful!", Toast.LENGTH_SHORT);
+
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							Pictures.mContext,
+							Pictures.mContext.getSharedPreferences("USER_INFO",
+									Context.MODE_PRIVATE));
+
+					mPrefs.edit()
+							.putString("username",
+									usernameInput.getText().toString())
+							.commit();
+					mPrefs.edit()
+							.putString("password",
+									passwordInput.getText().toString())
+							.commit();
+
+					setResult(LoginActivity.RESULT_OK);
+					LoginActivity.this.finish();
+
+				} else {
+					Log.e("tag", "Login Failed");
+					makeToast("Login failed!\nWas your username and password correct?\nAre you connected to the internet?", Toast.LENGTH_LONG);
 				}
-			});
-			*//**
-            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            
-            builder.setView(v);
-            
-            builder.setMessage(message)
-            	   .setPositiveButton("Login", new DialogInterface.OnClickListener() {
-            		   public void onClick(DialogInterface dialog, int id) {
-            			   rapi.login(usernameInput.getText().toString(), passwordInput.getText().toString());
-            			   */
-            			   /*if (remember.isChecked() && rapi.isLoggedIn()) {
-       		            		Editor edit = settings.edit();
-       		    				edit.putString("username", usernameInput.getText().toString());
-       		    				edit.putString("password", passwordInput.getText().toString());
-       		    				edit.commit();
-       		            	}*/
-            			    /**           			               			   
-            			   if (rapi.isLoggedIn()) {
-            				   loginSuccess.sendToTarget();
-            				   dialog.dismiss();
-            			   } else {
-            				   showFailure(h);
-            				   dialog.dismiss();
-            			   }
-            			   dialog.dismiss();
-            		   }
-            	   })
-            	   .setCancelable(false);
-            	   
-             
-            	return builder.create();
-          	}	
-		return null;
+			} else
+				makeToast("Please enter a username and password.",
+						Toast.LENGTH_SHORT);
+		} else if (v == cancel) {
+			setResult(LoginActivity.RESULT_CANCELED);
+			LoginActivity.this.finish();
+		}
+
 	}
-    
-	private void showFailure(Handler h) {
-		final Message msg = Message.obtain();
-		msg.setTarget(h);
-		msg.what = LOGIN_FAILED;
-		
-		new AlertDialog.Builder(mContext)
-		  .setTitle("Login Failed")
-	      .setMessage("Was your username and password correct?\nAre you connected to the internet?")
-	      .setIcon(R.drawable.alert)
-	      .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				msg.sendToTarget();
+
+	// Easy method to create and show Toast messages, using the NoToastTwiceTask
+	public void makeToast(String message, int length) {
+		if (length == Toast.LENGTH_SHORT) {
+			if (!dontToastMeTwice) {
+				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+				new NoToastTwiceTask().execute();
 			}
-	      })
-		  .setOnCancelListener(new OnCancelListener() {
-            public void onCancel(DialogInterface dialog) {
-            	msg.sendToTarget();
-            }
-          })
-	      .show();
+		} else if (length == Toast.LENGTH_LONG) {
+			if (!dontToastMeTwice) {
+				Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+				new NoToastTwiceTask().execute();
+			}
+		}
 	}
-	
-}*/
+
+	// Prevents toasts from being queued infinitesimally
+	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected void onPreExecute() {
+			dontToastMeTwice = true;
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			try {
+				Thread.sleep(3500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			dontToastMeTwice = false;
+		}
+	}
+
+}

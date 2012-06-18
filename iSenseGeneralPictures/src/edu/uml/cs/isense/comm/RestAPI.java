@@ -40,6 +40,7 @@ import edu.uml.cs.isense.objects.SessionData;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.util.Log;
 /**
  * 
  * @author johnfertitta
@@ -398,6 +399,7 @@ public class RestAPI {
 				
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+
 				session_key = o.getJSONObject("data").getString("session");
 				uid = o.getJSONObject("data").getInt("uid");
 				
@@ -424,6 +426,7 @@ public class RestAPI {
 	
 	public Experiment getExperiment(int id) {
 		String url = "method=getExperiment&experiment=" + id;
+
 		Experiment e = new Experiment();
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
@@ -751,7 +754,7 @@ public class RestAPI {
 	
 	public ArrayList<Experiment> getExperiments(int page, int limit, String action, String query) {
 		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query;
-		
+		Log.d("url", url);
 		ArrayList<Experiment> expList = new ArrayList<Experiment>();
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {

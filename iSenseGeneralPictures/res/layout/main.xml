@@ -1,75 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white"
-    >
-    
-    <ImageView android:id="@+id/ImageViewLogo"
-        android:contentDescription="@+string/iSlogo"
-		android:layout_width="fill_parent" 
-		android:background="@android:color/white"
-		android:src="@drawable/logo"
-		android:layout_height="wrap_content"
-		android:scaleType="center"/>
-		
-	<RelativeLayout android:orientation="vertical" 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@android:color/white">
-				
-		<TextView android:layout_height="wrap_content" 
-			android:layout_width="wrap_content" 
-			android:id="@+id/nameLabel" 
-			android:text="@+string/firstName"
-			android:textSize="18dip"
-			android:textColor="@android:color/black"
-			android:paddingTop="12dip"/>
-				
-		<EditText android:layout_height="wrap_content" 
-			android:id="@+id/name" 
-			android:maxLength="50"
-			android:layout_width="fill_parent"
-			android:layout_toRightOf="@+id/nameLabel" 
-			android:inputType="text"
-			android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
-			android:imeOptions="actionDone"/>
-	</RelativeLayout>
-	
-	<Button android:text="@+string/takePic" 
-		android:textSize="30dip"
-		android:id="@+id/takePicture" 
-		android:layout_width="fill_parent" 
-		android:layout_height="fill_parent"
-		android:paddingTop="16dip"
-		android:layout_weight="1"/>
-	
-	<LinearLayout android:orientation="vertical"
-	    	android:id="@+id/locationBlock"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:background="@android:color/black">
+    android:orientation="vertical" >
 
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/myLocation"
-				android:text="@+string/noLocation0"
-				android:textSize="18dip"
-				android:textStyle="bold"
-				android:background="@android:color/black"
-				android:textColor="@android:color/white"
-				android:layout_gravity="center_horizontal"/>
-	</LinearLayout>
-	
-	<TextView 
-        android:layout_height="wrap_content" 
-		android:layout_width="fill_parent" 
-		android:id="@+id/queueCountLabel"
-		android:text="@string/queueCount"
-		android:textSize="10dip"
-		android:textColor="@android:color/white"
-		android:background="@android:color/black"/>
+    <ImageView
+        android:id="@+id/ImageViewLogo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:contentDescription="@+string/iSlogo"
+        android:scaleType="center"
+        android:src="@drawable/logo" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/nameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dip"
+            android:text="@+string/firstName"
+            android:textColor="@android:color/black"
+            android:textSize="18dip" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/nameLabel"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLength="50" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/takePicture"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="16dip"
+        android:text="@+string/takePic"
+        android:textSize="30dip" />
+
+    <LinearLayout
+        android:id="@+id/locationBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/myLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/black"
+            android:text="@+string/noLocation0"
+            android:textColor="@android:color/white"
+            android:textSize="18dip"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <TextView
+            android:id="@+id/queueCountLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="@string/queueCount"
+            android:textColor="@android:color/white"
+            android:textSize="10dip" />
+
+        <TextView
+            android:id="@+id/ExperimentLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:text="@string/experiment"
+            android:textColor="@android:color/white"
+            android:textSize="10dip" />
+    </LinearLayout>
 
 </LinearLayout>
-
