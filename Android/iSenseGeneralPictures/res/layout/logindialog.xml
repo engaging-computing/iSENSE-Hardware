@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    
+    android:layout_height="fill_parent" >
+
     <TextView
-		android:id="@+id/usernameLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Username : "
-		android:layout_alignParentLeft="true"
-		android:layout_marginTop="5dip"/>
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dip"
+        android:text="Username : " />
 
     <EditText
         android:id="@+id/usernameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/usernameLabel"
-        android:paddingLeft="6dip"
-        android:inputType="textEmailAddress"/>
-        
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:background="@android:drawable/editbox_background"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="6dip" />
+
     <TextView
-		android:id="@+id/passwordLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Password  : "
-		android:layout_marginTop="5dip"
-		android:layout_below="@id/usernameInput"
-		android:layout_alignParentLeft="true"/>
-		
-	<EditText
+        android:id="@+id/passwordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/usernameInput"
+        android:layout_marginTop="5dip"
+        android:text="Password  : " />
+
+    <EditText
         android:id="@+id/passwordInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:layout_toRightOf="@id/passwordLabel"
         android:layout_below="@id/usernameInput"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:layout_toRightOf="@id/passwordLabel"
+        android:background="@android:drawable/editbox_background"
         android:paddingLeft="6dip"
-        android:password="true"/>
-<!--  			
-	<CheckedTextView android:text="Remember me" 
+        android:password="true" />
+
+    <!--
+     <CheckedTextView android:text="Remember me" 
 		android:id="@+id/rememberme" 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
@@ -49,5 +53,30 @@
 		android:checkMark="?android:attr/listChoiceIndicatorMultiple"
 		android:layout_alignParentRight="true"
 		android:layout_marginTop="20dip"/>
--->
+    -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordInput"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/okay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Okay" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Cancel" />
+    </LinearLayout>
+
 </RelativeLayout>

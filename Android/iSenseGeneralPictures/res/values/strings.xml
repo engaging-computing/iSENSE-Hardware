@@ -33,5 +33,7 @@
 	<string name="noLocation2">Lat: waiting for GPS ..\nLong: waiting for GPS ..</string>
 	<string name="noLocation3">Lat: waiting for GPS &#8230;\nLong: waiting for GPS  &#8230;</string>
 	<string name="noLocation4">Lat: waiting for GPS ....\nLong: waiting for GPS ....</string>
+	
+	<string name="experiment">Experiment: \0</string>
     
 </resources>

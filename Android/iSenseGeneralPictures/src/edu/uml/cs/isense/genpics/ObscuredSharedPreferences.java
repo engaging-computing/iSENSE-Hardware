@@ -178,4 +178,3 @@ public class ObscuredSharedPreferences implements SharedPreferences {
     }
 
 }
-

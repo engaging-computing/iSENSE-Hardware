@@ -7,12 +7,8 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
 
@@ -20,8 +16,8 @@ public class Experiments extends ListActivity {
 	private ExperimentAdapter m_adapter; 
 	@SuppressWarnings("unused")
 		private RestAPI rapi; 
-	
-	private Context mContext; 
+	@SuppressWarnings("unused")
+		private Context mContext; 
 	@SuppressWarnings("unused")
 		private boolean finish = false;
 	private ArrayList<Experiment> m_experiments;
@@ -62,10 +58,8 @@ public class Experiments extends ListActivity {
         // The activity is starting for the first time, load the data from the site
         if (data != null) {
             // The activity was destroyed/created automatically
-        	Toast.makeText(mContext, "Data not NULL", Toast.LENGTH_SHORT).show();
         	m_experiments = (ArrayList<Experiment>) dataList[0];
         } else {
-        	Toast.makeText(mContext, "Data NULL", Toast.LENGTH_SHORT).show();
         	m_experiments = new ArrayList<Experiment>();
         }
             
@@ -78,42 +72,8 @@ public class Experiments extends ListActivity {
         }
 
         setListAdapter(this.m_adapter);
-        
-        final EditText et = (EditText) findViewById(R.id.ExperimentSerchInput);
-        et.setSingleLine(true);
-        et.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void afterTextChanged(Editable s) {
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			
-				
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (s == null || s.length() == 0) {
-					m_experiments = new ArrayList<Experiment>();
-					m_adapter = new ExperimentAdapter(getBaseContext(), R.layout.experimentrow, R.layout.loadrow, m_experiments);
-			        setListAdapter(m_adapter);
-				} else {
-					m_experiments = new ArrayList<Experiment>();
-					m_adapter = new ExperimentAdapter(getBaseContext(), R.layout.experimentrow, R.layout.loadrow, m_experiments);
-					m_adapter.action = "search";
-					m_adapter.query = s.toString();
-			        setListAdapter(m_adapter);
-				}
-			}
-        	
-        });
-                
     }
-   
+    
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);

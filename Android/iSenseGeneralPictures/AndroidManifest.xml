@@ -39,6 +39,9 @@
         <activity
             android:name=".Descriptor"
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
