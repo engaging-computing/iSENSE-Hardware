@@ -196,6 +196,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private static boolean canobieIsChecked  = true;
     private static boolean canobieBackup     = true;
     private static boolean successLogin      = false;
+    private static boolean status400         = false;
     
     private Handler mHandler;
     private boolean throughHandler = false;
@@ -214,10 +215,11 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	public static Context mContext;
 	
 	private static ArrayList<File> pictureArray = new ArrayList<File>();
-	private static ArrayList<File> videoArray   = new ArrayList<File>();
+	//private static ArrayList<File> videoArray   = new ArrayList<File>();
 
 	
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -500,7 +502,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     		File f = videos.get(i);
     		File newFile = new File(folder, rideNameString + "-" + seatString + "-" + dateString + "-" + (i+1) + ".3gp");
     		f.renameTo(newFile);
-    		videoArray.add(newFile);
+    		//videoArray.add(newFile);
     	}
     	
     	videos.clear();
@@ -540,7 +542,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	inPausedState = false;	
     }
     
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onResume() {
     	super.onResume();
     	inPausedState = false;
@@ -548,7 +551,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     		showDialog(DIALOG_FORCE_STOP);
     	
     	//will call the login dialogue if necessary and update UI
-    	if(loginName != "") login();
+    	if(loginName != "") login(); 
     	
     	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
     }
@@ -591,7 +594,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         return true;
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         	case MENU_ITEM_SETUP:
@@ -666,6 +670,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
     
+	@SuppressWarnings("deprecation")
 	protected Dialog onCreateDialog(final int id) {
 	    
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -719,7 +724,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    case MENU_ITEM_LOGIN:
 	    	LoginActivity la = new LoginActivity(this);
 	        dialog = la.getDialog(new Handler() {
-	        	  public void handleMessage(Message msg) { 
+				public void handleMessage(Message msg) { 
 			    	  switch (msg.what) {
 			    	  	case LoginActivity.LOGIN_SUCCESSFULL:
 			    	  	  loginInfo.setText(" " + loginName);
@@ -1118,7 +1123,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	}    
     
     // Converts the captured picture's uri to a file that is save-able to the SD Card
-    public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
+    @SuppressWarnings("deprecation")
+	public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		
     	int apiLevel = getApiLevel();
     	if (apiLevel >= 11) {
@@ -1174,7 +1180,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	}
     
     // Converts the recorded video's uri to a file that is save-able to the SD Card
-    public static File convertVideoUriToFile (Uri videoUri, Activity activity)  {
+    @SuppressWarnings("deprecation")
+	public static File convertVideoUriToFile (Uri videoUri, Activity activity)  {
     	
     	int apiLevel = getApiLevel();
     	if (apiLevel >= 11) {
@@ -1251,7 +1258,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	}
 	
   	// Assists with differentiating between displays for dialogues
-  	private static int getApiLevel() {
+  	@SuppressWarnings("deprecation")
+	private static int getApiLevel() {
     	return Integer.parseInt(android.os.Build.VERSION.SDK);
     }
   	
@@ -1262,7 +1270,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		@Override
 		public void run()
 		{
-		
+			status400 = false;
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
@@ -1308,27 +1316,33 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 				}
 			}
 			
+			// Experiment Closed Checker
+			if (sessionId == -400) {
+				status400 = true;
+			} else {
+				status400 = false;
+				rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
 			
-			rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
 			
-			int pic = pictureArray.size();
+				int pic = pictureArray.size();
 			
-			while(pic > 0) {
-				if(nameOfSession.equals(""))
-					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-							experimentInput.getText().toString(), 
-							sessionId, "*Session Name Not Provided*", "N/A");
-				else
-					rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-							experimentInput.getText().toString(), 
-							sessionId, sessionName.getText().toString(), "N/A");
+				while(pic > 0) {
+					if(nameOfSession.equals(""))
+						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+								experimentInput.getText().toString(), 
+								sessionId, "*Session Name Not Provided*", "N/A");
+					else
+						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+								experimentInput.getText().toString(), 
+								sessionId, sessionName.getText().toString(), "N/A");
 
-				pic--;
+					pic--;
 				
-			}
+				}
 			
-			pictureArray.clear();
-			videoArray.clear();
+				pictureArray.clear();
+				//videoArray.clear();
+			}
 					
 		}
 		
@@ -1357,7 +1371,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	    }
 
-	    @Override  protected void onPostExecute(Void voids)
+	    @SuppressWarnings("deprecation")
+		@Override  protected void onPostExecute(Void voids)
 	    {
 	        
 	    	dia.setMessage("Done");
@@ -1365,7 +1380,11 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	        len = 0; len2 = 0; mediaCount = 0;
 	        
-	        Toast.makeText(AmusementPark.this, "Upload Success", Toast.LENGTH_SHORT).show();
+	        if (status400)
+	        	Toast.makeText(mContext, "Your data cannot be uploaded to this experiment.  It has been closed.", Toast.LENGTH_LONG).show();
+	        else
+	        	Toast.makeText(AmusementPark.this, "Upload Success", Toast.LENGTH_SHORT).show();
+	        
 	        picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	        showDialog(DIALOG_SUMMARY);
 	        
@@ -1395,6 +1414,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	}
 	
 	// Everything needed to be initialized for onCreate
+	@SuppressWarnings("deprecation")
 	private void initVars() {
 		
         mHandler = new Handler();
@@ -1403,7 +1423,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	mwidth  = deviceDisplay.getWidth();
         
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
-
+        
         pictures = new ArrayList<File>();
         videos   = new ArrayList<File>();
 
@@ -1481,6 +1501,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     }
 	
 	// Deals with Dialog creation whether api is tablet or not
+	@SuppressWarnings("deprecation")
 	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
 		if(apiTabletDisplay(dialog)) {
 		    	

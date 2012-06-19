@@ -55,7 +55,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -99,7 +98,7 @@ public class Isense extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	public static String experimentId = "427";
+	//public static String experimentId = "427";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
@@ -165,9 +164,13 @@ public class Isense extends Activity implements OnClickListener {
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
-	//Set up all views from the XML layout
+	// Set up all views from the XML layout
 	public void initializeLayout() {
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		/*SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
+		SharedPreferences.Editor editor = expr.edit();
+		editor.putString("experiment_number", experimentId);
+		editor.commit();*/
 
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
@@ -253,7 +256,10 @@ public class Isense extends Activity implements OnClickListener {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_2);
 		} else if (item.getItemId() == R.id.menu_setTime) {
-			ppi.setRealTimeClock();
+			if(ppi.setRealTimeClock())
+				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
 		} else if (item.getItemId() == R.id.menu_setSensors) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
@@ -381,6 +387,8 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	public void writeDataToScreen() {
+		dataLayout.removeAllViews();
+		
 		int i = 0;
 		int y = 1;
 		if (data.size() > 10) {
@@ -571,7 +579,10 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
-					ppi.setRealTimeClock();
+					if(ppi.setRealTimeClock())
+						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+					else
+						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
@@ -677,6 +688,9 @@ public class Isense extends Activity implements OnClickListener {
 			break;
 		case REQUEST_VIEW_DATA:
 			//When the data has been uploaded
+			break;
+		case CHANGE_EXPERIMENT:
+			break;
 		}
 	}
 
@@ -728,13 +742,15 @@ public class Isense extends Activity implements OnClickListener {
 				new PerformLogin().execute();
 
 			if (loggedIn) {
+				SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
+				
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(experimentId, 
+					sessionId = rapi.createSession(expr.getString("experiment_number", "None"), 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
 							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
 					if (sessionId != -1) {
-						rapi.putSessionData(sessionId, experimentId, dataSet);
+						rapi.putSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
 					} else {
 						sessionUrl = baseSessionUrl;
@@ -743,7 +759,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
+					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet))) {
 						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
 					}
 				}
