@@ -55,7 +55,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -760,7 +759,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
+					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet))) {
 						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
 					}
 				}
