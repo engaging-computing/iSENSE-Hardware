@@ -40,6 +40,7 @@ import java.util.prefs.Preferences;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import edu.uml.cs.raac.exceptions.ChecksumException;
 import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 import edu.uml.cs.raac.exceptions.InvalidHexException;
