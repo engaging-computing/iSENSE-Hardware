@@ -61,9 +61,16 @@ public class BoatActivity extends Activity implements LocationListener {
 	private static String experimentNumber = "350";        // HARD CODED
 	private static String userName         = "tsorboat";   // HARD CODED
 	private static String password         = "ecgrul3s";   // HARD CODED
-	private static int    sessionNumbers[] = { 
+	/*private static int    sessionNumbers[] = {           // isense
 		2904,  // Canals
 		5224,  // Claypit Brook
+		2905,  // Docks
+		2891,  // Down River
+		2906   // Up River	
+	};*/
+	private static int    sessionNumbers[] = {             // isensedev
+		2904,  // Canals
+		3546,  // Claypit Brook
 		2905,  // Docks
 		2891,  // Down River
 		2906   // Up River	
@@ -112,6 +119,7 @@ public class BoatActivity extends Activity implements LocationListener {
 	private static final int DIALOG_DATA       = 8;
 	private static final int DIALOG_YOU_SURE   = 9;
 	private static final int MENU_ITEM_UPLOAD  = 10;
+	private static final int DIALOG_EXP_CLOSED = 11;
 	
     static final public int DIALOG_CANCELED = 0;
     static final public int DIALOG_OK = 1;
@@ -148,6 +156,7 @@ public class BoatActivity extends Activity implements LocationListener {
     static boolean dontPromptMeTwice = false;
     static boolean needNewArray      = true;
     static boolean usedMenu          = false;
+    static boolean status400         = false;
     
     public static String textToSession = "";
     public static String toSendOut = "";
@@ -782,6 +791,29 @@ public class BoatActivity extends Activity implements LocationListener {
 	    	
 	    	break;
 	    	
+	    case DIALOG_EXP_CLOSED:
+	    	
+	    	builder.setTitle("Experiment Closed")
+	    	.setMessage("The experiment that this application is attempting to upload data to has been closed and can "
+	    				+ "no longer accept data at this time.  Therefore, this app is useless until an iSENSE developer " 
+	    				+ "has been contacted and has re-opened the experiment.")
+	    	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+	    		public void onClick(DialogInterface dialoginterface, final int id) {
+	    			dialoginterface.dismiss();
+	    		}
+	    	})
+	    	.setNegativeButton("Quit App", new DialogInterface.OnClickListener() {
+	    		public void onClick(DialogInterface dialoginterface, final int id) {
+	    			dialoginterface.dismiss();
+	    			((Activity) mContext).finish();
+	    		}
+	    	})
+	        .setCancelable(true);
+	           
+	    	dialog = builder.create();
+	    
+	    	break;
+	    	
 	    default:
 	    	dialog = null;
 	    	break;
@@ -847,6 +879,7 @@ public class BoatActivity extends Activity implements LocationListener {
 			int locationId =  0;
 			uploadSchool = "";
 			double myLat = 0, myLon = 0;
+			status400 = false;
 			
 			if (needNewArray)
 				data = new JSONArray();
@@ -906,7 +939,9 @@ public class BoatActivity extends Activity implements LocationListener {
 			
 			if (rapi.isConnectedToInternet()) {
 				needNewArray = true;
-				rapi.updateSessionData(sessionId, experimentNumber, data);
+				boolean success = rapi.updateSessionData(sessionId, experimentNumber, data);
+				if (!success)
+					status400 = true;
 			} else
 				needNewArray = false;
 						
@@ -943,31 +978,36 @@ public class BoatActivity extends Activity implements LocationListener {
 	        
 	        len = 0; len2 = 0;
 	        
-	        tempField1 = field1.getText().toString();
-	        field1.setText("");
-	        tempField2 = field2.getText().toString();
-	        field2.setText("");
-	        tempField3 = field3.getText().toString();
-	        field3.setText("");
-	        tempField4 = field4.getText().toString();
-	        field4.setText("");
-	        tempField5 = field5.getText().toString();
-	        field5.setText("");
-	        tempField6 = field6.getText().toString();
-	        field6.setText("");
-	        tempField7 = field7.getText().toString();
-	        field7.setText("");
-	        tempField8 = field8.getText().toString();
-	        field8.setText("");
-	        
 	        if (needNewArray)
 	        	data = new JSONArray();
 	        
-	        if(usedMenu) {
-	        	makeToast("All data uploaded successfully.", Toast.LENGTH_SHORT);
-	        	showDialog(DIALOG_SUMMARY);
-	        } else
-	        	showDialog(DIALOG_DATA);
+	        if (status400)
+	        	showDialog(DIALOG_EXP_CLOSED);
+	        else {
+	        
+	        	tempField1 = field1.getText().toString();
+	        	field1.setText("");
+	        	tempField2 = field2.getText().toString();
+	        	field2.setText("");
+	        	tempField3 = field3.getText().toString();
+	        	field3.setText("");
+	        	tempField4 = field4.getText().toString();
+	        	field4.setText("");
+	        	tempField5 = field5.getText().toString();
+	        	field5.setText("");
+	        	tempField6 = field6.getText().toString();
+	        	field6.setText("");
+	        	tempField7 = field7.getText().toString();
+	        	field7.setText("");
+	        	tempField8 = field8.getText().toString();
+	        	field8.setText("");
+	        
+	        	if(usedMenu) {
+	        		makeToast("All data uploaded successfully.", Toast.LENGTH_SHORT);
+	        		showDialog(DIALOG_SUMMARY);
+	        	} else
+	        		showDialog(DIALOG_DATA);
+	        }
 
 	    }
 	}	

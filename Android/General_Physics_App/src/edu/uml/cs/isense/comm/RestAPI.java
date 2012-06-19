@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
-//import android.util.Log;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.objects.Item;
@@ -144,6 +143,7 @@ public class RestAPI {
 	    return bytes;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean uploadPictureToSession(File image, String eid, int sid, String img_name, String img_desc) {
 		//String target = "?method=uploadImageToSession&session_key=" + session_key + "&sid=" + sid + "&img_name=" + img_name + "&img_desc=" + img_desc;
 		
@@ -268,6 +268,7 @@ public class RestAPI {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean uploadPicture(File image, String eid, String img_name, String img_desc) {
 		//String target = "?method=uploadImageToExperiment&session_key=" + session_key + "&eid=" + eid + "&img_name=" + img_name + "&img_desc=" + img_desc;
 		
@@ -362,9 +363,10 @@ public class RestAPI {
 		
 			try {
 				DataInputStream inStream = new DataInputStream(conn.getInputStream());
-				//String str;
+				@SuppressWarnings("unused")
+					String str;
 
-				while ((/*str = */inStream.readLine()) != null) {
+				while ((str = inStream.readLine()) != null) {
 					//Log.d("rapi", "Server Response" + str);
 				}
 				inStream.close();
@@ -380,6 +382,7 @@ public class RestAPI {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean login(String username, String password) {
 		String url = "method=login&username=" + URLEncoder.encode(username) + "&password=" + URLEncoder.encode(password);
 		
@@ -1127,6 +1130,12 @@ public class RestAPI {
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
 				JSONObject obj = o.getJSONObject("data");
+				
+				String msg = obj.getString("msg");
+				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+					// Experiment has been closed
+					sid = -400;
+				}
 													
 				sid = obj.getInt("sessionId");	
 			} catch (MalformedURLException e) {

@@ -54,7 +54,7 @@ public class Experiments extends ListActivity {
 	
 
 	/** Called when the activity is first created. */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +100,7 @@ public class Experiments extends ListActivity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 

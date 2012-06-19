@@ -9,6 +9,7 @@
 	<EditText android:id="@+id/ExperimentSerchInput"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
 		android:hint="Search"/>
 
 	<ListView
