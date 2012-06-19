@@ -1,32 +1,19 @@
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.pictures3;
 
 import java.util.ArrayList;
 
-import edu.uml.cs.isense.amusement.R;
-
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Experiment;
-
 import android.app.Activity;
-//import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
-//import android.content.DialogInterface;
 import android.content.Intent;
-/*import android.content.SharedPreferences;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.SharedPreferences.Editor;*/
 import android.os.Bundle;
-/*import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;*/
 import android.text.Editable;
 import android.text.TextWatcher;
-/*import android.view.Menu;
-import android.view.MenuItem;*/
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 
 public class Experiments extends ListActivity {
 	private ExperimentAdapter m_adapter; 
@@ -54,7 +41,7 @@ public class Experiments extends ListActivity {
 	
 
 	/** Called when the activity is first created. */
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    @SuppressWarnings("unchecked")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +87,7 @@ public class Experiments extends ListActivity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				
+				// TODO Auto-generated method stub
 				
 			}
 
