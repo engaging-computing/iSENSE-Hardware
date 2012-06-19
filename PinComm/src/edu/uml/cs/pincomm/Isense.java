@@ -151,6 +151,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		username = myPrefs.getString("isense_user", "");
 		password = myPrefs.getString("isense_pass", "");
 		nameField.setText(myPrefs.getString("group_name", ""));
+		experimentId = myPrefs.getString("isense_expId", "");
 		
 		if(myPrefs.getBoolean("FirstRun", true) == true) {
 			Intent i = new Intent(this, Login.class);
@@ -712,7 +713,15 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			break;
 		case CHANGE_EXPERIMENT:
 			if (resultCode == RESULT_OK) {
-				//do this stuff
+				SharedPreferences myPrefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences.Editor prefsEditor = myPrefs.edit();
+				
+				Toast.makeText(this, "Experiment ID set to "+data.getExtras().getInt("experimentID"), Toast.LENGTH_SHORT).show();
+				experimentId = ""+data.getExtras().getInt("experimentID");
+				
+				prefsEditor.putString("isense_expId", experimentId);
+				prefsEditor.commit();
 			}
 			break;
 		}
@@ -722,6 +731,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private void uploadData() {
 		if (timeData.size() != bta1Data.size()) {
 			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		if (experimentId.equals("")) {
+			Toast.makeText(this, "No experiment set, please choose Select Experiment from the menu",
 					Toast.LENGTH_LONG).show();
 			return;
 		}

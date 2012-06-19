@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import edu.uml.cs.pincomm.comm.RestAPI;
@@ -20,7 +20,7 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 	Button back, next;
 	static LinearLayout expLayout;
 	static Context myContext;
-	int page = 0;
+	int page = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +36,28 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 		back.setEnabled(false);
 
 		myContext = this;
-
+		
 		reloadExperiments();
 	}
 	
 	public void reloadExperiments() {
-		new LoadExperimentListTask().execute(Integer.valueOf(page));
-		if(page == 0) {
+		LoadExperimentListTask lelt = new LoadExperimentListTask();
+		lelt.setActivity(this);
+		lelt.execute(Integer.valueOf(page));
+		if(page == 1) {
 			back.setEnabled(false);
 		} else {
 			back.setEnabled(true);
 		}
 
+	}
+	
+	public void choseExp(int expId) {
+		Intent result = new Intent();
+		result.putExtra("experimentID", expId);
+		
+		setResult(RESULT_OK,result);
+		finish();
 	}
 
 	@Override
@@ -67,6 +77,11 @@ class LoadExperimentListTask extends AsyncTask<Integer, Void, ArrayList<Experime
 
 	RestAPI rapi;
 	private ProgressDialog dialog;
+	private ChangeExperiment myAct;
+	
+	public void setActivity (ChangeExperiment newAct) {
+		myAct = newAct;
+	}
 
 	protected void onPreExecute() {
 		ChangeExperiment.expLayout.removeAllViews();
@@ -88,14 +103,21 @@ class LoadExperimentListTask extends AsyncTask<Integer, Void, ArrayList<Experime
 		dialog = null;
 		int i = 0;
 		Resources res = ChangeExperiment.myContext.getResources();
-		for(Experiment exp : results) {
+		for(final Experiment exp : results) {
 			i++;
 			edu.uml.cs.pincomm.ExperimentRow currRow = new edu.uml.cs.pincomm.ExperimentRow(ChangeExperiment.myContext, null);
 			currRow.setName(exp.name);
 			currRow.setDesc(exp.description);
+			currRow.setLastMod("Last modified "+exp.timemodified);
 			if(i%2 != 0) {
 				currRow.setBackgroundColor(res.getColor(R.color.rowcols));
 			}
+			currRow.setClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					myAct.choseExp(exp.experiment_id);
+				}
+			});
 			ChangeExperiment.expLayout.addView(currRow);
 		}
 	}
