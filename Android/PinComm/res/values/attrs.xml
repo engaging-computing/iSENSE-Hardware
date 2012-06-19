@@ -4,6 +4,7 @@
     <declare-styleable name="exprow">
 		<attr name="name" format="string" />
         <attr name="desc" format="string" />
+        <attr name="lastmod" format="string" />
     </declare-styleable>
 
 </resources>

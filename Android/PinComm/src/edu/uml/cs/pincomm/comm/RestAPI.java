@@ -1013,7 +1013,6 @@ public class RestAPI {
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
 			try {
 				String data = makeRequest(url);
-				System.out.println(url);
 				
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);

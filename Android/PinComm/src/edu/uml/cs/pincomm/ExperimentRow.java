@@ -27,6 +27,12 @@ public class ExperimentRow extends LinearLayout {
 		if (teaseText != null) {
 			tease.setText(teaseText);
 		}
+		
+		TextView mod = (TextView) findViewById(R.id.modtext);
+		String modText = array.getString(R.styleable.exprow_lastmod);
+		if (modText != null) {
+			mod.setText(modText);
+		}
 
 		array.recycle();
 	}
@@ -45,17 +51,26 @@ public class ExperimentRow extends LinearLayout {
 		}
 	}
 	
+	public void setLastMod(String newMod) {
+		TextView mod = (TextView) findViewById(R.id.modtext);
+		if (newMod!= null) {
+			mod.setText(newMod);
+		}
+	}
+	
 	public void setLayoutBg(int color) {
 		LinearLayout myLayout = (LinearLayout) findViewById(R.id.exprow_layout);
 		myLayout.setBackgroundColor(color);
 	}
 	
-	public void setClickable(View.OnClickListener listener) {
+	public void setClickListener(View.OnClickListener listener) {
 		LinearLayout myLayout = (LinearLayout) findViewById(R.id.exprow_layout);
 		TextView name = (TextView) findViewById(R.id.toptext);
 		TextView desc = (TextView) findViewById(R.id.bottomtext);
+		TextView mod = (TextView) findViewById(R.id.modtext);
 		myLayout.setOnClickListener(listener);
 		name.setOnClickListener(listener);
 		desc.setOnClickListener(listener);
+		mod.setOnClickListener(listener);
 	}
 }
