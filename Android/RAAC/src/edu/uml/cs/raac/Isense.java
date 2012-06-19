@@ -101,7 +101,7 @@ public class Isense extends Activity implements OnClickListener {
 	int sessionId = -1;
 	public static String experimentId = "427";
 	String username = "sor";
-	String password = "sort";
+	String password = "sor";
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
@@ -783,7 +783,7 @@ public class Isense extends Activity implements OnClickListener {
 				Intent i = new Intent(Isense.this, ViewData.class);
 				startActivityForResult(i, REQUEST_VIEW_DATA);  
 			} else {
-				Toast.makeText(Isense.this, "Could not upload data.  Try logging in again or checking internet connectivity.", Toast.LENGTH_LONG).show();
+				Toast.makeText(Isense.this, "Upload failed. Check your internet connection, and make sure the experiment is not closed.", Toast.LENGTH_LONG).show();
 				dataRdy = true;
 				pushToISENSE.setEnabled(true);
 			}
