@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:inputType="text"
-            android:maxLength="16" >
+            android:maxLength="30" >
 
             <requestFocus />
         </EditText>
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:inputType="textPassword"
-            android:maxLength="16" />
+            android:maxLength="30" />
     </LinearLayout>
 
     <Button
