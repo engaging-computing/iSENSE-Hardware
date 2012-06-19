@@ -49,13 +49,12 @@ public final class R {
         public static final int superspin=0x7f020013;
     }
     public static final class id {
-        public static final int btn_cancel=0x7f0a0031;
-        public static final int LinearLayout01=0x7f0a0022;
-        public static final int LinearLayout02=0x7f0a001f;
-        public static final int LinearLayout03=0x7f0a0025;
-        public static final int TextView01=0x7f0a0023;
-        public static final int TextView02=0x7f0a0020;
-        public static final int TextView03=0x7f0a0026;
+        public static final int LinearLayout01=0x7f0a0023;
+        public static final int LinearLayout02=0x7f0a0020;
+        public static final int LinearLayout03=0x7f0a0026;
+        public static final int TextView01=0x7f0a0024;
+        public static final int TextView02=0x7f0a0021;
+        public static final int TextView03=0x7f0a0027;
         public static final int btaSpin1=0x7f0a002a;
         public static final int btaSpin2=0x7f0a002c;
         public static final int btn_cancel=0x7f0a0032;
@@ -63,11 +62,10 @@ public final class R {
         public static final int btn_okay=0x7f0a0031;
         public static final int btn_pushToISENSE=0x7f0a0017;
         public static final int button_scan=0x7f0a000a;
-        public static final int et_ave=0x7f0a0024;
-        public static final int et_max=0x7f0a0021;
-        public static final int et_medi=0x7f0a0027;
-        public static final int et_min=0x7f0a001e;
-        public static final int experiment_button_layout=0x7f0a0003;
+        public static final int et_ave=0x7f0a0025;
+        public static final int et_max=0x7f0a0022;
+        public static final int et_medi=0x7f0a0028;
+        public static final int et_min=0x7f0a001f;
         public static final int experiment_cancel=0x7f0a0005;
         public static final int experiment_layout_root=0x7f0a0001;
         public static final int experiment_ok=0x7f0a0004;
@@ -79,8 +77,8 @@ public final class R {
         public static final int linearLayout1=0x7f0a0019;
         public static final int linearLayout2=0x7f0a0010;
         public static final int linearLayout21=0x7f0a0013;
-        public static final int linearLayout3=0x7f0a001a;
-        public static final int linearLayout4=0x7f0a001c;
+        public static final int linearLayout3=0x7f0a001b;
+        public static final int linearLayout4=0x7f0a001d;
         public static final int linearLayout5=0x7f0a0029;
         public static final int menu_connect=0x7f0a0037;
         public static final int menu_experiment=0x7f0a003b;
@@ -96,19 +94,20 @@ public final class R {
         public static final int new_devices=0x7f0a0009;
         public static final int new_eid=0x7f0a0003;
         public static final int no=0x7f0a0036;
-        public static final int onlyTenPoints=0x7f0a0028;
+        public static final int onlyTenPoints=0x7f0a001a;
         public static final int paired_devices=0x7f0a0007;
         public static final int pinpoint_select_btn=0x7f0a000c;
         public static final int prompt=0x7f0a0034;
         public static final int scrollView1=0x7f0a0018;
-        public static final int sensorNameHeader=0x7f0a001b;
+        public static final int sensorNameHeader=0x7f0a001c;
         public static final int statusField=0x7f0a0012;
-        public static final int textView1=0x7f0a001d;
+        public static final int textView1=0x7f0a001e;
         public static final int textView2=0x7f0a002b;
         public static final int textView3=0x7f0a002d;
         public static final int textView4=0x7f0a002f;
         public static final int title_new_devices=0x7f0a0008;
         public static final int title_paired_devices=0x7f0a0006;
+        public static final int trollview=0x7f0a0000;
         public static final int yes=0x7f0a0035;
     }
     public static final class layout {
