@@ -78,7 +78,7 @@
               	  	android:layout_height="wrap_content"
                 	android:layout_weight=".50"
                 	android:layout_marginRight="0dp"
-                	android:text="Group Name:"
+                	android:text="@string/sessionname"
                 	android:textAppearance="?android:attr/textAppearanceLarge" />
             	
             	<EditText 
