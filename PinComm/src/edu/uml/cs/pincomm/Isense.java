@@ -85,6 +85,8 @@ import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 public class Isense extends Activity implements OnClickListener, TextWatcher {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
+	Button pagePrev, pageNext;
+	TextView pageLabel;
 	ScrollView dataScroller;
 	ImageButton pinpointBtn;
 	ImageView spinner;
@@ -150,7 +152,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				.getDefaultSharedPreferences(this);
 		username = myPrefs.getString("isense_user", "");
 		password = myPrefs.getString("isense_pass", "");
-		nameField.setText(myPrefs.getString("group_name", ""));
 		experimentId = myPrefs.getString("isense_expId", "");
 
 		if(myPrefs.getBoolean("FirstRun", true) == true) {
@@ -186,12 +187,17 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	//Set up all views from the XML layout
 	public void initializeLayout() {
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		SharedPreferences sensorPrefs = getSharedPreferences("SENSORS", 0);
+		SharedPreferences defaultPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		pushToISENSE = (Button) findViewById(R.id.btn_pushToISENSE);
+		pagePrev = (Button) findViewById(R.id.btn_prevPage);
+		pageNext = (Button) findViewById(R.id.btn_nextPage);
+		pageLabel = (TextView) findViewById(R.id.txt_pageIndicator);
 		pinpointBtn = (ImageButton) findViewById(R.id.pinpoint_select_btn);
 		launchLayout = (RelativeLayout) findViewById(R.id.launchlayout);
 		minField = (TextView) findViewById(R.id.et_min);
@@ -204,14 +210,24 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
-		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
-		sensorType = prefs.getString("name_bta1", "None");
+		sensorHead.setText("BTA1: " + sensorPrefs.getString("name_bta1", "None"));
+		sensorType = sensorPrefs.getString("name_bta1", "None");
 
+		nameField.setText(defaultPrefs.getString("group_name", ""));
+		
 		nameField.addTextChangedListener(this);
+		
+		pageLabel.setText("Page "+ (currPage+1));
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		pushToISENSE.setOnClickListener(this);
+		pagePrev.setOnClickListener(this);
+		pageNext.setOnClickListener(this);
+		
+		if(currPage == 0) {
+			pagePrev.setEnabled(false);
+		}
 
 		minField.setText(datMin);
 		maxField.setText(datMax);
