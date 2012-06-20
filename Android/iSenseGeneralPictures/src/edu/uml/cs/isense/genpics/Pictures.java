@@ -59,8 +59,7 @@ import edu.uml.cs.isense.objects.Picture;
 
 public class Pictures extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;
-	private static final int DESCRIPTION_REQUESTED = 2;
-	private static final int LOGIN_REQUESTED = 3;
+	private static final int LOGIN_REQUESTED = 2;
 
 	private static final int DIALOG_REJECT = 0;
 	private static final int DIALOG_NO_GPS = 1;
@@ -599,9 +598,7 @@ public class Pictures extends Activity implements LocationListener {
 			}
 
 			if (!smartUploading || (smartUploading && !calledBySmartUp)) {
-				if (Descriptor.desString.equals(""))
-					Descriptor.desString = "No description provided.";
-
+				
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 				String experimentNum = mPrefs.getString("experiment_number",
 						"Error");
@@ -612,8 +609,8 @@ public class Pictures extends Activity implements LocationListener {
 				}
 
 				int sessionId = rapi.createSession(experimentNum, name
-						.getText().toString() + ": " + Descriptor.desString,
-						Descriptor.desString, "n/a", "Lowell, MA", "");
+						.getText().toString(),
+						"No description provided.", "n/a", "Lowell, MA", "");
 
 				if (sessionId == -1) {
 					uploadError = true;
@@ -625,7 +622,6 @@ public class Pictures extends Activity implements LocationListener {
 					dataJSON.put(curTime);
 					dataJSON.put(Lat);
 					dataJSON.put(Long);
-					dataJSON.put(Descriptor.desString);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -640,14 +636,13 @@ public class Pictures extends Activity implements LocationListener {
 				dia.setProgress(99);
 
 				if (!rapi.uploadPictureToSession(picture, experimentNum,
-						sessionId, name.getText().toString() + ": "
-								+ Descriptor.desString, Descriptor.desString)) {
+						sessionId, name.getText().toString(),
+						"No description provided.")) {
 					uploadError = true;
 				}
 			} else {
 				smartUploader(uploaderPic.file, uploaderPic.latitude,
-						uploaderPic.longitude, uploaderPic.name,
-						uploaderPic.desc, uploaderPic.time);
+						uploaderPic.longitude, uploaderPic.name, uploaderPic.time);
 			}
 		}
 	};
@@ -660,17 +655,7 @@ public class Pictures extends Activity implements LocationListener {
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
-				// takePicture.getBackground().clearColorFilter();
-				// takePicture.setEnabled(false);
-				takePicture.setEnabled(false);
-				Intent startDescribe = new Intent(Pictures.this,
-						Descriptor.class);
-				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
-			}
-		} else if (requestCode == DESCRIPTION_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				// takePicture.getBackground().setColorFilter(0xFFFFFF33,
-				// PorterDuff.Mode.MULTIPLY);
+				
 				takePicture.setEnabled(true);
 				if (smartUploading) {
 					if (userLoggedIn) {
@@ -685,12 +670,10 @@ public class Pictures extends Activity implements LocationListener {
 					} else
 						showDialog(DIALOG_NOT_LOGGED_IN);
 				}
-			} else if (resultCode == RESULT_CANCELED) {
-				Intent startDescribe = new Intent(Pictures.this,
-						Descriptor.class);
-				startActivityForResult(startDescribe, DESCRIPTION_REQUESTED);
-				makeToast("You must enter a description.", Toast.LENGTH_SHORT);
+				
+				
 			}
+		
 		} else if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 
@@ -912,7 +895,7 @@ public class Pictures extends Activity implements LocationListener {
 	// save picture data in a queue for later upload
 	private void qsave(File pictureFile) {
 		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText()
-				.toString(), Descriptor.desString, System.currentTimeMillis());
+				.toString(), System.currentTimeMillis());
 		mQ.add(mPic);
 		QUEUE_COUNT++;
 		queueCount.setText("Queue Count: " + QUEUE_COUNT);
@@ -930,9 +913,7 @@ public class Pictures extends Activity implements LocationListener {
 
 	// upload stuff from the queue
 	private void smartUploader(File f, double lat, double lon, String n,
-			String d, long t) {
-		if (d == "")
-			d = "No description provided.";
+			long t) {
 
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		String experimentNum = mPrefs.getString("experiment_number", "Error");
@@ -943,7 +924,7 @@ public class Pictures extends Activity implements LocationListener {
 		}
 
 		int sessionId;
-		if ((sessionId = rapi.createSession(experimentNum, n + ": " + d, d,
+		if ((sessionId = rapi.createSession(experimentNum, n, "No description provided.",
 				"n/a", "Lowell, MA", "")) == -1) {
 			uploadError = true;
 			return;
@@ -954,7 +935,6 @@ public class Pictures extends Activity implements LocationListener {
 			dataJSON.put(t);
 			dataJSON.put(lat);
 			dataJSON.put(lon);
-			dataJSON.put(d);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -970,12 +950,9 @@ public class Pictures extends Activity implements LocationListener {
 		}
 		dia.setProgress(99);
 
-		success = rapi.uploadPictureToSession(f, experimentNum, sessionId, n
-				+ ": " + d, d);
+		success = rapi.uploadPictureToSession(f, experimentNum, sessionId, n, "No description provided.");
 		if (!success)
 			uploadError = true;
-
-		// Log.e("SmartUploader", "5: Q = " + QUEUE_COUNT);
 	}
 
 	// uploads pictures if smartUploading is enabled
