@@ -7,15 +7,13 @@ public class Picture {
 	public double latitude;
 	public double longitude;
 	public String name;
-	public String desc;
 	public long time;
 	
-	public Picture(File f, double lat, double lon, String n, String d, long t) {
+	public Picture(File f, double lat, double lon, String n, long t) {
 		file = f;
 		latitude = lat;
 		longitude = lon;
 		name = n;
-		desc = d;
 		time = t;
 	}
 }
