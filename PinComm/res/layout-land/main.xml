@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="0dp"
                     android:layout_weight=".50"
-                    android:text="Group Name:"
+                    android:text="@string/sessionname"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <EditText
@@ -89,6 +89,7 @@
                     android:layout_weight="1"
                     android:inputType="textCapWords"
                     android:maxLength="20"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
         </LinearLayout>
