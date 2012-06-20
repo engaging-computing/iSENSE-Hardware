@@ -377,19 +377,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	}
 
 	public void prepDataForUpload() {
-		int x = 0;
 		for (int i = 0; i < data.size(); i++) {
-			String[] strray = data.get(i);
 
-			for (String str : strray) {
-				x++;
-				switch(x) {
-				case 1:  timeData.add(fmtData(str));           									break;
-				case 14: bta1Data.add(Double.parseDouble(str));									break;
-				default:                                        								break;
-				}
-			}
-			x = 0;
+			String[] strray = data.get(i);
+			timeData.add(fmtData(strray[0]));
+			bta1Data.add(Double.parseDouble(strray[13]));
+			
 		}
 
 		findStatistics();	
