@@ -10,6 +10,7 @@
     <string name="select_device">Select a device to connect</string>
     <string name="none_found">No devices found</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    <string name="sessionname">Session Name:</string>
     
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
