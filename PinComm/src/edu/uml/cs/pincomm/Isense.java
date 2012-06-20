@@ -114,7 +114,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private ProgressDialog dia;
 	JSONArray dataSet;
 	public static Context mContext;
-	int currPage = 1; //current page of data to display
+	int currPage = 0; //current page of data to display
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -352,7 +352,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 									}
 									if (data != null) {
 										prepDataForUpload();
-										writeDataToScreen(1);
+										writeDataToScreen(0);
 										dataRdy = true;
 									}
 								}
@@ -396,20 +396,23 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	}
 
 	public void writeDataToScreen( int page ) {
-		int i = 0;
 		dataLayout.removeAllViews();
-		if (data.size() > 10) {
-			dataLayout.addView(tenPoints);
-			tenPoints.setVisibility(View.VISIBLE);
-			tenPoints.setText("Datapoints "+(data.size()-(page*10)+1)+" - "+data.size());
-			i = data.size()-10;
+		
+		int topPoint = data.size()-(page*10)-1;
+		int bottomPoint = topPoint - 9;
+		if (bottomPoint < 0) {
+			//If less than 10 results exist on page, restrict bottom point to 0
+			bottomPoint = 0;
 		}
+		dataLayout.addView(tenPoints);
+		tenPoints.setVisibility(View.VISIBLE);
+		tenPoints.setText("Datapoints "+(topPoint+1)+" - "+(topPoint - 9));
 
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
 
 		try {
-			for (; i<data.size(); i++) {
+			for (int i = topPoint; i >= bottomPoint; i--) {
 				String[] strray = data.get(i);
 				DecimalFormat df = new DecimalFormat("#0.00");
 				edu.uml.cs.pincomm.DatapointRow newRow = new edu.uml.cs.pincomm.DatapointRow(getBaseContext(), null);
