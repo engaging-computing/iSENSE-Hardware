@@ -197,6 +197,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private static boolean canobieBackup     = true;
     private static boolean successLogin      = false;
     private static boolean status400         = false;
+    private static boolean sdCardError       = false;
     
     private Handler mHandler;
     private boolean throughHandler = false;
@@ -267,6 +268,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						count++;
 						startStop.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 						choiceViaMenu = false;
+						
+						if (sdCardError)
+							Toast.makeText(mContext, "Could not write file to SD Card.", Toast.LENGTH_SHORT).show();
+						
 						if(throughHandler)
 							showDialog(RECORDING_STOPPED);
 						else
@@ -278,7 +283,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						elapsedMillis = 0; totalMillis    = 0;
 						len = 0; len2 = 0; dataPointCount = 0;
 						i   = 0;
-						beginWrite = true;
+						beginWrite = true; sdCardError = false;
 						currentTime = getUploadTime();
 						try {
 							Thread.sleep(100);
@@ -426,7 +431,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
                 out.write(data);
                 beginWrite = false;
         	} catch (IOException e) {
-        		Toast.makeText(this, "Error creating the SD Card file.", Toast.LENGTH_LONG).show();
+        		sdCardError = true;
+        		//Toast.makeText(this, "Error creating the SD Card file.", Toast.LENGTH_LONG).show();
         	}
     		
     		break;
@@ -435,7 +441,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     		try {
                 out.append(data);
         	} catch (IOException e) {
-        		Toast.makeText(this, "Error updating the SD Card file.", Toast.LENGTH_LONG).show();
+        		sdCardError = true;
+        		//Toast.makeText(this, "Error updating the SD Card file.", Toast.LENGTH_LONG).show();
         	}
     		
     		break;
@@ -447,13 +454,15 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
                 if(gpxwriter != null)
                 	gpxwriter.close();
         	} catch (IOException e) {
-        		Toast.makeText(this, "Error completing the SD Card file.", Toast.LENGTH_LONG).show();
+        		sdCardError = true;
+        		//Toast.makeText(this, "Error completing the SD Card file.", Toast.LENGTH_LONG).show();
         	}
     		
     		break;
     		
     	default:
-    		Toast.makeText(mContext, "Fatal error writing file to SD Card!", Toast.LENGTH_LONG).show();
+    		//Toast.makeText(mContext, "Fatal error writing file to SD Card!", Toast.LENGTH_LONG).show();
+    		sdCardError = true;
     		break;
     	}
     }
@@ -782,12 +791,17 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    	if( elapsedMinutes < 10 ) { s_elapsedMinutes = "0" + elapsedMinutes;    }
 	    	else { s_elapsedMinutes = "" + elapsedMinutes;                          }
 	    	
+	    	String appendMe = "";
+	    	if (sdCardError)
+	    		appendMe = "File not written to SD Card.";
+	    	else
+	    		appendMe = "Filename: \n" + rideNameString + "-" + seatString + "-" + dateString;
 	    	
 	    	builder.setTitle("Session Summary")
 	    	.setMessage("Elapsed time: " + s_elapsedMinutes + ":" + s_elapsedSeconds + "." + s_elapsedMillis + "\n"
 	    				+ "Data points: " + dataPointCount + "\n"
 	    				+ "End date and time: \n" + dateString + "\n"
-	    				+ "Filename: \n" + rideNameString + "-" + seatString + "-" + dateString)
+	    				+ appendMe)
 	    	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	    		public void onClick(DialogInterface dialoginterface,int i) {
 	    			dialoginterface.dismiss();
