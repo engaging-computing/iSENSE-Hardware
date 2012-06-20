@@ -40,9 +40,8 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginTop="5dp"
-            android:weightSum="1" >
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp" >
 
             <Button
                 android:id="@+id/btn_getRcrd"
@@ -50,21 +49,19 @@
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight="0.30"
+                android:layout_weight="0.75"
                 android:background="@drawable/custombtn"
-                android:text="Get Data"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:text="@string/retrieve_data" />
 
             <TextView
                 android:id="@+id/statusField"
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight=".30"
+                android:layout_weight=".75"
                 android:text="Status: Not Connected"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-            <!-- additional buttons by jeremy -->
 
             <LinearLayout
                 android:id="@+id/nameContainer"
@@ -78,9 +75,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="0dp"
-                    android:layout_weight=".5"
+                    android:layout_weight=".50"
                     android:text="Group Name:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <EditText
                     android:id="@+id/nameField"
@@ -88,83 +85,65 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginLeft="0dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:inputType="textCapWords"
                     android:maxLength="20"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <RelativeLayout>
-                </RelativeLayout>
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/nameContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:id="@+id/namePrompt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:text="Group Name:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayout1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/onlyTenPoints"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tenPoints"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_pushToISENSE"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
-                android:background="@drawable/custombtn"
-                android:text="Push to iSENSE"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="0" >
 
-            <ScrollView
-                android:id="@+id/scrollView1"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1" >
+                android:layout_marginRight="20dp" >
 
-                <LinearLayout
-                    android:id="@+id/linearLayout1"
+                <ScrollView
+                    android:id="@+id/scrollView1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-                </LinearLayout>
-            </ScrollView>
+                    android:layout_height="0dp"
+                    android:layout_weight="4">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/onlyTenPoints"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/tenPoints"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <Button
+                    android:id="@+id/btn_pushToISENSE"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/custombtn"
+                    android:gravity="center"
+                    android:text="@string/upload"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
@@ -196,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/minval"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
                         android:id="@+id/et_min"
@@ -239,6 +218,39 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" >
 
+                    <TextView
+                        android:id="@+id/TextView01"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/aveval"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:id="@+id/et_ave"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:lines="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/TextView03"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/medval"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
                     <EditText
                         android:id="@+id/et_medi"
                         android:layout_width="0dp"
@@ -249,68 +261,7 @@
                         android:inputType="none"
                         android:lines="1" />
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/btn_pushToISENSE"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@drawable/custombtn"
-                    android:gravity="center"
-                    android:text="Push to iSENSE"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout>
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/et_ave"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="false"
-            android:focusable="false"
-            android:inputType="none"
-            android:lines="1" />
-
-        <LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayout03"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <TextView
-                android:id="@+id/TextView03"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/medval"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/et_medi"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:focusable="false"
-                android:inputType="none"
-                android:lines="1" />
-        </LinearLayout>
-
-        <LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
