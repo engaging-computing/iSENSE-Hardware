@@ -228,6 +228,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		if(currPage == 0) {
 			pagePrev.setEnabled(false);
 		}
+		if(data == null) {
+			pageNext.setEnabled(false);
+		}
 
 		minField.setText(datMin);
 		maxField.setText(datMax);
@@ -365,8 +368,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 										progressDialog.dismiss();
 									}
 									if (data != null) {
+										currPage = 0;
 										prepDataForUpload();
-										writeDataToScreen(0);
+										writeDataToScreen(currPage);
 										dataRdy = true;
 									}
 								}
@@ -378,7 +382,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			thread.start();
 			pushToISENSE.setEnabled(true);
 		}
-		if (v == pushToISENSE)
+		if (v == pushToISENSE) {
 			if (nameField.length() == 0) Toast.makeText(this, "Please enter a session name.", Toast.LENGTH_LONG).show();
 			else {
 				if (!dataRdy) {
@@ -388,6 +392,15 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 
 			} 
+		}
+		if ( v == pagePrev ) {
+			currPage--;
+			writeDataToScreen( currPage );
+		}
+		if ( v == pageNext ) {
+			currPage++;
+			writeDataToScreen( currPage );
+		}
 	}
 
 	public void prepDataForUpload() {
@@ -405,11 +418,23 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	public void writeDataToScreen( int page ) {
 		dataLayout.removeAllViews();
 		
+		pageLabel.setText("Page "+ (currPage+1));
+		
+		if(page == 0) {
+			pagePrev.setEnabled(false);
+		} else {
+			pagePrev.setEnabled(true);
+		}
+		
 		int topPoint = data.size()-(page*10)-1;
 		int bottomPoint = topPoint - 9;
-		if (bottomPoint < 0) {
+		if (bottomPoint <= 0) {
 			//If less than 10 results exist on page, restrict bottom point to 0
+			//and disable Next Page button
 			bottomPoint = 0;
+			pageNext.setEnabled(false);
+		} else {
+			pageNext.setEnabled(true);
 		}
 
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
