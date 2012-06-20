@@ -92,7 +92,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	ViewFlipper flipper;
 	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
 	LinearLayout dataLayout;
-	TextView tenPoints;
 	EditText nameField;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
@@ -202,7 +201,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-		tenPoints = (TextView) findViewById(R.id.onlyTenPoints);
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
@@ -385,7 +383,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			
 		}
 
-		findStatistics();	
+		findStatistics();
 	}
 
 	public void writeDataToScreen( int page ) {
@@ -397,9 +395,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			//If less than 10 results exist on page, restrict bottom point to 0
 			bottomPoint = 0;
 		}
-		dataLayout.addView(tenPoints);
-		tenPoints.setVisibility(View.VISIBLE);
-		tenPoints.setText("Datapoints "+(topPoint+1)+" - "+(topPoint - 9));
 
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();

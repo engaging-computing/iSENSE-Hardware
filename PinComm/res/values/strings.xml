@@ -38,4 +38,7 @@
     
     <string name="label_connect">Select a PINPoint</string>
     <string name="label_sensor">Select Sensors</string>
+    
+    <string name="button_backpage">Previous Page</string>
+    <string name="button_nextpage">Next Page</string>
 </resources>

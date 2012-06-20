@@ -61,7 +61,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/custombtn"
                 android:text="@string/retrieve_data" />
-            
 
             <TextView
                 android:id="@+id/statusField"
@@ -71,13 +70,13 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:text="Status: Not Connected"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout21"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp" >
 
             <LinearLayout
@@ -105,9 +104,9 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:layout_weight=".50"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:inputType="textCapWords"
                     android:maxLength="20"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
@@ -120,6 +119,39 @@
                 android:layout_weight=".75"
                 android:background="@drawable/custombtn"
                 android:text="@string/upload"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_prevPage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/custombtn"
+                android:text="@string/button_backpage"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/txt_pageIndicator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Page 1"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <Button
+                android:id="@+id/btn_nextPage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/custombtn"
+                android:text="@string/button_nextpage"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -222,7 +254,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:inputType="none"
-                    android:lines="1"/>
+                    android:lines="1" />
             </LinearLayout>
 
             <LinearLayout
