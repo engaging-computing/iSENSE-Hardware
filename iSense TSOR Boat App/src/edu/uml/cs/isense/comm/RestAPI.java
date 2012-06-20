@@ -1257,6 +1257,8 @@ public class RestAPI {
 				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
 					// Experiment has been closed
 					sid = -400;
+				} else {									
+					sid = obj.getInt("sessionId");	
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
