@@ -85,7 +85,7 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="0dp"
                     android:layout_weight=".50"
-                    android:text="Group Name:"
+                    android:text="@string/sessionname"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
@@ -98,6 +98,7 @@
                     android:layout_weight=".50"
                     android:inputType="textCapWords"
                     android:maxLength="20"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:textAppearance="?android:attr/textAppearanceLarge" >
 
                     <requestFocus />

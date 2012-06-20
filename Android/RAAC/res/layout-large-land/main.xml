@@ -91,6 +91,7 @@
 	              	android:layout_gravity="left"
                 	android:inputType="textCapWords"
                 	android:maxLength="20"
+                	android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                 	android:textAppearance="?android:attr/textAppearanceLarge" />
             </LinearLayout>
         </LinearLayout>

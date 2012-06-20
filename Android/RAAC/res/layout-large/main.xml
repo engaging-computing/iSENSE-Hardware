@@ -97,6 +97,7 @@
                     android:layout_weight=".50"
                     android:inputType="textCapWords"
                     android:maxLength="20"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:textAppearance="?android:attr/textAppearanceLarge" >
 
                     <requestFocus />
