@@ -14,38 +14,24 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/*import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;*/
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.objects.Item;
 import edu.uml.cs.isense.objects.Person;
 import edu.uml.cs.isense.objects.Session;
 import edu.uml.cs.isense.objects.SessionData;
-//import edu.uml.cs.isense.objects.Image;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
 /**
- * 
- * @author johnfertitta
- *
  * This class handles all the communications with the API provided by the website.  ALl functions are blocking and self caching.
  */
+
 public class RestAPI {
 	@SuppressWarnings("unused")
 		private static final String LOG_TAG = "RestAPI";
@@ -53,12 +39,14 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isense.cs.uml.edu/ws/api.php";
+	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;
 	private int uid;
 	private JSONArray dataCache;
+	
+	public String connection = "";
 	
 	protected RestAPI() {
 
@@ -155,28 +143,30 @@ public class RestAPI {
 	    return bytes;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean uploadPictureToSession(File image, String eid, int sid, String img_name, String img_desc) {
 		//String target = "?method=uploadImageToSession&session_key=" + session_key + "&sid=" + sid + "&img_name=" + img_name + "&img_desc=" + img_desc;
 		
 		try {
+			
 			byte[] data = getBytesFromFile(image);
 			
 			String lineEnd = "\r\n";
 			String twoHyphens = "--";
 			String boundary = "*****";
 			
-			URL connectURL = new URL(this.base_url);
+			URL connectURL = new URL(this.base_url);// Log.e("url", "url: " + this.base_url);
 			HttpURLConnection conn = (HttpURLConnection) connectURL.openConnection();
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
 			conn.setUseCaches(false);
 			conn.setRequestMethod("POST");
-	
+			
 			conn.setRequestProperty("Connection", "Keep-Alive");
 			conn.setRequestProperty("Content-Type", "multipart/form-data, boundary=" + boundary);
-	
+		//	Log.e("url", "conn: " + conn);
 			DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-	
+			
 			// submit header
 			dos.writeBytes(twoHyphens + boundary + lineEnd);
 			dos.writeBytes("Content-Disposition: form-data; name=\"method\"" + lineEnd);
@@ -251,19 +241,19 @@ public class RestAPI {
 			// send multipart form data necesssary after file data...
 	
 			dos.writeBytes(lineEnd);
-			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd); //Log.e("url", "dos: " + dos);
 	
 			// close streams
 			dos.flush();
 			dos.close();
-		
+			
 			try {
 				DataInputStream inStream = new DataInputStream(conn.getInputStream());
 				//String str;
 
-				//while ((str = inStream.readLine()) != null) {
-					//Log.d("rapi", "Server Response" + str);
-				//}
+				while ((/*str = */inStream.readLine()) != null) {
+				//	Log.d("rapi", "Server Response" + str);
+				}
 				inStream.close();
 				return true;
 			} catch (IOException ioex) {
@@ -272,11 +262,13 @@ public class RestAPI {
 			}
 			
 		} catch (Exception e) {
+		//	Log.e("Pic", ""+e);
 			return false;
 		}
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean uploadPicture(File image, String eid, String img_name, String img_desc) {
 		//String target = "?method=uploadImageToExperiment&session_key=" + session_key + "&eid=" + eid + "&img_name=" + img_name + "&img_desc=" + img_desc;
 		
@@ -371,11 +363,12 @@ public class RestAPI {
 		
 			try {
 				DataInputStream inStream = new DataInputStream(conn.getInputStream());
-				//String str;
+				@SuppressWarnings("unused")
+					String str;
 
-				/*while ((str = inStream.readLine()) != null) {
-					Log.d("rapi", "Server Response" + str);
-				}*/
+				while ((str = inStream.readLine()) != null) {
+					//Log.d("rapi", "Server Response" + str);
+				}
 				inStream.close();
 				return true;
 			} catch (IOException ioex) {
@@ -389,11 +382,13 @@ public class RestAPI {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean login(String username, String password) {
 		String url = "method=login&username=" + URLEncoder.encode(username) + "&password=" + URLEncoder.encode(password);
 		
-		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (connectivityManager != null && ( connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected())) {
 			try {
+				connection = "";
 				String data = makeRequest(url);
 				
 				// Parse JSON Result
@@ -408,17 +403,21 @@ public class RestAPI {
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+				connection = "NONE";
 				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
+				connection = "NONE";
 				return false;
 			} catch (Exception e) {
 				e.printStackTrace();
+				connection = "600";
 				return false;
 			}
 			
 			return true;
 		}
+		connection = "NONE";
 		return false;
 	}
 	
@@ -712,7 +711,7 @@ public class RestAPI {
 					s.experiment_id = obj.getInt("experiment_id");
 					s.name = obj.getString("name");
 					s.description = obj.getString("description");
-/*lat not long?*/	s.latitude = obj.getLong("latitude");
+					s.latitude = obj.getLong("latitude");
 					s.longitude = obj.getLong("longitude");
 					s.timecreated = obj.getString("timeobj");
 					s.timemodified = obj.getString("timemodified");
@@ -720,23 +719,6 @@ public class RestAPI {
 				    i.s.add(s);
 				}
 				
-				/*length = images.length();
-				
-				for (int j = 0; j < length; j++) {
-					JSONObject obj = images.getJSONObject(j);
-					Image img = new Image();
-					
-					img.title = obj.getString("title");
-					img.experiment_id = obj.getInt("experiment_id");
-					img.picture_id = obj.getInt("picture_id");
-					img.description = obj.getString("description");
-					img.provider_url = obj.getString("provider_url");
-					img.provider_id = obj.getString("provider_id");
-					img.timecreated = obj.getString("timecreated");
-					img.name = obj.getString("name");
-					
-					i.i.add(img);
-				}*/
 							
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -756,8 +738,9 @@ public class RestAPI {
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
 			try {
+				
 				String data = makeRequest(url);
-			
+				
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
 				JSONArray a = o.getJSONArray("data");
@@ -1147,8 +1130,12 @@ public class RestAPI {
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
 				JSONObject obj = o.getJSONObject("data");
-													
-				sid = obj.getInt("sessionId");	
+					
+				String msg = obj.optString("msg");
+				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+						// Experiment has been closed
+						sid = -400;					
+				} else 	sid = obj.getInt("sessionId");	
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1160,7 +1147,7 @@ public class RestAPI {
 		
 		return sid;
 	}
-	
+		
 	public boolean putSessionData(int sid, String eid, JSONArray dataJSON) {
 		String url = "method=putSessionData&session_key=" + session_key + "&sid=" + sid + "&eid=" + eid + "&data=" + dataJSON.toString();
 		boolean ret = false;
@@ -1183,9 +1170,11 @@ public class RestAPI {
 		return ret;
 	}
 	
+	/** Method has been updated from original for the purpose of this app only: 
+	 *  in String url = ..., changed dataJSON.tostring(); from dataCache.toString(); */
 	public boolean updateSessionData(int sid, String eid, JSONArray dataJSON) {
 		dataCache.put(dataJSON);
-		String url = "method=updateSessionData&session_key=" + session_key + "&sid=" + sid + "&eid=" + eid + "&data=" + dataCache.toString();
+		String url = "method=updateSessionData&session_key=" + session_key + "&sid=" + sid + "&eid=" + eid + "&data=" + dataJSON.toString();
 		boolean ret = false;
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
@@ -1238,7 +1227,7 @@ public class RestAPI {
 		
 		// Get the status code of the HTTP Request so we can figure out what to do next
 		int status = conn.getResponseCode();
-		
+	
 		switch(status) {
 								
 			case 200:
@@ -1255,7 +1244,7 @@ public class RestAPI {
 				}
 			
 				// Set output from response
-				output = sb.toString();				
+				output = sb.toString();		
 				break;
 			
 			case 404:
@@ -1265,15 +1254,18 @@ public class RestAPI {
 			
 			default:
 				// Catch all for all other HTTP response codes
-				//Log.d("rapi", "Returned unhandled error code: " + status);
+			//	Log.d("rapi", "Returned unhandled error code: " + status);
 				break;
 		}
 		
 		return output;
 	}
 	
+	/*
+	 *  Additional method by Mike S.
+	 */
 	public boolean isConnectedToInternet() {
-		
+	
 		if(((connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected())) ||
 				((connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()))) {
 			return true;
@@ -1281,6 +1273,6 @@ public class RestAPI {
 			return false;
 		}
 	}
-	
+
 }
 
