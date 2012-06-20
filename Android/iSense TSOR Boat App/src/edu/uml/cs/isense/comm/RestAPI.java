@@ -40,7 +40,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isense.cs.uml.edu/ws/api.php";
+	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;
@@ -1252,8 +1252,12 @@ public class RestAPI {
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
 				JSONObject obj = o.getJSONObject("data");
-													
-				sid = obj.getInt("sessionId");	
+				
+				String msg = obj.getString("msg");
+				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+					// Experiment has been closed
+					sid = -400;
+				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1302,6 +1306,16 @@ public class RestAPI {
 				if (data.compareTo("{}") != 0) {
 					dataCache = new JSONArray();
 					ret = true;
+				}
+				
+				// Parse JSON Result
+				JSONObject o = new JSONObject(data);
+				JSONObject obj = o.getJSONObject("data");
+				
+				String msg = obj.getString("msg");
+				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+					// Experiment has been closed
+					ret = false;
 				}
 				
 			} catch (MalformedURLException e) {
