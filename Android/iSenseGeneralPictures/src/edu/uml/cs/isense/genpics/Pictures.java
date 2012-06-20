@@ -96,6 +96,7 @@ public class Pictures extends Activity implements LocationListener {
 	private static boolean calledBySmartUp = false;
 	private static boolean finishedUploadSetup = false;
 	private static boolean uploadError = false;
+	private static boolean status400 = false;
 	public static boolean initialLoginStatus = true;
 
 	private Picture uploaderPic = null;
@@ -481,48 +482,6 @@ public class Pictures extends Activity implements LocationListener {
 		return false;
 	}
 
-	/*
-	 * protected void setTeacherInfo(String session_title, String session_desc)
-	 * { AlertDialog.Builder alert = new AlertDialog.Builder( mContext ) ;
-	 * 
-	 * alert.setTitle( session_title ) ; alert.setMessage( session_desc ) ;
-	 * 
-	 * //Set an EditText view to get user input final EditText input = new
-	 * EditText( mContext ) ; alert.setView( input ) ;
-	 * input.setText(teacherInfo) ;
-	 * 
-	 * alert.setPositiveButton( "Ok", new DialogInterface.OnClickListener() {
-	 * public void onClick( DialogInterface dialog, int whichButton ) {
-	 * teacherInfo = input.getText().toString(); // Do something with value! }
-	 * });
-	 * 
-	 * alert.setNegativeButton( "Cancel", new DialogInterface.OnClickListener()
-	 * { public void onClick( DialogInterface dialog, int whichButton ) { //
-	 * Canceled. } });
-	 * 
-	 * alert.show(); }
-	 * 
-	 * protected void setSchoolInfo(String session_title, String session_desc) {
-	 * AlertDialog.Builder alert = new AlertDialog.Builder( mContext ) ;
-	 * 
-	 * alert.setTitle( session_title ) ; alert.setMessage( session_desc ) ;
-	 * 
-	 * //Set an EditText view to get user input final EditText input2 = new
-	 * EditText( mContext ) ; alert.setView( input2 ) ; input2.setText(
-	 * schoolInfo ) ;
-	 * 
-	 * alert.setPositiveButton( "Ok", new DialogInterface.OnClickListener() {
-	 * public void onClick( DialogInterface dialog, int whichButton ) {
-	 * schoolInfo = input2.getText().toString(); // Do something with value! }
-	 * });
-	 * 
-	 * alert.setNegativeButton( "Cancel", new DialogInterface.OnClickListener()
-	 * { public void onClick( DialogInterface dialog, int whichButton ) { //
-	 * Canceled. } });
-	 * 
-	 * alert.show(); }
-	 */
-
 	@Override
 	protected void onResume() {
 		if (!smartUploading && !rapi.isConnectedToInternet())
@@ -598,7 +557,7 @@ public class Pictures extends Activity implements LocationListener {
 			}
 
 			if (!smartUploading || (smartUploading && !calledBySmartUp)) {
-				
+
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 				String experimentNum = mPrefs.getString("experiment_number",
 						"Error");
@@ -609,8 +568,8 @@ public class Pictures extends Activity implements LocationListener {
 				}
 
 				int sessionId = rapi.createSession(experimentNum, name
-						.getText().toString(),
-						"No description provided.", "n/a", "Lowell, MA", "");
+						.getText().toString(), "No description provided.",
+						"n/a", "Lowell, MA", "");
 
 				if (sessionId == -1) {
 					uploadError = true;
@@ -629,20 +588,29 @@ public class Pictures extends Activity implements LocationListener {
 				finishedUploadSetup = true;
 				dia.setProgress(95);
 
-				if (!rapi.updateSessionData(sessionId, experimentNum, dataJSON)) {
-					uploadError = true;
+				// Experiment Closed Checker
+				if (sessionId == -400) {
+					status400 = true;
 					return;
-				}
-				dia.setProgress(99);
+				} else {
+					status400 = false;
+					if (!rapi.updateSessionData(sessionId, experimentNum,
+							dataJSON)) {
+						uploadError = true;
+						return;
+					}
+					dia.setProgress(99);
 
-				if (!rapi.uploadPictureToSession(picture, experimentNum,
-						sessionId, name.getText().toString(),
-						"No description provided.")) {
-					uploadError = true;
+					if (!rapi.uploadPictureToSession(picture, experimentNum,
+							sessionId, name.getText().toString(),
+							"No description provided.")) {
+						uploadError = true;
+					}
 				}
 			} else {
 				smartUploader(uploaderPic.file, uploaderPic.latitude,
-						uploaderPic.longitude, uploaderPic.name, uploaderPic.time);
+						uploaderPic.longitude, uploaderPic.name,
+						uploaderPic.time);
 			}
 		}
 	};
@@ -655,7 +623,7 @@ public class Pictures extends Activity implements LocationListener {
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri, this);
-				
+
 				takePicture.setEnabled(true);
 				if (smartUploading) {
 					if (userLoggedIn) {
@@ -670,10 +638,9 @@ public class Pictures extends Activity implements LocationListener {
 					} else
 						showDialog(DIALOG_NOT_LOGGED_IN);
 				}
-				
-				
+
 			}
-		
+
 		} else if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 
@@ -775,11 +742,12 @@ public class Pictures extends Activity implements LocationListener {
 			dia.setMessage("Done");
 			dia.cancel();
 
-			if (!uploadError)
-				makeToast("Your picture has uploaded successfully.",
-						Toast.LENGTH_LONG);
-			else
-				makeToast("An error occured during upload.", Toast.LENGTH_LONG);
+			if (status400)
+	        	makeToast("Your data cannot be uploaded to this experiment.  It has been closed.", Toast.LENGTH_LONG);
+	        else if (uploadError) 
+	        	makeToast("An error occured during upload.", Toast.LENGTH_LONG);
+	        else 
+	        	makeToast("Your picture has uploaded successfully.", Toast.LENGTH_LONG);
 
 			uploadError = false;
 
@@ -912,8 +880,7 @@ public class Pictures extends Activity implements LocationListener {
 	}
 
 	// upload stuff from the queue
-	private void smartUploader(File f, double lat, double lon, String n,
-			long t) {
+	private void smartUploader(File f, double lat, double lon, String n, long t) {
 
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		String experimentNum = mPrefs.getString("experiment_number", "Error");
@@ -924,8 +891,8 @@ public class Pictures extends Activity implements LocationListener {
 		}
 
 		int sessionId;
-		if ((sessionId = rapi.createSession(experimentNum, n, "No description provided.",
-				"n/a", "Lowell, MA", "")) == -1) {
+		if ((sessionId = rapi.createSession(experimentNum, n,
+				"No description provided.", "n/a", "Lowell, MA", "")) == -1) {
 			uploadError = true;
 			return;
 		}
@@ -942,17 +909,25 @@ public class Pictures extends Activity implements LocationListener {
 		finishedUploadSetup = true;
 		dia.setProgress(90);
 
-		boolean success = rapi.updateSessionData(sessionId, experimentNum,
-				dataJSON);
-		if (!success) {
-			uploadError = true;
+		// Experiment Closed Checker
+		if (sessionId == -400) {
+			status400 = true;
 			return;
-		}
-		dia.setProgress(99);
+		} else {
+			status400 = false;
+			boolean success = rapi.updateSessionData(sessionId, experimentNum,
+					dataJSON);
+			if (!success) {
+				uploadError = true;
+				return;
+			}
+			dia.setProgress(99);
 
-		success = rapi.uploadPictureToSession(f, experimentNum, sessionId, n, "No description provided.");
-		if (!success)
-			uploadError = true;
+			success = rapi.uploadPictureToSession(f, experimentNum, sessionId, n,
+					"No description provided.");
+			if (!success)
+				uploadError = true;
+		}
 	}
 
 	// uploads pictures if smartUploading is enabled
