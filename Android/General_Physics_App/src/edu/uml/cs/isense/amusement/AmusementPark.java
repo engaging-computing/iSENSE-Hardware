@@ -319,9 +319,15 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 								elapsedMillis += INTERVAL;
 								totalMillis = elapsedMillis;
 								
-								if((i % 5) == 0)
-									setTime(secondsElapsed++);
-								
+								if((i % 5) == 0) {
+									mHandler.post(new Runnable() {
+										@Override
+										public void run() {
+											setTime(secondsElapsed++);
+										}
+									});
+								}
+												
 								if(i >= 3000) {
 								
 									timeTimer.cancel();
@@ -703,6 +709,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			    	  		partialSessionName = sessionName.getText().toString();
 			    	  		setupDone = true;
 			    	  		canobieBackup = canobieIsChecked;
+			    	  		rideName.setText("Ride/St#: " + rideNameString + " " + stNumber);
 			    	  		if(pictures.size() > 0)
 			    	  			pushPicture();
 			    	  		if(videos.size() > 0)
@@ -716,7 +723,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			    	  			pushVideo();
 			    	  		break;
 			    	  }
-			          rideName.setText("Ride Name: " + rideNameString);
+			          rideName.setText("Ride/St#: " + rideNameString);
 
 			      } 
 			}, "Configure Options");
@@ -770,7 +777,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			    		case DIALOG_CANCELED:
 			    	  		break;
 					}
-					rideName.setText("Ride Name: " + rideNameString);
+					rideName.setText("Ride/St#: " + rideNameString);
 
 				}
 	    	}, "Final Step");
@@ -1433,7 +1440,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		if (secInt <= 9) sec = "0" + secInt;
 		else             sec = ""  + secInt;
 		
-		time.setText("Time Elapsed: " + min + "" + sec);
+		time.setText("Time Elapsed: " + min + ":" + sec);
 	}
 	
 	// Everything needed to be initialized for onCreate
@@ -1456,7 +1463,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         time     = (TextView) findViewById(R.id.time);
         rideName = (TextView) findViewById(R.id.ridename);
         
-        rideName.setText("Ride Name: " + rideNameString + stNumber);
+        rideName.setText("Ride/St#: " + rideNameString + stNumber);
         
         picCount = (TextView) findViewById(R.id.pictureCount);
     	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
