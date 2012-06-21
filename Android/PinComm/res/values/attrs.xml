@@ -6,5 +6,12 @@
         <attr name="desc" format="string" />
         <attr name="lastmod" format="string" />
     </declare-styleable>
+    
+    <declare-styleable name="datarow">
+		<attr name="toplabel" format="string" />
+        <attr name="time" format="string" />
+        <attr name="sensor1name" format="string" />
+        <attr name="sensor1data" format="string" />
+    </declare-styleable>
 
 </resources>

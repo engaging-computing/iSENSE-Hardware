@@ -85,6 +85,8 @@ import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 public class Isense extends Activity implements OnClickListener, TextWatcher {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
+	Button pagePrev, pageNext;
+	TextView pageLabel;
 	ScrollView dataScroller;
 	ImageButton pinpointBtn;
 	ImageView spinner;
@@ -92,7 +94,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	ViewFlipper flipper;
 	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
 	LinearLayout dataLayout;
-	TextView tenPoints;
 	EditText nameField;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
@@ -114,6 +115,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private ProgressDialog dia;
 	JSONArray dataSet;
 	public static Context mContext;
+	int currPage = 0; //current page of data to display
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -145,14 +147,13 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
-		
+
 		SharedPreferences myPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		username = myPrefs.getString("isense_user", "");
 		password = myPrefs.getString("isense_pass", "");
-		nameField.setText(myPrefs.getString("group_name", ""));
 		experimentId = myPrefs.getString("isense_expId", "");
-		
+
 		if(myPrefs.getBoolean("FirstRun", true) == true) {
 			Intent i = new Intent(this, Login.class);
 			startActivityForResult(i, LOGIN_BOX);
@@ -186,12 +187,17 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	//Set up all views from the XML layout
 	public void initializeLayout() {
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		SharedPreferences sensorPrefs = getSharedPreferences("SENSORS", 0);
+		SharedPreferences defaultPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		pushToISENSE = (Button) findViewById(R.id.btn_pushToISENSE);
+		pagePrev = (Button) findViewById(R.id.btn_prevPage);
+		pageNext = (Button) findViewById(R.id.btn_nextPage);
+		pageLabel = (TextView) findViewById(R.id.txt_pageIndicator);
 		pinpointBtn = (ImageButton) findViewById(R.id.pinpoint_select_btn);
 		launchLayout = (RelativeLayout) findViewById(R.id.launchlayout);
 		minField = (TextView) findViewById(R.id.et_min);
@@ -201,18 +207,30 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-		tenPoints = (TextView) findViewById(R.id.onlyTenPoints);
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
-		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
-		sensorType = prefs.getString("name_bta1", "None");
+		sensorHead.setText("BTA1: " + sensorPrefs.getString("name_bta1", "None"));
+		sensorType = sensorPrefs.getString("name_bta1", "None");
+
+		nameField.setText(defaultPrefs.getString("group_name", ""));
 		
 		nameField.addTextChangedListener(this);
+		
+		pageLabel.setText("Page "+ (currPage+1));
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		pushToISENSE.setOnClickListener(this);
+		pagePrev.setOnClickListener(this);
+		pageNext.setOnClickListener(this);
+		
+		if(currPage == 0) {
+			pagePrev.setEnabled(false);
+		}
+		if(data == null) {
+			pageNext.setEnabled(false);
+		}
 
 		minField.setText(datMin);
 		maxField.setText(datMax);
@@ -233,7 +251,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 		if (data != null) {
 			prepDataForUpload();
-			writeDataToScreen();
+			writeDataToScreen(currPage);
 		}
 	}
 
@@ -318,7 +336,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 			};
 
-			dataLayout.removeAllViews();
 			if( bta1Data != null || timeData != null ) {
 				bta1Data.clear();
 				timeData.clear();
@@ -351,8 +368,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 										progressDialog.dismiss();
 									}
 									if (data != null) {
+										currPage = 0;
 										prepDataForUpload();
-										writeDataToScreen();
+										writeDataToScreen(currPage);
 										dataRdy = true;
 									}
 								}
@@ -364,133 +382,109 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			thread.start();
 			pushToISENSE.setEnabled(true);
 		}
-		if (v == pushToISENSE)
-			if (nameField.length() == 0) Toast.makeText(this, "Please enter a name.", Toast.LENGTH_LONG).show();
+		if (v == pushToISENSE) {
+			if (nameField.length() == 0) Toast.makeText(this, "Please enter a session name.", Toast.LENGTH_LONG).show();
 			else {
 				if (!dataRdy) {
-					Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, "There is no data to upload.", Toast.LENGTH_LONG).show();
 				} else {
 					uploadData();
 				}
 
 			} 
+		}
+		if ( v == pagePrev ) {
+			currPage--;
+			writeDataToScreen( currPage );
+		}
+		if ( v == pageNext ) {
+			currPage++;
+			writeDataToScreen( currPage );
+		}
 	}
 
 	public void prepDataForUpload() {
-		int x = 0;
 		for (int i = 0; i < data.size(); i++) {
-			String[] strray = data.get(i);
 
-			for (String str : strray) {
-				x++;
-				switch(x) {
-				case 1:  timeData.add(fmtData(str));           									break;
-				case 14: bta1Data.add(Double.parseDouble(str));			break;
-				default:                                        								break;
-				}
-			}
-			x = 0;
+			String[] strray = data.get(i);
+			timeData.add(fmtData(strray[0]));
+			bta1Data.add(Double.parseDouble(strray[13]));
+			
 		}
 
-		findStatistics();	
+		findStatistics();
 	}
 
-	public void writeDataToScreen() {
-		int i = 0;
-		int y = 1;
-		if (data.size() > 10) {
-			dataLayout.addView(tenPoints);
-			tenPoints.setVisibility(View.VISIBLE);
-			i = data.size()-10;
-			y = data.size()-9;
+	public void writeDataToScreen( int page ) {
+		dataLayout.removeAllViews();
+		
+		pageLabel.setText("Page "+ (currPage+1));
+		
+		if(page == 0) {
+			pagePrev.setEnabled(false);
+		} else {
+			pagePrev.setEnabled(true);
+		}
+		
+		int topPoint = data.size()-(page*10)-1;
+		int bottomPoint = topPoint - 9;
+		if (bottomPoint <= 0) {
+			//If less than 10 results exist on page, restrict bottom point to 0
+			//and disable Next Page button
+			bottomPoint = 0;
+			pageNext.setEnabled(false);
+		} else {
+			pageNext.setEnabled(true);
 		}
 
-		int x = 0;
-		String label = "";
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
 
 		try {
-			for (; i<data.size(); i++) {
+			for (int i = topPoint; i >= bottomPoint; i--) {
 				String[] strray = data.get(i);
 				DecimalFormat df = new DecimalFormat("#0.00");
-				LinearLayout newRow = new LinearLayout(getBaseContext());
-				newRow.setOrientation(LinearLayout.HORIZONTAL);
+				edu.uml.cs.pincomm.DatapointRow newRow = new edu.uml.cs.pincomm.DatapointRow(getBaseContext(), null);
 				if(i%2 != 0) {
-					newRow.setBackgroundColor(res.getColor(R.color.rowcols));
+					newRow.setLayoutBg(res.getColor(R.color.rowcols));
 				}
-				TextView tvLeft1 = new TextView(getBaseContext());
-				tvLeft1.setText(Html.fromHtml("<b>" + "Datapoint " + y + "</b>"));
-				tvLeft1.setTextColor(Color.BLACK);
-				TextView tvRight1 = new TextView(getBaseContext());
-				newRow.addView(tvLeft1);
-				newRow.addView(tvRight1);
+				newRow.setLabel("Datapoint "+ (i+1));
+				newRow.setSensor1Name(prefs.getString("name_bta1", "BTA 1"));
+				//for (String str : strray) {
+				//x++;
+				//					switch(x) {
+				//					case 1: label = "Time (GMT)"; break;
+				//					//case 2: label = "Latitude"; break;
+				//					//case 3: label = "Longitude"; break;
+				//					//case 4: label = "Altitude GPS (m)"; break;
+				//					//case 5: label = "Altitude (m)"; break;
+				//					//case 6: label = "Pressure (atm)"; break;
+				//					//case 7: label = "Air Temperature (c)"; break;
+				//					//case 8: label = "Humidity (%rh)"; break;
+				//					//case 9: label = "Light (lux)"; break;
+				//					//case 10: label = "X-Accel"; break;
+				//					//case 11: label = "Y-Accel"; break;
+				//					//case 12: label = "Z-Accel"; break;
+				//					//case 13: label = "Acceleration"; break;
+				//					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
+				//					//case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
+				//					//case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
+				//					//case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
+				//					default:
+				//						continue;
+				//					}
+
+				newRow.setTime(strray[0]);
+				newRow.setSensor1Data(df.format(Double.parseDouble(strray[13])));
+
 				dataLayout.addView(newRow);
-				for (String str : strray) {
-					x++;
-					switch(x) {
-					case 1: label = "Time (GMT)"; break;
-					//case 2: label = "Latitude"; break;
-					//case 3: label = "Longitude"; break;
-					//case 4: label = "Altitude GPS (m)"; break;
-					//case 5: label = "Altitude (m)"; break;
-					//case 6: label = "Pressure (atm)"; break;
-					//case 7: label = "Air Temperature (c)"; break;
-					//case 8: label = "Humidity (%rh)"; break;
-					//case 9: label = "Light (lux)"; break;
-					//case 10: label = "X-Accel"; break;
-					//case 11: label = "Y-Accel"; break;
-					//case 12: label = "Z-Accel"; break;
-					//case 13: label = "Acceleration"; break;
-					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
-					//case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
-					//case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
-					//case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
-					default:
-						continue;
-					}
-					LinearLayout newRow2 = new LinearLayout(getBaseContext());
-					newRow2.setOrientation(LinearLayout.HORIZONTAL);
-					if(i%2 != 0) {
-						newRow2.setBackgroundColor(res.getColor(R.color.rowcols));
-					}
-					TextView tvLeft2 = new TextView(getBaseContext());
-					tvLeft2.setText(label);
-					tvLeft2.setTextColor(Color.BLACK);
-					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
-					TextView tvRight2 = new TextView(getBaseContext());
-					if(x==14) {
-						tvRight2.setText(df.format(Double.parseDouble(str)));
-					} else {
-						tvRight2.setText(str);
-					}
-					tvRight2.setTextColor(Color.BLACK);
-					newRow2.addView(tvLeft2);
-					newRow2.addView(tvRight2);
-					dataLayout.addView(newRow2);
-				}
-				LinearLayout newRow3 = new LinearLayout(getBaseContext());
-				newRow3.setOrientation(LinearLayout.HORIZONTAL);
-				if(i%2 != 0) {
-					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
-				}
-				TextView tvLeft3 = new TextView(getBaseContext());
-				tvLeft3.setText("");
-				TextView tvRight3 = new TextView(getBaseContext());
-				tvRight3.setText("");
-				newRow3.addView(tvLeft3);
-				newRow3.addView(tvRight3);
-				dataLayout.addView(newRow3);
 				dataScroller.post(new Runnable() {
 					@Override
 					public void run() {
 						dataScroller.fullScroll(ScrollView.FOCUS_UP);
 					}
 				});
-				x = 0;
-				y++;
 			}
-			//findStatistics();
 		} catch (NullPointerException e) {
 			Toast.makeText(getApplicationContext(), "Error collecting data, please try again", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
@@ -701,12 +695,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				prefsEditor.putString("isense_user", data.getExtras().getString("myUsername"));
 				prefsEditor.putString("isense_pass", data.getExtras().getString("myPass"));
 				prefsEditor.commit();
-				
+
 				username = data.getExtras().getString("myUsername");
 				password = data.getExtras().getString("myPass");
-				
+
 				loggedIn = false;
-				
+
 				if (!loggedIn && rapi.isConnectedToInternet()
 						&& !username.equals("") && !password.equals("")) new PerformLogin().execute();
 			}
@@ -716,10 +710,10 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				SharedPreferences myPrefs = PreferenceManager
 						.getDefaultSharedPreferences(this);
 				SharedPreferences.Editor prefsEditor = myPrefs.edit();
-				
+
 				Toast.makeText(this, "Experiment ID set to "+data.getExtras().getInt("experimentID"), Toast.LENGTH_SHORT).show();
 				experimentId = ""+data.getExtras().getInt("experimentID");
-				
+
 				prefsEditor.putString("isense_expId", experimentId);
 				prefsEditor.commit();
 			}
@@ -734,7 +728,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					Toast.LENGTH_LONG).show();
 			return;
 		}
-		
+
 		if (experimentId.equals("")) {
 			Toast.makeText(this, "No experiment set, please choose Select Experiment from the menu",
 					Toast.LENGTH_LONG).show();
@@ -892,27 +886,27 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	@Override
 	public void afterTextChanged(Editable arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 			int arg3) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		
+
 		SharedPreferences myPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor prefsEditor = myPrefs.edit();
-		
+
 		prefsEditor.putString("group_name", nameField.getText().toString());
-		
+
 		prefsEditor.commit();
-		
+
 	}
 
 
