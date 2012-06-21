@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+   	android:layout_height="wrap_content"
+   	android:orientation="vertical">
+    
+    	<TextView
+	        android:id="@+id/fields_prompt"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dip"
+	        android:layout_marginRight="10dip"
+	        android:text="The selected experiment uses the following fields:"
+	        android:textAppearance="?android:attr/textAppearanceMedium"/>
+    	
+    	<TextView
+    	    android:id="@+id/fields_display"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginLeft="20dp"
+    	    android:layout_marginRight="20dp"
+    	    android:layout_marginTop="20dp"
+    	    />
+    	
+</LinearLayout>

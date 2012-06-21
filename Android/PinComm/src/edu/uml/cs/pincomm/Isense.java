@@ -79,6 +79,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.pincomm.comm.RestAPI;
 import edu.uml.cs.pincomm.exceptions.NoDataException;
+import edu.uml.cs.pincomm.objects.ExperimentField;
 import edu.uml.cs.pincomm.pincushion.BluetoothService;
 import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 
@@ -127,7 +128,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private static final int REQUEST_ENABLE_BT = 4;
 	private static final int REQUEST_VIEW_DATA = 5;
 	private static final int CHANGE_EXPERIMENT = 6;
-	private static final int LOGIN_BOX = 7;
+	private static final int CHANGE_FIELDS = 7;
+	private static final int LOGIN_BOX = 8;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -296,7 +298,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		} else if (item.getItemId() == R.id.menu_experiment) {
 			Intent i = new Intent(this, ChangeExperiment.class);
 			startActivityForResult(i, CHANGE_EXPERIMENT);
-		} 
+		} else if (item.getItemId() == R.id.menu_fields) {
+			Intent i = new Intent(this, ChangeFields.class);
+			i.putExtra("expID", Integer.parseInt(experimentId));
+			startActivityForResult(i, CHANGE_FIELDS);
+		}
 		return true;
 
 	}
