@@ -252,5 +252,6 @@
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
 	<string name="menuDirections">Use Menu to Setup, Login, or Upload</string>
+	<string name="timeElapsed">Time Elapsed: 0:00</string>
 
 </resources>
