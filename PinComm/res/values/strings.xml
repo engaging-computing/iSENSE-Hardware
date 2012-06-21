@@ -12,6 +12,9 @@
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
     <string name="sessionname">Session Name:</string>
     
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensors</string>
