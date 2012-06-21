@@ -4,17 +4,9 @@
 	<classpathentry excluding="classes/|res/" kind="src" path="bin"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="assets"/>
-	<classpathentry kind="lib" path="assets/apache-mime4j-0.6.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="/Applications/android-sdk-macosx/platforms/android-11/android.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Applications/android-sdk-macosx/docs/reference"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="assets/apache-mime4j-0.6.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -70,7 +70,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
-//import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -96,8 +95,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
 	private static EditText experimentInput;
 	private static EditText seats;
-	private static Spinner rides;
+	private static Spinner  rides;
 	private static TextView rideName;
+	private static TextView time;
 	private static CheckBox canobieCheck;
 	
 	private Button startStop;
@@ -108,7 +108,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private TextView picCount;
 	private TextView loginInfo;	
 	private String rideNameString = "NOT SET";
-	private String seatString = "1";
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
@@ -155,8 +154,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private ArrayList<File> pictures;
     private ArrayList<File> videos;
     
-    private static int    rideIndex      =  0 ;
-    private static String studentNumber  = "1";
+    private static int    rideIndex =  0 ;
  
     private int    elapsedMinutes = 0;
     private int    elapsedSeconds = 0;
@@ -166,11 +164,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private int    i              = 0;  
     private int    len            = 0;  
     private int    len2           = 0;
+    private int    secondsElapsed = 0;
 
     private long   currentTime    = 0;
     
-    private String dateString, s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;;
-    RestAPI rapi ;
+    private String dateString, s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
+    RestAPI rapi;
     
     DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -178,7 +177,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     double partialProg = 1.0;
     
 
-    
     private EditText sessionName; 
     String nameOfSession = "";
     String partialSessionName = "";
@@ -206,18 +204,19 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     FileWriter gpxwriter;
     BufferedWriter out;
     
-    public static String textToSession = "";
-    public static String toSendOut = "";
-    public static String loginName = "";
-    public static String loginPass = "";
-    public static String experimentId = "";
+    public  static String textToSession = "";
+    public  static String toSendOut = "";
+    public  static String loginName = "";
+    public  static String loginPass = "";
+    public  static String experimentId = "";
+    private static String stNumber  = "1";
+    
+    
     public static JSONArray dataSet;
 	
 	public static Context mContext;
 	
 	private static ArrayList<File> pictureArray = new ArrayList<File>();
-	//private static ArrayList<File> videoArray   = new ArrayList<File>();
-
 	
     @SuppressWarnings("deprecation")
 	@Override
@@ -227,16 +226,17 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         
         mContext = this;
         
-        //initialize everything you're going to need
+        // Initialize everything you're going to need
         initVars();
                
         // Display the End User Agreement
         displayEula();
         
-        //This block useful for if onBackPressed - retains some things from previous session
+        // This block useful for if onBackPressed - retains some things from previous session
         if(running)
     		showDialog(DIALOG_FORCE_STOP);
         
+        // Main Layout Button for Recording Data
         startStop.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
         startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -263,6 +263,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						mSensorManager.unregisterListener(AmusementPark.this);
 						running = false;
 						startStop.setText(R.string.startString);
+						time.setText(R.string.timeElapsed);
 						 
 						timeTimer.cancel();
 						count++;
@@ -280,8 +281,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					} else {
 						
 						dataSet = new JSONArray();
-						elapsedMillis = 0; totalMillis    = 0;
-						len = 0; len2 = 0; dataPointCount = 0;
+						secondsElapsed = 0;
+						elapsedMillis  = 0; totalMillis    = 0;
+						len = 0; len2  = 0; dataPointCount = 0;
 						i   = 0;
 						beginWrite = true; sdCardError = false;
 						currentTime = getUploadTime();
@@ -316,7 +318,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 								count = (count + 1) % 2;
 								elapsedMillis += INTERVAL;
 								totalMillis = elapsedMillis;
-			
+								
+								if((i % 5) == 0)
+									setTime(secondsElapsed++);
+								
 								if(i >= 3000) {
 								
 									timeTimer.cancel();
@@ -423,7 +428,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         	    folder.mkdir();
         	}     
         	
-        	SDFile = new File(folder,  rides.getSelectedItem() + "-" + seats.getText().toString() + "-" + dateString + ".csv");
+        	SDFile = new File(folder,  rides.getSelectedItem() + "-" + stNumber + "-" + dateString + ".csv");
      	
         	try {
                 gpxwriter = new FileWriter(SDFile);
@@ -485,7 +490,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	
     	for(int i = 0; i < pictures.size(); i++) {
     		File f = pictures.get(i);
-    		File newFile = new File(folder, rideNameString + "-" + seatString + "-" + dateString + "-" + (i+1) + ".jpeg");
+    		File newFile = new File(folder, rideNameString + "-" + stNumber + "-" + dateString + "-" + (i+1) + ".jpeg");
     		f.renameTo(newFile);
     		pictureArray.add(newFile);
     	}
@@ -509,9 +514,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	
     	for(int i = 0; i < videos.size(); i++) {
     		File f = videos.get(i);
-    		File newFile = new File(folder, rideNameString + "-" + seatString + "-" + dateString + "-" + (i+1) + ".3gp");
+    		File newFile = new File(folder, rideNameString + "-" + stNumber + "-" + dateString + "-" + (i+1) + ".3gp");
     		f.renameTo(newFile);
-    		//videoArray.add(newFile);
     	}
     	
     	videos.clear();
@@ -559,7 +563,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     	if(running)
     		showDialog(DIALOG_FORCE_STOP);
     	
-    	//will call the login dialogue if necessary and update UI
+    	// Will call the login dialogue if necessary and update UI
     	if(loginName != "") login(); 
     	
     	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
@@ -795,7 +799,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    	if (sdCardError)
 	    		appendMe = "File not written to SD Card.";
 	    	else
-	    		appendMe = "Filename: \n" + rideNameString + "-" + seatString + "-" + dateString;
+	    		appendMe = "Filename: \n" + rideNameString + "-" + stNumber + "-" + dateString;
 	    	
 	    	builder.setTitle("Session Summary")
 	    	.setMessage("Elapsed time: " + s_elapsedMinutes + ":" + s_elapsedSeconds + "." + s_elapsedMillis + "\n"
@@ -997,8 +1001,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					Intent experimentIntent = new Intent(getApplicationContext(), Experiments.class);
 					experimentIntent.putExtra("edu.uml.cs.isense.amusement.experiments.propose", EXPERIMENT_CODE);
 				
-				//	Log.w("JSON", "EXPERIMENT_CODE: " + EXPERIMENT_CODE); //honk
-				
 					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 				}
 				
@@ -1029,10 +1031,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         	
         });
         
-        // ride adapter WAS here! honk. oh, and it was also NOT a 'final' variable
-
         rides.setSelection(rideIndex);
-        seats.setText(studentNumber);
+        seats.setText(stNumber);
         
         Button b = (Button) v.findViewById(R.id.pictureButton);
 		
@@ -1047,7 +1047,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					ContentValues values = new ContentValues();
 					
 					imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-			//		Log.e("Uri", "imageUri: " + imageUri); //honk
 					
 					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -1080,8 +1079,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					ContentValues valuesVideos = new ContentValues();
 				
 					videoUri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, valuesVideos);
-			//		Log.e("Uri", "videoUri: " + videoUri); //honk
-				
+		
 					Intent intentVid = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
 					intentVid.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -1102,7 +1100,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         	   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
         		   public void onClick(DialogInterface dialog, int id) {
         			   rideIndex = rides.getSelectedItemPosition();
-        			   studentNumber = seats.getText().toString();
+        			   stNumber = seats.getText().toString();
         			   
         			   nameOfSession = sessionName.getText().toString();
         			   
@@ -1245,6 +1243,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
 	}
     
+    // Performs tasks after returning to main UI from previous activities
   	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1355,7 +1354,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 				}
 			
 				pictureArray.clear();
-				//videoArray.clear();
 			}
 					
 		}
@@ -1427,6 +1425,17 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    }
 	}
 	
+	public void setTime(int seconds) {	
+		int min    = seconds / 60;
+		int secInt = seconds % 60;
+		
+		String sec = "";
+		if (secInt <= 9) sec = "0" + secInt;
+		else             sec = ""  + secInt;
+		
+		time.setText("Time Elapsed: " + min + "" + sec);
+	}
+	
 	// Everything needed to be initialized for onCreate
 	@SuppressWarnings("deprecation")
 	private void initVars() {
@@ -1443,10 +1452,11 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
         startStop = (Button) findViewById(R.id.startStop);
               
-        values = (TextView) findViewById(R.id.values);
+        values   = (TextView) findViewById(R.id.values);
+        time     = (TextView) findViewById(R.id.time);
         rideName = (TextView) findViewById(R.id.ridename);
         
-        rideName.setText("Ride Name: " + rideNameString);
+        rideName.setText("Ride Name: " + rideNameString + stNumber);
         
         picCount = (TextView) findViewById(R.id.pictureCount);
     	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);

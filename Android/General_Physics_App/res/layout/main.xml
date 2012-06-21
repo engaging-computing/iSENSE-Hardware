@@ -56,6 +56,23 @@
 			
 		</LinearLayout>
 		
+		<LinearLayout android:orientation="vertical"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:background="@android:color/black">
+
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/time"
+				android:text="@+string/timeElapsed"
+				android:textSize="14dip"
+				android:textStyle="bold"
+				android:background="@android:color/black"
+				android:textColor="@android:color/white"
+				android:layout_gravity="center_horizontal"/>
+			
+		</LinearLayout>
+		
 		<Button android:text="@+string/startString" 
 			android:textSize="30dip"
 			android:id="@+id/startStop" 
