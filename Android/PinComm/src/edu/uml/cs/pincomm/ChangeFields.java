@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class ChangeFields extends Activity implements OnClickListener {
 	static int experimentId;
 	ArrayAdapter<String> sensorAdapter;
 	String[] sensorArray;
+	Button btnOK, btnCancel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,8 @@ public class ChangeFields extends Activity implements OnClickListener {
 
 		fieldLabels = (LinearLayout) findViewById(R.id.field_labels);
 		sensorSpinnerLayout = (LinearLayout) findViewById(R.id.sensor_spinners);
+		btnOK = (Button) findViewById(R.id.fields_ok);
+		btnCancel = (Button) findViewById(R.id.fields_cancel);
 
 		//Fills Sensor Spinners with all the PINPoint's sensors
 		//includes the names of external sensors the user has selected
@@ -48,8 +52,10 @@ public class ChangeFields extends Activity implements OnClickListener {
 		
 		sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
 		
-		experimentId = getIntent().getIntExtra("expID",0);
+		btnOK.setOnClickListener(this);
+		btnCancel.setOnClickListener(this);
 		
+		experimentId = getIntent().getIntExtra("expID",0);
 		showFields();
 	}
 
@@ -61,7 +67,13 @@ public class ChangeFields extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		//
+		if ( v == btnOK ) {
+			
+		} else if ( v == btnCancel ) {
+			Intent result = new Intent();
+			setResult(RESULT_CANCELED,result);
+			finish();
+		}
 	}	
 }
 
@@ -92,9 +104,9 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 	protected void onPostExecute(ArrayList<ExperimentField> results) {
 		dialog.cancel();
 		dialog = null;
-		int i = 0;
+		//int i = 0;
 		for(final ExperimentField field : results) {
-			i++;
+			//i++;
 			
 			//Makes sure that the generated TextViews are the same height as the generated spinners
 			//So that they match up nicely
