@@ -95,8 +95,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
 	private static EditText experimentInput;
 	private static EditText seats;
-	private static Spinner rides;
+	private static Spinner  rides;
 	private static TextView rideName;
+	private static TextView time;
 	private static CheckBox canobieCheck;
 	
 	private Button startStop;
@@ -163,6 +164,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private int    i              = 0;  
     private int    len            = 0;  
     private int    len2           = 0;
+    private int    secondsElapsed = 0;
 
     private long   currentTime    = 0;
     
@@ -261,6 +263,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						mSensorManager.unregisterListener(AmusementPark.this);
 						running = false;
 						startStop.setText(R.string.startString);
+						time.setText(R.string.timeElapsed);
 						 
 						timeTimer.cancel();
 						count++;
@@ -278,8 +281,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 					} else {
 						
 						dataSet = new JSONArray();
-						elapsedMillis = 0; totalMillis    = 0;
-						len = 0; len2 = 0; dataPointCount = 0;
+						secondsElapsed = 0;
+						elapsedMillis  = 0; totalMillis    = 0;
+						len = 0; len2  = 0; dataPointCount = 0;
 						i   = 0;
 						beginWrite = true; sdCardError = false;
 						currentTime = getUploadTime();
@@ -314,7 +318,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 								count = (count + 1) % 2;
 								elapsedMillis += INTERVAL;
 								totalMillis = elapsedMillis;
-			
+								
+								if((i % 5) == 0)
+									setTime(secondsElapsed++);
+								
 								if(i >= 3000) {
 								
 									timeTimer.cancel();
@@ -1418,6 +1425,17 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	    }
 	}
 	
+	public void setTime(int seconds) {	
+		int min    = seconds / 60;
+		int secInt = seconds % 60;
+		
+		String sec = "";
+		if (secInt <= 9) sec = "0" + secInt;
+		else             sec = ""  + secInt;
+		
+		time.setText("Time Elapsed: " + min + "" + sec);
+	}
+	
 	// Everything needed to be initialized for onCreate
 	@SuppressWarnings("deprecation")
 	private void initVars() {
@@ -1434,7 +1452,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
         startStop = (Button) findViewById(R.id.startStop);
               
-        values = (TextView) findViewById(R.id.values);
+        values   = (TextView) findViewById(R.id.values);
+        time     = (TextView) findViewById(R.id.time);
         rideName = (TextView) findViewById(R.id.ridename);
         
         rideName.setText("Ride Name: " + rideNameString + stNumber);
