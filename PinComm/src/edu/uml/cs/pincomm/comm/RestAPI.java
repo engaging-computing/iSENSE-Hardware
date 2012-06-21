@@ -25,7 +25,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import edu.uml.cs.pincomm.Isense;
-import edu.uml.cs.pincomm.ViewData;
 import edu.uml.cs.pincomm.WifiDisabled;
 import edu.uml.cs.pincomm.objects.Experiment;
 import edu.uml.cs.pincomm.objects.ExperimentField;

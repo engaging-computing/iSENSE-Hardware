@@ -5,33 +5,49 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.pincomm.comm.RestAPI;
-import edu.uml.cs.pincomm.objects.Experiment;
 import edu.uml.cs.pincomm.objects.ExperimentField;
 
 public class ChangeFields extends Activity implements OnClickListener {
-	TextView fieldList;
-	static Context myContext;
+	LinearLayout sensorSpinnerLayout;
+	LinearLayout fieldLabels;
 	static int experimentId;
+	ArrayAdapter<String> sensorAdapter;
+	String[] sensorArray;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.change_fields);
 
-		fieldList = (TextView) findViewById(R.id.fields_display);
+		fieldLabels = (LinearLayout) findViewById(R.id.field_labels);
+		sensorSpinnerLayout = (LinearLayout) findViewById(R.id.sensor_spinners);
 
-		myContext = this;
-
+		//Fills Sensor Spinners with all the PINPoint's sensors
+		//includes the names of external sensors the user has selected
+		Resources res = getResources();
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		sensorArray = res.getStringArray(R.array.pptsensors_array);
+		sensorArray[14] = prefs.getString("name_bta1", "BTA 1");
+		sensorArray[15] = prefs.getString("name_bta2", "BTA 2");
+		sensorArray[16] = prefs.getString("name_mini1", "Minijack 1");
+		sensorArray[17] = prefs.getString("name_mini2", "Minijack 2");
+		
+		sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
+		
 		experimentId = getIntent().getIntExtra("expID",0);
 		
 		showFields();
@@ -41,7 +57,6 @@ public class ChangeFields extends Activity implements OnClickListener {
 		GetFieldsTask gft = new GetFieldsTask();
 		gft.setActivity(this);
 		gft.execute(Integer.valueOf(experimentId));
-
 	}
 
 	@Override
@@ -61,7 +76,7 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 	}
 
 	protected void onPreExecute() {
-		dialog = new ProgressDialog(ChangeFields.myContext);
+		dialog = new ProgressDialog(myAct);
 		dialog.setMessage("Fetching fields from iSENSE");
 		dialog.show();
 	}
@@ -80,7 +95,26 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 		int i = 0;
 		for(final ExperimentField field : results) {
 			i++;
-			myAct.fieldList.append("Field " + i + ": " + field.field_name + " (" + field.unit_abbreviation + ")\n");
+			
+			//Makes sure that the generated TextViews are the same height as the generated spinners
+			//So that they match up nicely
+			TypedValue value = new TypedValue();
+			((Activity) myAct).getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
+			DisplayMetrics metrics = new DisplayMetrics();
+			myAct.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			int listHeight = TypedValue.complexToDimensionPixelSize(value.data, metrics);
+			
+			//Generate a TextView for each field
+			TextView newLabel = new TextView(myAct);
+			newLabel.setText(field.field_name + " (" + field.unit_abbreviation + ")");
+			newLabel.setMinHeight(listHeight);
+			newLabel.setGravity(Gravity.CENTER_VERTICAL);
+			myAct.fieldLabels.addView(newLabel);
+			
+			//Generate a Spinner with all of the PINPoint sensors
+			Spinner newSpin = new Spinner(myAct);
+			newSpin.setAdapter(myAct.sensorAdapter);
+			myAct.sensorSpinnerLayout.addView(newSpin);
 		}
 	}
 

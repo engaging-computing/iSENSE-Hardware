@@ -43,4 +43,6 @@
     
     <string name="button_backpage">Previous Page</string>
     <string name="button_nextpage">Next Page</string>
+    
+    <string name="changefield_prompt1">For each field in the experiment, please select a sensor on your PINPoint</string>
 </resources>
