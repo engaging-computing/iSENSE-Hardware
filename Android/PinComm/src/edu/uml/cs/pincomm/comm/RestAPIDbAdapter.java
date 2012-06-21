@@ -2,10 +2,6 @@ package edu.uml.cs.pincomm.comm;
 
 import java.util.ArrayList;
 
-import edu.uml.cs.pincomm.objects.Experiment;
-import edu.uml.cs.pincomm.objects.ExperimentField;
-import edu.uml.cs.pincomm.objects.Person;
-import edu.uml.cs.pincomm.objects.Session;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +9,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import edu.uml.cs.pincomm.objects.Experiment;
+import edu.uml.cs.pincomm.objects.ExperimentField;
+import edu.uml.cs.pincomm.objects.Person;
+import edu.uml.cs.pincomm.objects.Session;
 
 public class RestAPIDbAdapter {
 	public static final String KEY_ROWID = "_id";
