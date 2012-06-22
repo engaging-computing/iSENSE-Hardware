@@ -20,6 +20,7 @@
         android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/usernameLabel"
         android:paddingLeft="6dip"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
         android:inputType="textEmailAddress"/>
         
     <TextView
@@ -40,6 +41,7 @@
         android:layout_below="@id/usernameInput"
         android:paddingLeft="6dip"
         android:password="true"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
         android:singleLine="true"/>
 
 </RelativeLayout>

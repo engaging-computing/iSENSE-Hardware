@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.uml.cs.pincomm"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="11" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        
+        <activity
+            android:name=".Isense"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MyTheme"
+            android:configChanges="keyboardHidden|orientation|keyboard" 
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Login"
+            android:label="@string/login_label"
+            android:theme="@style/Theme.MyDialogTheme" >
+        </activity>
+        <activity
+            android:name=".DeviceListActivity"
+            android:label="@string/label_connect"
+            android:theme="@style/Theme.MyDialogTheme" >
+        </activity>
+        <activity
+            android:name="SensorSelector"
+            android:label="@string/label_sensor"
+            android:theme="@style/Theme.MyDialogTheme" >
+        </activity>
+        <activity
+            android:name=".ViewData"
+            android:label="@string/view_page"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+        <activity
+            android:name=".ChangeExperiment"
+            android:label="@string/change_eid"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+        <activity
+            android:name=".WifiDisabled"
+            android:label="@string/wifi_page"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+    </application>
+
+</manifest>
