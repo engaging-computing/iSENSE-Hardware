@@ -620,7 +620,6 @@ public class RestAPI {
 	
 	public ArrayList<Experiment> getExperiments(int page, int limit, String action, String query) {
 		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query;
-		
 		ArrayList<Experiment> expList = new ArrayList<Experiment>();
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {

@@ -127,6 +127,13 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 			Spinner newSpin = new Spinner(myAct);
 			newSpin.setAdapter(myAct.sensorAdapter);
 			myAct.sensorSpinnerLayout.addView(newSpin);
+			
+			//Auto-detect field types and set their spinners accordingly
+			if(field.type_id == 7) {
+				newSpin.setSelection(1); //auto-detected time
+			} else if(field.type_id == 1) {
+				newSpin.setSelection(7); //auto-detected temp
+			}
 		}
 	}
 
