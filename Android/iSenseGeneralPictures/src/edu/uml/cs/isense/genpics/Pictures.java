@@ -78,8 +78,8 @@ public class Pictures extends Activity implements LocationListener {
 	private LocationManager mLocationManager;
 	private PowerManager pm;
 	private PowerManager.WakeLock wl;
-	private KeyguardManager keyguardManager;
-	private KeyguardLock lock;
+	//private KeyguardManager keyguardManager;
+	//private KeyguardLock lock;
 
 	private static boolean dontToastMeTwice = false;
 
@@ -359,8 +359,8 @@ public class Pictures extends Activity implements LocationListener {
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
 
-		keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-		lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+		//keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+		//lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -492,7 +492,7 @@ public class Pictures extends Activity implements LocationListener {
 			if (smartUploading && (QUEUE_COUNT > 0))
 				showDialog(DIALOG_READY_TO_UPLOAD);
 		}
-		lock.reenableKeyguard();
+		//lock.reenableKeyguard();
 		super.onResume();
 	}
 
@@ -502,7 +502,7 @@ public class Pictures extends Activity implements LocationListener {
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-		lock.reenableKeyguard();
+		//lock.reenableKeyguard();
 		super.onStart();
 	}
 
@@ -958,7 +958,7 @@ public class Pictures extends Activity implements LocationListener {
 		if (wl.isHeld())
 			wl.release();
 		mTimer = null;
-		lock.disableKeyguard();
+		//lock.disableKeyguard();
 		super.onStop();
 	}
 
