@@ -29,6 +29,7 @@ public class ChangeFields extends Activity implements OnClickListener {
 	ArrayAdapter<String> sensorAdapter;
 	String[] sensorArray;
 	Button btnOK, btnCancel;
+	int numFields = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,12 @@ public class ChangeFields extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if ( v == btnOK ) {
-			
+			Intent result = new Intent();
+			setResult(RESULT_OK,result);
+			result.putExtra("num_fields", numFields);
+			for(int i = 0; i < numFields; i++) {
+				//do something to get the fields back to Isense.java
+			}
 		} else if ( v == btnCancel ) {
 			Intent result = new Intent();
 			setResult(RESULT_CANCELED,result);
@@ -104,9 +110,9 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 	protected void onPostExecute(ArrayList<ExperimentField> results) {
 		dialog.cancel();
 		dialog = null;
-		//int i = 0;
 		for(final ExperimentField field : results) {
-			//i++;
+			//Count how many fields we have
+			myAct.numFields++;
 			
 			//Makes sure that the generated TextViews are the same height as the generated spinners
 			//So that they match up nicely
