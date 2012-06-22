@@ -19,8 +19,11 @@ public class LoginActivity {
 	private RestAPI rapi;
 	private Context mContext;
 	
-    private final String mLoginName = "PhysicsAppUser";
-    private final String mLoginPass = "omgThisIsFun";
+    //private final String mLoginName = "PhysicsAppUser";
+    //private final String mLoginPass = "omgThisIsFun";
+    
+    private final String mLoginName = "sor";
+    private final String mLoginPass = "sor";
 	
 	static final public int LOGIN_SUCCESSFULL = 1;
 	static final public int LOGIN_FAILED = 0;

@@ -100,6 +100,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static TextView time;
 	private static CheckBox canobieCheck;
 	
+	//private final String experimentNum = "422"; //isense
+	private final String experimentNum = "277"; //   dev
+    
+	
 	private Button startStop;
 	private Button browseButton;
 	private TextView values;
@@ -139,9 +143,6 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     
     public static final int CAMERA_PIC_REQUESTED = 1;
     public static final int CAMERA_VID_REQUESTED = 2;
-    
-    private final String experimentNum = "422";
-    //isense
     	
     private int count = 0;
     private String data;
@@ -259,11 +260,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						writeToSDCard(null, 'f');
 						setupDone = false;
 						useMenu = true;
-					
+						
 						mSensorManager.unregisterListener(AmusementPark.this);
 						running = false;
 						startStop.setText(R.string.startString);
 						time.setText(R.string.timeElapsed);
+						rideName.setText("Ride/St#: NOT SET");
 						 
 						timeTimer.cancel();
 						count++;
@@ -723,7 +725,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			    	  			pushVideo();
 			    	  		break;
 			    	  }
-			          rideName.setText("Ride/St#: " + rideNameString);
+			          rideName.setText("Ride/St#: " + rideNameString + " " + stNumber);
 
 			      } 
 			}, "Configure Options");
@@ -777,7 +779,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 			    		case DIALOG_CANCELED:
 			    	  		break;
 					}
-					rideName.setText("Ride/St#: " + rideNameString);
+					rideName.setText("Ride/St#: " + rideNameString + " " + stNumber);
 
 				}
 	    	}, "Final Step");
@@ -1463,7 +1465,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         time     = (TextView) findViewById(R.id.time);
         rideName = (TextView) findViewById(R.id.ridename);
         
-        rideName.setText("Ride/St#: " + rideNameString + stNumber);
+        rideName.setText("Ride/St#: " + rideNameString);
         
         picCount = (TextView) findViewById(R.id.pictureCount);
     	picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
