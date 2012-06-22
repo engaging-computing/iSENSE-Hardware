@@ -40,7 +40,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isense.cs.uml.edu/ws/api.php";
+	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;
@@ -1242,28 +1242,34 @@ public class RestAPI {
 	}
 	
 	public int createSession(String eid, String name, String description, String street, String city, String country)  {
-		int sid = -1;
-		String url = "method=createSession&session_key=" + session_key + "&eid=" + eid + "&name=" + name + "&description=" + description + "&street=" + street + "&city=" + city + "&country=" + country;
-		
-		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
-			try {
-				String data = makeRequest(url);
-				
-				// Parse JSON Result
-				JSONObject o = new JSONObject(data);
-				JSONObject obj = o.getJSONObject("data");
-													
-				sid = obj.getInt("sessionId");	
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} 
-		
-		return sid;
+        int sid = -1;
+        String url = "method=createSession&session_key=" + session_key + "&eid=" + eid + "&name=" + name + "&description=" + description + "&street=" + street + "&city=" + city + "&country=" + country;
+        
+        if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() 
+        		|| connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
+        	try {
+                String data = makeRequest(url);
+                        
+                // Parse JSON Result
+                JSONObject o = new JSONObject(data);
+                JSONObject obj = o.getJSONObject("data");
+                                
+                String msg = obj.optString("msg");
+                if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+                	// Experiment has been closed
+                    sid = -400;                                        
+                } else         
+                    sid = obj.getInt("sessionId");        
+        	} catch (MalformedURLException e) {
+                        e.printStackTrace();
+        	} catch (IOException e) {
+                        e.printStackTrace();
+        	} catch (Exception e) {
+                        e.printStackTrace();
+        	}
+        }
+        
+        return sid;
 	}
 	
 	public boolean putSessionData(int sid, String eid, JSONArray dataJSON) {
@@ -1303,6 +1309,16 @@ public class RestAPI {
 					dataCache = new JSONArray();
 					ret = true;
 				}
+				
+				// Parse JSON Result
+                JSONObject o = new JSONObject(data);
+                JSONObject obj = o.getJSONObject("data");
+                                
+                String msg = obj.optString("msg");
+                if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+                	// Experiment has been closed
+                    ret = false;                                        
+                }
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

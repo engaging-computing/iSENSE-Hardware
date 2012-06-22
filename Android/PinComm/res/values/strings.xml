@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wifi_page">WiFi Disabled</string>
+    <string name="app_name">PinComm</string>
+    <string name="button_scan">Scan for Devices</string>
+	<string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="none_paired">No paired devices found</string>
+    <string name="scanning">Scanning&#8230;</string>
+    <string name="select_device">Select a device to connect</string>
+    <string name="none_found">No devices found</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    <string name="sessionname">Session Name:</string>
+    
+    <string name="menu_connect">Connect a PINPoint</string>
+    <string name="menu_settime">Sync PINPoint Time</string>
+    <string name="menu_setsensors">Select Sensors</string>
+    <string name="menu_login">Edit Login Details</string>
+    <string name="menu_experiment">Select Experiment</string>
+    
+    <string name="minval">Minimum</string>
+    <string name="maxval">Maximum</string>
+    <string name="aveval">Average/Mean</string>
+    <string name="medval">Median</string>
+    <string name="view_page">View Data on iSENSE</string>
+    <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
+    <string name="upload">Upload Data</string>
+    <string name="retrieve_data">Retrieve Data</string>
+    
+    <string name="login_label">Sign in to iSENSE</string>
+    <string name="login_msg">Enter your sign in details to be able to upload data to iSENSE.</string>
+    <string name="login_usernameLbl">Username</string>
+    <string name="login_passLbl">Password</string>
+    <string name="login_button">Sign In</string>
+    
+    <string name="expr_msg">Please select the experiment to which you want to upload data</string>
+    <string name="change_eid">Select Experiment</string>
+    
+    <string name="label_connect">Select a PINPoint</string>
+    <string name="label_sensor">Select Sensors</string>
+    
+    <string name="button_backpage">Previous Page</string>
+    <string name="button_nextpage">Next Page</string>
+</resources>
