@@ -105,7 +105,10 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	String sensorType;
+	
+	ArrayList<String> trackedFields;
+	int amtTrackedFields = 0;
+	
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi;
 	private ProgressDialog dia;
@@ -208,7 +211,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		nameField = (EditText) findViewById(R.id.nameField);	
 
 		sensorHead.setText("BTA1: " + sensorPrefs.getString("name_bta1", "None"));
-		sensorType = sensorPrefs.getString("name_bta1", "None");
+		trackedFields = new ArrayList<String>();
+		amtTrackedFields = defaultPrefs.getInt("numFields", 0);
+		for (int i = 0; i < amtTrackedFields; i++) {
+			trackedFields.add(defaultPrefs.getString("trackedField"+i, ""));
+		}
 
 		nameField.setText(defaultPrefs.getString("group_name", ""));
 		
@@ -601,8 +608,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				break;
 			case BluetoothService.MESSAGE_WRITE:
 			case BluetoothService.MESSAGE_READ:
-				byte[] readBuf = (byte[]) msg.obj;
-				String readMessage = new String(readBuf, 0, msg.arg1);
 				break;
 			case BluetoothService.MESSAGE_DEVICE_NAME:
 				break;
@@ -679,7 +684,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 						data.getExtras().getString("mininame2"));
 
 				sensorHead.setText("BTA1: " + data.getExtras().getString("btaname1"));
-				sensorType = data.getExtras().getString("btaname1");
 
 				editor.commit();
 			}
@@ -719,6 +723,23 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				prefsEditor.commit();
 			}
 			break;
+		case CHANGE_FIELDS:
+			if (resultCode == RESULT_OK) {
+				SharedPreferences myPrefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences.Editor prefsEditor = myPrefs.edit();
+				
+				amtTrackedFields = data.getExtras().getInt("fields_num");
+				trackedFields = new ArrayList<String>();
+				
+				for (int i = 0; i < amtTrackedFields; i++) {
+					prefsEditor.putString("trackedField"+i, data.getExtras().getStringArray("fields_array")[i]);
+					trackedFields.add(data.getExtras().getStringArray("fields_array")[i]);
+				}
+				
+				prefsEditor.putInt("numFields", amtTrackedFields);
+				prefsEditor.commit();
+			}
 		}
 	}
 
@@ -738,28 +759,28 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 		dataSet = new JSONArray();
 
-		JSONArray dataJSON;
-		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
-			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put(bta1Data.get(i));
-				dataJSON.put("");
-				dataSet.put(dataJSON);
-			}
-		else if (sensorType.equals("Vernier pH Sensor")) {
-			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put("");
-				dataJSON.put(bta1Data.get(i));
-				dataSet.put(dataJSON);
-			}
-		}
-		else {
-			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
-			return;
-		}
+//		JSONArray dataJSON;
+//		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
+//			for (int i = 0; i < timeData.size(); i++) {
+//				dataJSON = new JSONArray();
+//				dataJSON.put(timeData.get(i));
+//				dataJSON.put(bta1Data.get(i));
+//				dataJSON.put("");
+//				dataSet.put(dataJSON);
+//			}
+//		else if (sensorType.equals("Vernier pH Sensor")) {
+//			for (int i = 0; i < timeData.size(); i++) {
+//				dataJSON = new JSONArray();
+//				dataJSON.put(timeData.get(i));
+//				dataJSON.put("");
+//				dataJSON.put(bta1Data.get(i));
+//				dataSet.put(dataJSON);
+//			}
+//		}
+//		else {
+//			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
+//			return;
+//		}
 
 		new UploadTask().execute();
 	}
