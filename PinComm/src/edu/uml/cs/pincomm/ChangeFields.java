@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -28,8 +29,9 @@ public class ChangeFields extends Activity implements OnClickListener {
 	static int experimentId;
 	ArrayAdapter<String> sensorAdapter;
 	String[] sensorArray;
+	ArrayList<String> fieldSelections;
+	static int fieldIndex = 0;
 	Button btnOK, btnCancel;
-	int numFields = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,9 @@ public class ChangeFields extends Activity implements OnClickListener {
 		
 		sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
 		
+		fieldIndex = 0;
+		fieldSelections = new ArrayList<String>();
+		
 		btnOK.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
 		
@@ -71,9 +76,8 @@ public class ChangeFields extends Activity implements OnClickListener {
 		if ( v == btnOK ) {
 			Intent result = new Intent();
 			setResult(RESULT_OK,result);
-			result.putExtra("num_fields", numFields);
-			for(int i = 0; i < numFields; i++) {
-				//do something to get the fields back to Isense.java
+			for(int i = 0; i < fieldIndex; i++) {
+				System.out.println(fieldSelections.get(i));
 			}
 		} else if ( v == btnCancel ) {
 			Intent result = new Intent();
@@ -111,8 +115,8 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 		dialog.cancel();
 		dialog = null;
 		for(final ExperimentField field : results) {
-			//Count how many fields we have
-			myAct.numFields++;
+			ChangeFields.fieldIndex++;
+			final int currIndex = ChangeFields.fieldIndex;
 			
 			//Makes sure that the generated TextViews are the same height as the generated spinners
 			//So that they match up nicely
@@ -133,12 +137,26 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 			Spinner newSpin = new Spinner(myAct);
 			newSpin.setAdapter(myAct.sensorAdapter);
 			myAct.sensorSpinnerLayout.addView(newSpin);
+			newSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+			    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+			    	myAct.fieldSelections.set(currIndex-1, myAct.sensorArray[pos]);
+			    }
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					//
+				}
+			});
 			
 			//Auto-detect field types and set their spinners accordingly
 			if(field.type_id == 7) {
+				myAct.fieldSelections.add(myAct.sensorArray[1]);
 				newSpin.setSelection(1); //auto-detected time
 			} else if(field.type_id == 1) {
+				myAct.fieldSelections.add(myAct.sensorArray[7]);
 				newSpin.setSelection(7); //auto-detected temp
+			} else {
+				myAct.fieldSelections.add(myAct.sensorArray[0]);
 			}
 		}
 	}
