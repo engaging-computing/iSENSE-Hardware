@@ -76,9 +76,9 @@ public class ChangeFields extends Activity implements OnClickListener {
 		if ( v == btnOK ) {
 			Intent result = new Intent();
 			setResult(RESULT_OK,result);
-			for(int i = 0; i < fieldIndex; i++) {
-				System.out.println(fieldSelections.get(i));
-			}
+			result.putExtra("fields_array", fieldSelections.toArray(new String[fieldSelections.size()]));
+			result.putExtra("fields_num", fieldSelections.size());
+			finish();
 		} else if ( v == btnCancel ) {
 			Intent result = new Intent();
 			setResult(RESULT_CANCELED,result);
