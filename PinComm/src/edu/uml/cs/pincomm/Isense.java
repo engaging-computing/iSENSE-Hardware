@@ -64,6 +64,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -71,6 +73,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -89,7 +92,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	ImageView spinner;
 	RelativeLayout launchLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
+	TextView minField, maxField, aveField, medField, btStatus;
+	Spinner sensorHead;
 	LinearLayout dataLayout;
 	EditText nameField;
 	static pinpointInterface ppi;
@@ -194,7 +198,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	//Set up all views from the XML layout
 	public void initializeLayout() {
-		SharedPreferences sensorPrefs = getSharedPreferences("SENSORS", 0);
+
 		SharedPreferences defaultPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
@@ -214,16 +218,17 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
-		nameField = (EditText) findViewById(R.id.nameField);	
-
-		sensorHead.setText("BTA1: " + sensorPrefs.getString("name_bta1", "None"));
+		sensorHead = (Spinner) findViewById(R.id.sensorNameHeader);
+		nameField = (EditText) findViewById(R.id.nameField);
+		
 		trackedFields = new ArrayList<String>();
 		amtTrackedFields = defaultPrefs.getInt("numFields", 0);
 		trackedFields.clear();
 		for (int i = 0; i < amtTrackedFields; i++) {
 			trackedFields.add(defaultPrefs.getString("trackedField"+i, ""));
 		}
+		
+		fillSensorSpinner();
 
 		nameField.setText(defaultPrefs.getString("group_name", ""));
 
@@ -422,6 +427,38 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 	}
 
+	public void fillSensorSpinner() {
+		SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final SharedPreferences.Editor editor = myPrefs.edit();
+		String[] sensorArray;
+		ArrayList<String> trackedFieldsMod = trackedFields;
+		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
+		
+		for(int i = 0; i < trackedFieldsMod.size(); i++ ) {
+			if(trackedFieldsMod.get(i).equals("Time (GMT)") || trackedFieldsMod.get(i).equals("None") || trackedFieldsMod.get(i).equals("No Sensor")) {
+				trackedFieldsMod.remove(i); //Don't let users find average/mean/etc for irrelevant fields
+			}
+		}
+		
+		sensorArray = trackedFieldsMod.toArray(new String[trackedFieldsMod.size()]);
+		ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
+		sensorHead.setAdapter(sensorAdapter);
+		if(prevSelection != -1) {
+			sensorHead.setSelection(prevSelection);
+		}
+		sensorHead.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+		    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+		    	editor.putInt("sensorspin_selection", pos);
+		    	editor.commit();
+		    }
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				//
+			}
+		});
+	}
+
 	public void prepDataForUpload() {
 		for (int i = 0; i < data.size(); i++) {
 
@@ -463,7 +500,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			pageNext.setEnabled(true);
 		}
 
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
 
 		try {
@@ -477,7 +513,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				newRow.setLabel("Datapoint "+ (i+1));
 				for (int j = 0; j < amtTrackedFields; j++) {
 					String field = trackedFields.get(j);
-					
+
 					if(field.equals("Time (GMT)")) {
 						newRow.addField(field, strray[0]);
 					} else if(!field.equals("None") && !field.equals("No Sensor")) {
@@ -485,7 +521,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 						int index = Arrays.asList(allSensors).indexOf(field);
 						newRow.addField(field, strray[index+1]);
 					}
-					
+
 				}
 				//for (String str : strray) {
 				//x++;
@@ -709,9 +745,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				editor.putString("name_mini2",
 						data.getExtras().getString("mininame2"));
 
-				sensorHead.setText("BTA1: " + data.getExtras().getString("btaname1"));
-
 				editor.commit();
+				fillSensorSpinner();
 			}
 			break;
 		case REQUEST_VIEW_DATA:
@@ -745,6 +780,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				Toast.makeText(this, "Experiment ID set to "+data.getExtras().getInt("experimentID"), Toast.LENGTH_SHORT).show();
 				experimentId = ""+data.getExtras().getInt("experimentID");
 
+				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new experiment
+				fillSensorSpinner();
+				
 				prefsEditor.putString("isense_expId", experimentId);
 				prefsEditor.commit();
 			}
@@ -763,6 +801,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					trackedFields.add(data.getExtras().getStringArray("fields_array")[i]);
 				}
 
+				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new fields
+				fillSensorSpinner();
+				
 				prefsEditor.putInt("numFields", amtTrackedFields);
 				prefsEditor.commit();
 			}
