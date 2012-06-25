@@ -105,10 +105,10 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	
+
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
-	
+
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi;
 	private ProgressDialog dia;
@@ -116,8 +116,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	public static Context mContext;
 	int currPage = 0; //current page of data to display
 
-	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
+	ArrayList<ArrayList<Double>> sensorData = new ArrayList<ArrayList<Double>>();
+
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE = 1;
@@ -144,6 +145,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+
+		//Initialize sensor data nested array list
+		for(int i = 0; i<16; i++) {
+			sensorData.add(new ArrayList<Double>());
+		}
 
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
@@ -218,9 +224,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 
 		nameField.setText(defaultPrefs.getString("group_name", ""));
-		
+
 		nameField.addTextChangedListener(this);
-		
+
 		pageLabel.setText("Page "+ (currPage+1));
 
 		pinpointBtn.setOnClickListener(this);
@@ -228,7 +234,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		pushToISENSE.setOnClickListener(this);
 		pagePrev.setOnClickListener(this);
 		pageNext.setOnClickListener(this);
-		
+
 		if(currPage == 0) {
 			pagePrev.setEnabled(false);
 		}
@@ -344,8 +350,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 			};
 
-			if( bta1Data != null || timeData != null ) {
-				bta1Data.clear();
+			if( timeData != null ) {
+				//clear data from all sensor arraylists
+				for(int i = 0; i<16; i++) {
+					sensorData.get(i).clear();
+				}
 				timeData.clear();
 			}
 
@@ -416,8 +425,15 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 			String[] strray = data.get(i);
 			timeData.add(fmtData(strray[0]));
-			bta1Data.add(Double.parseDouble(strray[13]));
-			
+			//Add data from each of the sensors
+			for(int j = 0; j<16; j++) {
+				try {
+					sensorData.get(j).add(Double.parseDouble(strray[j+1]));
+				} catch (NumberFormatException e) {
+					sensorData.get(j).add(0.0);
+				}
+			}
+
 		}
 
 		findStatistics();
@@ -425,15 +441,15 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	public void writeDataToScreen( int page ) {
 		dataLayout.removeAllViews();
-		
+
 		pageLabel.setText("Page "+ (currPage+1));
-		
+
 		if(page == 0) {
 			pagePrev.setEnabled(false);
 		} else {
 			pagePrev.setEnabled(true);
 		}
-		
+
 		int topPoint = data.size()-(page*10)-1;
 		int bottomPoint = topPoint - 9;
 		if (bottomPoint <= 0) {
@@ -504,11 +520,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		double min, max, ave, med;
 		double temp = 0;
 
-		if (bta1Data.size() != 0) {
-			min = bta1Data.get(0);
-			max = bta1Data.get(0);
+		if (sensorData.get(12).size() != 0) {
+			min = sensorData.get(12).get(0);
+			max = sensorData.get(12).get(0);
 
-			for (double i : bta1Data) {
+			for (double i : sensorData.get(12)) {
 				if (i < min) {
 					min = i;
 				}
@@ -517,7 +533,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 				temp += i;
 			}
-			ave = temp / bta1Data.size();
+			ave = temp / sensorData.get(12).size();
 
 			datMin = "" + form.format(min);
 			datMax = "" + form.format(max);
@@ -527,12 +543,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			maxField.setText(datMax);
 			aveField.setText(datAve);
 
-			if (bta1Data.size() == 1) {
-				med = bta1Data.get(0);
-			} else if (bta1Data.size() % 2 == 0) {
-				med = bta1Data.get((bta1Data.size() + 1) / 2);
+			if (sensorData.get(12).size() == 1) {
+				med = sensorData.get(12).get(0);
+			} else if (sensorData.get(12).size() % 2 == 0) {
+				med = sensorData.get(12).get((sensorData.get(12).size() + 1) / 2);
 			} else {
-				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
+				med = (sensorData.get(12).get((sensorData.get(12).size() / 2)) + sensorData.get(12).get((sensorData.get(12)
 						.size() + 1) / 2)) / 2;
 			}
 
@@ -728,15 +744,15 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				SharedPreferences myPrefs = PreferenceManager
 						.getDefaultSharedPreferences(this);
 				SharedPreferences.Editor prefsEditor = myPrefs.edit();
-				
+
 				amtTrackedFields = data.getExtras().getInt("fields_num");
 				trackedFields = new ArrayList<String>();
-				
+
 				for (int i = 0; i < amtTrackedFields; i++) {
 					prefsEditor.putString("trackedField"+i, data.getExtras().getStringArray("fields_array")[i]);
 					trackedFields.add(data.getExtras().getStringArray("fields_array")[i]);
 				}
-				
+
 				prefsEditor.putInt("numFields", amtTrackedFields);
 				prefsEditor.commit();
 			}
@@ -745,7 +761,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
-		if (timeData.size() != bta1Data.size()) {
+		if (timeData.size() != sensorData.get(12).size()) {
 			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
 					Toast.LENGTH_LONG).show();
 			return;
@@ -759,28 +775,28 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 		dataSet = new JSONArray();
 
-//		JSONArray dataJSON;
-//		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
-//			for (int i = 0; i < timeData.size(); i++) {
-//				dataJSON = new JSONArray();
-//				dataJSON.put(timeData.get(i));
-//				dataJSON.put(bta1Data.get(i));
-//				dataJSON.put("");
-//				dataSet.put(dataJSON);
-//			}
-//		else if (sensorType.equals("Vernier pH Sensor")) {
-//			for (int i = 0; i < timeData.size(); i++) {
-//				dataJSON = new JSONArray();
-//				dataJSON.put(timeData.get(i));
-//				dataJSON.put("");
-//				dataJSON.put(bta1Data.get(i));
-//				dataSet.put(dataJSON);
-//			}
-//		}
-//		else {
-//			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
-//			return;
-//		}
+		//		JSONArray dataJSON;
+		//		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
+		//			for (int i = 0; i < timeData.size(); i++) {
+		//				dataJSON = new JSONArray();
+		//				dataJSON.put(timeData.get(i));
+		//				dataJSON.put(bta1Data.get(i));
+		//				dataJSON.put("");
+		//				dataSet.put(dataJSON);
+		//			}
+		//		else if (sensorType.equals("Vernier pH Sensor")) {
+		//			for (int i = 0; i < timeData.size(); i++) {
+		//				dataJSON = new JSONArray();
+		//				dataJSON.put(timeData.get(i));
+		//				dataJSON.put("");
+		//				dataJSON.put(bta1Data.get(i));
+		//				dataSet.put(dataJSON);
+		//			}
+		//		}
+		//		else {
+		//			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
+		//			return;
+		//		}
 
 		new UploadTask().execute();
 	}
