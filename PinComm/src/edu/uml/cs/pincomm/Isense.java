@@ -34,6 +34,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -219,6 +220,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		sensorHead.setText("BTA1: " + sensorPrefs.getString("name_bta1", "None"));
 		trackedFields = new ArrayList<String>();
 		amtTrackedFields = defaultPrefs.getInt("numFields", 0);
+		trackedFields.clear();
 		for (int i = 0; i < amtTrackedFields; i++) {
 			trackedFields.add(defaultPrefs.getString("trackedField"+i, ""));
 		}
@@ -473,8 +475,18 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
-				newRow.addField("Time (GMT)", strray[0]);
-				newRow.addField(prefs.getString("name_bta1", "BTA 1"), df.format(Double.parseDouble(strray[13])));
+				for (int j = 0; j < amtTrackedFields; j++) {
+					String field = trackedFields.get(j);
+					
+					if(field.equals("Time (GMT)")) {
+						newRow.addField(field, strray[0]);
+					} else if(!field.equals("None") && !field.equals("No Sensor")) {
+						String[] allSensors = getResources().getStringArray(R.array.pptsensors_array);
+						int index = Arrays.asList(allSensors).indexOf(field);
+						newRow.addField(field, strray[index+1]);
+					}
+					
+				}
 				//for (String str : strray) {
 				//x++;
 				//					switch(x) {
@@ -745,7 +757,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 				amtTrackedFields = data.getExtras().getInt("fields_num");
 				trackedFields = new ArrayList<String>();
-
+				trackedFields.clear();
 				for (int i = 0; i < amtTrackedFields; i++) {
 					prefsEditor.putString("trackedField"+i, data.getExtras().getStringArray("fields_array")[i]);
 					trackedFields.add(data.getExtras().getStringArray("fields_array")[i]);
