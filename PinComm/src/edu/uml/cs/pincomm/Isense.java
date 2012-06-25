@@ -473,7 +473,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
-				newRow.setSensor1Name(prefs.getString("name_bta1", "BTA 1"));
+				newRow.addField("Time (GMT)", strray[0]);
+				newRow.addField(prefs.getString("name_bta1", "BTA 1"), df.format(Double.parseDouble(strray[13])));
 				//for (String str : strray) {
 				//x++;
 				//					switch(x) {
@@ -497,9 +498,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				//					default:
 				//						continue;
 				//					}
-
-				newRow.setTime(strray[0]);
-				newRow.setSensor1Data(df.format(Double.parseDouble(strray[13])));
 
 				dataLayout.addView(newRow);
 				dataScroller.post(new Runnable() {
