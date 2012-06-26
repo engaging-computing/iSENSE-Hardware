@@ -528,7 +528,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					} else if(!field.equals("None") && !field.equals("No Sensor")) {
 						getResources().getStringArray(R.array.pptsensors_array);
 						int index = Arrays.asList(allSensors).indexOf(field);
-						newRow.addField(field, strray[index-1]);
+						newRow.addField(field, df.format(Double.parseDouble(strray[index-1])));
 					}
 				}
 				//for (String str : strray) {
