@@ -437,6 +437,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		for(int i = 0; i < trackedFieldsMod.size(); i++ ) {
 			if(trackedFieldsMod.get(i).equalsIgnoreCase("Time (GMT)") || trackedFieldsMod.get(i).equalsIgnoreCase("None") || trackedFieldsMod.get(i).equalsIgnoreCase("No Sensor")) {
 				trackedFieldsMod.remove(i); //Don't let users find average/mean/etc for irrelevant fields
+				i--;
 			}
 		}
 		
@@ -793,6 +794,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				
 				prefsEditor.putString("isense_expId", experimentId);
 				prefsEditor.commit();
+				
+				//Launch field selection dialog
+				Intent i = new Intent(this, ChangeFields.class);
+				i.putExtra("expID", Integer.parseInt(experimentId));
+				startActivityForResult(i, CHANGE_FIELDS);
 			}
 			break;
 		case CHANGE_FIELDS:
