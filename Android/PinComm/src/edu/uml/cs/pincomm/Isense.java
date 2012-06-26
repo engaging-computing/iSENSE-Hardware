@@ -431,11 +431,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final SharedPreferences.Editor editor = myPrefs.edit();
 		String[] sensorArray;
-		ArrayList<String> trackedFieldsMod = trackedFields;
+		ArrayList<String> trackedFieldsMod = (ArrayList<String>) trackedFields.clone();
 		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
 		
 		for(int i = 0; i < trackedFieldsMod.size(); i++ ) {
-			if(trackedFieldsMod.get(i).equals("Time (GMT)") || trackedFieldsMod.get(i).equals("None") || trackedFieldsMod.get(i).equals("No Sensor")) {
+			if(trackedFieldsMod.get(i).equalsIgnoreCase("Time (GMT)") || trackedFieldsMod.get(i).equalsIgnoreCase("None") || trackedFieldsMod.get(i).equalsIgnoreCase("No Sensor")) {
 				trackedFieldsMod.remove(i); //Don't let users find average/mean/etc for irrelevant fields
 			}
 		}
@@ -444,7 +444,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
 		sensorHead.setAdapter(sensorAdapter);
 		if(prevSelection != -1) {
-			sensorHead.setSelection(prevSelection);
+			sensorHead.setSelection(prevSelection, false);
+		} else {
+			sensorHead.setSelection(0, false);
 		}
 		sensorHead.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
@@ -511,17 +513,23 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
+				
+				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+				String[] allSensors = getResources().getStringArray(R.array.pptsensors_array);
+				allSensors[14] = prefs.getString("name_bta1", "BTA 1");
+				allSensors[15] = prefs.getString("name_bta2", "BTA 2");
+				allSensors[16] = prefs.getString("name_mini1", "Minijack 1");
+				allSensors[17] = prefs.getString("name_mini2", "Minijack 2");
+				
 				for (int j = 0; j < amtTrackedFields; j++) {
 					String field = trackedFields.get(j);
-
 					if(field.equals("Time (GMT)")) {
 						newRow.addField(field, strray[0]);
 					} else if(!field.equals("None") && !field.equals("No Sensor")) {
-						String[] allSensors = getResources().getStringArray(R.array.pptsensors_array);
+						getResources().getStringArray(R.array.pptsensors_array);
 						int index = Arrays.asList(allSensors).indexOf(field);
-						newRow.addField(field, strray[index+1]);
+						newRow.addField(field, strray[index-1]);
 					}
-
 				}
 				//for (String str : strray) {
 				//x++;
