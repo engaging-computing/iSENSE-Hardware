@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 
@@ -434,13 +435,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		ArrayList<String> trackedFieldsMod = (ArrayList<String>) trackedFields.clone();
 		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
 		
-		for(int i = 0; i < trackedFieldsMod.size(); i++ ) {
-			if(trackedFieldsMod.get(i).equalsIgnoreCase("Time (GMT)") || trackedFieldsMod.get(i).equalsIgnoreCase("None") || trackedFieldsMod.get(i).equalsIgnoreCase("No Sensor")) {
-				trackedFieldsMod.remove(i); //Don't let users find average/mean/etc for irrelevant fields
-				i--;
-			}
-		}
-		
+		List<String> toRemove = Arrays.asList("Time (GMT)", "None", "No Sensor");
+		trackedFieldsMod.removeAll( toRemove );
+
 		sensorArray = trackedFieldsMod.toArray(new String[trackedFieldsMod.size()]);
 		ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
 		sensorHead.setAdapter(sensorAdapter);
@@ -453,7 +450,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			@Override
 		    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 		    	editor.putInt("sensorspin_selection", pos);
+		    	editor.putString("sensorspin_value", parent.getItemAtPosition(pos).toString());
 		    	editor.commit();
+		    	findStatistics();
 		    }
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
@@ -574,12 +573,25 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		DecimalFormat form = new DecimalFormat("0.0000");
 		double min, max, ave, med;
 		double temp = 0;
+		int lookup = 0;
 
-		if (sensorData.get(12).size() != 0) {
-			min = sensorData.get(12).get(0);
-			max = sensorData.get(12).get(0);
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+		ArrayList<String> allSensors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.pptsensors_array)));
+		allSensors.set(14, prefs.getString("name_bta1", "BTA 1"));
+		allSensors.set(15, prefs.getString("name_bta2", "BTA 2"));
+		allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
+		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
+		allSensors.remove(0);
+		allSensors.remove(1);
+		
+		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
+		
+		if (sensorData.get(lookup).size() != 0) {
+			min = sensorData.get(lookup).get(0);
+			max = sensorData.get(lookup).get(0);
 
-			for (double i : sensorData.get(12)) {
+			for (double i : sensorData.get(lookup)) {
 				if (i < min) {
 					min = i;
 				}
@@ -588,7 +600,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 				temp += i;
 			}
-			ave = temp / sensorData.get(12).size();
+			ave = temp / sensorData.get(lookup).size();
 
 			datMin = "" + form.format(min);
 			datMax = "" + form.format(max);
@@ -598,12 +610,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			maxField.setText(datMax);
 			aveField.setText(datAve);
 
-			if (sensorData.get(12).size() == 1) {
-				med = sensorData.get(12).get(0);
-			} else if (sensorData.get(12).size() % 2 == 0) {
-				med = sensorData.get(12).get((sensorData.get(12).size() + 1) / 2);
+			if (sensorData.get(lookup).size() == 1) {
+				med = sensorData.get(lookup).get(0);
+			} else if (sensorData.get(lookup).size() % 2 == 0) {
+				med = sensorData.get(lookup).get((sensorData.get(lookup).size() + 1) / 2);
 			} else {
-				med = (sensorData.get(12).get((sensorData.get(12).size() / 2)) + sensorData.get(12).get((sensorData.get(12)
+				med = (sensorData.get(lookup).get((sensorData.get(lookup).size() / 2)) + sensorData.get(lookup).get((sensorData.get(lookup)
 						.size() + 1) / 2)) / 2;
 			}
 
@@ -816,10 +828,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 
 				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new fields
-				fillSensorSpinner();
 				
 				prefsEditor.putInt("numFields", amtTrackedFields);
 				prefsEditor.commit();
+				
+				fillSensorSpinner();
 			}
 		}
 	}
