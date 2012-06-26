@@ -128,14 +128,15 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static final int MENU_ITEM_SETUP = 1;
 	private static final int MENU_ITEM_LOGIN = 2;
 	private static final int MENU_ITEM_UPLOAD = 3;
-	private static final int SAVE_DATA = 4;
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int EXPERIMENT_CODE = 7;
-	private static final int DIALOG_NO_ISENSE = 8;
-	private static final int RECORDING_STOPPED = 9;
-	private static final int DIALOG_NO_GPS = 10;
-	private static final int DIALOG_FORCE_STOP = 11;
+	private static final int MENU_ITEM_TIME = 4;
+	private static final int SAVE_DATA = 5;
+	private static final int DIALOG_SUMMARY = 6;
+	private static final int DIALOG_CHOICE = 7;
+	private static final int EXPERIMENT_CODE = 8;
+	private static final int DIALOG_NO_ISENSE = 9;
+	private static final int RECORDING_STOPPED = 10;
+	private static final int DIALOG_NO_GPS = 11;
+	private static final int DIALOG_FORCE_STOP = 12;
 
     public static final int DIALOG_CANCELED = 0;
     public static final int DIALOG_OK = 1;
@@ -218,7 +219,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	public static Context mContext;
 	
 	private static ArrayList<File> pictureArray = new ArrayList<File>();
-	
+
     @SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -598,6 +599,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		menu.add(Menu.NONE, MENU_ITEM_SETUP,  Menu.NONE, "Setup" );
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN,  Menu.NONE, "Login" );
 		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
+		menu.add(Menu.NONE, MENU_ITEM_TIME,   Menu.NONE, "Sync Time");
 		return true;
 	}
     
@@ -607,10 +609,12 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
             menu.getItem(MENU_ITEM_SETUP  - 1).setEnabled(false);
             menu.getItem(MENU_ITEM_LOGIN  - 1).setEnabled(false);
             menu.getItem(MENU_ITEM_UPLOAD - 1).setEnabled(false);
+            menu.getItem(MENU_ITEM_TIME   - 1).setEnabled(false);
         } else {
         	menu.getItem(MENU_ITEM_SETUP  - 1).setEnabled(true );
             menu.getItem(MENU_ITEM_LOGIN  - 1).setEnabled(true );
             menu.getItem(MENU_ITEM_UPLOAD - 1).setEnabled(true );
+            menu.getItem(MENU_ITEM_TIME   - 1).setEnabled(true );
         }
         return true;
     }
@@ -628,6 +632,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         	case MENU_ITEM_UPLOAD:
         		choiceViaMenu = true;
         		showDialog(DIALOG_CHOICE);
+        		return true;
+        	case MENU_ITEM_TIME:
+        		Toast.makeText(mContext, "You hit sync time.  Gratz bro.", Toast.LENGTH_SHORT).show();
         		return true;
         }
         return false;
@@ -1107,40 +1114,75 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		
         builder.setTitle(message)
         	   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-        		   public void onClick(DialogInterface dialog, int id) {
-        			   rideIndex = rides.getSelectedItemPosition();
-        			   stNumber = seats.getText().toString();
-        			   
-        			   nameOfSession = sessionName.getText().toString();
-        			   
- 			    	   rideNameString = (String) rides.getSelectedItem();
- 			    	   
- 			    	   experimentId = (String) experimentInput.getText().toString();
- 			    	   
-        			   final Message dialogOk = Message.obtain();
-        			   dialogOk.setTarget(h);
-        			   dialogOk.what = DIALOG_OK;
-        				
-        			   dialogOk.sendToTarget();
-        			   
-        			   dialog.dismiss();
-        			  
-        		   }
+        		   @Override
+        		   public void onClick(DialogInterface dialog, int id) {}
         	   })
         	   .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        		   public void onClick(DialogInterface dialoginterface,int i) {
-        			   final Message dialogOk = Message.obtain();
-        			   dialogOk.setTarget(h);
-        			   dialogOk.what = DIALOG_CANCELED;
-        			   dialogOk.sendToTarget();
-        			   
-        			   dialoginterface.dismiss();
-        		   }
+        		   @Override
+        		   public void onClick(DialogInterface dialoginterface,int i) {}
         	   	})
         	   .setCancelable(false);
-        	   
         
-        return builder.create();
+        final AlertDialog ad = builder.create();
+        ad.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+            	Button positive = ad.getButton(DialogInterface.BUTTON_POSITIVE);
+                positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    	boolean pass = true;
+  			    	   
+         			   	if (sessionName.getText().length() == 0) {
+         			   		sessionName.setError("Enter a Name");
+         			   		pass = false;
+         			   	}
+         			   	if (experimentInput.getText().length() == 0) {
+         			   		experimentInput.setError("Enter an Experiment");
+         			   		pass = false;
+         			   	}
+         			   	if (seats.getText().length() == 0) {
+         			   		seats.setError("Enter a St#");
+         			   		pass = false;
+         			   	}
+         			   	if (pass) {
+         			   		rideIndex = rides.getSelectedItemPosition();
+         			   		stNumber = seats.getText().toString();
+         			   
+         			   		nameOfSession = sessionName.getText().toString();
+         			   
+         			   		rideNameString = (String) rides.getSelectedItem();
+  			    	   
+         			   		experimentId = (String) experimentInput.getText().toString();
+         			   		
+         			   		final Message dialogOk = Message.obtain();
+         			   		dialogOk.setTarget(h);
+         			   		dialogOk.what = DIALOG_OK;
+  			    		   
+         			   		dialogOk.sendToTarget();
+  			    		   
+         			   		ad.dismiss();
+  			    	   }
+                    }
+                });
+            	
+                Button negative = ad.getButton(DialogInterface.BUTTON_NEGATIVE);
+                negative.setOnClickListener(new View.OnClickListener() {
+                	@Override
+                    public void onClick(View v) {
+                		final Message dialogOk = Message.obtain();
+         			   	dialogOk.setTarget(h);
+         			   	dialogOk.what = DIALOG_CANCELED;
+         			   	dialogOk.sendToTarget();
+         			   
+         			   	ad.dismiss();
+                    }
+                });
+            }
+        });
+
+        
+        return ad;
 	}    
     
     // Converts the captured picture's uri to a file that is save-able to the SD Card
