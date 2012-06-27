@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="wifi_page">WiFi Disabled</string>
+    <string name="wifi_page">Enable Wifi</string>
+    <string name="wifi_message">This application requires an internet connection. Would you like to enable WiFi?</string>
     <string name="app_name">PinComm</string>
     <string name="button_scan">Scan for Devices</string>
 	<string name="title_paired_devices">Paired Devices</string>
@@ -14,6 +15,8 @@
     
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
