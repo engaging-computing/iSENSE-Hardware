@@ -221,14 +221,14 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
 		sensorHead = (Spinner) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);
-		
+
 		trackedFields = new ArrayList<String>();
 		amtTrackedFields = defaultPrefs.getInt("numFields", 0);
 		trackedFields.clear();
 		for (int i = 0; i < amtTrackedFields; i++) {
 			trackedFields.add(defaultPrefs.getString("trackedField"+i, ""));
 		}
-		
+
 		fillSensorSpinner();
 
 		nameField.setText(defaultPrefs.getString("group_name", ""));
@@ -434,7 +434,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		String[] sensorArray;
 		ArrayList<String> trackedFieldsMod = (ArrayList<String>) trackedFields.clone();
 		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
-		
+
 		List<String> toRemove = Arrays.asList("Time (GMT)", "None", "No Sensor");
 		trackedFieldsMod.removeAll( toRemove );
 
@@ -448,12 +448,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 		sensorHead.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
-		    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-		    	editor.putInt("sensorspin_selection", pos);
-		    	editor.putString("sensorspin_value", parent.getItemAtPosition(pos).toString());
-		    	editor.commit();
-		    	findStatistics();
-		    }
+			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+				editor.putInt("sensorspin_selection", pos);
+				editor.putString("sensorspin_value", parent.getItemAtPosition(pos).toString());
+				editor.commit();
+				findStatistics();
+			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 				//
@@ -513,14 +513,14 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
-				
+
 				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 				String[] allSensors = getResources().getStringArray(R.array.pptsensors_array);
 				allSensors[14] = prefs.getString("name_bta1", "BTA 1");
 				allSensors[15] = prefs.getString("name_bta2", "BTA 2");
 				allSensors[16] = prefs.getString("name_mini1", "Minijack 1");
 				allSensors[17] = prefs.getString("name_mini2", "Minijack 2");
-				
+
 				for (int j = 0; j < amtTrackedFields; j++) {
 					String field = trackedFields.get(j);
 					if(field.equals("Time (GMT)")) {
@@ -531,29 +531,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 						newRow.addField(field, df.format(Double.parseDouble(strray[index-1])));
 					}
 				}
-				//for (String str : strray) {
-				//x++;
-				//					switch(x) {
-				//					case 1: label = "Time (GMT)"; break;
-				//					//case 2: label = "Latitude"; break;
-				//					//case 3: label = "Longitude"; break;
-				//					//case 4: label = "Altitude GPS (m)"; break;
-				//					//case 5: label = "Altitude (m)"; break;
-				//					//case 6: label = "Pressure (atm)"; break;
-				//					//case 7: label = "Air Temperature (c)"; break;
-				//					//case 8: label = "Humidity (%rh)"; break;
-				//					//case 9: label = "Light (lux)"; break;
-				//					//case 10: label = "X-Accel"; break;
-				//					//case 11: label = "Y-Accel"; break;
-				//					//case 12: label = "Z-Accel"; break;
-				//					//case 13: label = "Acceleration"; break;
-				//					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
-				//					//case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
-				//					//case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
-				//					//case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
-				//					default:
-				//						continue;
-				//					}
 
 				dataLayout.addView(newRow);
 				dataScroller.post(new Runnable() {
@@ -584,9 +561,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
 		allSensors.remove(0);
 		allSensors.remove(1);
-		
+
 		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
-		
+
 		if (sensorData.get(lookup).size() != 0) {
 			min = sensorData.get(lookup).get(0);
 			max = sensorData.get(lookup).get(0);
@@ -803,11 +780,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new experiment
 				fillSensorSpinner();
-				
+
 				prefsEditor.putBoolean("fields_set", false);
 				prefsEditor.putString("isense_expId", experimentId);
 				prefsEditor.commit();
-				
+
 				//Launch field selection dialog
 				Intent i = new Intent(this, ChangeFields.class);
 				i.putExtra("expID", Integer.parseInt(experimentId));
@@ -832,7 +809,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				prefsEditor.putBoolean("fields_set", true);
 				prefsEditor.putInt("numFields", amtTrackedFields);
 				prefsEditor.commit();
-				
+
 				fillSensorSpinner();
 			}
 		}
@@ -840,43 +817,48 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
+		SharedPreferences myPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+
+		ArrayList<String> allSensors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.pptsensors_array)));
+		allSensors.set(14, prefs.getString("name_bta1", "BTA 1"));
+		allSensors.set(15, prefs.getString("name_bta2", "BTA 2"));
+		allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
+		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
+		allSensors.remove(0);
+		allSensors.remove(1);
+		
 		if (timeData.size() != sensorData.get(12).size()) {
-			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
+			Toast.makeText(this, "An unexpected error occurred! Try pressing Retrieve Data again",
 					Toast.LENGTH_LONG).show();
 			return;
-		}
-
-		if (experimentId.equals("")) {
+		} else if (experimentId.equals("")) {
 			Toast.makeText(this, "No experiment set, please choose Select Experiment from the menu",
+					Toast.LENGTH_LONG).show();
+			return;
+		} else if (myPrefs.getBoolean("fields_set", false) == false) {
+			Toast.makeText(this, "Fields not setup for upload. Please choose Setup Fields from the menu",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		dataSet = new JSONArray();
-
-		//		JSONArray dataJSON;
-		//		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
-		//			for (int i = 0; i < timeData.size(); i++) {
-		//				dataJSON = new JSONArray();
-		//				dataJSON.put(timeData.get(i));
-		//				dataJSON.put(bta1Data.get(i));
-		//				dataJSON.put("");
-		//				dataSet.put(dataJSON);
-		//			}
-		//		else if (sensorType.equals("Vernier pH Sensor")) {
-		//			for (int i = 0; i < timeData.size(); i++) {
-		//				dataJSON = new JSONArray();
-		//				dataJSON.put(timeData.get(i));
-		//				dataJSON.put("");
-		//				dataJSON.put(bta1Data.get(i));
-		//				dataSet.put(dataJSON);
-		//			}
-		//		}
-		//		else {
-		//			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
-		//			return;
-		//		}
-
+		JSONArray dataJSON;
+		for( int j = 0; j < timeData.size(); j++) {
+			dataJSON = new JSONArray();
+			dataJSON.put(timeData.get(j));
+			for (int i = 1; i <= amtTrackedFields; i++) {
+				int tempindex = allSensors.indexOf(myPrefs.getString("trackedField"+i, ""));
+				if(tempindex != -1) {
+					dataJSON.put(sensorData.get(tempindex).get(j));
+				} else {
+					dataJSON.put("");
+				}
+			}
+			dataSet.put(dataJSON);
+		}
+		
 		new UploadTask().execute();
 	}
 
