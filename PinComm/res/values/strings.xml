@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="wifi_page">WiFi Disabled</string>
+    <string name="wifi_page">Enable Wifi</string>
+    <string name="wifi_message">This application requires an internet connection. Would you like to enable WiFi?</string>
     <string name="app_name">PinComm</string>
     <string name="button_scan">Scan for Devices</string>
 	<string name="title_paired_devices">Paired Devices</string>
@@ -12,11 +13,17 @@
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
     <string name="sessionname">Session Name:</string>
     
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensors</string>
     <string name="menu_login">Edit Login Details</string>
     <string name="menu_experiment">Select Experiment</string>
+    <string name="menu_fields">Setup Fields</string>
     
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
@@ -38,7 +45,10 @@
     
     <string name="label_connect">Select a PINPoint</string>
     <string name="label_sensor">Select Sensors</string>
+    <string name="label_fieldsbox">Setup Fields</string>
     
     <string name="button_backpage">Previous Page</string>
     <string name="button_nextpage">Next Page</string>
+    
+    <string name="changefield_prompt1">For each field in the experiment, please select a sensor on your PINPoint</string>
 </resources>
