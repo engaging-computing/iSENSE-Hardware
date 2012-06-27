@@ -804,6 +804,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new experiment
 				fillSensorSpinner();
 				
+				prefsEditor.putBoolean("fields_set", false);
 				prefsEditor.putString("isense_expId", experimentId);
 				prefsEditor.commit();
 				
@@ -828,7 +829,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 
 				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new fields
-				
+				prefsEditor.putBoolean("fields_set", true);
 				prefsEditor.putInt("numFields", amtTrackedFields);
 				prefsEditor.commit();
 				
