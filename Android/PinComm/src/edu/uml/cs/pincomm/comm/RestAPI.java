@@ -25,7 +25,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import edu.uml.cs.pincomm.Isense;
-import edu.uml.cs.pincomm.ViewData;
 import edu.uml.cs.pincomm.WifiDisabled;
 import edu.uml.cs.pincomm.objects.Experiment;
 import edu.uml.cs.pincomm.objects.ExperimentField;
@@ -621,13 +620,11 @@ public class RestAPI {
 	
 	public ArrayList<Experiment> getExperiments(int page, int limit, String action, String query) {
 		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query;
-		
 		ArrayList<Experiment> expList = new ArrayList<Experiment>();
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
 			try {
 				String data = makeRequest(url);
-			
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
 				JSONArray a = o.getJSONArray("data");
