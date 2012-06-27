@@ -155,7 +155,7 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 					//
 				}
 			});
-			
+						
 			//Auto-detect field types and set their spinners accordingly, if this experiment hasn't already had its fields setup
 			if(myAct.fieldsSet == false) {
 				if(field.type_id == 7) {
@@ -164,6 +164,18 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 				} else if(field.type_id == 1) {
 					myAct.fieldSelections.add(myAct.sensorArray[7]);
 					newSpin.setSelection(7); //auto-detected temp
+				} else if(field.type_id == 9) {
+					myAct.fieldSelections.add(myAct.sensorArray[9]);
+					newSpin.setSelection(9); //auto-detected light
+				} else if(field.type_id == 27) {
+					myAct.fieldSelections.add(myAct.sensorArray[6]);
+					newSpin.setSelection(6); //auto-detected pressure
+				} else if(field.type_id == 28) {
+					myAct.fieldSelections.add(myAct.sensorArray[8]);
+					newSpin.setSelection(8); //auto-detected humidity
+				} else if(field.type_id == 3) {
+					myAct.fieldSelections.add(myAct.sensorArray[5]);
+					newSpin.setSelection(5); //auto-detected altitude
 				} else {
 					myAct.fieldSelections.add(myAct.sensorArray[0]);
 				}
