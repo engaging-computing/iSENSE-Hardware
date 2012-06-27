@@ -9,9 +9,11 @@
     
     <declare-styleable name="datarow">
 		<attr name="toplabel" format="string" />
-        <attr name="time" format="string" />
-        <attr name="sensor1name" format="string" />
-        <attr name="sensor1data" format="string" />
+    </declare-styleable>
+    
+    <declare-styleable name="datasubrow">
+        <attr name="label" format="string" />
+        <attr name="data" format="string" />
     </declare-styleable>
 
 </resources>

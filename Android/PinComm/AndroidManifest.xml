@@ -55,6 +55,11 @@
             android:theme="@style/Theme.MyDialogTheme">
         </activity>
         <activity
+            android:name=".ChangeFields"
+            android:label="@string/label_fieldsbox"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+        <activity
             android:name=".WifiDisabled"
             android:label="@string/wifi_page"
             android:theme="@style/Theme.MyDialogTheme">
