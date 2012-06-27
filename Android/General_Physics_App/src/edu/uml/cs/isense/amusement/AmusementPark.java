@@ -70,6 +70,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -144,6 +145,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     
     public static final int CAMERA_PIC_REQUESTED = 1;
     public static final int CAMERA_VID_REQUESTED = 2;
+    public static final int SYNC_TIME_REQUESTED  = 3;
     	
     private int count = 0;
     private String data;
@@ -169,6 +171,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private int    secondsElapsed = 0;
 
     private long   currentTime    = 0;
+    private long   timeOffset     = 0;
     
     private String dateString, s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
     RestAPI rapi;
@@ -289,7 +292,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						len = 0; len2  = 0; dataPointCount = 0;
 						i   = 0;
 						beginWrite = true; sdCardError = false;
-						currentTime = getUploadTime();
+						currentTime = getUploadTime() + timeOffset;
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -634,7 +637,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
         		showDialog(DIALOG_CHOICE);
         		return true;
         	case MENU_ITEM_TIME:
-        		Toast.makeText(mContext, "You hit sync time.  Gratz bro.", Toast.LENGTH_SHORT).show();
+        		Intent i = new Intent(AmusementPark.this, SyncTime.class);
+        		startActivityForResult(i, SYNC_TIME_REQUESTED);
         		return true;
         }
         return false;
@@ -1317,6 +1321,13 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     		if (resultCode == Activity.RESULT_OK) {
     			experimentInput.setText("" + data.getExtras().getInt("edu.uml.cs.isense.pictures.experiments.exp_id"));
     		}
+		} else if (requestCode == SYNC_TIME_REQUESTED) {
+			if(resultCode == RESULT_OK) {
+				timeOffset = data.getExtras().getLong("offset");
+				Log.e("intent", "timeOffset set to: " + timeOffset);
+			} else if(resultCode == RESULT_CANCELED) {
+				// oh no they canceled!
+			}
 		}
 		
 	}

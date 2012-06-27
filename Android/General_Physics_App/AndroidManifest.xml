@@ -31,6 +31,10 @@
         		  android:label="Login" />
         <activity android:name=".Experiments"
                   android:label="Experiments" />
+        <activity android:name=".SyncTime"
+                  android:label="SyncTime"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden" />
 
     </application>
 </manifest>
