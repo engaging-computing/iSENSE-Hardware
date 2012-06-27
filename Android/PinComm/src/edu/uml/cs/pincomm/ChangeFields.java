@@ -1,6 +1,7 @@
 package edu.uml.cs.pincomm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -32,6 +34,8 @@ public class ChangeFields extends Activity implements OnClickListener {
 	ArrayList<String> fieldSelections;
 	static int fieldIndex = 0;
 	Button btnOK, btnCancel;
+	boolean fieldsSet = false;
+	SharedPreferences prefs2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class ChangeFields extends Activity implements OnClickListener {
 		//includes the names of external sensors the user has selected
 		Resources res = getResources();
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		
 		sensorArray = res.getStringArray(R.array.pptsensors_array);
 		sensorArray[14] = prefs.getString("name_bta1", "BTA 1");
 		sensorArray[15] = prefs.getString("name_bta2", "BTA 2");
@@ -57,6 +62,9 @@ public class ChangeFields extends Activity implements OnClickListener {
 		
 		fieldIndex = 0;
 		fieldSelections = new ArrayList<String>();
+		
+		prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+		fieldsSet = prefs2.getBoolean("fields_set", false);
 		
 		btnOK.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
@@ -148,15 +156,20 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 				}
 			});
 			
-			//Auto-detect field types and set their spinners accordingly
-			if(field.type_id == 7) {
-				myAct.fieldSelections.add(myAct.sensorArray[1]);
-				newSpin.setSelection(1); //auto-detected time
-			} else if(field.type_id == 1) {
-				myAct.fieldSelections.add(myAct.sensorArray[7]);
-				newSpin.setSelection(7); //auto-detected temp
+			//Auto-detect field types and set their spinners accordingly, if this experiment hasn't already had its fields setup
+			if(myAct.fieldsSet == false) {
+				if(field.type_id == 7) {
+					myAct.fieldSelections.add(myAct.sensorArray[1]);
+					newSpin.setSelection(1); //auto-detected time
+				} else if(field.type_id == 1) {
+					myAct.fieldSelections.add(myAct.sensorArray[7]);
+					newSpin.setSelection(7); //auto-detected temp
+				} else {
+					myAct.fieldSelections.add(myAct.sensorArray[0]);
+				}
 			} else {
-				myAct.fieldSelections.add(myAct.sensorArray[0]);
+				myAct.fieldSelections.add(myAct.prefs2.getString("trackedField"+(currIndex-1), ""));
+				newSpin.setSelection(Arrays.asList(myAct.sensorArray).indexOf(myAct.prefs2.getString("trackedField"+(currIndex-1), "")));
 			}
 		}
 	}
