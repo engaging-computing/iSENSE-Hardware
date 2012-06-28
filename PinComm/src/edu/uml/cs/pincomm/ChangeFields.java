@@ -164,7 +164,7 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 				} else if(field.type_id == 1) {
 					myAct.fieldSelections.add(myAct.sensorArray[7]);
 					newSpin.setSelection(7); //auto-detected temp
-				} else if(field.type_id == 9) {
+				} else if(field.type_id == 9 || field.type_id == 29) {
 					myAct.fieldSelections.add(myAct.sensorArray[9]);
 					newSpin.setSelection(9); //auto-detected light
 				} else if(field.type_id == 27) {
@@ -176,6 +176,9 @@ class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>>
 				} else if(field.type_id == 3) {
 					myAct.fieldSelections.add(myAct.sensorArray[5]);
 					newSpin.setSelection(5); //auto-detected altitude
+				} else if(field.type_id == 25) {
+					myAct.fieldSelections.add(myAct.sensorArray[13]);
+					newSpin.setSelection(13); //auto-detected acceleration
 				} else {
 					myAct.fieldSelections.add(myAct.sensorArray[0]);
 				}
