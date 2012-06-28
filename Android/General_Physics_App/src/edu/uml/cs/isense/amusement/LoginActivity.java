@@ -96,10 +96,18 @@ public class LoginActivity {
             	   })
             	   .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             		   public void onClick(DialogInterface dialog, int id) {
+            			   rejectMsg.sendToTarget();
             			   dialog.dismiss();
             		   }
             	   })
-            	   .setCancelable(true);
+            	   .setCancelable(true)
+            	   .setOnCancelListener(new OnCancelListener() {
+            		   @Override
+            		   public void onCancel(DialogInterface dialog) {
+            			   rejectMsg.sendToTarget();
+            			   dialog.dismiss();
+            		   }   
+            	   });
             	   
              
             	return builder.create();
