@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import edu.uml.cs.pincomm.comm.RestAPI;
-import edu.uml.cs.pincomm.objects.Experiment;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 
 public class ChangeExperiment extends Activity implements OnClickListener {
 	Button back, next;

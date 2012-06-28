@@ -1,4 +1,4 @@
-package edu.uml.cs.pincomm.objects;
+package edu.uml.cs.isense.objects;
 
 public class Session {
     public int session_id;

@@ -1,4 +1,4 @@
-package edu.uml.cs.pincomm.objects;
+package edu.uml.cs.isense.objects;
 
 public class ExperimentField {
 	public int field_id;
