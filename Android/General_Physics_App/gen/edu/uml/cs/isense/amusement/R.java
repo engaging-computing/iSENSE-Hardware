@@ -15,11 +15,13 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int canobie_check=0x7f020000;
-        public static final int icon=0x7f020001;
-        public static final int logo=0x7f020002;
-        public static final int progress_small=0x7f020003;
-        public static final int spinner_black_16=0x7f020004;
+        public static final int background=0x7f020000;
+        public static final int canobie_check=0x7f020001;
+        public static final int colorless=0x7f020002;
+        public static final int icon=0x7f020003;
+        public static final int logo=0x7f020004;
+        public static final int progress_small=0x7f020005;
+        public static final int spinner_black_16=0x7f020006;
     }
     public static final class id {
         public static final int BrowseButton=0x7f070029;
@@ -29,7 +31,9 @@ public final class R {
         public static final int ImageViewLogo=0x7f07001c;
         public static final int LinearLayout02=0x7f070004;
         public static final int ScrollView01=0x7f070003;
+        public static final int aboutSync=0x7f070033;
         public static final int bottomtext=0x7f070013;
+        public static final int buttonGoBack=0x7f070036;
         public static final int checkBox1=0x7f070005;
         public static final int checkBox10=0x7f07000e;
         public static final int checkBox11=0x7f07000f;
@@ -55,11 +59,14 @@ public final class R {
         public static final int passwordLabel=0x7f070019;
         public static final int pictureButton=0x7f070030;
         public static final int pictureCount=0x7f070022;
+        public static final int receiveButton=0x7f070035;
         public static final int rideNameLabel=0x7f07002e;
         public static final int ridename=0x7f07001d;
         public static final int rides=0x7f07002f;
+        public static final int scrollView1=0x7f070032;
         public static final int selectCancel=0x7f070002;
         public static final int selectOK=0x7f070001;
+        public static final int sendButton=0x7f070034;
         public static final int sessionName=0x7f070026;
         public static final int setupScroll=0x7f070023;
         public static final int startStop=0x7f070020;
@@ -81,26 +88,37 @@ public final class R {
         public static final int logindialog=0x7f030004;
         public static final int main=0x7f030005;
         public static final int setup=0x7f030006;
+        public static final int synctime=0x7f030007;
     }
     public static final class raw {
         public static final int beep=0x7f040000;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
+        public static final int browse=0x7f050013;
+        public static final int canobieRides=0x7f050016;
         public static final int eula=0x7f050007;
+        public static final int experimentNum=0x7f050012;
         public static final int experiments_no_items=0x7f050005;
         public static final int hello=0x7f050000;
         public static final int iSENSELogo=0x7f05000d;
-        public static final int iSENSElogo=0x7f050011;
+        public static final int iSENSElogo=0x7f05001b;
         public static final int iSenseConfig=0x7f050002;
         public static final int menuDirections=0x7f05000f;
         public static final int notLoggedIn=0x7f05000b;
         public static final int otherConfig=0x7f050003;
         public static final int picAndVidCount=0x7f05000e;
+        public static final int ride=0x7f050017;
         public static final int rideAndSeat=0x7f05000c;
         public static final int rides_prompt=0x7f050004;
+        public static final int seatNum=0x7f050014;
+        public static final int seatNumber=0x7f050015;
+        public static final int sessionName=0x7f050011;
         public static final int startString=0x7f050009;
         public static final int stopString=0x7f05000a;
+        public static final int syncTime=0x7f05001a;
+        public static final int takePic=0x7f050018;
+        public static final int takeVid=0x7f050019;
         public static final int timeElapsed=0x7f050010;
         public static final int updates=0x7f050006;
         public static final int xyz=0x7f050008;
