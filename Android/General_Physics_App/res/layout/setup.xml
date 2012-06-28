@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="12dip"
-                android:text="Session Name: "
+                android:text="@string/sessionName"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -42,9 +42,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/nameLabel"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                 android:imeOptions="actionDone"
                 android:inputType="text"
-                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                 android:maxLength="50"
                 android:text="" >
 
@@ -65,25 +65,27 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:paddingTop="15dip"
-                android:text="Experiment ID: "
+                android:text="@string/experimentNum"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/ExperimentInput"
-                android:layout_width="60sp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/ExperimentLabel"
+                android:layout_toLeftOf="@+id/BrowseButton"
                 android:digits="1234567890"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:imeOptions="actionDone"
+                android:maxLength="5" />
 
             <Button
                 android:id="@+id/BrowseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@id/ExperimentInput"
-                android:text="Browse..." />
+                android:text="@string/browse" />
         </RelativeLayout>
 
         <TextView
@@ -107,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="12dip"
-                android:text="Seat/Student #: "
+                android:text="@string/seatNum"
                 android:textColor="@android:color/black"
                 android:textSize="18dip" />
 
@@ -120,8 +122,8 @@
                 android:digits="1234567890"
                 android:imeOptions="actionDone"
                 android:inputType="phone"
-                android:maxLength="12"
-                android:text="1" >
+                android:maxLength="5"
+                android:text="@string/seatNumber" >
             </EditText>
         </RelativeLayout>
 
@@ -137,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:checked="true"
-                android:text="Canobie Lake Park Rides"
+                android:text="@string/canobieRides"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -147,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/isCanobie"
                 android:paddingTop="12dip"
-                android:text="Ride: "
+                android:text="@string/ride"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -171,15 +173,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Take a Picture" />
+                android:text="@string/takePic" />
 
             <Button
                 android:id="@+id/videoButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/pictureButton"
                 android:layout_weight="1"
-                android:text="Take a Video" />
+                android:text="@string/takeVid" />
         </LinearLayout>
     </LinearLayout>
 

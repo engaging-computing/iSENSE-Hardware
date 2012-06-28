@@ -1242,32 +1242,34 @@ public class RestAPI {
 	}
 	
 	public int createSession(String eid, String name, String description, String street, String city, String country)  {
-		int sid = -1;
-		String url = "method=createSession&session_key=" + session_key + "&eid=" + eid + "&name=" + name + "&description=" + description + "&street=" + street + "&city=" + city + "&country=" + country;
-		
-		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
-			try {
-				String data = makeRequest(url);
-				
-				// Parse JSON Result
-				JSONObject o = new JSONObject(data);
-				JSONObject obj = o.getJSONObject("data");
-				
-				String msg = obj.getString("msg");
-				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
-					// Experiment has been closed
-					sid = -400;
-				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} 
-		
-		return sid;
+        int sid = -1;
+        String url = "method=createSession&session_key=" + session_key + "&eid=" + eid + "&name=" + name + "&description=" + description + "&street=" + street + "&city=" + city + "&country=" + country;
+        
+        if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() 
+        		|| connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
+        	try {
+                String data = makeRequest(url);
+                        
+                // Parse JSON Result
+                JSONObject o = new JSONObject(data);
+                JSONObject obj = o.getJSONObject("data");
+                                
+                String msg = obj.optString("msg");
+                if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+                	// Experiment has been closed
+                    sid = -400;                                        
+                } else         
+                    sid = obj.getInt("sessionId");        
+        	} catch (MalformedURLException e) {
+                        e.printStackTrace();
+        	} catch (IOException e) {
+                        e.printStackTrace();
+        	} catch (Exception e) {
+                        e.printStackTrace();
+        	}
+        }
+        
+        return sid;
 	}
 	
 	public boolean putSessionData(int sid, String eid, JSONArray dataJSON) {
@@ -1309,14 +1311,14 @@ public class RestAPI {
 				}
 				
 				// Parse JSON Result
-				JSONObject o = new JSONObject(data);
-				JSONObject obj = o.getJSONObject("data");
-				
-				String msg = obj.getString("msg");
-				if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
-					// Experiment has been closed
-					ret = false;
-				}
+                JSONObject o = new JSONObject(data);
+                JSONObject obj = o.getJSONObject("data");
+                                
+                String msg = obj.optString("msg");
+                if(msg.compareToIgnoreCase("Experiment Closed") == 0) {
+                	// Experiment has been closed
+                    ret = false;                                        
+                }
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

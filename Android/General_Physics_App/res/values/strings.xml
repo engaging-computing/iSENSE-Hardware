@@ -252,5 +252,39 @@
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
 	<string name="menuDirections">Use Menu to Setup, Login, or Upload</string>
+	<string name="timeElapsed">Time Elapsed: 0:00</string>
+	<string name="sessionName">Session Name: </string>
+	<string name="experimentNum">Expm #: </string>
+	<string name="browse">  Browse&#8230;  </string>
+	<string name="seatNum">Seat/Student #: </string>
+	<string name="seatNumber">1</string>
+	<string name="canobieRides">Canobie Lake Park Rides</string>
+	<string name="ride">Ride: </string>
+	<string name="takePic">Take a Picture</string>
+	<string name="takeVid">Take a Video"</string>
+	
+	<string name="syncTime">
+	    Synchronizing time is useful when using multiple devices on a ride at the
+	    same time.  By default, many Android devices\' clocks will not match one
+	    another\'s, thus making recording data at similar times difficult.  However,
+	    you have a choice to fix this issue by setting a device as a \"host\".
+	    This can be done by hitting the \"Send\" button.  Upon hitting \"Send\", 
+	    the time from that particular Android device will be broadcasted as a timeframe
+	    that all other phones in the local network can receive.  However, in order for
+	    a phone to receive a broadcasted time, that phone must be currently in 
+	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
+	    you intend on receiving a host\'s time, you must be in receive-mode before the
+	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
+	    hosted, should you be the host).  After pressing either \"Send\" or 
+	    \"Receive\", a dialog box will tell you the time that has either been 
+	    broadcasted or pulled from the host, along with the millisecond offset between 
+	    the received time and your Android device\'s actual clock.  If you do choose 
+	    to synchronize time, recording data will now use the hosted time as a label 
+	    for data points, rather than using your local time.  This now allows 
+	    simultaneous data recording across multiple devices on the same ride at the 
+	    same time.  Please note: synchronizing time will only work if all the Android
+	    devices are connected to the same WiFi network.  3G, 4G, or any other data plan
+	    will not allow for synchronizing time.
+	</string>
 
 </resources>
