@@ -22,8 +22,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.pincomm.comm.RestAPI;
-import edu.uml.cs.pincomm.objects.ExperimentField;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.ExperimentField;
 
 public class ChangeFields extends Activity implements OnClickListener {
 	LinearLayout sensorSpinnerLayout;
@@ -97,7 +97,7 @@ public class ChangeFields extends Activity implements OnClickListener {
 
 class GetFieldsTask extends AsyncTask<Integer, Void, ArrayList<ExperimentField>> {
 
-	RestAPI rapi;
+	edu.uml.cs.isense.comm.RestAPI rapi;
 	private ProgressDialog dialog;
 	private ChangeFields myAct;
 

@@ -78,7 +78,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import edu.uml.cs.pincomm.comm.RestAPI;
+import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.pincomm.exceptions.NoDataException;
 import edu.uml.cs.pincomm.pincushion.BluetoothService;
 import edu.uml.cs.pincomm.pincushion.pinpointInterface;
