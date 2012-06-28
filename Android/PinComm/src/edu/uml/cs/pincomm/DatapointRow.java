@@ -21,53 +21,22 @@ public class DatapointRow extends LinearLayout {
 		if (labelText != null) {
 			topLabel.setText(labelText);
 		}
-		
-		TextView recordTime = (TextView) findViewById(R.id.label_timedata);
-		String timeText = array.getString(R.styleable.datarow_time);
-		if (timeText != null) {
-			recordTime.setText(timeText);
-		}
-		
-		TextView sensor1Name = (TextView) findViewById(R.id.label_sensor1);
-		String sensorText = array.getString(R.styleable.datarow_sensor1name);
-		if (sensorText != null) {
-			sensor1Name.setText(sensorText);
-		}
-		
-		TextView sensor1Data = (TextView) findViewById(R.id.label_sensor1data);
-		String sensorDataText = array.getString(R.styleable.datarow_sensor1data);
-		if (sensorDataText != null) {
-			sensor1Data.setText(sensorDataText);
-		}
 
 		array.recycle();
+	}
+	
+	public void addField(String fieldName, String fieldData) {
+		LinearLayout myLayout = (LinearLayout) findViewById(R.id.datarow_layout);
+		edu.uml.cs.pincomm.DatapointSubrow newRow = new edu.uml.cs.pincomm.DatapointSubrow(getContext(), null);
+		newRow.setLabel(fieldName);
+		newRow.setData(fieldData);
+		myLayout.addView(newRow);
 	}
 	
 	public void setLabel(String newLabel) {
 		TextView topLabel = (TextView) findViewById(R.id.label_datapoint);
 		if (newLabel != null) {
 			topLabel.setText(newLabel);
-		}
-	}
-	
-	public void setTime(String newTime) {
-		TextView time = (TextView) findViewById(R.id.label_timedata);
-		if (newTime != null) {
-			time.setText(newTime);
-		}
-	}
-	
-	public void setSensor1Name(String newName) {
-		TextView sensor1Name = (TextView) findViewById(R.id.label_sensor1);
-		if (newName!= null) {
-			sensor1Name.setText(newName);
-		}
-	}
-	
-	public void setSensor1Data(String newData) {
-		TextView sensor1Data = (TextView) findViewById(R.id.label_sensor1data);
-		if (newData!= null) {
-			sensor1Data.setText(newData);
 		}
 	}
 	
@@ -79,13 +48,7 @@ public class DatapointRow extends LinearLayout {
 	public void setClickListener(View.OnClickListener listener) {
 		LinearLayout myLayout = (LinearLayout) findViewById(R.id.datarow_layout);
 		TextView topLabel = (TextView) findViewById(R.id.label_datapoint);
-		TextView recordTime = (TextView) findViewById(R.id.label_timedata);
-		TextView sensor1Name = (TextView) findViewById(R.id.label_sensor1);
-		TextView sensor1Data = (TextView) findViewById(R.id.label_sensor1data);
 		myLayout.setOnClickListener(listener);
 		topLabel.setOnClickListener(listener);
-		recordTime.setOnClickListener(listener);
-		sensor1Name.setOnClickListener(listener);
-		sensor1Data.setOnClickListener(listener);
 	}
 }
