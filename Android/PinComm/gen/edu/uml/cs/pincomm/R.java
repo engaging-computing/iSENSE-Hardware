@@ -93,10 +93,12 @@ containing a value of this type.
         public static final int ic_launcher=0x7f02000d;
         public static final int logo=0x7f02000e;
         public static final int nopptbtn=0x7f02000f;
-        public static final int pptbtn=0x7f020010;
-        public static final int pptbtntry=0x7f020011;
-        public static final int raaclogo=0x7f020012;
-        public static final int superspin=0x7f020013;
+        public static final int pinpointdiagram=0x7f020010;
+        public static final int pptbtn=0x7f020011;
+        public static final int pptbtntry=0x7f020012;
+        public static final int raaclogo=0x7f020013;
+        public static final int sensordiagram=0x7f020014;
+        public static final int superspin=0x7f020015;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f0a0039;
@@ -106,6 +108,7 @@ containing a value of this type.
         public static final int TextView02=0x7f0a0037;
         public static final int TextView03=0x7f0a003d;
         public static final int bottomtext=0x7f0a0018;
+        public static final int btaLayout=0x7f0a0049;
         public static final int btaSpin1=0x7f0a0040;
         public static final int btaSpin2=0x7f0a0042;
         public static final int btn_cancel=0x7f0a0048;
@@ -147,12 +150,13 @@ containing a value of this type.
         public static final int linearLayout4=0x7f0a0033;
         public static final int linearLayout5=0x7f0a003f;
         public static final int loginBtn=0x7f0a0022;
-        public static final int menu_connect=0x7f0a004c;
-        public static final int menu_experiment=0x7f0a0050;
-        public static final int menu_fields=0x7f0a0051;
-        public static final int menu_login=0x7f0a004f;
-        public static final int menu_setSensors=0x7f0a004d;
-        public static final int menu_setTime=0x7f0a004e;
+        public static final int menu_connect=0x7f0a004e;
+        public static final int menu_experiment=0x7f0a0052;
+        public static final int menu_fields=0x7f0a0053;
+        public static final int menu_login=0x7f0a0051;
+        public static final int menu_setSensors=0x7f0a004f;
+        public static final int menu_setTime=0x7f0a0050;
+        public static final int miniLayout=0x7f0a004a;
         public static final int miniSpin1=0x7f0a0044;
         public static final int miniSpin2=0x7f0a0046;
         public static final int modtext=0x7f0a0019;
@@ -161,11 +165,11 @@ containing a value of this type.
         public static final int nameField=0x7f0a002b;
         public static final int namePrompt=0x7f0a002a;
         public static final int new_devices=0x7f0a0014;
-        public static final int no=0x7f0a004b;
+        public static final int no=0x7f0a004d;
         public static final int paired_devices=0x7f0a0012;
         public static final int passwordField=0x7f0a0021;
         public static final int pinpoint_select_btn=0x7f0a001b;
-        public static final int prompt=0x7f0a0049;
+        public static final int prompt=0x7f0a004b;
         public static final int scrollView1=0x7f0a0030;
         public static final int sensorNameHeader=0x7f0a0032;
         public static final int sensor_spinners=0x7f0a0008;
@@ -180,7 +184,7 @@ containing a value of this type.
         public static final int txt_message=0x7f0a001d;
         public static final int txt_pageIndicator=0x7f0a002e;
         public static final int usernameField=0x7f0a001f;
-        public static final int yes=0x7f0a004a;
+        public static final int yes=0x7f0a004c;
     }
     public static final class layout {
         public static final int change_experiment=0x7f030000;
