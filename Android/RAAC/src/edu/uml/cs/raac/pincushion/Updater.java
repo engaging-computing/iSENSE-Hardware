@@ -56,7 +56,8 @@ public class Updater {
     public Updater() {
     }
 
-    public void getDataFromIsense() {
+    @SuppressWarnings("unused")
+	public void getDataFromIsense() {
         boolean result = false;
 
         try {
@@ -107,7 +108,8 @@ public class Updater {
 
     }
 
-    public ArrayList<String[]> getDataFromGoogleDoc() throws IOException{
+    @SuppressWarnings("unused")
+	public ArrayList<String[]> getDataFromGoogleDoc() throws IOException{
 
         String fileURL = "https://spreadsheets.google.com/spreadsheet/pub?key=0Aos8U59XvkPkdDFPUFkzUlYzSkt5N2ZMRXpVZ01nUEE&single=true&gid=0&output=csv";
 

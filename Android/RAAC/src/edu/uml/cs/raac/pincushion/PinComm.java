@@ -67,6 +67,7 @@ public class PinComm {
 	private static final byte WRITE_TIME = (byte) 0x03;
 	private static final byte READ_EEPROM = (byte) 0x04;
 	private static final byte WRITE_EEPROM = (byte) 0x05;
+	@SuppressWarnings("unused")
 	private static final byte LIVE_REQUEST = (byte) 0x06;
 	private static final byte DATA_HEADER = (byte) 0x07;
 	private static final byte RESET_PINPOINT = (byte) 0x08;
@@ -87,6 +88,7 @@ public class PinComm {
 	private static final byte BOOTLOADER_FLAG = (byte) 0xFB;
 	//PINPoint record information
 	private static final int RECORD_SIZE = 32;
+	@SuppressWarnings("unused")
 	private Double firmwareVersion = 0.0;
 	private BluetoothService spi;
 
@@ -162,7 +164,7 @@ public class PinComm {
 				try {
 					temp[i] = spi.readByte();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 			}
@@ -286,7 +288,7 @@ public class PinComm {
 			try {
 				high = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -299,7 +301,7 @@ public class PinComm {
 			try {
 				low = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -385,7 +387,7 @@ public class PinComm {
 			try {
 				spi.readByte();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		} else {
@@ -612,7 +614,7 @@ public class PinComm {
 			try {
 				one = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -622,7 +624,7 @@ public class PinComm {
 			try {
 				two = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -632,7 +634,7 @@ public class PinComm {
 			try {
 				three = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -642,7 +644,7 @@ public class PinComm {
 			try {
 				four = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 

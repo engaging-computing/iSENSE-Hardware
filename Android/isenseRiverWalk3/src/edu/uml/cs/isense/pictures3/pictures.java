@@ -50,7 +50,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Picture;
 
 public class pictures extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;

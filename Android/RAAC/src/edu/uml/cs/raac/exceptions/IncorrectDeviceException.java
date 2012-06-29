@@ -34,6 +34,7 @@ package edu.uml.cs.raac.exceptions;
  *
  * @author James Dalphond <jdalphon@cs.uml.edu>
  */
+@SuppressWarnings("serial")
 public class IncorrectDeviceException extends Exception {
 
 }

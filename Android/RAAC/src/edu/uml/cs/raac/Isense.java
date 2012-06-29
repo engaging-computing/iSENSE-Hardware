@@ -73,7 +73,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import edu.uml.cs.raac.comm.RestAPI;
+import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.raac.exceptions.NoDataException;
 import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
@@ -604,6 +604,7 @@ public class Isense extends Activity implements OnClickListener {
 			case BluetoothService.MESSAGE_WRITE:
 			case BluetoothService.MESSAGE_READ:
 				byte[] readBuf = (byte[]) msg.obj;
+				@SuppressWarnings("unused")
 				String readMessage = new String(readBuf, 0, msg.arg1);
 				break;
 			case BluetoothService.MESSAGE_DEVICE_NAME:

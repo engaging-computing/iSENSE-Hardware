@@ -16,8 +16,6 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -55,7 +53,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Picture;
+import edu.uml.cs.isense.genpics.Picture;
 
 public class Pictures extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;

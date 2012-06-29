@@ -39,8 +39,6 @@ import java.util.prefs.Preferences;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 import edu.uml.cs.raac.exceptions.ChecksumException;
 import edu.uml.cs.raac.exceptions.IncompatibleConversionException;
 import edu.uml.cs.raac.exceptions.InvalidHexException;
@@ -53,10 +51,11 @@ import edu.uml.cs.raac.exceptions.NoDataException;
  * 
  * @author James Dalphond <jdalphon@cs.uml.edu>
  */
+@SuppressWarnings("unused")
 public class pinpointInterface {
 	
-	// Vector of datapoints.
-    private Vector<String> dataPoints;
+	// Vector of datapoints. 
+	private Vector<String> dataPoints;
     private Preferences myPrefs;
     // Comunications protocol for the Pinpoint.
     public PinComm pinpoint;
