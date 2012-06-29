@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Instructions:"
+        android:text="@string/instructions"
         android:textSize="20dp" />
 
     <ScrollView
@@ -22,11 +22,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content" >
 
             <TextView
                 android:id="@+id/aboutSync"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/syncTime"
@@ -53,7 +53,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/colorless"
-                android:text="Send"
+                android:text="@string/send"
                 android:textColor="#FFFFFF" />
 
             <Button
@@ -62,7 +62,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/colorless"
-                android:text="Receive"
+                android:text="@string/receive"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/colorless"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
