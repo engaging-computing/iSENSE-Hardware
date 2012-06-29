@@ -205,6 +205,7 @@ public class SyncTime extends Activity {
 	// returns:
 	// -1 for UnknownHost exception
 	// -2 for Socket exception for socket creation
+	// -3 for Timeout exception
 	int initSocket() {
 
 		try {

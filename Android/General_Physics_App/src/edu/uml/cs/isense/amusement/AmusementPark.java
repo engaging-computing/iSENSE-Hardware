@@ -201,6 +201,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private static boolean successLogin      = false;
     private static boolean status400         = false;
     private static boolean sdCardError       = false;
+    private static boolean uploadSuccess     = false;
     
     private Handler mHandler;
     private boolean throughHandler = false;
@@ -1339,12 +1340,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     }
   	
   	// Calls the rapi primitives for actual uploading
-	private Runnable uploader = new Runnable()
-	{
+	private Runnable uploader = new Runnable() {
 		
 		@Override
-		public void run()
-		{
+		public void run() {
 			status400 = false;
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
@@ -1391,13 +1390,19 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 				}
 			}
 			
+			//createSession Success Check
+			if (sessionId == -1) {
+				uploadSuccess = false;
+				return;
+			}
+			
 			// Experiment Closed Checker
 			if (sessionId == -400) {
 				status400 = true;
 			} else {
 				status400 = false;
-				rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
-			
+				uploadSuccess = rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
+				if (!uploadSuccess) return;
 			
 				int pic = pictureArray.size();
 			
@@ -1456,6 +1461,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	        if (status400)
 	        	Toast.makeText(mContext, "Your data cannot be uploaded to this experiment.  It has been closed.", Toast.LENGTH_LONG).show();
+	        else if (!uploadSuccess)
+	        	Toast.makeText(mContext, "An error occured during upload.  Please check internet connectivity.", Toast.LENGTH_LONG).show();
 	        else
 	        	Toast.makeText(AmusementPark.this, "Upload Success", Toast.LENGTH_SHORT).show();
 	        
