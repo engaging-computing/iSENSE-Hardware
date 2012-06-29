@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>iSense Amusement Park App</name>
+	<name>iSense Car Ramp Physics</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -30,11 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>iSENSE Imports</name>
-			<type>2</type>
-			<location>/Users/csadmin/Documents/iSENSE-Hardware/Android/iSENSE Imports</location>
-		</link>
-	</linkedResources>
 </projectDescription>
