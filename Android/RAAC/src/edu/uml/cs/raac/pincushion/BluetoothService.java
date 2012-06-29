@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.UUID;
 
@@ -55,7 +54,9 @@ public class BluetoothService {
 	public static final String DEVICE_NAME = "device_name";
 	public static final String TOAST = "toast";
 
+	@SuppressWarnings("unused")
 	private static final int REQUEST_CONNECT_DEVICE = 10;
+	@SuppressWarnings("unused")
 	private static final int REQUEST_ENABLE_BT = 11;
 
 	/**
@@ -241,6 +242,7 @@ public class BluetoothService {
 		// The local socket
 		private final BluetoothServerSocket mmServerSocket;
 
+		@SuppressWarnings("unused")
 		public AcceptThread() {
 			BluetoothServerSocket tmp = null;
 
@@ -378,6 +380,7 @@ public class BluetoothService {
 		private final BluetoothSocket mmSocket;
 		private final InputStream mmInStream;
 		private final OutputStream mmOutStream;
+		@SuppressWarnings("unused")
 		private byte nextByte, bbuff[];
 		Queue<Byte> buffer = new LinkedList<Byte>();
 		public ConnectedComm(BluetoothSocket socket) {
@@ -446,7 +449,7 @@ public class BluetoothService {
 			} catch (IOException e) {
 				Log.e(TAG, "Exception during write", e);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -456,7 +459,7 @@ public class BluetoothService {
 				buffer.clear();
 				mmOutStream.flush();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -465,7 +468,7 @@ public class BluetoothService {
 			try {
 				mmOutStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}

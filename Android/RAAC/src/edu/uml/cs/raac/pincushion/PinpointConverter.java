@@ -295,7 +295,8 @@ public class PinpointConverter {
         //30 = MMMT TTTT
         //31 = YYYY YYYM
 
-        int hours, minutes, seconds, dayOfWeek, date, month, year;
+        @SuppressWarnings("unused")
+		int hours, minutes, seconds, dayOfWeek, date, month, year;
 
         seconds = ((raw[27] & 0xF0) >> 4) + ((raw[28] & 0x03) << 4);
         minutes = ((raw[28] & 0xFC) >> 2);
@@ -404,7 +405,8 @@ public class PinpointConverter {
         return Double.valueOf(threeDForm.format(d));
     }
 
-    public double myUnsignedToSigned(int[] bits) {
+    @SuppressWarnings("unused")
+	public double myUnsignedToSigned(int[] bits) {
         int ret = 1;
         int x = 0;
         String tmp = "";
