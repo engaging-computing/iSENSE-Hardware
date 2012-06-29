@@ -262,6 +262,10 @@
 	<string name="ride">Ride: </string>
 	<string name="takePic">Take a Picture</string>
 	<string name="takeVid">Take a Video"</string>
+	<string name="instructions">Instructions:</string>
+	<string name="send">Send</string>
+	<string name="receive">Receive</string>
+	<string name="cancel">Cancel</string>
 	
 	<string name="syncTime">
 	    Synchronizing time is useful when using multiple devices on a ride at the
