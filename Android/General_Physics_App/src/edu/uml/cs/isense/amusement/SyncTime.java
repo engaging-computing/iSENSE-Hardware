@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -216,7 +215,7 @@ public class SyncTime extends Activity {
 
         InetAddress mAddress;
         try {
-            mAddress = InetAddress.getByName("10.0.2.7");
+            mAddress = InetAddress.getByName(InetAddress.getLocalHost().getHostName());
            
             Log.d(tag, "Address is: " + ipAddress);
 
@@ -235,7 +234,7 @@ public class SyncTime extends Activity {
         mSocket.connect(mAddress, mPort);
        
         try {
-            mSocket.setSoTimeout(5000);
+            mSocket.setSoTimeout(10000);
         } catch (SocketException e) {
             e.printStackTrace();
             return -4;
@@ -297,35 +296,46 @@ public class SyncTime extends Activity {
        
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(timeStamp);
+        int minute = date.get(Calendar.MINUTE),
+		    second = date.get(Calendar.SECOND), 
+        	millis = date.get(Calendar.MILLISECOND);
+        String minuteSt, secondSt, millisSt;
+        
+        minuteSt = (minute < 10)  ? "0" + minute   : "" + minute;
+        secondSt = (second < 10)  ? "0" + second   : "" + second;
+        millisSt = (millis < 100) ? "0" + millis   : "" + millis;
+        millisSt = (millis < 10)  ? "0" + millisSt :    millisSt;
        
-        return date.get(Calendar.MONTH) + "/" + date.get(Calendar.DAY_OF_MONTH) +
+        return (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.DAY_OF_MONTH) +
                 "/" + date.get(Calendar.YEAR) + ", " + date.get(Calendar.HOUR_OF_DAY) +
-                ":" + date.get(Calendar.MINUTE) + ":" + date.get(Calendar.SECOND) +
-                "." + date.get(Calendar.MILLISECOND);
+                ":" + minuteSt + ":" + secondSt + "." + millisSt;
     }
    
     private class ReceiveTask extends AsyncTask <Void, Integer, Void> {
        
-        @Override protected void onPreExecute()
-        {   
+        //@SuppressWarnings("deprecation")
+		@Override protected void onPreExecute() {   
             dia = new ProgressDialog(mContext);
             dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dia.setMessage("Attempting to synchronize time...");
+            dia.setMessage("Attempting to synchronize time (automatic timeout in 10 seconds)...");
             dia.setCancelable(false);
+            /*dia.setButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) { 
+                	cancel(true); 
+                	dia.dismiss();
+                }
+            });*/
             dia.show();
         }
 
-        @Override protected Void doInBackground(Void... voids)
-
-        {
-            Log.d(tag, "Recieved message: " + receivePack());    
+        @Override protected Void doInBackground(Void... voids) {
+            Log.d(tag, "Received message: " + receivePack());    
             publishProgress(100);
             return null; 
         }
 
         @SuppressWarnings("deprecation")
-        @Override  protected void onPostExecute(Void voids)
-        {
+        @Override  protected void onPostExecute(Void voids) {
             dia.cancel();
             if (success)
                 showDialog(DIALOG_RECEIVE);
@@ -355,8 +365,9 @@ public class SyncTime extends Activity {
 
     @Override
     protected void onStop() {
-        if (mSocket.isConnected())
-            mSocket.close();
+    	if (mSocket != null)
+    		if (mSocket.isConnected()) // ************************************** CAUSES ERRORS HERE
+    			mSocket.close();
         super.onStop();
     }
    
