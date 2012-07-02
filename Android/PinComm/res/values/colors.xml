@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="rowcols">#C4E2F2</color>
+    <color name="rowcols">#DBDBDB</color>
+    <color name="rowcolselected">#7ABDFF</color>
     <color name="gray">#888888</color>
 
 </resources>

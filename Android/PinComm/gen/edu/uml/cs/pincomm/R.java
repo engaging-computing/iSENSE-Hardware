@@ -73,8 +73,9 @@ containing a value of this type.
         public static final int toplabel=0x7f010003;
     }
     public static final class color {
-        public static final int gray=0x7f060001;
+        public static final int gray=0x7f060002;
         public static final int rowcols=0x7f060000;
+        public static final int rowcolselected=0x7f060001;
     }
     public static final class drawable {
         public static final int actionbg=0x7f020000;
@@ -93,12 +94,11 @@ containing a value of this type.
         public static final int ic_launcher=0x7f02000d;
         public static final int logo=0x7f02000e;
         public static final int nopptbtn=0x7f02000f;
-        public static final int pinpointdiagram=0x7f020010;
-        public static final int pptbtn=0x7f020011;
-        public static final int pptbtntry=0x7f020012;
-        public static final int raaclogo=0x7f020013;
-        public static final int sensordiagram=0x7f020014;
-        public static final int superspin=0x7f020015;
+        public static final int pptbtn=0x7f020010;
+        public static final int pptbtntry=0x7f020011;
+        public static final int raaclogo=0x7f020012;
+        public static final int sensordiagram=0x7f020013;
+        public static final int superspin=0x7f020014;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f0a0039;
