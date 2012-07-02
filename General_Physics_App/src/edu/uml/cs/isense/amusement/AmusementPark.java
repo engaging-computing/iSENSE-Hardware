@@ -101,8 +101,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static TextView time;
 	private static CheckBox canobieCheck;
 	
-	//private final String experimentNum = "422"; //isense
-	private final String experimentNum = "277"; //   dev
+	private final String experimentNum = "422"; //isense
+	//private final String experimentNum = "277"; //   dev
     
 	
 	private Button startStop;
