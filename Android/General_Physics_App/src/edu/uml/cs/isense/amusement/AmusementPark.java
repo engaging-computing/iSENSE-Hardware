@@ -600,10 +600,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_SETUP,  Menu.NONE, "Setup" );
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN,  Menu.NONE, "Login" );
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
-		menu.add(Menu.NONE, MENU_ITEM_TIME,   Menu.NONE, "Sync Time");
+		menu.add(Menu.NONE, MENU_ITEM_SETUP,  Menu.NONE, "Setup" ).setIcon(R.drawable.ic_menu_settings);
+		menu.add(Menu.NONE, MENU_ITEM_LOGIN,  Menu.NONE, "Login" ).setIcon(R.drawable.ic_menu_login);
+		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload").setIcon(R.drawable.ic_menu_upload);
+		menu.add(Menu.NONE, MENU_ITEM_TIME,   Menu.NONE, "Sync Time").setIcon(R.drawable.ic_menu_synctime);
 		return true;
 	}
     
