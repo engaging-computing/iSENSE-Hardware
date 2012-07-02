@@ -127,18 +127,20 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private float orientation[];
 	
 	private static final int INTERVAL = 200;
-	private static final int MENU_ITEM_SETUP = 1;
-	private static final int MENU_ITEM_LOGIN = 2;
-	private static final int MENU_ITEM_UPLOAD = 3;
-	private static final int MENU_ITEM_TIME = 4;
-	private static final int SAVE_DATA = 5;
-	private static final int DIALOG_SUMMARY = 6;
-	private static final int DIALOG_CHOICE = 7;
-	private static final int EXPERIMENT_CODE = 8;
-	private static final int DIALOG_NO_ISENSE = 9;
-	private static final int RECORDING_STOPPED = 10;
-	private static final int DIALOG_NO_GPS = 11;
-	private static final int DIALOG_FORCE_STOP = 12;
+	
+	private static final int MENU_ITEM_SETUP = 0;
+	private static final int MENU_ITEM_LOGIN = 1;
+	private static final int MENU_ITEM_UPLOAD = 2;
+	private static final int MENU_ITEM_TIME = 3;
+	
+	private static final int SAVE_DATA = 4;
+	private static final int DIALOG_SUMMARY = 5;
+	private static final int DIALOG_CHOICE = 6;
+	private static final int EXPERIMENT_CODE = 7;
+	private static final int DIALOG_NO_ISENSE = 8;
+	private static final int RECORDING_STOPPED = 9;
+	private static final int DIALOG_NO_GPS = 10;
+	private static final int DIALOG_FORCE_STOP = 11;
 
     public static final int DIALOG_CANCELED = 0;
     public static final int DIALOG_OK = 1;
@@ -613,15 +615,15 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
         if (!useMenu) {
-            menu.getItem(MENU_ITEM_SETUP  - 1).setEnabled(false);
-            menu.getItem(MENU_ITEM_LOGIN  - 1).setEnabled(false);
-            menu.getItem(MENU_ITEM_UPLOAD - 1).setEnabled(false);
-            menu.getItem(MENU_ITEM_TIME   - 1).setEnabled(false);
+            menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
+            menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
+            menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
+            menu.getItem(MENU_ITEM_TIME).setEnabled(false);
         } else {
-        	menu.getItem(MENU_ITEM_SETUP  - 1).setEnabled(true );
-            menu.getItem(MENU_ITEM_LOGIN  - 1).setEnabled(true );
-            menu.getItem(MENU_ITEM_UPLOAD - 1).setEnabled(true );
-            menu.getItem(MENU_ITEM_TIME   - 1).setEnabled(true );
+        	menu.getItem(MENU_ITEM_SETUP).setEnabled(true );
+            menu.getItem(MENU_ITEM_LOGIN).setEnabled(true );
+            menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true );
+            menu.getItem(MENU_ITEM_TIME).setEnabled(true );
         }
         return true;
     }
