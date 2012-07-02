@@ -19,12 +19,6 @@ public class LoginActivity {
 	private RestAPI rapi;
 	private Context mContext;
 	
-    //private final String mLoginName = "PhysicsAppUser";
-    //private final String mLoginPass = "omgThisIsFun";
-    
-    private final String mLoginName = "sor";
-    private final String mLoginPass = "sor";
-	
 	static final public int LOGIN_SUCCESSFULL = 1;
 	static final public int LOGIN_FAILED = 0;
 	static final public int LOGIN_CANCELED = -1;
@@ -36,7 +30,6 @@ public class LoginActivity {
 		private static final String unknownUser    = "Connection to internet has been found, but the username or password was incorrect.  Please try again.";
 		private static final String noConnection   = "No connection to internet through either wifi or mobile found.  Please enable one to continue, then try again."; 
 		private static final String defaultMessage = "Was your username and password correct?\nAre you connected to the internet?\nPlease try again.";
-	    private static final String error600       = "Our servers are busy right now and cannot log you in (http response code 600).";
 	/* } */
 	
 	@SuppressWarnings("unused")
@@ -70,8 +63,12 @@ public class LoginActivity {
             final EditText usernameInput = (EditText) v.findViewById(R.id.usernameInput);
 			final EditText passwordInput = (EditText) v.findViewById(R.id.passwordInput);
 			
-			usernameInput.setText(mLoginName);
-			passwordInput.setText(mLoginPass);
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					   AmusementPark.mContext, AmusementPark.mContext
+					   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
+			
+			usernameInput.setText(mPrefs.getString("username", ""));
+			passwordInput.setText(mPrefs.getString("password", ""));
 			
             final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             
@@ -83,8 +80,11 @@ public class LoginActivity {
             			   success = rapi.login(usernameInput.getText().toString(), passwordInput.getText().toString());
                        			               			   
             			   if (success) {
-            				   AmusementPark.loginName = usernameInput.getText().toString();
-                			   AmusementPark.loginPass = passwordInput.getText().toString();
+            				   final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+            						   AmusementPark.mContext, AmusementPark.mContext
+            						   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
+            				   mPrefs.edit().putString("username", usernameInput.getText().toString()).commit();
+            				   mPrefs.edit().putString("password", passwordInput.getText().toString()).commit();
             				   loginSuccess.sendToTarget();
             				   dialog.dismiss();
             			   } else {
@@ -119,7 +119,7 @@ public class LoginActivity {
 		msg.what = LOGIN_FAILED;
 		//Log.e("CNCTN", "connection: " + rapi.connection);
 		if(rapi.connection == "NONE") message = noConnection;
-		else if(rapi.connection == "600") message = error600;
+		else if(rapi.connection == "600") message = unknownUser;
 		else if(rapi.connection == "") message = unknownUser;
 		else message = defaultMessage;
 			
