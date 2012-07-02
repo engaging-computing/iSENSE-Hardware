@@ -44,6 +44,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -101,8 +102,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static TextView time;
 	private static CheckBox canobieCheck;
 	
-	//private final String experimentNum = "422"; //isense
-	private final String experimentNum = "277"; //   dev
+	private final String experimentNum = "422";   //isense
+	//private final String experimentNum = "277"; //dev
     
 	
 	private Button startStop;
@@ -201,6 +202,7 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     private static boolean successLogin      = false;
     private static boolean status400         = false;
     private static boolean sdCardError       = false;
+    private static boolean uploadSuccess     = false;
     
     private Handler mHandler;
     private boolean throughHandler = false;
@@ -292,7 +294,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						len = 0; len2  = 0; dataPointCount = 0;
 						i   = 0;
 						beginWrite = true; sdCardError = false;
-						currentTime = getUploadTime() + timeOffset;
+						
+						currentTime = getUploadTime();
+						
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -599,10 +603,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_SETUP,  Menu.NONE, "Setup" );
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN,  Menu.NONE, "Login" );
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
-		menu.add(Menu.NONE, MENU_ITEM_TIME,   Menu.NONE, "Sync Time");
+		menu.add(Menu.NONE, MENU_ITEM_SETUP,  Menu.NONE, "Setup" ).setIcon(R.drawable.ic_menu_settings);
+		menu.add(Menu.NONE, MENU_ITEM_LOGIN,  Menu.NONE, "Login" ).setIcon(R.drawable.ic_menu_login);
+		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload").setIcon(R.drawable.ic_menu_upload);
+		menu.add(Menu.NONE, MENU_ITEM_TIME,   Menu.NONE, "Sync Time").setIcon(R.drawable.ic_menu_synctime);
 		return true;
 	}
     
@@ -1324,6 +1328,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if(resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
+				SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
+				SharedPreferences.Editor mEditor = mPrefs.edit();
+				mEditor.putLong("timeOffset", timeOffset);
+				mEditor.commit();
 				Log.e("intent", "timeOffset set to: " + timeOffset);
 			} else if(resultCode == RESULT_CANCELED) {
 				// oh no they canceled!
@@ -1339,12 +1347,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
     }
   	
   	// Calls the rapi primitives for actual uploading
-	private Runnable uploader = new Runnable()
-	{
+	private Runnable uploader = new Runnable() {
 		
 		@Override
-		public void run()
-		{
+		public void run() {
 			status400 = false;
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
@@ -1391,13 +1397,19 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 				}
 			}
 			
+			//createSession Success Check
+			if (sessionId == -1) {
+				uploadSuccess = false;
+				return;
+			}
+			
 			// Experiment Closed Checker
 			if (sessionId == -400) {
 				status400 = true;
 			} else {
 				status400 = false;
-				rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
-			
+				uploadSuccess = rapi.putSessionData(sessionId, experimentInput.getText().toString(), dataSet);
+				if (!uploadSuccess) return;
 			
 				int pic = pictureArray.size();
 			
@@ -1456,6 +1468,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	        
 	        if (status400)
 	        	Toast.makeText(mContext, "Your data cannot be uploaded to this experiment.  It has been closed.", Toast.LENGTH_LONG).show();
+	        else if (!uploadSuccess)
+	        	Toast.makeText(mContext, "An error occured during upload.  Please check internet connectivity.", Toast.LENGTH_LONG).show();
 	        else
 	        	Toast.makeText(AmusementPark.this, "Upload Success", Toast.LENGTH_SHORT).show();
 	        
@@ -1583,7 +1597,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private long getUploadTime()
     {
     		Calendar c = Calendar.getInstance();
-    		return ((long) c.getTimeInMillis());
+    		SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
+			timeOffset = mPrefs.getLong("timeOffset", 0);
+    		
+    		return (((long) c.getTimeInMillis()) + timeOffset);
     }
 	
 	// Deals with Dialog creation whether api is tablet or not
