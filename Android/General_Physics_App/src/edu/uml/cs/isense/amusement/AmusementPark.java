@@ -44,6 +44,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -101,8 +102,8 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private static TextView time;
 	private static CheckBox canobieCheck;
 	
-	private final String experimentNum = "422"; //isense
-	//private final String experimentNum = "277"; //   dev
+	private final String experimentNum = "422";   //isense
+	//private final String experimentNum = "277"; //dev
     
 	
 	private Button startStop;
@@ -293,7 +294,9 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 						len = 0; len2  = 0; dataPointCount = 0;
 						i   = 0;
 						beginWrite = true; sdCardError = false;
-						currentTime = getUploadTime() + timeOffset;
+						
+						currentTime = getUploadTime();
+						
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -1325,6 +1328,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if(resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
+				SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
+				SharedPreferences.Editor mEditor = mPrefs.edit();
+				mEditor.putLong("timeOffset", timeOffset);
+				mEditor.commit();
 				Log.e("intent", "timeOffset set to: " + timeOffset);
 			} else if(resultCode == RESULT_CANCELED) {
 				// oh no they canceled!
@@ -1590,7 +1597,10 @@ public class AmusementPark extends Activity implements SensorEventListener, Loca
 	private long getUploadTime()
     {
     		Calendar c = Calendar.getInstance();
-    		return ((long) c.getTimeInMillis());
+    		SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
+			timeOffset = mPrefs.getLong("timeOffset", 0);
+    		
+    		return (((long) c.getTimeInMillis()) + timeOffset);
     }
 	
 	// Deals with Dialog creation whether api is tablet or not
