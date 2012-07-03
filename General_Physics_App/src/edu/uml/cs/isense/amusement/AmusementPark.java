@@ -608,7 +608,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (videos.size() > 0)
 			pushVideo();
 	}
-
+	
 	@Override
 	public void onStart() {
 		super.onStart();
