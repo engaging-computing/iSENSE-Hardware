@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import edu.uml.cs.isense.objects.ExpLoaded;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.objects.Item;
@@ -819,6 +820,106 @@ public class RestAPI {
 			}
 		}
 		return expList;
+	}
+	
+	public ExpLoaded getAllExperiments(int page, int limit, String action, String query) {
+		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query;
+		
+		ExpLoaded expPair = new ExpLoaded();
+		expPair.exp = new ArrayList<Experiment>();
+		expPair.setLoaded(false);
+		
+		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
+			try {
+				
+				String data = makeRequest(url);
+				
+				// Parse JSON Result
+				JSONObject o = new JSONObject(data);
+				JSONArray a = o.getJSONArray("data");
+						
+				int length = a.length();
+				if (length < 10)
+					expPair.setLoaded(true);
+				else
+					expPair.setLoaded(false);
+				
+				if (action.toLowerCase().compareTo("browse") == 0) mDbHelper.open();
+				for (int i = 0; i < length; i++) {
+					try {
+						JSONObject current = a.getJSONObject(i);
+						JSONObject obj = current.getJSONObject("meta");
+						Experiment e = new Experiment();
+								
+						e.experiment_id = obj.getInt("experiment_id");
+						e.owner_id = obj.getInt("owner_id");
+						e.name = obj.getString("name");
+						e.description = obj.getString("description");
+						e.timecreated = obj.getString("timecreated");
+						e.timemodified = obj.getString("timemodified");
+						e.default_read = obj.getInt("default_read");
+						e.default_join = obj.getInt("default_join");
+						e.featured = obj.getInt("featured");
+						e.rating = obj.getInt("rating");
+						e.rating_votes = obj.getInt("rating_votes");
+						e.hidden = obj.getInt("hidden");
+						e.firstname = obj.getString("owner_firstname");
+						e.lastname = obj.getString("owner_lastname");
+						e.provider_url = obj.getString("provider_url");
+				
+						expPair.exp.add(e);
+						if (action.toLowerCase().compareTo("browse") == 0) {
+							mDbHelper.deleteExperiment(e);
+							mDbHelper.insertExperiment(e);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+
+						continue;
+					}
+				}
+				if (action.toLowerCase().compareTo("browse") == 0) mDbHelper.close();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		} else if (action.toLowerCase().compareTo("browse") == 0){
+			mDbHelper.open();
+			Cursor c = mDbHelper.getExperiments(page, limit);
+			mDbHelper.close();
+			
+			if (c == null || c.getCount() == 0) return expPair;
+
+			while(!c.isAfterLast()) {
+				
+				Experiment e = new Experiment();
+				
+				e.experiment_id = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_EXPERIMENT_ID));
+				e.owner_id = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_OWNER_ID));
+				e.name = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_NAME));
+				e.description = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_DESCRIPTION));
+				e.timecreated = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_TIMECREATED));
+				e.timemodified = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_TIMEMODIFIED));
+				e.default_read = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_DEFAULT_READ));
+				e.default_join = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_DEFAULT_JOIN));
+				e.featured = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_FEATURED));
+				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
+				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
+				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
+				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
+				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
+			
+				expPair.exp.add(e);
+				
+				if (c.isLast()) break;
+				c.moveToNext();
+			}
+		}
+		return expPair;
 	}
 	
 	public ArrayList<String> getExperimentImages(int id) {
