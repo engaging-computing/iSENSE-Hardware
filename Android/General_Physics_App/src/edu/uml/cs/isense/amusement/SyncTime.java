@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,11 +58,11 @@ public class SyncTime extends Activity {
 		setContentView(R.layout.synctime);
 
 		mContext = this;
-
-		// WifiManager wifiMngr = (WifiManager)
-		// getSystemService(Context.WIFI_SERVICE);
-		// WifiInfo wifiInfo = wifiMngr.getConnectionInfo();
-		// int ipAddress = wifiInfo.getIpAddress();
+		
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		      StrictMode.setThreadPolicy(policy);	
+		}
 
 		String dummyTime = "" + System.currentTimeMillis();
 		byteMessage = dummyTime.getBytes();
@@ -103,7 +104,6 @@ public class SyncTime extends Activity {
 		});
 	}
 
-	// @SuppressWarnings("deprecation")
 	protected Dialog onCreateDialog(final int id) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -148,7 +148,7 @@ public class SyncTime extends Activity {
 									+ timeRec
 									+ " from the host device, which is an offset of "
 									+ timeOffset
-									+ "milliseconds from your local clock.")
+									+ " milliseconds from your local clock.")
 					.setPositiveButton("Done",
 							new DialogInterface.OnClickListener() {
 								public void onClick(
@@ -318,18 +318,13 @@ public class SyncTime extends Activity {
 
 	private class ReceiveTask extends AsyncTask<Void, Integer, Void> {
 
-		// @SuppressWarnings("deprecation")
+		
 		@Override
 		protected void onPreExecute() {
 			dia = new ProgressDialog(mContext);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Attempting to synchronize time (automatic timeout in 10 seconds)...");
 			dia.setCancelable(false);
-			/*
-			 * dia.setButton("Cancel", new DialogInterface.OnClickListener() {
-			 * public void onClick(DialogInterface dialog, int which) {
-			 * cancel(true); dia.dismiss(); } });
-			 */
 			dia.show();
 		}
 
@@ -372,8 +367,7 @@ public class SyncTime extends Activity {
 	@Override
 	protected void onStop() {
 		if (mSocket != null)
-			if (mSocket.isConnected()) // **************************************
-										// CAUSES ERRORS HERE
+			if (mSocket.isConnected())							
 				mSocket.close();
 		super.onStop();
 	}

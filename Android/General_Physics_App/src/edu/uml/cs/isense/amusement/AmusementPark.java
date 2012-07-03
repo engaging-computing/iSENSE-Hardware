@@ -79,6 +79,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ArrayAdapter;
@@ -87,6 +88,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -251,9 +253,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				if (!setupDone || rideName.getText().toString() == null) {
 
 					showDialog(MENU_ITEM_SETUP);
-					Toast.makeText(AmusementPark.this,
-							"You must setup before recording data.",
-							Toast.LENGTH_LONG).show();
+					makeToast("You must setup before recording data.", Toast.LENGTH_LONG, "x");
 
 				} else {
 
@@ -280,9 +280,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						choiceViaMenu = false;
 
 						if (sdCardError)
-							Toast.makeText(mContext,
-									"Could not write file to SD Card.",
-									Toast.LENGTH_SHORT).show();
+							makeToast("Could not write file to SD Card.", Toast.LENGTH_SHORT, "x");
 
 						if (throughHandler)
 							showDialog(RECORDING_STOPPED);
@@ -307,10 +305,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
-							Toast.makeText(
-									getBaseContext(),
-									"Data recording interrupted! Time values may be inconsistent.",
-									Toast.LENGTH_SHORT).show();
+							makeToast("Data recording interrupted! Time values may be inconsistent.", Toast.LENGTH_SHORT, "x");
 							e.printStackTrace();
 						}
 
@@ -488,8 +483,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				beginWrite = false;
 			} catch (IOException e) {
 				sdCardError = true;
-				// Toast.makeText(this, "Error creating the SD Card file.",
-				// Toast.LENGTH_LONG).show();
 			}
 
 			break;
@@ -499,8 +492,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				out.append(data);
 			} catch (IOException e) {
 				sdCardError = true;
-				// Toast.makeText(this, "Error updating the SD Card file.",
-				// Toast.LENGTH_LONG).show();
 			}
 
 			break;
@@ -513,15 +504,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					gpxwriter.close();
 			} catch (IOException e) {
 				sdCardError = true;
-				// Toast.makeText(this, "Error completing the SD Card file.",
-				// Toast.LENGTH_LONG).show();
 			}
 
 			break;
 
 		default:
-			// Toast.makeText(mContext, "Fatal error writing file to SD Card!",
-			// Toast.LENGTH_LONG).show();
 			sdCardError = true;
 			break;
 		}
@@ -608,7 +595,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (videos.size() > 0)
 			pushVideo();
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -640,14 +627,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onBackPressed() {
 		if (!dontToastMeTwice) {
 			if (running)
-				Toast.makeText(
-						this,
-						"Cannot exit via BACK while recording data; use HOME instead.",
-						Toast.LENGTH_LONG).show();
+				makeToast("Cannot exit via BACK while recording data; use HOME instead.", Toast.LENGTH_LONG, "x");
 			else
-				Toast.makeText(this, "Press back again to exit.",
-						Toast.LENGTH_SHORT).show();
-			new NoToastTwiceTask().execute();
+				makeToast("Press back again to exit.", Toast.LENGTH_SHORT, "check");
+
+			// new NoToastTwiceTask().execute();
 		} else if (exitAppViaBack && !running) {
 			setupDone = false;
 			super.onBackPressed();
@@ -829,11 +813,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								AmusementPark.mContext, AmusementPark.mContext
 										.getSharedPreferences("USER_INFO",
 												Context.MODE_PRIVATE));
-						loginInfo.setText(" " + mPrefs.getString("username", ""));
+						loginInfo.setText(" "
+								+ mPrefs.getString("username", ""));
 						loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
-						Toast.makeText(AmusementPark.this, "Login successful",
-								Toast.LENGTH_LONG).show();
+						makeToast("Login successful", Toast.LENGTH_LONG, "check");
 						break;
 					case LoginActivity.LOGIN_CANCELED:
 						break;
@@ -853,9 +837,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					switch (msg.what) {
 					case DIALOG_OK:
 						if (len == 0 || len2 == 0)
-							Toast.makeText(AmusementPark.this,
-									"There is no data to upload!",
-									Toast.LENGTH_LONG).show();
+							makeToast("There is no data to upload!", Toast.LENGTH_LONG, "x");
 						showDialog(DIALOG_CHOICE);
 						partialSessionName = sessionName.getText().toString();
 						break;
@@ -938,10 +920,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									dialoginterface.dismiss();
 
 									if (len == 0 || len2 == 0)
-										Toast.makeText(AmusementPark.this,
-												"There is no data to upload!",
-												Toast.LENGTH_LONG).show();
-
+										makeToast("There is no data to upload!", Toast.LENGTH_LONG, "x");
 									else {
 
 										String isValid = experimentInput
@@ -1134,10 +1113,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			public void onClick(View v) {
 
 				if (!rapi.isConnectedToInternet()) {
-					Toast.makeText(
-							AmusementPark.this,
-							"You must enable wifi or mobile connectivity to do this.",
-							Toast.LENGTH_SHORT).show();
+					makeToast("You must enable wifi or mobile connectivity to do this.", Toast.LENGTH_SHORT, "x");
 				} else {
 
 					Intent experimentIntent = new Intent(
@@ -1201,13 +1177,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 
 				} else {
-					if (!dontToastMeTwice) {
-						Toast.makeText(
-								AmusementPark.this,
-								"Permission isn't granted to write to external storage.  Please enable to take pictures.",
-								Toast.LENGTH_LONG).show();
-						new NoToastTwiceTask().execute();
-					}
+					makeToast("Permission isn't granted to write to external storage.  Please enable to take pictures.", 
+							Toast.LENGTH_LONG, "x");		
 				}
 
 			}
@@ -1236,13 +1207,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
 
 				} else {
-					if (!dontToastMeTwice) {
-						Toast.makeText(
-								AmusementPark.this,
-								"Permission isn't granted to write to external storage.  Please enable to record videos.",
-								Toast.LENGTH_LONG).show();
-						new NoToastTwiceTask().execute();
-					}
+					makeToast("Permission isn't granted to write to external storage.  Please enable to record videos.",
+							Toast.LENGTH_LONG, "x");
 				}
 			}
 		});
@@ -1291,10 +1257,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 							rideNameString = (String) rides.getSelectedItem();
 
-							SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+							SharedPreferences mPrefs = getSharedPreferences(
+									"EID", 0);
 							SharedPreferences.Editor mEditor = mPrefs.edit();
-							mEditor.putString("experiment_id", experimentInput.getText().toString()).commit();
-							
+							mEditor.putString("experiment_id",
+									experimentInput.getText().toString())
+									.commit();
+
 							final Message dialogOk = Message.obtain();
 							dialogOk.setTarget(h);
 							dialogOk.what = DIALOG_OK;
@@ -1461,8 +1430,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
-				int eid = data.getExtras()
-						.getInt("edu.uml.cs.isense.pictures.experiments.exp_id");
+				int eid = data.getExtras().getInt(
+						"edu.uml.cs.isense.pictures.experiments.exp_id");
 				experimentInput.setText("" + eid);
 			}
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
@@ -1512,17 +1481,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String eid = mPrefs.getString("experiment_id", "");
 
 			if (nameOfSession.equals("")) {
 				if (address == null || address.size() <= 0) {
-					sessionId = rapi.createSession(eid, "*Session Name Not Provided*",
+					sessionId = rapi.createSession(eid,
+							"*Session Name Not Provided*",
 							"Automated Submission Through Android App", "N/A",
 							"N/A", "United States");
 				} else {
-					sessionId = rapi.createSession(eid, "*Session Name Not Provided*",
+					sessionId = rapi.createSession(eid,
+							"*Session Name Not Provided*",
 							"Automated Submission Through Android App", addr,
 							city + ", " + state, country);
 				}
@@ -1559,11 +1530,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				while (pic > 0) {
 					if (nameOfSession.equals(""))
 						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, "*Session Name Not Provided*", "N/A");
+								eid, sessionId, "*Session Name Not Provided*",
+								"N/A");
 					else
 						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, sessionName.getText().toString(),
-								"N/A");
+								eid, sessionId, sessionName.getText()
+										.toString(), "N/A");
 
 					pic--;
 
@@ -1611,18 +1583,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			mediaCount = 0;
 
 			if (status400)
-				Toast.makeText(
-						mContext,
-						"Your data cannot be uploaded to this experiment.  It has been closed.",
-						Toast.LENGTH_LONG).show();
+				makeToast("Your data cannot be uploaded to this experiment.  It has been closed.",
+						Toast.LENGTH_LONG, "x");
 			else if (!uploadSuccess)
-				Toast.makeText(
-						mContext,
-						"An error occured during upload.  Please check internet connectivity.",
-						Toast.LENGTH_LONG).show();
+				makeToast("An error occured during upload.  Please check internet connectivity.",
+						Toast.LENGTH_LONG, "x");
 			else
-				Toast.makeText(AmusementPark.this, "Upload Success",
-						Toast.LENGTH_SHORT).show();
+				makeToast("Upload Success", Toast.LENGTH_SHORT, "check");
 
 			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			showDialog(DIALOG_SUMMARY);
@@ -1655,6 +1622,36 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 			dontToastMeTwice = false;
 		}
+	}
+
+	public void makeToast(String message, int length, String image_id) {
+
+		if (!dontToastMeTwice) {
+			LayoutInflater inflater = getLayoutInflater();
+			View layout = inflater.inflate(R.layout.toast_layout,
+					(ViewGroup) findViewById(R.id.toast_layout_root));
+
+			ImageView image = (ImageView) layout.findViewById(R.id.image);
+			if (image_id.equals("check"))
+				image.setImageResource(R.drawable.checkmark);
+			else
+				image.setImageResource(R.drawable.red_x);
+			
+			TextView text = (TextView) layout.findViewById(R.id.text);
+			text.setText(message);
+
+			Toast toast = new Toast(getApplicationContext());
+			toast.setGravity(Gravity.BOTTOM, 0, 50);
+			if (length == Toast.LENGTH_SHORT)
+				toast.setDuration(Toast.LENGTH_SHORT);
+			else
+				toast.setDuration(Toast.LENGTH_LONG);
+			toast.setView(layout);
+			toast.show();
+			
+			new NoToastTwiceTask().execute();
+		}
+
 	}
 
 	public void setTime(int seconds) {
@@ -1749,8 +1746,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	// Deals with login and UI display
 	void login() {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				   AmusementPark.mContext, AmusementPark.mContext
-				   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
+				AmusementPark.mContext,
+				AmusementPark.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
 		boolean success = rapi.login(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 		if (success) {
