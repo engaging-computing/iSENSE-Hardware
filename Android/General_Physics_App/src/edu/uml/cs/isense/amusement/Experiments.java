@@ -1,32 +1,15 @@
 package edu.uml.cs.isense.amusement;
-
 import java.util.ArrayList;
 
-import edu.uml.cs.isense.amusement.R;
-
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Experiment;
-
 import android.app.Activity;
-//import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
-//import android.content.DialogInterface;
 import android.content.Intent;
-/*import android.content.SharedPreferences;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.SharedPreferences.Editor;*/
 import android.os.Bundle;
-/*import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;*/
-import android.text.Editable;
-import android.text.TextWatcher;
-/*import android.view.Menu;
-import android.view.MenuItem;*/
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 
 public class Experiments extends ListActivity {
 	private ExperimentAdapter m_adapter; 
@@ -78,7 +61,7 @@ public class Experiments extends ListActivity {
         } else {
         	m_experiments = new ArrayList<Experiment>();
         }
-        
+            
         this.m_adapter = new ExperimentAdapter(getBaseContext(), R.layout.experimentrow, R.layout.loadrow, m_experiments);
         
         if (data != null) {
@@ -86,46 +69,14 @@ public class Experiments extends ListActivity {
         	m_adapter.allItemsLoaded = (Boolean) dataList[2];
         	m_adapter.page = (Integer) dataList[3];
         }
+
         setListAdapter(this.m_adapter);
-        
-        final EditText et = (EditText) findViewById(R.id.ExperimentSerchInput);
-        et.setSingleLine(true);
-        et.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void afterTextChanged(Editable s) {
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-				
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (s == null || s.length() == 0) {
-					m_experiments = new ArrayList<Experiment>();
-					m_adapter = new ExperimentAdapter(getBaseContext(), R.layout.experimentrow, R.layout.loadrow, m_experiments);
-			        setListAdapter(m_adapter);
-				} else {
-					m_experiments = new ArrayList<Experiment>();
-					m_adapter = new ExperimentAdapter(getBaseContext(), R.layout.experimentrow, R.layout.loadrow, m_experiments);
-					m_adapter.action = "search";
-					m_adapter.query = s.toString();
-			        setListAdapter(m_adapter);
-				}
-			}
-        	
-        });
-                
     }
-   
+    
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+		
 		Experiment e = m_experiments.get(position);
 
 		Intent intent = new Intent();

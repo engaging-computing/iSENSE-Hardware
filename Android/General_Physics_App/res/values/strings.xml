@@ -279,16 +279,18 @@
 	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
 	    you intend on receiving a host\'s time, you must be in receive-mode before the
 	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
-	    hosted, should you be the host).  After pressing either \"Send\" or 
-	    \"Receive\", a dialog box will tell you the time that has either been 
-	    broadcasted or pulled from the host, along with the millisecond offset between 
+	    broadcasted, should you be the host).  After pressing either \"Send\" or 
+	    \"Receive\", a dialog box will tell you the time that has been received from
+	    the host, along with the millisecond offset between 
 	    the received time and your Android device\'s actual clock.  If you do choose 
-	    to synchronize time, recording data will now use the hosted time as a label 
+	    to synchronize time, recording data will now use the received time as a label 
 	    for data points, rather than using your local time.  This now allows 
 	    simultaneous data recording across multiple devices on the same ride at the 
 	    same time.  Please note: synchronizing time will only work if all the Android
-	    devices are connected to the same WiFi network.  3G, 4G, or any other data plan
-	    will not allow for synchronizing time.
+	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
+	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
+	    allowed on some WiFi networks, but it generally works on small, password-secured 
+	    WiFi networks.
 	</string>
 
 </resources>
