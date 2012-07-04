@@ -30,6 +30,15 @@
             android:src="@drawable/superspin"
             android:visibility="gone" />
 
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/nfcconnect" />
+
     </RelativeLayout>
 
     <LinearLayout
