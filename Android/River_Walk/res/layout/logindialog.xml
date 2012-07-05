@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <TextView
+		android:id="@+id/usernameLabel"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Username : "
+		android:layout_alignParentLeft="true"
+		android:layout_marginTop="5dip"/>
+
+    <EditText
+        android:id="@+id/usernameInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:background="@android:drawable/editbox_background"
+        android:layout_toRightOf="@id/usernameLabel"
+        android:paddingLeft="6dip"
+        android:inputType="textEmailAddress"/>
+        
+    <TextView
+		android:id="@+id/passwordLabel"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Password  : "
+		android:layout_marginTop="5dip"
+		android:layout_below="@id/usernameInput"
+		android:layout_alignParentLeft="true"/>
+		
+	<EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:background="@android:drawable/editbox_background"
+        android:layout_toRightOf="@id/passwordLabel"
+        android:layout_below="@id/usernameInput"
+        android:paddingLeft="6dip"
+        android:password="true"/>
+<!--  			
+	<CheckedTextView android:text="Remember me" 
+		android:id="@+id/rememberme" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_below="@id/passwordLabel"
+		android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="20dip"/>
+-->
+</RelativeLayout>
