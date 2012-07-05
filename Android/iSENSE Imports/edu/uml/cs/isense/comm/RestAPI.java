@@ -1298,7 +1298,7 @@ public class RestAPI {
 		return ret;
 	}
 	
-	public String getMyIp(){
+	public String getMyIp() {
         String url = "method=whatsMyIp";
         try {
             String data = makeRequest(url);

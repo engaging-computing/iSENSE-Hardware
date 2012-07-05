@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="null_string">Null</string>
+    <string name="time">Time</string>
+    <string name="accel_x">Accel-X</string>
+    <string name="accel_y">Accel-Y</string>
+    <string name="accel_z">Accel-Z</string>
+    <string name="accel_total">Accel-Total</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="magnetic_x">Magnetic-X</string>
+    <string name="magnetic_y">Magnetic-Y</string>
+    <string name="magnetic_z">Magnetic-Z</string>
+    <string name="magnetic_total">Magnetic-Total</string>
+    
+</resources>
