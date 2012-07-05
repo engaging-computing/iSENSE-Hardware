@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    android:keepScreenOn="true">
+    
+    <LinearLayout android:orientation="vertical"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_weight="1">
+    	
+			<ImageView android:id="@+id/ImageViewLogo"
+				android:layout_width="fill_parent" 
+				android:background="@android:color/white"
+				android:src="@drawable/logo"
+				android:layout_height="wrap_content"
+				android:scaleType="center"/>
+	
+		<LinearLayout android:orientation="vertical"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:background="@android:color/black">
+
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/values"
+				android:text="Y: "
+				android:textSize="18dip"
+				android:textStyle="bold"
+				android:background="@android:color/black"
+				android:textColor="@android:color/white"
+				android:layout_gravity="center_horizontal"/>
+			
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/howToUse"
+				android:layout_marginTop="10dp"
+				android:text="Place device on its back with the top edge facing the direction of displacement."
+				android:textSize="16dip"
+				android:background="@android:color/white"
+				android:textColor="@android:color/black"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center"/>
+			
+		</LinearLayout>
+		
+		<Button android:text="Hold to Start" 
+			android:textSize="30dip"
+			android:id="@+id/startStop" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:layout_weight="1"/>
+		
+		<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/useMenuTo"
+				android:layout_marginBottom="10dp"
+				android:text="Use Menu to access About"
+				android:textSize="16dip"
+				android:background="@android:color/white"
+				android:textColor="@android:color/black"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center"/>
+			
+	</LinearLayout>
+	
+</LinearLayout>
