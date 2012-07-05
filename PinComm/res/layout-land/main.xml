@@ -29,7 +29,7 @@
             android:layout_marginBottom="-114dp"
             android:layout_marginLeft="10dp"
             android:src="@drawable/superspin"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/imageView1"
