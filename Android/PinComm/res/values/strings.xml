@@ -40,6 +40,14 @@
     <string name="login_passLbl">Password</string>
     <string name="login_button">Sign In</string>
     
+    <string name="finalize_label">Enter Upload Details</string>
+    <string name="finalize_msg">Please enter a few final details about this upload.</string>
+    <string name="finalize_sessdesc">Session Description</string>
+    <string name="finalize_street">Street</string>
+    <string name="finalize_city">City, State</string>
+    <string name="finalize_geo">Geolocate Me</string>
+    <string name="btn_upload">Upload</string>
+    
     <string name="expr_msg">Please select the experiment to which you want to upload data</string>
     <string name="change_eid">Select Experiment</string>
     

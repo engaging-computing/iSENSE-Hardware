@@ -106,11 +106,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
 	public static String experimentId = "427";
-	String username = "sor";
-	String password = "sort";
+	String username = "";
+	String password = "";
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	String sessionDesc, sessionStreet, sessionCity;
 
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
@@ -135,6 +136,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private static final int CHANGE_EXPERIMENT = 6;
 	private static final int CHANGE_FIELDS = 7;
 	private static final int LOGIN_BOX = 8;
+	private static final int UPLOAD_BOX = 9;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -791,6 +793,45 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				startActivityForResult(i, CHANGE_FIELDS);
 			}
 			break;
+		case UPLOAD_BOX:
+			if (resultCode == RESULT_OK) {
+
+				sessionDesc = data.getExtras().getString("myDesc");
+				sessionStreet = data.getExtras().getString("myStreet");
+				sessionCity = data.getExtras().getString("myCity");
+
+				SharedPreferences myPrefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+
+				ArrayList<String> allSensors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.pptsensors_array)));
+				allSensors.set(14, prefs.getString("name_bta1", "BTA 1"));
+				allSensors.set(15, prefs.getString("name_bta2", "BTA 2"));
+				allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
+				allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
+				allSensors.remove(0);
+				allSensors.remove(1);
+
+				dataSet = new JSONArray();
+				JSONArray dataJSON;
+				for( int j = 0; j < timeData.size(); j++) {
+					dataJSON = new JSONArray();
+					dataJSON.put(timeData.get(j));
+					for (int i = 1; i <= amtTrackedFields; i++) {
+						int tempindex = allSensors.indexOf(myPrefs.getString("trackedField"+i, ""));
+						if(tempindex != -1) {
+							dataJSON.put(sensorData.get(tempindex).get(j));
+						} else {
+							dataJSON.put("");
+						}
+					}
+					dataSet.put(dataJSON);
+				}
+
+				new UploadTask().execute();
+
+			}
+			break;
 		case CHANGE_FIELDS:
 			if (resultCode == RESULT_OK) {
 				SharedPreferences myPrefs = PreferenceManager
@@ -819,16 +860,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private void uploadData() {
 		SharedPreferences myPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 
-		ArrayList<String> allSensors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.pptsensors_array)));
-		allSensors.set(14, prefs.getString("name_bta1", "BTA 1"));
-		allSensors.set(15, prefs.getString("name_bta2", "BTA 2"));
-		allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
-		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
-		allSensors.remove(0);
-		allSensors.remove(1);
-		
 		if (timeData.size() != sensorData.get(12).size()) {
 			Toast.makeText(this, "An unexpected error occurred! Try pressing Retrieve Data again",
 					Toast.LENGTH_LONG).show();
@@ -843,23 +875,10 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			return;
 		}
 
-		dataSet = new JSONArray();
-		JSONArray dataJSON;
-		for( int j = 0; j < timeData.size(); j++) {
-			dataJSON = new JSONArray();
-			dataJSON.put(timeData.get(j));
-			for (int i = 1; i <= amtTrackedFields; i++) {
-				int tempindex = allSensors.indexOf(myPrefs.getString("trackedField"+i, ""));
-				if(tempindex != -1) {
-					dataJSON.put(sensorData.get(tempindex).get(j));
-				} else {
-					dataJSON.put("");
-				}
-			}
-			dataSet.put(dataJSON);
-		}
+		//Launch dialog for user to fill in final information about the upload
+		Intent i = new Intent(this, FinalizeUpload.class);
+		startActivityForResult(i, UPLOAD_BOX);
 		
-		new UploadTask().execute();
 	}
 
 	//the uploading thread that does all the work
@@ -875,10 +894,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 			if (loggedIn) {
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(experimentId, 
-							nameOfSession, 
-							"Automated Submission Through Android App", 
-							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
+					sessionId = rapi.createSession(experimentId, nameOfSession, sessionDesc, 
+							sessionStreet, sessionCity, "United States");
 					if (sessionId != -1) {
 						rapi.putSessionData(sessionId, experimentId, dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
