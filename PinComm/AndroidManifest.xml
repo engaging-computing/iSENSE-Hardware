@@ -60,6 +60,11 @@
             android:theme="@style/Theme.MyDialogTheme">
         </activity>
         <activity
+            android:name=".FinalizeUpload"
+            android:label="@string/finalize_label"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+        <activity
             android:name=".WifiDisabled"
             android:label="@string/wifi_page"
             android:theme="@style/Theme.MyDialogTheme">
