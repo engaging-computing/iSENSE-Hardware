@@ -115,14 +115,14 @@ containing a value of this type.
         public static final int btnCancel=0x7f0a0051;
         public static final int btnUpload=0x7f0a0050;
         public static final int btn_cancel=0x7f0a0049;
-        public static final int btn_geolocate=0x7f0a004f;
+        public static final int btn_geolocate=0x7f0a004d;
         public static final int btn_getRcrd=0x7f0a0027;
         public static final int btn_nextPage=0x7f0a0030;
         public static final int btn_okay=0x7f0a0048;
         public static final int btn_prevPage=0x7f0a002e;
         public static final int btn_pushToISENSE=0x7f0a002d;
         public static final int button_scan=0x7f0a0015;
-        public static final int cityField=0x7f0a004e;
+        public static final int cityField=0x7f0a004f;
         public static final int datarow_layout=0x7f0a000c;
         public static final int datasubrow_layout=0x7f0a000e;
         public static final int descField=0x7f0a004c;
@@ -181,7 +181,7 @@ containing a value of this type.
         public static final int sensorNameHeader=0x7f0a0033;
         public static final int sensor_spinners=0x7f0a0008;
         public static final int statusField=0x7f0a0028;
-        public static final int streetfield=0x7f0a004d;
+        public static final int streetfield=0x7f0a004e;
         public static final int textView1=0x7f0a0035;
         public static final int textView2=0x7f0a0042;
         public static final int textView3=0x7f0a0044;
