@@ -79,7 +79,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ArrayAdapter;
@@ -88,7 +87,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -178,7 +176,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	private String dateString, s_elapsedSeconds, s_elapsedMillis,
 			s_elapsedMinutes;
+	
 	RestAPI rapi;
+	Waffle w;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -253,7 +253,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				if (!setupDone || rideName.getText().toString() == null) {
 
 					showDialog(MENU_ITEM_SETUP);
-					makeToast("You must setup before recording data.",
+					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
 
 				} else {
@@ -281,7 +281,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						choiceViaMenu = false;
 
 						if (sdCardError)
-							makeToast("Could not write file to SD Card.",
+							w.make("Could not write file to SD Card.",
 									Toast.LENGTH_SHORT, "x");
 
 						if (throughHandler)
@@ -307,7 +307,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
-							makeToast(
+							w.make(
 									"Data recording interrupted! Time values may be inconsistent.",
 									Toast.LENGTH_SHORT, "x");
 							e.printStackTrace();
@@ -631,11 +631,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onBackPressed() {
 		if (!dontToastMeTwice) {
 			if (running)
-				makeToast(
+				w.make(
 						"Cannot exit via BACK while recording data; use HOME instead.",
 						Toast.LENGTH_LONG, "x");
 			else
-				makeToast("Press back again to exit.", Toast.LENGTH_SHORT,
+				w.make("Press back again to exit.", Toast.LENGTH_SHORT,
 						"check");
 
 			// new NoToastTwiceTask().execute();
@@ -824,7 +824,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								+ mPrefs.getString("username", ""));
 						loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
-						makeToast("Login successful", Toast.LENGTH_LONG,
+						w.make("Login successful", Toast.LENGTH_LONG,
 								"check");
 						break;
 					case LoginActivity.LOGIN_CANCELED:
@@ -845,7 +845,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					switch (msg.what) {
 					case DIALOG_OK:
 						if (len == 0 || len2 == 0)
-							makeToast("There is no data to upload!",
+							w.make("There is no data to upload!",
 									Toast.LENGTH_LONG, "x");
 						showDialog(DIALOG_CHOICE);
 						partialSessionName = sessionName.getText().toString();
@@ -929,7 +929,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									dialoginterface.dismiss();
 
 									if (len == 0 || len2 == 0)
-										makeToast(
+										w.make(
 												"There is no data to upload!",
 												Toast.LENGTH_LONG, "x");
 									else {
@@ -1124,7 +1124,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			public void onClick(View v) {
 
 				if (!rapi.isConnectedToInternet()) {
-					makeToast(
+					w.make(
 							"You must enable wifi or mobile connectivity to do this.",
 							Toast.LENGTH_SHORT, "x");
 				} else {
@@ -1190,7 +1190,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 
 				} else {
-					makeToast(
+					w.make(
 							"Permission isn't granted to write to external storage.  Please enable to take pictures.",
 							Toast.LENGTH_LONG, "x");
 				}
@@ -1221,7 +1221,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
 
 				} else {
-					makeToast(
+					w.make(
 							"Permission isn't granted to write to external storage.  Please enable to record videos.",
 							Toast.LENGTH_LONG, "x");
 				}
@@ -1586,77 +1586,20 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			mediaCount = 0;
 
 			if (status400)
-				makeToast(
+				w.make(
 						"Your data cannot be uploaded to this experiment.  It has been closed.",
 						Toast.LENGTH_LONG, "x");
 			else if (!uploadSuccess)
-				makeToast(
+				w.make(
 						"An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
 			else
-				makeToast("Upload Success", Toast.LENGTH_SHORT, "check");
+				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 
 			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			showDialog(DIALOG_SUMMARY);
 
 		}
-	}
-
-	// Prevents toasts from being queued infinitesimally
-	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
-		@Override
-		protected void onPreExecute() {
-			dontToastMeTwice = true;
-			exitAppViaBack = true;
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			try {
-				Thread.sleep(1500);
-				exitAppViaBack = false;
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				exitAppViaBack = false;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			dontToastMeTwice = false;
-		}
-	}
-
-	public void makeToast(String message, int length, String image_id) {
-
-		if (!dontToastMeTwice) {
-			LayoutInflater inflater = getLayoutInflater();
-			View layout = inflater.inflate(R.layout.toast_layout,
-					(ViewGroup) findViewById(R.id.toast_layout_root));
-
-			ImageView image = (ImageView) layout.findViewById(R.id.image);
-			if (image_id.equals("check"))
-				image.setImageResource(R.drawable.checkmark);
-			else
-				image.setImageResource(R.drawable.red_x);
-
-			TextView text = (TextView) layout.findViewById(R.id.text);
-			text.setText(message);
-
-			Toast toast = new Toast(getApplicationContext());
-			toast.setGravity(Gravity.BOTTOM, 0, 50);
-			if (length == Toast.LENGTH_SHORT)
-				toast.setDuration(Toast.LENGTH_SHORT);
-			else
-				toast.setDuration(Toast.LENGTH_LONG);
-			toast.setView(layout);
-			toast.show();
-
-			new NoToastTwiceTask().execute();
-		}
-
 	}
 
 	public void setTime(int seconds) {
@@ -1709,6 +1652,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		
+		w = new Waffle(this);
 	}
 
 	// Takes care of everything to do with EULA
