@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, DataCollector!</string>
-    <string name="app_name">Data Collector</string>
+    <string name="hello">Hello World, AmuesmentPark!</string>
+    <string name="app_name">Amusement Park Physics</string>
     
     <string name="iSenseConfig"><u><b>iSENSE Only Configurations</b></u></string>
     <string name="otherConfig"><u><b>Other Configurations</b></u></string>
