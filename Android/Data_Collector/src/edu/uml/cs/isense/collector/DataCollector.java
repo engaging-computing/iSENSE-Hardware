@@ -122,6 +122,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private float rawMag[];
 	private float accel[];
 	private float orientation[];
+	private String temperature = "";
+	private String pressure    = "";
+	private String light       = "";
 
 	private static final int INTERVAL = 200;
 
@@ -180,7 +183,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	Waffle w;
 	DataFieldManager dfm;
 	Fields f;
-	
+
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
 	ProgressDialog dia;
@@ -290,6 +293,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					} else {
 
+						registerSensors();
+
 						dataSet = new JSONArray();
 						secondsElapsed = 0;
 						elapsedMillis = 0;
@@ -312,21 +317,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 						useMenu = false;
-
-						if (mSensorManager != null) {
-							mSensorManager
-									.registerListener(
-											DataCollector.this,
-											mSensorManager
-													.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-											SensorManager.SENSOR_DELAY_FASTEST);
-							mSensorManager
-									.registerListener(
-											DataCollector.this,
-											mSensorManager
-													.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-											SensorManager.SENSOR_DELAY_FASTEST);
-						}
 
 						data = "X Acceleration, Y Acceleration, Z Acceleration, Acceleration, "
 								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
@@ -368,7 +358,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									i++;
 									len++;
 									len2++;
-									
+
 									// NO NO
 									data = toThou.format(accel[0]) + ", "
 											+ toThou.format(accel[1]) + ", "
@@ -382,20 +372,32 @@ public class DataCollector extends Activity implements SensorEventListener,
 											+ ", " + currentTime
 											+ elapsedMillis + "\n";
 
-									f.accel_x     = toThou.format(accel[0]);
-									f.accel_y     = toThou.format(accel[1]);
-									f.accel_z     = toThou.format(accel[2]);
+									f.accel_x = toThou.format(accel[0]);
+									f.accel_y = toThou.format(accel[1]);
+									f.accel_z = toThou.format(accel[2]);
 									f.accel_total = toThou.format(accel[3]);
-									f.latitude    = loc.getLatitude();
-									f.longitude   = loc.getLongitude();
-									f.angle_deg   = toThou.format(orientation[0]);
-									f.angle_rad   = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-									f.mag_x       = rawMag[0];
-									f.mag_y       = rawMag[1];
-									f.mag_z       = rawMag[2];
-									f.mag_total   = Math.sqrt(Math.pow(f.mag_x, 2) + Math.pow(f.mag_y, 2) + Math.pow(f.mag_z, 2));		
-									f.timeMillis  = currentTime + elapsedMillis;
-
+									f.latitude = loc.getLatitude();
+									f.longitude = loc.getLongitude();
+									f.angle_deg = toThou.format(orientation[0]);
+									f.angle_rad = ""
+											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+									f.mag_x = rawMag[0];
+									f.mag_y = rawMag[1];
+									f.mag_z = rawMag[2];
+									f.mag_total = Math.sqrt(Math
+											.pow(f.mag_x, 2)
+											+ Math.pow(f.mag_y, 2)
+											+ Math.pow(f.mag_z, 2));
+									f.timeMillis = currentTime + elapsedMillis;
+									f.temperature = temperature;
+									f.pressure = pressure;
+									f.altitude = calcAltitude();
+									f.lux = light;
+									
+									Log.d("f values", "Pressure is " + f.pressure);
+									Log.d("temperature", "Temperature is " + f.temperature);
+									Log.d("altitude", "Altitude is " + f.altitude);
+									
 									dataSet.put(dfm.putData());
 
 									if (beginWrite) {
@@ -717,6 +719,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SensorManager.getOrientation(rotation, orientation);
 			}
 
+		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+			temperature = toThou.format(event.values[0]);
+		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+			pressure = toThou.format(event.values[0]);
+		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+			light = toThou.format(event.values[0]);
 		}
 	}
 
@@ -1725,6 +1733,46 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			return dialog;
 		}
+	}
+
+	// Registers Sensors
+	private void registerSensors() {
+		if (mSensorManager != null) {
+			mSensorManager.registerListener(DataCollector.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager
+					.registerListener(DataCollector.this, mSensorManager
+							.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+							SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager.registerListener(DataCollector.this, mSensorManager
+					.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+					SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager.registerListener(DataCollector.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
+					SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager.registerListener(DataCollector.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
+					SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager.registerListener(DataCollector.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
+					SensorManager.SENSOR_DELAY_FASTEST);
+
+		}
+	}
+	
+	// Calculates Altitude from Temperature and Pressure if Possible
+	private String calcAltitude() {
+		if (pressure.equals("") || temperature.equals("")) {
+				return "";
+		} else {
+			double temp = Math.pow(1013.25 / Double.parseDouble(pressure), (1 / 5.257));
+			temp *= (Double.parseDouble(temperature) + 273.15);
+			temp /= 0.0065;
+			
+			String altitude = toThou.format(temp);
+			return altitude;
+		}		
 	}
 
 }
