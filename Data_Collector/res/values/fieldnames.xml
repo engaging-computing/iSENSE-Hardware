@@ -13,5 +13,11 @@
     <string name="magnetic_y">Magnetic-Y</string>
     <string name="magnetic_z">Magnetic-Z</string>
     <string name="magnetic_total">Magnetic-Total</string>
+    <string name="heading_deg">Heading-Deg</string>
+    <string name="heading_rad">Heading-Rad</string>
+    <string name="temperature">Temperature</string>
+    <string name="pressure">Pressure</string>
+    <string name="altitude">Altitude</string>
+    <string name="luminous_flux">Lumenous Flux</string>
     
 </resources>
