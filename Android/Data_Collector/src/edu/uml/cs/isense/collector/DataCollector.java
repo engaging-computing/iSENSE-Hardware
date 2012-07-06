@@ -179,6 +179,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	
 	RestAPI rapi;
 	Waffle w;
+	DataFieldManager dfm;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -771,6 +772,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				public void handleMessage(Message msg) {
 					switch (msg.what) {
 					case DIALOG_OK:
+						
 						partialSessionName = sessionName.getText().toString();
 						setupDone = true;
 						canobieBackup = canobieIsChecked;
@@ -1272,6 +1274,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 									+ " - " + rideNameString
 									+ " " + stNumber;
 
+							
+							
+							dfm = new DataFieldManager(Integer.parseInt(experimentInput.getText().toString()), rapi, mContext);
+							dfm.sort();
+							
+							for (String s : dfm.order) {
+							  Log.d("field_order", s);
+							}
+							
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
 							SharedPreferences.Editor mEditor = mPrefs.edit();
