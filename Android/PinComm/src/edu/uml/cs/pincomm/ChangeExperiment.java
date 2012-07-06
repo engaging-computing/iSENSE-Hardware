@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
 
 public class ChangeExperiment extends Activity implements OnClickListener {
 	Button back, next;
+	TextView currPage;
 	static LinearLayout expLayout;
 	static Context myContext;
 	int page = 1;
@@ -33,6 +35,7 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 		expLayout    = (LinearLayout) findViewById(R.id.exprList);
 		back     = (Button)   findViewById(R.id.experiment_back);
 		next = (Button)   findViewById(R.id.experiment_forward);
+		currPage = (TextView) findViewById(R.id.currPageInd);
 
 		back.setOnClickListener(this);
 		next.setOnClickListener(this);
@@ -54,7 +57,7 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 		} else {
 			back.setEnabled(true);
 		}
-
+		currPage.setText("Page "+page);
 	}
 	
 	public void choseExp(int expId) {

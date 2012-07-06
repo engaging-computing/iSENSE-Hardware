@@ -35,20 +35,32 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
 	
-			<Button 
-			    android:id="@+id/experiment_back"
-		    	android:layout_width="0dp"
-		    	android:layout_height="wrap_content"
-		    	android:textAppearance="?android:attr/textAppearanceMedium"
-		    	android:layout_weight="1"
-		    	android:text="@string/button_backpage" />
-
 			<Button
-		    	android:id="@+id/experiment_forward"
+			    android:id="@+id/experiment_back"
 			    android:layout_width="0dp"
 			    android:layout_height="wrap_content"
+			    android:layout_weight="2"
+			    android:text="@string/button_backpage"
+			    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+			<TextView
+			    android:id="@+id/currPageInd"
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="5dp"
+			    android:layout_marginRight="5dp"
 			    android:layout_weight="1"
+			    android:gravity="center_horizontal"
+			    android:text="Page 1"
+			    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+			<Button
+			    android:id="@+id/experiment_forward"
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="2"
 			    android:text="@string/button_nextpage"
-			    android:textAppearance="?android:attr/textAppearanceMedium" />	
+			    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
 		</LinearLayout>
 </LinearLayout>
