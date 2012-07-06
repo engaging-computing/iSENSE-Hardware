@@ -434,9 +434,28 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final SharedPreferences.Editor editor = myPrefs.edit();
 		String[] sensorArray;
+
+		//Allow the user to look at data from all sensors if no experiment/fields have been set up
+		if(amtTrackedFields == 0) {
+			//Fills Sensor Spinner with all the PINPoint's sensors
+			//includes the names of external sensors the user has selected
+			Resources res = getResources();
+			SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+			
+			String[] defSensorArray = res.getStringArray(R.array.pptsensors_array);
+			defSensorArray[14] = prefs.getString("name_bta1", "BTA 1");
+			defSensorArray[15] = prefs.getString("name_bta2", "BTA 2");
+			defSensorArray[16] = prefs.getString("name_mini1", "Minijack 1");
+			defSensorArray[17] = prefs.getString("name_mini2", "Minijack 2");
+			trackedFields.clear();
+			for (int i = 2; i < 18; i++) {
+				trackedFields.add(defSensorArray[i]);
+			}
+		}
+		
 		ArrayList<String> trackedFieldsMod = (ArrayList<String>) trackedFields.clone();
 		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
-
+		
 		List<String> toRemove = Arrays.asList("Time (GMT)", "None", "No Sensor");
 		trackedFieldsMod.removeAll( toRemove );
 
@@ -448,6 +467,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		} else {
 			sensorHead.setSelection(0, false);
 		}
+		editor.putString("sensorspin_value", sensorHead.getSelectedItem().toString());
+		editor.commit();
 		sensorHead.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -562,8 +583,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
 		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
 		allSensors.remove(0);
-		allSensors.remove(1);
-
+		allSensors.remove(0);
+		
+		System.out.println(prefs2.getString("sensorspin_value", ""));
 		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
 
 		if (sensorData.get(lookup).size() != 0) {
