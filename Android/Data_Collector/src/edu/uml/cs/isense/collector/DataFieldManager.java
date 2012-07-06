@@ -50,6 +50,7 @@ public class DataFieldManager extends Application {
 			// Light
 			case 8:
 			case 9:
+			case 29:
 				order.add(mContext.getString(R.string.luminous_flux));
 				break;
 
