@@ -31,7 +31,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -176,11 +175,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private String dateString, s_elapsedSeconds, s_elapsedMillis,
 			s_elapsedMinutes;
-	
+
 	RestAPI rapi;
 	Waffle w;
 	DataFieldManager dfm;
-
+	Fields f;
+	
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
 	ProgressDialog dia;
@@ -306,8 +306,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
-							w.make(
-									"Data recording interrupted! Time values may be inconsistent.",
+							w.make("Data recording interrupted! Time values may be inconsistent.",
 									Toast.LENGTH_SHORT, "x");
 							e.printStackTrace();
 						}
@@ -369,7 +368,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 									i++;
 									len++;
 									len2++;
-
+									
+									// NO NO
 									data = toThou.format(accel[0]) + ", "
 											+ toThou.format(accel[1]) + ", "
 											+ toThou.format(accel[2]) + ", "
@@ -382,35 +382,21 @@ public class DataCollector extends Activity implements SensorEventListener,
 											+ ", " + currentTime
 											+ elapsedMillis + "\n";
 
-									JSONArray dataJSON = new JSONArray();
+									f.accel_x     = toThou.format(accel[0]);
+									f.accel_y     = toThou.format(accel[1]);
+									f.accel_z     = toThou.format(accel[2]);
+									f.accel_total = toThou.format(accel[3]);
+									f.latitude    = loc.getLatitude();
+									f.longitude   = loc.getLongitude();
+									f.angle_deg   = toThou.format(orientation[0]);
+									f.angle_rad   = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+									f.mag_x       = rawMag[0];
+									f.mag_y       = rawMag[1];
+									f.mag_z       = rawMag[2];
+									f.mag_total   = Math.sqrt(Math.pow(f.mag_x, 2) + Math.pow(f.mag_y, 2) + Math.pow(f.mag_z, 2));		
+									f.timeMillis  = currentTime + elapsedMillis;
 
-									try {
-
-										/* Accel-x */dataJSON.put(toThou
-												.format(accel[0]));
-										/* Accel-y */dataJSON.put(toThou
-												.format(accel[1]));
-										/* Accel-z */dataJSON.put(toThou
-												.format(accel[2]));
-										/* Accel-Total */dataJSON.put(toThou
-												.format(accel[3]));
-										/* Latitude */dataJSON.put(loc
-												.getLatitude());
-										/* Longitude */dataJSON.put(loc
-												.getLongitude());
-										/* Heading */dataJSON.put(toThou
-												.format(orientation[0]));
-										/* Magnetic-x */dataJSON.put(rawMag[0]);
-										/* Magnetic-y */dataJSON.put(rawMag[1]);
-										/* Magnetic-z */dataJSON.put(rawMag[2]);
-										/* Time */dataJSON.put(currentTime
-												+ elapsedMillis);
-
-										dataSet.put(dataJSON);
-
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
+									dataSet.put(dfm.putData());
 
 									if (beginWrite) {
 										writeToSDCard(data, 's');
@@ -630,14 +616,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onBackPressed() {
 		if (!w.dontToastMeTwice) {
 			if (running)
-				w.make(
-						"Cannot exit via BACK while recording data; use HOME instead.",
+				w.make("Cannot exit via BACK while recording data; use HOME instead.",
 						Toast.LENGTH_LONG, "x");
 			else
-				w.make("Press back again to exit.", Toast.LENGTH_SHORT,
-						"check");
+				w.make("Press back again to exit.", Toast.LENGTH_SHORT, "check");
 
-			
 		} else if (w.exitAppViaBack && !running) {
 			setupDone = false;
 			super.onBackPressed();
@@ -772,7 +755,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				public void handleMessage(Message msg) {
 					switch (msg.what) {
 					case DIALOG_OK:
-						
+
 						partialSessionName = sessionName.getText().toString();
 						setupDone = true;
 						canobieBackup = canobieIsChecked;
@@ -824,8 +807,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								+ mPrefs.getString("username", ""));
 						loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG,
-								"check");
+						w.make("Login successful", Toast.LENGTH_LONG, "check");
 						break;
 					case LoginActivity.LOGIN_CANCELED:
 						break;
@@ -929,8 +911,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									dialoginterface.dismiss();
 
 									if (len == 0 || len2 == 0)
-										w.make(
-												"There is no data to upload!",
+										w.make("There is no data to upload!",
 												Toast.LENGTH_LONG, "x");
 									else {
 
@@ -1124,8 +1105,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			public void onClick(View v) {
 
 				if (!rapi.isConnectedToInternet()) {
-					w.make(
-							"You must enable wifi or mobile connectivity to do this.",
+					w.make("You must enable wifi or mobile connectivity to do this.",
 							Toast.LENGTH_SHORT, "x");
 				} else {
 
@@ -1190,8 +1170,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 
 				} else {
-					w.make(
-							"Permission isn't granted to write to external storage.  Please enable to take pictures.",
+					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
 							Toast.LENGTH_LONG, "x");
 				}
 
@@ -1221,8 +1200,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
 
 				} else {
-					w.make(
-							"Permission isn't granted to write to external storage.  Please enable to record videos.",
+					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
 							Toast.LENGTH_LONG, "x");
 				}
 			}
@@ -1269,20 +1247,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 							stNumber = seats.getText().toString();
 
 							rideNameString = (String) rides.getSelectedItem();
-							
-							nameOfSession = sessionName.getText().toString()
-									+ " - " + rideNameString
-									+ " " + stNumber;
 
-							
-							
-							dfm = new DataFieldManager(Integer.parseInt(experimentInput.getText().toString()), rapi, mContext);
+							nameOfSession = sessionName.getText().toString()
+									+ " - " + rideNameString + " " + stNumber;
+
+							dfm = new DataFieldManager(Integer
+									.parseInt(experimentInput.getText()
+											.toString()), rapi, mContext, f);
 							dfm.getOrder();
-							
+
 							for (String s : dfm.order) {
-							  Log.d("field_order", s);
+								Log.d("field_order", s);
 							}
-							
+
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
 							SharedPreferences.Editor mEditor = mPrefs.edit();
@@ -1595,12 +1572,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			mediaCount = 0;
 
 			if (status400)
-				w.make(
-						"Your data cannot be uploaded to this experiment.  It has been closed.",
+				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Toast.LENGTH_LONG, "x");
 			else if (!uploadSuccess)
-				w.make(
-						"An error occured during upload.  Please check internet connectivity.",
+				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
 			else
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
@@ -1661,8 +1636,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
+
 		w = new Waffle(this);
+		f = new Fields();
 	}
 
 	// Takes care of everything to do with EULA
