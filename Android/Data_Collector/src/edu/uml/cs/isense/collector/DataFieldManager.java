@@ -24,7 +24,7 @@ public class DataFieldManager extends Application {
 		this.mContext = mContext;
 	}
 	
-	public void sort() {
+	public void getOrder() {
 		expFields = rapi.getExperimentFields(eid);
 		
 		for (ExperimentField field : expFields) {

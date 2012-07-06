@@ -1277,7 +1277,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							
 							
 							dfm = new DataFieldManager(Integer.parseInt(experimentInput.getText().toString()), rapi, mContext);
-							dfm.sort();
+							dfm.getOrder();
 							
 							for (String s : dfm.order) {
 							  Log.d("field_order", s);
