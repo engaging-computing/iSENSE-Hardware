@@ -201,7 +201,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	RestAPI rapi;
 	Waffle w;
-	DataFieldManager dfm;
+	public static DataFieldManager dfm;
 	Fields f;
 	public static SensorCompatibility sc;
 	LinkedList<String> acceptedFields;
@@ -1503,7 +1503,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				acceptedFields = (LinkedList<String>) data.getExtras().get("accepted_fields");
+				acceptedFields = ChooseSensorDialog.acceptedFields;
 				getEnabledFields();
 			} else if (resultCode == RESULT_CANCELED) {
 				// do more stuff
@@ -1883,7 +1883,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dia.cancel();
 
 			Intent i = new Intent(mContext, ChooseSensorDialog.class);
-			i.putExtra("fields", dfm.order);
 			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
 			
 		}
