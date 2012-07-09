@@ -123,8 +123,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private float accel[];
 	private float orientation[];
 	private String temperature = "";
-	private String pressure    = "";
-	private String light       = "";
+	private String pressure = "";
+	private String light = "";
 
 	private static final int INTERVAL = 200;
 
@@ -393,11 +393,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 									f.pressure = pressure;
 									f.altitude = calcAltitude();
 									f.lux = light;
-									
-									Log.d("f values", "Pressure is " + f.pressure);
-									Log.d("temperature", "Temperature is " + f.temperature);
-									Log.d("altitude", "Altitude is " + f.altitude);
-									
+
+									Log.d("f values", "Pressure is "
+											+ f.pressure);
+									Log.d("temperature", "Temperature is "
+											+ f.temperature);
+									Log.d("altitude", "Altitude is "
+											+ f.altitude);
+
 									dataSet.put(dfm.putData());
 
 									if (beginWrite) {
@@ -1259,14 +1262,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							nameOfSession = sessionName.getText().toString()
 									+ " - " + rideNameString + " " + stNumber;
 
-							dfm = new DataFieldManager(Integer
-									.parseInt(experimentInput.getText()
-											.toString()), rapi, mContext, f);
-							dfm.getOrder();
-
-							for (String s : dfm.order) {
-								Log.d("field_order", s);
-							}
+							new SensorCheckTask().execute();
 
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
@@ -1738,41 +1734,88 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Registers Sensors
 	private void registerSensors() {
 		if (mSensorManager != null) {
+			
 			mSensorManager.registerListener(DataCollector.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 					SensorManager.SENSOR_DELAY_FASTEST);
-			mSensorManager
-					.registerListener(DataCollector.this, mSensorManager
-							.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-							SensorManager.SENSOR_DELAY_FASTEST);
-			mSensorManager.registerListener(DataCollector.this, mSensorManager
-					.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+			
+			mSensorManager.registerListener(DataCollector.this, 
+					mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 					SensorManager.SENSOR_DELAY_FASTEST);
+			
+			mSensorManager.registerListener(DataCollector.this, 
+					mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+					SensorManager.SENSOR_DELAY_FASTEST);
+			
 			mSensorManager.registerListener(DataCollector.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 					SensorManager.SENSOR_DELAY_FASTEST);
-			mSensorManager.registerListener(DataCollector.this,
-					mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
-					SensorManager.SENSOR_DELAY_FASTEST);
+			
 			mSensorManager.registerListener(DataCollector.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 					SensorManager.SENSOR_DELAY_FASTEST);
 
 		}
 	}
-	
+
 	// Calculates Altitude from Temperature and Pressure if Possible
 	private String calcAltitude() {
 		if (pressure.equals("") || temperature.equals("")) {
-				return "";
+			return "";
 		} else {
-			double temp = Math.pow(1013.25 / Double.parseDouble(pressure), (1 / 5.257));
+			double temp = Math.pow(1013.25 / Double.parseDouble(pressure),
+					(1 / 5.257));
 			temp *= (Double.parseDouble(temperature) + 273.15);
 			temp /= 0.0065;
-			
+
 			String altitude = toThou.format(temp);
 			return altitude;
-		}		
+		}
+	}
+
+	// Task for checking sensor availability along with enabling/disabling
+	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+			dia = new ProgressDialog(DataCollector.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setCancelable(false);
+			dia.show();
+
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+
+			dfm = new DataFieldManager(Integer
+					.parseInt(experimentInput.getText()
+							.toString()), rapi, mContext, f);
+			dfm.getOrder();
+
+			for (String s : dfm.order) {
+				Log.d("field_order", s);
+			}
+			
+			SensorCompatibility sc = dfm.checkCompatibility();
+			// send Jeremy the sc
+
+			publishProgress(100);
+			return null;
+
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+
+			dia.setMessage("Done");
+			dia.cancel();
+
+			// stuff after
+
+		}
 	}
 
 }
