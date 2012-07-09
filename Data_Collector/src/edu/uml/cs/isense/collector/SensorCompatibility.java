@@ -27,9 +27,5 @@ public class SensorCompatibility {
 	public SensorCompatibility() {
 
 	}
-
-	public boolean isCompatible(SensorTypes sensorType) {
-		return compatible[(sensorType.getSensorType())];
-	}
-
+	
 }
