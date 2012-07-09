@@ -25,9 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/pinpoint_select_btn"
             android:layout_alignTop="@id/pinpoint_select_btn"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="19dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:fitsSystemWindows="true"
             android:src="@drawable/superspin"
             android:visibility="gone" />
 
@@ -75,54 +75,16 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout21"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp" >
-
-            <LinearLayout
-                android:id="@+id/nameContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:id="@+id/namePrompt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:text="@string/sessionname"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <EditText
-                    android:id="@+id/nameField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="25dp"
-                    android:layout_weight=".50"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                    android:inputType="textCapWords"
-                    android:maxLength="20"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_pushToISENSE"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
-                android:background="@drawable/custombtn"
-                android:text="@string/upload"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_pushToISENSE"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custombtn"
+            android:text="@string/upload"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -211,7 +173,10 @@
                     android:layout_weight="1"
                     android:focusable="false"
                     android:inputType="none"
-                    android:maxLines="1" />
+                    android:maxLines="1" >
+
+                    <requestFocus />
+                </EditText>
             </LinearLayout>
 
             <LinearLayout
