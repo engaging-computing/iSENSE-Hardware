@@ -8,7 +8,6 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import edu.uml.cs.isense.collector.SensorCompatibility.SensorTypes;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 
@@ -23,6 +22,11 @@ public class DataFieldManager extends Application {
 	JSONArray dataSet;
 	Fields f;
 	SensorCompatibility sc;
+	boolean[] enabledFields = {
+		false, false, false, false, false, false, false, 
+		false, false, false, false, false, false, false, 
+		false, false, false
+	};
 
 	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
 		this.eid = eid;
