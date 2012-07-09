@@ -96,8 +96,6 @@ public final class R {
         public static final int beep=0x7f040000;
     }
     public static final class string {
-        public static final int Compatible=0x7f050012;
-        public static final int Incompatible=0x7f050013;
         public static final int accel_total=0x7f050005;
         public static final int accel_x=0x7f050002;
         public static final int accel_y=0x7f050003;
@@ -107,6 +105,7 @@ public final class R {
         public static final int browse=0x7f050027;
         public static final int cancel=0x7f050031;
         public static final int canobieRides=0x7f05002a;
+        public static final int compatible=0x7f050012;
         public static final int eula=0x7f05001b;
         public static final int experimentNum=0x7f050026;
         public static final int experiments_no_items=0x7f050019;
@@ -116,6 +115,7 @@ public final class R {
         public static final int iSENSELogo=0x7f050021;
         public static final int iSENSElogo=0x7f050033;
         public static final int iSenseConfig=0x7f050016;
+        public static final int incompatible=0x7f050013;
         public static final int instructions=0x7f05002e;
         public static final int latitude=0x7f050006;
         public static final int longitude=0x7f050007;

@@ -20,7 +20,7 @@
     <string name="altitude">Altitude</string>
     <string name="luminous_flux">Luminous Flux</string>
     
-    <string name="Compatible">Compatible</string>
-    <string name="Incompatible">Incompatible</string>
+    <string name="compatible">Compatible</string>
+    <string name="incompatible">Incompatible</string>
     
 </resources>
