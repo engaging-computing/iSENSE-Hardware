@@ -85,58 +85,23 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout21"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_pushToISENSE"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" >
-
-            <LinearLayout
-                android:id="@+id/nameContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:id="@+id/namePrompt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:text="@string/sessionname"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <EditText
-                    android:id="@+id/nameField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                    android:inputType="textCapWords"
-                    android:maxLength="20"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_pushToISENSE"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
-                android:background="@drawable/custombtn"
-                android:text="@string/upload"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/custombtn"
+            android:text="@string/upload"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal" >
 
             <Button
@@ -215,7 +180,10 @@
                     android:layout_weight="1"
                     android:focusable="false"
                     android:inputType="none"
-                    android:lines="1" />
+                    android:lines="1" >
+
+                    <requestFocus />
+                </EditText>
             </LinearLayout>
 
             <LinearLayout
