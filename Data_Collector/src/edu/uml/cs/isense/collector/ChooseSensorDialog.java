@@ -6,6 +6,7 @@ import edu.uml.cs.isense.collector.SensorCompatibility.SensorTypes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
@@ -37,7 +38,7 @@ public class ChooseSensorDialog extends Activity {
 					CheckedTextView ctv = (CheckedTextView) v.findViewById(R.id.sensorlabel);
 					ctv.setText(field);
 					TextView tv = (TextView) v.findViewById(R.id.subsensorlabel);
-					setCompatibility(tv, SensorTypes.ACCELEROMETER);
+					setCompatibility(tv, ctv, SensorTypes.ACCELEROMETER);
 			}
 				
 				
@@ -45,9 +46,15 @@ public class ChooseSensorDialog extends Activity {
 		}
 	}
 	
-	void setCompatibility(TextView tv, SensorTypes sensor) {
-		if (sensor == SensorTypes.ACCELEROMETER) {
-				if (sensors.isCompatible(sensor));
+	void setCompatibility(TextView tv, CheckedTextView ctv, SensorTypes sensor) {
+		if (sensors.isCompatible(sensor)) {
+			tv.setTextColor(Color.GREEN);
+			tv.setText(R.string.compatible);
+			ctv.setChecked(true);
+		} else {
+			tv.setTextColor(Color.RED);
+			tv.setText(R.string.incompatible);
+			ctv.setChecked(false);
 		}
 	}
 
