@@ -73,39 +73,6 @@
                 android:layout_weight=".75"
                 android:text="Status: Not Connected"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <LinearLayout
-                android:id="@+id/nameContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:id="@+id/namePrompt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:text="@string/sessionname"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <EditText
-                    android:id="@+id/nameField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                    android:inputType="textCapWords"
-                    android:maxLength="20"
-                    android:textAppearance="?android:attr/textAppearanceSmall" >
-
-                    <requestFocus />
-                </EditText>
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -222,7 +189,10 @@
                         android:layout_weight="1"
                         android:focusable="false"
                         android:inputType="none"
-                        android:lines="1" />
+                        android:lines="1" >
+
+                        <requestFocus />
+                    </EditText>
                 </LinearLayout>
 
                 <LinearLayout

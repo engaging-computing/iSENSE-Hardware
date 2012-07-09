@@ -56,8 +56,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -68,7 +66,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,7 +80,7 @@ import edu.uml.cs.pincomm.exceptions.NoDataException;
 import edu.uml.cs.pincomm.pincushion.BluetoothService;
 import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 
-public class Isense extends Activity implements OnClickListener, TextWatcher {
+public class Isense extends Activity implements OnClickListener {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
 	Button pagePrev, pageNext;
@@ -96,7 +93,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	TextView minField, maxField, aveField, medField, btStatus;
 	Spinner sensorHead;
 	LinearLayout dataLayout;
-	EditText nameField;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
@@ -111,7 +107,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	String sessionDesc, sessionStreet, sessionCity;
+	String sessionName, sessionDesc, sessionStreet, sessionCity;
 
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
@@ -222,7 +218,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
 		sensorHead = (Spinner) findViewById(R.id.sensorNameHeader);
-		nameField = (EditText) findViewById(R.id.nameField);
 
 		trackedFields = new ArrayList<String>();
 		amtTrackedFields = defaultPrefs.getInt("numFields", 0);
@@ -232,10 +227,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 
 		fillSensorSpinner();
-
-		nameField.setText(defaultPrefs.getString("group_name", ""));
-
-		nameField.addTextChangedListener(this);
 
 		pageLabel.setText("Page "+ (currPage+1));
 
@@ -410,15 +401,13 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			pushToISENSE.setEnabled(true);
 		}
 		if (v == pushToISENSE) {
-			if (nameField.length() == 0) Toast.makeText(this, "Please enter a session name.", Toast.LENGTH_LONG).show();
-			else {
-				if (!dataRdy) {
-					Toast.makeText(this, "There is no data to upload.", Toast.LENGTH_LONG).show();
-				} else {
-					uploadData();
-				}
 
-			} 
+			if (!dataRdy) {
+				Toast.makeText(this, "There is no data to upload.", Toast.LENGTH_LONG).show();
+			} else {
+				uploadData();
+			}
+
 		}
 		if ( v == pagePrev ) {
 			currPage--;
@@ -441,7 +430,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			//includes the names of external sensors the user has selected
 			Resources res = getResources();
 			SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-			
+
 			String[] defSensorArray = res.getStringArray(R.array.pptsensors_array);
 			defSensorArray[14] = prefs.getString("name_bta1", "BTA 1");
 			defSensorArray[15] = prefs.getString("name_bta2", "BTA 2");
@@ -452,10 +441,10 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				trackedFields.add(defSensorArray[i]);
 			}
 		}
-		
+
 		ArrayList<String> trackedFieldsMod = (ArrayList<String>) trackedFields.clone();
 		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
-		
+
 		List<String> toRemove = Arrays.asList("Time (GMT)", "None", "No Sensor");
 		trackedFieldsMod.removeAll( toRemove );
 
@@ -584,7 +573,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
 		allSensors.remove(0);
 		allSensors.remove(0);
-		
+
 		System.out.println(prefs2.getString("sensorspin_value", ""));
 		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
 
@@ -818,6 +807,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		case UPLOAD_BOX:
 			if (resultCode == RESULT_OK) {
 
+				sessionName = data.getExtras().getString("myName");
 				sessionDesc = data.getExtras().getString("myDesc");
 				sessionStreet = data.getExtras().getString("myStreet");
 				sessionCity = data.getExtras().getString("myCity");
@@ -900,7 +890,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		//Launch dialog for user to fill in final information about the upload
 		Intent i = new Intent(this, FinalizeUpload.class);
 		startActivityForResult(i, UPLOAD_BOX);
-		
+
 	}
 
 	//the uploading thread that does all the work
@@ -909,14 +899,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		@Override
 		public void run() {
 
-			String nameOfSession = nameField.getText().toString();
-
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
 
 			if (loggedIn) {
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(experimentId, nameOfSession, sessionDesc, 
+					sessionId = rapi.createSession(experimentId, sessionName, sessionDesc, 
 							sessionStreet, sessionCity, "United States");
 					if (sessionId != -1) {
 						rapi.putSessionData(sessionId, experimentId, dataSet);
@@ -1020,32 +1008,5 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 
 	}
-
-	@Override
-	public void afterTextChanged(Editable arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-			int arg3) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-
-		SharedPreferences myPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor prefsEditor = myPrefs.edit();
-
-		prefsEditor.putString("group_name", nameField.getText().toString());
-
-		prefsEditor.commit();
-
-	}
-
 
 }

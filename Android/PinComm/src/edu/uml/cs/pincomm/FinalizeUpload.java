@@ -32,10 +32,11 @@ public class FinalizeUpload extends Activity implements OnClickListener, TextWat
 
 	Button btnUp, btnCancel;
 	CheckBox btnGeo;
-	EditText desc, street, city;
+	EditText name, desc, street, city;
 	String myDesc;
 	String myStreet;
 	String myCity;
+	String myName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class FinalizeUpload extends Activity implements OnClickListener, TextWat
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.uploadfinalizebox);
 
+		name = (EditText) findViewById(R.id.nameField);
 		desc = (EditText) findViewById(R.id.descField);
 		street = (EditText) findViewById(R.id.streetfield);
 		city = (EditText) findViewById(R.id.cityField);
@@ -55,6 +57,7 @@ public class FinalizeUpload extends Activity implements OnClickListener, TextWat
 		btnCancel.setOnClickListener(this);
 		btnGeo.setOnCheckedChangeListener(this);
 
+		name.addTextChangedListener(this);
 		desc.addTextChangedListener(this);
 		street.addTextChangedListener(this);
 		city.addTextChangedListener(this);
@@ -68,11 +71,13 @@ public class FinalizeUpload extends Activity implements OnClickListener, TextWat
 
 		if (v == btnUp) {
 
+			myName = name.getText().toString();
 			myDesc = desc.getText().toString();
 			myStreet = street.getText().toString();
 			myCity = city.getText().toString();
 
 			Intent result = new Intent();
+			result.putExtra("myName", myName);
 			result.putExtra("myDesc", myDesc);
 			result.putExtra("myStreet", myStreet);
 			result.putExtra("myCity", myCity);
@@ -121,11 +126,12 @@ public class FinalizeUpload extends Activity implements OnClickListener, TextWat
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+		myName = name.getText().toString();
 		myDesc = desc.getText().toString();
 		myStreet = street.getText().toString();
 		myCity = city.getText().toString();
 
-		if (myDesc.equals("") || myStreet.equals("") || myCity.equals("")) {
+		if (myName.equals("") || myDesc.equals("") || myStreet.equals("") || myCity.equals("")) {
 			btnUp.setEnabled(false);
 		} else{
 			btnUp.setEnabled(true);
