@@ -292,5 +292,8 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.
 	</string>
+	
+	<string name="okay">Okay</string>
+	<string name="back">Back</string>
 
 </resources>

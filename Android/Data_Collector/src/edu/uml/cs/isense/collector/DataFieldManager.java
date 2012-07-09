@@ -21,7 +21,7 @@ public class DataFieldManager extends Application {
 	LinkedList<String> order;
 	JSONArray dataSet;
 	Fields f;
-	SensorCompatibility sc;
+	SensorCompatibility sc = new SensorCompatibility();
 	boolean[] enabledFields = {
 		false, false, false, false, false, false, false, 
 		false, false, false, false, false, false, false, 
