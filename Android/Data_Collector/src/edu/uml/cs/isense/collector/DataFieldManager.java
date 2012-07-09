@@ -21,6 +21,7 @@ public class DataFieldManager extends Application {
 	LinkedList<String> order;
 	JSONArray dataSet;
 	Fields f;
+	SensorCompatibility sc;
 
 	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
 		this.eid = eid;
@@ -214,6 +215,18 @@ public class DataFieldManager extends Application {
 
 		return dataJSON;
 
+	}
+	
+	public SensorCompatibility checkCompatibility() {
+		
+		
+		for (String s : this.order) {
+			
+			
+			
+		}
+		
+		return sc;
 	}
 
 }
