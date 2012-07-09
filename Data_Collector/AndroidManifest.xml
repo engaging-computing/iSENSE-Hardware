@@ -36,6 +36,9 @@
                   android:label="SyncTime"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".ChooseSensorDialog"
+                  android:label="ChooseSensorDialog"
+                  android:theme="@android:style/Theme.Dialog" />
 
     </application>
 </manifest>
