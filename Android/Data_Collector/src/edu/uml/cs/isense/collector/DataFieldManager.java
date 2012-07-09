@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
+import edu.uml.cs.isense.collector.SensorCompatibility.SensorTypes;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 
@@ -217,15 +218,22 @@ public class DataFieldManager extends Application {
 
 	}
 	
+	
 	public SensorCompatibility checkCompatibility() {
 		
+		int apiLevel = android.os.Build.VERSION.SDK_INT;
+		int apiVal = 0;
+		int[][] dispatch = sc.compatDispatch;
 		
-		for (String s : this.order) {
-			
-			
-			
+		if (apiLevel <= 8)                 apiVal = 0;
+		if (apiLevel > 8 && apiLevel < 14) apiVal = 1;
+		if (apiLevel > 14)                 apiVal = 2;
+		
+		for (int i = 0; i <= 5; i++) {
+			int temp = dispatch[apiVal][i];
+			if (temp == 1) sc.compatible[i] = true;
 		}
-		
+
 		return sc;
 	}
 

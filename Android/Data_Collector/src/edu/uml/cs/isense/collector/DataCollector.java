@@ -1800,7 +1800,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 			
 			SensorCompatibility sc = dfm.checkCompatibility();
-			// send Jeremy the sc
+			// send Jeremy the sc - extras = (dfm.order, sc);
 
 			publishProgress(100);
 			return null;
