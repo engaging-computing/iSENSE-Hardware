@@ -24,7 +24,11 @@ public class Waffle {
 
 		if (!dontToastMeTwice) {
 			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View layout = inflater.inflate(R.layout.toast_layout, null);
+			View layout;
+			if (image_id.equals("check"))
+				layout = inflater.inflate(R.layout.toast_layout, null);
+			else
+				layout = inflater.inflate(R.layout.toast_layout_x, null);
 
 			ImageView image = (ImageView) layout.findViewById(R.id.image);
 			if (image_id.equals("check"))

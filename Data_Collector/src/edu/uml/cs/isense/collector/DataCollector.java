@@ -45,7 +45,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -69,6 +68,7 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
 import android.view.Display;
 import android.view.Gravity;
@@ -82,6 +82,8 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
@@ -131,6 +133,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int RECORDING_STOPPED = 9;
 	private static final int DIALOG_NO_GPS = 10;
 	private static final int DIALOG_FORCE_STOP = 11;
+	private static final int DIALOG_DESCRIPTION = 12;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -184,6 +187,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private String dateString, s_elapsedSeconds, s_elapsedMillis,
 			s_elapsedMinutes;
+	private String sessionDescription = "";
 
 	RestAPI rapi;
 	Waffle w;
@@ -226,10 +230,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static String sdFileName = "";
 
 	public static JSONArray dataSet;
-
 	public static Context mContext;
 
 	private static ArrayList<File> pictureArray = new ArrayList<File>();
+	private LinearLayout mScreen;
+	private ImageView isenseLogo;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -280,11 +285,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 						running = false;
 						startStop.setText(R.string.startString);
 						time.setText(R.string.timeElapsed);
-						session.setText(getString(R.string.session));
 
 						timeTimer.cancel();
+						
 						startStop.getBackground().setColorFilter(0xFFFF0000,
 								PorterDuff.Mode.MULTIPLY);
+						mScreen.setBackgroundResource(R.drawable.background);
+						isenseLogo.setImageResource(R.drawable.logo_red);
+						
 						choiceViaMenu = false;
 
 						if (sdCardError)
@@ -294,7 +302,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (throughHandler)
 							showDialog(RECORDING_STOPPED);
 						else
-							showDialog(DIALOG_CHOICE);
+							showDialog(DIALOG_DESCRIPTION);
 
 					} else {
 
@@ -416,6 +424,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}, 0, INTERVAL);
 						startStop.getBackground().setColorFilter(0xFF00FF00,
 								PorterDuff.Mode.MULTIPLY);
+						mScreen.setBackgroundResource(R.drawable.background_running);
+						isenseLogo.setImageResource(R.drawable.logo_green);
 					}
 					return running;
 
@@ -689,7 +699,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			showDialog(DIALOG_CHOICE);
+			if (sessionDescription.equals(""))
+				showDialog(DIALOG_DESCRIPTION);
+			else
+				showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent i = new Intent(DataCollector.this, SyncTime.class);
@@ -836,7 +849,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							loginName = loginName.substring(0, 18) + "...";
 						loginInfo.setText("Username: "
 								+ loginName);
-						loginInfo.setTextColor(Color.GREEN);
+						//loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
 						w.make("Login successful", Toast.LENGTH_LONG, "check");
 						break;
@@ -860,7 +873,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (len == 0 || len2 == 0)
 							w.make("There is no data to upload!",
 									Toast.LENGTH_LONG, "x");
-						showDialog(DIALOG_CHOICE);
+						showDialog(DIALOG_DESCRIPTION);
 						partialSessionName = sessionName.getText().toString();
 						break;
 					case DIALOG_CANCELED:
@@ -1007,7 +1020,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
-									showDialog(DIALOG_CHOICE);
+									showDialog(DIALOG_DESCRIPTION);
 								}
 							}).setCancelable(false);
 
@@ -1063,6 +1076,62 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
+		
+		case DIALOG_DESCRIPTION:
+	    	LinearLayout layout = new LinearLayout(this);
+	        layout.setOrientation(LinearLayout.VERTICAL);
+	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+	        final EditText input = new EditText(this);
+	        input.setSingleLine(true);
+	        input.setKeyListener(DigitsKeyListener.getInstance(
+	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
+	        layout.setPadding(5, 0, 5, 0);
+	        layout.addView(input);
+	    	
+	    	final AlertDialog d = new AlertDialog.Builder(mContext)
+            .setTitle("Step 3:")
+            .setMessage("Enter a session description (or leave blank if you'd like an automatically generated description).")
+            .setCancelable(false)
+            .setView(layout)
+            .setPositiveButton("Upload To iSENSE",
+                    new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface d, int which) {
+                            //Do nothing here. We override the onclick
+                        }
+                    })
+            .setNegativeButton("Cancel", null)
+            .create();
+
+	    	d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                @Override
+                public void onShow(DialogInterface dialog) {
+
+                    Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                    b.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                        	d.dismiss();
+                        	sessionDescription = input.getText().toString();
+                        	String isValid = experimentInput
+									.getText().toString();
+							if (successLogin
+									&& (isValid.length() > 0)) {
+								// executeIsenseTask = true;
+								new Task().execute();
+							} else {
+								showDialog(DIALOG_NO_ISENSE);
+							}
+                        }
+                    });
+                }
+            });
+	           
+	    	dialog = d;
+	    
+	    	break;
 
 		default:
 			dialog = null;
@@ -1455,19 +1524,27 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			String description;
+			if (sessionDescription.equals(""))
+				description = "Automated Submission Through Android Data Collection App";
+			else
+				description = sessionDescription;
 
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String eid = mPrefs.getString("experiment_id", "");
 
 			if (address == null || address.size() <= 0) {
 				sessionId = rapi.createSession(eid, nameOfSession,
-						"Automated Submission Through Android App", "N/A",
+						description, "N/A",
 						"N/A", "United States");
 			} else {
 				sessionId = rapi.createSession(eid, nameOfSession,
-						"Automated Submission Through Android App", addr, city
+						description, addr, city
 								+ ", " + state, country);
 			}
+			
+			sessionDescription = "";
 
 			// createSession Success Check
 			if (sessionId == -1) {
@@ -1541,6 +1618,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			len = 0;
 			len2 = 0;
 			mediaCount = 0;
+			session.setText(getString(R.string.session));
 
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
@@ -1574,6 +1652,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@SuppressWarnings("deprecation")
 	private void initVars() {
 
+		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
+		isenseLogo = (ImageView) findViewById(R.id.ImageViewLogo);
 		mHandler = new Handler();
 
 		Display deviceDisplay = getWindowManager().getDefaultDisplay();
@@ -1597,7 +1677,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		loginInfo = (TextView) findViewById(R.id.loginInfo);
 		loginInfo.setText(R.string.notLoggedIn);
-		loginInfo.setTextColor(Color.RED);
+		//loginInfo.setTextColor(Color.RED);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -1659,7 +1739,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				loginName = loginName.substring(0, 18) + "...";
 			loginInfo.setText("Username: "
 					+ loginName);
-			loginInfo.setTextColor(Color.GREEN);
+			//loginInfo.setTextColor(Color.GREEN);
 			successLogin = true;
 		}
 	}
