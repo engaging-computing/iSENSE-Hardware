@@ -19,7 +19,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	SensorCompatibility sensors;
 	LinearLayout scrollViewLayout;
 	public static LinkedList<String> acceptedFields;
-	public static boolean compatible = true;
+	public static boolean compatible;
 	
 	private int nullViewCount = 0;
 	private boolean isEmpty = false;
@@ -30,6 +30,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choosesensor);
 
+		compatible = true;
 		Context mContext = this;
 
 		LinkedList<String> fields = DataCollector.dfm.order;
