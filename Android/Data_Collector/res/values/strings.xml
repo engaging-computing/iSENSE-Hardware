@@ -235,5 +235,6 @@
 	
 	<string name="okay">Okay</string>
 	<string name="back">Back</string>
+	<string name="contentDesc"></string>
 
 </resources>
