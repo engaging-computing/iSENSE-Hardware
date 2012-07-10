@@ -45,6 +45,16 @@ public class DataFieldManager extends Application {
 			case 1:
 				order.add(mContext.getString(R.string.temperature));
 				break;
+				
+			// Potential Altitude
+			case 2:
+			case 3:
+				if (field.field_name.toLowerCase().contains("altitude")) {
+					order.add(mContext.getString(R.string.altitude));
+				} else {
+					order.add(mContext.getString(R.string.null_string));
+				}
+				break;
 
 			// Time
 			case 7:
