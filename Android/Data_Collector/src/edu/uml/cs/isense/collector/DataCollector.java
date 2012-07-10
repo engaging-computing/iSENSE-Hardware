@@ -81,13 +81,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
@@ -98,20 +93,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
 	private static EditText experimentInput;
-	private static EditText seats;
-	private static Spinner rides;
-	private static TextView rideName;
+	private static TextView session;
 	private static TextView time;
-	private static CheckBox canobieCheck;
 
 	private Button startStop;
 	private Button browseButton;
-	private TextView values;
 	private Boolean running = false;
 	private Vibrator vibrator;
 	private TextView picCount;
 	private TextView loginInfo;
-	private String rideNameString = "NOT SET";
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
@@ -170,7 +160,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int ALTITUDE = 15;
 	private static final int LIGHT = 16;
 
-	private int count = 0;
 	private String data;
 
 	private Uri imageUri;
@@ -180,8 +169,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private ArrayList<File> pictures;
 	private ArrayList<File> videos;
-
-	private static int rideIndex = 0;
 
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
@@ -223,8 +210,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
 	private static boolean choiceViaMenu = false;
-	private static boolean canobieIsChecked = true;
-	private static boolean canobieBackup = true;
 	private static boolean successLogin = false;
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
@@ -239,7 +224,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	public static String textToSession = "";
 	public static String toSendOut = "";
-	private static String stNumber = "1";
+	public static String sdFileName = "";
 
 	public static JSONArray dataSet;
 
@@ -274,7 +259,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 
-				if (!setupDone || rideName.getText().toString() == null) {
+				if (!setupDone) {
 
 					showDialog(MENU_ITEM_SETUP);
 					w.make("You must setup before recording data.",
@@ -296,10 +281,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 						running = false;
 						startStop.setText(R.string.startString);
 						time.setText(R.string.timeElapsed);
-						rideName.setText("Ride/St#: NOT SET");
+						session.setText(getString(R.string.session));
 
 						timeTimer.cancel();
-						count++;
 						startStop.getBackground().setColorFilter(0xFFFF0000,
 								PorterDuff.Mode.MULTIPLY);
 						choiceViaMenu = false;
@@ -350,7 +334,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 							public void run() {
 
 								dataPointCount++;
-								count = (count + 1) % 2;
 								elapsedMillis += INTERVAL;
 								totalMillis = elapsedMillis;
 
@@ -380,21 +363,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 									i++;
 									len++;
 									len2++;
-
-									// NO NO
-									/*data = toThou.format(accel[0]) + ", "
-											+ toThou.format(accel[1]) + ", "
-											+ toThou.format(accel[2]) + ", "
-											+ toThou.format(accel[3]) + ", "
-											+ loc.getLatitude() + ", "
-											+ loc.getLongitude() + ", "
-											+ toThou.format(orientation[0])
-											+ ", " + rawMag[0] + ", "
-											+ rawMag[1] + ", " + rawMag[2]
-											+ ", " + currentTime
-											+ elapsedMillis + "\n";*/
-									
-									data = "Nothing, nothing\n";
 
 									if (dfm.enabledFields[ACCEL_X])
 										f.accel_x = toThou.format(accel[0]);
@@ -435,6 +403,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 										f.lux = light;
 
 									dataSet.put(dfm.putData());
+									data = dfm.writeSdCardLine();
 
 									if (beginWrite) {
 										writeToSDCard(data, 's');
@@ -490,8 +459,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 			Date dt = new Date();
+			String uploadSessionString;
 
 			dateString = sdf.format(dt);
+			
+			if (session.getText().toString().equals(getString(R.string.session)))
+				uploadSessionString = "Session Name Not Provided";
+			else
+				uploadSessionString = session.getText().toString();
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -500,8 +475,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, rides.getSelectedItem() + "-" + stNumber
-					+ "-" + dateString + ".csv");
+			SDFile = new File(folder, uploadSessionString
+					+ " - " + dateString + ".csv");
+			sdFileName = uploadSessionString + " - " + dateString;
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -545,11 +521,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void pushPicture() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 		Date dt = new Date();
+		String uploadSessionString;
 
 		dateString = sdf.format(dt);
 
-		if (rideNameString.equals("NOT SET"))
-			rideNameString = "Unspecified Ride";
+		if (session.getText().toString().equals(getString(R.string.session)))
+			uploadSessionString = "Session Name Not Provided";
+		else
+			uploadSessionString = session.getText().toString();
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -560,8 +539,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		for (int i = 0; i < pictures.size(); i++) {
 			File f = pictures.get(i);
-			File newFile = new File(folder, rideNameString + "-" + stNumber
-					+ "-" + dateString + "-" + (i + 1) + ".jpeg");
+			File newFile = new File(folder, uploadSessionString
+					+ " - " + dateString + "-" + (i + 1) + ".jpeg");
 			f.renameTo(newFile);
 			pictureArray.add(newFile);
 		}
@@ -573,9 +552,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void pushVideo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 		Date dt = new Date();
+		String uploadSessionString;
 
 		dateString = sdf.format(dt);
 
+		if (session.getText().toString().equals(getString(R.string.session)))
+			uploadSessionString = "Session Name Not Provided";
+		else
+			uploadSessionString = session.getText().toString();
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
 
@@ -585,8 +569,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		for (int i = 0; i < videos.size(); i++) {
 			File f = videos.get(i);
-			File newFile = new File(folder, rideNameString + "-" + stNumber
-					+ "-" + dateString + "-" + (i + 1) + ".3gp");
+			File newFile = new File(folder, uploadSessionString
+					+ " - " + dateString + "-" + (i + 1) + ".3gp");
 			f.renameTo(newFile);
 		}
 
@@ -722,9 +706,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-
-		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-
 		
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y] || 
@@ -734,17 +715,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				accel[0] = event.values[0];
 				accel[1] = event.values[1];
 				accel[2] = event.values[2];
-
-				String xPrepend = accel[0] > 0 ? "+" : "";
-				String yPrepend = accel[1] > 0 ? "+" : "";
-				String zPrepend = accel[2] > 0 ? "+" : "";
-
-				if (count == 0) {
-					values.setText("X: " + xPrepend + oneDigit.format(accel[0])
-							+ ", Y: " + yPrepend + oneDigit.format(accel[1])
-							+ ", Z: " + zPrepend + oneDigit.format(accel[2]));
-				}
-
 				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
 						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 			}
@@ -816,24 +786,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						partialSessionName = sessionName.getText().toString();
 						setupDone = true;
-						canobieBackup = canobieIsChecked;
-						rideName.setText("Ride/St#: " + rideNameString + " "
-								+ stNumber);
+						session.setText("Session Name: " + partialSessionName);
 						if (pictures.size() > 0)
 							pushPicture();
 						if (videos.size() > 0)
 							pushVideo();
 						break;
 					case DIALOG_CANCELED:
-						canobieIsChecked = canobieBackup;
 						if (pictures.size() > 0)
 							pushPicture();
 						if (videos.size() > 0)
 							pushVideo();
 						break;
 					}
-					rideName.setText("Ride/St#: " + rideNameString + " "
-							+ stNumber);
 
 				}
 			}, "Configure Options");
@@ -893,8 +858,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					case DIALOG_CANCELED:
 						break;
 					}
-					rideName.setText("Ride/St#: " + rideNameString + " "
-							+ stNumber);
 
 				}
 			}, "Final Step");
@@ -933,8 +896,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (sdCardError)
 				appendMe = "File not written to SD Card.";
 			else
-				appendMe = "Filename: \n" + rideNameString + "-" + stNumber
-						+ "-" + dateString;
+				appendMe = "Filename: \n" + sdFileName;
 
 			builder.setTitle("Session Summary")
 					.setMessage(
@@ -1108,34 +1070,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		canobieIsChecked = canobieBackup;
 
 		LayoutInflater vi = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = vi.inflate(R.layout.setup, null);
 
 		builder.setView(v);
-
-		rides = (Spinner) v.findViewById(R.id.rides);
-
-		final ArrayAdapter<CharSequence> generalAdapter = ArrayAdapter
-				.createFromResource(this, R.array.rides_array,
-						android.R.layout.simple_spinner_item);
-		generalAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		final ArrayAdapter<CharSequence> canobieAdapter = ArrayAdapter
-				.createFromResource(this, R.array.canobie_array,
-						android.R.layout.simple_spinner_item);
-		canobieAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		if (canobieIsChecked)
-			rides.setAdapter(canobieAdapter);
-		else
-			rides.setAdapter(generalAdapter);
-
-		seats = (EditText) v.findViewById(R.id.studentNumber);
 
 		sessionName = (EditText) v.findViewById(R.id.sessionName);
 
@@ -1179,32 +1119,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		});
-
-		canobieCheck = (CheckBox) v.findViewById(R.id.isCanobie);
-		if (canobieIsChecked)
-			canobieCheck.setChecked(true);
-		else
-			canobieCheck.setChecked(false);
-
-		canobieCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-
-				if (canobieCheck.isChecked()) {
-					canobieIsChecked = true;
-					rides.setAdapter(canobieAdapter);
-				} else {
-					canobieIsChecked = false;
-					rides.setAdapter(generalAdapter);
-				}
-
-			}
-
-		});
-
-		rides.setSelection(rideIndex);
-		seats.setText(stNumber);
 
 		Button b = (Button) v.findViewById(R.id.pictureButton);
 
@@ -1296,18 +1210,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 							experimentInput.setError("Enter an Experiment");
 							pass = false;
 						}
-						if (seats.getText().length() == 0) {
-							seats.setError("Enter a St#");
-							pass = false;
-						}
+						
 						if (pass) {
-							rideIndex = rides.getSelectedItemPosition();
-							stNumber = seats.getText().toString();
 
-							rideNameString = (String) rides.getSelectedItem();
-
-							nameOfSession = sessionName.getText().toString()
-									+ " - " + rideNameString + " " + stNumber;
+							nameOfSession = sessionName.getText().toString();
 
 							new SensorCheckTask().execute();
 
@@ -1462,7 +1368,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Performs tasks after returning to main UI from previous activities
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1676,12 +1581,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 		videos = new ArrayList<File>();
 
 		startStop = (Button) findViewById(R.id.startStop);
-
-		values = (TextView) findViewById(R.id.values);
-		time = (TextView) findViewById(R.id.time);
-		rideName = (TextView) findViewById(R.id.ridename);
-
-		rideName.setText("Ride/St#: " + rideNameString);
+		
+		session = (TextView) findViewById(R.id.sessionName);
+		time    = (TextView) findViewById(R.id.time);
 
 		picCount = (TextView) findViewById(R.id.pictureCount);
 		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);

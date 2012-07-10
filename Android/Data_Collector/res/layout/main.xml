@@ -31,30 +31,13 @@
 
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:id="@+id/ridename"
-				android:text="@+string/rideAndSeat"
+				android:id="@+id/sessionName"
+				android:text="@+string/session"
 				android:textSize="18dip"
 				android:background="@android:color/black"
 				android:textColor="@android:color/white"
 				android:layout_gravity="center_horizontal"
 				android:gravity="center_horizontal"/>
-	
-		<LinearLayout android:orientation="vertical"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:background="@android:color/black">
-
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/values"
-				android:text="@+string/xyz"
-				android:textSize="18dip"
-				android:textStyle="bold"
-				android:background="@android:color/black"
-				android:textColor="@android:color/white"
-				android:layout_gravity="center_horizontal"/>
-			
-		</LinearLayout>
 		
 		<LinearLayout android:orientation="vertical"
     		android:layout_width="fill_parent"
