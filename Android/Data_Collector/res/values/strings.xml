@@ -3,68 +3,7 @@
     <string name="hello">Hello World, AmuesmentPark!</string>
     <string name="app_name">Amusement Park Physics</string>
     
-    <string name="iSenseConfig"><u><b>iSENSE Only Configurations</b></u></string>
-    <string name="otherConfig"><u><b>Other Configurations</b></u></string>
-    
-    <string name="rides_prompt">Choose a ride</string>
-    <string-array name="rides_array">
-        <item>Unknown</item>
-        <item>Bumper Cars</item>
-        <item>Carousel</item>
-        <item>Drop Tower</item>
-        <item>Ferris Wheel</item>
-        <item>Frisbee</item>
-        <item>Gravitron</item>
-        <item>Jump-and-Smile</item>
-        <item>Kiddie Ride</item>
-        <item>Log Flume</item>
-        <item>Matterhorn</item>
-        <item>Orbiter</item>
-        <item>Other</item>
-        <item>Pirate Ship</item>
-        <item>Railway</item>
-        <item>River Rafting</item>
-        <item>Roller Coaster (wooden)</item>
-        <item>Roller Coaster (steel)</item>
-        <item>Rotor</item>
-        <item>Scrambler</item>
-        <item>Slide</item>
-        <item>Speed</item>
-        <item>Swings</item>
-        <item>Teacups</item>
-        <item>Tilt-A-Whirl</item>
-        <item>Wipeout</item>
-        <item>Zero Gravity</item>
-        <item>Zipper</item>
-    </string-array>
-    <string-array name="canobie_array">
-    	<item>Unknown</item>
-    	<item>Alpine Swing</item>
-        <item>Antique Cars</item>
-        <item>Canobie 500</item>
-        <item>Caterpillar</item>
-        <item>Corkscrew</item>
-        <item>daVinvi\'s Dream</item>
-        <item>Dodgems</item>
-        <item>Dragon Coaster</item>
-        <item>Giant Sky Wheel</item>
-        <item>Jungle Bounce</item>
-        <item>Junior Sports Cars</item>
-        <item>Kiddie Carousel</item>
-        <item>Over the Rainbow</item>
-        <item>Pirata</item>
-        <item>Psychodrome</item>
-        <item>Skater</item>
-        <item>StarBlaster</item>
-        <item>Turkish Twist</item>
-        <item>Twist and Shout</item>
-        <item>Untamed</item>
-        <item>Wave Blaster</item>
-        <item>Wipeout</item>
-        <item>Xtreme Frisbee</item>
-        <item>Yankee Cannonball</item>
-        <item>Zero Gravity</item>
-    </string-array>
+    <string name="iSenseConfig"><u><b>Step 1: Identify Your Session</b></u></string>
     
     <string name="experiments_no_items">No experiments were found.</string>
     
@@ -248,10 +187,10 @@
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
 	<string name="notLoggedIn"> Not Logged In</string>
-	<string name="rideAndSeat">Ride/St#: </string>
+	<string name="session">Session Name: NOT SET</string>
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
-	<string name="menuDirections">Use Menu to Setup, Login, or Upload</string>
+	<string name="menuDirections">Use Menu to Access Configurations</string>
 	<string name="timeElapsed">Time Elapsed: 0:00</string>
 	<string name="sessionName">Session Name: </string>
 	<string name="experimentNum">Expm #: </string>

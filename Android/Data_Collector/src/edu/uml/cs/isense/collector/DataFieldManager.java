@@ -22,11 +22,9 @@ public class DataFieldManager extends Application {
 	JSONArray dataSet;
 	Fields f;
 	SensorCompatibility sc = new SensorCompatibility();
-	boolean[] enabledFields = {
-		false, false, false, false, false, false, false, 
-		false, false, false, false, false, false, false, 
-		false, false, false
-	};
+	boolean[] enabledFields = { false, false, false, false, false, false,
+			false, false, false, false, false, false, false, false, false,
+			false, false };
 
 	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
 		this.eid = eid;
@@ -221,21 +219,160 @@ public class DataFieldManager extends Application {
 		return dataJSON;
 
 	}
-	
-	
+
+	public String writeSdCardLine() {
+
+		StringBuilder b = new StringBuilder();
+		boolean start = true;
+
+		for (String s : this.order) {
+
+			if (s.equals(mContext.getString(R.string.accel_x))) {
+				if (start)
+					b.append(f.accel_x);
+				else
+					b.append(", ").append(f.accel_x);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.accel_y))) {
+				if (start)
+					b.append(f.accel_y);
+				else
+					b.append(", ").append(f.accel_y);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.accel_z))) {
+				if (start)
+					b.append(f.accel_z);
+				else
+					b.append(", ").append(f.accel_z);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.accel_total))) {
+				if (start)
+					b.append(f.accel_total);
+				else
+					b.append(", ").append(f.accel_total);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.temperature))) {
+				if (start)
+					b.append(f.temperature);
+				else
+					b.append(", ").append(f.temperature);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.time))) {
+				if (start)
+					b.append(f.timeMillis);
+				else
+					b.append(", ").append(f.timeMillis);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.luminous_flux))) {
+				if (start)
+					b.append(f.lux);
+				else
+					b.append(", ").append(f.lux);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.heading_deg))) {
+				if (start)
+					b.append(f.angle_deg);
+				else
+					b.append(", ").append(f.angle_deg);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.heading_rad))) {
+				if (start)
+					b.append(f.angle_rad);
+				else
+					b.append(", ").append(f.angle_rad);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.latitude))) {
+				if (start)
+					b.append(f.latitude);
+				else
+					b.append(", ").append(f.latitude);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.longitude))) {
+				if (start)
+					b.append(f.longitude);
+				else
+					b.append(", ").append(f.longitude);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.magnetic_x))) {
+				if (start)
+					b.append(f.mag_x);
+				else
+					b.append(", ").append(f.mag_x);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.magnetic_y))) {
+				if (start)
+					b.append(f.mag_y);
+				else
+					b.append(", ").append(f.mag_y);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.magnetic_z))) {
+				if (start)
+					b.append(f.mag_z);
+				else
+					b.append(", ").append(f.mag_z);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.magnetic_total))) {
+				if (start)
+					b.append(f.mag_total);
+				else
+					b.append(", ").append(f.mag_total);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.altitude))) {
+				if (start)
+					b.append(f.altitude);
+				else
+					b.append(", ").append(f.altitude);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.pressure))) {
+				if (start)
+					b.append(f.pressure);
+				else
+					b.append(", ").append(f.pressure);
+				continue;
+			}
+			if (!start)
+				b.append(", ");
+
+		}
+
+		b.append("\n");
+
+		return b.toString();
+	}
+
 	public SensorCompatibility checkCompatibility() {
-		
+
 		int apiLevel = android.os.Build.VERSION.SDK_INT;
 		int apiVal = 0;
 		int[][] dispatch = sc.compatDispatch;
-		
-		if (apiLevel <= 8)                 apiVal = 0;
-		if (apiLevel > 8 && apiLevel < 14) apiVal = 1;
-		if (apiLevel > 14)                 apiVal = 2;
-		
+
+		if (apiLevel <= 8)
+			apiVal = 0;
+		if (apiLevel > 8 && apiLevel < 14)
+			apiVal = 1;
+		if (apiLevel > 14)
+			apiVal = 2;
+
 		for (int i = 0; i <= 5; i++) {
 			int temp = dispatch[apiVal][i];
-			if (temp == 1) sc.compatible[i] = true;
+			if (temp == 1)
+				sc.compatible[i] = true;
 		}
 
 		return sc;
