@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainScreen"
 	android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/main_background"
+    android:background="@drawable/background"
     android:keepScreenOn="true">
     
     <LinearLayout android:orientation="vertical"
     	android:layout_width="fill_parent"
     	android:layout_height="0dip"
+		android:background="@android:color/transparent"
     	android:layout_weight="1">
-    
 
 			<ImageView android:id="@+id/ImageViewLogo"
 			    android:contentDescription="@+string/iSENSElogo"
 				android:layout_width="fill_parent" 
 				android:background="@android:color/transparent" 
-				android:src="@drawable/logo"
+				android:src="@drawable/logo_red"
 				android:layout_height="wrap_content"
+				android:layout_marginTop="2dp"
+				android:layout_marginBottom="4dp"
 				android:scaleType="center"/>
 			
 			<TextView android:id="@+id/loginInfo"
     			android:layout_width="fill_parent"
-    			android:layout_marginTop="4dp"
     			android:layout_height="wrap_content"
-    			android:background="#000000"
+    			android:background="@android:color/transparent"
     			android:text="@+string/notLoggedIn"
     			android:gravity="center_horizontal"
     			android:textColor="#FFFFFF"
@@ -36,7 +38,7 @@
 				android:id="@+id/sessionName"
 				android:text="@+string/session"
 				android:textSize="18dip"
-				android:background="@android:color/black"
+				android:background="@android:color/transparent"
 				android:textColor="@android:color/white"
 				android:layout_gravity="center_horizontal"
 				android:gravity="center_horizontal"/>
@@ -44,7 +46,7 @@
 		<LinearLayout android:orientation="vertical"
     		android:layout_width="fill_parent"
     		android:layout_height="wrap_content"
-    		android:background="@android:color/black">
+    		android:background="@android:color/transparent">
 
 			<TextView android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -52,7 +54,7 @@
 				android:text="@+string/timeElapsed"
 				android:textSize="14dip"
 				android:textStyle="bold"
-				android:background="@android:color/black"
+				android:background="@android:color/transparent"
 				android:textColor="@android:color/white"
 				android:layout_gravity="center_horizontal"/>
 			
@@ -60,7 +62,9 @@
 		
 		<Button android:text="@+string/startString" 
 			android:textSize="30dip"
+			android:textColor="@android:color/white"
 			android:id="@+id/startStop" 
+			android:background="@drawable/colorless"
 			android:layout_width="fill_parent" 
 			android:layout_height="fill_parent"
 			android:layout_marginLeft="20dp"
@@ -74,6 +78,7 @@
 	<LinearLayout android:orientation="vertical"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
+		android:background="@android:color/transparent"
 		android:layout_marginBottom="20dp">
 			
 		<TextView android:id="@+id/menuPrompt"
@@ -81,18 +86,20 @@
 			android:layout_width = "fill_parent"
 			android:layout_gravity="center_horizontal"
 			android:gravity="center"
+			android:background="@android:color/transparent"
 			android:textSize="15sp"
 			android:text="@+string/menuDirections"
-			android:textColor="@android:color/black"/>
+			android:textColor="@android:color/white"/>
 			
 		<TextView android:id="@+id/pictureCount"
 			android:gravity="center"
 			android:layout_height="fill_parent"
 			android:layout_width = "fill_parent"
 			android:layout_gravity="center_horizontal"
+			android:background="@android:color/transparent"
 			android:text="@+string/picAndVidCount"
 			android:textSize="15sp"
-			android:textColor="@android:color/black"/>
+			android:textColor="@android:color/white"/>
 		
 	</LinearLayout>
 	
