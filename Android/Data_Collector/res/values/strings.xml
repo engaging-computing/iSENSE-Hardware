@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, AmuesmentPark!</string>
-    <string name="app_name">Amusement Park Physics</string>
+    <string name="hello">Hello World, DataCollector!</string>
+    <string name="app_name">iSENSE Data Collector</string>
     
     <string name="iSenseConfig"><u><b>Step 1: Identify Your Session</b></u></string>
     
@@ -186,7 +186,7 @@
 	<string name="xyz">X: , Y: , Z:</string>
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
-	<string name="notLoggedIn"> Not Logged In</string>
+	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
 	<string name="session">Session Name: NOT SET</string>
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="picAndVidCount">Pictures and Videos taken: \0</string>

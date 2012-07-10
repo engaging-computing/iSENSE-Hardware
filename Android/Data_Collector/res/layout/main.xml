@@ -6,15 +6,6 @@
     android:background="@drawable/main_background"
     android:keepScreenOn="true">
     
-    <TextView android:id="@+id/loginInfo"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:background="#000000"
-    	android:text="@+string/notLoggedIn"
-    	android:textColor="#FFFFFF"
-    	android:textSize="12sp"
-    />
-    
     <LinearLayout android:orientation="vertical"
     	android:layout_width="fill_parent"
     	android:layout_height="0dip"
@@ -28,6 +19,17 @@
 				android:src="@drawable/logo"
 				android:layout_height="wrap_content"
 				android:scaleType="center"/>
+			
+			<TextView android:id="@+id/loginInfo"
+    			android:layout_width="fill_parent"
+    			android:layout_marginTop="4dp"
+    			android:layout_height="wrap_content"
+    			android:background="#000000"
+    			android:text="@+string/notLoggedIn"
+    			android:gravity="center_horizontal"
+    			android:textColor="#FFFFFF"
+    			android:textSize="12dip"
+    		/>
 
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
