@@ -37,7 +37,7 @@
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".ChooseSensorDialog"
-                  android:label="ChooseSensorDialog"
+                  android:label="Step 2"
                   android:theme="@android:style/Theme.Dialog" />
 
     </application>

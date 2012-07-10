@@ -40,7 +40,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isense.cs.uml.edu/ws/api.php";
+	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;

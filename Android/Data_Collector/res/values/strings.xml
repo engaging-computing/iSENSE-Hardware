@@ -183,6 +183,7 @@
 		
 	</string>
 	
+	<string name="search">Search</string>
 	<string name="xyz">X: , Y: , Z:</string>
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
