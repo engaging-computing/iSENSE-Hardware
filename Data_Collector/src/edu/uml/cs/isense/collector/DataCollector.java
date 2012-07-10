@@ -1,15 +1,15 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /**                                                                                               **/
-/**      IIIIIIIIIIIII            General Purpose Amusement Park App             SSSSSSSSS        **/
+/**      IIIIIIIIIIIII            General Purpose Data Collector App             SSSSSSSSS        **/
 /**           III                                                               SSS               **/
-/**           III                    Original Creator: John Fertita            SSS                **/
-/**           III                    Edits By:         Jeremy Poulin,           SSS               **/
+/**           III                                                              SSS                **/
+/**           III                    By:               Jeremy Poulin,           SSS               **/
 /**           III                                      Michael Stowell           SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
-/**           III                    Special Thanks:   Don Rhine                         SSS      **/
-/**           III                    Group:            ECG, iSENSE                      SSS       **/
-/**      IIIIIIIIIIIII               Property:         UMass Lowell              SSSSSSSSS        **/
+/**           III                                                                        SSS      **/
+/**           III                    Group:            ECG / iSENSE                     SSS       **/
+/**      IIIIIIIIIIIII               Property:         UMass Lowell             SSSSSSSSSS        **/
 /**                                                                                               **/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -70,7 +70,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -786,7 +785,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						partialSessionName = sessionName.getText().toString();
 						setupDone = true;
-						session.setText("Session Name: " + partialSessionName);
+						String showSessionName;
+						if (partialSessionName.length() > 15) {
+							showSessionName = partialSessionName.substring(0, 15) + "...";
+						} else {
+							showSessionName = partialSessionName;
+						}
+						session.setText("Session Name: " + showSessionName);
 						if (pictures.size() > 0)
 							pushPicture();
 						if (videos.size() > 0)
@@ -826,8 +831,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 								DataCollector.mContext, DataCollector.mContext
 										.getSharedPreferences("USER_INFO",
 												Context.MODE_PRIVATE));
-						loginInfo.setText(" "
-								+ mPrefs.getString("username", ""));
+						String loginName = mPrefs.getString("username", "");
+						if (loginName.length() >= 18)
+							loginName = loginName.substring(0, 18) + "...";
+						loginInfo.setText("Username: "
+								+ loginName);
 						loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
 						w.make("Login successful", Toast.LENGTH_LONG, "check");
@@ -1402,7 +1410,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
-				Log.e("intent", "timeOffset set to: " + timeOffset);
 			} else if (resultCode == RESULT_CANCELED) {
 				// oh no they canceled!
 			}
@@ -1647,7 +1654,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		boolean success = rapi.login(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 		if (success) {
-			loginInfo.setText(" " + mPrefs.getString("username", ""));
+			String loginName = mPrefs.getString("username", "");
+			if (loginName.length() >= 18)
+				loginName = loginName.substring(0, 18) + "...";
+			loginInfo.setText("Username: "
+					+ loginName);
 			loginInfo.setTextColor(Color.GREEN);
 			successLogin = true;
 		}
@@ -1767,10 +1778,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 							.toString()), rapi, mContext, f);
 			dfm.getOrder();
 
-			for (String s : dfm.order) {
-				Log.d("field_order", s);
-			}
-			
 			sc = dfm.checkCompatibility();
 
 			publishProgress(100);

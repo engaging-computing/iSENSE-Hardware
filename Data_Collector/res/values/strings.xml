@@ -186,7 +186,7 @@
 	<string name="xyz">X: , Y: , Z:</string>
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
-	<string name="notLoggedIn"> Not Logged In</string>
+	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
 	<string name="session">Session Name: NOT SET</string>
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
