@@ -28,9 +28,10 @@ public final class R {
         public static final int main_background=0x7f02000e;
         public static final int progress_small=0x7f02000f;
         public static final int red_x=0x7f020010;
-        public static final int spinner_black_16=0x7f020011;
-        public static final int toast_background_check=0x7f020012;
-        public static final int toast_background_x=0x7f020013;
+        public static final int sensorelement_bkgd=0x7f020011;
+        public static final int spinner_black_16=0x7f020012;
+        public static final int toast_background_check=0x7f020013;
+        public static final int toast_background_x=0x7f020014;
     }
     public static final class id {
         public static final int BrowseButton=0x7f06001f;
