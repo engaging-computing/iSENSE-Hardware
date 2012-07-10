@@ -19,9 +19,11 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	SensorCompatibility sensors;
 	LinearLayout scrollViewLayout;
 	public static LinkedList<String> acceptedFields;
+	public static boolean compatible = true;
 	
 	private int nullViewCount = 0;
 	private boolean isEmpty = false;
+	private TextView errorTV;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +98,13 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		}
 
 		if (nullViewCount == scrollViewLayout.getChildCount()) {
-			TextView tv = new TextView(mContext);
-			if (isEmpty) tv.setText(getString(R.string.invalidExperiment));
-			else tv.setText(getString(R.string.noCompatibleFields));
-			scrollViewLayout.addView(tv);
+			errorTV = new TextView(mContext);
+			if (isEmpty) errorTV.setText(getString(R.string.invalidExperiment));
+			else {
+				errorTV.setText(getString(R.string.noCompatibleFields));
+				compatible = false;
+			}
+			scrollViewLayout.addView(errorTV);
 			
 			isEmpty = false;
 		}
@@ -178,6 +183,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 
 	private void setAcceptedFields() {
 		acceptedFields = new LinkedList<String>();
+		scrollViewLayout.removeView(errorTV);
 		for (int i = 0; i < scrollViewLayout.getChildCount(); i++) {
 			View v = scrollViewLayout.getChildAt(i);
 
