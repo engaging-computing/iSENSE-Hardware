@@ -22,8 +22,10 @@
     
     <string name="compatible">Compatible</string>
     <string name="incompatible">Incompatible</string>
-    <string name="noCompatibleFields">No compatible fields found.</string>
+    <string name="noCompatibleFields">No compatible fields found. (Hitting \"Okay\" 
+        will return you to the configuration menu to select a new experiment.)</string>
     <string name="invalidExperiment">No fields found for this experiment. 
-        This experiment may have been deleted, or may not exist at all.</string>
+        This experiment may have been deleted, or may not exist at all. (Hitting \"Okay\" 
+        will return you to the configuration menu to select a new experiment.)</string>
     
 </resources>
