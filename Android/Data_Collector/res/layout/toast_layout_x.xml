@@ -5,7 +5,7 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:padding="10dp"
-              android:background="@drawable/toast_background_check"
+              android:background="@drawable/toast_background_x"
               >
     <ImageView android:id="@+id/image"
         	   android:contentDescription="@string/contentDesc"
