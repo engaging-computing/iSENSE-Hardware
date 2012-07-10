@@ -699,10 +699,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			if (sessionDescription.equals(""))
-				showDialog(DIALOG_DESCRIPTION);
-			else
-				showDialog(DIALOG_CHOICE);
+			showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent i = new Intent(DataCollector.this, SyncTime.class);
@@ -1445,6 +1442,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Performs tasks after returning to main UI from previous activities
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1484,10 +1482,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				acceptedFields = ChooseSensorDialog.acceptedFields;
-				getEnabledFields();
+				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
+					showDialog(MENU_ITEM_SETUP);
+				} else if (!ChooseSensorDialog.compatible) {
+					showDialog(MENU_ITEM_SETUP);
+				} else {
+					acceptedFields = ChooseSensorDialog.acceptedFields;
+					getEnabledFields();
+				}
 			} else if (resultCode == RESULT_CANCELED) {
-				// do more stuff
+				setupDone = false;
 			}
 		}
 
