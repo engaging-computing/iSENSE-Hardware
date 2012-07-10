@@ -1442,6 +1442,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Performs tasks after returning to main UI from previous activities
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1482,14 +1483,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
-					// error - no compatible fields
+					showDialog(MENU_ITEM_SETUP);
+				} else if (!ChooseSensorDialog.compatible) {
+					showDialog(MENU_ITEM_SETUP);
 				} else {
-					// error - experiment deleted/doesn't exist
+					acceptedFields = ChooseSensorDialog.acceptedFields;
+					getEnabledFields();
 				}
-				acceptedFields = ChooseSensorDialog.acceptedFields;
-				getEnabledFields();
 			} else if (resultCode == RESULT_CANCELED) {
-				// do more stuff
+				setupDone = false;
 			}
 		}
 
