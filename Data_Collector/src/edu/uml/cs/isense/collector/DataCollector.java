@@ -699,10 +699,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			if (sessionDescription.equals(""))
-				showDialog(DIALOG_DESCRIPTION);
-			else
-				showDialog(DIALOG_CHOICE);
+			showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent i = new Intent(DataCollector.this, SyncTime.class);
@@ -1484,6 +1481,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
+					// error - no compatible fields
+				} else {
+					// error - experiment deleted/doesn't exist
+				}
 				acceptedFields = ChooseSensorDialog.acceptedFields;
 				getEnabledFields();
 			} else if (resultCode == RESULT_CANCELED) {
