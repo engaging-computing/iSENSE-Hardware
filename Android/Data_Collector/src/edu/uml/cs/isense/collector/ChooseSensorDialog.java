@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -80,6 +81,9 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 
 			scrollViewLayout.addView(v);
 			v.setOnClickListener(this);
+			
+			if (field.equals(getString(R.string.null_string)))
+				v.setVisibility(View.GONE);
 
 			Button okay = (Button) findViewById(R.id.sensor_ok);
 			okay.setOnClickListener(this);
@@ -95,7 +99,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	void setCompatibility(TextView tv, CheckedTextView ctv) {
 		tv.setTextColor(Color.GREEN);
 		tv.setText(R.string.compatible);
-		ctv.setChecked(true);
+		ctv.setChecked(true);			
 	}
 
 	// Check compatibility against SensorTypes
@@ -108,6 +112,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			tv.setTextColor(Color.RED);
 			tv.setText(R.string.incompatible);
 			ctv.setChecked(false);
+			ctv.setCheckMarkDrawable(R.drawable.red_x);
 		}
 	}
 
@@ -122,10 +127,9 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			tv.setTextColor(Color.RED);
 			tv.setText(R.string.incompatible);
 			ctv.setChecked(false);
+			ctv.setCheckMarkDrawable(R.drawable.red_x);
 		}
 	}
-
-	// "accepted_fields"
 
 	@Override
 	protected void onPause() {
