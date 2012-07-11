@@ -70,6 +70,7 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -468,14 +469,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 			Date dt = new Date();
-			String uploadSessionString;
 
 			dateString = sdf.format(dt);
-			
-			if (session.getText().toString().equals(getString(R.string.session)))
-				uploadSessionString = "Session Name Not Provided";
-			else
-				uploadSessionString = session.getText().toString();
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -484,9 +479,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, uploadSessionString
+			SDFile = new File(folder, partialSessionName
 					+ " - " + dateString + ".csv");
-			sdFileName = uploadSessionString + " - " + dateString;
+			sdFileName = partialSessionName + " - " + dateString;
+			Log.d("tag", sdFileName);
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -650,7 +646,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
 						Toast.LENGTH_LONG, "x");
 			else
-				w.make("Press back again to exit.", Toast.LENGTH_SHORT, "check");
+				w.make("Double press \"Back\" to exit.", Toast.LENGTH_SHORT, "check");
 
 		} else if (w.exitAppViaBack && !running) {
 			setupDone = false;
@@ -923,7 +919,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									+ "\n" + "Data points: " + dataPointCount
 									+ "\n" + "End date and time: \n"
 									+ dateString + "\n" + appendMe)
-					.setPositiveButton("OK",
+					.setPositiveButton("Okay",
 							new DialogInterface.OnClickListener() {
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
@@ -990,7 +986,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									+ "You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in "
 									+ "to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if "
 									+ "you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.")
-					.setPositiveButton("OK",
+					.setPositiveButton("Okay",
 							new DialogInterface.OnClickListener() {
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
@@ -1011,8 +1007,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			builder.setTitle("Time Up")
 					.setMessage(
 							"You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum "
-									+ "recording time at 10 minutes and have stopped recording for you.  Press OK to continue.")
-					.setPositiveButton("OK",
+									+ "recording time at 10 minutes and have stopped recording for you.  Press \"Okay\" to continue.")
+					.setPositiveButton("Okay",
 							new DialogInterface.OnClickListener() {
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
@@ -1060,7 +1056,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					.setMessage(
 							"You exited the app while data was still being recorded.  Data has stopped recording.")
 					.setCancelable(false)
-					.setPositiveButton("OK",
+					.setPositiveButton("Okay",
 							new DialogInterface.OnClickListener() {
 								public void onClick(
 										DialogInterface dialoginterface,
@@ -1082,6 +1078,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	        input.setSingleLine(true);
 	        input.setKeyListener(DigitsKeyListener.getInstance(
 	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
+	        input.setInputType(InputType.TYPE_CLASS_TEXT);
 	        layout.setPadding(5, 0, 5, 0);
 	        layout.addView(input);
 	    	
@@ -1252,8 +1249,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		});
 
-		builder.setTitle(message)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 					}
