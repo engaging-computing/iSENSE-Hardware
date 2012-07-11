@@ -15,10 +15,13 @@
     <string name="magnetic_total">Magnetic-Total</string>       <!-- 10 -->
     <string name="heading_deg">Heading-Deg</string>             <!-- 11 -->
     <string name="heading_rad">Heading-Rad</string>             <!-- 12 -->
-    <string name="temperature">Temperature</string>             <!-- 13 -->
+    <string name="temperature_c">Temperature-C</string>         <!-- 13 -->
     <string name="pressure">Pressure</string>                   <!-- 14 -->
     <string name="altitude">Altitude</string>                   <!-- 15 -->
     <string name="luminous_flux">Luminous Flux</string>         <!-- 16 -->
+    
+    <string name="temperature_f">Temperature-F</string>         <!-- 17 -->
+    <string name="temperature_k">Temperature-K</string>			<!-- 18 -->
     
     <string name="compatible">Compatible</string>
     <string name="incompatible">Incompatible</string>
