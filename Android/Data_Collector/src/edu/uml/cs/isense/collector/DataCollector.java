@@ -33,7 +33,6 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -159,10 +158,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MAG_TOTAL = 10;
 	private static final int HEADING_DEG = 11;
 	private static final int HEADING_RAD = 12;
-	private static final int TEMPERATURE = 13;
+	private static final int TEMPERATURE_C = 13;
 	private static final int PRESSURE = 14;
 	private static final int ALTITUDE = 15;
 	private static final int LIGHT = 16;
+	
+	private static final int TEMPERATURE_F = 17;
+	private static final int TEMPERATURE_K = 18;
 
 	private String data;
 
@@ -402,8 +404,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 												+ Math.pow(f.mag_z, 2));
 									if (dfm.enabledFields[TIME])
 										f.timeMillis = currentTime + elapsedMillis;
-									if (dfm.enabledFields[TEMPERATURE])
-										f.temperature = temperature;
+									if (dfm.enabledFields[TEMPERATURE_C])
+										f.temperature_c = temperature;
+									if (dfm.enabledFields[TEMPERATURE_F])
+										f.temperature_f = "" + ((Double.parseDouble(temperature) * 1.8) + 32);
+									if (dfm.enabledFields[TEMPERATURE_K])
+										f.temperature_k = "" + (Double.parseDouble(temperature) + 273.15);
 									if (dfm.enabledFields[PRESSURE])
 										f.pressure = pressure;
 									if (dfm.enabledFields[ALTITUDE])
@@ -743,7 +749,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-			if (dfm.enabledFields[TEMPERATURE])
+			if (dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] 
+					|| dfm.enabledFields[TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
 			if (dfm.enabledFields[PRESSURE])
@@ -1799,7 +1806,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 			
-			if (dfm.enabledFields[TEMPERATURE] || dfm.enabledFields[ALTITUDE]) {
+			if (dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] ||
+					dfm.enabledFields[TEMPERATURE_K] || dfm.enabledFields[ALTITUDE]) {
 				mSensorManager.registerListener(DataCollector.this, 
 						mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
@@ -1822,7 +1830,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Calculates Altitude from Temperature and Pressure if Possible
 	private String calcAltitude() {
-		if (dfm.enabledFields[TEMPERATURE] && dfm.enabledFields[PRESSURE]) {
+		if ((dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] 
+				|| dfm.enabledFields[TEMPERATURE_K]) && dfm.enabledFields[PRESSURE]) {
 			if (pressure.equals("") || temperature.equals("")) {
 				return "";
 			} else {
@@ -1906,8 +1915,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm.enabledFields[HEADING_DEG] = true;
 			if (s.equals(getString(R.string.heading_rad)))
 				dfm.enabledFields[HEADING_RAD] = true;
-			if (s.equals(getString(R.string.temperature)))
-				dfm.enabledFields[TEMPERATURE] = true;
+			if (s.equals(getString(R.string.temperature_c)))
+				dfm.enabledFields[TEMPERATURE_C] = true;
+			if (s.equals(getString(R.string.temperature_f)))
+				dfm.enabledFields[TEMPERATURE_F] = true;
+			if (s.equals(getString(R.string.temperature_k)))
+				dfm.enabledFields[TEMPERATURE_K] = true;
 			if (s.equals(getString(R.string.pressure)))
 				dfm.enabledFields[PRESSURE] = true;
 			if (s.equals(getString(R.string.altitude)))
