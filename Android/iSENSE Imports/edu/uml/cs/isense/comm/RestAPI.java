@@ -640,7 +640,7 @@ public class RestAPI {
 				p.lastlogin = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTLOGIN));
 				p.picture = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PICTURE));
 				p.url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_URL));
-	//			p.timeobj = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_TIMEOBJ));
+				p.timeobj = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_TIMEOBJ));
 	//			p.date_diff = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_DATE_DIFF));
 				p.experiment_count = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_EXPERIMENT_COUNT));
 				p.session_count = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_SESSION_COUNT));
@@ -763,7 +763,7 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						//e.firstname = obj.getString("owner_firstname");
+						e.firstname = obj.getString("owner_firstname");
 						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
@@ -809,7 +809,7 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
@@ -863,7 +863,7 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						//e.firstname = obj.getString("owner_firstname");
+						e.firstname = obj.getString("owner_firstname");
 						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
@@ -909,7 +909,7 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
