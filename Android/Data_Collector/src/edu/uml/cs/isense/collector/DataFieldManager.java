@@ -43,7 +43,15 @@ public class DataFieldManager extends Application {
 
 			// Temperature
 			case 1:
-				order.add(mContext.getString(R.string.temperature));
+				if (field.unit_name.toLowerCase().contains("f"))
+					order.add(mContext.getString(R.string.temperature_f));
+				else if (field.unit_name.toLowerCase().contains("c")) {
+					order.add(mContext.getString(R.string.temperature_c));
+				} else if (field.unit_name.toLowerCase().contains("k")) {
+					order.add(mContext.getString(R.string.temperature_k));
+				} else {
+					order.add(mContext.getString(R.string.null_string));
+				}
 				break;
 				
 			// Potential Altitude
@@ -168,8 +176,16 @@ public class DataFieldManager extends Application {
 					dataJSON.put(f.accel_total);
 					continue;
 				}
-				if (s.equals(mContext.getString(R.string.temperature))) {
-					dataJSON.put(f.temperature);
+				if (s.equals(mContext.getString(R.string.temperature_c))) {
+					dataJSON.put(f.temperature_c);
+					continue;
+				}
+				if (s.equals(mContext.getString(R.string.temperature_f))) {
+					dataJSON.put(f.temperature_f);
+					continue;
+				}
+				if (s.equals(mContext.getString(R.string.temperature_k))) {
+					dataJSON.put(f.temperature_k);
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.time))) {
@@ -265,11 +281,25 @@ public class DataFieldManager extends Application {
 					b.append(", ").append(f.accel_total);
 				continue;
 			}
-			if (s.equals(mContext.getString(R.string.temperature))) {
+			if (s.equals(mContext.getString(R.string.temperature_c))) {
 				if (start)
-					b.append(f.temperature);
+					b.append(f.temperature_c);
 				else
-					b.append(", ").append(f.temperature);
+					b.append(", ").append(f.temperature_c);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.temperature_f))) {
+				if (start)
+					b.append(f.temperature_f);
+				else
+					b.append(", ").append(f.temperature_f);
+				continue;
+			}
+			if (s.equals(mContext.getString(R.string.temperature_k))) {
+				if (start)
+					b.append(f.temperature_k);
+				else
+					b.append(", ").append(f.temperature_k);
 				continue;
 			}
 			if (s.equals(mContext.getString(R.string.time))) {
