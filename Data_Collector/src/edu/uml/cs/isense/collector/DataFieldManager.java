@@ -22,9 +22,9 @@ public class DataFieldManager extends Application {
 	JSONArray dataSet;
 	Fields f;
 	SensorCompatibility sc = new SensorCompatibility();
-	boolean[] enabledFields = { false, false, false, false, false, false,
+	boolean[] enabledFields = {  false, false, false, false, false, false,
 			false, false, false, false, false, false, false, false, false,
-			false, false };
+			false, false, false, false };
 
 	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
 		this.eid = eid;
