@@ -92,7 +92,6 @@ import edu.uml.cs.isense.comm.RestAPI;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
-@TargetApi(11)
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
