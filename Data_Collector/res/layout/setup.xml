@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@android:color/black"
         android:orientation="vertical"
         android:scrollbars="vertical" >
 
@@ -18,13 +18,13 @@
             android:gravity="center_horizontal"
             android:paddingTop="12dip"
             android:text="@string/iSenseConfig"
-            android:textColor="@android:color/black"
-            android:textSize="16dip" />
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="5dp"
+            android:textSize="18dip" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical" >
 
             <TextView
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="12dip"
                 android:text="@string/sessionName"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
             <EditText
@@ -55,7 +55,6 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical"
             android:paddingBottom="5dp" >
 
@@ -66,7 +65,7 @@
                 android:layout_alignParentLeft="true"
                 android:paddingTop="15dip"
                 android:text="@string/experimentNum"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
             <EditText
@@ -91,7 +90,6 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="horizontal" >
 
             <Button

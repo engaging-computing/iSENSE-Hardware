@@ -34,7 +34,11 @@
 		<link>
 			<name>iSENSE Imports</name>
 			<type>2</type>
+<<<<<<< HEAD
 			<location>/Users/csadmin/Documents/iSENSE-Hardware/Android/iSENSE Imports</location>
+=======
+			<location>/Users/jpoulin/iSENSE-Hardware/Android/iSENSE Imports</location>
+>>>>>>> master
 		</link>
 	</linkedResources>
 </projectDescription>
