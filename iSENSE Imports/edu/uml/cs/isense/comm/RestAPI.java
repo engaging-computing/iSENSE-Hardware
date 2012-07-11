@@ -763,8 +763,8 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						e.firstname = obj.getString("owner_firstname");
-						e.lastname = obj.getString("owner_lastname");
+						//e.firstname = obj.getString("owner_firstname");
+						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
 						expList.add(e);
@@ -809,8 +809,8 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
-				e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
+				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
 				expList.add(e);
@@ -863,8 +863,8 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						e.firstname = obj.getString("owner_firstname");
-						e.lastname = obj.getString("owner_lastname");
+						//e.firstname = obj.getString("owner_firstname");
+						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
 						expPair.exp.add(e);
@@ -909,8 +909,8 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
-				e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
+				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
 				expPair.exp.add(e);

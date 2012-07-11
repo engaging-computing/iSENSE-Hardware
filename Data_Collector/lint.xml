@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="FloatMath">
+        <ignore path="src/edu/uml/cs/isense/collector/DataCollector.java" />
+    </issue>
+    <issue id="NewApi">
+        <ignore path="src/edu/uml/cs/isense/collector/DataCollector.java" />
+    </issue>
+</lint>
