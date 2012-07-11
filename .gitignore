@@ -1,0 +1,7 @@
+#	Class Files
+
+*.class
+
+#	Useless Mac files
+
+*.DS_store

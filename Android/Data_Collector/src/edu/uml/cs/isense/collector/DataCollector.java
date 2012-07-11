@@ -33,6 +33,7 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -91,6 +92,7 @@ import edu.uml.cs.isense.comm.RestAPI;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
+@TargetApi(11)
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 

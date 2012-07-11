@@ -73,7 +73,9 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 						|| field.equals(getString(R.string.heading_rad))) {
 					setCompatibility(tv, ctv, SensorTypes.ORIENTATION);
 
-				} else if (field.equals(getString(R.string.temperature))) {
+				} else if (field.equals(getString(R.string.temperature_c))
+						|| field.equals(getString(R.string.temperature_f))
+						|| field.equals(getString(R.string.temperature_k))) {
 					setCompatibility(tv, ctv, SensorTypes.AMBIENT_TEMPERATURE);
 
 				} else if (field.equals(getString(R.string.pressure))) {
