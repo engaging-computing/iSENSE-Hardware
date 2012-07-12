@@ -33,6 +33,7 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -70,6 +71,7 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -222,7 +224,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
 
-	private Handler mHandler;
+	private static Handler mHandler;
 	private boolean throughHandler = false;
 
 	File SDFile;
@@ -727,8 +729,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				accel[0] = event.values[0];
 				accel[1] = event.values[1];
 				accel[2] = event.values[2];
-				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+				double accelSum = Math.pow(accel[0], 2) + Math.pow(accel[1], 2) + Math.pow(accel[2], 2);
+				accel[3] = FloatMath.sqrt((float) accelSum);
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -779,6 +781,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
+	@SuppressLint("HandlerLeak")
 	@SuppressWarnings("deprecation")
 	protected Dialog onCreateDialog(final int id) {
 
@@ -1333,6 +1336,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Converts the captured picture's uri to a file that is save-able to the SD
 	// Card
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
 
@@ -1395,6 +1399,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Converts the recorded video's uri to a file that is save-able to the SD
 	// Card
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
 
@@ -1929,5 +1934,4 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm.enabledFields[LIGHT] = true;
 		}
 	}
-
 }

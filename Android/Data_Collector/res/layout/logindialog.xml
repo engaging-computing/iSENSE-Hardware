@@ -9,7 +9,7 @@
 		android:id="@+id/usernameLabel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Username:   "
+		android:text="@string/username"
 		android:layout_alignParentLeft="true"
 		android:layout_marginTop="5dip"/>
 
@@ -27,20 +27,20 @@
 		android:id="@+id/passwordLabel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Password:    "
+		android:text="@string/password"
 		android:layout_marginTop="5dip"
 		android:layout_below="@id/usernameInput"
 		android:layout_alignParentLeft="true"/>
 		
 	<EditText
         android:id="@+id/passwordInput"
+        android:inputType="textPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/passwordLabel"
         android:layout_below="@id/usernameInput"
         android:paddingLeft="6dip"
-        android:password="true"
         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
         android:singleLine="true"/>
 
