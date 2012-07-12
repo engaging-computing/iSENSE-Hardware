@@ -101,7 +101,7 @@ public class DataFieldManager extends Application {
 			// Numeric/Custom
 			case 21:
 			case 22:
-				if (field.field_name.toLowerCase().contains("magnetic")) {
+				if (field.field_name.toLowerCase().contains("mag")) {
 					if (field.field_name.toLowerCase().contains("x")) {
 						order.add(mContext.getString(R.string.magnetic_x));
 					} else if (field.field_name.toLowerCase().contains("y")) {
