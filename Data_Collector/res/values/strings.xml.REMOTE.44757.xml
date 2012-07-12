@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, DataCollector!</string>
     <string name="app_name">iSENSE Data Collector</string>
     
     <string name="iSenseConfig"><u><b>Step 1: Identify Your Session</b></u></string>
@@ -185,7 +184,6 @@
 	
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="search">Search</string>
-	<string name="xyz">X: , Y: , Z:</string>
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
 	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
@@ -195,12 +193,8 @@
 	<string name="sessionName">Session Name: </string>
 	<string name="experimentNum">Expm #: </string>
 	<string name="browse">  Browse&#8230;  </string>
-	<string name="seatNum">Seat/Student #: </string>
-	<string name="seatNumber">1</string>
-	<string name="canobieRides">Canobie Lake Park Rides</string>
-	<string name="ride">Ride: </string>
-	<string name="takePic">Take Picture</string>
-	<string name="takeVid">Take Video"</string>
+	<string name="takePic">Take a Picture</string>
+	<string name="takeVid">Take a Video"</string>
 	<string name="instructions"><u>Instructions:</u></string>
 	<string name="send">Send</string>
 	<string name="receive">Receive</string>
@@ -232,6 +226,8 @@
 	    WiFi networks.
 	</string>
 	
+	<string name="username">Username:    \n</string>
+	<string name="password">Password:    \n</string>
 	<string name="okay">Okay</string>
 	<string name="back">Back</string>
 	<string name="contentDesc"></string>
