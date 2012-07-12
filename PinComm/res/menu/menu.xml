@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_connect"
-          android:icon="@drawable/ic_action_search"
-          android:title="@string/menu_connect"
-          android:showAsAction="always|withText" />
-    <item android:id="@+id/menu_setSensors"
-          android:icon="@drawable/ic_action_sensor"
-          android:title="@string/menu_setsensors"
-          android:showAsAction="always|withText" />
-    <item android:id="@+id/menu_setTime"
-          android:icon="@drawable/ic_action_time"
-          android:title="@string/menu_settime"
-          android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/menu_login"
-          android:icon="@drawable/ic_action_refresh"
-          android:title="@string/menu_login"
-          android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/menu_experiment"
-          android:icon="@drawable/ic_action_share"
-          android:title="@string/menu_experiment"
-          android:showAsAction="ifRoom|withText" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_connect"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="always|withText"
+        android:title="@string/menu_connect"/>
+    <item
+        android:id="@+id/menu_setSensors"
+        android:icon="@drawable/ic_action_sensor"
+        android:showAsAction="always|withText"
+        android:title="@string/menu_setsensors"/>
+    <item
+        android:id="@+id/menu_setTime"
+        android:icon="@drawable/ic_action_time"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_settime"/>
+    <item
+        android:id="@+id/menu_login"
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_login"/>
+    <item
+        android:id="@+id/menu_experiment"
+        android:icon="@drawable/ic_action_share"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_experiment"/>
+    <item 
+        android:id="@+id/menu_fields"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_fields" />
+
 </menu>
