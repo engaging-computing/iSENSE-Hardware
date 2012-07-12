@@ -4,4 +4,7 @@
 
 #	Useless Mac files
 
-*.DS_Store
+*.DS_store
+
+#	Backup Files
+*.*~
