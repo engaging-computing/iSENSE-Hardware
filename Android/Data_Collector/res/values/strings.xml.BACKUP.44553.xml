@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, DataCollector!</string>
     <string name="app_name">iSENSE Data Collector</string>
     
     <string name="iSenseConfig"><u><b>Step 1: Identify Your Session</b></u></string>
@@ -183,25 +182,34 @@
 		
 	</string>
 	
+	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="search">Search</string>
-	<string name="xyz">X: , Y: , Z:</string>
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
 	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
 	<string name="session">Session Name: NOT SET</string>
+<<<<<<< HEAD
 	<string name="iSENSELogo">iSENSE Logo</string>
 	<string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
 	<string name="menuDirections">Use Menu to Access Configurations</string>
+=======
+ 	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
+>>>>>>> master
 	<string name="timeElapsed">Time Elapsed: 0:00</string>
 	<string name="sessionName">Session Name: </string>
 	<string name="experimentNum">Experiment #: </string>
 	<string name="browse">  Browse&#8230;  </string>
+<<<<<<< HEAD
 	<string name="seatNum">Seat/Student #: </string>
 	<string name="seatNumber">1</string>
 	<string name="canobieRides">Canobie Lake Park Rides</string>
 	<string name="ride">Ride: </string>
 	<string name="takePic">Take Picture</string>
 	<string name="takeVid">Take Video"</string>
+=======
+	<string name="takePic">Take a Picture</string>
+	<string name="takeVid">Take a Video"</string>
+>>>>>>> master
 	<string name="instructions"><u>Instructions:</u></string>
 	<string name="send">Send</string>
 	<string name="receive">Receive</string>
@@ -233,11 +241,18 @@
 	    WiFi networks.
 	</string>
 	
+	<string name="username">Username:    \n</string>
+	<string name="password">Password:    \n</string>
 	<string name="okay">Okay</string>
 	<string name="back">Back</string>
 	<string name="contentDesc"></string>
+<<<<<<< HEAD
 	<string name="media_title">Media Manager</string>
 	<string name="media_desc">Select one of the following options:</string>
 	<string name="scan_qr">Scan QR Code</string>
 	
+=======
+	<string name="loading">Loading&#x2026;</string>
+	<string name="menuDirections">Use menu to access configurations.</string>
+>>>>>>> master
 </resources>
