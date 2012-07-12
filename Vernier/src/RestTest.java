@@ -1,13 +1,18 @@
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Vector;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import REST.RestAPI;
+import REST.columnMatchException;
+import REST.isenseInterface;
+import REST.loginException;
 
 public class RestTest {
 
@@ -15,7 +20,26 @@ public class RestTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		isenseInterface is = new isenseInterface();
+		int exp = 24;
+		String headers[] = {"time","ext"};
+		Vector<String> data = new Vector<String>();
+		data.add("4,5");
+		data.add(System.currentTimeMillis()+",6");
+		
+		is.login("sor", "sor");
+		try {
+			int sid = is.joinExperiment(exp, "b", "b", "b", "b");
+			System.out.println("Created Session " + sid );
+			is.addToSession(exp, sid, headers , data);
+		} catch (loginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (columnMatchException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 /*		try {
 			StartRecording();
 			Thread.sleep(5000);
@@ -23,7 +47,7 @@ public class RestTest {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}*//*
 		String get_status = GetStatus();
 		try {
 			JSONObject get_status_json = new JSONObject(get_status);
@@ -48,7 +72,7 @@ public class RestTest {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public static String StartRecording(){
