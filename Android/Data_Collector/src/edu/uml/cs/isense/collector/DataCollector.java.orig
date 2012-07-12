@@ -40,12 +40,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -66,7 +64,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
@@ -93,6 +90,7 @@ import edu.uml.cs.isense.comm.RestAPI;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
+@SuppressLint("NewApi")
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -102,7 +100,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private Button startStop;
 	private Button browseButton;
-	private static Button qrCode;
+	private Button qrCode;
 	private Boolean running = false;
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -143,11 +141,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	public static final int EXPERIMENT_CODE = 1;
+	private static final int EXPERIMENT_CODE = 1;
 	public static final int SYNC_TIME_REQUESTED = 2;
 	public static final int CHOOSE_SENSORS_REQUESTED = 3;
 	public static final int QR_CODE_REQUESTED = 4;
-	
+
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -672,8 +670,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				accel[0] = event.values[0];
 				accel[1] = event.values[1];
 				accel[2] = event.values[2];
-				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+				double accelSum = Math.pow(accel[0], 2) + Math.pow(accel[1], 2) + Math.pow(accel[2], 2);
+				accel[3] = FloatMath.sqrt((float) accelSum);
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -1007,64 +1005,62 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
-		
+
 		case DIALOG_DESCRIPTION:
-	    	LinearLayout layout = new LinearLayout(this);
-	        layout.setOrientation(LinearLayout.VERTICAL);
-	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-	        final EditText input = new EditText(this);
-	        input.setSingleLine(true);
-	        input.setKeyListener(DigitsKeyListener.getInstance(
-	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
-	        input.setInputType(InputType.TYPE_CLASS_TEXT);
-	        layout.setPadding(5, 0, 5, 0);
-	        layout.addView(input);
-	    	
-	    	final AlertDialog d = new AlertDialog.Builder(mContext)
-            .setTitle("Step 3:")
-            .setMessage("Enter a session description (or leave blank if you'd like an automatically generated description).")
-            .setCancelable(false)
-            .setView(layout)
-            .setPositiveButton("Upload To iSENSE",
-                    new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface d, int which) {
-                            //Do nothing here. We override the onclick
-                        }
-                    })
-            .setNegativeButton("Cancel", null)
-            .create();
+			LinearLayout layout = new LinearLayout(this);
+			layout.setOrientation(LinearLayout.VERTICAL);
+			layout.setGravity(Gravity.CENTER_HORIZONTAL);
+			final EditText input = new EditText(this);
+			input.setSingleLine(true);
+			input.setKeyListener(DigitsKeyListener
+					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
+			input.setInputType(InputType.TYPE_CLASS_TEXT);
+			layout.setPadding(5, 0, 5, 0);
+			layout.addView(input);
 
-	    	d.setOnShowListener(new DialogInterface.OnShowListener() {
+			final AlertDialog d = new AlertDialog.Builder(mContext)
+					.setTitle("Step 3:")
+					.setMessage(
+							"Enter a session description (or leave blank if you'd like an automatically generated description).")
+					.setCancelable(false)
+					.setView(layout)
+					.setPositiveButton("Upload To iSENSE",
+							new Dialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int which) {
+									// Do nothing here. We override the onclick
+								}
+							}).setNegativeButton("Cancel", null).create();
 
-                @Override
-                public void onShow(DialogInterface dialog) {
+			d.setOnShowListener(new DialogInterface.OnShowListener() {
 
-                    Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                    b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onShow(DialogInterface dialog) {
 
-                        @Override
-                        public void onClick(View view) {
-                        	d.dismiss();
-                        	sessionDescription = input.getText().toString();
-                        	String isValid = experimentInput
-									.getText().toString();
-							if (successLogin
-									&& (isValid.length() > 0)) {
+					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							d.dismiss();
+							sessionDescription = input.getText().toString();
+							String isValid = experimentInput.getText()
+									.toString();
+							if (successLogin && (isValid.length() > 0)) {
 								// executeIsenseTask = true;
 								new Task().execute();
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
 							}
-                        }
-                    });
-                }
-            });
-	           
-	    	dialog = d;
-	    
-	    	break;
-	    	
+						}
+					});
+				}
+			});
+
+			dialog = d;
+
+			break;
+
 		case DIALOG_NO_QR:
 
 			builder.setTitle("No Barcode Scanner Found")
@@ -1095,7 +1091,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
-
 
 		default:
 			dialog = null;
@@ -1135,7 +1130,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						'8', '9' };
 			}
 		});
-		
+
 		qrCode = (Button) v.findViewById(R.id.qrCode);
 		qrCode.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("deprecation")
@@ -1254,6 +1249,125 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return ad;
 	}
 
+<<<<<<< HEAD
+=======
+	// Converts the captured picture's uri to a file that is save-able to the SD
+	// Card
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+
+		int apiLevel = getApiLevel();
+		if (apiLevel >= 11) {
+
+			String[] proj = { MediaStore.Images.Media.DATA,
+					MediaStore.Images.Media._ID,
+					MediaStore.Images.ImageColumns.ORIENTATION };
+			String selection = null;
+			String[] selectionArgs = null;
+			String sortOrder = null;
+
+			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
+					proj, selection, selectionArgs, sortOrder);
+
+			Cursor cursor = cursorLoader.loadInBackground();
+
+			int file_ColumnIndex = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			int orientation_ColumnIndex = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+			if (cursor.moveToFirst()) {
+				@SuppressWarnings("unused")
+				String orientation = cursor.getString(orientation_ColumnIndex);
+				return new File(cursor.getString(file_ColumnIndex));
+			}
+			return null;
+
+		} else {
+
+			Cursor cursor = null;
+			try {
+				String[] proj = { MediaStore.Images.Media.DATA,
+						MediaStore.Images.Media._ID,
+						MediaStore.Images.ImageColumns.ORIENTATION };
+				cursor = activity.managedQuery(imageUri, proj, // Which columns
+																// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
+						null); // Order-by clause (ascending by name)
+				int file_ColumnIndex = cursor
+						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				int orientation_ColumnIndex = cursor
+						.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+				if (cursor.moveToFirst()) {
+					@SuppressWarnings("unused")
+					String orientation = cursor
+							.getString(orientation_ColumnIndex);
+					return new File(cursor.getString(file_ColumnIndex));
+				}
+				return null;
+			} finally {
+				if (cursor != null) {
+					cursor.close();
+				}
+			}
+		}
+	}
+
+	// Converts the recorded video's uri to a file that is save-able to the SD
+	// Card
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
+
+		int apiLevel = getApiLevel();
+		if (apiLevel >= 11) {
+
+			String[] proj = { MediaStore.Video.Media.DATA,
+					MediaStore.Video.Media._ID };
+			String selection = null;
+			String[] selectionArgs = null;
+			String sortOrder = null;
+
+			CursorLoader cursorLoader = new CursorLoader(mContext, videoUri,
+					proj, selection, selectionArgs, sortOrder);
+
+			Cursor cursor = cursorLoader.loadInBackground();
+			int file_ColumnIndex = cursor
+					.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+			if (cursor.moveToFirst()) {
+				return new File(cursor.getString(file_ColumnIndex));
+			}
+			return null;
+
+		} else {
+
+			Cursor cursor = null;
+
+			try {
+				String[] proj = { MediaStore.Video.Media.DATA,
+						MediaStore.Video.Media._ID };
+				cursor = activity.managedQuery(videoUri, proj, // Which columns
+																// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
+						null); // Order-by clause (ascending by name)
+				int file_ColumnIndex = cursor
+						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+				if (cursor.moveToFirst()) {
+					return new File(cursor.getString(file_ColumnIndex));
+				}
+				return null;
+			} finally {
+				if (cursor != null) {
+					cursor.close();
+				}
+			}
+		}
+
+	}
+
+>>>>>>> master
 	// Performs tasks after returning to main UI from previous activities
 	@SuppressWarnings("deprecation")
 	@Override
@@ -1739,5 +1853,4 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm.enabledFields[LIGHT] = true;
 		}
 	}
-
 }
