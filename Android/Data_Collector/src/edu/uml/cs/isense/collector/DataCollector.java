@@ -40,10 +40,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -64,10 +66,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -89,7 +93,6 @@ import edu.uml.cs.isense.comm.RestAPI;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
-@SuppressLint("NewApi")
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -99,7 +102,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private Button startStop;
 	private Button browseButton;
-	private Button qrCode;
+	private static Button qrCode;
 	private Boolean running = false;
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -140,11 +143,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	private static final int EXPERIMENT_CODE = 1;
+	public static final int EXPERIMENT_CODE = 1;
 	public static final int SYNC_TIME_REQUESTED = 2;
 	public static final int CHOOSE_SENSORS_REQUESTED = 3;
 	public static final int QR_CODE_REQUESTED = 4;
-
+	
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -215,7 +218,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
 
-	private Handler mHandler;
+	private static Handler mHandler;
 	private boolean throughHandler = false;
 
 	File SDFile;
@@ -722,6 +725,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
+	@SuppressLint("HandlerLeak")
 	@SuppressWarnings("deprecation")
 	protected Dialog onCreateDialog(final int id) {
 
@@ -1003,62 +1007,64 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
-
+		
 		case DIALOG_DESCRIPTION:
-			LinearLayout layout = new LinearLayout(this);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			layout.setGravity(Gravity.CENTER_HORIZONTAL);
-			final EditText input = new EditText(this);
-			input.setSingleLine(true);
-			input.setKeyListener(DigitsKeyListener
-					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
-			input.setInputType(InputType.TYPE_CLASS_TEXT);
-			layout.setPadding(5, 0, 5, 0);
-			layout.addView(input);
+	    	LinearLayout layout = new LinearLayout(this);
+	        layout.setOrientation(LinearLayout.VERTICAL);
+	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+	        final EditText input = new EditText(this);
+	        input.setSingleLine(true);
+	        input.setKeyListener(DigitsKeyListener.getInstance(
+	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
+	        input.setInputType(InputType.TYPE_CLASS_TEXT);
+	        layout.setPadding(5, 0, 5, 0);
+	        layout.addView(input);
+	    	
+	    	final AlertDialog d = new AlertDialog.Builder(mContext)
+            .setTitle("Step 3:")
+            .setMessage("Enter a session description (or leave blank if you'd like an automatically generated description).")
+            .setCancelable(false)
+            .setView(layout)
+            .setPositiveButton("Upload To iSENSE",
+                    new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface d, int which) {
+                            //Do nothing here. We override the onclick
+                        }
+                    })
+            .setNegativeButton("Cancel", null)
+            .create();
 
-			final AlertDialog d = new AlertDialog.Builder(mContext)
-					.setTitle("Step 3:")
-					.setMessage(
-							"Enter a session description (or leave blank if you'd like an automatically generated description).")
-					.setCancelable(false)
-					.setView(layout)
-					.setPositiveButton("Upload To iSENSE",
-							new Dialog.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface d, int which) {
-									// Do nothing here. We override the onclick
-								}
-							}).setNegativeButton("Cancel", null).create();
+	    	d.setOnShowListener(new DialogInterface.OnShowListener() {
 
-			d.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
 
-				@Override
-				public void onShow(DialogInterface dialog) {
+                    Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                    b.setOnClickListener(new View.OnClickListener() {
 
-					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-					b.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View view) {
-							d.dismiss();
-							sessionDescription = input.getText().toString();
-							String isValid = experimentInput.getText()
-									.toString();
-							if (successLogin && (isValid.length() > 0)) {
+                        @Override
+                        public void onClick(View view) {
+                        	d.dismiss();
+                        	sessionDescription = input.getText().toString();
+                        	String isValid = experimentInput
+									.getText().toString();
+							if (successLogin
+									&& (isValid.length() > 0)) {
 								// executeIsenseTask = true;
 								new Task().execute();
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
 							}
-						}
-					});
-				}
-			});
-
-			dialog = d;
-
-			break;
-
+                        }
+                    });
+                }
+            });
+	           
+	    	dialog = d;
+	    
+	    	break;
+	    	
 		case DIALOG_NO_QR:
 
 			builder.setTitle("No Barcode Scanner Found")
@@ -1089,6 +1095,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
+
 
 		default:
 			dialog = null;
@@ -1128,7 +1135,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						'8', '9' };
 			}
 		});
-
+		
 		qrCode = (Button) v.findViewById(R.id.qrCode);
 		qrCode.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("deprecation")
