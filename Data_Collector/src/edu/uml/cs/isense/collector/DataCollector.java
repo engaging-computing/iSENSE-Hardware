@@ -38,7 +38,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -102,9 +102,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private Button startStop;
 	private Button browseButton;
+	private static Button qrCode;
 	private Boolean running = false;
 	private Vibrator vibrator;
-	private TextView picCount;
 	private TextView loginInfo;
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
@@ -127,25 +127,26 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_LOGIN = 1;
 	private static final int MENU_ITEM_UPLOAD = 2;
 	private static final int MENU_ITEM_TIME = 3;
+	private static final int MENU_ITEM_MEDIA = 4;
 
-	private static final int SAVE_DATA = 4;
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int EXPERIMENT_CODE = 7;
+	private static final int SAVE_DATA = 5;
+	private static final int DIALOG_SUMMARY = 6;
+	private static final int DIALOG_CHOICE = 7;
 	private static final int DIALOG_NO_ISENSE = 8;
 	private static final int RECORDING_STOPPED = 9;
 	private static final int DIALOG_NO_GPS = 10;
 	private static final int DIALOG_FORCE_STOP = 11;
 	private static final int DIALOG_DESCRIPTION = 12;
+	private static final int DIALOG_NO_QR = 13;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	public static final int CAMERA_PIC_REQUESTED = 1;
-	public static final int CAMERA_VID_REQUESTED = 2;
-	public static final int SYNC_TIME_REQUESTED = 3;
-	public static final int CHOOSE_SENSORS_REQUESTED = 4;
+	public static final int EXPERIMENT_CODE = 1;
+	public static final int SYNC_TIME_REQUESTED = 2;
+	public static final int CHOOSE_SENSORS_REQUESTED = 3;
+	public static final int QR_CODE_REQUESTED = 4;
 	
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -170,13 +171,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private String data;
 
-	private Uri imageUri;
-	private Uri videoUri;
-
 	private MediaPlayer mMediaPlayer;
-
-	private ArrayList<File> pictures;
-	private ArrayList<File> videos;
 
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
@@ -209,12 +204,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private EditText sessionName;
 	String nameOfSession = "";
-	String partialSessionName = "";
+	static String partialSessionName = "";
 
 	public static boolean inPausedState = false;
 
 	private static int mwidth = 1;
-	private static int mediaCount = 0;
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
@@ -238,7 +232,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static JSONArray dataSet;
 	public static Context mContext;
 
-	private static ArrayList<File> pictureArray = new ArrayList<File>();
+	public static ArrayList<File> pictureArray = new ArrayList<File>();
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
 
@@ -531,66 +525,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Adds pictures to the SD Card
-	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-		String uploadSessionString;
-
-		dateString = sdf.format(dt);
-
-		if (session.getText().toString().equals(getString(R.string.session)))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = session.getText().toString();
-
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < pictures.size(); i++) {
-			File f = pictures.get(i);
-			File newFile = new File(folder, uploadSessionString
-					+ " - " + dateString + "-" + (i + 1) + ".jpeg");
-			f.renameTo(newFile);
-			pictureArray.add(newFile);
-		}
-
-		pictures.clear();
-	}
-
-	// Adds videos to the SD Card
-	public void pushVideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-		String uploadSessionString;
-
-		dateString = sdf.format(dt);
-
-		if (session.getText().toString().equals(getString(R.string.session)))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = session.getText().toString();
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < videos.size(); i++) {
-			File f = videos.get(i);
-			File newFile = new File(folder, uploadSessionString
-					+ " - " + dateString + "-" + (i + 1) + ".3gp");
-			f.renameTo(newFile);
-		}
-
-		videos.clear();
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -600,10 +534,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
 	}
 
 	@Override
@@ -615,10 +545,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
 	}
 
 	@Override
@@ -643,7 +569,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -673,6 +598,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				R.drawable.ic_menu_upload);
 		menu.add(Menu.NONE, MENU_ITEM_TIME, Menu.NONE, "Sync Time").setIcon(
 				R.drawable.ic_menu_synctime);
+		menu.add(Menu.NONE, MENU_ITEM_MEDIA, Menu.NONE, "Media").setIcon(
+				R.drawable.ic_menu_media);
 		return true;
 	}
 
@@ -683,11 +610,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
@@ -709,6 +638,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		case MENU_ITEM_TIME:
 			Intent i = new Intent(DataCollector.this, SyncTime.class);
 			startActivityForResult(i, SYNC_TIME_REQUESTED);
+			return true;
+		case MENU_ITEM_MEDIA:
+			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
+			startActivity(iMedia);
 			return true;
 		}
 		return false;
@@ -809,31 +742,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 							showSessionName = partialSessionName;
 						}
 						session.setText("Session Name: " + showSessionName);
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
+						
 						break;
 					case DIALOG_CANCELED:
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
+					
 						break;
 					}
 
 				}
 			}, "Configure Options");
 			dialog.setCancelable(true);
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					if (pictures.size() > 0)
-						pushPicture();
-					if (videos.size() > 0)
-						pushVideo();
-				}
-			});
 
 			sessionName.setText(partialSessionName);
 			break;
@@ -890,7 +808,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			break;
 		case DIALOG_SUMMARY:
 
-			mediaCount = 0;
+			MediaManager.mediaCount = 0;
 			elapsedMillis = totalMillis;
 			elapsedSeconds = elapsedMillis / 1000;
 			elapsedMillis %= 1000;
@@ -935,8 +853,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
-									picCount.setText(getString(R.string.picAndVidCount)
-											+ mediaCount);
+									
 								}
 							}).setCancelable(true);
 
@@ -1137,6 +1054,38 @@ public class DataCollector extends Activity implements SensorEventListener,
 	    	dialog = d;
 	    
 	    	break;
+	    	
+		case DIALOG_NO_QR:
+
+			builder.setTitle("No Barcode Scanner Found")
+					.setMessage(
+							"Your device does not have the proper Barcode Scanner application installed "
+									+ "to use this feature.  However, "
+									+ "you may visit the Google Play store to download this application (\"Barcode Scanner\" "
+									+ "by the Zxing Team).")
+					.setPositiveButton("Visit URL",
+							new DialogInterface.OnClickListener() {
+								public void onClick(
+										DialogInterface dialoginterface, int i) {
+									String url = "https://play.google.com/store/apps/details?id=com.google.zxing.client.android";
+									Intent urlIntent = new Intent(
+											Intent.ACTION_VIEW);
+									urlIntent.setData(Uri.parse(url));
+									startActivity(urlIntent);
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								public void onClick(
+										DialogInterface dialoginterface, int i) {
+									dialoginterface.dismiss();
+								}
+							}).setCancelable(true);
+
+			dialog = builder.create();
+
+			break;
+
 
 		default:
 			dialog = null;
@@ -1177,6 +1126,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 						'8', '9' };
 			}
 		});
+		
+		qrCode = (Button) v.findViewById(R.id.qrCode);
+		qrCode.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(View v) {
+				try {
+					Intent intent = new Intent(
+							"com.google.zxing.client.android.SCAN");
+
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+					intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+					startActivityForResult(intent, QR_CODE_REQUESTED);
+				} catch (ActivityNotFoundException e) {
+					showDialog(DIALOG_NO_QR);
+				}
+			}
+		});
 
 		browseButton = (Button) v.findViewById(R.id.BrowseButton);
 		browseButton.setOnClickListener(new OnClickListener() {
@@ -1200,64 +1168,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			}
 
-		});
-
-		Button b = (Button) v.findViewById(R.id.pictureButton);
-
-		b.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues values = new ContentValues();
-
-					imageUri = getContentResolver().insert(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							values);
-
-					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
-							Toast.LENGTH_LONG, "x");
-				}
-
-			}
-
-		});
-
-		Button bv = (Button) v.findViewById(R.id.videoButton);
-
-		bv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues valuesVideos = new ContentValues();
-
-					videoUri = getContentResolver().insert(
-							MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-							valuesVideos);
-
-					Intent intentVid = new Intent(
-							MediaStore.ACTION_VIDEO_CAPTURE);
-					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-					intentVid.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
-							Toast.LENGTH_LONG, "x");
-				}
-			}
 		});
 
 		builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
@@ -1456,23 +1366,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertImageUriToFile(imageUri, this);
-				pictures.add(f);
-				mediaCount++;
-				picCount.setText(getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == CAMERA_VID_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertVideoUriToFile(videoUri, this);
-				videos.add(f);
-				mediaCount++;
-				picCount.setText("" + getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == EXPERIMENT_CODE) {
+		if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.pictures.experiments.exp_id");
@@ -1502,6 +1396,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
 			}
+		} else if (requestCode == QR_CODE_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				String contents = data.getStringExtra("SCAN_RESULT");
+				Log.d("QR", "Contents: " + contents);
+
+				String delimiter = "id=";
+				String[] split = contents.split(delimiter);
+				experimentInput.setText(split[1]);
+
+				// Handle successful scan
+			} else if (resultCode == RESULT_CANCELED) {
+				// Handle cancel
+			}
+
 		}
 
 	}
@@ -1630,7 +1538,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			len = 0;
 			len2 = 0;
-			mediaCount = 0;
+			MediaManager.mediaCount = 0;
 			session.setText(getString(R.string.session));
 
 			if (status400)
@@ -1642,7 +1550,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 
-			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			showDialog(DIALOG_SUMMARY);
 
 		}
@@ -1677,16 +1584,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 
-		pictures = new ArrayList<File>();
-		videos = new ArrayList<File>();
-
 		startStop = (Button) findViewById(R.id.startStop);
 		
 		session = (TextView) findViewById(R.id.sessionName);
 		time    = (TextView) findViewById(R.id.time);
-
-		picCount = (TextView) findViewById(R.id.pictureCount);
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 
 		loginInfo = (TextView) findViewById(R.id.loginInfo);
 		loginInfo.setText(R.string.notLoggedIn);
