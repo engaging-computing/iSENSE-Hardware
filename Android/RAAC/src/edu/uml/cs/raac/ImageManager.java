@@ -28,17 +28,15 @@
 
 package edu.uml.cs.raac;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -46,10 +44,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -65,7 +61,8 @@ public class ImageManager {
     private static ImageManager instance = null;
     private HashMap<String, ImageView> viewMap;
     private ExecutorService executor;
-    private Collection<Exec> execs;
+    @SuppressWarnings("unused")
+	private Collection<Exec> execs;
     
     private final Handler handler = new Handler() {
 		@Override

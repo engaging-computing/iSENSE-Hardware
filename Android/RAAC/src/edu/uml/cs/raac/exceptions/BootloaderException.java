@@ -35,6 +35,7 @@ package edu.uml.cs.raac.exceptions;
  * @deprecated Not sure whether or not this should be called. SVN is screwey and I wrote it a long time ago. 
  * @author James Dalphond <jdalphon@cs.uml.edu>
  */
+@SuppressWarnings("serial")
 public class BootloaderException extends Exception{
 
     public int error;

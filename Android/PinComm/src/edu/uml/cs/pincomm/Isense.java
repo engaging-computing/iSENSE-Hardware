@@ -34,7 +34,9 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 
@@ -47,7 +49,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -55,34 +56,31 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import edu.uml.cs.pincomm.comm.RestAPI;
+import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.pincomm.exceptions.NoDataException;
 import edu.uml.cs.pincomm.pincushion.BluetoothService;
 import edu.uml.cs.pincomm.pincushion.pinpointInterface;
 
-public class Isense extends Activity implements OnClickListener, TextWatcher {
+public class Isense extends Activity implements OnClickListener {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
 	Button pagePrev, pageNext;
@@ -92,9 +90,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	ImageView spinner;
 	RelativeLayout launchLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
+	TextView minField, maxField, aveField, medField, btStatus;
+	Spinner sensorHead;
 	LinearLayout dataLayout;
-	EditText nameField;
 	static pinpointInterface ppi;
 	private BluetoothService mChatService = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
@@ -104,12 +102,16 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
 	public static String experimentId = "427";
-	String username = "sor";
-	String password = "sort";
+	String username = "";
+	String password = "";
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	String sensorType;
+	String sessionName, sessionDesc, sessionStreet, sessionCity;
+
+	ArrayList<String> trackedFields;
+	int amtTrackedFields = 0;
+
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi;
 	private ProgressDialog dia;
@@ -117,8 +119,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	public static Context mContext;
 	int currPage = 0; //current page of data to display
 
-	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
+	ArrayList<ArrayList<Double>> sensorData = new ArrayList<ArrayList<Double>>();
+
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE = 1;
@@ -127,7 +130,9 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 	private static final int REQUEST_ENABLE_BT = 4;
 	private static final int REQUEST_VIEW_DATA = 5;
 	private static final int CHANGE_EXPERIMENT = 6;
-	private static final int LOGIN_BOX = 7;
+	private static final int CHANGE_FIELDS = 7;
+	private static final int LOGIN_BOX = 8;
+	private static final int UPLOAD_BOX = 9;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -144,6 +149,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+
+		//Initialize sensor data nested array list
+		for(int i = 0; i<16; i++) {
+			sensorData.add(new ArrayList<Double>());
+		}
 
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
@@ -187,7 +197,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	//Set up all views from the XML layout
 	public void initializeLayout() {
-		SharedPreferences sensorPrefs = getSharedPreferences("SENSORS", 0);
+
 		SharedPreferences defaultPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
@@ -207,16 +217,17 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
-		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
-		nameField = (EditText) findViewById(R.id.nameField);	
+		sensorHead = (Spinner) findViewById(R.id.sensorNameHeader);
 
-		sensorHead.setText("BTA1: " + sensorPrefs.getString("name_bta1", "None"));
-		sensorType = sensorPrefs.getString("name_bta1", "None");
+		trackedFields = new ArrayList<String>();
+		amtTrackedFields = defaultPrefs.getInt("numFields", 0);
+		trackedFields.clear();
+		for (int i = 0; i < amtTrackedFields; i++) {
+			trackedFields.add(defaultPrefs.getString("trackedField"+i, ""));
+		}
 
-		nameField.setText(defaultPrefs.getString("group_name", ""));
-		
-		nameField.addTextChangedListener(this);
-		
+		fillSensorSpinner();
+
 		pageLabel.setText("Page "+ (currPage+1));
 
 		pinpointBtn.setOnClickListener(this);
@@ -224,7 +235,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		pushToISENSE.setOnClickListener(this);
 		pagePrev.setOnClickListener(this);
 		pageNext.setOnClickListener(this);
-		
+
 		if(currPage == 0) {
 			pagePrev.setEnabled(false);
 		}
@@ -296,7 +307,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		} else if (item.getItemId() == R.id.menu_experiment) {
 			Intent i = new Intent(this, ChangeExperiment.class);
 			startActivityForResult(i, CHANGE_EXPERIMENT);
-		} 
+		} else if (item.getItemId() == R.id.menu_fields) {
+			Intent i = new Intent(this, ChangeFields.class);
+			i.putExtra("expID", Integer.parseInt(experimentId));
+			startActivityForResult(i, CHANGE_FIELDS);
+		}
 		return true;
 
 	}
@@ -336,8 +351,11 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 			};
 
-			if( bta1Data != null || timeData != null ) {
-				bta1Data.clear();
+			if( timeData != null ) {
+				//clear data from all sensor arraylists
+				for(int i = 0; i<16; i++) {
+					sensorData.get(i).clear();
+				}
 				timeData.clear();
 			}
 
@@ -383,15 +401,13 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			pushToISENSE.setEnabled(true);
 		}
 		if (v == pushToISENSE) {
-			if (nameField.length() == 0) Toast.makeText(this, "Please enter a session name.", Toast.LENGTH_LONG).show();
-			else {
-				if (!dataRdy) {
-					Toast.makeText(this, "There is no data to upload.", Toast.LENGTH_LONG).show();
-				} else {
-					uploadData();
-				}
 
-			} 
+			if (!dataRdy) {
+				Toast.makeText(this, "There is no data to upload.", Toast.LENGTH_LONG).show();
+			} else {
+				uploadData();
+			}
+
 		}
 		if ( v == pagePrev ) {
 			currPage--;
@@ -403,13 +419,74 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 	}
 
+	public void fillSensorSpinner() {
+		SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final SharedPreferences.Editor editor = myPrefs.edit();
+		String[] sensorArray;
+
+		//Allow the user to look at data from all sensors if no experiment/fields have been set up
+		if(amtTrackedFields == 0) {
+			//Fills Sensor Spinner with all the PINPoint's sensors
+			//includes the names of external sensors the user has selected
+			Resources res = getResources();
+			SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+
+			String[] defSensorArray = res.getStringArray(R.array.pptsensors_array);
+			defSensorArray[14] = prefs.getString("name_bta1", "BTA 1");
+			defSensorArray[15] = prefs.getString("name_bta2", "BTA 2");
+			defSensorArray[16] = prefs.getString("name_mini1", "Minijack 1");
+			defSensorArray[17] = prefs.getString("name_mini2", "Minijack 2");
+			trackedFields.clear();
+			for (int i = 2; i < 18; i++) {
+				trackedFields.add(defSensorArray[i]);
+			}
+		}
+
+		ArrayList<String> trackedFieldsMod = (ArrayList<String>) trackedFields.clone();
+		int prevSelection = myPrefs.getInt("sensorspin_selection", -1);
+
+		List<String> toRemove = Arrays.asList("Time (GMT)", "None", "No Sensor");
+		trackedFieldsMod.removeAll( toRemove );
+
+		sensorArray = trackedFieldsMod.toArray(new String[trackedFieldsMod.size()]);
+		ArrayAdapter<String> sensorAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sensorArray);
+		sensorHead.setAdapter(sensorAdapter);
+		if(prevSelection != -1) {
+			sensorHead.setSelection(prevSelection, false);
+		} else {
+			sensorHead.setSelection(0, false);
+		}
+		editor.putString("sensorspin_value", sensorHead.getSelectedItem().toString());
+		editor.commit();
+		sensorHead.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+				editor.putInt("sensorspin_selection", pos);
+				editor.putString("sensorspin_value", parent.getItemAtPosition(pos).toString());
+				editor.commit();
+				findStatistics();
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				//
+			}
+		});
+	}
+
 	public void prepDataForUpload() {
 		for (int i = 0; i < data.size(); i++) {
 
 			String[] strray = data.get(i);
 			timeData.add(fmtData(strray[0]));
-			bta1Data.add(Double.parseDouble(strray[13]));
-			
+			//Add data from each of the sensors
+			for(int j = 0; j<16; j++) {
+				try {
+					sensorData.get(j).add(Double.parseDouble(strray[j+1]));
+				} catch (NumberFormatException e) {
+					sensorData.get(j).add(0.0);
+				}
+			}
+
 		}
 
 		findStatistics();
@@ -417,15 +494,15 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 
 	public void writeDataToScreen( int page ) {
 		dataLayout.removeAllViews();
-		
+
 		pageLabel.setText("Page "+ (currPage+1));
-		
+
 		if(page == 0) {
 			pagePrev.setEnabled(false);
 		} else {
 			pagePrev.setEnabled(true);
 		}
-		
+
 		int topPoint = data.size()-(page*10)-1;
 		int bottomPoint = topPoint - 9;
 		if (bottomPoint <= 0) {
@@ -437,7 +514,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			pageNext.setEnabled(true);
 		}
 
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
 
 		try {
@@ -449,33 +525,24 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
-				newRow.setSensor1Name(prefs.getString("name_bta1", "BTA 1"));
-				//for (String str : strray) {
-				//x++;
-				//					switch(x) {
-				//					case 1: label = "Time (GMT)"; break;
-				//					//case 2: label = "Latitude"; break;
-				//					//case 3: label = "Longitude"; break;
-				//					//case 4: label = "Altitude GPS (m)"; break;
-				//					//case 5: label = "Altitude (m)"; break;
-				//					//case 6: label = "Pressure (atm)"; break;
-				//					//case 7: label = "Air Temperature (c)"; break;
-				//					//case 8: label = "Humidity (%rh)"; break;
-				//					//case 9: label = "Light (lux)"; break;
-				//					//case 10: label = "X-Accel"; break;
-				//					//case 11: label = "Y-Accel"; break;
-				//					//case 12: label = "Z-Accel"; break;
-				//					//case 13: label = "Acceleration"; break;
-				//					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
-				//					//case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
-				//					//case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
-				//					//case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
-				//					default:
-				//						continue;
-				//					}
 
-				newRow.setTime(strray[0]);
-				newRow.setSensor1Data(df.format(Double.parseDouble(strray[13])));
+				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+				String[] allSensors = getResources().getStringArray(R.array.pptsensors_array);
+				allSensors[14] = prefs.getString("name_bta1", "BTA 1");
+				allSensors[15] = prefs.getString("name_bta2", "BTA 2");
+				allSensors[16] = prefs.getString("name_mini1", "Minijack 1");
+				allSensors[17] = prefs.getString("name_mini2", "Minijack 2");
+
+				for (int j = 0; j < amtTrackedFields; j++) {
+					String field = trackedFields.get(j);
+					if(field.equals("Time (GMT)")) {
+						newRow.addField(field, strray[0]);
+					} else if(!field.equals("None") && !field.equals("No Sensor")) {
+						getResources().getStringArray(R.array.pptsensors_array);
+						int index = Arrays.asList(allSensors).indexOf(field);
+						newRow.addField(field, df.format(Double.parseDouble(strray[index-1])));
+					}
+				}
 
 				dataLayout.addView(newRow);
 				dataScroller.post(new Runnable() {
@@ -495,12 +562,26 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		DecimalFormat form = new DecimalFormat("0.0000");
 		double min, max, ave, med;
 		double temp = 0;
+		int lookup = 0;
 
-		if (bta1Data.size() != 0) {
-			min = bta1Data.get(0);
-			max = bta1Data.get(0);
+		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+		SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+		ArrayList<String> allSensors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.pptsensors_array)));
+		allSensors.set(14, prefs.getString("name_bta1", "BTA 1"));
+		allSensors.set(15, prefs.getString("name_bta2", "BTA 2"));
+		allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
+		allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
+		allSensors.remove(0);
+		allSensors.remove(0);
 
-			for (double i : bta1Data) {
+		System.out.println(prefs2.getString("sensorspin_value", ""));
+		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
+
+		if (sensorData.get(lookup).size() != 0) {
+			min = sensorData.get(lookup).get(0);
+			max = sensorData.get(lookup).get(0);
+
+			for (double i : sensorData.get(lookup)) {
 				if (i < min) {
 					min = i;
 				}
@@ -509,7 +590,7 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				}
 				temp += i;
 			}
-			ave = temp / bta1Data.size();
+			ave = temp / sensorData.get(lookup).size();
 
 			datMin = "" + form.format(min);
 			datMax = "" + form.format(max);
@@ -519,12 +600,12 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 			maxField.setText(datMax);
 			aveField.setText(datAve);
 
-			if (bta1Data.size() == 1) {
-				med = bta1Data.get(0);
-			} else if (bta1Data.size() % 2 == 0) {
-				med = bta1Data.get((bta1Data.size() + 1) / 2);
+			if (sensorData.get(lookup).size() == 1) {
+				med = sensorData.get(lookup).get(0);
+			} else if (sensorData.get(lookup).size() % 2 == 0) {
+				med = sensorData.get(lookup).get((sensorData.get(lookup).size() + 1) / 2);
 			} else {
-				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
+				med = (sensorData.get(lookup).get((sensorData.get(lookup).size() / 2)) + sensorData.get(lookup).get((sensorData.get(lookup)
 						.size() + 1) / 2)) / 2;
 			}
 
@@ -600,8 +681,6 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				break;
 			case BluetoothService.MESSAGE_WRITE:
 			case BluetoothService.MESSAGE_READ:
-				byte[] readBuf = (byte[]) msg.obj;
-				String readMessage = new String(readBuf, 0, msg.arg1);
 				break;
 			case BluetoothService.MESSAGE_DEVICE_NAME:
 				break;
@@ -677,10 +756,8 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				editor.putString("name_mini2",
 						data.getExtras().getString("mininame2"));
 
-				sensorHead.setText("BTA1: " + data.getExtras().getString("btaname1"));
-				sensorType = data.getExtras().getString("btaname1");
-
 				editor.commit();
+				fillSensorSpinner();
 			}
 			break;
 		case REQUEST_VIEW_DATA:
@@ -714,53 +791,106 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 				Toast.makeText(this, "Experiment ID set to "+data.getExtras().getInt("experimentID"), Toast.LENGTH_SHORT).show();
 				experimentId = ""+data.getExtras().getInt("experimentID");
 
+				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new experiment
+				fillSensorSpinner();
+
+				prefsEditor.putBoolean("fields_set", false);
 				prefsEditor.putString("isense_expId", experimentId);
 				prefsEditor.commit();
+
+				//Launch field selection dialog
+				Intent i = new Intent(this, ChangeFields.class);
+				i.putExtra("expID", Integer.parseInt(experimentId));
+				startActivityForResult(i, CHANGE_FIELDS);
 			}
 			break;
+		case UPLOAD_BOX:
+			if (resultCode == RESULT_OK) {
+
+				sessionName = data.getExtras().getString("myName");
+				sessionDesc = data.getExtras().getString("myDesc");
+				sessionStreet = data.getExtras().getString("myStreet");
+				sessionCity = data.getExtras().getString("myCity");
+
+				SharedPreferences myPrefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
+
+				ArrayList<String> allSensors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.pptsensors_array)));
+				allSensors.set(14, prefs.getString("name_bta1", "BTA 1"));
+				allSensors.set(15, prefs.getString("name_bta2", "BTA 2"));
+				allSensors.set(16, prefs.getString("name_mini1", "Minijack 1"));
+				allSensors.set(17, prefs.getString("name_mini2", "Minijack 2"));
+				allSensors.remove(0);
+				allSensors.remove(1);
+
+				dataSet = new JSONArray();
+				JSONArray dataJSON;
+				for( int j = 0; j < timeData.size(); j++) {
+					dataJSON = new JSONArray();
+					dataJSON.put(timeData.get(j));
+					for (int i = 1; i <= amtTrackedFields; i++) {
+						int tempindex = allSensors.indexOf(myPrefs.getString("trackedField"+i, ""));
+						if(tempindex != -1) {
+							dataJSON.put(sensorData.get(tempindex).get(j));
+						} else {
+							dataJSON.put("");
+						}
+					}
+					dataSet.put(dataJSON);
+				}
+
+				new UploadTask().execute();
+
+			}
+			break;
+		case CHANGE_FIELDS:
+			if (resultCode == RESULT_OK) {
+				SharedPreferences myPrefs = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences.Editor prefsEditor = myPrefs.edit();
+
+				amtTrackedFields = data.getExtras().getInt("fields_num");
+				trackedFields = new ArrayList<String>();
+				trackedFields.clear();
+				for (int i = 0; i < amtTrackedFields; i++) {
+					prefsEditor.putString("trackedField"+i, data.getExtras().getStringArray("fields_array")[i]);
+					trackedFields.add(data.getExtras().getStringArray("fields_array")[i]);
+				}
+
+				prefsEditor.putInt("sensorspin_selection", -1); //Undo any sensor-spinner selections, as they may not apply to new fields
+				prefsEditor.putBoolean("fields_set", true);
+				prefsEditor.putInt("numFields", amtTrackedFields);
+				prefsEditor.commit();
+
+				fillSensorSpinner();
+			}
 		}
 	}
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
-		if (timeData.size() != bta1Data.size()) {
-			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
+		SharedPreferences myPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		if (timeData.size() != sensorData.get(12).size()) {
+			Toast.makeText(this, "An unexpected error occurred! Try pressing Retrieve Data again",
 					Toast.LENGTH_LONG).show();
 			return;
-		}
-
-		if (experimentId.equals("")) {
+		} else if (experimentId.equals("")) {
 			Toast.makeText(this, "No experiment set, please choose Select Experiment from the menu",
 					Toast.LENGTH_LONG).show();
 			return;
-		}
-
-		dataSet = new JSONArray();
-
-		JSONArray dataJSON;
-		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
-			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put(bta1Data.get(i));
-				dataJSON.put("");
-				dataSet.put(dataJSON);
-			}
-		else if (sensorType.equals("Vernier pH Sensor")) {
-			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put("");
-				dataJSON.put(bta1Data.get(i));
-				dataSet.put(dataJSON);
-			}
-		}
-		else {
-			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
+		} else if (myPrefs.getBoolean("fields_set", false) == false) {
+			Toast.makeText(this, "Fields not setup for upload. Please choose Setup Fields from the menu",
+					Toast.LENGTH_LONG).show();
 			return;
 		}
 
-		new UploadTask().execute();
+		//Launch dialog for user to fill in final information about the upload
+		Intent i = new Intent(this, FinalizeUpload.class);
+		startActivityForResult(i, UPLOAD_BOX);
+
 	}
 
 	//the uploading thread that does all the work
@@ -769,17 +899,13 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		@Override
 		public void run() {
 
-			String nameOfSession = nameField.getText().toString();
-
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
 
 			if (loggedIn) {
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(experimentId, 
-							nameOfSession, 
-							"Automated Submission Through Android App", 
-							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
+					sessionId = rapi.createSession(experimentId, sessionName, sessionDesc, 
+							sessionStreet, sessionCity, "United States");
 					if (sessionId != -1) {
 						rapi.putSessionData(sessionId, experimentId, dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
@@ -882,32 +1008,5 @@ public class Isense extends Activity implements OnClickListener, TextWatcher {
 		}
 
 	}
-
-	@Override
-	public void afterTextChanged(Editable arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-			int arg3) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-
-		SharedPreferences myPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor prefsEditor = myPrefs.edit();
-
-		prefsEditor.putString("group_name", nameField.getText().toString());
-
-		prefsEditor.commit();
-
-	}
-
 
 }

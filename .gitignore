@@ -1,0 +1,10 @@
+#	Class Files
+
+*.class
+
+#	Useless Mac files
+
+*.DS_Store
+
+#	Backup Files
+*.*~

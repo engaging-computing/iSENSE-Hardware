@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -52,6 +53,16 @@
         <activity
             android:name=".ChangeExperiment"
             android:label="@string/change_eid"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+        <activity
+            android:name=".ChangeFields"
+            android:label="@string/label_fieldsbox"
+            android:theme="@style/Theme.MyDialogTheme">
+        </activity>
+        <activity
+            android:name=".FinalizeUpload"
+            android:label="@string/finalize_label"
             android:theme="@style/Theme.MyDialogTheme">
         </activity>
         <activity

@@ -6,21 +6,26 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import edu.uml.cs.pincomm.comm.RestAPI;
-import edu.uml.cs.pincomm.objects.Experiment;
+import android.widget.TextView;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 
 public class ChangeExperiment extends Activity implements OnClickListener {
 	Button back, next;
+	TextView currPage;
 	static LinearLayout expLayout;
 	static Context myContext;
 	int page = 1;
+	SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +35,15 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 		expLayout    = (LinearLayout) findViewById(R.id.exprList);
 		back     = (Button)   findViewById(R.id.experiment_back);
 		next = (Button)   findViewById(R.id.experiment_forward);
+		currPage = (TextView) findViewById(R.id.currPageInd);
 
 		back.setOnClickListener(this);
 		next.setOnClickListener(this);
 		back.setEnabled(false);
 
 		myContext = this;
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		reloadExperiments();
 	}
@@ -49,7 +57,7 @@ public class ChangeExperiment extends Activity implements OnClickListener {
 		} else {
 			back.setEnabled(true);
 		}
-
+		currPage.setText("Page "+page);
 	}
 	
 	public void choseExp(int expId) {
@@ -111,6 +119,9 @@ class LoadExperimentListTask extends AsyncTask<Integer, Void, ArrayList<Experime
 			currRow.setLastMod("Last modified "+exp.timemodified);
 			if(i%2 != 0) {
 				currRow.setBackgroundColor(res.getColor(R.color.rowcols));
+			}
+			if((""+exp.experiment_id).equals(myAct.prefs.getString("isense_expId", "0"))) {
+				currRow.setBackgroundColor(res.getColor(R.color.rowcolselected));
 			}
 			currRow.setClickListener(new OnClickListener() {
 				@Override

@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.TimeZone;
 
 import android.app.ProgressDialog;
-
 import edu.uml.cs.pincomm.exceptions.ChecksumException;
 import edu.uml.cs.pincomm.exceptions.IncorrectDeviceException;
 import edu.uml.cs.pincomm.exceptions.NoConnectionException;
