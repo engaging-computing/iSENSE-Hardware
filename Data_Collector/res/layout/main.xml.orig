@@ -90,7 +90,11 @@
 			android:textSize="15sp"
 			android:text="@+string/menuDirections"
 			android:textColor="@android:color/white"/>
+<<<<<<< HEAD
+		
+=======
 				
+>>>>>>> upstream/master
 	</LinearLayout>
 	
 	
