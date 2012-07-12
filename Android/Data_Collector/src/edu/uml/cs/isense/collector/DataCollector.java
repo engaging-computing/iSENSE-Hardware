@@ -38,14 +38,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -66,12 +64,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -93,6 +89,7 @@ import edu.uml.cs.isense.comm.RestAPI;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
+@SuppressLint("NewApi")
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -102,9 +99,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private Button startStop;
 	private Button browseButton;
+	private Button qrCode;
 	private Boolean running = false;
 	private Vibrator vibrator;
-	private TextView picCount;
 	private TextView loginInfo;
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
@@ -127,26 +124,27 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_LOGIN = 1;
 	private static final int MENU_ITEM_UPLOAD = 2;
 	private static final int MENU_ITEM_TIME = 3;
+	private static final int MENU_ITEM_MEDIA = 4;
 
-	private static final int SAVE_DATA = 4;
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int EXPERIMENT_CODE = 7;
+	private static final int SAVE_DATA = 5;
+	private static final int DIALOG_SUMMARY = 6;
+	private static final int DIALOG_CHOICE = 7;
 	private static final int DIALOG_NO_ISENSE = 8;
 	private static final int RECORDING_STOPPED = 9;
 	private static final int DIALOG_NO_GPS = 10;
 	private static final int DIALOG_FORCE_STOP = 11;
 	private static final int DIALOG_DESCRIPTION = 12;
+	private static final int DIALOG_NO_QR = 13;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	public static final int CAMERA_PIC_REQUESTED = 1;
-	public static final int CAMERA_VID_REQUESTED = 2;
-	public static final int SYNC_TIME_REQUESTED = 3;
-	public static final int CHOOSE_SENSORS_REQUESTED = 4;
-	
+	private static final int EXPERIMENT_CODE = 1;
+	public static final int SYNC_TIME_REQUESTED = 2;
+	public static final int CHOOSE_SENSORS_REQUESTED = 3;
+	public static final int QR_CODE_REQUESTED = 4;
+
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -164,19 +162,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int PRESSURE = 14;
 	private static final int ALTITUDE = 15;
 	private static final int LIGHT = 16;
-	
+
 	private static final int TEMPERATURE_F = 17;
 	private static final int TEMPERATURE_K = 18;
 
 	private String data;
 
-	private Uri imageUri;
-	private Uri videoUri;
-
 	private MediaPlayer mMediaPlayer;
-
-	private ArrayList<File> pictures;
-	private ArrayList<File> videos;
 
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
@@ -209,12 +201,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private EditText sessionName;
 	String nameOfSession = "";
-	String partialSessionName = "";
+	public static String partialSessionName = "";
 
 	public static boolean inPausedState = false;
 
 	private static int mwidth = 1;
-	private static int mediaCount = 0;
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
@@ -224,7 +215,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
 
-	private static Handler mHandler;
+	private Handler mHandler;
 	private boolean throughHandler = false;
 
 	File SDFile;
@@ -238,7 +229,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static JSONArray dataSet;
 	public static Context mContext;
 
-	private static ArrayList<File> pictureArray = new ArrayList<File>();
+	public static ArrayList<File> pictureArray = new ArrayList<File>();
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
 
@@ -293,12 +284,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 						time.setText(R.string.timeElapsed);
 
 						timeTimer.cancel();
-						
+
 						startStop.getBackground().setColorFilter(0xFFFF0000,
 								PorterDuff.Mode.MULTIPLY);
 						mScreen.setBackgroundResource(R.drawable.background);
 						isenseLogo.setImageResource(R.drawable.logo_red);
-						
+
 						choiceViaMenu = false;
 
 						if (sdCardError)
@@ -390,9 +381,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 									if (dfm.enabledFields[LONGITUDE])
 										f.longitude = loc.getLongitude();
 									if (dfm.enabledFields[HEADING_DEG])
-										f.angle_deg = toThou.format(orientation[0]);
+										f.angle_deg = toThou
+												.format(orientation[0]);
 									if (dfm.enabledFields[HEADING_RAD])
-										f.angle_rad = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+										f.angle_rad = ""
+												+ (Double
+														.parseDouble(f.angle_deg) * (Math.PI / 180));
 									if (dfm.enabledFields[MAG_X])
 										f.mag_x = rawMag[0];
 									if (dfm.enabledFields[MAG_Y])
@@ -400,18 +394,23 @@ public class DataCollector extends Activity implements SensorEventListener,
 									if (dfm.enabledFields[MAG_Z])
 										f.mag_z = rawMag[2];
 									if (dfm.enabledFields[MAG_TOTAL])
-										f.mag_total = Math.sqrt(Math
-												.pow(f.mag_x, 2)
+										f.mag_total = Math.sqrt(Math.pow(
+												f.mag_x, 2)
 												+ Math.pow(f.mag_y, 2)
 												+ Math.pow(f.mag_z, 2));
 									if (dfm.enabledFields[TIME])
-										f.timeMillis = currentTime + elapsedMillis;
+										f.timeMillis = currentTime
+												+ elapsedMillis;
 									if (dfm.enabledFields[TEMPERATURE_C])
 										f.temperature_c = temperature;
 									if (dfm.enabledFields[TEMPERATURE_F])
-										f.temperature_f = "" + ((Double.parseDouble(temperature) * 1.8) + 32);
+										f.temperature_f = ""
+												+ ((Double
+														.parseDouble(temperature) * 1.8) + 32);
 									if (dfm.enabledFields[TEMPERATURE_K])
-										f.temperature_k = "" + (Double.parseDouble(temperature) + 273.15);
+										f.temperature_k = ""
+												+ (Double
+														.parseDouble(temperature) + 273.15);
 									if (dfm.enabledFields[PRESSURE])
 										f.pressure = pressure;
 									if (dfm.enabledFields[ALTITUDE])
@@ -488,8 +487,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, partialSessionName
-					+ " - " + dateString + ".csv");
+			SDFile = new File(folder, partialSessionName + " - " + dateString
+					+ ".csv");
 			sdFileName = partialSessionName + " - " + dateString;
 			Log.d("tag", sdFileName);
 
@@ -531,66 +530,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Adds pictures to the SD Card
-	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-		String uploadSessionString;
-
-		dateString = sdf.format(dt);
-
-		if (session.getText().toString().equals(getString(R.string.session)))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = session.getText().toString();
-
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < pictures.size(); i++) {
-			File f = pictures.get(i);
-			File newFile = new File(folder, uploadSessionString
-					+ " - " + dateString + "-" + (i + 1) + ".jpeg");
-			f.renameTo(newFile);
-			pictureArray.add(newFile);
-		}
-
-		pictures.clear();
-	}
-
-	// Adds videos to the SD Card
-	public void pushVideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-		String uploadSessionString;
-
-		dateString = sdf.format(dt);
-
-		if (session.getText().toString().equals(getString(R.string.session)))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = session.getText().toString();
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < videos.size(); i++) {
-			File f = videos.get(i);
-			File newFile = new File(folder, uploadSessionString
-					+ " - " + dateString + "-" + (i + 1) + ".3gp");
-			f.renameTo(newFile);
-		}
-
-		videos.clear();
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -600,10 +539,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
 	}
 
 	@Override
@@ -615,10 +550,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
 	}
 
 	@Override
@@ -643,7 +574,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -655,7 +585,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
 						Toast.LENGTH_LONG, "x");
 			else
-				w.make("Double press \"Back\" to exit.", Toast.LENGTH_SHORT, "check");
+				w.make("Double press \"Back\" to exit.", Toast.LENGTH_SHORT,
+						"check");
 
 		} else if (w.exitAppViaBack && !running) {
 			setupDone = false;
@@ -673,6 +604,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				R.drawable.ic_menu_upload);
 		menu.add(Menu.NONE, MENU_ITEM_TIME, Menu.NONE, "Sync Time").setIcon(
 				R.drawable.ic_menu_synctime);
+		menu.add(Menu.NONE, MENU_ITEM_MEDIA, Menu.NONE, "Media").setIcon(
+				R.drawable.ic_menu_media);
 		return true;
 	}
 
@@ -683,11 +616,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
@@ -710,6 +645,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			Intent i = new Intent(DataCollector.this, SyncTime.class);
 			startActivityForResult(i, SYNC_TIME_REQUESTED);
 			return true;
+		case MENU_ITEM_MEDIA:
+			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
+			startActivity(iMedia);
+			return true;
 		}
 		return false;
 	}
@@ -720,29 +659,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		
+
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y] || 
-					dfm.enabledFields[ACCEL_Z] || dfm.enabledFields[ACCEL_TOTAL]) {
-				
+			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
+					|| dfm.enabledFields[ACCEL_Z]
+					|| dfm.enabledFields[ACCEL_TOTAL]) {
+
 				rawAccel = event.values.clone();
 				accel[0] = event.values[0];
 				accel[1] = event.values[1];
 				accel[2] = event.values[2];
-				double accelSum = Math.pow(accel[0], 2) + Math.pow(accel[1], 2) + Math.pow(accel[2], 2);
-				accel[3] = FloatMath.sqrt((float) accelSum);
+				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y] || 
-					dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL] ||
-					dfm.enabledFields[HEADING_DEG] || dfm.enabledFields[HEADING_RAD]) {
-				
+			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
+					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
+					|| dfm.enabledFields[HEADING_DEG]
+					|| dfm.enabledFields[HEADING_RAD]) {
+
 				rawMag = event.values.clone();
 
 				float rotation[] = new float[9];
 
-				
 				if (SensorManager.getRotationMatrix(rotation, null, rawAccel,
 						rawMag)) {
 					orientation = new float[3];
@@ -751,7 +691,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-			if (dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] 
+			if (dfm.enabledFields[TEMPERATURE_C]
+					|| dfm.enabledFields[TEMPERATURE_F]
 					|| dfm.enabledFields[TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
@@ -759,7 +700,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				pressure = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
 			if (dfm.enabledFields[LIGHT])
-			light = toThou.format(event.values[0]);
+				light = toThou.format(event.values[0]);
 		}
 	}
 
@@ -781,7 +722,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	@SuppressLint("HandlerLeak")
 	@SuppressWarnings("deprecation")
 	protected Dialog onCreateDialog(final int id) {
 
@@ -804,36 +744,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 						setupDone = true;
 						String showSessionName;
 						if (partialSessionName.length() > 15) {
-							showSessionName = partialSessionName.substring(0, 15) + "...";
+							showSessionName = partialSessionName.substring(0,
+									15) + "...";
 						} else {
 							showSessionName = partialSessionName;
 						}
 						session.setText("Session Name: " + showSessionName);
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
+
 						break;
 					case DIALOG_CANCELED:
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
+
 						break;
 					}
 
 				}
 			}, "Configure Options");
 			dialog.setCancelable(true);
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					if (pictures.size() > 0)
-						pushPicture();
-					if (videos.size() > 0)
-						pushVideo();
-				}
-			});
 
 			sessionName.setText(partialSessionName);
 			break;
@@ -851,9 +777,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						String loginName = mPrefs.getString("username", "");
 						if (loginName.length() >= 18)
 							loginName = loginName.substring(0, 18) + "...";
-						loginInfo.setText("Username: "
-								+ loginName);
-						//loginInfo.setTextColor(Color.GREEN);
+						loginInfo.setText("Username: " + loginName);
+						// loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
 						w.make("Login successful", Toast.LENGTH_LONG, "check");
 						break;
@@ -890,7 +815,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			break;
 		case DIALOG_SUMMARY:
 
-			mediaCount = 0;
+			MediaManager.mediaCount = 0;
 			elapsedMillis = totalMillis;
 			elapsedSeconds = elapsedMillis / 1000;
 			elapsedMillis %= 1000;
@@ -935,8 +860,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
-									picCount.setText(getString(R.string.picAndVidCount)
-											+ mediaCount);
 								}
 							}).setCancelable(true);
 
@@ -1080,63 +1003,92 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
-		
+
 		case DIALOG_DESCRIPTION:
-	    	LinearLayout layout = new LinearLayout(this);
-	        layout.setOrientation(LinearLayout.VERTICAL);
-	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-	        final EditText input = new EditText(this);
-	        input.setSingleLine(true);
-	        input.setKeyListener(DigitsKeyListener.getInstance(
-	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
-	        input.setInputType(InputType.TYPE_CLASS_TEXT);
-	        layout.setPadding(5, 0, 5, 0);
-	        layout.addView(input);
-	    	
-	    	final AlertDialog d = new AlertDialog.Builder(mContext)
-            .setTitle("Step 3:")
-            .setMessage("Enter a session description (or leave blank if you'd like an automatically generated description).")
-            .setCancelable(false)
-            .setView(layout)
-            .setPositiveButton("Upload To iSENSE",
-                    new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface d, int which) {
-                            //Do nothing here. We override the onclick
-                        }
-                    })
-            .setNegativeButton("Cancel", null)
-            .create();
+			LinearLayout layout = new LinearLayout(this);
+			layout.setOrientation(LinearLayout.VERTICAL);
+			layout.setGravity(Gravity.CENTER_HORIZONTAL);
+			final EditText input = new EditText(this);
+			input.setSingleLine(true);
+			input.setKeyListener(DigitsKeyListener
+					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
+			input.setInputType(InputType.TYPE_CLASS_TEXT);
+			layout.setPadding(5, 0, 5, 0);
+			layout.addView(input);
 
-	    	d.setOnShowListener(new DialogInterface.OnShowListener() {
+			final AlertDialog d = new AlertDialog.Builder(mContext)
+					.setTitle("Step 3:")
+					.setMessage(
+							"Enter a session description (or leave blank if you'd like an automatically generated description).")
+					.setCancelable(false)
+					.setView(layout)
+					.setPositiveButton("Upload To iSENSE",
+							new Dialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int which) {
+									// Do nothing here. We override the onclick
+								}
+							}).setNegativeButton("Cancel", null).create();
 
-                @Override
-                public void onShow(DialogInterface dialog) {
+			d.setOnShowListener(new DialogInterface.OnShowListener() {
 
-                    Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                    b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onShow(DialogInterface dialog) {
 
-                        @Override
-                        public void onClick(View view) {
-                        	d.dismiss();
-                        	sessionDescription = input.getText().toString();
-                        	String isValid = experimentInput
-									.getText().toString();
-							if (successLogin
-									&& (isValid.length() > 0)) {
+					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							d.dismiss();
+							sessionDescription = input.getText().toString();
+							String isValid = experimentInput.getText()
+									.toString();
+							if (successLogin && (isValid.length() > 0)) {
 								// executeIsenseTask = true;
 								new Task().execute();
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
 							}
-                        }
-                    });
-                }
-            });
-	           
-	    	dialog = d;
-	    
-	    	break;
+						}
+					});
+				}
+			});
+
+			dialog = d;
+
+			break;
+
+		case DIALOG_NO_QR:
+
+			builder.setTitle("No Barcode Scanner Found")
+					.setMessage(
+							"Your device does not have the proper Barcode Scanner application installed "
+									+ "to use this feature.  However, "
+									+ "you may visit the Google Play store to download this application (\"Barcode Scanner\" "
+									+ "by the Zxing Team).")
+					.setPositiveButton("Visit URL",
+							new DialogInterface.OnClickListener() {
+								public void onClick(
+										DialogInterface dialoginterface, int i) {
+									String url = "https://play.google.com/store/apps/details?id=com.google.zxing.client.android";
+									Intent urlIntent = new Intent(
+											Intent.ACTION_VIEW);
+									urlIntent.setData(Uri.parse(url));
+									startActivity(urlIntent);
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								public void onClick(
+										DialogInterface dialoginterface, int i) {
+									dialoginterface.dismiss();
+								}
+							}).setCancelable(true);
+
+			dialog = builder.create();
+
+			break;
 
 		default:
 			dialog = null;
@@ -1151,7 +1103,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private AlertDialog getSavePrompt(final Handler h, String message) {
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
 
 		LayoutInflater vi = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -1175,6 +1126,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 			protected char[] getAcceptedChars() {
 				return new char[] { '0', '1', '2', '3', '4', '5', '6', '7',
 						'8', '9' };
+			}
+		});
+
+		qrCode = (Button) v.findViewById(R.id.qrCode);
+		qrCode.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(View v) {
+				try {
+					Intent intent = new Intent(
+							"com.google.zxing.client.android.SCAN");
+
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+					intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+					startActivityForResult(intent, QR_CODE_REQUESTED);
+				} catch (ActivityNotFoundException e) {
+					showDialog(DIALOG_NO_QR);
+				}
 			}
 		});
 
@@ -1202,65 +1172,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		});
 
-		Button b = (Button) v.findViewById(R.id.pictureButton);
-
-		b.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues values = new ContentValues();
-
-					imageUri = getContentResolver().insert(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							values);
-
-					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
-							Toast.LENGTH_LONG, "x");
-				}
-
-			}
-
-		});
-
-		Button bv = (Button) v.findViewById(R.id.videoButton);
-
-		bv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues valuesVideos = new ContentValues();
-
-					videoUri = getContentResolver().insert(
-							MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-							valuesVideos);
-
-					Intent intentVid = new Intent(
-							MediaStore.ACTION_VIDEO_CAPTURE);
-					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-					intentVid.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
-							Toast.LENGTH_LONG, "x");
-				}
-			}
-		});
-
-		builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("Okay",
+				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 					}
@@ -1291,7 +1204,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							experimentInput.setError("Enter an Experiment");
 							pass = false;
 						}
-						
+
 						if (pass) {
 
 							nameOfSession = sessionName.getText().toString();
@@ -1334,145 +1247,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return ad;
 	}
 
-	// Converts the captured picture's uri to a file that is save-able to the SD
-	// Card
-	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
-	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
-
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Images.Media.DATA,
-					MediaStore.Images.Media._ID,
-					MediaStore.Images.ImageColumns.ORIENTATION };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			int orientation_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-			if (cursor.moveToFirst()) {
-				@SuppressWarnings("unused")
-				String orientation = cursor.getString(orientation_ColumnIndex);
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-
-			Cursor cursor = null;
-			try {
-				String[] proj = { MediaStore.Images.Media.DATA,
-						MediaStore.Images.Media._ID,
-						MediaStore.Images.ImageColumns.ORIENTATION };
-				cursor = activity.managedQuery(imageUri, proj, // Which columns
-																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				int orientation_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-				if (cursor.moveToFirst()) {
-					@SuppressWarnings("unused")
-					String orientation = cursor
-							.getString(orientation_ColumnIndex);
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
-	}
-
-	// Converts the recorded video's uri to a file that is save-able to the SD
-	// Card
-	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
-	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
-
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Video.Media.DATA,
-					MediaStore.Video.Media._ID };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, videoUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-			if (cursor.moveToFirst()) {
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-
-			Cursor cursor = null;
-
-			try {
-				String[] proj = { MediaStore.Video.Media.DATA,
-						MediaStore.Video.Media._ID };
-				cursor = activity.managedQuery(videoUri, proj, // Which columns
-																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-				if (cursor.moveToFirst()) {
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
-
-	}
-
 	// Performs tasks after returning to main UI from previous activities
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertImageUriToFile(imageUri, this);
-				pictures.add(f);
-				mediaCount++;
-				picCount.setText(getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == CAMERA_VID_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertVideoUriToFile(videoUri, this);
-				videos.add(f);
-				mediaCount++;
-				picCount.setText("" + getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == EXPERIMENT_CODE) {
+		if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.pictures.experiments.exp_id");
@@ -1502,6 +1283,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
 			}
+		} else if (requestCode == QR_CODE_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				String contents = data.getStringExtra("SCAN_RESULT");
+				Log.d("QR", "Contents: " + contents);
+
+				String delimiter = "id=";
+				String[] split = contents.split(delimiter);
+				experimentInput.setText(split[1]);
+
+				// Handle successful scan
+			} else if (resultCode == RESULT_CANCELED) {
+				// Handle cancel
+			}
+
 		}
 
 	}
@@ -1537,7 +1332,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			String description;
 			if (sessionDescription.equals(""))
 				description = "Automated Submission Through Android Data Collection App";
@@ -1548,15 +1343,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			String eid = mPrefs.getString("experiment_id", "");
 
 			if (address == null || address.size() <= 0) {
-				sessionId = rapi.createSession(eid, nameOfSession,
-						description, "N/A",
-						"N/A", "United States");
+				sessionId = rapi.createSession(eid, nameOfSession, description,
+						"N/A", "N/A", "United States");
 			} else {
-				sessionId = rapi.createSession(eid, nameOfSession,
-						description, addr, city
-								+ ", " + state, country);
+				sessionId = rapi.createSession(eid, nameOfSession, description,
+						addr, city + ", " + state, country);
 			}
-			
+
 			sessionDescription = "";
 
 			// createSession Success Check
@@ -1576,17 +1369,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 					return;
 
 				int pic = pictureArray.size();
+				Log.d("pic", "pic array size = " + pic);
 
 				while (pic > 0) {
-					if (nameOfSession.equals(""))
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+					if (nameOfSession.equals("")) {
+						boolean success = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 								eid, sessionId, "*Session Name Not Provided*",
 								"N/A");
-					else
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+						Log.d("pic", "rapi called (1) " + success);
+					} else {
+						boolean success = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 								eid, sessionId, sessionName.getText()
 										.toString(), "N/A");
-
+						Log.d("pic", "rapi called (2) " + success);
+					}
 					pic--;
 
 				}
@@ -1630,7 +1426,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			len = 0;
 			len2 = 0;
-			mediaCount = 0;
+			MediaManager.mediaCount = 0;
 			session.setText(getString(R.string.session));
 
 			if (status400)
@@ -1642,7 +1438,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 
-			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			showDialog(DIALOG_SUMMARY);
 
 		}
@@ -1677,20 +1472,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 
-		pictures = new ArrayList<File>();
-		videos = new ArrayList<File>();
-
 		startStop = (Button) findViewById(R.id.startStop);
-		
-		session = (TextView) findViewById(R.id.sessionName);
-		time    = (TextView) findViewById(R.id.time);
 
-		picCount = (TextView) findViewById(R.id.pictureCount);
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
+		session = (TextView) findViewById(R.id.sessionName);
+		time = (TextView) findViewById(R.id.time);
 
 		loginInfo = (TextView) findViewById(R.id.loginInfo);
 		loginInfo.setText(R.string.notLoggedIn);
-		//loginInfo.setTextColor(Color.RED);
+		// loginInfo.setTextColor(Color.RED);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -1750,9 +1539,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			String loginName = mPrefs.getString("username", "");
 			if (loginName.length() >= 18)
 				loginName = loginName.substring(0, 18) + "...";
-			loginInfo.setText("Username: "
-					+ loginName);
-			//loginInfo.setTextColor(Color.GREEN);
+			loginInfo.setText("Username: " + loginName);
+			// loginInfo.setTextColor(Color.GREEN);
 			successLogin = true;
 		}
 	}
@@ -1795,35 +1583,44 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Registers Sensors
 	private void registerSensors() {
 		if (mSensorManager != null && setupDone && dfm != null) {
-			
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y] || 
-					dfm.enabledFields[ACCEL_Z] || dfm.enabledFields[ACCEL_TOTAL]) {
+
+			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
+					|| dfm.enabledFields[ACCEL_Z]
+					|| dfm.enabledFields[ACCEL_TOTAL]) {
 				mSensorManager.registerListener(DataCollector.this,
-						mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y] || 
-					dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL] ||
-					dfm.enabledFields[HEADING_DEG] || dfm.enabledFields[HEADING_RAD]) {
-				mSensorManager.registerListener(DataCollector.this, 
-						mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+
+			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
+					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
+					|| dfm.enabledFields[HEADING_DEG]
+					|| dfm.enabledFields[HEADING_RAD]) {
+				mSensorManager.registerListener(DataCollector.this,
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
-			if (dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] ||
-					dfm.enabledFields[TEMPERATURE_K] || dfm.enabledFields[ALTITUDE]) {
-				mSensorManager.registerListener(DataCollector.this, 
-						mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
-						SensorManager.SENSOR_DELAY_FASTEST);
+
+			if (dfm.enabledFields[TEMPERATURE_C]
+					|| dfm.enabledFields[TEMPERATURE_F]
+					|| dfm.enabledFields[TEMPERATURE_K]
+					|| dfm.enabledFields[ALTITUDE]) {
+				mSensorManager
+						.registerListener(
+								DataCollector.this,
+								mSensorManager
+										.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+								SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
+
 			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
+
 			if (dfm.enabledFields[LIGHT]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
@@ -1835,8 +1632,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Calculates Altitude from Temperature and Pressure if Possible
 	private String calcAltitude() {
-		if ((dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] 
-				|| dfm.enabledFields[TEMPERATURE_K]) && dfm.enabledFields[PRESSURE]) {
+		if ((dfm.enabledFields[TEMPERATURE_C]
+				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
+				&& dfm.enabledFields[PRESSURE]) {
 			if (pressure.equals("") || temperature.equals("")) {
 				return "";
 			} else {
@@ -1848,7 +1646,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				String altitude = toThou.format(temp);
 				return altitude;
 			}
-		} else return "";
+		} else
+			return "";
 	}
 
 	// Task for checking sensor availability along with enabling/disabling
@@ -1868,9 +1667,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			dfm = new DataFieldManager(Integer
-					.parseInt(experimentInput.getText()
-							.toString()), rapi, mContext, f);
+			dfm = new DataFieldManager(Integer.parseInt(experimentInput
+					.getText().toString()), rapi, mContext, f);
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
@@ -1888,10 +1686,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			Intent i = new Intent(mContext, ChooseSensorDialog.class);
 			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
-			
+
 		}
 	}
-	
+
 	private void getEnabledFields() {
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
@@ -1934,4 +1732,5 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm.enabledFields[LIGHT] = true;
 		}
 	}
+
 }

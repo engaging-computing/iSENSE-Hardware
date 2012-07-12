@@ -19,7 +19,7 @@
             android:paddingTop="12dip"
             android:text="@string/iSenseConfig"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="25dp"
             android:textSize="18dip" />
 
         <RelativeLayout
@@ -53,6 +53,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_marginTop="25dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -79,33 +80,29 @@
                 android:imeOptions="actionDone"
                 android:maxLength="5" />
 
-            <Button
-                android:id="@+id/BrowseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/browse" />
         </RelativeLayout>
-
+        
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:paddingBottom="5dp" >
+            
+            <Button
+            	android:id="@+id/qrCode"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_weight="1"
+            	android:text="@string/scan_qr" />
 
             <Button
-                android:id="@+id/pictureButton"
+                android:id="@+id/BrowseButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/takePic" />
-
-            <Button
-                android:id="@+id/videoButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/takeVid" />
+				android:layout_weight="1"
+                android:text="@string/browse" />      
         </LinearLayout>
+        
     </LinearLayout>
 
 </ScrollView>
