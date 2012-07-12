@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/mediaManagerInstructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="16dp"
+        android:text="@string/media_desc"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp" />
+
+    <Button
+        android:id="@+id/mediaPicture"
+        android:layout_marginBottom="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:background="@drawable/colorless"
+        android:textColor="@android:color/white"
+        android:text="@string/takePic" />
+
+    <Button
+        android:id="@+id/mediaVideo"
+        android:layout_marginBottom="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:background="@drawable/colorless"
+        android:textColor="@android:color/white"
+        android:text="@string/takeVid" />
+    
+    <Button
+        android:id="@+id/mediaBack"
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:background="@drawable/colorless"
+        android:textColor="@android:color/white"
+        android:text="@string/back" />
+
+    <TextView
+        android:id="@+id/mediaCounter"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:layout_height="wrap_content"
+        android:text="@string/picAndVidCount"
+        android:layout_marginBottom="15dp" />
+
+</LinearLayout>

@@ -90,17 +90,7 @@
 			android:textSize="15sp"
 			android:text="@+string/menuDirections"
 			android:textColor="@android:color/white"/>
-			
-		<TextView android:id="@+id/pictureCount"
-			android:gravity="center"
-			android:layout_height="fill_parent"
-			android:layout_width = "fill_parent"
-			android:layout_gravity="center_horizontal"
-			android:background="@android:color/transparent"
-			android:text="@+string/picAndVidCount"
-			android:textSize="15sp"
-			android:textColor="@android:color/white"/>
-		
+				
 	</LinearLayout>
 	
 	

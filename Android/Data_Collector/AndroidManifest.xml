@@ -39,6 +39,9 @@
         <activity android:name=".ChooseSensorDialog"
                   android:label="Step 2: Select Fields"
                   android:theme="@style/theme_dialog_black" />
+        <activity android:name=".MediaManager"
+            	  android:label="Media Manager"
+            	  android:theme="@style/theme_dialog_black" />
 
     </application>
 </manifest>
