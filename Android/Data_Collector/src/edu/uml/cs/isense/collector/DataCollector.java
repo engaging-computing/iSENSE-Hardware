@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -86,9 +87,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
+import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
-import edu.uml.cs.isense.collector.objects.ObscuredSharedPreferences;
+import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.supplements.Waffle;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
@@ -146,7 +150,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int SYNC_TIME_REQUESTED = 2;
 	public static final int CHOOSE_SENSORS_REQUESTED = 3;
 	public static final int QR_CODE_REQUESTED = 4;
-	
+	public static final int QUEUE_UPLOAD_REQUESTED = 5;
+
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -195,6 +200,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	Fields f;
 	public static SensorCompatibility sc;
 	LinkedList<String> acceptedFields;
+	public static Queue<DataSet> uploadQueue;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -232,9 +238,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Context mContext;
 
 	public static ArrayList<File> pictureArray = new ArrayList<File>();
-	public static ArrayList<File> pictures     = new ArrayList<File>();
-	public static ArrayList<File> videos       = new ArrayList<File>();
-	
+	public static ArrayList<File> pictures = new ArrayList<File>();
+	public static ArrayList<File> videos = new ArrayList<File>();
+
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
 
@@ -783,7 +789,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (loginName.length() >= 18)
 							loginName = loginName.substring(0, 18) + "...";
 						loginInfo.setText("Username: " + loginName);
-						// loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
 						w.make("Login successful", Toast.LENGTH_LONG, "check");
 						break;
@@ -892,9 +897,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 												.getText().toString();
 										if (successLogin
 												&& (isValid.length() > 0)) {
-											// executeIsenseTask = true;
 											dialoginterface.dismiss();
-											new Task().execute();
+											new UploadTask().execute();
 										} else {
 											showDialog(DIALOG_NO_ISENSE);
 										}
@@ -1008,64 +1012,61 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
-		
+
 		case DIALOG_DESCRIPTION:
-	    	LinearLayout layout = new LinearLayout(this);
-	        layout.setOrientation(LinearLayout.VERTICAL);
-	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-	        final EditText input = new EditText(this);
-	        input.setSingleLine(true);
-	        input.setKeyListener(DigitsKeyListener.getInstance(
-	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
-	        input.setInputType(InputType.TYPE_CLASS_TEXT);
-	        layout.setPadding(5, 0, 5, 0);
-	        layout.addView(input);
-	    	
-	    	final AlertDialog d = new AlertDialog.Builder(mContext)
-            .setTitle("Step 3:")
-            .setMessage("Enter a session description (or leave blank if you'd like an automatically generated description).")
-            .setCancelable(false)
-            .setView(layout)
-            .setPositiveButton("Upload To iSENSE",
-                    new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface d, int which) {
-                            //Do nothing here. We override the onclick
-                        }
-                    })
-            .setNegativeButton("Cancel", null)
-            .create();
+			LinearLayout layout = new LinearLayout(this);
+			layout.setOrientation(LinearLayout.VERTICAL);
+			layout.setGravity(Gravity.CENTER_HORIZONTAL);
+			final EditText input = new EditText(this);
+			input.setSingleLine(true);
+			input.setKeyListener(DigitsKeyListener
+					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
+			input.setInputType(InputType.TYPE_CLASS_TEXT);
+			layout.setPadding(5, 0, 5, 0);
+			layout.addView(input);
 
-	    	d.setOnShowListener(new DialogInterface.OnShowListener() {
+			final AlertDialog d = new AlertDialog.Builder(mContext)
+					.setTitle("Step 3:")
+					.setMessage(
+							"Enter a session description (or leave blank if you'd like an automatically generated description).")
+					.setCancelable(false)
+					.setView(layout)
+					.setPositiveButton("Upload To iSENSE",
+							new Dialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int which) {
+									// Do nothing here. We override the onclick
+								}
+							}).setNegativeButton("Cancel", null).create();
 
-                @Override
-                public void onShow(DialogInterface dialog) {
+			d.setOnShowListener(new DialogInterface.OnShowListener() {
 
-                    Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                    b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onShow(DialogInterface dialog) {
 
-                        @Override
-                        public void onClick(View view) {
-                        	d.dismiss();
-                        	sessionDescription = input.getText().toString();
-                        	String isValid = experimentInput
-									.getText().toString();
-							if (successLogin
-									&& (isValid.length() > 0)) {
-								// executeIsenseTask = true;
-								new Task().execute();
+					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							d.dismiss();
+							sessionDescription = input.getText().toString();
+							String isValid = experimentInput.getText()
+									.toString();
+							if (successLogin && (isValid.length() > 0)) {
+								new UploadTask().execute();
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
 							}
-                        }
-                    });
-                }
-            });
-	           
-	    	dialog = d;
-	    
-	    	break;
-	    	
+						}
+					});
+				}
+			});
+
+			dialog = d;
+
+			break;
+
 		case DIALOG_NO_QR:
 
 			builder.setTitle("No Barcode Scanner Found")
@@ -1096,7 +1097,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dialog = builder.create();
 
 			break;
-
 
 		default:
 			dialog = null;
@@ -1136,7 +1136,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						'8', '9' };
 			}
 		});
-		
+
 		qrCode = (Button) v.findViewById(R.id.qrCode);
 		qrCode.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("deprecation")
@@ -1297,7 +1297,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				String delimiter = "id=";
 				String[] split = contents.split(delimiter);
-				
+
 				try {
 					experimentInput.setText(split[1]);
 				} catch (ArrayIndexOutOfBoundsException e) {
@@ -1367,7 +1367,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// createSession Success Check
 			if (sessionId == -1) {
 				uploadSuccess = false;
-				return;
 			}
 
 			// Experiment Closed Checker
@@ -1375,36 +1374,45 @@ public class DataCollector extends Activity implements SensorEventListener,
 				status400 = true;
 			} else {
 				status400 = false;
-				uploadSuccess = rapi.putSessionData(sessionId, experimentInput
-						.getText().toString(), dataSet);
-				if (!uploadSuccess)
-					return;
+				uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
+				
+				// Saves data for later upload
+				if (!uploadSuccess) {
+					DataSet ds = new DataSet(DataSet.Type.DATA, rapi,
+							nameOfSession, description, eid, dataSet, null,
+							sessionId, address);
+					uploadQueue.add(ds);
+				}
 
 				int pic = pictureArray.size();
 
 				while (pic > 0) {
-					if (nameOfSession.equals("")) {
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, "Session Name Not Provided",
-								"N/A");
-					} else {
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, sessionName.getText()
-										.toString(), "N/A");
-					}
-					pic--;
+					boolean picSuccess = rapi.uploadPictureToSession(
+							pictureArray.get(pic - 1), eid, sessionId,
+							nameOfSession, description);
 
+					// Saves pictures for later upload
+					if (!picSuccess) {
+						DataSet ds = new DataSet(DataSet.Type.PIC, rapi,
+								nameOfSession, description, eid, null,
+								pictureArray.get(pic - 1), sessionId, null);
+						uploadQueue.add(ds);
+					}
+
+					pic--;
 				}
 
 				pictureArray.clear();
 			}
+
+			
 
 		}
 
 	};
 
 	// Control task for uploading data
-	private class Task extends AsyncTask<Void, Integer, Void> {
+	private class UploadTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
 		protected void onPreExecute() {
@@ -1437,21 +1445,23 @@ public class DataCollector extends Activity implements SensorEventListener,
 			len2 = 0;
 			MediaManager.mediaCount = 0;
 			session.setText(getString(R.string.session));
-
+			
+			showDialog(DIALOG_SUMMARY, null);
+			
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Toast.LENGTH_LONG, "x");
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-				
-				
-			} else
-				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 
-			showDialog(DIALOG_SUMMARY);
+			} else {
+				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+				manageUploadQueue();
+			}
 
 		}
+
 	}
 
 	public void setTime(int seconds) {
@@ -1490,7 +1500,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		loginInfo = (TextView) findViewById(R.id.loginInfo);
 		loginInfo.setText(R.string.notLoggedIn);
-		// loginInfo.setTextColor(Color.RED);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -1741,6 +1750,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm.enabledFields[ALTITUDE] = true;
 			if (s.equals(getString(R.string.luminous_flux)))
 				dfm.enabledFields[LIGHT] = true;
+		}
+	}
+	
+	// Prompts the user to upload the rest of their content
+	// upon successful upload of data
+	private void manageUploadQueue() {
+		if (uploadSuccess) {
+			if (!uploadQueue.isEmpty()) {
+				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+			}
 		}
 	}
 
