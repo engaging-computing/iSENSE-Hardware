@@ -29,15 +29,15 @@ public class QueueUploader extends Activity {
 			case DATA:
 				View data = View.inflate(mContext, R.layout.queueblock_data,
 						scrollQueue);
-				
+
 				TextView eid = (TextView) data.findViewById(R.id.experimentid);
 				eid.setText(ds.getEID());
-				
+
 				TextView desc = (TextView) data.findViewById(R.id.description);
 				desc.setText(ds.getDesc());
-				
+
 				scrollQueue.addView(data);
-				
+
 				break;
 			case PIC:
 				View pic = View.inflate(mContext, R.layout.queueblock_pic,
