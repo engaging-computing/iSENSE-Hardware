@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import edu.uml.cs.isense.collector.objects.ObscuredSharedPreferences;
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class LoginActivity {	
