@@ -297,7 +297,7 @@ public class isenseInterface {
                     + "---------------------------");
             for (int j = 0; j < fields.length; j++) {
                 for (int k = 0; k < eFields.length; k++) {
-                    if (fields[j].compareToIgnoreCase(eFields[k]) == 0) {
+                    if (fields[j].replaceAll("\\s","").compareToIgnoreCase(eFields[k].replaceAll("\\s","")) == 0) {
                         fieldMatches.put(eFields[k], j);
                         fm[k] = j;
                         myPrint(eFields[k] + "(" + k + ")" + "  <---->  " + fields[j] + "(" + j + ")");
