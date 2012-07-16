@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="theme_dialog_black" parent="@android:style/Theme.Dialog">
         <item name="android:background">#000000</item>
     </style>
