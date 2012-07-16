@@ -118,19 +118,20 @@ public class MediaManager extends Activity {
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				File f = convertImageUriToFile(imageUri, this);
-				DataCollector.pictureArray.add(f);
+				DataCollector.pictures.add(f);
 				mediaCount++;
 				mediaCountLabel.setText(getString(R.string.picAndVidCount)
 						+ mediaCount);
-				pushPicture(f);
+				pushPicture();
 			}
 		} else if (requestCode == CAMERA_VID_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				File f = convertVideoUriToFile(videoUri, this);
+				DataCollector.videos.add(f);
 				mediaCount++;
 				mediaCountLabel.setText("" + getString(R.string.picAndVidCount)
 						+ mediaCount);
-				pushVideo(f);
+				pushVideo();
 			}
 		}
 	}
@@ -258,7 +259,7 @@ public class MediaManager extends Activity {
 	}
 
 	// Adds pictures to the SD Card
-	public void pushPicture(File pic) {
+	public void pushPicture() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 		Date dt = new Date();
 		String uploadSessionString;
@@ -277,13 +278,18 @@ public class MediaManager extends Activity {
 			folder.mkdir();
 		}
 
-		File newFile = new File(folder, uploadSessionString + " - "
-				+ dateString + ".jpeg");
-		pic.renameTo(newFile);
+		for (int i = 0; i < DataCollector.pictures.size(); i++) {
+			File f = DataCollector.pictures.get(i);
+			File newFile = new File(folder, uploadSessionString + "-"
+					+ dateString + ".jpeg");
+			f.renameTo(newFile);
+			DataCollector.pictureArray.add(newFile);
+		}
+		DataCollector.pictures.clear();
 	}
 
 	// Adds videos to the SD Card
-	public void pushVideo(File vid) {
+	public void pushVideo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 		Date dt = new Date();
 		String uploadSessionString;
@@ -302,10 +308,31 @@ public class MediaManager extends Activity {
 			folder.mkdir();
 		}
 
-		File newFile = new File(folder, uploadSessionString + " - "
-				+ dateString + ".3gp");
-		vid.renameTo(newFile);
+		for (int i = 0; i < DataCollector.videos.size(); i++) {
+			File f = DataCollector.videos.get(i);
+			File newFile = new File(folder, uploadSessionString + " - "
+					+ dateString + ".3gp");
+			f.renameTo(newFile);
+		}
+		DataCollector.videos.clear();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (DataCollector.pictures.size() > 0)
+			pushPicture();
+		if (DataCollector.videos.size() > 0)
+			pushVideo();
+	}
 
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (DataCollector.pictures.size() > 0)
+			pushPicture();
+		if (DataCollector.videos.size() > 0)
+			pushVideo();
 	}
 
 }
