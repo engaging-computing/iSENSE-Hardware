@@ -3,7 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Vector;
+import java.util.*;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,16 +21,69 @@ public class RestTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		isenseInterface is = new isenseInterface();
-		int exp = 24;
-		String headers[] = {"time","ext"};
-		Vector<String> data = new Vector<String>();
-		data.add("4,5");
-		data.add(System.currentTimeMillis()+",6");
-		
-		is.login("sor", "sor");
+		String get_status = GetStatus();
 		try {
-			int sid = is.joinExperiment(exp, "b", "b", "b", "b");
+			JSONObject get_status_json = new JSONObject(get_status);
+			int col_size = get_status_json.getJSONObject("views").length();
+			long start_time = Long.parseLong(get_status_json.getString("columnListTimeStamp"))*1000;//time started, in unix milliseconds
+			String col_id[] = new String[col_size];//column id
+			String col_type[] = new String[col_size];//type of date eg time, temp, ph
+			String col_data[] = new String[col_size];//column data
+			//gets data from vernier labquest 2, in JSON format, puts into strings
+			for (int i = 0;i<col_size;i++){//loop through all the columns available
+				String views = get_status_json.getJSONObject("views").names().getString(i);
+				if (get_status_json.getJSONObject("views").getJSONObject(views).has("baseColID")){
+					col_id[i] = get_status_json.getJSONObject("views").getJSONObject(views).getString("baseColID");
+				} else if (get_status_json.getJSONObject("views").getJSONObject(views).has("colID")) {
+					col_id[i] = get_status_json.getJSONObject("views").getJSONObject(views).getString("colID");
+				}
+				col_type[i] = get_status_json.getJSONObject("columns").getJSONObject(col_id[i]).getString("name");
+				JSONObject get_col_json = new JSONObject(GetColumns(col_id[i]));
+				col_data[i] = get_col_json.getString("values");				
+			}
+			//gets data from strings and puts time data in time, and each data set in data, and type in type
+			ArrayList<Long> time = new ArrayList<Long>();
+			ArrayList<ArrayList<Double>> data = new ArrayList<ArrayList<Double>>();
+			ArrayList<String> type = new ArrayList<String>();
+			for (int i = 0;i<col_size;i++){
+				if ((col_type[i].compareTo("Time") == 0) && (time.size() == 0)){ //time
+					StringTokenizer time_tokenized = new StringTokenizer(col_data[i],"[,]");
+					while (time_tokenized.hasMoreTokens()){
+						time.add((long)Double.parseDouble(time_tokenized.nextToken())*1000+start_time);
+					}
+				}
+				else if (col_type[i].compareTo("Time") != 0){
+					ArrayList<Double> temp = new ArrayList<Double>();
+					StringTokenizer data_tokenized = new StringTokenizer(col_data[i],"[,]");
+					while (data_tokenized.hasMoreTokens()){
+						temp.add(Double.parseDouble(data_tokenized.nextToken()));
+					}
+					
+					data.add(temp);
+					type.add(col_type[i]);
+				}
+			}
+			System.out.println(time);
+			System.out.println(data);
+			System.out.println(type);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
+		
+		isenseInterface is = new isenseInterface();
+		int exp = 484;
+		String headers[] = {"time","Temp","pH","Time"};
+		//System.out.println(headers[1]);
+		/*
+		Vector<String> data = new Vector<String>();
+		
+		is.login("test", "test");
+		try {
+			int sid = is.joinExperiment(exp, "Testing LapQuest", "Procedure....", "123 Fake St.", "Springfield, USA");
 			System.out.println("Created Session " + sid );
 			is.addToSession(exp, sid, headers , data);
 		} catch (loginException e) {
@@ -38,43 +92,18 @@ public class RestTest {
 		} catch (columnMatchException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-/*		try {
-			StartRecording();
-			Thread.sleep(5000);
-			StopRecording();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*//*
-		String get_status = GetStatus();
-		try {
-			JSONObject get_status_json = new JSONObject(get_status);
-			int col_size = get_status_json.getJSONObject("views").length();
-			String col_id[] = new String[col_size];//column id
-			String type[] = new String[col_size];//type of date eg time, temp, ph
-			JSONArray col_data[] = new JSONArray[col_size];//column data
-			for (int i = 0;i<col_size;i++){
-				String views = get_status_json.getJSONObject("views").names().get(i).toString();
-				if (get_status_json.getJSONObject("views").getJSONObject(views).has("baseColID")){
-					col_id[i] = get_status_json.getJSONObject("views").getJSONObject(views).getString("baseColID");
-				} else if (get_status_json.getJSONObject("views").getJSONObject(views).has("colID")) {
-					col_id[i] = get_status_json.getJSONObject("views").getJSONObject(views).getString("colID");
-				}
-				type[i] = get_status_json.getJSONObject("columns").getJSONObject(col_id[i]).getString("name");
-				JSONObject get_col_json = new JSONObject(GetColumns(col_id[i]));
-				col_data[i] = get_col_json.getJSONArray("values");
-
-				System.out.println(type[i]);
-				System.out.println(col_data[i]);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}*/
+		
 	}
 
+	public static Vector<String> getData(){
+		Vector<String> data = new Vector<String>();
+		
+		data.add("time,ph,temp,temp");
+		
+		return data;
+	}
+	
 	public static String StartRecording(){
 		String result = null;
 		try {
