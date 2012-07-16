@@ -10,6 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+import com.sun.xml.internal.ws.org.objectweb.asm.Type;
+
 import REST.RestAPI;
 import REST.columnMatchException;
 import REST.isenseInterface;
@@ -21,9 +24,8 @@ public class RestTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String get_status = GetStatus();
 		try {
-			JSONObject get_status_json = new JSONObject(get_status);
+			JSONObject get_status_json = new JSONObject(GetStatus());
 			int col_size = get_status_json.getJSONObject("views").length();
 			long start_time = Long.parseLong(get_status_json.getString("columnListTimeStamp"))*1000;//time started, in unix milliseconds
 			String col_id[] = new String[col_size];//column id
@@ -42,58 +44,66 @@ public class RestTest {
 				col_data[i] = get_col_json.getString("values");				
 			}
 			//gets data from strings and puts time data in time, and each data set in data, and type in type
-			ArrayList<Long> time = new ArrayList<Long>();
-			ArrayList<ArrayList<Double>> data = new ArrayList<ArrayList<Double>>();
+			ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 			ArrayList<String> type = new ArrayList<String>();
 			for (int i = 0;i<col_size;i++){
-				if ((col_type[i].compareTo("Time") == 0) && (time.size() == 0)){ //time
+				ArrayList<String> temp = new ArrayList<String>();
+				if ((col_type[i].compareTo("Time") == 0) && (!type.contains("Time"))){ //time
 					StringTokenizer time_tokenized = new StringTokenizer(col_data[i],"[,]");
 					while (time_tokenized.hasMoreTokens()){
-						time.add((long)Double.parseDouble(time_tokenized.nextToken())*1000+start_time);
+						temp.add(Long.toString((long)Double.parseDouble(time_tokenized.nextToken())*1000+start_time));
 					}
+					data.add(temp);
+					type.add(col_type[i]);
 				}
 				else if (col_type[i].compareTo("Time") != 0){
-					ArrayList<Double> temp = new ArrayList<Double>();
 					StringTokenizer data_tokenized = new StringTokenizer(col_data[i],"[,]");
 					while (data_tokenized.hasMoreTokens()){
-						temp.add(Double.parseDouble(data_tokenized.nextToken()));
+						temp.add(data_tokenized.nextToken());
 					}
-					
 					data.add(temp);
 					type.add(col_type[i]);
 				}
 			}
-			System.out.println(time);
-			System.out.println(data);
+
+			System.out.println(data);			
+			isenseInterface is = new isenseInterface();
+			int exp = 485;
+			String headers[] = type.toArray(new String[type.size()]);
+
+			Vector<String> test_data = new Vector<String>();
+			test_data.add("1,2,3");
+			System.out.println(test_data);
+			Vector<String> vector_data = new Vector<String>();
+			for (int i = 0;i<data.get(0).size();i++){
+				String temp = new String();
+				for (int j = 0;j<data.size();j++){
+					if (j != 0){
+						temp = temp + ",";
+					}
+					temp = temp + data.get(j).get(i);
+				}
+				vector_data.add(temp);
+			}
+			System.out.println(vector_data);
 			System.out.println(type);
+			
+			is.login("test", "test");
+			int sid = is.joinExperiment(exp, "Testing LapQuest", "Procedure....", "123 Fake St.", "Springfield, USA");
+			System.out.println("Created Session " + sid );
+			//is.addToSession(exp, sid, headers , data2);
+			is.addToSession(exp, sid, headers , vector_data);
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		
-		
-		
-		isenseInterface is = new isenseInterface();
-		int exp = 484;
-		String headers[] = {"time","Temp","pH","Time"};
-		//System.out.println(headers[1]);
-		/*
-		Vector<String> data = new Vector<String>();
-		
-		is.login("test", "test");
-		try {
-			int sid = is.joinExperiment(exp, "Testing LapQuest", "Procedure....", "123 Fake St.", "Springfield, USA");
-			System.out.println("Created Session " + sid );
-			is.addToSession(exp, sid, headers , data);
 		} catch (loginException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (columnMatchException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
-		
+		}		
 	}
 
 	public static Vector<String> getData(){
