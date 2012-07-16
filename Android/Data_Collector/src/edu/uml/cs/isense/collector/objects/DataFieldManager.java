@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector;
+package edu.uml.cs.isense.collector.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
+import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 
@@ -18,11 +19,11 @@ public class DataFieldManager extends Application {
 	Context mContext;
 
 	ArrayList<ExperimentField> expFields;
-	LinkedList<String> order;
+	public LinkedList<String> order;
 	JSONArray dataSet;
 	Fields f;
 	SensorCompatibility sc = new SensorCompatibility();
-	boolean[] enabledFields = {  false, false, false, false, false, false,
+	public boolean[] enabledFields = {  false, false, false, false, false, false,
 			false, false, false, false, false, false, false, false, false,
 			false, false, false, false };
 

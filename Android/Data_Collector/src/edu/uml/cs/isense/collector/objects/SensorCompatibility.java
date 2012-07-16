@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector;
+package edu.uml.cs.isense.collector.objects;
 
 public class SensorCompatibility {
 
