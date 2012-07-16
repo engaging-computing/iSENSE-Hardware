@@ -68,7 +68,7 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
+import android.util.FloatMath;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -229,6 +229,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Context mContext;
 
 	public static ArrayList<File> pictureArray = new ArrayList<File>();
+	public static ArrayList<File> pictures     = new ArrayList<File>();
+	public static ArrayList<File> videos       = new ArrayList<File>();
+	
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
 
@@ -489,7 +492,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			SDFile = new File(folder, partialSessionName + " - " + dateString
 					+ ".csv");
 			sdFileName = partialSessionName + " - " + dateString;
-			Log.d("tag", sdFileName);
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -668,8 +670,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				accel[0] = event.values[0];
 				accel[1] = event.values[1];
 				accel[2] = event.values[2];
-				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+				accel[3] = FloatMath.sqrt((float) (Math.pow(accel[0], 2)
+						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -1289,11 +1291,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == QR_CODE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				String contents = data.getStringExtra("SCAN_RESULT");
-				Log.d("QR", "Contents: " + contents);
 
 				String delimiter = "id=";
 				String[] split = contents.split(delimiter);
-				experimentInput.setText(split[1]);
+				
+				try {
+					experimentInput.setText(split[1]);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					w.make("Invalid QR Code!", Toast.LENGTH_LONG, "x");
+				}
 
 				// Handle successful scan
 			} else if (resultCode == RESULT_CANCELED) {
@@ -1372,19 +1378,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 					return;
 
 				int pic = pictureArray.size();
-				Log.d("pic", "pic array size = " + pic);
 
 				while (pic > 0) {
 					if (nameOfSession.equals("")) {
-						boolean success = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, "*Session Name Not Provided*",
+						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+								eid, sessionId, "Session Name Not Provided",
 								"N/A");
-						Log.d("pic", "rapi called (1) " + success);
 					} else {
-						boolean success = rapi.uploadPictureToSession(pictureArray.get(pic - 1),
+						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
 								eid, sessionId, sessionName.getText()
 										.toString(), "N/A");
-						Log.d("pic", "rapi called (2) " + success);
 					}
 					pic--;
 
