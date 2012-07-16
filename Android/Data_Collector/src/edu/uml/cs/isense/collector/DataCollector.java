@@ -85,6 +85,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.collector.objects.DataFieldManager;
+import edu.uml.cs.isense.collector.objects.Fields;
+import edu.uml.cs.isense.collector.objects.ObscuredSharedPreferences;
 import edu.uml.cs.isense.comm.RestAPI;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
@@ -1435,10 +1438,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Toast.LENGTH_LONG, "x");
-			else if (!uploadSuccess)
+			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-			else
+				
+				
+			} else
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 
 			showDialog(DIALOG_SUMMARY);
