@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector;
+package edu.uml.cs.isense.supplements;
 
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +9,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
@@ -84,6 +85,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 			return this;
 		}
 
+		@SuppressLint("NewApi")
 		@Override
 		public void apply() {
 			delegate.apply();

@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import edu.uml.cs.isense.supplements.Waffle;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;

@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -88,7 +89,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.collector.objects.DataFieldManager;
+import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.collector.objects.Fields;
+import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.supplements.Waffle;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
@@ -146,6 +153,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int SYNC_TIME_REQUESTED = 2;
 	public static final int CHOOSE_SENSORS_REQUESTED = 3;
 	public static final int QR_CODE_REQUESTED = 4;
+	public static final int QUEUE_UPLOAD_REQUESTED = 5;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -195,6 +203,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	Fields f;
 	public static SensorCompatibility sc;
 	LinkedList<String> acceptedFields;
+	public static Queue<DataSet> uploadQueue;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -580,7 +589,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (loginName.length() >= 18)
 							loginName = loginName.substring(0, 18) + "...";
 						loginInfo.setText("Username: " + loginName);
-						// loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
 						w.make("Login successful", Toast.LENGTH_LONG, "check");
 						break;
@@ -690,9 +698,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 												.getText().toString();
 										if (successLogin
 												&& (isValid.length() > 0)) {
-											// executeIsenseTask = true;
 											dialoginterface.dismiss();
-											new Task().execute();
+											new UploadTask().execute();
 										} else {
 											showDialog(DIALOG_NO_ISENSE);
 										}
@@ -848,8 +855,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							String isValid = experimentInput.getText()
 									.toString();
 							if (successLogin && (isValid.length() > 0)) {
-								// executeIsenseTask = true;
-								new Task().execute();
+								new UploadTask().execute();
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
 							}
@@ -1162,7 +1168,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// createSession Success Check
 			if (sessionId == -1) {
 				uploadSuccess = false;
-				return;
 			}
 
 			// Experiment Closed Checker
@@ -1170,25 +1175,31 @@ public class DataCollector extends Activity implements SensorEventListener,
 				status400 = true;
 			} else {
 				status400 = false;
-				uploadSuccess = rapi.putSessionData(sessionId, experimentInput
-						.getText().toString(), dataSet);
-				if (!uploadSuccess)
-					return;
+				uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
+
+				// Saves data for later upload
+				if (!uploadSuccess) {
+					DataSet ds = new DataSet(DataSet.Type.DATA, rapi,
+							nameOfSession, description, eid, dataSet, null,
+							sessionId, address);
+					uploadQueue.add(ds);
+				}
 
 				int pic = pictureArray.size();
 
 				while (pic > 0) {
-					if (nameOfSession.equals("")) {
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, "Session Name Not Provided",
-								"N/A");
-					} else {
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, sessionName.getText()
-										.toString(), "N/A");
+					boolean picSuccess = rapi.uploadPictureToSession(
+							pictureArray.get(pic - 1), eid, sessionId,
+							nameOfSession, description);
+
+					// Saves pictures for later upload
+					if (!picSuccess) {
+						DataSet ds = new DataSet(DataSet.Type.PIC, rapi,
+								nameOfSession, description, eid, null,
+								pictureArray.get(pic - 1), sessionId, null);
+						uploadQueue.add(ds);
 					}
 					pic--;
-
 				}
 
 				pictureArray.clear();
@@ -1199,7 +1210,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	};
 
 	// Control task for uploading data
-	private class Task extends AsyncTask<Void, Integer, Void> {
+	private class UploadTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
 		protected void onPreExecute() {
@@ -1234,18 +1245,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 			session.setText(getString(R.string.session));
 			nameOfSession = "";
 
+			showDialog(DIALOG_SUMMARY, null);
+
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Toast.LENGTH_LONG, "x");
-			else if (!uploadSuccess)
+			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-			else
-				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 
-			showDialog(DIALOG_SUMMARY);
+			} else {
+				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+				manageUploadQueue();
+			}
 
 		}
+
 	}
 
 	public void setTime(int seconds) {
@@ -1503,45 +1518,56 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Prompts the user to upload the rest of their content
+	// upon successful upload of data
+	private void manageUploadQueue() {
+		if (uploadSuccess) {
+			if (!uploadQueue.isEmpty()) {
+				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+			}
+		}
+	}
+
 	@SuppressWarnings("deprecation")
 	public int getOrientation(Context context) {
 		final int rotation = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
 				.getOrientation();
 		switch (rotation) {
-		case Surface.ROTATION_0:   // Portrait
+		case Surface.ROTATION_0: // Portrait
 			return 0;
-			
-		case Surface.ROTATION_90:  // Landscape
+
+		case Surface.ROTATION_90: // Landscape
 			return 1;
-			
+
 		case Surface.ROTATION_180: // Portrait - Reverse
 			return 2;
-			
-		default:				   // Landscape - Reverse
+
+		default: // Landscape - Reverse
 			return 3;
 		}
 	}
-	
+
 	public void lockOrientation() {
-		
+
 		int orient = getOrientation(mContext);
-		
+
 		switch (orient) {
-		case 0:				// Portrait
+		case 0: // Portrait
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			break;
-		case 1:				// Landscape		
+		case 1: // Landscape
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			break;
-		case 2:				// Portrait - Reverse
+		case 2: // Portrait - Reverse
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
 			break;
-		case 3:				// Landscape - Reverse
+		case 3: // Landscape - Reverse
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 			break;
 		}
-		
+
 	}
 
 	// Everything needed to be initialized for onCreate

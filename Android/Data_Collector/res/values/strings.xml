@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">iSENSE Data Collector</string>
-    
     <string name="iSenseConfig"><u><b>Step 1: Identify Your Session</b></u></string>
-    
     <string name="experiments_no_items">No experiments were found.</string>
-    
+    <string name="prompt">Would you like to retry uploading any of the following?</string>
     <string name="updates">Please carefully review the following agreement for this version of this app:</string>
+	
 	<string name ="eula">This end user license agreement (Agreement) is a legal agreement between you 
 		and the developers at iSENSE (Internet System for Networked Sensor Experimentation) and 
 		ECG (Engaging Computing Group) of the University of Massachusetts Lowell (the Developer) 
@@ -182,25 +181,6 @@
 		
 	</string>
 	
-	<string name="search">Search</string>
-	<string name="startString">START\n(Press and Hold)</string>
-	<string name="stopString">STOP\n(Press and Hold)</string>
-	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
-	<string name="session">Session Name: NOT SET</string>
-	<string name="iSENSELogo">iSENSE Logo</string>
-	<string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
-	<string name="menuDirections">Use Menu to Access Configurations</string>
-	<string name="timeElapsed">Time Elapsed: 0:00</string>
-	<string name="sessionName">Session Name: </string>
-	<string name="experimentNum">Experiment #: </string>
-	<string name="browse">  Browse&#8230;  </string>
-	<string name="takePic">Take Picture</string>
-	<string name="takeVid">Take Video"</string>
-	<string name="instructions"><u>Instructions:</u></string>
-	<string name="send">Send</string>
-	<string name="receive">Receive</string>
-	<string name="cancel">Cancel</string>
-	
 	<string name="syncTime">
 	    Synchronizing time is useful when using multiple devices on a ride at the
 	    same time.  By default, many Android devices\' clocks will not match one
@@ -227,8 +207,27 @@
 	    WiFi networks.
 	</string>
 	
+	<string name="search">Search</string>
+	<string name="startString">START\n(Press and Hold)</string>
+	<string name="stopString">STOP\n(Press and Hold)</string>
+	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
+	<string name="session">Session Name: NOT SET</string>
+	<string name="iSENSELogo">iSENSE Logo</string>
+	<string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
+	<string name="menuDirections">Use Menu to Access Configurations</string>
+	<string name="timeElapsed">Time Elapsed: 0:00</string>
+	<string name="sessionName">Session Name: </string>
+	<string name="experimentNum">Experiment #: </string>
+	<string name="browse">  Browse&#8230;  </string>
+	<string name="takePic">Take Picture</string>
+	<string name="takeVid">Take Video"</string>
+	<string name="instructions"><u>Instructions:</u></string>
+	<string name="send">Send</string>
+	<string name="receive">Receive</string>
+	<string name="cancel">Cancel</string>
 	<string name="okay">Okay</string>
 	<string name="back">Back</string>
+	<string name="upload">Upload</string>
 	<string name="contentDesc"></string>
 	<string name="media_desc">Select one of the following options:</string>
 	<string name="scan_qr">Scan QR Code</string>

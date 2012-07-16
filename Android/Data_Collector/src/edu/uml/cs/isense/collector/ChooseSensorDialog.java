@@ -12,7 +12,8 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.SensorCompatibility.SensorTypes;
+import edu.uml.cs.isense.collector.objects.SensorCompatibility;
+import edu.uml.cs.isense.collector.objects.SensorCompatibility.SensorTypes;
 
 public class ChooseSensorDialog extends Activity implements OnClickListener {
 
