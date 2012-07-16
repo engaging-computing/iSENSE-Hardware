@@ -14,25 +14,25 @@ public class DataSet {
 	};
 
 	// Both
-	Type t;
-	RestAPI rapi;
-	String name;
-	String desc;
-	String eid;
+	public Type type;
+	private RestAPI rapi;
+	private String name;
+	private String desc;
+	private String eid;
 
 	// Data Only
-	JSONArray data;
+	private JSONArray data;
 
 	// Picture Only
-	File picture;
+	private File picture;
 
 	// Optional
-	int sid = -1;
-	List<Address> address;
+	private int sid = -1;
+	private List<Address> address;
 
-	public DataSet(Type t, RestAPI rapi, String name, String desc, String eid,
+	public DataSet(Type type, RestAPI rapi, String name, String desc, String eid,
 			JSONArray data, File picture, int sid, List<Address> address) {
-		this.t = t;
+		this.type = type;
 		this.rapi = rapi;
 		this.name = name;
 		this.desc = desc;
@@ -46,7 +46,7 @@ public class DataSet {
 	// Attempts to upload data with given information
 	public boolean upload() {
 		boolean success = true;
-		switch (t) {
+		switch (type) {
 		case DATA:
 			if (sid == -1) {
 				String city = "", state = "", country = "", addr = "";
@@ -94,6 +94,14 @@ public class DataSet {
 		}
 
 		return success;
+	}
+
+	public String getEID() {
+		return this.eid;
+	}
+	
+	public String getDesc() {
+		return this.desc;
 	}
 
 }
