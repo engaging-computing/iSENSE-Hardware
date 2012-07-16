@@ -8,3 +8,7 @@
 
 #	Backup Files
 *.*~
+
+#	Eclipse files
+.classpath
+.project
