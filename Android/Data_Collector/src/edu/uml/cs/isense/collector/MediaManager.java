@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,8 @@ public class MediaManager extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.media_manager);
 
+		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		
 		mContext = this;
 		w = new Waffle(mContext);
 
