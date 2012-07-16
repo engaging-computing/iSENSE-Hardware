@@ -65,35 +65,22 @@ public class RestTest {
 					type.add(col_type[i]);
 				}
 			}
-
-			System.out.println(data);			
+			//connecting to isense
 			isenseInterface is = new isenseInterface();
-			int exp = 485;
-			String headers[] = type.toArray(new String[type.size()]);
-
-			Vector<String> test_data = new Vector<String>();
-			test_data.add("1,2,3");
-			System.out.println(test_data);
-			Vector<String> vector_data = new Vector<String>();
+			int exp = 485;//changable
+			String headers[] = type.toArray(new String[type.size()]);//convert type to string array
+			Vector<String> vector_data = new Vector<String>();//convert data to vertor string
 			for (int i = 0;i<data.get(0).size();i++){
 				String temp = new String();
 				for (int j = 0;j<data.size();j++){
-					if (j != 0){
-						temp = temp + ",";
-					}
-					temp = temp + data.get(j).get(i);
+					temp = temp + data.get(j).get(i) + ",";
 				}
 				vector_data.add(temp);
 			}
-			System.out.println(vector_data);
-			System.out.println(type);
-			
-			is.login("test", "test");
+			is.login("test", "test");//log in - changable
 			int sid = is.joinExperiment(exp, "Testing LapQuest", "Procedure....", "123 Fake St.", "Springfield, USA");
 			System.out.println("Created Session " + sid );
-			//is.addToSession(exp, sid, headers , data2);
-			is.addToSession(exp, sid, headers , vector_data);
-			
+			is.addToSession(exp, sid, headers , vector_data);			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
