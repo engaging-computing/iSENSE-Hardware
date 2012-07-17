@@ -104,4 +104,14 @@ public class DataSet {
 		return this.desc;
 	}
 
+	public CharSequence getName() {
+		return this.name;
+	}
+
+	public CharSequence getType() {
+		if (this.type == Type.PIC) return "Picture";
+		else if (this.type == Type.DATA) return "Data";
+		else return "Unsupported Type";
+	}
+
 }

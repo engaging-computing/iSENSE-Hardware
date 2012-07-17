@@ -72,6 +72,7 @@ import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.NumberKeyListener;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -1016,8 +1017,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						if (pass) {
 
-							// nameOfSession = sessionName.getText().toString();
-
 							new SensorCheckTask().execute();
 
 							SharedPreferences mPrefs = getSharedPreferences(
@@ -1166,23 +1165,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 			sessionDescription = "";
 
 			// createSession Success Check
-			if (sessionId == -1) {
+			//if (sessionId == -1) {
 				uploadSuccess = false;
-			}
+			//}
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
 				status400 = true;
 			} else {
 				status400 = false;
-				uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
+				if (uploadSuccess)
+					uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
 
 				// Saves data for later upload
 				if (!uploadSuccess) {
 					DataSet ds = new DataSet(DataSet.Type.DATA, rapi,
-							nameOfSession, description, eid, dataSet, null,
+							nameOfSession + " - " + dateString, description, eid, dataSet, null,
 							sessionId, address);
 					uploadQueue.add(ds);
+					Log.d("uploader", "Queue is not empty");
 				}
 
 				int pic = pictureArray.size();
@@ -1193,9 +1194,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
-					if (!picSuccess) {
+					if (picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC, rapi,
-								nameOfSession, description, eid, null,
+								nameOfSession + " - " + dateString, description, eid, null,
 								pictureArray.get(pic - 1), sessionId, null);
 						uploadQueue.add(ds);
 					}
@@ -1253,6 +1254,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
+				manageUploadQueue();
 
 			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
@@ -1521,12 +1523,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) {
+		//if (uploadSuccess) {
 			if (!uploadQueue.isEmpty()) {
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			}
-		}
+		//}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1602,7 +1604,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		w = new Waffle(this);
 		f = new Fields();
-
+		uploadQueue = new LinkedList<DataSet>();
+		
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
