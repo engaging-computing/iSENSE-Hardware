@@ -53,6 +53,10 @@
         <activity
             android:name=".QueueUploader"
             android:label="Upload" />
+        <activity
+            android:name=".Setup"
+            android:label="Step 1: Identify Session"
+            android:theme="@style/theme_dialog_black" />
     </application>
 
 </manifest>
