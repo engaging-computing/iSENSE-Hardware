@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">iSENSE Data Collector</string>
-    <string name="iSenseConfig"><u><b>Step 1: Identify Your Session</b></u></string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="prompt">Would you like to retry uploading any of the following?</string>
     <string name="updates">Please carefully review the following agreement for this version of this app:</string>

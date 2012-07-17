@@ -50,6 +50,10 @@
             android:name=".MediaManager"
             android:label="Media Manager"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".Setup"
+            android:label="Step 1: Identify Session"
+            android:theme="@style/theme_dialog_black" />
     </application>
 
 </manifest>

@@ -4,10 +4,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import edu.uml.cs.isense.supplements.Waffle;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -17,12 +16,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.supplements.Waffle;
 
 public class MediaManager extends Activity {
 
@@ -122,7 +123,8 @@ public class MediaManager extends Activity {
 
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				File f = convertImageUriToFile(imageUri, this);
+				File f = convertImageUriToFile(imageUri);
+				Log.d("pic file", f.toString());
 				DataCollector.pictures.add(f);
 				mediaCount++;
 				mediaCountLabel.setText(getString(R.string.picAndVidCount)
@@ -144,8 +146,7 @@ public class MediaManager extends Activity {
 	// Converts the captured picture's uri to a file that is save-able to the SD
 	// Card
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
-	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
+	public static File convertImageUriToFile(Uri imageUri) {
 
 		int apiLevel = getApiLevel();
 		if (apiLevel >= 11) {
@@ -180,10 +181,11 @@ public class MediaManager extends Activity {
 				String[] proj = { MediaStore.Images.Media.DATA,
 						MediaStore.Images.Media._ID,
 						MediaStore.Images.ImageColumns.ORIENTATION };
-				cursor = activity.managedQuery(imageUri, proj, // Which columns
+				ContentResolver cr = mContext.getContentResolver();
+				cursor = cr.query(imageUri, proj,  // Which columns
 																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
+						null,  // WHERE clause; which rows to return (all rows)
+						null,  // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -200,14 +202,14 @@ public class MediaManager extends Activity {
 				if (cursor != null) {
 					cursor.close();
 				}
-			}
+			} 
+			//return new File(imageUri.getPath());
 		}
 	}
 
 	// Converts the recorded video's uri to a file that is save-able to the SD
 	// Card
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
 
 		int apiLevel = getApiLevel();
@@ -237,10 +239,11 @@ public class MediaManager extends Activity {
 			try {
 				String[] proj = { MediaStore.Video.Media.DATA,
 						MediaStore.Video.Media._ID };
-				cursor = activity.managedQuery(videoUri, proj, // Which columns
+				ContentResolver cr = mContext.getContentResolver();
+				cursor = cr.query(videoUri, proj,  // Which columns
 																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
+						null,  // WHERE clause; which rows to return (all rows)
+						null,  // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
