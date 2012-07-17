@@ -50,6 +50,9 @@
             android:name=".MediaManager"
             android:label="Media Manager"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".QueueUploader"
+            android:label="Upload" />
     </application>
 
 </manifest>
