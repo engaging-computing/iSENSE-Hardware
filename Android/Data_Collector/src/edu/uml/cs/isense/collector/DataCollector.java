@@ -39,7 +39,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -60,7 +59,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -70,16 +68,14 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
-import android.text.method.NumberKeyListener;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -102,13 +98,10 @@ import edu.uml.cs.isense.supplements.Waffle;
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
-	private static EditText experimentInput;
 	private static TextView session;
 	private static TextView time;
 
 	private Button startStop;
-	private Button browseButton;
-	private static Button qrCode;
 	private Boolean running = false;
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -135,25 +128,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_TIME = 3;
 	private static final int MENU_ITEM_MEDIA = 4;
 
-	private static final int SAVE_DATA = 5;
-	private static final int DIALOG_SUMMARY = 6;
-	private static final int DIALOG_CHOICE = 7;
-	private static final int DIALOG_NO_ISENSE = 8;
-	private static final int RECORDING_STOPPED = 9;
-	private static final int DIALOG_NO_GPS = 10;
-	private static final int DIALOG_FORCE_STOP = 11;
-	private static final int DIALOG_DESCRIPTION = 12;
-	private static final int DIALOG_NO_QR = 13;
+	private static final int DIALOG_SUMMARY = 5;
+	private static final int DIALOG_CHOICE = 6;
+	private static final int DIALOG_NO_ISENSE = 7;
+	private static final int RECORDING_STOPPED = 8;
+	private static final int DIALOG_NO_GPS = 9;
+	private static final int DIALOG_FORCE_STOP = 10;
+	private static final int DIALOG_DESCRIPTION = 11;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	public static final int EXPERIMENT_CODE = 1;
-	public static final int SYNC_TIME_REQUESTED = 2;
-	public static final int CHOOSE_SENSORS_REQUESTED = 3;
-	public static final int QR_CODE_REQUESTED = 4;
-	public static final int QUEUE_UPLOAD_REQUESTED = 5;
+	public static final int SYNC_TIME_REQUESTED = 1;
+	public static final int CHOOSE_SENSORS_REQUESTED = 2;
+	public static final int QUEUE_UPLOAD_REQUESTED = 3;
+	public static final int SETUP_REQUESTED = 4;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -210,13 +200,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	ProgressDialog dia;
 	double partialProg = 1.0;
 
-	private EditText sessionName;
 	private static String nameOfSession = "";
 	public static String partialSessionName = "";
 
 	public static boolean inPausedState = false;
 
-	private static int mwidth = 1;
+	public static int mwidth = 1;
+	
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
@@ -441,7 +431,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ITEM_SETUP:
-			showDialog(MENU_ITEM_SETUP);
+			Intent iSetup = new Intent(DataCollector.this, Setup.class);
+			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case MENU_ITEM_LOGIN:
 			showDialog(MENU_ITEM_LOGIN);
@@ -451,8 +442,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
-			Intent i = new Intent(DataCollector.this, SyncTime.class);
-			startActivityForResult(i, SYNC_TIME_REQUESTED);
+			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
+			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
 			return true;
 		case MENU_ITEM_MEDIA:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
@@ -543,37 +534,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
 		switch (id) {
-		case MENU_ITEM_SETUP:
-
-			dialog = getSavePrompt(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case DIALOG_OK:
-
-						partialSessionName = sessionName.getText().toString();
-						nameOfSession = partialSessionName;
-						setupDone = true;
-						String showSessionName;
-						if (partialSessionName.length() > 15) {
-							showSessionName = partialSessionName.substring(0,
-									15) + "...";
-						} else {
-							showSessionName = partialSessionName;
-						}
-						session.setText("Session Name: " + showSessionName);
-
-						break;
-					case DIALOG_CANCELED:
-
-						break;
-					}
-
-				}
-			}, "Configure Options");
-			dialog.setCancelable(true);
-
-			sessionName.setText(partialSessionName);
-			break;
 
 		case MENU_ITEM_LOGIN:
 			LoginActivity la = new LoginActivity(this);
@@ -603,27 +563,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			});
 			break;
 
-		case SAVE_DATA:
-
-			dialog = getSavePrompt(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case DIALOG_OK:
-						if (len == 0 || len2 == 0)
-							w.make("There is no data to upload!",
-									Toast.LENGTH_LONG, "x");
-						showDialog(DIALOG_DESCRIPTION);
-						partialSessionName = sessionName.getText().toString();
-						nameOfSession = partialSessionName;
-						break;
-					case DIALOG_CANCELED:
-						break;
-					}
-
-				}
-			}, "Final Step");
-			sessionName.setText(partialSessionName);
-			break;
 		case DIALOG_SUMMARY:
 
 			MediaManager.mediaCount = 0;
@@ -694,10 +633,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 												Toast.LENGTH_LONG, "x");
 									else {
 
-										String isValid = experimentInput
-												.getText().toString();
+										SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+										String experimentInput = mPrefs.getString("experiment_id", "");
+										
 										if (successLogin
-												&& (isValid.length() > 0)) {
+												&& (experimentInput.length() > 0)) {
 											dialoginterface.dismiss();
 											new UploadTask().execute();
 										} else {
@@ -852,9 +792,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 						public void onClick(View view) {
 							d.dismiss();
 							sessionDescription = input.getText().toString();
-							String isValid = experimentInput.getText()
-									.toString();
-							if (successLogin && (isValid.length() > 0)) {
+							
+							SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+							String experimentInput = mPrefs.getString("experiment_id", "");
+							
+							if (successLogin && (experimentInput.length() > 0)) {
 								new UploadTask().execute();
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
@@ -868,37 +810,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			break;
 
-		case DIALOG_NO_QR:
-
-			builder.setTitle("No Barcode Scanner Found")
-					.setMessage(
-							"Your device does not have the proper Barcode Scanner application installed "
-									+ "to use this feature.  However, "
-									+ "you may visit the Google Play store to download this application (\"Barcode Scanner\" "
-									+ "by the Zxing Team).")
-					.setPositiveButton("Visit URL",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									String url = "https://play.google.com/store/apps/details?id=com.google.zxing.client.android";
-									Intent urlIntent = new Intent(
-											Intent.ACTION_VIEW);
-									urlIntent.setData(Uri.parse(url));
-									startActivity(urlIntent);
-								}
-							})
-					.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
 		default:
 			dialog = null;
 			break;
@@ -908,167 +819,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// Method to create a data-saving prompt with "message" as the message
-	private AlertDialog getSavePrompt(final Handler h, String message) {
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		LayoutInflater vi = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = vi.inflate(R.layout.setup, null);
-
-		builder.setView(v);
-
-		sessionName = (EditText) v.findViewById(R.id.sessionName);
-
-		experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		experimentInput.setText(mPrefs.getString("experiment_id", ""));
-
-		experimentInput.setKeyListener(new NumberKeyListener() {
-			@Override
-			public int getInputType() {
-				return InputType.TYPE_CLASS_PHONE;
-			}
-
-			@Override
-			protected char[] getAcceptedChars() {
-				return new char[] { '0', '1', '2', '3', '4', '5', '6', '7',
-						'8', '9' };
-			}
-		});
-
-		qrCode = (Button) v.findViewById(R.id.qrCode);
-		qrCode.setOnClickListener(new OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View v) {
-				try {
-					Intent intent = new Intent(
-							"com.google.zxing.client.android.SCAN");
-
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-					intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-					startActivityForResult(intent, QR_CODE_REQUESTED);
-				} catch (ActivityNotFoundException e) {
-					showDialog(DIALOG_NO_QR);
-				}
-			}
-		});
-
-		browseButton = (Button) v.findViewById(R.id.BrowseButton);
-		browseButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!rapi.isConnectedToInternet()) {
-					w.make("You must enable wifi or mobile connectivity to do this.",
-							Toast.LENGTH_SHORT, "x");
-				} else {
-
-					Intent experimentIntent = new Intent(
-							getApplicationContext(), Experiments.class);
-					experimentIntent.putExtra(
-							"edu.uml.cs.isense.amusement.experiments.propose",
-							EXPERIMENT_CODE);
-
-					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
-				}
-
-			}
-
-		});
-
-		builder.setPositiveButton("Okay",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(
-									DialogInterface dialoginterface, int i) {
-							}
-						}).setCancelable(false);
-
-		final AlertDialog ad = builder.create();
-		ad.setOnShowListener(new DialogInterface.OnShowListener() {
-			@Override
-			public void onShow(DialogInterface dialog) {
-				Button positive = ad.getButton(DialogInterface.BUTTON_POSITIVE);
-				positive.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						boolean pass = true;
-
-						if (sessionName.getText().length() == 0) {
-							sessionName.setError("Enter a Name");
-							pass = false;
-						}
-						if (experimentInput.getText().length() == 0) {
-							experimentInput.setError("Enter an Experiment");
-							pass = false;
-						}
-
-						if (pass) {
-
-							// nameOfSession = sessionName.getText().toString();
-
-							new SensorCheckTask().execute();
-
-							SharedPreferences mPrefs = getSharedPreferences(
-									"EID", 0);
-							SharedPreferences.Editor mEditor = mPrefs.edit();
-							mEditor.putString("experiment_id",
-									experimentInput.getText().toString())
-									.commit();
-
-							final Message dialogOk = Message.obtain();
-							dialogOk.setTarget(h);
-							dialogOk.what = DIALOG_OK;
-
-							dialogOk.sendToTarget();
-
-							ad.dismiss();
-						}
-					}
-				});
-
-				Button negative = ad.getButton(DialogInterface.BUTTON_NEGATIVE);
-				negative.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						final Message dialogOk = Message.obtain();
-						dialogOk.setTarget(h);
-						dialogOk.what = DIALOG_CANCELED;
-						dialogOk.sendToTarget();
-
-						ad.dismiss();
-					}
-				});
-			}
-		});
-
-		return ad;
-	}
-
 	// Performs tasks after returning to main UI from previous activities
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == EXPERIMENT_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-				int eid = data.getExtras().getInt(
-						"edu.uml.cs.isense.pictures.experiments.exp_id");
-				experimentInput.setText("" + eid);
-			}
-		} else if (requestCode == SYNC_TIME_REQUESTED) {
+		if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
 				SharedPreferences mPrefs = getSharedPreferences("time_offset",
@@ -1092,24 +849,28 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
 			}
-		} else if (requestCode == QR_CODE_REQUESTED) {
+		} else if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String contents = data.getStringExtra("SCAN_RESULT");
-
-				String delimiter = "id=";
-				String[] split = contents.split(delimiter);
-
-				try {
-					experimentInput.setText(split[1]);
-				} catch (ArrayIndexOutOfBoundsException e) {
-					w.make("Invalid QR Code!", Toast.LENGTH_LONG, "x");
+					
+				setupDone = true;
+				
+				partialSessionName = nameOfSession = data.getStringExtra("sessionName");
+				
+				String showSessionName;
+				if (partialSessionName.length() > 15) {
+					showSessionName = partialSessionName.substring(0,
+							15) + "...";
+				} else {
+					showSessionName = partialSessionName;
 				}
-
-				// Handle successful scan
+				
+				session.setText("Session Name: " + showSessionName);
+				
+				new SensorCheckTask().execute();
+				
 			} else if (resultCode == RESULT_CANCELED) {
-				// Handle cancel
+				setupDone = false;
 			}
-
 		}
 
 	}
@@ -1452,8 +1213,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput
-					.getText().toString()), rapi, mContext, f);
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			String experimentInput = mPrefs.getString("experiment_id", "");
+			
+			dfm = new DataFieldManager(Integer.parseInt(experimentInput), 
+					rapi, mContext, f);
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
@@ -1552,6 +1316,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void lockOrientation() {
 
 		int orient = getOrientation(mContext);
+		Log.d("orient", "" + orient);
 
 		switch (orient) {
 		case 0: // Portrait
@@ -1561,10 +1326,23 @@ public class DataCollector extends Activity implements SensorEventListener,
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			break;
 		case 2: // Portrait - Reverse
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+			if (getApiLevel() >= 9)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+			else {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				w.make("Your device does not support a reverse-portrait orientation lock.",
+						Toast.LENGTH_LONG, "x");
+			}
 			break;
 		case 3: // Landscape - Reverse
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+			if (getApiLevel() >= 9)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+			else {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+				w.make("Your device does not support a reverse-landscape orientation lock.",
+						Toast.LENGTH_LONG, "x");
+			}
 			break;
 		}
 
@@ -1668,9 +1446,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				if (!setupDone) {
 
-					showDialog(MENU_ITEM_SETUP);
 					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
+					
+					Intent iSetup = new Intent(DataCollector.this, Setup.class);
+					startActivityForResult(iSetup, SETUP_REQUESTED);
 
 				} else {
 
