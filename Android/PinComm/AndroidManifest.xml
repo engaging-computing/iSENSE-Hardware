@@ -13,19 +13,24 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        
         <activity
             android:name=".Isense"
+            android:configChanges="keyboardHidden|orientation|keyboard"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyTheme"
-            android:configChanges="keyboardHidden|orientation|keyboard" 
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -48,27 +53,27 @@
         <activity
             android:name=".ViewData"
             android:label="@string/view_page"
-            android:theme="@style/Theme.MyDialogTheme">
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name=".ChangeExperiment"
             android:label="@string/change_eid"
-            android:theme="@style/Theme.MyDialogTheme">
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name=".ChangeFields"
             android:label="@string/label_fieldsbox"
-            android:theme="@style/Theme.MyDialogTheme">
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name=".FinalizeUpload"
             android:label="@string/finalize_label"
-            android:theme="@style/Theme.MyDialogTheme">
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
         <activity
             android:name=".WifiDisabled"
             android:label="@string/wifi_page"
-            android:theme="@style/Theme.MyDialogTheme">
+            android:theme="@style/Theme.MyDialogTheme" >
         </activity>
     </application>
 
