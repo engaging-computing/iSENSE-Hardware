@@ -50,6 +50,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -108,6 +109,8 @@ public class Isense extends Activity implements OnClickListener {
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	String sessionName, sessionDesc, sessionStreet, sessionCity;
+	
+	NfcAdapter mAdapter;
 
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
@@ -141,6 +144,8 @@ public class Isense extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 
 		mContext = this;
+		
+		mAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
 		mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
