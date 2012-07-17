@@ -50,12 +50,17 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -285,6 +290,19 @@ public class Isense extends Activity implements OnClickListener {
 				// Start the Bluetooth chat services
 				mChatService.start();
 			}
+		}
+		
+		//Check to see if the activity is being started due to reading an NFC tag
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+			Parcelable[] rawMsgs = getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+	        if (rawMsgs != null) {
+	            NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+	            for (int i = 0; i < rawMsgs.length; i++) {
+	                msgs[i] = (NdefMessage) rawMsgs[i];
+	            }
+	            String payload = new String(msgs[0].getRecords()[0].getPayload());
+	            Toast.makeText(this, payload, Toast.LENGTH_LONG).show();
+	        }
 		}
 	}
 
