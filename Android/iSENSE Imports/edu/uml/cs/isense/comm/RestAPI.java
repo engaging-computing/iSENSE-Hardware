@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.util.Log;
 import edu.uml.cs.isense.objects.ExpLoaded;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
@@ -241,7 +242,7 @@ public class RestAPI {
 			// send multipart form data necesssary after file data...
 	
 			dos.writeBytes(lineEnd);
-			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd); //Log.e("url", "dos: " + dos);
+			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 	
 			// close streams
 			dos.flush();
@@ -763,7 +764,7 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						e.firstname = obj.getString("owner_firstname");
+						//e.firstname = obj.getString("owner_firstname");
 						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
@@ -809,7 +810,7 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
@@ -863,7 +864,7 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						e.firstname = obj.getString("owner_firstname");
+						//e.firstname = obj.getString("owner_firstname");
 						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
@@ -909,7 +910,7 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
@@ -1250,6 +1251,7 @@ public class RestAPI {
 	
 	public boolean putSessionData(int sid, String eid, JSONArray dataJSON) {
 		String url = "method=putSessionData&session_key=" + session_key + "&sid=" + sid + "&eid=" + eid + "&data=" + dataJSON.toString();
+		Log.e("putsession", url);
 		boolean ret = false;
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
