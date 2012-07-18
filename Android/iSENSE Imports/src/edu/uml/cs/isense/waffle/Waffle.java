@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.supplements;
+package edu.uml.cs.isense.waffle;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.collector.R;
 
 public class Waffle {
 	public boolean dontToastMeTwice;
