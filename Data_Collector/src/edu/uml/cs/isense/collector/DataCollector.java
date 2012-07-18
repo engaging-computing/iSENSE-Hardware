@@ -17,11 +17,9 @@
 package edu.uml.cs.isense.collector;
 
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,7 +44,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
@@ -71,12 +68,10 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
@@ -93,7 +88,8 @@ import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
-import edu.uml.cs.isense.supplements.Waffle;
+import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.waffle.Waffle;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
@@ -343,22 +339,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		
-		SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-		SharedPreferences.Editor ed = mPrefs.edit();
-
-		ByteArrayOutputStream uploadQOutStream = new ByteArrayOutputStream();
-		ObjectOutputStream out;
-		try {
-			out = new ObjectOutputStream(uploadQOutStream);
-			out.writeObject(uploadQueue);
-			out.close();
-			uploadQOutStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		ed.putString("uploadqueue", uploadQOutStream.toString());
-		ed.commit();
 	}
 
 	@Override
@@ -972,7 +952,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession + " - " + dateString, description,
 							eid, dataSet, null, sessionId, address);
 					uploadQueue.add(ds);
-					Log.d("uploader", "Queue is not empty");
 				}
 
 				int pic = pictureArray.size();
@@ -1323,60 +1302,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// }
 	}
 
-	@SuppressWarnings("deprecation")
-	public int getOrientation(Context context) {
-		final int rotation = ((WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
-				.getOrientation();
-		switch (rotation) {
-		case Surface.ROTATION_0: // Portrait
-			return 0;
-
-		case Surface.ROTATION_90: // Landscape
-			return 1;
-
-		case Surface.ROTATION_180: // Portrait - Reverse
-			return 2;
-
-		default: // Landscape - Reverse
-			return 3;
-		}
-	}
-
-	public void lockOrientation() {
-
-		int orient = getOrientation(mContext);
-
-		switch (orient) {
-		case 0: // Portrait
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			break;
-		case 1: // Landscape
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			break;
-		case 2: // Portrait - Reverse
-			if (getApiLevel() >= 9)
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-			else {
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-				w.make("Your device does not support a reverse-portrait orientation lock.",
-						Toast.LENGTH_LONG, "x");
-			}
-			break;
-		case 3: // Landscape - Reverse
-			if (getApiLevel() >= 9)
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-			else {
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-				w.make("Your device does not support a reverse-landscape orientation lock.",
-						Toast.LENGTH_LONG, "x");
-			}
-			break;
-		}
-
-	}
-
 	// Everything needed to be initialized for onCreate
 	@SuppressWarnings("deprecation")
 	private void initVars() {
@@ -1490,7 +1415,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					mMediaPlayer.start();
 
 					if (running) {
-						setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+						OrientationManager.enableRotation((Activity) mContext);
 
 						writeToSDCard(null, 'f');
 						setupDone = false;
@@ -1522,7 +1447,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						registerSensors();
-						lockOrientation();
+						OrientationManager.disableRotation((Activity) mContext);
 
 						dataSet = new JSONArray();
 						secondsElapsed = 0;
