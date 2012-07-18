@@ -29,6 +29,7 @@
 package edu.uml.cs.pincomm;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -303,8 +304,21 @@ public class Isense extends Activity implements OnClickListener {
             for (int i = 0; i < rawMsgs.length; i++) {
                 msgs[i] = (NdefMessage) rawMsgs[i];
             }
-            String payload = new String(msgs[0].getRecords()[0].getPayload());
-            Toast.makeText(this, payload, Toast.LENGTH_LONG).show();
+            byte[] payload = msgs[0].getRecords()[0].getPayload();
+            String text = "";
+            //Get the Text Encoding
+            String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+            //Get the Language Code
+            int languageCodeLength = payload[0] & 0077;
+            try {
+				//Get the Text
+	            text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         }
 	}
 	
