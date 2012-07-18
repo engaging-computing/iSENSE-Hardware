@@ -145,6 +145,7 @@ public class RestAPI {
 	    return bytes;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean uploadPictureToSession(File image, String eid, int sid, String img_name, String img_desc) {
 		//String target = "?method=uploadImageToSession&session_key=" + session_key + "&sid=" + sid + "&img_name=" + img_name + "&img_desc=" + img_desc;
 		
@@ -269,6 +270,7 @@ public class RestAPI {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	public Boolean uploadPicture(File image, String eid, String img_name, String img_desc) {
 		//String target = "?method=uploadImageToExperiment&session_key=" + session_key + "&eid=" + eid + "&img_name=" + img_name + "&img_desc=" + img_desc;
 		
@@ -382,6 +384,7 @@ public class RestAPI {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Boolean login(String username, String password) {
 		String url = "method=login&username=" + URLEncoder.encode(username) + "&password=" + URLEncoder.encode(password);
 		
@@ -731,7 +734,7 @@ public class RestAPI {
 	}
 	
 	public ArrayList<Experiment> getExperiments(int page, int limit, String action, String query) {
-		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query;
+		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query + "&sort=recent";
 		
 		ArrayList<Experiment> expList = new ArrayList<Experiment>();
 		
@@ -764,7 +767,7 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						//e.firstname = obj.getString("owner_firstname");
+						e.firstname = obj.getString("firstname");
 						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
@@ -810,7 +813,7 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
@@ -824,7 +827,7 @@ public class RestAPI {
 	}
 	
 	public ExpLoaded getAllExperiments(int page, int limit, String action, String query) {
-		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query;
+		String url = "method=getExperiments&page=" + page + "&limit=" + limit + "&action=" + action + "&query=" + query + "&sort=recent";
 		
 		ExpLoaded expPair = new ExpLoaded();
 		expPair.exp = new ArrayList<Experiment>();
@@ -864,7 +867,7 @@ public class RestAPI {
 						e.rating = obj.getInt("rating");
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
-						//e.firstname = obj.getString("owner_firstname");
+						e.firstname = obj.getString("firstname");
 						//e.lastname = obj.getString("owner_lastname");
 						e.provider_url = obj.getString("provider_url");
 				
@@ -910,7 +913,7 @@ public class RestAPI {
 				e.rating = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING));
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
-				//e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
