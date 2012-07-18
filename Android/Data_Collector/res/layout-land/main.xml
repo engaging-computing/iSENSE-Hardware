@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainScreen"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -19,13 +20,15 @@
         <ImageView
             android:id="@+id/ImageViewLogo"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="10dp"
+            android:layout_weight=".75"
             android:background="@android:color/transparent"
             android:contentDescription="@+string/iSENSElogo"
-            android:scaleType="center"
-            android:src="@drawable/logo_red" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo_red"
+            tools:ignore="NestedWeights" />
 
         <RelativeLayout
             android:id="@+id/layoutBelowImageEncapsulator"
@@ -34,55 +37,56 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_weight=".25"
             android:gravity="center" >
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:background="@android:color/transparent"
                 android:gravity="center_horizontal"
                 android:text="@+string/timeElapsed"
                 android:textColor="@android:color/white"
                 android:textSize="14dip"
-                android:textStyle="bold"
-                android:layout_marginBottom="20dp" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/loginInfo"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/time"
                 android:background="@android:color/transparent"
                 android:gravity="center_horizontal"
                 android:text="@+string/notLoggedIn"
                 android:textColor="#FFFFFF"
-                android:textSize="12dip"
-                android:layout_below="@+id/time" />
+                android:textSize="12dip" />
 
             <TextView
                 android:id="@+id/sessionName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/loginInfo"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/transparent"
                 android:gravity="center_horizontal"
                 android:text="@+string/session"
                 android:textColor="@android:color/white"
-                android:textSize="18dip"
-                android:layout_below="@+id/loginInfo" />
+                android:textSize="18dip" />
 
             <TextView
                 android:id="@+id/menuPrompt"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/sessionName"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="@+string/menuDirections"
                 android:textColor="@android:color/white"
-                android:textSize="15sp"
-                android:layout_below="@+id/sessionName"
-                android:layout_marginTop="20dp" />
+                android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>
 
