@@ -17,9 +17,11 @@
 package edu.uml.cs.isense.collector;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -187,7 +189,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
-	RestAPI rapi;
+	public static RestAPI rapi;
 	Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
@@ -206,7 +208,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 
 	public static int mwidth = 1;
-	
+
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
@@ -341,6 +343,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
+		
+		SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor ed = mPrefs.edit();
+
+		ByteArrayOutputStream uploadQOutStream = new ByteArrayOutputStream();
+		ObjectOutputStream out;
+		try {
+			out = new ObjectOutputStream(uploadQOutStream);
+			out.writeObject(uploadQueue);
+			out.close();
+			uploadQOutStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ed.putString("uploadqueue", uploadQOutStream.toString());
+		ed.commit();
 	}
 
 	@Override
@@ -633,9 +651,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 												Toast.LENGTH_LONG, "x");
 									else {
 
-										SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-										String experimentInput = mPrefs.getString("experiment_id", "");
-										
+										SharedPreferences mPrefs = getSharedPreferences(
+												"EID", 0);
+										String experimentInput = mPrefs
+												.getString("experiment_id", "");
+
 										if (successLogin
 												&& (experimentInput.length() > 0)) {
 											dialoginterface.dismiss();
@@ -792,10 +812,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 						public void onClick(View view) {
 							d.dismiss();
 							sessionDescription = input.getText().toString();
-							
-							SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-							String experimentInput = mPrefs.getString("experiment_id", "");
-							
+
+							SharedPreferences mPrefs = getSharedPreferences(
+									"EID", 0);
+							String experimentInput = mPrefs.getString(
+									"experiment_id", "");
+
 							if (successLogin && (experimentInput.length() > 0)) {
 								new UploadTask().execute();
 							} else {
@@ -851,23 +873,24 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-					
+
 				setupDone = true;
-				
-				partialSessionName = nameOfSession = data.getStringExtra("sessionName");
-				
+
+				partialSessionName = nameOfSession = data
+						.getStringExtra("sessionName");
+
 				String showSessionName;
 				if (partialSessionName.length() > 15) {
-					showSessionName = partialSessionName.substring(0,
-							15) + "...";
+					showSessionName = partialSessionName.substring(0, 15)
+							+ "...";
 				} else {
 					showSessionName = partialSessionName;
 				}
-				
+
 				session.setText("Session Name: " + showSessionName);
-				
+
 				new SensorCheckTask().execute();
-				
+
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
 			}
@@ -890,6 +913,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
+			Date dt = new Date();
+			String dateString = sdf.format(dt);
 
 			try {
 				if (roughLoc != null) {
@@ -927,9 +954,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 			sessionDescription = "";
 
 			// createSession Success Check
-			//if (sessionId == -1) {
-				uploadSuccess = false;
-			//}
+			// if (sessionId == -1) {
+			uploadSuccess = false;
+			// }
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
@@ -937,13 +964,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				status400 = false;
 				if (uploadSuccess)
-					uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
+					uploadSuccess = rapi
+							.putSessionData(sessionId, eid, dataSet);
 
 				// Saves data for later upload
 				if (!uploadSuccess) {
-					DataSet ds = new DataSet(DataSet.Type.DATA, rapi,
-							nameOfSession + " - " + dateString, description, eid, dataSet, null,
-							sessionId, address);
+					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession + " - " + dateString, description,
+							eid, dataSet, null, sessionId, address);
 					uploadQueue.add(ds);
 					Log.d("uploader", "Queue is not empty");
 				}
@@ -957,8 +984,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// Saves pictures for later upload
 					if (picSuccess) {
-						DataSet ds = new DataSet(DataSet.Type.PIC, rapi,
-								nameOfSession + " - " + dateString, description, eid, null,
+						DataSet ds = new DataSet(DataSet.Type.PIC, nameOfSession + " - " + dateString,
+								description, eid, null,
 								pictureArray.get(pic - 1), sessionId, null);
 						uploadQueue.add(ds);
 					}
@@ -1218,9 +1245,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String experimentInput = mPrefs.getString("experiment_id", "");
-			
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput), 
-					rapi, mContext, f);
+
+			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+					mContext, f);
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
@@ -1288,12 +1315,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		//if (uploadSuccess) {
-			if (!uploadQueue.isEmpty()) {
-				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			}
-		//}
+		// if (uploadSuccess) {
+		if (!uploadQueue.isEmpty()) {
+			Intent i = new Intent().setClass(mContext, QueueUploader.class);
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		}
+		// }
 	}
 
 	@SuppressWarnings("deprecation")
@@ -1382,8 +1409,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		w = new Waffle(this);
 		f = new Fields();
+
 		uploadQueue = new LinkedList<DataSet>();
-		
+
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
@@ -1451,7 +1479,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
-					
+
 					Intent iSetup = new Intent(DataCollector.this, Setup.class);
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 
