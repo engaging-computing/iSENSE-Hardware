@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.objects.DataSet;
 
-public class QueueUploader extends Activity {
+public class QueueUploader extends Activity implements OnClickListener {
 
 	private Context mContext;
+	private LinearLayout scrollQueue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +23,13 @@ public class QueueUploader extends Activity {
 
 		mContext = this;
 
-		LinearLayout scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
+		Button upload = (Button) findViewById(R.id.upload);
+		upload.setOnClickListener(this);
+
+		Button cancel = (Button) findViewById(R.id.cancel);
+		cancel.setOnClickListener(this);
+
+		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue(scrollQueue);
 	}
 
@@ -28,41 +37,83 @@ public class QueueUploader extends Activity {
 	private void fillScrollQueue(LinearLayout scrollQueue) {
 		String previous = "";
 
-		for (DataSet ds : DataCollector.uploadQueue) {
+		for (final DataSet ds : DataCollector.uploadQueue) {
 			switch (ds.type) {
 			case DATA:
 				View data = View.inflate(mContext, R.layout.queueblock_data,
 						null);
 
 				makeBlock(data, ds);
-				previous = checkPrevious(previous, scrollQueue, (String) ds.getName());
-				scrollQueue.addView(data);
+				previous = checkPrevious(previous, scrollQueue,
+						(String) ds.getName());
 
+				scrollQueue.addView(data);
+				ds.setUploadable(true);
+
+				data.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						CheckedTextView ctv = (CheckedTextView) v
+								.findViewById(R.id.name);
+						ctv.toggle();
+
+						if (ctv.isChecked())
+							ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+						else
+							ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+						ds.setUploadable(ctv.isChecked());
+
+					}
+
+				});
 				break;
 
 			case PIC:
 				View pic = View
 						.inflate(mContext, R.layout.queueblock_pic, null);
 
-				makeBlock(pic, ds);				
-				previous = checkPrevious(previous, scrollQueue, (String) ds.getName());
-				scrollQueue.addView(pic);
+				makeBlock(pic, ds);
+				previous = checkPrevious(previous, scrollQueue,
+						(String) ds.getName());
 
+				scrollQueue.addView(pic);
+				pic.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						CheckedTextView ctv = (CheckedTextView) v
+								.findViewById(R.id.name);
+						ctv.toggle();
+
+						if (ctv.isChecked())
+							ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+						else
+							ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+						ds.setUploadable(ctv.isChecked());
+
+					}
+
+				});
 				break;
 			}
 
-			
 		}
 
 	}
 
 	// Adds empty space after experiment groups
-	private String checkPrevious(String previous, LinearLayout scrollQueue, String ds) {
+	private String checkPrevious(String previous, LinearLayout scrollQueue,
+			String ds) {
+
 		LinearLayout space = new LinearLayout(mContext);
 		space.setPadding(0, 10, 0, 10);
-		
+
 		if ((!previous.equals(ds)) && (!previous.equals("")))
 			scrollQueue.addView(space);
+
 		return ds;
 	}
 
@@ -76,6 +127,41 @@ public class QueueUploader extends Activity {
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.check_layout:
+
+			CheckedTextView ctv = (CheckedTextView) v.findViewById(R.id.name);
+			ctv.toggle();
+
+			if (ctv.isChecked())
+				ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+			else
+				ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+			break;
+
+		case R.id.upload:
+			for (DataSet ds : DataCollector.uploadQueue) {
+				if (ds.isUploadable()) {
+					boolean success = ds.upload();
+					if (success)
+						DataCollector.uploadQueue.remove(ds);
+				}
+			}
+
+			setResult(RESULT_OK);
+			finish();
+			break;
+
+		case R.id.cancel:
+			setResult(RESULT_CANCELED);
+			finish();
+			break;
+		}
 	}
 
 }
