@@ -291,18 +291,28 @@ public class Isense extends Activity implements OnClickListener {
 				mChatService.start();
 			}
 		}
-		
-		//Check to see if the activity is being started due to reading an NFC tag
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-			Parcelable[] rawMsgs = getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-	        if (rawMsgs != null) {
-	            NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
-	            for (int i = 0; i < rawMsgs.length; i++) {
-	                msgs[i] = (NdefMessage) rawMsgs[i];
-	            }
-	            String payload = new String(msgs[0].getRecords()[0].getPayload());
-	            Toast.makeText(this, payload, Toast.LENGTH_LONG).show();
-	        }
+			handleNFCIntent(getIntent());
+		}
+	}
+	
+	void handleNFCIntent(Intent intent) {
+		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        if (rawMsgs != null) {
+            NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+            for (int i = 0; i < rawMsgs.length; i++) {
+                msgs[i] = (NdefMessage) rawMsgs[i];
+            }
+            String payload = new String(msgs[0].getRecords()[0].getPayload());
+            Toast.makeText(this, payload, Toast.LENGTH_LONG).show();
+        }
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		//Check to see if the activity is being started due to reading an NFC tag
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+			handleNFCIntent(intent);
 		}
 	}
 
