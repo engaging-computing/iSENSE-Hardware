@@ -22,7 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.supplements.Waffle;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class Setup extends Activity implements OnClickListener {
 
