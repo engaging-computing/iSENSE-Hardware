@@ -227,7 +227,6 @@
 	<string name="okay">Okay</string>
 	<string name="back">Back</string>
 	<string name="upload">Upload</string>
-	<string name="contentDesc"></string>
 	<string name="media_desc">Select one of the following options:</string>
 	<string name="scan_qr">Scan QR Code</string>
     <string name="username">Username:    \0</string>

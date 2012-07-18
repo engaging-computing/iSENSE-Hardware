@@ -23,7 +23,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.supplements.Waffle;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
 
