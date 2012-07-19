@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/custombtn"
             android:text="@string/upload"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -128,7 +128,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:layout_weight="2" >
+            android:layout_weight="1.8" >
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -142,6 +142,8 @@
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:layout_weight="1.75"
             android:orientation="vertical" >
 
@@ -150,6 +152,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
