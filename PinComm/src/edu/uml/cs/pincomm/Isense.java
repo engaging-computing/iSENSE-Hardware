@@ -116,7 +116,7 @@ public class Isense extends Activity implements OnClickListener {
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	String sessionName, sessionDesc, sessionStreet, sessionCity;
-	
+
 	NfcAdapter mAdapter;
 
 	ArrayList<String> trackedFields;
@@ -151,7 +151,7 @@ public class Isense extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 
 		mContext = this;
-		
+
 		mAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
@@ -297,32 +297,32 @@ public class Isense extends Activity implements OnClickListener {
 			handleNFCIntent(getIntent());
 		}
 	}
-	
+
 	void handleNFCIntent(Intent intent) {
 		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-        if (rawMsgs != null) {
-            NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
-            for (int i = 0; i < rawMsgs.length; i++) {
-                msgs[i] = (NdefMessage) rawMsgs[i];
-            }
-            byte[] payload = msgs[0].getRecords()[0].getPayload();
-            String text = "";
-            //Get the Text Encoding
-            String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
-            //Get the Language Code
-            int languageCodeLength = payload[0] & 0077;
-            try {
+		if (rawMsgs != null) {
+			NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+			for (int i = 0; i < rawMsgs.length; i++) {
+				msgs[i] = (NdefMessage) rawMsgs[i];
+			}
+			byte[] payload = msgs[0].getRecords()[0].getPayload();
+			String text = "";
+			//Get the Text Encoding
+			String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+			//Get the Language Code
+			int languageCodeLength = payload[0] & 0077;
+			try {
 				//Get the Text
-	            text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+				text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-                        
-            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-        }
+
+			connectToBluetooth(text);
+		}
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		//Check to see if the activity is being started due to reading an NFC tag
@@ -736,11 +736,16 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 	};
-	
+
 	public void connectToBluetooth(String macAddr) {
-		BluetoothDevice device = mBluetoothAdapter
-				.getRemoteDevice(macAddr);
-		mChatService.connect(device);
+		try {
+			BluetoothDevice device = mBluetoothAdapter
+					.getRemoteDevice(macAddr);
+			mChatService.connect(device);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
+		}
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
