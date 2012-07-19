@@ -736,6 +736,12 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 	};
+	
+	public void connectToBluetooth(String macAddr) {
+		BluetoothDevice device = mBluetoothAdapter
+				.getRemoteDevice(macAddr);
+		mChatService.connect(device);
+	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -746,11 +752,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_2:
@@ -760,11 +762,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}
