@@ -2,6 +2,7 @@
 <resources>
 
     <color name="rowcols">#DBDBDB</color>
+    <color name="rowcols2">#F0F0F0</color>
     <color name="rowcolselected">#7ABDFF</color>
     <color name="gray">#888888</color>
 

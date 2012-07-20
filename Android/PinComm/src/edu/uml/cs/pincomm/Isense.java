@@ -571,6 +571,8 @@ public class Isense extends Activity implements OnClickListener {
 				edu.uml.cs.pincomm.DatapointRow newRow = new edu.uml.cs.pincomm.DatapointRow(getBaseContext(), null);
 				if(i%2 != 0) {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
+				} else {
+					newRow.setLayoutBg(res.getColor(R.color.rowcols2));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
 
@@ -622,7 +624,6 @@ public class Isense extends Activity implements OnClickListener {
 		allSensors.remove(0);
 		allSensors.remove(0);
 
-		System.out.println(prefs2.getString("sensorspin_value", ""));
 		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
 
 		if (sensorData.get(lookup).size() != 0) {
