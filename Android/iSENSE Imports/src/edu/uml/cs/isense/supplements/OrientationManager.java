@@ -7,6 +7,7 @@ import android.os.Build;
 import android.view.Surface;
 
 public class OrientationManager {
+	
 	@SuppressWarnings("deprecation")
 	public static void disableRotation(Activity activity) {       
 	    final int orientation = activity.getResources().getConfiguration().orientation;

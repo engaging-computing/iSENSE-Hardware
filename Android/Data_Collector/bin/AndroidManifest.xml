@@ -42,7 +42,8 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="Login" />
+            android:label="Login"
+            android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".Experiments"
             android:label="Experiments" />

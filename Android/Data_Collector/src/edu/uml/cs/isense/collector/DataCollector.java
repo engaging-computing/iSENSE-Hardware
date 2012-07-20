@@ -62,7 +62,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.InputType;
@@ -72,6 +71,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
@@ -113,6 +113,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private float rawAccel[];
 	private float rawMag[];
 	private float accel[];
+	private float mag[];
 	private float orientation[];
 	private String temperature = "";
 	private String pressure = "";
@@ -142,6 +143,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int CHOOSE_SENSORS_REQUESTED = 2;
 	public static final int QUEUE_UPLOAD_REQUESTED = 3;
 	public static final int SETUP_REQUESTED = 4;
+	public static final int LOGIN_REQUESTED = 5;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -185,7 +187,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
-	RestAPI rapi;
+	static RestAPI rapi;
 	Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
@@ -204,6 +206,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 
 	public static int mwidth = 1;
+	private static int rotation = 0;
 
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
@@ -433,7 +436,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case MENU_ITEM_LOGIN:
-			showDialog(MENU_ITEM_LOGIN);
+			Intent i = new Intent(mContext, LoginActivity.class);
+			startActivityForResult(i, LOGIN_REQUESTED);
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
@@ -464,9 +468,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[ACCEL_TOTAL]) {
 
 				rawAccel = event.values.clone();
-				accel[0] = event.values[0];
-				accel[1] = event.values[1];
-				accel[2] = event.values[2];
+				
+				switch (rotation) {
+				case 90:
+					// x = -y  && y = x
+					accel[0] = -event.values[1];
+					accel[1] =  event.values[0];
+					break;
+				case 180:
+					// x = -x && y = -y
+					accel[0] = -event.values[0];
+					accel[1] = -event.values[1];
+					break;
+				case 270:
+					// x = y && y = -x
+					accel[0] =  event.values[1];
+					accel[1] = -event.values[0];
+					break;
+				case 0:
+				default:
+					accel[0] = event.values[0];
+					accel[1] = event.values[1];
+				}
+
+				accel[2] = event.values[2];						
 				accel[3] = FloatMath.sqrt((float) (Math.pow(accel[0], 2)
 						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 			}
@@ -478,6 +503,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[HEADING_RAD]) {
 
 				rawMag = event.values.clone();
+				
+				switch (rotation) {
+				case 90:
+					// x = -y  && y = x
+					mag[0] = -event.values[1];
+					mag[1] =  event.values[0];
+					break;
+				case 180:
+					// x = -x && y = -y
+					mag[0] = -event.values[0];
+					mag[1] = -event.values[1];
+					break;
+				case 270:
+					// x = y && y = -x
+					mag[0] =  event.values[1];
+					mag[1] = -event.values[0];
+					break;
+				case 0:
+				default:
+					mag[0] = event.values[0];
+					mag[1] = event.values[1];
+				}
+
+				mag[2] = event.values[2];
 
 				float rotation[] = new float[9];
 
@@ -532,34 +581,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
 		switch (id) {
-
-		case MENU_ITEM_LOGIN:
-			LoginActivity la = new LoginActivity(this);
-			dialog = la.getDialog(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case LoginActivity.LOGIN_SUCCESSFULL:
-						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-								DataCollector.mContext, DataCollector.mContext
-										.getSharedPreferences("USER_INFO",
-												Context.MODE_PRIVATE));
-						String loginName = mPrefs.getString("username", "");
-						if (loginName.length() >= 18)
-							loginName = loginName.substring(0, 18) + "...";
-						loginInfo.setText("Username: " + loginName);
-						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG, "check");
-						break;
-					case LoginActivity.LOGIN_CANCELED:
-						break;
-					case LoginActivity.LOGIN_FAILED:
-						successLogin = false;
-						showDialog(MENU_ITEM_LOGIN);
-						break;
-					}
-				}
-			});
-			break;
 
 		case DIALOG_SUMMARY:
 
@@ -873,6 +894,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
+			}
+		} else if (requestCode == LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				String returnCode = data.getStringExtra("returnCode");
+
+				if (returnCode.equals("Success")) {
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							DataCollector.mContext,
+							DataCollector.mContext.getSharedPreferences(
+									"USER_INFO", Context.MODE_PRIVATE));
+					String loginName = mPrefs.getString("username", "");
+					if (loginName.length() >= 18)
+						loginName = loginName.substring(0, 18) + "...";
+					loginInfo.setText("Username: " + loginName);
+					successLogin = true;
+					w.make("Login successful", Toast.LENGTH_LONG, "check");
+				} else if (returnCode.equals("Failed")) {
+					successLogin = false;
+					Intent i = new Intent(mContext, LoginActivity.class);
+					startActivityForResult(i, LOGIN_REQUESTED);
+				} else {
+					// I shouldn't get here... ever!
+				}
+
 			}
 		}
 
@@ -1333,6 +1378,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		orientation = new float[3];
 		rawAccel = new float[3];
 		rawMag = new float[3];
+		mag = new float[3];
 
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
@@ -1441,6 +1487,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						registerSensors();
 						OrientationManager.disableRotation((Activity) mContext);
 
+						
+						rotation = getRotation(mContext);
 						dataSet = new JSONArray();
 						secondsElapsed = 0;
 						elapsedMillis = 0;
@@ -1524,11 +1572,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 												+ (Double
 														.parseDouble(f.angle_deg) * (Math.PI / 180));
 									if (dfm.enabledFields[MAG_X])
-										f.mag_x = rawMag[0];
+										f.mag_x = mag[0];
 									if (dfm.enabledFields[MAG_Y])
-										f.mag_y = rawMag[1];
+										f.mag_y = mag[1];
 									if (dfm.enabledFields[MAG_Z])
-										f.mag_z = rawMag[2];
+										f.mag_z = mag[2];
 									if (dfm.enabledFields[MAG_TOTAL])
 										f.mag_total = Math.sqrt(Math.pow(
 												f.mag_x, 2)
@@ -1580,6 +1628,23 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		});
+	}
+
+	public int getRotation(Context context) {
+		@SuppressWarnings("deprecation")
+		final int rotation = ((WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+				.getOrientation();
+		switch (rotation) {
+		case Surface.ROTATION_0:
+			return 0;
+		case Surface.ROTATION_90:
+			return 90;
+		case Surface.ROTATION_180:
+			return 180;
+		default:
+			return 270;
+		}
 	}
 
 }
