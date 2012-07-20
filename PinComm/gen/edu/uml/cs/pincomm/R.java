@@ -55,6 +55,26 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int lastmod=0x7f010002;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int menuConnect=0x7f010006;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int menuRefresh=0x7f010007;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int menuSensor=0x7f010008;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int menuShare=0x7f010009;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int menuTime=0x7f01000a;
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -73,9 +93,10 @@ containing a value of this type.
         public static final int toplabel=0x7f010003;
     }
     public static final class color {
-        public static final int gray=0x7f080002;
+        public static final int gray=0x7f080003;
         public static final int rowcols=0x7f080000;
-        public static final int rowcolselected=0x7f080001;
+        public static final int rowcols2=0x7f080001;
+        public static final int rowcolselected=0x7f080002;
     }
     public static final class drawable {
         public static final int actionbg=0x7f020000;
@@ -87,23 +108,29 @@ containing a value of this type.
         public static final int btn_selectppt=0x7f020006;
         public static final int checkmark=0x7f020007;
         public static final int custombtn=0x7f020008;
-        public static final int ic_action_refresh=0x7f020009;
-        public static final int ic_action_search=0x7f02000a;
-        public static final int ic_action_sensor=0x7f02000b;
-        public static final int ic_action_share=0x7f02000c;
-        public static final int ic_action_time=0x7f02000d;
-        public static final int ic_launcher=0x7f02000e;
-        public static final int logo=0x7f02000f;
-        public static final int nfcconnect=0x7f020010;
-        public static final int nopptbtn=0x7f020011;
-        public static final int pptbtn=0x7f020012;
-        public static final int pptbtntry=0x7f020013;
-        public static final int raaclogo=0x7f020014;
-        public static final int red_x=0x7f020015;
-        public static final int sensordiagram=0x7f020016;
-        public static final int superspin=0x7f020017;
-        public static final int toast_background_check=0x7f020018;
-        public static final int toast_background_x=0x7f020019;
+        public static final int ic_action_search=0x7f020009;
+        public static final int ic_launcher=0x7f02000a;
+        public static final int logo=0x7f02000b;
+        public static final int menu_connect_dark=0x7f02000c;
+        public static final int menu_connect_light=0x7f02000d;
+        public static final int menu_refresh_dark=0x7f02000e;
+        public static final int menu_refresh_light=0x7f02000f;
+        public static final int menu_sensor_dark=0x7f020010;
+        public static final int menu_sensor_light=0x7f020011;
+        public static final int menu_share_dark=0x7f020012;
+        public static final int menu_share_light=0x7f020013;
+        public static final int menu_time_dark=0x7f020014;
+        public static final int menu_time_light=0x7f020015;
+        public static final int nfcconnect=0x7f020016;
+        public static final int nopptbtn=0x7f020017;
+        public static final int pptbtn=0x7f020018;
+        public static final int pptbtntry=0x7f020019;
+        public static final int raaclogo=0x7f02001a;
+        public static final int red_x=0x7f02001b;
+        public static final int sensordiagram=0x7f02001c;
+        public static final int superspin=0x7f02001d;
+        public static final int toast_background_check=0x7f02001e;
+        public static final int toast_background_x=0x7f02001f;
     }
     public static final class id {
         public static final int LinearLayout01=0x7f0a0037;
@@ -408,5 +435,77 @@ containing a value of this type.
           @attr name android:name
         */
         public static final int exprow_name = 0;
+        /** Attributes that can be used with a theme.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #theme_menuConnect edu.uml.cs.pincomm:menuConnect}</code></td><td></td></tr>
+           <tr><td><code>{@link #theme_menuRefresh edu.uml.cs.pincomm:menuRefresh}</code></td><td></td></tr>
+           <tr><td><code>{@link #theme_menuSensor edu.uml.cs.pincomm:menuSensor}</code></td><td></td></tr>
+           <tr><td><code>{@link #theme_menuShare edu.uml.cs.pincomm:menuShare}</code></td><td></td></tr>
+           <tr><td><code>{@link #theme_menuTime edu.uml.cs.pincomm:menuTime}</code></td><td></td></tr>
+           </table>
+           @see #theme_menuConnect
+           @see #theme_menuRefresh
+           @see #theme_menuSensor
+           @see #theme_menuShare
+           @see #theme_menuTime
+         */
+        public static final int[] theme = {
+            0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009,
+            0x7f01000a
+        };
+        /**
+          <p>This symbol is the offset where the {@link edu.uml.cs.pincomm.R.attr#menuConnect}
+          attribute's value can be found in the {@link #theme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name android:menuConnect
+        */
+        public static final int theme_menuConnect = 0;
+        /**
+          <p>This symbol is the offset where the {@link edu.uml.cs.pincomm.R.attr#menuRefresh}
+          attribute's value can be found in the {@link #theme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name android:menuRefresh
+        */
+        public static final int theme_menuRefresh = 1;
+        /**
+          <p>This symbol is the offset where the {@link edu.uml.cs.pincomm.R.attr#menuSensor}
+          attribute's value can be found in the {@link #theme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name android:menuSensor
+        */
+        public static final int theme_menuSensor = 2;
+        /**
+          <p>This symbol is the offset where the {@link edu.uml.cs.pincomm.R.attr#menuShare}
+          attribute's value can be found in the {@link #theme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name android:menuShare
+        */
+        public static final int theme_menuShare = 3;
+        /**
+          <p>This symbol is the offset where the {@link edu.uml.cs.pincomm.R.attr#menuTime}
+          attribute's value can be found in the {@link #theme} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name android:menuTime
+        */
+        public static final int theme_menuTime = 4;
     };
 }
