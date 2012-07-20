@@ -29,6 +29,7 @@
 package edu.uml.cs.pincomm;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONArray;
 
@@ -50,11 +52,17 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -109,6 +117,8 @@ public class Isense extends Activity implements OnClickListener {
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	String sessionName, sessionDesc, sessionStreet, sessionCity;
 
+	NfcAdapter mAdapter;
+
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
 
@@ -141,6 +151,8 @@ public class Isense extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 
 		mContext = this;
+
+		mAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
 		mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
@@ -280,6 +292,42 @@ public class Isense extends Activity implements OnClickListener {
 				// Start the Bluetooth chat services
 				mChatService.start();
 			}
+		}
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+			handleNFCIntent(getIntent());
+		}
+	}
+
+	void handleNFCIntent(Intent intent) {
+		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+		if (rawMsgs != null) {
+			NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+			for (int i = 0; i < rawMsgs.length; i++) {
+				msgs[i] = (NdefMessage) rawMsgs[i];
+			}
+			byte[] payload = msgs[0].getRecords()[0].getPayload();
+			String text = "";
+			//Get the Text Encoding
+			String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+			//Get the Language Code
+			int languageCodeLength = payload[0] & 0077;
+			try {
+				//Get the Text
+				text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			connectToBluetooth(text);
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		//Check to see if the activity is being started due to reading an NFC tag
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+			handleNFCIntent(intent);
 		}
 	}
 
@@ -689,6 +737,17 @@ public class Isense extends Activity implements OnClickListener {
 		}
 	};
 
+	public void connectToBluetooth(String macAddr) {
+		try {
+			BluetoothDevice device = mBluetoothAdapter
+					.getRemoteDevice(macAddr);
+			mChatService.connect(device);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
+		}
+	}
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
@@ -698,11 +757,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_2:
@@ -712,11 +767,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}
