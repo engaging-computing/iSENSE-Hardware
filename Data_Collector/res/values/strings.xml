@@ -232,5 +232,8 @@
     <string name="username">Username:    \0</string>
 	<string name="password">Password:    \0</string>
 	<string name="loading">Loading&#x2026;</string>
+	<string name="usernamePrompt">Username:   </string>
+	<string name="passwordPrompt">Password:   </string>
+	
 	
 </resources>

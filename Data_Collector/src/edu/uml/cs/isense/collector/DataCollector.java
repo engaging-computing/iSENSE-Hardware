@@ -62,7 +62,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.InputType;
@@ -142,6 +141,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int CHOOSE_SENSORS_REQUESTED = 2;
 	public static final int QUEUE_UPLOAD_REQUESTED = 3;
 	public static final int SETUP_REQUESTED = 4;
+	public static final int LOGIN_REQUESTED = 5;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -185,7 +185,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
-	RestAPI rapi;
+	static RestAPI rapi;
 	Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
@@ -433,7 +433,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case MENU_ITEM_LOGIN:
-			showDialog(MENU_ITEM_LOGIN);
+			Intent i = new Intent(mContext, LoginActivity.class);
+			startActivityForResult(i, LOGIN_REQUESTED);
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
@@ -532,34 +533,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
 		switch (id) {
-
-		case MENU_ITEM_LOGIN:
-			LoginActivity la = new LoginActivity(this);
-			dialog = la.getDialog(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case LoginActivity.LOGIN_SUCCESSFULL:
-						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-								DataCollector.mContext, DataCollector.mContext
-										.getSharedPreferences("USER_INFO",
-												Context.MODE_PRIVATE));
-						String loginName = mPrefs.getString("username", "");
-						if (loginName.length() >= 18)
-							loginName = loginName.substring(0, 18) + "...";
-						loginInfo.setText("Username: " + loginName);
-						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG, "check");
-						break;
-					case LoginActivity.LOGIN_CANCELED:
-						break;
-					case LoginActivity.LOGIN_FAILED:
-						successLogin = false;
-						showDialog(MENU_ITEM_LOGIN);
-						break;
-					}
-				}
-			});
-			break;
 
 		case DIALOG_SUMMARY:
 
@@ -873,6 +846,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
+			}
+		} else if (requestCode == LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				String returnCode = data.getStringExtra("returnCode");
+				
+				if (returnCode.equals("Success")) {
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							DataCollector.mContext, DataCollector.mContext
+									.getSharedPreferences("USER_INFO",
+											Context.MODE_PRIVATE));
+					String loginName = mPrefs.getString("username", "");
+					if (loginName.length() >= 18)
+						loginName = loginName.substring(0, 18) + "...";
+					loginInfo.setText("Username: " + loginName);
+					successLogin = true;
+					w.make("Login successful", Toast.LENGTH_LONG, "check");
+				} else if (returnCode.equals("Failed")) {
+					successLogin = false;
+					Intent i = new Intent(mContext, LoginActivity.class);
+					startActivityForResult(i, LOGIN_REQUESTED);
+				} else {
+					// I shouldn't get here... ever!
+				}
+				
 			}
 		}
 
@@ -1437,7 +1434,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							showDialog(DIALOG_DESCRIPTION);
 
 					} else {
-
+ 
 						registerSensors();
 						OrientationManager.disableRotation((Activity) mContext);
 
