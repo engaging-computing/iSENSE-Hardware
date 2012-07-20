@@ -18,9 +18,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.os.StrictMode;
 import android.util.Log;
 import edu.uml.cs.isense.objects.ExpLoaded;
 import edu.uml.cs.isense.objects.Experiment;
@@ -50,14 +52,24 @@ public class RestAPI {
 	
 	public String connection = "";
 	
+	@SuppressLint("NewApi")
 	protected RestAPI() {
-
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		      StrictMode.setThreadPolicy(policy);
+		}
     }
 	
+	@SuppressLint("NewApi")
 	protected RestAPI(ConnectivityManager cm, Context c) {
 		mDbHelper = new RestAPIDbAdapter(c);
 		connectivityManager = cm;
 		dataCache = new JSONArray();
+		
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		      StrictMode.setThreadPolicy(policy);
+		}
 	}
 	
 	/**
@@ -397,6 +409,8 @@ public class RestAPI {
 				JSONObject o = new JSONObject(data);
 				session_key = o.getJSONObject("data").getString("session");
 				uid = o.getJSONObject("data").getInt("uid");
+				
+				Log.e("login result", "Result = " + o.toString());
 				
 				if (isLoggedIn()) {
 					this.username = username;
