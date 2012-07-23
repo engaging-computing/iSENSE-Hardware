@@ -38,6 +38,7 @@ import java.util.Date;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -49,6 +50,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -111,6 +113,8 @@ public class Isense extends Activity implements OnClickListener {
 	JSONArray dataSet;
 	public static Context mContext;
 
+	NfcAdapter mAdapter;
+	
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
 
@@ -282,7 +286,19 @@ public class Isense extends Activity implements OnClickListener {
 		if (ppi != null)
 			ppi.disconnect();
 	}
-
+	
+	public void connectToBluetooth(String macAddr) {
+		try {
+			BluetoothDevice device = mBluetoothAdapter
+					.getRemoteDevice(macAddr);
+			mChatService.connect(device);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
 		if (v == pinpointBtn) {
@@ -295,7 +311,9 @@ public class Isense extends Activity implements OnClickListener {
 			final ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setMessage("Please wait, reading data from PINPoint");
-			progressDialog.setProgressNumberFormat(null);
+			if(Build.VERSION.SDK_INT >= 11) {
+				progressDialog.setProgressNumberFormat(null);
+			}
 			progressDialog.show();
 
 			final Runnable toastRun = new Runnable() { 
@@ -623,11 +641,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_2:
@@ -637,11 +651,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}
