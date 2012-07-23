@@ -42,7 +42,8 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="Login" />
+            android:label="Login"
+            android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".Experiments"
             android:label="Experiments" />
@@ -64,6 +65,35 @@
             android:name=".Setup"
             android:label="Step 1: Identify Session"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".LoginError"
+            android:label="Login Failed"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".Summary"
+            android:label="Session Summary"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".UploadChoice"
+            android:label="Select an Action:"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".NoIsense"
+            android:label="Upload Error"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".NoGps"
+            android:label="No GPS Provider Found"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".ForceStop"
+            android:label="Data Recording Halted"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".RecordingStopped"
+            android:label="Data Recording Timed Out"
+            android:theme="@style/theme_dialog_black" />
+        
     </application>
 
 </manifest>

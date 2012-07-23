@@ -67,7 +67,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.InputType;
@@ -78,6 +77,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
@@ -121,6 +121,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private float rawAccel[];
 	private float rawMag[];
 	private float accel[];
+	private float mag[];
 	private float orientation[];
 	private String temperature = "";
 	private String pressure = "";
@@ -133,14 +134,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_UPLOAD = 2;
 	private static final int MENU_ITEM_TIME = 3;
 	private static final int MENU_ITEM_MEDIA = 4;
-
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int DIALOG_NO_ISENSE = 7;
-	private static final int RECORDING_STOPPED = 8;
-	private static final int DIALOG_NO_GPS = 9;
-	private static final int DIALOG_FORCE_STOP = 10;
-	private static final int DIALOG_DESCRIPTION = 11;
+	
+	private static final int DIALOG_DESCRIPTION = 5;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -150,7 +145,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int CHOOSE_SENSORS_REQUESTED = 2;
 	public static final int QUEUE_UPLOAD_REQUESTED = 3;
 	public static final int SETUP_REQUESTED = 4;
-
+	public static final int LOGIN_REQUESTED = 5;
+	public static final int UPLOAD_CHOICE_REQUESTED = 6;
+	public static final int NO_ISENSE_REQUESTED = 7;
+	public static final int NO_GPS_REQUESTED = 8;
+	public static final int FORCE_STOP_REQUESTED = 9;
+	public static final int RECORDING_STOPPED_REQUESTED = 10;
+	
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -189,11 +190,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private long currentTime = 0;
 	private long timeOffset = 0;
 
-	private String dateString, s_elapsedSeconds, s_elapsedMillis,
+	private String dateString, niceDateString, 
+			s_elapsedSeconds, s_elapsedMillis,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
-	public static RestAPI rapi;
+	static RestAPI rapi;
 	Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
@@ -212,6 +214,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 
 	public static int mwidth = 1;
+	private static int rotation = 0;
 
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
@@ -221,6 +224,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
+	private static boolean showGpsDialog = true;
 
 	private static Handler mHandler;
 	private boolean throughHandler = false;
@@ -243,7 +247,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -263,8 +266,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
+		if (running) {
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
+		}
 
 	}
 
@@ -274,9 +279,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+			SimpleDateFormat niceFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
 			Date dt = new Date();
 
 			dateString = sdf.format(dt);
+			niceDateString = niceFormat.format(dt);
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -399,14 +406,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		assignVars();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
-
+		if (running) {
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
+		}
 		// Will call the login dialogue if necessary and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
@@ -468,7 +475,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -477,11 +483,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case MENU_ITEM_LOGIN:
-			showDialog(MENU_ITEM_LOGIN);
+			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			showDialog(DIALOG_CHOICE);
+			Intent iUpload = new Intent(mContext, UploadChoice.class);
+			startActivityForResult(iUpload, UPLOAD_CHOICE_REQUESTED);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
@@ -508,9 +516,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[ACCEL_TOTAL]) {
 
 				rawAccel = event.values.clone();
-				accel[0] = event.values[0];
-				accel[1] = event.values[1];
-				accel[2] = event.values[2];
+				
+				switch (rotation) {
+				case 90:
+					// x = -y  && y = x
+					accel[0] = -event.values[1];
+					accel[1] =  event.values[0];
+					break;
+				case 180:
+					// x = -x && y = -y
+					accel[0] = -event.values[0];
+					accel[1] = -event.values[1];
+					break;
+				case 270:
+					// x = y && y = -x
+					accel[0] =  event.values[1];
+					accel[1] = -event.values[0];
+					break;
+				case 0:
+				default:
+					accel[0] = event.values[0];
+					accel[1] = event.values[1];
+				}
+
+				accel[2] = event.values[2];						
 				accel[3] = FloatMath.sqrt((float) (Math.pow(accel[0], 2)
 						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 			}
@@ -522,6 +551,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[HEADING_RAD]) {
 
 				rawMag = event.values.clone();
+				
+				switch (rotation) {
+				case 90:
+					// x = -y  && y = x
+					mag[0] = -event.values[1];
+					mag[1] =  event.values[0];
+					break;
+				case 180:
+					// x = -x && y = -y
+					mag[0] = -event.values[0];
+					mag[1] = -event.values[1];
+					break;
+				case 270:
+					// x = y && y = -x
+					mag[0] =  event.values[1];
+					mag[1] = -event.values[0];
+					break;
+				case 0:
+				default:
+					mag[0] = event.values[0];
+					mag[1] = event.values[1];
+				}
+
+				mag[2] = event.values[2];
 
 				float rotation[] = new float[9];
 
@@ -577,227 +630,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		switch (id) {
 
-		case MENU_ITEM_LOGIN:
-			LoginActivity la = new LoginActivity(this);
-			dialog = la.getDialog(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case LoginActivity.LOGIN_SUCCESSFULL:
-						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-								DataCollector.mContext, DataCollector.mContext
-										.getSharedPreferences("USER_INFO",
-												Context.MODE_PRIVATE));
-						String loginName = mPrefs.getString("username", "");
-						if (loginName.length() >= 18)
-							loginName = loginName.substring(0, 18) + "...";
-						loginInfo.setText("Username: " + loginName);
-						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG, "check");
-						break;
-					case LoginActivity.LOGIN_CANCELED:
-						break;
-					case LoginActivity.LOGIN_FAILED:
-						successLogin = false;
-						showDialog(MENU_ITEM_LOGIN);
-						break;
-					}
-				}
-			});
-			break;
-
-		case DIALOG_SUMMARY:
-
-			MediaManager.mediaCount = 0;
-			elapsedMillis = totalMillis;
-			elapsedSeconds = elapsedMillis / 1000;
-			elapsedMillis %= 1000;
-			elapsedMinutes = elapsedSeconds / 60;
-			elapsedSeconds %= 60;
-
-			if (elapsedSeconds < 10) {
-				s_elapsedSeconds = "0" + elapsedSeconds;
-			} else {
-				s_elapsedSeconds = "" + elapsedSeconds;
-			}
-
-			if (elapsedMillis < 10) {
-				s_elapsedMillis = "00" + elapsedMillis;
-			} else if (elapsedMillis < 100) {
-				s_elapsedMillis = "0" + elapsedMillis;
-			} else {
-				s_elapsedMillis = "" + elapsedMillis;
-			}
-
-			if (elapsedMinutes < 10) {
-				s_elapsedMinutes = "0" + elapsedMinutes;
-			} else {
-				s_elapsedMinutes = "" + elapsedMinutes;
-			}
-
-			String appendMe = "";
-			if (sdCardError)
-				appendMe = "File not written to SD Card.";
-			else
-				appendMe = "Filename: \n" + sdFileName;
-
-			builder.setTitle("Session Summary")
-					.setMessage(
-							"Elapsed time: " + s_elapsedMinutes + ":"
-									+ s_elapsedSeconds + "." + s_elapsedMillis
-									+ "\n" + "Data points: " + dataPointCount
-									+ "\n" + "End date and time: \n"
-									+ dateString + "\n" + appendMe)
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-			break;
-
-		case DIALOG_CHOICE:
-
-			builder.setTitle("Select An Action:")
-					.setMessage(
-							"Would you like to upload your data and media to iSENSE?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-
-									if (len == 0 || len2 == 0)
-										w.make("There is no data to upload!",
-												Toast.LENGTH_LONG, "x");
-									else {
-
-										SharedPreferences mPrefs = getSharedPreferences(
-												"EID", 0);
-										String experimentInput = mPrefs
-												.getString("experiment_id", "");
-
-										if (successLogin
-												&& (experimentInput.length() > 0)) {
-											dialoginterface.dismiss();
-											new UploadTask().execute();
-										} else {
-											showDialog(DIALOG_NO_ISENSE);
-										}
-
-									}
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_ISENSE:
-
-			builder.setTitle("Cannot Upload to iSENSE")
-					.setMessage(
-							"You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to. "
-									+ "You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in "
-									+ "to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if "
-									+ "you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.")
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case RECORDING_STOPPED:
-
-			throughHandler = false;
-
-			builder.setTitle("Time Up")
-					.setMessage(
-							"You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum "
-									+ "recording time at 10 minutes and have stopped recording for you.  Press \"Okay\" to continue.")
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									showDialog(DIALOG_DESCRIPTION);
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_GPS:
-
-			builder.setTitle("No GPS Provider Found")
-					.setMessage(
-							"Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?")
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_FORCE_STOP:
-
-			builder.setTitle("Data Recording Halted")
-					.setMessage(
-							"You exited the app while data was still being recorded.  Data has stopped recording.")
-					.setCancelable(false)
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									startStop.performLongClick();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
 		case DIALOG_DESCRIPTION:
 			LinearLayout layout = new LinearLayout(this);
 			layout.setOrientation(LinearLayout.VERTICAL);
@@ -822,7 +654,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 								public void onClick(DialogInterface d, int which) {
 									// Do nothing here. We override the onclick
 								}
-							}).setNegativeButton("Cancel", null).create();
+							})
+					.setNegativeButton("Cancel",
+							new Dialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int which) {
+									// Do nothing here. We override the onclick	
+								}				
+							})
+					.create();
 
 			d.setOnShowListener(new DialogInterface.OnShowListener() {
 
@@ -831,7 +671,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
 					b.setOnClickListener(new View.OnClickListener() {
-
 						@Override
 						public void onClick(View view) {
 							d.dismiss();
@@ -845,8 +684,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 							if (successLogin && (experimentInput.length() > 0)) {
 								new UploadTask().execute();
 							} else {
-								showDialog(DIALOG_NO_ISENSE);
+								Intent iNoIsense = new Intent(mContext, NoIsense.class);
+								startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
 							}
+						}
+					});
+					
+					Button c = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+					c.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							d.dismiss();
+							w.make("Data not uploaded.", Toast.LENGTH_SHORT, "x");
+							showSummary();
 						}
 					});
 				}
@@ -918,8 +768,68 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
 			}
-		}
+		} else if (requestCode == LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				String returnCode = data.getStringExtra("returnCode");
 
+				if (returnCode.equals("Success")) {
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							DataCollector.mContext,
+							DataCollector.mContext.getSharedPreferences(
+									"USER_INFO", Context.MODE_PRIVATE));
+					String loginName = mPrefs.getString("username", "");
+					if (loginName.length() >= 18)
+						loginName = loginName.substring(0, 18) + "...";
+					loginInfo.setText("Username: " + loginName);
+					successLogin = true;
+					w.make("Login successful", Toast.LENGTH_LONG, "check");
+				} else if (returnCode.equals("Failed")) {
+					successLogin = false;
+					Intent i = new Intent(mContext, LoginActivity.class);
+					startActivityForResult(i, LOGIN_REQUESTED);
+				} else {
+					Log.wtf("NO!", "I should never get here!");
+				}
+
+			}
+		} else if (requestCode == UPLOAD_CHOICE_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (len == 0 || len2 == 0)
+					w.make("There is no data to upload!",
+							Toast.LENGTH_LONG, "x");
+				else {
+
+					SharedPreferences mPrefs = getSharedPreferences(
+							"EID", 0);
+					String experimentInput = mPrefs
+							.getString("experiment_id", "");
+
+					if (successLogin
+							&& (experimentInput.length() > 0)) 
+						showDialog(DIALOG_DESCRIPTION);
+					else {
+						Intent iNoIsense = new Intent(mContext, NoIsense.class);
+						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);	
+					}
+				}
+			} else if (resultCode == RESULT_CANCELED) {
+				if (!choiceViaMenu)
+					showSummary();
+			}
+		} else if (requestCode == NO_ISENSE_REQUESTED) {
+			if (!choiceViaMenu)
+				showSummary();
+		} else if (requestCode == NO_GPS_REQUESTED) {
+			showGpsDialog = true;
+			if (resultCode == RESULT_OK) {
+				startActivity(new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			} 
+		} else if (requestCode == FORCE_STOP_REQUESTED) {
+			startStop.performLongClick();
+		} else if (requestCode == RECORDING_STOPPED_REQUESTED) {
+			showDialog(DIALOG_DESCRIPTION);
+		}
 	}
 
 	// Assists with differentiating between displays for dialogues
@@ -1049,7 +959,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void onPostExecute(Void voids) {
 
@@ -1062,7 +971,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			session.setText(getString(R.string.session));
 			nameOfSession = "";
 
-			showDialog(DIALOG_SUMMARY, null);
+			showSummary();
 
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
@@ -1389,6 +1298,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		orientation = new float[3];
 		rawAccel = new float[3];
 		rawMag = new float[3];
+		mag = new float[3];
 
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
@@ -1421,7 +1331,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setStartStopListener();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void initLocations() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -1435,7 +1344,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			mRoughLocManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, DataCollector.this);
 		} else {
-			showDialog(DIALOG_NO_GPS);
+			if (showGpsDialog) {
+				Intent iNoGps = new Intent(mContext, NoGps.class);
+				startActivityForResult(iNoGps, NO_GPS_REQUESTED);
+				showGpsDialog = false;
+			}
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
@@ -1487,16 +1400,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 							w.make("Could not write file to SD Card.",
 									Toast.LENGTH_SHORT, "x");
 
-						if (throughHandler)
-							showDialog(RECORDING_STOPPED);
-						else
+						if (throughHandler) {
+							Intent iRecordingStopped = new Intent(mContext, RecordingStopped.class);
+							startActivityForResult(iRecordingStopped, RECORDING_STOPPED_REQUESTED);
+						} else {
 							showDialog(DIALOG_DESCRIPTION);
-
+						}
+							
 					} else {
 
 						registerSensors();
 						OrientationManager.disableRotation((Activity) mContext);
 
+						
+						rotation = getRotation(mContext);
 						dataSet = new JSONArray();
 						secondsElapsed = 0;
 						elapsedMillis = 0;
@@ -1580,11 +1497,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 												+ (Double
 														.parseDouble(f.angle_deg) * (Math.PI / 180));
 									if (dfm.enabledFields[MAG_X])
-										f.mag_x = rawMag[0];
+										f.mag_x = mag[0];
 									if (dfm.enabledFields[MAG_Y])
-										f.mag_y = rawMag[1];
+										f.mag_y = mag[1];
 									if (dfm.enabledFields[MAG_Z])
-										f.mag_z = rawMag[2];
+										f.mag_z = mag[2];
 									if (dfm.enabledFields[MAG_TOTAL])
 										f.mag_total = Math.sqrt(Math.pow(
 												f.mag_x, 2)
@@ -1641,6 +1558,69 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// get shared Q_COUNT
 	public static SharedPreferences getSharedPreferences (Context ctxt) {
 		   return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
+	}
+
+	public int getRotation(Context context) {
+		@SuppressWarnings("deprecation")
+		final int rotation = ((WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+				.getOrientation();
+		switch (rotation) {
+		case Surface.ROTATION_0:
+			return 0;
+		case Surface.ROTATION_90:
+			return 90;
+		case Surface.ROTATION_180:
+			return 180;
+		default:
+			return 270;
+		}
+	}
+	
+	private void showSummary() {
+		MediaManager.mediaCount = 0;
+		elapsedMillis = totalMillis;
+		elapsedSeconds = elapsedMillis / 1000;
+		elapsedMillis %= 1000;
+		elapsedMinutes = elapsedSeconds / 60;
+		elapsedSeconds %= 60;
+
+		if (elapsedSeconds < 10) {
+			s_elapsedSeconds = "0" + elapsedSeconds;
+		} else {
+			s_elapsedSeconds = "" + elapsedSeconds;
+		}
+
+		if (elapsedMillis < 10) {
+			s_elapsedMillis = "00" + elapsedMillis;
+		} else if (elapsedMillis < 100) {
+			s_elapsedMillis = "0" + elapsedMillis;
+		} else {
+			s_elapsedMillis = "" + elapsedMillis;
+		}
+
+		if (elapsedMinutes < 10) {
+			s_elapsedMinutes = "0" + elapsedMinutes;
+		} else {
+			s_elapsedMinutes = "" + elapsedMinutes;
+		}
+
+		String appendMe = "";
+		if (sdCardError)
+			appendMe = "File not written to SD Card.";
+		else
+			appendMe = "Filename: \n" + sdFileName;
+		
+		Intent iSummary = new Intent(mContext, Summary.class);
+		iSummary.putExtra("millis",  s_elapsedMillis)
+				.putExtra("seconds", s_elapsedSeconds)
+				.putExtra("minutes", s_elapsedMinutes)
+				.putExtra("append",  appendMe)
+				.putExtra("date",    niceDateString)
+				.putExtra("points",  "" + dataPointCount);
+		
+		startActivity(iSummary);
+		
 	}
 
 	
