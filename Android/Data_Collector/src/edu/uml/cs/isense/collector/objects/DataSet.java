@@ -1,14 +1,21 @@
 package edu.uml.cs.isense.collector.objects;
 
 import java.io.File;
-import java.util.List;
+import java.io.Serializable;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
-import android.location.Address;
+import android.annotation.SuppressLint;
 import edu.uml.cs.isense.collector.DataCollector;
 
-public class DataSet {
+@SuppressLint("ParserError")
+public class DataSet implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3776465868309657210L;
 
 	public enum Type {
 		DATA, PIC
@@ -22,7 +29,7 @@ public class DataSet {
 	private boolean rdyForUpload = true;
 
 	// Data Only
-	private JSONArray data;
+	private byte[] data;
 
 	// Picture Only
 	private File picture;
@@ -33,21 +40,22 @@ public class DataSet {
 	private String state = "";
 	private String country = "";
 	private String addr = "";
-
-	public DataSet(Type type, String name, String desc,
-			String eid, JSONArray data, File picture, int sid,
-			List<Address> address) {
+	
+	public DataSet(Type type, String name, String desc, String eid,
+			String data, File picture, int sid, String city, String state, String country, String addr) {
 		this.type = type;
 		this.name = name;
 		this.desc = desc;
 		this.eid = eid;
-		this.data = data;
+		if (!(data == null))
+			this.data = data.getBytes();
+		else this.data = null;
 		this.picture = picture;
 		this.sid = sid;
-		this.city  = address.get(0).getLocality();
-		this.state = address.get(0).getAdminArea();
-		this.country = address.get(0).getCountryName();
-		this.addr = address.get(0).getAddressLine(0);
+		this.city = city;
+		this.state = state;
+		this.country = country;
+		this.addr = addr;
 	}
 
 	// Attempts to upload data with given information
@@ -56,15 +64,15 @@ public class DataSet {
 		if (this.rdyForUpload) {
 			switch (type) {
 			case DATA:
-				
+
 				if (sid == -1) {
 
 					if (addr.equals("")) {
-						sid = DataCollector.rapi.createSession(eid, name, desc, "N/A", "N/A",
-								"United States");
+						sid = DataCollector.rapi.createSession(eid, name, desc,
+								"N/A", "N/A", "United States");
 					} else {
-						sid = DataCollector.rapi.createSession(eid, name, desc, addr, city
-								+ ", " + state, country);
+						sid = DataCollector.rapi.createSession(eid, name, desc,
+								addr, city + ", " + state, country);
 					}
 
 					if (sid == -1) {
@@ -77,25 +85,39 @@ public class DataSet {
 				if (sid == -400) {
 					success = false;
 					break;
-				} else
-					success = DataCollector.rapi.putSessionData(sid, eid, data);
-
+				} else {
+					JSONArray dataJSON = prepDataForUpload();
+					if (!(dataJSON.isNull(0)))
+					 success = DataCollector.rapi.putSessionData(sid, eid, dataJSON);
+				}
 				break;
 
 			case PIC:
 				if (name.equals("")) {
-					success = DataCollector.rapi.uploadPictureToSession(picture, eid, sid,
-							"*Session Name Not Provided*", "N/A");
+					success = DataCollector.rapi.uploadPictureToSession(
+							picture, eid, sid, "*Session Name Not Provided*",
+							"N/A");
 				} else {
-					success = DataCollector.rapi.uploadPictureToSession(picture, eid, sid,
-							name, "N/A");
+					success = DataCollector.rapi.uploadPictureToSession(
+							picture, eid, sid, name, "N/A");
 				}
 				break;
 
 			}
 		}
-		
+
 		return success;
+	}
+
+	private JSONArray prepDataForUpload() {
+		String dataString = data.toString();
+		JSONArray dataJSON = null;
+		try {
+			dataJSON = new JSONArray(dataString);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return dataJSON;
 	}
 
 	public String getEID() {
@@ -122,9 +144,8 @@ public class DataSet {
 	public void setUploadable(boolean uploadable) {
 		this.rdyForUpload = uploadable;
 	}
-	
+
 	public boolean isUploadable() {
 		return this.rdyForUpload;
 	}
-
 }
