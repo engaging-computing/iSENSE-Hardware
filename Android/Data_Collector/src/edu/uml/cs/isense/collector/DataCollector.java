@@ -128,12 +128,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_TIME = 3;
 	private static final int MENU_ITEM_MEDIA = 4;
 	
-	private static final int DIALOG_CHOICE = 5;
-	private static final int DIALOG_NO_ISENSE = 6;
-	private static final int RECORDING_STOPPED = 7;
-	private static final int DIALOG_NO_GPS = 8;
-	private static final int DIALOG_FORCE_STOP = 9;
-	private static final int DIALOG_DESCRIPTION = 10;
+	private static final int RECORDING_STOPPED = 5;
+	private static final int DIALOG_NO_GPS = 6;
+	private static final int DIALOG_FORCE_STOP = 7;
+	private static final int DIALOG_DESCRIPTION = 8;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -144,7 +142,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int QUEUE_UPLOAD_REQUESTED = 3;
 	public static final int SETUP_REQUESTED = 4;
 	public static final int LOGIN_REQUESTED = 5;
-
+	public static final int UPLOAD_CHOICE_REQUESTED = 6;
+	public static final int NO_ISENSE_REQUESTED = 7;
+	
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -430,7 +430,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -439,12 +438,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case MENU_ITEM_LOGIN:
-			Intent i = new Intent(mContext, LoginActivity.class);
-			startActivityForResult(i, LOGIN_REQUESTED);
+			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			showDialog(DIALOG_CHOICE);
+			Intent iUpload = new Intent(mContext, UploadChoice.class);
+			startActivityForResult(iUpload, UPLOAD_CHOICE_REQUESTED);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
@@ -585,76 +585,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		switch (id) {
 
-		case DIALOG_CHOICE:
-
-			builder.setTitle("Select An Action:")
-					.setMessage(
-							"Would you like to upload your data and media to iSENSE?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-
-									if (len == 0 || len2 == 0)
-										w.make("There is no data to upload!",
-												Toast.LENGTH_LONG, "x");
-									else {
-
-										SharedPreferences mPrefs = getSharedPreferences(
-												"EID", 0);
-										String experimentInput = mPrefs
-												.getString("experiment_id", "");
-
-										if (successLogin
-												&& (experimentInput.length() > 0)) {
-											dialoginterface.dismiss();
-											new UploadTask().execute();
-										} else {
-											showDialog(DIALOG_NO_ISENSE);
-										}
-
-									}
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showSummary();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_ISENSE:
-
-			builder.setTitle("Cannot Upload to iSENSE")
-					.setMessage(
-							"You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to. "
-									+ "You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in "
-									+ "to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if "
-									+ "you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.")
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showSummary();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
 		case RECORDING_STOPPED:
 
 			throughHandler = false;
@@ -779,7 +709,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 							if (successLogin && (experimentInput.length() > 0)) {
 								new UploadTask().execute();
 							} else {
-								showDialog(DIALOG_NO_ISENSE);
+								Intent iNoIsense = new Intent(mContext, NoIsense.class);
+								startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
 							}
 						}
 					});
@@ -886,8 +817,34 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 
 			}
-		}
+		} else if (requestCode == UPLOAD_CHOICE_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (len == 0 || len2 == 0)
+					w.make("There is no data to upload!",
+							Toast.LENGTH_LONG, "x");
+				else {
 
+					SharedPreferences mPrefs = getSharedPreferences(
+							"EID", 0);
+					String experimentInput = mPrefs
+							.getString("experiment_id", "");
+
+					if (successLogin
+							&& (experimentInput.length() > 0)) 
+						new UploadTask().execute();
+					else {
+						Intent iNoIsense = new Intent(mContext, NoIsense.class);
+						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);	
+					}
+				}
+			} else if (resultCode == RESULT_CANCELED) {
+				if (!choiceViaMenu)
+					showSummary();
+			}
+		} else if (requestCode == NO_ISENSE_REQUESTED) {
+			if (!choiceViaMenu)
+				showSummary();
+		}
 	}
 
 	// Assists with differentiating between displays for dialogues
