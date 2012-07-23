@@ -70,6 +70,14 @@
             android:name=".Summary"
             android:label="Session Summary"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".UploadChoice"
+            android:label="Select an Action:"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".NoIsense"
+            android:label="Upload Error"
+            android:theme="@style/theme_dialog_black" />
         
     </application>
 
