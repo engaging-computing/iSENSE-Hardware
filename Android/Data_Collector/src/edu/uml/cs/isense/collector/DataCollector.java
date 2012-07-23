@@ -67,6 +67,7 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -126,14 +127,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_UPLOAD = 2;
 	private static final int MENU_ITEM_TIME = 3;
 	private static final int MENU_ITEM_MEDIA = 4;
-
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int DIALOG_NO_ISENSE = 7;
-	private static final int RECORDING_STOPPED = 8;
-	private static final int DIALOG_NO_GPS = 9;
-	private static final int DIALOG_FORCE_STOP = 10;
-	private static final int DIALOG_DESCRIPTION = 11;
+	
+	private static final int DIALOG_CHOICE = 5;
+	private static final int DIALOG_NO_ISENSE = 6;
+	private static final int RECORDING_STOPPED = 7;
+	private static final int DIALOG_NO_GPS = 8;
+	private static final int DIALOG_FORCE_STOP = 9;
+	private static final int DIALOG_DESCRIPTION = 10;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -183,7 +183,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private long currentTime = 0;
 	private long timeOffset = 0;
 
-	private String dateString, s_elapsedSeconds, s_elapsedMillis,
+	private String dateString, niceDateString, 
+			s_elapsedSeconds, s_elapsedMillis,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
@@ -269,9 +270,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+			SimpleDateFormat niceFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
 			Date dt = new Date();
 
 			dateString = sdf.format(dt);
+			niceDateString = niceFormat.format(dt);
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -582,59 +585,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		switch (id) {
 
-		case DIALOG_SUMMARY:
-
-			MediaManager.mediaCount = 0;
-			elapsedMillis = totalMillis;
-			elapsedSeconds = elapsedMillis / 1000;
-			elapsedMillis %= 1000;
-			elapsedMinutes = elapsedSeconds / 60;
-			elapsedSeconds %= 60;
-
-			if (elapsedSeconds < 10) {
-				s_elapsedSeconds = "0" + elapsedSeconds;
-			} else {
-				s_elapsedSeconds = "" + elapsedSeconds;
-			}
-
-			if (elapsedMillis < 10) {
-				s_elapsedMillis = "00" + elapsedMillis;
-			} else if (elapsedMillis < 100) {
-				s_elapsedMillis = "0" + elapsedMillis;
-			} else {
-				s_elapsedMillis = "" + elapsedMillis;
-			}
-
-			if (elapsedMinutes < 10) {
-				s_elapsedMinutes = "0" + elapsedMinutes;
-			} else {
-				s_elapsedMinutes = "" + elapsedMinutes;
-			}
-
-			String appendMe = "";
-			if (sdCardError)
-				appendMe = "File not written to SD Card.";
-			else
-				appendMe = "Filename: \n" + sdFileName;
-
-			builder.setTitle("Session Summary")
-					.setMessage(
-							"Elapsed time: " + s_elapsedMinutes + ":"
-									+ s_elapsedSeconds + "." + s_elapsedMillis
-									+ "\n" + "Data points: " + dataPointCount
-									+ "\n" + "End date and time: \n"
-									+ dateString + "\n" + appendMe)
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-			break;
-
 		case DIALOG_CHOICE:
 
 			builder.setTitle("Select An Action:")
@@ -675,7 +625,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 									dialoginterface.dismiss();
 									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
+										showSummary();
 								}
 							}).setCancelable(true);
 
@@ -697,7 +647,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
 									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
+										showSummary();
 								}
 							}).setCancelable(true);
 
@@ -799,7 +749,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 								public void onClick(DialogInterface d, int which) {
 									// Do nothing here. We override the onclick
 								}
-							}).setNegativeButton("Cancel", null).create();
+							})
+					.setNegativeButton("Cancel",
+							new Dialog.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int which) {
+									// Do nothing here. We override the onclick	
+								}				
+							})
+					.create();
 
 			d.setOnShowListener(new DialogInterface.OnShowListener() {
 
@@ -808,7 +766,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
 					b.setOnClickListener(new View.OnClickListener() {
-
 						@Override
 						public void onClick(View view) {
 							d.dismiss();
@@ -824,6 +781,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 							} else {
 								showDialog(DIALOG_NO_ISENSE);
 							}
+						}
+					});
+					
+					Button c = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+					c.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							d.dismiss();
+							w.make("Data not uploaded.", Toast.LENGTH_SHORT, "x");
+							showSummary();
 						}
 					});
 				}
@@ -915,7 +882,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
-					// I shouldn't get here... ever!
+					Log.wtf("NO!", "I should never get here!");
 				}
 
 			}
@@ -1041,7 +1008,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void onPostExecute(Void voids) {
 
@@ -1054,7 +1020,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			session.setText(getString(R.string.session));
 			nameOfSession = "";
 
-			showDialog(DIALOG_SUMMARY, null);
+			showSummary();
 
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
@@ -1065,7 +1031,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
-				manageUploadQueue();
+				// manageUploadQueue();
 			}
 
 		}
@@ -1645,6 +1611,52 @@ public class DataCollector extends Activity implements SensorEventListener,
 		default:
 			return 270;
 		}
+	}
+	
+	private void showSummary() {
+		MediaManager.mediaCount = 0;
+		elapsedMillis = totalMillis;
+		elapsedSeconds = elapsedMillis / 1000;
+		elapsedMillis %= 1000;
+		elapsedMinutes = elapsedSeconds / 60;
+		elapsedSeconds %= 60;
+
+		if (elapsedSeconds < 10) {
+			s_elapsedSeconds = "0" + elapsedSeconds;
+		} else {
+			s_elapsedSeconds = "" + elapsedSeconds;
+		}
+
+		if (elapsedMillis < 10) {
+			s_elapsedMillis = "00" + elapsedMillis;
+		} else if (elapsedMillis < 100) {
+			s_elapsedMillis = "0" + elapsedMillis;
+		} else {
+			s_elapsedMillis = "" + elapsedMillis;
+		}
+
+		if (elapsedMinutes < 10) {
+			s_elapsedMinutes = "0" + elapsedMinutes;
+		} else {
+			s_elapsedMinutes = "" + elapsedMinutes;
+		}
+
+		String appendMe = "";
+		if (sdCardError)
+			appendMe = "File not written to SD Card.";
+		else
+			appendMe = "Filename: \n" + sdFileName;
+		
+		Intent iSummary = new Intent(mContext, Summary.class);
+		iSummary.putExtra("millis",  s_elapsedMillis)
+				.putExtra("seconds", s_elapsedSeconds)
+				.putExtra("minutes", s_elapsedMinutes)
+				.putExtra("append",  appendMe)
+				.putExtra("date",    niceDateString)
+				.putExtra("points",  "" + dataPointCount);
+		
+		startActivity(iSummary);
+		
 	}
 
 }

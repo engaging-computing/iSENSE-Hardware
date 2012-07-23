@@ -1,11 +1,7 @@
 package edu.uml.cs.isense.collector;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -27,6 +23,8 @@ public class LoginActivity extends Activity {
 	static final public int NAME_SUCCESSFUL = 1;
 	static final public int NAME_FAILED = 0;
 	static final public int NAME_CANCELED = -1;
+	
+	private static final int ERROR_REQUESTED = 100;
 
 	boolean success;
 	
@@ -112,38 +110,25 @@ public class LoginActivity extends Activity {
 		}
 		
 		returnCode = "Failed";
-			
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-    	Dialog dialog;
-    	
-		builder
-			.setTitle("Login Failed")
-			.setMessage(message)
-			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					Intent ret = new Intent(LoginActivity.this, DataCollector.class);
-					ret.putExtra("returnCode", returnCode);
-					setResult(RESULT_OK, ret);
-					finish();
-				}
-			})
-			.setOnCancelListener(new OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					Intent ret = new Intent(LoginActivity.this, DataCollector.class);
-					ret.putExtra("returnCode", returnCode);
-					setResult(RESULT_OK, ret);
-					finish();
-				}
-			})
-			.setCancelable(true)
-			.create();
 		
-		dialog = builder.create();
-		dialog.show();
-		
-    	DataCollector.apiTabletDisplay(dialog);
+		Intent showError = new Intent(mContext, LoginError.class);
+		showError.putExtra("message", message);
+		showError.putExtra("returnCode", returnCode);
+		startActivityForResult(showError, ERROR_REQUESTED);
     	
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == ERROR_REQUESTED) {
+			String codeFromError = data.getStringExtra("returnCode");
+			Intent ret = new Intent(LoginActivity.this, DataCollector.class);
+			ret.putExtra("returnCode", codeFromError);
+			setResult(RESULT_OK, ret);
+			finish();
+		}
 	}
 
 }
