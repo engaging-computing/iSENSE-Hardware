@@ -241,6 +241,14 @@
 		to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if
 		you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.
 	</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
+	<string name="force_stop">You exited the app while data was still being recorded.  Data has stopped recording.</string>
+	<string name="recording_stopped_text">
+	    You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum
+		recording time at 10 minutes and have stopped recording for you.  Press \"Okay\" to continue.  
+	</string>
 	
 	
 </resources>
