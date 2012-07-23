@@ -62,6 +62,15 @@
             android:name=".Setup"
             android:label="Step 1: Identify Session"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".LoginError"
+            android:label="Login Failed"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".Summary"
+            android:label="Session Summary"
+            android:theme="@style/theme_dialog_black" />
+        
     </application>
 
 </manifest>
