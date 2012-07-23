@@ -18,8 +18,13 @@ package edu.uml.cs.isense.collector;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,6 +73,7 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -95,6 +101,8 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
+
+	static String TAG = "DataCollector";
 
 	private static TextView session;
 	private static TextView time;
@@ -173,7 +181,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 	private int totalMillis = 0;
 	private int dataPointCount = 0;
-	private int i = 0;
+	private int iCount = 0;
 	private int len = 0;
 	private int len2 = 0;
 	private int secondsElapsed = 0;
@@ -339,12 +347,48 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
+
+		int Q_COUNT = uploadQueue.size();
+		Log.d(TAG, "onStop size commiting: " + Q_COUNT);
+
+		final SharedPreferences mPrefs = getSharedPreferences("Q_COUNT",
+				MODE_PRIVATE);
+		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
+
+		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
+		mPrefsEditor.commit();
+
+		File uploadQueueFile = new File(
+				Environment.getExternalStorageDirectory() + "/iSENSE"
+						+ "/uploadqueue.ser");
+		ObjectOutput out;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
+
+			while (Q_COUNT > 0) {
+				DataSet ds = uploadQueue.remove();
+				Log.d(TAG, "onStop" + (String) ds.getType());
+				Log.d(TAG, "Q_COUNT IN UPLOAD: " + Q_COUNT);
+
+				// Serialize to a file
+				out.writeObject(ds);
+				Log.d(TAG, "Wrote object: " + Q_COUNT);
+				Q_COUNT--;
+			}
+
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		inPausedState = false;
+
+		getUploadQueue();
+
 	}
 
 	@Override
@@ -949,8 +993,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Saves data for later upload
 				if (!uploadSuccess) {
-					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession + " - " + dateString, description,
-							eid, dataSet, null, sessionId, address);
+					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession
+							+ " - " + dateString, description, eid,
+							dataSet.toString(), null, sessionId, city, state,
+							country, addr);
 					uploadQueue.add(ds);
 				}
 
@@ -963,9 +1009,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// Saves pictures for later upload
 					if (picSuccess) {
-						DataSet ds = new DataSet(DataSet.Type.PIC, nameOfSession + " - " + dateString,
+						DataSet ds = new DataSet(DataSet.Type.PIC,
+								nameOfSession + " - " + dateString,
 								description, eid, null,
-								pictureArray.get(pic - 1), sessionId, null);
+								pictureArray.get(pic - 1), sessionId, city,
+								state, country, addr);
 						uploadQueue.add(ds);
 					}
 					pic--;
@@ -1456,7 +1504,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						len = 0;
 						len2 = 0;
 						dataPointCount = 0;
-						i = 0;
+						iCount = 0;
 						beginWrite = true;
 						sdCardError = false;
 
@@ -1485,7 +1533,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								elapsedMillis += INTERVAL;
 								totalMillis = elapsedMillis;
 
-								if ((i % 5) == 0) {
+								if ((iCount % 5) == 0) {
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -1494,7 +1542,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									});
 								}
 
-								if (i >= 3000) {
+								if (iCount >= 3000) {
 
 									timeTimer.cancel();
 
@@ -1508,7 +1556,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 								} else {
 
-									i++;
+									iCount++;
 									len++;
 									len2++;
 
@@ -1589,5 +1637,45 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		});
 	}
+	
+	// get shared Q_COUNT
+	public static SharedPreferences getSharedPreferences (Context ctxt) {
+		   return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
+	}
 
+	
+	public static void getUploadQueue() {
+		
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/iSENSE");
+
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+		
+		final SharedPreferences mPrefs = getSharedPreferences(mContext);
+		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
+
+		try {
+			// Deserialize from a file
+			File file = new File(folder.getAbsolutePath() + "/uploadqueue.ser");
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
+					file));
+			// Deserialize the object
+			for (int i = 0; i < Q_COUNT; i++) {
+				Log.d(TAG, "bytes availible: " + in.available());
+				DataSet dataSet = (DataSet) in.readObject();
+				uploadQueue.add(dataSet);
+				Log.d(TAG, "bytes availible: " + in.available());
+				Log.d(TAG, "Added dataSet: " + uploadQueue.size());
+				Log.d(TAG, "Q_COUNT in  writing from file: " + Q_COUNT);
+			}
+			in.close();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -1,20 +1,26 @@
 package edu.uml.cs.isense.collector;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class QueueUploader extends Activity implements OnClickListener {
 
-	private Context mContext;
+	private static Context mContext;
 	private LinearLayout scrollQueue;
+	private Runnable sdUploader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +105,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 				});
 				break;
 			}
-
+			Log.d("just filled array", "uploadQueue: " + DataCollector.uploadQueue.size());
 		}
 
 	}
@@ -145,12 +151,29 @@ public class QueueUploader extends Activity implements OnClickListener {
 			break;
 
 		case R.id.upload:
-			for (DataSet ds : DataCollector.uploadQueue) {
-				if (ds.isUploadable()) {
-					boolean success = ds.upload();
-					if (success)
-						DataCollector.uploadQueue.remove(ds);
-				}
+			Log.d("IM HERE!!", "Yay I've arrived!");
+			DataCollector.getUploadQueue();
+			Log.d("Q_SIZE", "SIZE: " + DataCollector.uploadQueue.size());
+			
+			for (final DataSet ds : DataCollector.uploadQueue) {
+				
+				sdUploader = new Runnable() {
+
+					@Override
+					public void run() {
+						if (ds.isUploadable()) {
+							boolean success = ds.upload();
+							if (success)
+								DataCollector.uploadQueue.remove(ds);
+						}
+					}
+					
+				};
+				
+				Log.d("UPLOADING :)", "calling upload task");
+				new UploadSDTask().execute();
+
+				
 			}
 
 			setResult(RESULT_OK);
@@ -161,6 +184,40 @@ public class QueueUploader extends Activity implements OnClickListener {
 			setResult(RESULT_CANCELED);
 			finish();
 			break;
+		}
+	}
+
+	// Control task for uploading data from SD card
+	class UploadSDTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+			ProgressDialog dia;
+
+			dia = new ProgressDialog(DataCollector.mContext);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setCancelable(false);
+			dia.show();
+
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+
+			sdUploader.run();
+			publishProgress(100);
+			return null;
+
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+
+			Waffle w = new Waffle(QueueUploader.mContext);
+			w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+
 		}
 	}
 
