@@ -16,7 +16,7 @@ public class NoIsense extends Activity {
 		
 		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
-		Button ok = (Button) findViewById(R.id.no_isense_ok);
+		final Button ok = (Button) findViewById(R.id.no_isense_ok);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -128,10 +128,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_TIME = 3;
 	private static final int MENU_ITEM_MEDIA = 4;
 	
-	private static final int RECORDING_STOPPED = 5;
-	private static final int DIALOG_NO_GPS = 6;
-	private static final int DIALOG_FORCE_STOP = 7;
-	private static final int DIALOG_DESCRIPTION = 8;
+	private static final int DIALOG_DESCRIPTION = 5;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -144,6 +141,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int LOGIN_REQUESTED = 5;
 	public static final int UPLOAD_CHOICE_REQUESTED = 6;
 	public static final int NO_ISENSE_REQUESTED = 7;
+	public static final int NO_GPS_REQUESTED = 8;
+	public static final int FORCE_STOP_REQUESTED = 9;
+	public static final int RECORDING_STOPPED_REQUESTED = 10;
 	
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -217,6 +217,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
+	private static boolean showGpsDialog = true;
 
 	private static Handler mHandler;
 	private boolean throughHandler = false;
@@ -239,7 +240,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -259,8 +259,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
+		if (running) {
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
+		}
 
 	}
 
@@ -361,14 +363,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		assignVars();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
-
+		if (running) {
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
+		}
 		// Will call the login dialogue if necessary and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
@@ -585,76 +587,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		switch (id) {
 
-		case RECORDING_STOPPED:
-
-			throughHandler = false;
-
-			builder.setTitle("Time Up")
-					.setMessage(
-							"You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum "
-									+ "recording time at 10 minutes and have stopped recording for you.  Press \"Okay\" to continue.")
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									showDialog(DIALOG_DESCRIPTION);
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_GPS:
-
-			builder.setTitle("No GPS Provider Found")
-					.setMessage(
-							"Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?")
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_FORCE_STOP:
-
-			builder.setTitle("Data Recording Halted")
-					.setMessage(
-							"You exited the app while data was still being recorded.  Data has stopped recording.")
-					.setCancelable(false)
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									startStop.performLongClick();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
 		case DIALOG_DESCRIPTION:
 			LinearLayout layout = new LinearLayout(this);
 			layout.setOrientation(LinearLayout.VERTICAL);
@@ -831,7 +763,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					if (successLogin
 							&& (experimentInput.length() > 0)) 
-						new UploadTask().execute();
+						showDialog(DIALOG_DESCRIPTION);
 					else {
 						Intent iNoIsense = new Intent(mContext, NoIsense.class);
 						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);	
@@ -844,6 +776,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == NO_ISENSE_REQUESTED) {
 			if (!choiceViaMenu)
 				showSummary();
+		} else if (requestCode == NO_GPS_REQUESTED) {
+			showGpsDialog = true;
+			if (resultCode == RESULT_OK) {
+				startActivity(new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			} 
+		} else if (requestCode == FORCE_STOP_REQUESTED) {
+			startStop.performLongClick();
+		} else if (requestCode == RECORDING_STOPPED_REQUESTED) {
+			showDialog(DIALOG_DESCRIPTION);
 		}
 	}
 
@@ -1334,7 +1276,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setStartStopListener();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void initLocations() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -1348,7 +1289,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			mRoughLocManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, DataCollector.this);
 		} else {
-			showDialog(DIALOG_NO_GPS);
+			if (showGpsDialog) {
+				Intent iNoGps = new Intent(mContext, NoGps.class);
+				startActivityForResult(iNoGps, NO_GPS_REQUESTED);
+				showGpsDialog = false;
+			}
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
@@ -1400,11 +1345,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 							w.make("Could not write file to SD Card.",
 									Toast.LENGTH_SHORT, "x");
 
-						if (throughHandler)
-							showDialog(RECORDING_STOPPED);
-						else
+						if (throughHandler) {
+							Intent iRecordingStopped = new Intent(mContext, RecordingStopped.class);
+							startActivityForResult(iRecordingStopped, RECORDING_STOPPED_REQUESTED);
+						} else {
 							showDialog(DIALOG_DESCRIPTION);
-
+						}
+							
 					} else {
 
 						registerSensors();

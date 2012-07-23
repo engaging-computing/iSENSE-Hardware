@@ -11,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,18 +28,18 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
 
-	private Uri imageUri;
-	private Uri videoUri;
+	private static Uri imageUri;
+	private static Uri videoUri;
 
 	private static final int CAMERA_PIC_REQUESTED = 1;
 	private static final int CAMERA_VID_REQUESTED = 2;
 
-	private Waffle w;
+	private static Waffle w;
 	private static Context mContext;
-	private TextView mediaCountLabel;
-	private Button takePic;
-	private Button takeVid;
-	private Button back;
+	private static TextView mediaCountLabel;
+	private static Button takePic;
+	private static Button takeVid;
+	private static Button back;
 
 	public static int mediaCount;
 
@@ -341,6 +342,10 @@ public class MediaManager extends Activity {
 			pushPicture();
 		if (DataCollector.videos.size() > 0)
 			pushVideo();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
 	}
 
 }
