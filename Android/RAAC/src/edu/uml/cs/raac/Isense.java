@@ -29,6 +29,7 @@
 package edu.uml.cs.raac;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -50,12 +51,14 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -238,8 +241,47 @@ public class Isense extends Activity implements OnClickListener {
 				mChatService.start();
 			}
 		}
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+			handleNFCIntent(getIntent());
+		}
 	}
 
+	@SuppressLint("NewApi")
+	void handleNFCIntent(Intent intent) {
+		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+		if(Build.VERSION.SDK_INT >= 9) {
+		if (rawMsgs != null) {
+			NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+			for (int i = 0; i < rawMsgs.length; i++) {
+				msgs[i] = (NdefMessage) rawMsgs[i];
+			}
+			byte[] payload = msgs[0].getRecords()[0].getPayload();
+			String text = "";
+			//Get the Text Encoding
+			String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+			//Get the Language Code
+			int languageCodeLength = payload[0] & 0077;
+			try {
+				//Get the Text
+				text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			connectToBluetooth(text);
+		}
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		//Check to see if the activity is being started due to reading an NFC tag
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+			handleNFCIntent(intent);
+		}
+	}
+	
 	@Override
 	public void onStart() {
 		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
