@@ -41,57 +41,66 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="edu.uml.cs.isense.complexdialogs.LoginActivity"
             android:label="Login"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".Experiments"
             android:label="Experiments" />
         <activity
-            android:name=".SyncTime"
+            android:name="edu.uml.cs.isense.sync.SyncTime"
             android:label="SyncTime" />
         <activity
-            android:name=".ChooseSensorDialog"
+            android:name="edu.uml.cs.isense.complexdialogs.ChooseSensorDialog"
             android:label="Step 2: Select Fields"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".MediaManager"
+            android:name="edu.uml.cs.isense.complexdialogs.MediaManager"
             android:label="Media Manager"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".QueueUploader"
-            android:label="Upload" />
-        <activity
-            android:name=".Setup"
+            android:name="edu.uml.cs.isense.complexdialogs.Setup"
             android:label="Step 1: Identify Session"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".LoginError"
+            android:name="edu.uml.cs.isense.dialogs.LoginError"
             android:label="Login Failed"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".Summary"
+            android:name="edu.uml.cs.isense.dialogs.Summary"
             android:label="Session Summary"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".UploadChoice"
+            android:name="edu.uml.cs.isense.dialogs.UploadChoice"
             android:label="Select an Action:"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".NoIsense"
+            android:name="edu.uml.cs.isense.dialogs.NoIsense"
             android:label="Upload Error"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".NoGps"
+            android:name="edu.uml.cs.isense.dialogs.NoGps"
             android:label="No GPS Provider Found"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".ForceStop"
+            android:name="edu.uml.cs.isense.dialogs.ForceStop"
             android:label="Data Recording Halted"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".RecordingStopped"
+            android:name="edu.uml.cs.isense.dialogs.RecordingStopped"
             android:label="Data Recording Timed Out"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.complexdialogs.Description"
+            android:label="Enter Session Description"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.simpledialogs.NoQR"
+            android:label="No Barcode Scanner Found"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.complexdialogs.Eula"
+            android:label="End User License Agreement"
             android:theme="@style/theme_dialog_black" />
         
     </application>
