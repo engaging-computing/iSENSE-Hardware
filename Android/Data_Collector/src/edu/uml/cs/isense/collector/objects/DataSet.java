@@ -29,7 +29,7 @@ public class DataSet implements Serializable {
 	private boolean rdyForUpload = true;
 
 	// Data Only
-	private byte[] data;
+	private String data;
 
 	// Picture Only
 	private File picture;
@@ -48,7 +48,7 @@ public class DataSet implements Serializable {
 		this.desc = desc;
 		this.eid = eid;
 		if (!(data == null))
-			this.data = data.getBytes();
+			this.data = data;
 		else this.data = null;
 		this.picture = picture;
 		this.sid = sid;
@@ -110,10 +110,9 @@ public class DataSet implements Serializable {
 	}
 
 	private JSONArray prepDataForUpload() {
-		String dataString = data.toString();
 		JSONArray dataJSON = null;
 		try {
-			dataJSON = new JSONArray(dataString);
+			dataJSON = new JSONArray(data);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -1275,7 +1275,16 @@ public class RestAPI {
 			try {
 				String data = makeRequest(url);
 				
-				if (data.compareTo("{}") != 0) ret = true;
+				JSONObject o = new JSONObject(data);
+                String status = o.getString("status");
+				
+                if (status.equals("200")) ret = true;
+                else {
+                	JSONObject msg = o.getJSONObject("data");
+                	Log.e("RAPI", msg.getString("msg"));
+                	ret = false;
+                }
+				//if (data.compareTo("{}") != 0) ret = true;
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -1300,10 +1309,21 @@ public class RestAPI {
 			try {
 				String data = makeRequest(url);
 				
-				if (data.compareTo("{}") != 0) {
-					dataCache = new JSONArray();
-					ret = true;
-				}
+				JSONObject o = new JSONObject(data);
+                String status = o.getString("status");
+				
+                if (status.equals("200")){
+                	dataCache = new JSONArray();
+                	ret = true;
+                } else {
+                	JSONObject msg = o.getJSONObject("data");
+                	Log.e("RAPI", msg.getString("msg"));
+                	ret = false;
+                }
+				//if (data.compareTo("{}") != 0) ret = true;if (data.compareTo("{}") != 0) {
+				//	dataCache = new JSONArray();
+				//	ret = true;
+				//}
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

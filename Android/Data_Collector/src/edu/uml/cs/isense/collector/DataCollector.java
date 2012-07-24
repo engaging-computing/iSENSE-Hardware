@@ -195,7 +195,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
-	static RestAPI rapi;
+	public static RestAPI rapi;
 	Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
