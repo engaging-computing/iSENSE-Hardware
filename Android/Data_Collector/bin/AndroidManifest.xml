@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
-    
+   
     <supports-screens android:resizeable="true"
                   android:smallScreens="true"
                   android:normalScreens="true"
@@ -102,6 +102,9 @@
             android:name="edu.uml.cs.isense.complexdialogs.Eula"
             android:label="End User License Agreement"
             android:theme="@style/theme_dialog_black" />
+        <activity 
+            android:name="edu.uml.cs.isense.collector.QueueUploader"
+            android:label="Retry Uploading" />
         
     </application>
 
