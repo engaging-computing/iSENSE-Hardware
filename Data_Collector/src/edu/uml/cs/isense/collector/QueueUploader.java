@@ -1,5 +1,8 @@
 package edu.uml.cs.isense.collector;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,6 +24,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private static Context mContext;
 	private LinearLayout scrollQueue;
 	private Runnable sdUploader;
+	private ProgressDialog dia;
+	private Queue<DataSet> mirrorQueue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +110,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 				});
 				break;
 			}
-			Log.d("just filled array", "uploadQueue: " + DataCollector.uploadQueue.size());
+			Log.d("just filled array", "uploadQueue: "
+					+ DataCollector.uploadQueue.size());
 		}
 
 	}
@@ -153,31 +159,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 		case R.id.upload:
 			Log.d("IM HERE!!", "Yay I've arrived!");
 			DataCollector.getUploadQueue();
+
+			mirrorQueue = new LinkedList<DataSet>();
+			mirrorQueue.addAll(DataCollector.uploadQueue);
+
 			Log.d("Q_SIZE", "SIZE: " + DataCollector.uploadQueue.size());
-			
-			for (final DataSet ds : DataCollector.uploadQueue) {
-				
-				sdUploader = new Runnable() {
 
-					@Override
-					public void run() {
-						if (ds.isUploadable()) {
-							boolean success = ds.upload();
-							if (success)
-								DataCollector.uploadQueue.remove(ds);
-						}
-					}
-					
-				};
-				
-				Log.d("UPLOADING :)", "calling upload task");
-				new UploadSDTask().execute();
-
-				
-			}
-
-			setResult(RESULT_OK);
-			finish();
+			new UploadSDTask().execute();
 			break;
 
 		case R.id.cancel:
@@ -189,36 +177,58 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	// Control task for uploading data from SD card
 	class UploadSDTask extends AsyncTask<Void, Integer, Void> {
-
 		@Override
 		protected void onPreExecute() {
-
-			ProgressDialog dia;
-
-			dia = new ProgressDialog(DataCollector.mContext);
+			DataSet ds = mirrorQueue.remove();
+			createRunnable(ds);
+			Log.d("UPLOADING :)", "calling upload task");
+			dia = new ProgressDialog(QueueUploader.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
-
 		}
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-
 			sdUploader.run();
-			publishProgress(100);
+			dia.setProgress(100);
 			return null;
-
 		}
 
 		@Override
 		protected void onPostExecute(Void voids) {
-
 			Waffle w = new Waffle(QueueUploader.mContext);
 			w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+			dia.dismiss();
 
+			if (mirrorQueue.isEmpty()) {
+				setResult(RESULT_OK);
+				finish();
+				return;
+			} else
+				continueUploading();
 		}
+	}
+
+	void createRunnable(final DataSet ds) {
+		sdUploader = new Runnable() {
+
+			@Override
+			public void run() {
+				if (ds.isUploadable()) {
+					boolean success = ds.upload();
+					if (success)
+						DataCollector.uploadQueue.remove(ds);
+				}
+			}
+
+		};
+
+	}
+
+	private void continueUploading() {
+		new UploadSDTask().execute();
 	}
 
 }
