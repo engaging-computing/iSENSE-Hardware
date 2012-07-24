@@ -1,107 +1,150 @@
 package edu.uml.cs.isense.collector.objects;
 
 import java.io.File;
-import java.util.List;
+import java.io.Serializable;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
-import android.location.Address;
-import edu.uml.cs.isense.comm.RestAPI;
+import android.annotation.SuppressLint;
+import edu.uml.cs.isense.collector.DataCollector;
 
-public class DataSet {
+@SuppressLint("ParserError")
+public class DataSet implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3776465868309657210L;
+
 	public enum Type {
 		DATA, PIC
 	};
 
 	// Both
 	public Type type;
-	private RestAPI rapi;
 	private String name;
 	private String desc;
 	private String eid;
+	private boolean rdyForUpload = true;
 
 	// Data Only
-	private JSONArray data;
+	private String data;
 
 	// Picture Only
 	private File picture;
 
 	// Optional
 	private int sid = -1;
-	private List<Address> address;
-
-	public DataSet(Type type, RestAPI rapi, String name, String desc, String eid,
-			JSONArray data, File picture, int sid, List<Address> address) {
+	private String city = "";
+	private String state = "";
+	private String country = "";
+	private String addr = "";
+	
+	public DataSet(Type type, String name, String desc, String eid,
+			String data, File picture, int sid, String city, String state, String country, String addr) {
 		this.type = type;
-		this.rapi = rapi;
 		this.name = name;
 		this.desc = desc;
 		this.eid = eid;
-		this.data = data;
+		if (!(data == null))
+			this.data = data;
+		else this.data = null;
 		this.picture = picture;
 		this.sid = sid;
-		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.country = country;
+		this.addr = addr;
 	}
 
 	// Attempts to upload data with given information
 	public boolean upload() {
 		boolean success = true;
-		switch (type) {
-		case DATA:
-			if (sid == -1) {
-				String city = "", state = "", country = "", addr = "";
-
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-				}
-
-				if (address == null || address.size() <= 0) {
-					sid = rapi.createSession(eid, name, desc, "N/A", "N/A",
-							"United States");
-				} else {
-					sid = rapi.createSession(eid, name, desc, addr, city + ", "
-							+ state, country);
-				}
+		if (this.rdyForUpload) {
+			switch (type) {
+			case DATA:
 
 				if (sid == -1) {
+
+					if (addr.equals("")) {
+						sid = DataCollector.rapi.createSession(eid, name, desc,
+								"N/A", "N/A", "United States");
+					} else {
+						sid = DataCollector.rapi.createSession(eid, name, desc,
+								addr, city + ", " + state, country);
+					}
+
+					if (sid == -1) {
+						success = false;
+						break;
+					}
+				}
+
+				// Experiment Closed Checker
+				if (sid == -400) {
 					success = false;
 					break;
+				} else {
+					JSONArray dataJSON = prepDataForUpload();
+					if (!(dataJSON.isNull(0)))
+					 success = DataCollector.rapi.putSessionData(sid, eid, dataJSON);
 				}
-			}
-			
-			// Experiment Closed Checker
-			if (sid == -400) {
-				success = false;
 				break;
-			} else
-				success = rapi.putSessionData(sid, eid, data);
-			
-			break;
-	
-		case PIC:
-			if (name.equals("")) {
-				success = rapi.uploadPictureToSession(picture, eid, sid,
-						"*Session Name Not Provided*", "N/A");
-			} else {
-				success = rapi.uploadPictureToSession(picture, eid, sid, name,
-						"N/A");
-			}
-			break;
 
+			case PIC:
+				if (name.equals("")) {
+					success = DataCollector.rapi.uploadPictureToSession(
+							picture, eid, sid, "*Session Name Not Provided*",
+							"N/A");
+				} else {
+					success = DataCollector.rapi.uploadPictureToSession(
+							picture, eid, sid, name, "N/A");
+				}
+				break;
+
+			}
 		}
 
 		return success;
 	}
 
+	private JSONArray prepDataForUpload() {
+		JSONArray dataJSON = null;
+		try {
+			dataJSON = new JSONArray(data);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return dataJSON;
+	}
+
 	public String getEID() {
 		return this.eid;
 	}
-	
+
 	public String getDesc() {
 		return this.desc;
 	}
 
+	public CharSequence getName() {
+		return this.name;
+	}
+
+	public CharSequence getType() {
+		if (this.type == Type.PIC)
+			return "Picture";
+		else if (this.type == Type.DATA)
+			return "Data";
+		else
+			return "Unsupported Type";
+	}
+
+	public void setUploadable(boolean uploadable) {
+		this.rdyForUpload = uploadable;
+	}
+
+	public boolean isUploadable() {
+		return this.rdyForUpload;
+	}
 }

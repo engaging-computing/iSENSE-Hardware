@@ -18,8 +18,13 @@ package edu.uml.cs.isense.collector;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -108,6 +113,8 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
+	static String TAG = "DataCollector";
+
 	private static TextView session;
 	private static TextView time;
 
@@ -186,7 +193,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 	private int totalMillis = 0;
 	private int dataPointCount = 0;
-	private int i = 0;
+	private int iCount = 0;
 	private int len = 0;
 	private int len2 = 0;
 	private int secondsElapsed = 0;
@@ -199,7 +206,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			s_elapsedMinutes;
 	private String sessionDescription = "";
 
-	static RestAPI rapi;
+	public static RestAPI rapi;
 	Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
@@ -361,12 +368,48 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
+
+		int Q_COUNT = uploadQueue.size();
+		Log.d(TAG, "onStop size commiting: " + Q_COUNT);
+
+		final SharedPreferences mPrefs = getSharedPreferences("Q_COUNT",
+				MODE_PRIVATE);
+		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
+
+		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
+		mPrefsEditor.commit();
+
+		File uploadQueueFile = new File(
+				Environment.getExternalStorageDirectory() + "/iSENSE"
+						+ "/uploadqueue.ser");
+		ObjectOutput out;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
+
+			while (Q_COUNT > 0) {
+				DataSet ds = uploadQueue.remove();
+				Log.d(TAG, "onStop" + (String) ds.getType());
+				Log.d(TAG, "Q_COUNT IN UPLOAD: " + Q_COUNT);
+
+				// Serialize to a file
+				out.writeObject(ds);
+				Log.d(TAG, "Wrote object: " + Q_COUNT);
+				Q_COUNT--;
+			}
+
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		inPausedState = false;
+
+		getUploadQueue();
+
 	}
 
 	@Override
@@ -751,7 +794,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
-			
+
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
+			Date dt = new Date();
+			String dateString = sdf.format(dt);
+
 			try {
 				if (roughLoc != null) {
 					address = new Geocoder(DataCollector.this,
@@ -790,28 +837,28 @@ public class DataCollector extends Activity implements SensorEventListener,
 			sessionDescription = "";
 
 			// createSession Success Check
-			if (sessionId == -1) {
-				uploadSuccess = false;
-				Log.e("madlogs", "returning from -1");
-				return;
-			}
+			// if (sessionId == -1) {
+			uploadSuccess = false;
+			// }
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
 				Log.e("madlogs", "returning from -400");
 				status400 = true;
-				return;
 			} else {
 				status400 = false;
-				uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
-				Log.e("madlogs", "success = " + uploadSuccess);
+				if (uploadSuccess)
+					uploadSuccess = rapi
+							.putSessionData(sessionId, eid, dataSet);
+
 				// Saves data for later upload
-				/*if (!uploadSuccess) {
-					DataSet ds = new DataSet(DataSet.Type.DATA, rapi,
-							nameOfSession, description, eid, dataSet, null,
-							sessionId, address);
+				if (!uploadSuccess) {
+					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession
+							+ " - " + dateString, description, eid,
+							dataSet.toString(), null, sessionId, city, state,
+							country, addr);
 					uploadQueue.add(ds);
-				}*/
+				}
 
 				int pic = pictureArray.size();
 
@@ -822,12 +869,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
-					/*if (!picSuccess) {
-						DataSet ds = new DataSet(DataSet.Type.PIC, rapi,
-								nameOfSession, description, eid, null,
-								pictureArray.get(pic - 1), sessionId, null);
+					if (picSuccess) {
+						DataSet ds = new DataSet(DataSet.Type.PIC,
+								nameOfSession + " - " + dateString,
+								description, eid, null,
+								pictureArray.get(pic - 1), sessionId, city,
+								state, country, addr);
 						uploadQueue.add(ds);
-					}*/
+					}
 					pic--;
 				}
 
@@ -864,7 +913,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		}
 
-		@Override 
+		@Override
 		protected void onPostExecute(Void voids) {
 
 			dia.setMessage("Done");
@@ -884,10 +933,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
+				manageUploadQueue();
 
 			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
-				// manageUploadQueue();
+				manageUploadQueue();
 			}
 
 		}
@@ -1187,12 +1237,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) {
-			if (!uploadQueue.isEmpty()) {
-				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			}
+		// if (uploadSuccess) {
+		if (!uploadQueue.isEmpty()) {
+			Intent i = new Intent().setClass(mContext, QueueUploader.class);
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 		}
+		// }
 	}
 
 	// Everything needed to be initialized for onCreate
@@ -1227,6 +1277,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		w = new Waffle(this);
 		f = new Fields();
+
+		uploadQueue = new LinkedList<DataSet>();
 
 		accel = new float[4];
 		orientation = new float[3];
@@ -1356,7 +1408,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						len = 0;
 						len2 = 0;
 						dataPointCount = 0;
-						i = 0;
+						iCount = 0;
 						beginWrite = true;
 						sdCardError = false;
 
@@ -1385,7 +1437,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								elapsedMillis += INTERVAL;
 								totalMillis = elapsedMillis;
 
-								if ((i % 5) == 0) {
+								if ((iCount % 5) == 0) {
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -1394,7 +1446,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									});
 								}
 
-								if (i >= 3000) {
+								if (iCount >= 3000) {
 
 									timeTimer.cancel();
 
@@ -1408,7 +1460,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 								} else {
 
-									i++;
+									iCount++;
 									len++;
 									len2++;
 
@@ -1489,6 +1541,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		});
 	}
+	
+	// get shared Q_COUNT
+	public static SharedPreferences getSharedPreferences (Context ctxt) {
+		   return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
+	}
 
 	public int getRotation(Context context) {
 		@SuppressWarnings("deprecation")
@@ -1553,4 +1610,39 @@ public class DataCollector extends Activity implements SensorEventListener,
 		
 	}
 
+	
+	public static void getUploadQueue() {
+		
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/iSENSE");
+
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+		
+		final SharedPreferences mPrefs = getSharedPreferences(mContext);
+		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
+
+		try {
+			// Deserialize from a file
+			File file = new File(folder.getAbsolutePath() + "/uploadqueue.ser");
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
+					file));
+			// Deserialize the object
+			for (int i = 0; i < Q_COUNT; i++) {
+				Log.d(TAG, "bytes availible: " + in.available());
+				DataSet dataSet = (DataSet) in.readObject();
+				uploadQueue.add(dataSet);
+				Log.d(TAG, "bytes availible: " + in.available());
+				Log.d(TAG, "Added dataSet: " + uploadQueue.size());
+				Log.d(TAG, "Q_COUNT in  writing from file: " + Q_COUNT);
+			}
+			in.close();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

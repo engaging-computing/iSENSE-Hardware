@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="5dp"
     android:weightSum="2"
-    android:background="@drawable/sensorelement_bkgd" >
+    android:background="@drawable/listelement_bkgd" >
 
     <CheckedTextView
         android:id="@+id/sensorlabel"
