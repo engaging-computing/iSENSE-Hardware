@@ -63,31 +63,31 @@
             android:label="Step 1: Identify Session"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.LoginError"
+            android:name="edu.uml.cs.isense.simpledialogs.LoginError"
             android:label="Login Failed"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.Summary"
+            android:name="edu.uml.cs.isense.simpledialogs.Summary"
             android:label="Session Summary"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.UploadChoice"
+            android:name="edu.uml.cs.isense.simpledialogs.UploadChoice"
             android:label="Select an Action:"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.NoIsense"
+            android:name="edu.uml.cs.isense.simpledialogs.NoIsense"
             android:label="Upload Error"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.NoGps"
+            android:name="edu.uml.cs.isense.simpledialogs.NoGps"
             android:label="No GPS Provider Found"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.ForceStop"
+            android:name="edu.uml.cs.isense.simpledialogs.ForceStop"
             android:label="Data Recording Halted"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.dialogs.RecordingStopped"
+            android:name="edu.uml.cs.isense.simpledialogs.RecordingStopped"
             android:label="Data Recording Timed Out"
             android:theme="@style/theme_dialog_black" />
         <activity
