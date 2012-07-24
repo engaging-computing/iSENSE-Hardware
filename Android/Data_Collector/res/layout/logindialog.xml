@@ -9,7 +9,7 @@
 		android:id="@+id/usernameLabel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/usernamePrompt"
+		android:text="@string/username"
 		android:layout_alignParentLeft="true"
 		android:layout_marginTop="5dip"/>
 
@@ -27,7 +27,7 @@
 		android:id="@+id/passwordLabel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/passwordPrompt"
+		android:text="@string/password"
 		android:layout_marginTop="5dip"
 		android:layout_below="@id/usernameInput"
 		android:layout_alignParentLeft="true"/>
