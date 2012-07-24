@@ -40,16 +40,18 @@ public class DataSet implements Serializable {
 	private String state = "";
 	private String country = "";
 	private String addr = "";
-	
+
 	public DataSet(Type type, String name, String desc, String eid,
-			String data, File picture, int sid, String city, String state, String country, String addr) {
+			String data, File picture, int sid, String city, String state,
+			String country, String addr) {
 		this.type = type;
 		this.name = name;
 		this.desc = desc;
 		this.eid = eid;
 		if (!(data == null))
 			this.data = data;
-		else this.data = null;
+		else
+			this.data = null;
 		this.picture = picture;
 		this.sid = sid;
 		this.city = city;
@@ -88,7 +90,8 @@ public class DataSet implements Serializable {
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0)))
-					 success = DataCollector.rapi.putSessionData(sid, eid, dataJSON);
+						success = DataCollector.rapi.putSessionData(sid, eid,
+								dataJSON);
 				}
 				break;
 
