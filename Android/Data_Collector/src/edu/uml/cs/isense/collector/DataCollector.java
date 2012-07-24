@@ -34,9 +34,7 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -44,6 +42,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
@@ -63,9 +63,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
@@ -78,7 +77,6 @@ import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -88,8 +86,21 @@ import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.complexdialogs.ChooseSensorDialog;
+import edu.uml.cs.isense.complexdialogs.Description;
+import edu.uml.cs.isense.complexdialogs.Eula;
+import edu.uml.cs.isense.complexdialogs.LoginActivity;
+import edu.uml.cs.isense.complexdialogs.MediaManager;
+import edu.uml.cs.isense.complexdialogs.Setup;
+import edu.uml.cs.isense.simpledialogs.ForceStop;
+import edu.uml.cs.isense.simpledialogs.NoGps;
+import edu.uml.cs.isense.simpledialogs.NoIsense;
+import edu.uml.cs.isense.simpledialogs.RecordingStopped;
+import edu.uml.cs.isense.simpledialogs.Summary;
+import edu.uml.cs.isense.simpledialogs.UploadChoice;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /* Experiment 422 on iSENSE and 277 on Dev */
@@ -127,8 +138,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_UPLOAD = 2;
 	private static final int MENU_ITEM_TIME = 3;
 	private static final int MENU_ITEM_MEDIA = 4;
-	
-	private static final int DIALOG_DESCRIPTION = 5;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -144,6 +153,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int NO_GPS_REQUESTED = 8;
 	public static final int FORCE_STOP_REQUESTED = 9;
 	public static final int RECORDING_STOPPED_REQUESTED = 10;
+	public static final int DESCRIPTION_REQUESTED = 11;
+	public static final int EULA_REQUESTED = 12;
 	
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -239,6 +250,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
+	
+	private SharedPreferences eulaPrefs;
+	private String eulaKey;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -436,6 +450,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ITEM_SETUP:
+			startStop.setEnabled(false);
 			Intent iSetup = new Intent(DataCollector.this, Setup.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
@@ -574,106 +589,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	@SuppressLint("HandlerLeak")
-	@SuppressWarnings("deprecation")
-	protected Dialog onCreateDialog(final int id) {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog;// = builder.setView(new View(this)).create();
-
-		// dialog.show();
-
-		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-		switch (id) {
-
-		case DIALOG_DESCRIPTION:
-			LinearLayout layout = new LinearLayout(this);
-			layout.setOrientation(LinearLayout.VERTICAL);
-			layout.setGravity(Gravity.CENTER_HORIZONTAL);
-			final EditText input = new EditText(this);
-			input.setSingleLine(true);
-			input.setKeyListener(DigitsKeyListener
-					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
-			input.setInputType(InputType.TYPE_CLASS_TEXT);
-			layout.setPadding(5, 0, 5, 0);
-			layout.addView(input);
-
-			final AlertDialog d = new AlertDialog.Builder(mContext)
-					.setTitle("Step 3:")
-					.setMessage(
-							"Enter a session description (or leave blank if you'd like an automatically generated description).")
-					.setCancelable(false)
-					.setView(layout)
-					.setPositiveButton("Upload To iSENSE",
-							new Dialog.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface d, int which) {
-									// Do nothing here. We override the onclick
-								}
-							})
-					.setNegativeButton("Cancel",
-							new Dialog.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface d, int which) {
-									// Do nothing here. We override the onclick	
-								}				
-							})
-					.create();
-
-			d.setOnShowListener(new DialogInterface.OnShowListener() {
-
-				@Override
-				public void onShow(DialogInterface dialog) {
-
-					Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-					b.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							d.dismiss();
-							sessionDescription = input.getText().toString();
-
-							SharedPreferences mPrefs = getSharedPreferences(
-									"EID", 0);
-							String experimentInput = mPrefs.getString(
-									"experiment_id", "");
-
-							if (successLogin && (experimentInput.length() > 0)) {
-								new UploadTask().execute();
-							} else {
-								Intent iNoIsense = new Intent(mContext, NoIsense.class);
-								startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
-							}
-						}
-					});
-					
-					Button c = d.getButton(AlertDialog.BUTTON_NEGATIVE);
-					c.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							d.dismiss();
-							w.make("Data not uploaded.", Toast.LENGTH_SHORT, "x");
-							showSummary();
-						}
-					});
-				}
-			});
-
-			dialog = d;
-
-			break;
-
-		default:
-			dialog = null;
-			break;
-		}
-
-		return apiDialogCheckerCase(dialog, lp, id);
-
-	}
-
 	// Performs tasks after returning to main UI from previous activities
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -690,11 +606,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 				// oh no they canceled!
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
+			startStop.setEnabled(true);
 			if (resultCode == RESULT_OK) {
 				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
-					showDialog(MENU_ITEM_SETUP);
+					startStop.setEnabled(false);
+					Intent iSetup = new Intent(DataCollector.this, Setup.class);
+					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else if (!ChooseSensorDialog.compatible) {
-					showDialog(MENU_ITEM_SETUP);
+					startStop.setEnabled(false);
+					Intent iSetup = new Intent(DataCollector.this, Setup.class);
+					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else {
 					acceptedFields = ChooseSensorDialog.acceptedFields;
 					getEnabledFields();
@@ -724,6 +645,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
+				startStop.setEnabled(true);
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -762,9 +684,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 							.getString("experiment_id", "");
 
 					if (successLogin
-							&& (experimentInput.length() > 0)) 
-						showDialog(DIALOG_DESCRIPTION);
-					else {
+							&& (experimentInput.length() > 0)) {
+						Intent iDescription = new Intent(mContext, Description.class);
+						startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+					} else {
 						Intent iNoIsense = new Intent(mContext, NoIsense.class);
 						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);	
 					}
@@ -785,15 +708,39 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == FORCE_STOP_REQUESTED) {
 			startStop.performLongClick();
 		} else if (requestCode == RECORDING_STOPPED_REQUESTED) {
-			showDialog(DIALOG_DESCRIPTION);
+			Intent iDescription = new Intent(mContext, Description.class);
+			startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				sessionDescription = data.getStringExtra("description");
+
+				SharedPreferences mPrefs = getSharedPreferences(
+						"EID", 0);
+				String experimentInput = mPrefs.getString(
+						"experiment_id", "");
+
+				if (successLogin && (experimentInput.length() > 0)) {
+					new UploadTask().execute();
+				} else {
+					Intent iNoIsense = new Intent(mContext, NoIsense.class);
+					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
+				}
+			} else if (resultCode == RESULT_CANCELED) {
+				w.make("Data not uploaded.", Toast.LENGTH_SHORT, "x");
+				showSummary();
+			}
+		} else if (requestCode == EULA_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				SharedPreferences.Editor editor = eulaPrefs.edit();
+            	editor.putBoolean(eulaKey, true);
+            	editor.commit();
+			} else {
+				((Activity) mContext).finish();
+			}
 		}
 	}
 
-	// Assists with differentiating between displays for dialogues
-	@SuppressWarnings("deprecation")
-	private static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
-	}
+	
 
 	// Calls the rapi primitives for actual uploading
 	private Runnable uploader = new Runnable() {
@@ -804,7 +751,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			int sessionId = -1;
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
-
+			
 			try {
 				if (roughLoc != null) {
 					address = new Geocoder(DataCollector.this,
@@ -837,43 +784,50 @@ public class DataCollector extends Activity implements SensorEventListener,
 				sessionId = rapi.createSession(eid, nameOfSession, description,
 						addr, city + ", " + state, country);
 			}
+			
+			Log.e("madlogs", "sid = " + sessionId);
 
 			sessionDescription = "";
 
 			// createSession Success Check
 			if (sessionId == -1) {
 				uploadSuccess = false;
+				Log.e("madlogs", "returning from -1");
+				return;
 			}
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
+				Log.e("madlogs", "returning from -400");
 				status400 = true;
+				return;
 			} else {
 				status400 = false;
 				uploadSuccess = rapi.putSessionData(sessionId, eid, dataSet);
-
+				Log.e("madlogs", "success = " + uploadSuccess);
 				// Saves data for later upload
-				if (!uploadSuccess) {
+				/*if (!uploadSuccess) {
 					DataSet ds = new DataSet(DataSet.Type.DATA, rapi,
 							nameOfSession, description, eid, dataSet, null,
 							sessionId, address);
 					uploadQueue.add(ds);
-				}
+				}*/
 
 				int pic = pictureArray.size();
 
 				while (pic > 0) {
+					Log.e("madlogs", "doin picchas");
 					boolean picSuccess = rapi.uploadPictureToSession(
 							pictureArray.get(pic - 1), eid, sessionId,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
-					if (!picSuccess) {
+					/*if (!picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC, rapi,
 								nameOfSession, description, eid, null,
 								pictureArray.get(pic - 1), sessionId, null);
 						uploadQueue.add(ds);
-					}
+					}*/
 					pic--;
 				}
 
@@ -895,19 +849,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
+			Log.e("madlogs", "starting task");
 
 		}
 
 		@Override
 		protected Void doInBackground(Void... voids) {
 
+			Log.e("madlogs", "starting uploader");
 			uploader.run();
+			Log.e("madlogs", "all done");
 			publishProgress(100);
 			return null;
 
 		}
 
-		@Override
+		@Override 
 		protected void onPostExecute(Void voids) {
 
 			dia.setMessage("Done");
@@ -953,13 +910,39 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Takes care of everything to do with EULA
 	private void displayEula() {
 
-		AlertDialog.Builder adb = new SimpleEula(this).show();
+		PackageInfo versionInfo = getPackageInfo();
+
+		// The eulaKey changes every time you increment the version number in the AndroidManifest.xml
+		eulaKey = "eula_" + versionInfo.versionCode;
+		
+		if (eulaPrefs == null)
+			eulaPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		
+		boolean hasBeenShown = eulaPrefs.getBoolean(eulaKey, false);
+    
+		if(hasBeenShown == false) {
+			Intent iEula = new Intent(mContext, Eula.class);
+			iEula.putExtra("versionName", versionInfo.versionName);
+			startActivityForResult(iEula, EULA_REQUESTED);
+		}
+		
+		/*AlertDialog.Builder adb = new SimpleEula(this).show();
 		if (adb != null) {
 			Dialog dialog = adb.create();
 			dialog.show();
 
 			apiTabletDisplay(dialog);
+		}*/
+	}
+	
+	private PackageInfo getPackageInfo() {
+		PackageInfo pi = null;
+		try {
+			pi = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
 		}
+		return pi;
 	}
 
 	// apiTabletDisplay for Dialog Building on Tablets
@@ -984,6 +967,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else
 			return false;
 
+	}
+	
+	// Assists with differentiating between displays for dialogues
+	@SuppressWarnings("deprecation")
+	private static int getApiLevel() {
+		return Integer.parseInt(android.os.Build.VERSION.SDK);
 	}
 
 	// Deals with login and UI display
@@ -1302,7 +1291,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public boolean onLongClick(View arg0) {
 
@@ -1311,6 +1299,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
 
+					startStop.setEnabled(false);
 					Intent iSetup = new Intent(DataCollector.this, Setup.class);
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 
@@ -1349,7 +1338,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 							Intent iRecordingStopped = new Intent(mContext, RecordingStopped.class);
 							startActivityForResult(iRecordingStopped, RECORDING_STOPPED_REQUESTED);
 						} else {
-							showDialog(DIALOG_DESCRIPTION);
+							Intent iDescription = new Intent(mContext, Description.class);
+							startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
 						}
 							
 					} else {
