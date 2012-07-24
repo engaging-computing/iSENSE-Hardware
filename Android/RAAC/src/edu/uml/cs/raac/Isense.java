@@ -647,6 +647,7 @@ public class Isense extends Activity implements OnClickListener {
 						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 					else
 						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
+					getRecords();
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
