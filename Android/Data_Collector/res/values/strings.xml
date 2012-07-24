@@ -5,7 +5,10 @@
     <string name="prompt">Would you like to retry uploading any of the following?</string>
     <string name="updates">Please carefully review the following agreement for this version of this app:</string>
 	
-	<string name ="eula">This end user license agreement (Agreement) is a legal agreement between you 
+	<string name ="eula">
+	    Please carefully review the following agreement for this version of this app:\n
+	    
+	    \nThis end user license agreement (Agreement) is a legal agreement between you 
 		and the developers at iSENSE (Internet System for Networked Sensor Experimentation) and 
 		ECG (Engaging Computing Group) of the University of Massachusetts Lowell (the Developer) 
 		stating the terms and conditions that govern your use of the Amusement Park Application for 
@@ -232,8 +235,7 @@
     <string name="username">Username:    \0</string>
 	<string name="password">Password:    \0</string>
 	<string name="loading">Loading&#x2026;</string>
-	<string name="usernamePrompt">Username:   </string>
-	<string name="passwordPrompt">Password:   </string>
+	
 	<string name="uploadString">Would you like to upload your data and media to iSENSE?</string>
 	<string name="no_isense">
 	    You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
@@ -249,6 +251,17 @@
 	    You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum
 		recording time at 10 minutes and have stopped recording for you.  Press \"Okay\" to continue.  
 	</string>
-	
+	<string name="description_hint">Enter Description Here&#8230;</string>
+	<string name="description_prompt">
+	    Enter a session description (or leave blank if you\'d like an automatically generated description).
+	</string>
+	<string name="visit">Visit</string>
+	<string name="qr_prompt">
+	    Your device does not have the proper Barcode Scanner application installed
+		to use this feature.  However, you may visit the Google Play store to download 
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
+	<string name="accept">Accept</string>
+	<string name="decline">Decline</string>
 	
 </resources>
