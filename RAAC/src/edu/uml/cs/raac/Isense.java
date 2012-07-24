@@ -117,7 +117,7 @@ public class Isense extends Activity implements OnClickListener {
 	public static Context mContext;
 
 	NfcAdapter mAdapter;
-	
+
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
 
@@ -250,27 +250,27 @@ public class Isense extends Activity implements OnClickListener {
 	void handleNFCIntent(Intent intent) {
 		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 		if(Build.VERSION.SDK_INT >= 9) {
-		if (rawMsgs != null) {
-			NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
-			for (int i = 0; i < rawMsgs.length; i++) {
-				msgs[i] = (NdefMessage) rawMsgs[i];
-			}
-			byte[] payload = msgs[0].getRecords()[0].getPayload();
-			String text = "";
-			//Get the Text Encoding
-			String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
-			//Get the Language Code
-			int languageCodeLength = payload[0] & 0077;
-			try {
-				//Get the Text
-				text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			if (rawMsgs != null) {
+				NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+				for (int i = 0; i < rawMsgs.length; i++) {
+					msgs[i] = (NdefMessage) rawMsgs[i];
+				}
+				byte[] payload = msgs[0].getRecords()[0].getPayload();
+				String text = "";
+				//Get the Text Encoding
+				String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+				//Get the Language Code
+				int languageCodeLength = payload[0] & 0077;
+				try {
+					//Get the Text
+					text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-			connectToBluetooth(text);
-		}
+				connectToBluetooth(text);
+			}
 		}
 	}
 
@@ -281,7 +281,7 @@ public class Isense extends Activity implements OnClickListener {
 			handleNFCIntent(intent);
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
@@ -328,7 +328,7 @@ public class Isense extends Activity implements OnClickListener {
 		if (ppi != null)
 			ppi.disconnect();
 	}
-	
+
 	public void connectToBluetooth(String macAddr) {
 		try {
 			BluetoothDevice device = mBluetoothAdapter
@@ -339,7 +339,76 @@ public class Isense extends Activity implements OnClickListener {
 			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
 		}
 	}
-	
+
+	@SuppressLint("NewApi")
+	public void getRecords() {
+		ppi.setContext(this);
+		final ProgressDialog progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setMessage("Please wait, reading data from PINPoint");
+		if(Build.VERSION.SDK_INT >= 11) {
+			progressDialog.setProgressNumberFormat(null);
+		}
+		progressDialog.show();
+
+		final Runnable toastRun = new Runnable() { 
+			public void run() { 
+				Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
+			}
+		};
+		final Runnable toastRun2 = new Runnable() { 
+			public void run() { 
+				Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
+			}
+		};
+
+		dataLayout.removeAllViews();
+		if( bta1Data != null || timeData != null ) {
+			bta1Data.clear();
+			timeData.clear();
+		}
+
+		Thread thread=new Thread(
+				new Runnable(){
+
+					public void run(){
+
+						try {
+
+							data = ppi.getData(progressDialog);
+
+						} catch (NoDataException e) {
+							e.printStackTrace();
+							runOnUiThread(toastRun);
+						} catch (IOException e) {
+							e.printStackTrace();
+							runOnUiThread(toastRun2);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						runOnUiThread(new Runnable(){
+
+							@Override
+							public void run() {
+								if(progressDialog.isShowing()) {
+									progressDialog.dismiss();
+								}
+								if (data != null) {
+									prepDataForUpload();
+									writeDataToScreen();
+									dataRdy = true;
+								}
+							}
+
+						});
+					}
+
+				});
+		thread.start();
+		pushToISENSE.setEnabled(true);
+	}
+
 	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
@@ -348,72 +417,7 @@ public class Isense extends Activity implements OnClickListener {
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
 		if (v == rcrdBtn) {
-
-			ppi.setContext(this);
-			final ProgressDialog progressDialog = new ProgressDialog(this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMessage("Please wait, reading data from PINPoint");
-			if(Build.VERSION.SDK_INT >= 11) {
-				progressDialog.setProgressNumberFormat(null);
-			}
-			progressDialog.show();
-
-			final Runnable toastRun = new Runnable() { 
-				public void run() { 
-					Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
-				}
-			};
-			final Runnable toastRun2 = new Runnable() { 
-				public void run() { 
-					Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
-				}
-			};
-
-			dataLayout.removeAllViews();
-			if( bta1Data != null || timeData != null ) {
-				bta1Data.clear();
-				timeData.clear();
-			}
-
-			Thread thread=new Thread(
-					new Runnable(){
-
-						public void run(){
-
-							try {
-
-								data = ppi.getData(progressDialog);
-
-							} catch (NoDataException e) {
-								e.printStackTrace();
-								runOnUiThread(toastRun);
-							} catch (IOException e) {
-								e.printStackTrace();
-								runOnUiThread(toastRun2);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-
-							runOnUiThread(new Runnable(){
-
-								@Override
-								public void run() {
-									if(progressDialog.isShowing()) {
-										progressDialog.dismiss();
-									}
-									if (data != null) {
-										prepDataForUpload();
-										writeDataToScreen();
-										dataRdy = true;
-									}
-								}
-
-							});
-						}
-
-					});
-			thread.start();
-			pushToISENSE.setEnabled(true);
+			getRecords();
 		}
 		if (v == pushToISENSE)
 			if (nameField.length() == 0) Toast.makeText(this, "Please enter a name.", Toast.LENGTH_LONG).show();
@@ -448,7 +452,7 @@ public class Isense extends Activity implements OnClickListener {
 
 	public void writeDataToScreen() {
 		dataLayout.removeAllViews();
-		
+
 		int i = 0;
 		int y = 1;
 		if (data.size() > 10) {
@@ -796,7 +800,7 @@ public class Isense extends Activity implements OnClickListener {
 
 			if (loggedIn) {
 				SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
-				
+
 				if (sessionId == -1) {
 					sessionId = rapi.createSession(expr.getString("experiment_number", "None"), 
 							nameOfSession, 
