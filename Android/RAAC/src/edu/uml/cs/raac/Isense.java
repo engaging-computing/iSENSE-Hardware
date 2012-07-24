@@ -41,11 +41,13 @@ import org.json.JSONArray;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -83,6 +85,7 @@ import edu.uml.cs.raac.exceptions.NoDataException;
 import edu.uml.cs.raac.pincushion.BluetoothService;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
+@SuppressLint("NewApi")
 public class Isense extends Activity implements OnClickListener {
 	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
@@ -167,7 +170,9 @@ public class Isense extends Activity implements OnClickListener {
 		pushToISENSE.setEnabled(false);
 
 		launchLayout.setVisibility(View.VISIBLE);
-
+		
+		mAdapter = NfcAdapter.getDefaultAdapter(this);
+		
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
@@ -226,9 +231,20 @@ public class Isense extends Activity implements OnClickListener {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
+
+		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
+		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+		IntentFilter[] tagFilters=new IntentFilter[] { discovery };
+		PendingIntent pendingIntent = PendingIntent.getActivity(
+			    this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+		if(Build.VERSION.SDK_INT >= 10) {
+			mAdapter.enableForegroundDispatch(this, pendingIntent, tagFilters, null);
+		}
+
 		// Performing this check in onResume() covers the case in which BT was
 		// not enabled during onStart(), so we were paused to enable it...
 		// onResume() will be called when ACTION_REQUEST_ENABLE activity
@@ -241,8 +257,17 @@ public class Isense extends Activity implements OnClickListener {
 				mChatService.start();
 			}
 		}
+		
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			handleNFCIntent(getIntent());
+		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if(Build.VERSION.SDK_INT >= 10) {
+			mAdapter.disableForegroundDispatch(this);
 		}
 	}
 
