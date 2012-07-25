@@ -8,7 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -43,19 +42,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 		cancel.setOnClickListener(this);
 
 		// Make sure the queue is written before we fetch it
-		Log.d("Q before", "Am I empty? " + DataCollector.uploadQueue.isEmpty());
-		
 		if (!(DataCollector.uploadQueue.isEmpty()))
 			DataCollector.storeQueue();
 
 		DataCollector.getUploadQueue();
-		Log.d("Q after", "Am I empty? " + DataCollector.uploadQueue.isEmpty());
 
 		mirrorQueue = new LinkedList<DataSet>();
 		mirrorQueue.addAll(DataCollector.uploadQueue);
-
-		Log.d("Q mirror post", "Am I empty? " + mirrorQueue.isEmpty());
-		Log.d("Q post", "Am I empty? " + DataCollector.uploadQueue.isEmpty());
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue(scrollQueue);
@@ -63,7 +56,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	// Works through list of data to be uploaded and creates the list of blocks
 	private void fillScrollQueue(LinearLayout scrollQueue) {
-		Log.d("onCREATE", "teehee scrollqueues");
 		String previous = "";
 
 		for (final DataSet ds : mirrorQueue) {
@@ -181,7 +173,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 		protected void onPreExecute() {
 			DataSet ds = mirrorQueue.remove();
 			createRunnable(ds);
-			Log.d("UPLOADING :)", "calling upload task");
 			dia = new ProgressDialog(QueueUploader.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
