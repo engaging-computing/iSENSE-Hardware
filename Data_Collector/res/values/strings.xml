@@ -263,5 +263,8 @@
 	</string>
 	<string name="accept">Accept</string>
 	<string name="decline">Decline</string>
+	<string name="done">Done</string>
+	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+	<string name="retry">Try Again</string>
 	
 </resources>
