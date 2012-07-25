@@ -104,7 +104,20 @@
             android:theme="@style/theme_dialog_black" />
         <activity 
             android:name="edu.uml.cs.isense.collector.QueueUploader"
-            android:label="Retry Uploading" />
+            android:label="Retry Uploading"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeSent"
+            android:label="Time Sent"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeReceived"
+            android:label="Time Received"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeFailed"
+            android:label="Connection Timed Out"
+            android:theme="@style/theme_dialog_black" />
         
     </application>
 

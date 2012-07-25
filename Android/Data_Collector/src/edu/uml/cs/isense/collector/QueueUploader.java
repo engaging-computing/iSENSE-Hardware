@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class QueueUploader extends Activity implements OnClickListener {
@@ -179,6 +180,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 	class UploadSDTask extends AsyncTask<Void, Integer, Void> {
 		@Override
 		protected void onPreExecute() {
+			OrientationManager.disableRotation(QueueUploader.this);
+			
 			DataSet ds = mirrorQueue.remove();
 			createRunnable(ds);
 			Log.d("UPLOADING :)", "calling upload task");
@@ -201,6 +204,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 			Waffle w = new Waffle(QueueUploader.mContext);
 			w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 			dia.dismiss();
+			
+			OrientationManager.enableRotation(QueueUploader.this);
 
 			if (mirrorQueue.isEmpty()) {
 				setResult(RESULT_OK);

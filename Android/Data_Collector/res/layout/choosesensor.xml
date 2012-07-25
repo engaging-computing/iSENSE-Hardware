@@ -33,15 +33,21 @@
             android:id="@+id/sensor_ok"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
-            android:text="@string/okay" />
+            android:background="@drawable/colorless"
+            android:text="@string/okay"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/sensor_back"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
-            android:text="@string/back" />
+            android:background="@drawable/colorless"
+            android:text="@string/back"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </RelativeLayout>
