@@ -441,7 +441,8 @@ public class RestAPI {
 		String url = "method=getExperiment&experiment=" + id;
 		Experiment e = new Experiment();
 		
-		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() 
+				|| connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
 			try {
 				String data = makeRequest(url);
 				
@@ -463,6 +464,17 @@ public class RestAPI {
 				e.hidden = obj.getInt("hidden");
 				e.firstname = obj.getString("firstname");
 				e.lastname = obj.getString("lastname");
+				// New API fields
+				e.name_prefix = obj.getString("name_prefix");
+				e.location = obj.getString("location");
+				e.req_name = obj.getInt("req_name");
+				e.req_location = obj.getInt("req_location");
+				e.req_procedure = obj.getInt("req_procedure");
+				e.activity = obj.getInt("activity");
+				e.recommended = obj.getInt("recommended");
+				e.srate = obj.getInt("srate");
+				e.activity_for = obj.getInt("activity_for");
+				e.closed = obj.getInt("closed");
 						
 				mDbHelper.open();
 				mDbHelper.deleteExperiment(e);
@@ -503,9 +515,10 @@ public class RestAPI {
 			e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 		}
 		
-		return e;
-		
+		return e;	
 	}
+	
+	
 	
 	public ArrayList<SessionData> sessiondata(String sessions) {
 		String url = "method=sessiondata&sessions=" + sessions;
