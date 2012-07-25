@@ -10,11 +10,8 @@ import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,29 +21,30 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.supplements.OrientationManager;
 
 public class SyncTime extends Activity {
 
-	private Context mContext;
+	private static Context mContext;
+	
+	private static final int TIME_SENT_REQUESTED = 100;
+	private static final int TIME_RECEIVED_REQUESTED = 101;
+	private static final int TIME_FAILED_REQUESTED = 102;
 
-	private static final int DIALOG_SENT = 1;
-	private static final int DIALOG_RECEIVE = 2;
-	private static final int DIALOG_FAIL_RECEIVE = 3;
+	private static long timeOffset = 0;
+	private static long myTime = 0;
+	private static long timeReceived = 0;
 
-	private long timeOffset = 0;
-	private long myTime = 0;
-	private long timeReceived = 0;
-
-	String host = "255.255.255.255";
-	int mPort = 45623;
-	String tag = "UDP Socket";
-	DatagramSocket mSocket;
-	DatagramPacket mPack, newPack;
-	String currentTime;
-	String receivedTime;
-	byte[] byteMessage;
-	byte[] receivedMessage;
-	InetAddress sendAddress;
+	static String host = "255.255.255.255";
+	static int mPort = 45623;
+	static String tag = "UDP Socket";
+	static DatagramSocket mSocket;
+	static DatagramPacket mPack, newPack;
+	static String currentTime;
+	static String receivedTime;
+	static byte[] byteMessage;
+	static byte[] receivedMessage;
+	static InetAddress sendAddress;
 
 	boolean preInit = false;
 	boolean success = false;
@@ -54,7 +52,6 @@ public class SyncTime extends Activity {
 	ProgressDialog dia;
 
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,7 +81,12 @@ public class SyncTime extends Activity {
 
 				Log.d(tag, "Received message: " + receivePack());
 
-				showDialog(DIALOG_SENT);
+				String timeSent = convertTimeStamp(timeReceived);
+				
+				Intent iSent = new Intent(SyncTime.this, TimeSent.class);
+				iSent.putExtra("timeSent", timeSent);
+				iSent.putExtra("timeOffset", timeOffset);
+				startActivityForResult(iSent, TIME_SENT_REQUESTED);
 
 			}
 		});
@@ -101,107 +103,10 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				((Activity) mContext).finish();
 				setResult(RESULT_CANCELED);
+				((Activity) mContext).finish();
 			}
 		});
-	}
-
-	protected Dialog onCreateDialog(final int id) {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog;
-
-		switch (id) {
-		case DIALOG_SENT:
-
-			String timeSent = convertTimeStamp(timeReceived);
-
-			builder.setTitle("Time Sent")
-					.setMessage(
-							"You have sent the time "
-									+ timeSent
-									+ " to other devices, which is an offset of "
-									+ timeOffset
-									+ " milliseconds from your local clock.")
-					.setPositiveButton("Done",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									Intent retIntent = new Intent();
-									retIntent.putExtra("offset", timeOffset);
-									setResult(RESULT_OK, retIntent);
-
-									dialoginterface.dismiss();
-									((Activity) mContext).finish();
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_RECEIVE:
-
-			String timeRec = convertTimeStamp(timeReceived);
-
-			builder.setTitle("Time Received")
-					.setMessage(
-							"You have received the time "
-									+ timeRec
-									+ " from the host device, which is an offset of "
-									+ timeOffset
-									+ " milliseconds from your local clock.")
-					.setPositiveButton("Done",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									Intent retIntent = new Intent();
-									retIntent.putExtra("offset", timeOffset);
-									setResult(RESULT_OK, retIntent);
-
-									dialoginterface.dismiss();
-									((Activity) mContext).finish();
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_FAIL_RECEIVE:
-
-			builder.setTitle("Connection Timed Out")
-					.setMessage(
-							"Failed to synchronize time.  Please try again.")
-					.setPositiveButton("Try Again",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									new ReceiveTask().execute();
-									dialoginterface.dismiss();
-								}
-							})
-					.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		default:
-			dialog = null;
-			break;
-		}
-
-		return dialog;
-
 	}
 
 	// attempts to initialize socket
@@ -324,6 +229,7 @@ public class SyncTime extends Activity {
 		
 		@Override
 		protected void onPreExecute() {
+			OrientationManager.disableRotation(SyncTime.this);
 			dia = new ProgressDialog(mContext);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Attempting to synchronize time (automatic timeout in 10 seconds)...");
@@ -338,14 +244,20 @@ public class SyncTime extends Activity {
 			return null;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void onPostExecute(Void voids) {
 			dia.cancel();
-			if (success)
-				showDialog(DIALOG_RECEIVE);
-			else
-				showDialog(DIALOG_FAIL_RECEIVE);
+			OrientationManager.enableRotation(SyncTime.this);
+			if (success) {
+				String timeRec = convertTimeStamp(timeReceived);
+				Intent iReceived = new Intent(SyncTime.this, TimeReceived.class);
+				iReceived.putExtra("timeReceived", timeRec);
+				iReceived.putExtra("timeOffset", timeOffset);
+				startActivityForResult(iReceived, TIME_RECEIVED_REQUESTED);
+			} else {
+				Intent iFail = new Intent(SyncTime.this, TimeFailed.class);
+				startActivityForResult(iFail, TIME_FAILED_REQUESTED);
+			}
 		}
 	}
 
@@ -388,5 +300,25 @@ public class SyncTime extends Activity {
 				+ "." + String.valueOf(intMyIp0);
 
 		return ipString;
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == TIME_SENT_REQUESTED) {
+			Intent retIntent = new Intent();
+			retIntent.putExtra("offset", timeOffset);
+			setResult(RESULT_OK, retIntent);
+			finish();
+		} else if (requestCode == TIME_RECEIVED_REQUESTED) {
+			Intent retIntent = new Intent();
+			retIntent.putExtra("offset", timeOffset);
+			setResult(RESULT_OK, retIntent);
+			finish();
+		} else if (requestCode == TIME_FAILED_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				new ReceiveTask().execute();
+			} 
+		}
 	}
 }
