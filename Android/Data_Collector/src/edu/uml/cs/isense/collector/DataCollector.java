@@ -19,6 +19,7 @@ package edu.uml.cs.isense.collector;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,11 +41,8 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -73,14 +71,12 @@ import android.provider.Settings;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -164,7 +160,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int RECORDING_STOPPED_REQUESTED = 10;
 	public static final int DESCRIPTION_REQUESTED = 11;
 	public static final int EULA_REQUESTED = 12;
-	
+
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -203,13 +199,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private long currentTime = 0;
 	private long timeOffset = 0;
 
-	private String dateString, niceDateString, 
-			s_elapsedSeconds, s_elapsedMillis,
-			s_elapsedMinutes;
+	private String dateString, niceDateString, s_elapsedSeconds,
+			s_elapsedMillis, s_elapsedMinutes;
 	private String sessionDescription = "";
 
 	public static RestAPI rapi;
-	Waffle w;
+	static Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
 	public static SensorCompatibility sc;
@@ -259,7 +254,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private LinearLayout mScreen;
 	private ImageView isenseLogo;
-	
+
 	private SharedPreferences eulaPrefs;
 	private String eulaKey;
 
@@ -295,7 +290,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-			SimpleDateFormat niceFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
+			SimpleDateFormat niceFormat = new SimpleDateFormat(
+					"MM/dd/yyyy, HH:mm:ss");
 			Date dt = new Date();
 
 			dateString = sdf.format(dt);
@@ -375,38 +371,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			timeElapsedTimer.cancel();
 		inPausedState = true;
 
-		int Q_COUNT = uploadQueue.size();
-		Log.d(TAG, "onStop size commiting: " + Q_COUNT);
-
-		final SharedPreferences mPrefs = getSharedPreferences("Q_COUNT",
-				MODE_PRIVATE);
-		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
-
-		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
-		mPrefsEditor.commit();
-
-		File uploadQueueFile = new File(
-				Environment.getExternalStorageDirectory() + "/iSENSE"
-						+ "/uploadqueue.ser");
-		ObjectOutput out;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
-
-			while (Q_COUNT > 0) {
-				DataSet ds = uploadQueue.remove();
-				Log.d(TAG, "onStop" + (String) ds.getType());
-				Log.d(TAG, "Q_COUNT IN UPLOAD: " + Q_COUNT);
-
-				// Serialize to a file
-				out.writeObject(ds);
-				Log.d(TAG, "Wrote object: " + Q_COUNT);
-				Q_COUNT--;
-			}
-
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
+		storeQueue();
 	}
 
 	@Override
@@ -414,8 +380,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		super.onStart();
 		inPausedState = false;
 
+		// rebuilds uploadQueue from saved info
 		getUploadQueue();
-
 	}
 
 	@Override
@@ -537,12 +503,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[ACCEL_TOTAL]) {
 
 				rawAccel = event.values.clone();
-				
+
 				switch (rotation) {
 				case 90:
-					// x = -y  && y = x
+					// x = -y && y = x
 					accel[0] = -event.values[1];
-					accel[1] =  event.values[0];
+					accel[1] = event.values[0];
 					break;
 				case 180:
 					// x = -x && y = -y
@@ -551,7 +517,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					break;
 				case 270:
 					// x = y && y = -x
-					accel[0] =  event.values[1];
+					accel[0] = event.values[1];
 					accel[1] = -event.values[0];
 					break;
 				case 0:
@@ -560,7 +526,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					accel[1] = event.values[1];
 				}
 
-				accel[2] = event.values[2];						
+				accel[2] = event.values[2];
 				accel[3] = FloatMath.sqrt((float) (Math.pow(accel[0], 2)
 						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 			}
@@ -572,12 +538,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[HEADING_RAD]) {
 
 				rawMag = event.values.clone();
-				
+
 				switch (rotation) {
 				case 90:
-					// x = -y  && y = x
+					// x = -y && y = x
 					mag[0] = -event.values[1];
-					mag[1] =  event.values[0];
+					mag[1] = event.values[0];
 					break;
 				case 180:
 					// x = -x && y = -y
@@ -586,7 +552,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					break;
 				case 270:
 					// x = y && y = -x
-					mag[0] =  event.values[1];
+					mag[0] = event.values[1];
 					mag[1] = -event.values[0];
 					break;
 				case 0:
@@ -652,6 +618,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
 			}
+
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			startStop.setEnabled(true);
 			if (resultCode == RESULT_OK) {
@@ -670,6 +637,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
 			}
+
 		} else if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
@@ -696,6 +664,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				setupDone = false;
 				startStop.setEnabled(true);
 			}
+
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				String returnCode = data.getStringExtra("returnCode");
@@ -720,53 +689,57 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 
 			}
+
 		} else if (requestCode == UPLOAD_CHOICE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				if (len == 0 || len2 == 0)
-					w.make("There is no data to upload!",
-							Toast.LENGTH_LONG, "x");
+					w.make("There is no data to upload!", Toast.LENGTH_LONG,
+							"x");
 				else {
 
-					SharedPreferences mPrefs = getSharedPreferences(
-							"EID", 0);
-					String experimentInput = mPrefs
-							.getString("experiment_id", "");
+					SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+					String experimentInput = mPrefs.getString("experiment_id",
+							"");
 
-					if (successLogin
-							&& (experimentInput.length() > 0)) {
-						Intent iDescription = new Intent(mContext, Description.class);
-						startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+					if (successLogin && (experimentInput.length() > 0)) {
+						Intent iDescription = new Intent(mContext,
+								Description.class);
+						startActivityForResult(iDescription,
+								DESCRIPTION_REQUESTED);
 					} else {
 						Intent iNoIsense = new Intent(mContext, NoIsense.class);
-						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);	
+						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
 					}
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				if (!choiceViaMenu)
 					showSummary();
 			}
+
 		} else if (requestCode == NO_ISENSE_REQUESTED) {
 			if (!choiceViaMenu)
 				showSummary();
+
 		} else if (requestCode == NO_GPS_REQUESTED) {
 			showGpsDialog = true;
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-			} 
+			}
+
 		} else if (requestCode == FORCE_STOP_REQUESTED) {
 			startStop.performLongClick();
+
 		} else if (requestCode == RECORDING_STOPPED_REQUESTED) {
 			Intent iDescription = new Intent(mContext, Description.class);
 			startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				sessionDescription = data.getStringExtra("description");
 
-				SharedPreferences mPrefs = getSharedPreferences(
-						"EID", 0);
-				String experimentInput = mPrefs.getString(
-						"experiment_id", "");
+				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+				String experimentInput = mPrefs.getString("experiment_id", "");
 
 				if (successLogin && (experimentInput.length() > 0)) {
 					new UploadTask().execute();
@@ -778,18 +751,23 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Data not uploaded.", Toast.LENGTH_SHORT, "x");
 				showSummary();
 			}
+
 		} else if (requestCode == EULA_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences.Editor editor = eulaPrefs.edit();
-            	editor.putBoolean(eulaKey, true);
-            	editor.commit();
+				editor.putBoolean(eulaKey, true);
+				editor.commit();
 			} else {
 				((Activity) mContext).finish();
 			}
+		
+		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				getUploadQueue();
+			}
 		}
-	}
 
-	
+	}
 
 	// Calls the rapi primitives for actual uploading
 	private Runnable uploader = new Runnable() {
@@ -837,15 +815,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 				sessionId = rapi.createSession(eid, nameOfSession, description,
 						addr, city + ", " + state, country);
 			}
-			
+
 			Log.e("madlogs", "sid = " + sessionId);
 
 			sessionDescription = "";
 
 			// createSession Success Check
-			// if (sessionId == -1) {
-			uploadSuccess = false;
-			// }
+			if (sessionId == -1)
+				uploadSuccess = false;
+			else uploadSuccess = true;
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
@@ -940,8 +918,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-				manageUploadQueue();
-
 			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 				manageUploadQueue();
@@ -969,67 +945,38 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		PackageInfo versionInfo = getPackageInfo();
 
-		// The eulaKey changes every time you increment the version number in the AndroidManifest.xml
+		// The eulaKey changes every time you increment the version number in
+		// the AndroidManifest.xml
 		eulaKey = "eula_" + versionInfo.versionCode;
-		
+
 		if (eulaPrefs == null)
 			eulaPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-		
+
 		boolean hasBeenShown = eulaPrefs.getBoolean(eulaKey, false);
-    
-		if(hasBeenShown == false) {
+
+		if (hasBeenShown == false) {
 			Intent iEula = new Intent(mContext, Eula.class);
 			iEula.putExtra("versionName", versionInfo.versionName);
 			startActivityForResult(iEula, EULA_REQUESTED);
 		}
-		
-		/*AlertDialog.Builder adb = new SimpleEula(this).show();
-		if (adb != null) {
-			Dialog dialog = adb.create();
-			dialog.show();
 
-			apiTabletDisplay(dialog);
-		}*/
+		/*
+		 * AlertDialog.Builder adb = new SimpleEula(this).show(); if (adb !=
+		 * null) { Dialog dialog = adb.create(); dialog.show();
+		 * 
+		 * apiTabletDisplay(dialog); }
+		 */
 	}
-	
+
 	private PackageInfo getPackageInfo() {
 		PackageInfo pi = null;
 		try {
-			pi = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
+			pi = mContext.getPackageManager().getPackageInfo(
+					mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
 		return pi;
-	}
-
-	// apiTabletDisplay for Dialog Building on Tablets
-	static boolean apiTabletDisplay(Dialog dialog) {
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-			dialog.show();
-
-			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-			lp.copyFrom(dialog.getWindow().getAttributes());
-			lp.width = mwidth;
-			lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-			lp.gravity = Gravity.CENTER_VERTICAL;
-			lp.dimAmount = 0.7f;
-
-			dialog.getWindow().setAttributes(lp);
-			dialog.getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-			return true;
-		} else
-			return false;
-
-	}
-	
-	// Assists with differentiating between displays for dialogues
-	@SuppressWarnings("deprecation")
-	private static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
 	}
 
 	// Deals with login and UI display
@@ -1057,32 +1004,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		timeOffset = mPrefs.getLong("timeOffset", 0);
 
 		return (((long) c.getTimeInMillis()) + timeOffset);
-	}
-
-	// Deals with Dialog creation whether api is tablet or not
-	@SuppressWarnings("deprecation")
-	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
-		if (apiTabletDisplay(dialog)) {
-
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-			return null;
-
-		} else {
-
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-
-			return dialog;
-		}
 	}
 
 	// Registers Sensors
@@ -1246,12 +1167,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		// if (uploadSuccess) {
-		if (!uploadQueue.isEmpty()) {
-			Intent i = new Intent().setClass(mContext, QueueUploader.class);
-			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		if (uploadSuccess) {
+			if (!uploadQueue.isEmpty()) {
+				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+			}
 		}
-		// }
 	}
 
 	// Everything needed to be initialized for onCreate
@@ -1286,8 +1207,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		w = new Waffle(this);
 		f = new Fields();
-
-		uploadQueue = new LinkedList<DataSet>();
 
 		accel = new float[4];
 		orientation = new float[3];
@@ -1397,19 +1316,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 									Toast.LENGTH_SHORT, "x");
 
 						if (throughHandler) {
-							Intent iRecordingStopped = new Intent(mContext, RecordingStopped.class);
-							startActivityForResult(iRecordingStopped, RECORDING_STOPPED_REQUESTED);
+							Intent iRecordingStopped = new Intent(mContext,
+									RecordingStopped.class);
+							startActivityForResult(iRecordingStopped,
+									RECORDING_STOPPED_REQUESTED);
 						} else {
-							Intent iDescription = new Intent(mContext, Description.class);
-							startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+							Intent iDescription = new Intent(mContext,
+									Description.class);
+							startActivityForResult(iDescription,
+									DESCRIPTION_REQUESTED);
 						}
-							
+
 					} else {
 
 						registerSensors();
 						OrientationManager.disableRotation((Activity) mContext);
 
-						
 						rotation = getRotation(mContext);
 						dataSet = new JSONArray();
 						secondsElapsed = 0;
@@ -1555,10 +1477,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		});
 	}
-	
+
 	// get shared Q_COUNT
-	public static SharedPreferences getSharedPreferences (Context ctxt) {
-		   return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
+	public static SharedPreferences getSharedPreferences(Context ctxt) {
+		return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
 	}
 
 	public int getRotation(Context context) {
@@ -1577,7 +1499,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return 270;
 		}
 	}
-	
+
 	private void showSummary() {
 		MediaManager.mediaCount = 0;
 		elapsedMillis = totalMillis;
@@ -1611,52 +1533,82 @@ public class DataCollector extends Activity implements SensorEventListener,
 			appendMe = "File not written to SD Card.";
 		else
 			appendMe = "Filename: \n" + sdFileName;
-		
+
 		Intent iSummary = new Intent(mContext, Summary.class);
-		iSummary.putExtra("millis",  s_elapsedMillis)
+		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append",  appendMe)
-				.putExtra("date",    niceDateString)
-				.putExtra("points",  "" + dataPointCount);
-		
+				.putExtra("append", appendMe).putExtra("date", niceDateString)
+				.putExtra("points", "" + dataPointCount);
+
 		startActivity(iSummary);
-		
+
 	}
 
-	
+	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
 	public static void getUploadQueue() {
 		
+		uploadQueue = new LinkedList<DataSet>();
+
+		// Makes sure there is an iSENSE folder
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
-
-		if (!folder.exists()) {
+		if (!folder.exists())
 			folder.mkdir();
-		}
-		
+
+		// Gets Q_COUNT back from Shared Prefs
 		final SharedPreferences mPrefs = getSharedPreferences(mContext);
 		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
 
 		try {
-			// Deserialize from a file
+			// Deserialize the file as a whole
 			File file = new File(folder.getAbsolutePath() + "/uploadqueue.ser");
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
 					file));
-			// Deserialize the object
+			// Deserialize the objects one by one
 			for (int i = 0; i < Q_COUNT; i++) {
-				Log.d(TAG, "bytes availible: " + in.available());
 				DataSet dataSet = (DataSet) in.readObject();
 				uploadQueue.add(dataSet);
-				Log.d(TAG, "bytes availible: " + in.available());
-				Log.d(TAG, "Added dataSet: " + uploadQueue.size());
-				Log.d(TAG, "Q_COUNT in  writing from file: " + Q_COUNT);
 			}
 			in.close();
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			w.make(e.toString(), Toast.LENGTH_SHORT, "x");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	// Saves Q_COUNT and uploadQueue into memory for later use
+	public static void storeQueue() {
+
+		// Save Q_COUNT in SharedPrefs
+		final SharedPreferences mPrefs = getSharedPreferences(mContext);
+		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
+		int Q_COUNT = uploadQueue.size();
+		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
+		mPrefsEditor.commit();
+
+		// writes uploadqueue.ser
+		File uploadQueueFile = new File(
+				Environment.getExternalStorageDirectory() + "/iSENSE"
+						+ "/uploadqueue.ser");
+		ObjectOutput out;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
+
+			// Serializes DataSets from uploadQueue into uploadqueue.ser
+			while (Q_COUNT > 0) {
+				DataSet ds = uploadQueue.remove();
+				out.writeObject(ds);
+				Q_COUNT--;
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
