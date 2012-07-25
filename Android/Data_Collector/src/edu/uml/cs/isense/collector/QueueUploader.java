@@ -21,16 +21,18 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class QueueUploader extends Activity implements OnClickListener {
 
+
 	private static Context mContext;
-	private LinearLayout scrollQueue;
+	private static LinearLayout scrollQueue;
 	private Runnable sdUploader;
 	private ProgressDialog dia;
-	private Queue<DataSet> mirrorQueue;
+	private static Queue<DataSet> mirrorQueue;
+	private boolean uploadSuccess = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.queueprompt);
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.queueprompt);
 
 		mContext = this;
 
@@ -40,15 +42,31 @@ public class QueueUploader extends Activity implements OnClickListener {
 		Button cancel = (Button) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
+		// Make sure the queue is written before we fetch it
+		Log.d("Q before", "Am I empty? " + DataCollector.uploadQueue.isEmpty());
+		
+		if (!(DataCollector.uploadQueue.isEmpty()))
+			DataCollector.storeQueue();
+
+		DataCollector.getUploadQueue();
+		Log.d("Q after", "Am I empty? " + DataCollector.uploadQueue.isEmpty());
+
+		mirrorQueue = new LinkedList<DataSet>();
+		mirrorQueue.addAll(DataCollector.uploadQueue);
+
+		Log.d("Q mirror post", "Am I empty? " + mirrorQueue.isEmpty());
+		Log.d("Q post", "Am I empty? " + DataCollector.uploadQueue.isEmpty());
+
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue(scrollQueue);
 	}
 
 	// Works through list of data to be uploaded and creates the list of blocks
 	private void fillScrollQueue(LinearLayout scrollQueue) {
+		Log.d("onCREATE", "teehee scrollqueues");
 		String previous = "";
 
-		for (final DataSet ds : DataCollector.uploadQueue) {
+		for (final DataSet ds : mirrorQueue) {
 			switch (ds.type) {
 			case DATA:
 				View data = View.inflate(mContext, R.layout.queueblock_data,
@@ -90,6 +108,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 						(String) ds.getName());
 
 				scrollQueue.addView(pic);
+				ds.setUploadable(true);
+
 				pic.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -110,8 +130,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 				});
 				break;
 			}
-			Log.d("just filled array", "uploadQueue: "
-					+ DataCollector.uploadQueue.size());
 		}
 
 	}
@@ -144,27 +162,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.check_layout:
-
-			CheckedTextView ctv = (CheckedTextView) v.findViewById(R.id.name);
-			ctv.toggle();
-
-			if (ctv.isChecked())
-				ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
-			else
-				ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-			break;
 
 		case R.id.upload:
-			Log.d("IM HERE!!", "Yay I've arrived!");
-			DataCollector.getUploadQueue();
-
-			mirrorQueue = new LinkedList<DataSet>();
-			mirrorQueue.addAll(DataCollector.uploadQueue);
-
-			Log.d("Q_SIZE", "SIZE: " + DataCollector.uploadQueue.size());
-
+			DataCollector.uploadQueue = new LinkedList<DataSet>();
 			new UploadSDTask().execute();
 			break;
 
@@ -199,10 +199,15 @@ public class QueueUploader extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Void voids) {
 			Waffle w = new Waffle(QueueUploader.mContext);
-			w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+
+			if (uploadSuccess)
+				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+			else
+				w.make("Upload failed.", Toast.LENGTH_SHORT, "x");
 			dia.dismiss();
 
 			if (mirrorQueue.isEmpty()) {
+				DataCollector.storeQueue();
 				setResult(RESULT_OK);
 				finish();
 				return;
@@ -217,9 +222,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 			@Override
 			public void run() {
 				if (ds.isUploadable()) {
-					boolean success = ds.upload();
-					if (success)
-						DataCollector.uploadQueue.remove(ds);
+					uploadSuccess = ds.upload();
+				} else {
+					DataCollector.uploadQueue.add(ds);
 				}
 			}
 

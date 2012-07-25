@@ -19,6 +19,7 @@ package edu.uml.cs.isense.collector;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -206,7 +207,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private String sessionDescription = "";
 
 	public static RestAPI rapi;
-	Waffle w;
+	static Waffle w;
 	public static DataFieldManager dfm;
 	Fields f;
 	public static SensorCompatibility sc;
@@ -758,6 +759,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				((Activity) mContext).finish();
 			}
+		
+		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				getUploadQueue();
+			}
 		}
 
 	}
@@ -1256,8 +1262,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		w = new Waffle(this);
 		f = new Fields();
 
-		uploadQueue = new LinkedList<DataSet>();
-
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
@@ -1592,6 +1596,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
 	public static void getUploadQueue() {
+		
+		uploadQueue = new LinkedList<DataSet>();
 
 		// Makes sure there is an iSENSE folder
 		File folder = new File(Environment.getExternalStorageDirectory()
@@ -1617,17 +1623,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			w.make(e.toString(), Toast.LENGTH_SHORT, "x");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	// Saves Q_COUNT and uploadQueue into memory for later use
-	private void storeQueue() {
+	public static void storeQueue() {
 
 		// Save Q_COUNT in SharedPrefs
-		final SharedPreferences mPrefs = getSharedPreferences("Q_COUNT",
-				MODE_PRIVATE);
+		final SharedPreferences mPrefs = getSharedPreferences(mContext);
 		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
 		int Q_COUNT = uploadQueue.size();
 		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
