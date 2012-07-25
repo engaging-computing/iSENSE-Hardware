@@ -41,11 +41,8 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -74,14 +71,12 @@ import android.provider.Settings;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -818,9 +813,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			sessionDescription = "";
 
 			// createSession Success Check
-			// if (sessionId == -1) {
-			uploadSuccess = false;
-			// }
+			if (sessionId == -1)
+				uploadSuccess = false;
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
@@ -915,8 +909,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-				manageUploadQueue();
-
 			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 				manageUploadQueue();
@@ -978,36 +970,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return pi;
 	}
 
-	// apiTabletDisplay for Dialog Building on Tablets
-	static boolean apiTabletDisplay(Dialog dialog) {
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-			dialog.show();
-
-			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-			lp.copyFrom(dialog.getWindow().getAttributes());
-			lp.width = mwidth;
-			lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-			lp.gravity = Gravity.CENTER_VERTICAL;
-			lp.dimAmount = 0.7f;
-
-			dialog.getWindow().setAttributes(lp);
-			dialog.getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-			return true;
-		} else
-			return false;
-
-	}
-
-	// Assists with differentiating between displays for dialogues
-	@SuppressWarnings("deprecation")
-	private static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
-	}
-
 	// Deals with login and UI display
 	void login() {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -1033,32 +995,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		timeOffset = mPrefs.getLong("timeOffset", 0);
 
 		return (((long) c.getTimeInMillis()) + timeOffset);
-	}
-
-	// Deals with Dialog creation whether api is tablet or not
-	@SuppressWarnings("deprecation")
-	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
-		if (apiTabletDisplay(dialog)) {
-
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-			return null;
-
-		} else {
-
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-
-			return dialog;
-		}
 	}
 
 	// Registers Sensors
@@ -1222,12 +1158,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		// if (uploadSuccess) {
-		if (!uploadQueue.isEmpty()) {
-			Intent i = new Intent().setClass(mContext, QueueUploader.class);
-			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		if (uploadSuccess) {
+			if (!uploadQueue.isEmpty()) {
+				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+			}
 		}
-		// }
 	}
 
 	// Everything needed to be initialized for onCreate
