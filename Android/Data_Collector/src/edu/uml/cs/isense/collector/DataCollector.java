@@ -815,6 +815,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// createSession Success Check
 			if (sessionId == -1)
 				uploadSuccess = false;
+			else uploadSuccess = true;
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
