@@ -79,6 +79,7 @@ public class DataSet implements Serializable {
 
 					if (sid == -1) {
 						success = false;
+						DataCollector.uploadQueue.add(this);
 						break;
 					}
 				}
@@ -86,12 +87,16 @@ public class DataSet implements Serializable {
 				// Experiment Closed Checker
 				if (sid == -400) {
 					success = false;
+					DataCollector.uploadQueue.add(this);
 					break;
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
-					if (!(dataJSON.isNull(0)))
+					if (!(dataJSON.isNull(0))) {
 						success = DataCollector.rapi.putSessionData(sid, eid,
 								dataJSON);
+						if (!success)
+							DataCollector.uploadQueue.add(this);
+					}
 				}
 				break;
 
@@ -104,6 +109,8 @@ public class DataSet implements Serializable {
 					success = DataCollector.rapi.uploadPictureToSession(
 							picture, eid, sid, name, "N/A");
 				}
+				if (!success)
+					DataCollector.uploadQueue.add(this);
 				break;
 
 			}
