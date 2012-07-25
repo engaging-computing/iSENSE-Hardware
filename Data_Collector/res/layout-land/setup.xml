@@ -54,7 +54,7 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical"
                 android:paddingBottom="5dp" >
 
@@ -106,6 +106,35 @@
                     android:textColor="@android:color/white"
                     android:text="@string/browse" />
             </LinearLayout>
+            
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:paddingBottom="5dp" >
+
+                <TextView
+                    android:id="@+id/sample_rate_prompt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:paddingTop="15dip"
+                    android:text="@string/sample_rate"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/srate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/sample_rate_prompt"
+                    android:digits="1234567890"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:maxLength="20" />
+            </RelativeLayout>
+            
         </LinearLayout>
     </ScrollView>
 
