@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.Experiments;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.simpledialogs.NoQR;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -24,6 +26,7 @@ public class Setup extends Activity implements OnClickListener {
 
 	private EditText sessionName;
 	private EditText eidInput;
+	private EditText srate;
 	
 	private Button okay;
 	private Button cancel;
@@ -53,13 +56,19 @@ public class Setup extends Activity implements OnClickListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		
+		mPrefs = getSharedPreferences("EID", 0);
+		
+		String eid = mPrefs.getString("experiment_id", "");
+		Experiment e = rapi.getExperiment(Integer.parseInt(eid));
+		Log.e("exp", "eid = " + e.experiment_id + ", srate = " + e.srate);
 
 		sessionName = (EditText) findViewById(R.id.sessionName);
 		sessionName.setText(DataCollector.partialSessionName);
-		
-		mPrefs = getSharedPreferences("EID", 0);
+			
 		eidInput = (EditText) findViewById(R.id.ExperimentInput);
-		eidInput.setText(mPrefs.getString("experiment_id", ""));
+		if (e != null)
+			eidInput.setText("" + e.experiment_id);
 		
 		okay = (Button) findViewById(R.id.setup_ok);
 		okay.setOnClickListener(this);
@@ -72,6 +81,10 @@ public class Setup extends Activity implements OnClickListener {
 		
 		browse = (Button) findViewById(R.id.BrowseButton);
 		browse.setOnClickListener(this);
+		
+		srate = (EditText) findViewById(R.id.srate);
+		if (e != null)
+			srate.setText("" + e.srate);
 
 	}
 
@@ -91,12 +104,20 @@ public class Setup extends Activity implements OnClickListener {
 				eidInput.setError("Enter an Experiment");
 				pass = false;
 			}
+			if (srate.getText().length() == 0) {
+				srate.setError("Enter a Sample Interval");
+				pass = false;
+			}
+			if (Long.parseLong(srate.getText().toString()) < 200) {
+				srate.setError("Interval Must be >= 200");
+				pass = false;
+			}
 
 			if (pass) {
 
 				Intent i = new Intent(mContext, DataCollector.class);
 				i.putExtra("sessionName", sessionName.getText().toString());
-
+				i.putExtra("srate", Integer.parseInt(srate.getText().toString()));
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putString("experiment_id",
 						eidInput.getText().toString()).commit();

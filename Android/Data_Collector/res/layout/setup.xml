@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/ExperimentLabel"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="15dip"
@@ -87,6 +87,24 @@
                     android:text="@string/browse"
                     android:textColor="@android:color/white" />
             </LinearLayout>
+            
+            <TextView 
+                android:id="@+id/sample_rate_prompt"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/sample_rate"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_marginTop="15dp" />
+            <EditText 
+                android:id="@+id/srate"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:digits="0123456789"
+                android:maxLength="20"
+                android:inputType="phone"
+                android:imeOptions="actionDone" />
+            
         </LinearLayout>
     </ScrollView>
 

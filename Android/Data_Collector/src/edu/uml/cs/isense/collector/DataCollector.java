@@ -124,6 +124,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private Location loc;
 	private Location roughLoc;
 	private Timer timeTimer;
+	private Timer timeElapsedTimer;
 
 	private float rawAccel[];
 	private float rawMag[];
@@ -135,6 +136,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private String light = "";
 
 	private static final int INTERVAL = 200;
+	private static long srate = INTERVAL;
 
 	private static final int MENU_ITEM_SETUP = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
@@ -352,6 +354,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mSensorManager.unregisterListener(DataCollector.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
+		if (timeElapsedTimer != null)
+			timeElapsedTimer.cancel();
 		inPausedState = true;
 	}
 
@@ -363,6 +367,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mSensorManager.unregisterListener(DataCollector.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
+		if (timeElapsedTimer != null)
+			timeElapsedTimer.cancel();
 		inPausedState = true;
 
 		// stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
@@ -639,7 +645,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				partialSessionName = nameOfSession = data
 						.getStringExtra("sessionName");
-
+				
+				srate = data.getIntExtra("srate", INTERVAL);
+				
 				String showSessionName;
 				if (partialSessionName.length() > 15) {
 					showSessionName = partialSessionName.substring(0, 15)
@@ -1294,6 +1302,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						time.setText(R.string.timeElapsed);
 
 						timeTimer.cancel();
+						timeElapsedTimer.cancel();
 
 						startStop.getBackground().setColorFilter(0xFFFF0000,
 								PorterDuff.Mode.MULTIPLY);
@@ -1351,27 +1360,31 @@ public class DataCollector extends Activity implements SensorEventListener,
 								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
 						running = true;
 						startStop.setText(R.string.stopString);
+						
+						timeElapsedTimer = new Timer();
+						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
+							public void run() {
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										setTime(secondsElapsed++);
+									}
+								});			
+							}
+						}, 0, 1000);
 
 						timeTimer = new Timer();
 						timeTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
 
 								dataPointCount++;
-								elapsedMillis += INTERVAL;
+								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
-
-								if ((iCount % 5) == 0) {
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											setTime(secondsElapsed++);
-										}
-									});
-								}
 
 								if (iCount >= 3000) {
 
 									timeTimer.cancel();
+									dataPointCount--;
 
 									mHandler.post(new Runnable() {
 										@Override
@@ -1449,7 +1462,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								}
 
 							}
-						}, 0, INTERVAL);
+						}, 0, srate);
 						startStop.getBackground().setColorFilter(0xFF00FF00,
 								PorterDuff.Mode.MULTIPLY);
 						mScreen.setBackgroundResource(R.drawable.background_running);
