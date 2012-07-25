@@ -616,8 +616,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
-			} else if (resultCode == RESULT_CANCELED) {
-				// oh no they canceled!
 			}
 
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
@@ -875,7 +873,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPreExecute() {
-
+			OrientationManager.disableRotation(DataCollector.this);
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
@@ -898,9 +896,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPostExecute(Void voids) {
-
 			dia.setMessage("Done");
 			dia.cancel();
+			
+			OrientationManager.enableRotation(DataCollector.this);
 
 			len = 0;
 			len2 = 0;
@@ -1137,7 +1136,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPreExecute() {
-
+			OrientationManager.disableRotation(DataCollector.this);
+			
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Gathering experiment fields...");
@@ -1165,9 +1165,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPostExecute(Void voids) {
-
 			dia.setMessage("Done");
 			dia.cancel();
+			
+			OrientationManager.enableRotation(DataCollector.this);
 
 			Intent i = new Intent(mContext, ChooseSensorDialog.class);
 			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
