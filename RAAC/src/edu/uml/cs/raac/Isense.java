@@ -120,6 +120,7 @@ public class Isense extends Activity implements OnClickListener {
 	public static Context mContext;
 
 	NfcAdapter mAdapter;
+	PendingIntent pendingIntent;
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -170,9 +171,11 @@ public class Isense extends Activity implements OnClickListener {
 		pushToISENSE.setEnabled(false);
 
 		launchLayout.setVisibility(View.VISIBLE);
-		
+
 		mAdapter = NfcAdapter.getDefaultAdapter(this);
-		
+		pendingIntent = PendingIntent.getActivity(
+				this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
@@ -239,10 +242,8 @@ public class Isense extends Activity implements OnClickListener {
 		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
 		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 		IntentFilter[] tagFilters=new IntentFilter[] { discovery };
-		PendingIntent pendingIntent = PendingIntent.getActivity(
-			    this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		if(Build.VERSION.SDK_INT >= 10) {
-			mAdapter.enableForegroundDispatch(this, pendingIntent, tagFilters, null);
+			mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
 		}
 
 		// Performing this check in onResume() covers the case in which BT was
@@ -257,12 +258,12 @@ public class Isense extends Activity implements OnClickListener {
 				mChatService.start();
 			}
 		}
-		
+
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			handleNFCIntent(getIntent());
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
