@@ -274,7 +274,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		// Display the End User Agreement
 		displayEula();
-
+		
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
 		if (running) {
