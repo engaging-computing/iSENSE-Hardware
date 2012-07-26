@@ -178,7 +178,7 @@ public class RestAPI {
 			
 			conn.setRequestProperty("Connection", "Keep-Alive");
 			conn.setRequestProperty("Content-Type", "multipart/form-data, boundary=" + boundary);
-		//	Log.e("url", "conn: " + conn);
+			//Log.e("url", "conn: " + conn);
 			DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
 			
 			// submit header
@@ -590,33 +590,11 @@ public class RestAPI {
 						JSONObject obj = a.getJSONObject(i);
 						Person p = new Person();
 						
-						p.user_id = obj.getInt("user_id");
 						p.firstname = obj.getString("firstname");
-						p.lastname = obj.getString("lastname");
-						p.confirmed = obj.getInt("confirmed");
-						p.email = obj.getString("email");
-						p.icq = obj.getString("icq");
-						p.skype = obj.getString("skype");
-						p.yahoo = obj.getString("yahoo");
-						p.aim = obj.getString("aim");
-						p.msn = obj.getString("msn");
-						p.institution = obj.getString("institution");
-						p.department = obj.getString("department");
-						p.street = obj.getString("street");
-						p.city = obj.getString("city");
-						p.country = obj.getString("country");
-						p.longitude = obj.getDouble("longitude");
-						p.latititude = obj.getDouble("latitude");
-						p.langauge = obj.getString("language");
-						p.firstaccess = obj.getString("firstaccess");
-						p.lastaccess = obj.getString("lastaccess");
-						p.lastlogin = obj.getString("lastlogin");
+						p.user_id = obj.getInt("user_id");
 						p.picture = obj.getString("picture");
-						p.url = obj.getString("url");
-						//	p.timeobj = obj.getString("timeobj");
-						//	p.date_diff = obj.getString("date_diff");
-						p.experiment_count = obj.getInt("experiment_count");
 						p.session_count = obj.getInt("session_count");
+						p.experiment_count = obj.getInt("experiment_count");
 		
 					    pList.add(p);
 					    if (action.toLowerCase().compareTo("browse") == 0) {
@@ -648,34 +626,12 @@ public class RestAPI {
 				
 				Person p = new Person();
 				
-				p.user_id = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_USER_ID));
 				p.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
-				p.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
-				p.confirmed = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_CONFIRMED));
-				p.email = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_EMAIL));
-				p.icq = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_ICQ));
-				p.skype = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_SKYPE));
-				p.yahoo = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_YAHOO));
-				p.aim = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_AIM));
-				p.msn = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_MSN));
-				p.institution = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_INSTITUTION));
-				p.department = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_DEPARTMENT));
-				p.street = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_STREET));
-				p.city = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_CITY));
-				p.country = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_COUNTRY));
-				p.longitude = c.getDouble(c.getColumnIndex(RestAPIDbAdapter.KEY_LONGITUDE));
-				p.latititude = c.getDouble(c.getColumnIndex(RestAPIDbAdapter.KEY_LATITUDE));
-				p.langauge = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LANGUAGE));
-				p.firstaccess =c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTACCESS));
-				p.lastaccess = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTACCESS));
-				p.lastlogin = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTLOGIN));
+				p.user_id = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_USER_ID));
 				p.picture = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PICTURE));
-				p.url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_URL));
-				p.timeobj = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_TIMEOBJ));
-	//			p.date_diff = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_DATE_DIFF));
-				p.experiment_count = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_EXPERIMENT_COUNT));
 				p.session_count = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_SESSION_COUNT));
-			
+				p.experiment_count = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_EXPERIMENT_COUNT));
+					
 				pList.add(p);
 				
 				if (c.isLast()) break;
@@ -687,7 +643,7 @@ public class RestAPI {
 	}
 	
 	public Item getProfile(int user_id) {
-		String url = "method=getUserProfile&user=" + user_id;
+		String url = "method=getUserProfile&user=" + user_id + "&session_key=" + session_key;
 		Item i = new Item();
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
@@ -710,7 +666,6 @@ public class RestAPI {
 				} catch (JSONException e) {
 					sessions = new JSONArray();
 				}
-				//JSONArray images = a.getJSONArray("images");
 				
 				int length = experiments.length();
 				
@@ -725,7 +680,24 @@ public class RestAPI {
 				    e.timecreated = obj.getString("timecreated");
 				    e.timemodified = obj.getString("timemodified");
 				    e.hidden = obj.getInt("hidden");
-				    //e.session_count = obj.getInt("session_count");
+				    // New api fields
+				    e.default_read = obj.getInt("default_read");
+				    e.default_join = obj.getInt("default_join");
+				    e.featured = obj.getInt("featured");
+				    e.rating = obj.getInt("rating");
+				    e.rating_votes = obj.getInt("rating_votes");
+				    e.activity = obj.getInt("activity");
+				    e.activity_for = obj.getInt("activity_for");
+				    e.req_name = obj.getInt("req_name");
+				    e.req_procedure = obj.getInt("req_procedure");
+				    e.req_location = obj.getInt("req_location");
+				    e.name_prefix = obj.getString("name_prefix");
+				    e.location = obj.getString("location");
+				    e.closed = obj.getInt("closed");
+				    e.exp_image = obj.getString("exp_image");
+				    e.recommended = obj.getInt("recommended");
+				    e.srate = obj.getInt("srate");
+				    e.timeobj = obj.getString("timeobj");
 				    
 				    i.e.add(e);
 				}
@@ -736,14 +708,18 @@ public class RestAPI {
 					JSONObject obj = sessions.getJSONObject(j);
 					Session s = new Session();
 						
-					s.session_id = obj.getInt("session_id");
-					s.experiment_id = obj.getInt("experiment_id");
+					s.session_id = obj.getInt("session_id");		
 					s.name = obj.getString("name");
 					s.description = obj.getString("description");
 					s.latitude = obj.getLong("latitude");
 					s.longitude = obj.getLong("longitude");
 					s.timecreated = obj.getString("timeobj");
 					s.timemodified = obj.getString("timemodified");
+					s.experiment_id = obj.getInt("experiment_id");
+					// New API fields
+					s.timeobj = obj.getString("timeobj");
+					s.owner_id = obj.getInt("owner_id");
+					s.experiment_name = obj.getString("experiment_name");
 					
 				    i.s.add(s);
 				}
@@ -781,7 +757,12 @@ public class RestAPI {
 						JSONObject current = a.getJSONObject(i);
 						JSONObject obj = current.getJSONObject("meta");
 						Experiment e = new Experiment();
-								
+						
+						// New API Fields (non-meta)
+						e.tags = current.getString("tags");
+						e.contrib_count = current.getInt("contrib_count");
+						e.session_count = current.getInt("session_count");
+						// Old API Fields (all meta data)
 						e.experiment_id = obj.getInt("experiment_id");
 						e.owner_id = obj.getInt("owner_id");
 						e.name = obj.getString("name");
@@ -795,9 +776,19 @@ public class RestAPI {
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
 						e.firstname = obj.getString("firstname");
-						//e.lastname = obj.getString("owner_lastname");
-						e.provider_url = obj.getString("provider_url");
-				
+						e.provider_url = obj.getString("provider_url"); 
+						// New Fields Again (meta)
+						e.name_prefix = obj.getString("name_prefix");
+						e.location = obj.getString("location");
+						e.recommended = obj.getInt("recommended");
+						e.activity_for = obj.getInt("activity_for");
+						e.closed = obj.getInt("closed");
+						e.rating_comp = obj.getString("rating_comp");
+						e.activity = obj.getInt("activity");
+						e.req_name = obj.getInt("req_name");
+						e.srate = obj.getInt("srate");
+						e.exp_image = obj.getString("exp_image");
+						
 						expList.add(e);
 						if (action.toLowerCase().compareTo("browse") == 0) {
 							mDbHelper.deleteExperiment(e);
@@ -841,7 +832,6 @@ public class RestAPI {
 				e.rating_votes = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_RATING_VOTES));
 				e.hidden = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
 				e.firstname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
-				//e.lastname = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
 			
 				expList.add(e);
@@ -882,6 +872,11 @@ public class RestAPI {
 						JSONObject obj = current.getJSONObject("meta");
 						Experiment e = new Experiment();
 								
+						// New API Fields (non-meta)
+						e.tags = current.getString("tags");
+						e.contrib_count = current.getInt("contrib_count");
+						e.session_count = current.getInt("session_count");
+						// Old API Fields (all meta data)
 						e.experiment_id = obj.getInt("experiment_id");
 						e.owner_id = obj.getInt("owner_id");
 						e.name = obj.getString("name");
@@ -895,8 +890,18 @@ public class RestAPI {
 						e.rating_votes = obj.getInt("rating_votes");
 						e.hidden = obj.getInt("hidden");
 						e.firstname = obj.getString("firstname");
-						//e.lastname = obj.getString("owner_lastname");
-						e.provider_url = obj.getString("provider_url");
+						e.provider_url = obj.getString("provider_url"); 
+						// New Fields Again (meta)
+						e.name_prefix = obj.getString("name_prefix");
+						e.location = obj.getString("location");
+						e.recommended = obj.getInt("recommended");
+						e.activity_for = obj.getInt("activity_for");
+						e.closed = obj.getInt("closed");
+						e.rating_comp = obj.getString("rating_comp");
+						e.activity = obj.getInt("activity");
+						e.req_name = obj.getInt("req_name");
+						e.srate = obj.getInt("srate");
+						e.exp_image = obj.getString("exp_image");
 				
 						expPair.exp.add(e);
 						if (action.toLowerCase().compareTo("browse") == 0) {
@@ -1004,6 +1009,7 @@ public class RestAPI {
 		return imgList;
 	}
 	
+	// Never used?
 	public ArrayList<String> getExperimentVideos(int id) {
 		ArrayList<String> vidList = new ArrayList<String>();
 		String url = "method=getExperimentVideos&experiment=" + id;
@@ -1052,6 +1058,9 @@ public class RestAPI {
 	}
 	
 	public String getExperimentTags(int id) {
+		// Added StringBuilder for efficiency
+		StringBuilder builder = new StringBuilder();
+		
 		String tags = "";
 		String url = "method=getExperimentTags&experiment=" + id;
 		
@@ -1068,11 +1077,13 @@ public class RestAPI {
 				mDbHelper.open();
 				for (int i = 0; i < length; i++) {
 					JSONObject obj = a.getJSONObject(i);
-					
-					tags += obj.getString("tag") + ", ";
+					builder.append(obj.getString("tag")).append(", ");
+					//tags += obj.getString("tag") + ", ";
 				}
 				
+				tags = builder.toString();
 				tags = tags.substring(0, tags.lastIndexOf(","));
+				
 				mDbHelper.deleteExperimentTags(id);
 				mDbHelper.insertExperimentTags(id, tags);
 				mDbHelper.close();
@@ -1122,6 +1133,8 @@ public class RestAPI {
 					f.unit_abbreviation = obj.getString("unit_abbreviation");
 					f.unit_id = obj.getInt("unit_id");
 					f.unit_name = obj.getString("unit_name");
+					// New API Field
+					f.experiment_id = obj.getString("experiment_id");
 					
 					fields.add(f);
 				}
@@ -1197,6 +1210,8 @@ public class RestAPI {
 					s.debug_data = obj.getString("debug_data");
 					s.firstname = obj.getString("firstname");
 					s.lastname = obj.getString("lastname");
+					// New API Field
+					s.priv = obj.getInt("private");
 					
 				    sesList.add(s);
 				    mDbHelper.deleteSession(s);
@@ -1311,7 +1326,7 @@ public class RestAPI {
 		return ret;
 	}
 	
-	/** Method has been updated from original for the purpose of this app only: 
+	/** Method has been updated from original: 
 	 *  in String url = ..., changed dataJSON.tostring(); from dataCache.toString(); */
 	public boolean updateSessionData(int sid, String eid, JSONArray dataJSON) {
 		dataCache.put(dataJSON);
@@ -1350,6 +1365,7 @@ public class RestAPI {
 		return ret;
 	}
 	
+	// Will always return status 600 - do not use
 	public String getMyIp() {
         String url = "method=whatsMyIp";
         try {
@@ -1406,10 +1422,11 @@ public class RestAPI {
 			
 			default:
 				// Catch all for all other HTTP response codes
-			//	Log.d("rapi", "Returned unhandled error code: " + status);
+				// Log.d("rapi", "Returned unhandled error code: " + status);
 				break;
 		}
 		
+		Log.e("make request string", output);
 		return output;
 	}
 	
