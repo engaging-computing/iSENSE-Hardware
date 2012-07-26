@@ -40,7 +40,7 @@ public class RestAPIDbAdapter {
 	public static final String KEY_UNIT_NAME = "unit_name";
 	public static final String KEY_TAGS = "tags";
 	public static final String KEY_SESSION_ID = "session_id";
-	public static final String KEY_STREET = "stree";
+	public static final String KEY_STREET = "street";
 	public static final String KEY_CITY = "city";
 	public static final String KEY_COUNTRY = "country";
 	public static final String KEY_LATITUDE = "latitude";
@@ -478,34 +478,12 @@ public class RestAPIDbAdapter {
     
     public long insertPerson(Person p) {
     	ContentValues initialValues = new ContentValues();
-    	initialValues.put(KEY_AIM, p.aim);
-    	initialValues.put(KEY_CITY, p.city);
-    	initialValues.put(KEY_COUNTRY, p.country);
-    	initialValues.put(KEY_DATE_DIFF, p.date_diff);
-    	initialValues.put(KEY_DEPARTMENT, p.department);
-    	initialValues.put(KEY_EMAIL, p.email);
-    	initialValues.put(KEY_FIRSTACCESS, p.firstaccess);
     	initialValues.put(KEY_FIRSTNAME, p.firstname);
-    	initialValues.put(KEY_ICQ, p.icq);
-    	initialValues.put(KEY_INSTITUTION, p.institution);
-    	initialValues.put(KEY_LANGUAGE, p.langauge);
-    	initialValues.put(KEY_LASTACCESS, p.lastaccess);
-    	initialValues.put(KEY_LASTLOGIN, p.lastlogin);
-    	initialValues.put(KEY_LASTNAME, p.lastname);
-    	initialValues.put(KEY_MSN, p.msn);
-    	initialValues.put(KEY_PICTURE, p.picture);
-    	initialValues.put(KEY_SKYPE, p.skype);
-    	initialValues.put(KEY_STREET, p.street);
-    	initialValues.put(KEY_TIMEOBJ, p.timeobj);
-    	initialValues.put(KEY_URL, p.url);
-    	initialValues.put(KEY_YAHOO, p.yahoo);
-    	initialValues.put(KEY_CONFIRMED, p.confirmed);
-    	initialValues.put(KEY_EXPERIMENT_COUNT, p.experiment_count);
-    	initialValues.put(KEY_LATITUDE, p.latititude);
-    	initialValues.put(KEY_LONGITUDE, p.longitude);
-    	initialValues.put(KEY_SESSION_COUNT, p.session_count);
     	initialValues.put(KEY_USER_ID, p.user_id);
-
+    	initialValues.put(KEY_PICTURE, p.picture);
+    	initialValues.put(KEY_SESSION_COUNT, p.session_count);
+    	initialValues.put(KEY_EXPERIMENT_COUNT, p.experiment_count);
+    	
     	return mDb.insert(DATABASE_TABLE_PEOPLE, null, initialValues);
     }
 

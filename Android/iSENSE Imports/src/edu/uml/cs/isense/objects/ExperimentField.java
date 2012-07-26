@@ -8,6 +8,9 @@ public class ExperimentField {
 	public String type_name = "";
 	public String unit_name = "";
 	public String unit_abbreviation = "";
+	
+	// New API Fields
+	public String experiment_id = "";
 }
 
 /**
@@ -54,4 +57,5 @@ type_id as-is in the database
 |      36 | Concentration      |
 |      37 | Text               |
 +---------+--------------------+
+
 */
