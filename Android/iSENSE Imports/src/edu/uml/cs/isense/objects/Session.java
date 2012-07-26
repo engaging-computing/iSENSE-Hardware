@@ -18,4 +18,9 @@ public class Session {
     public String lastname = "";
     public String imageURL = "";
     public boolean checked = false;
+    // New API fields
+    public String timeobj = "";
+    public String experiment_name = "";
+    // New for getSessions() only
+    public int priv;
 }

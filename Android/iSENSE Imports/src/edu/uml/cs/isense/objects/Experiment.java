@@ -31,5 +31,10 @@ public class Experiment {
     public int srate;
     public int activity_for;
     public int closed;
+    public String exp_image = "";
+    // From getExperiments() only
+    public String tags = "";
+    public int contrib_count;
+    public String rating_comp = "";
    
 }
