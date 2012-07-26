@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -59,9 +58,8 @@ public class Setup extends Activity implements OnClickListener {
 		
 		mPrefs = getSharedPreferences("EID", 0);
 		
-		String eid = mPrefs.getString("experiment_id", "");
+		String eid = mPrefs.getString("experiment_id", "-1");
 		Experiment e = rapi.getExperiment(Integer.parseInt(eid));
-		Log.e("exp", "eid = " + e.experiment_id + ", srate = " + e.srate);
 
 		sessionName = (EditText) findViewById(R.id.sessionName);
 		sessionName.setText(DataCollector.partialSessionName);
