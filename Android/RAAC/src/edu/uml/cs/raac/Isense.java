@@ -241,7 +241,6 @@ public class Isense extends Activity implements OnClickListener {
 
 		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
 		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-		IntentFilter[] tagFilters=new IntentFilter[] { discovery };
 		if(Build.VERSION.SDK_INT >= 10) {
 			mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
 		}
@@ -446,7 +445,9 @@ public class Isense extends Activity implements OnClickListener {
 			getRecords();
 		}
 		if (v == pushToISENSE)
-			if (nameField.length() == 0) Toast.makeText(this, "Please enter a name.", Toast.LENGTH_LONG).show();
+			if (nameField.length() == 0) {
+				Toast.makeText(this, "Please enter a name.", Toast.LENGTH_LONG).show();
+			}
 			else {
 				if (!dataRdy) {
 					Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
