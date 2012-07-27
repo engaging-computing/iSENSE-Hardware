@@ -17,7 +17,6 @@ import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.Experiments;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.simpledialogs.NoQR;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -50,23 +49,23 @@ public class Setup extends Activity implements OnClickListener {
 		mContext = this;
 
 		w = new Waffle(mContext);
-
+		
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+
+		Bundle extras = getIntent().getExtras();
+		String eid    = extras.getString("experiment_id");
+		String sample = extras.getString("srate");
 		
 		mPrefs = getSharedPreferences("EID", 0);
-		
-		String eid = mPrefs.getString("experiment_id", "-1");
-		Experiment e = rapi.getExperiment(Integer.parseInt(eid));
 
 		sessionName = (EditText) findViewById(R.id.sessionName);
 		sessionName.setText(DataCollector.partialSessionName);
 			
 		eidInput = (EditText) findViewById(R.id.ExperimentInput);
-		if (e != null)
-			eidInput.setText("" + e.experiment_id);
+		eidInput.setText(eid);
 		
 		okay = (Button) findViewById(R.id.setup_ok);
 		okay.setOnClickListener(this);
@@ -81,8 +80,7 @@ public class Setup extends Activity implements OnClickListener {
 		browse.setOnClickListener(this);
 		
 		srate = (EditText) findViewById(R.id.srate);
-		if (e != null)
-			srate.setText("" + e.srate);
+		srate.setText(sample);
 
 	}
 
