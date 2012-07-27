@@ -62,6 +62,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.text.Html;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -446,16 +447,16 @@ public class Isense extends Activity implements OnClickListener {
 		}
 		if (v == pushToISENSE)
 			if (nameField.length() == 0) {
-				Toast.makeText(this, "Please enter a name.", Toast.LENGTH_LONG).show();
+				Time now = new Time();
+				now.setToNow();
+				nameField.setText(now.month+"/"+now.monthDay+"/"+now.year+" "+now.hour+":"+now.minute);
 			}
-			else {
-				if (!dataRdy) {
-					Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
-				} else {
-					uploadData();
-				}
+		if (!dataRdy) {
+			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+		} else {
+			uploadData();
+		}
 
-			} 
 	}
 
 	public void prepDataForUpload() {
