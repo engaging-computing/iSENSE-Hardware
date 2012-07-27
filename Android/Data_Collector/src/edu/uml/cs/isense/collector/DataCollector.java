@@ -69,7 +69,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,6 +92,7 @@ import edu.uml.cs.isense.complexdialogs.Eula;
 import edu.uml.cs.isense.complexdialogs.LoginActivity;
 import edu.uml.cs.isense.complexdialogs.MediaManager;
 import edu.uml.cs.isense.complexdialogs.Setup;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.simpledialogs.ForceStop;
 import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.simpledialogs.NoIsense;
@@ -466,8 +466,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (item.getItemId()) {
 		case MENU_ITEM_SETUP:
 			startStop.setEnabled(false);
-			Intent iSetup = new Intent(DataCollector.this, Setup.class);
-			startActivityForResult(iSetup, SETUP_REQUESTED);
+			new SetupTask().execute();
 			return true;
 		case MENU_ITEM_LOGIN:
 			Intent iLogin = new Intent(mContext, LoginActivity.class);
@@ -624,12 +623,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
 					startStop.setEnabled(false);
-					Intent iSetup = new Intent(DataCollector.this, Setup.class);
-					startActivityForResult(iSetup, SETUP_REQUESTED);
+					new SetupTask().execute();
 				} else if (!ChooseSensorDialog.compatible) {
 					startStop.setEnabled(false);
-					Intent iSetup = new Intent(DataCollector.this, Setup.class);
-					startActivityForResult(iSetup, SETUP_REQUESTED);
+					new SetupTask().execute();
 				} else {
 					acceptedFields = ChooseSensorDialog.acceptedFields;
 					getEnabledFields();
@@ -685,7 +682,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
-					Log.wtf("NO!", "I should never get here!");
+					// Should never get here
 				}
 
 			}
@@ -816,18 +813,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 						addr, city + ", " + state, country);
 			}
 
-			Log.e("madlogs", "sid = " + sessionId);
-
 			sessionDescription = "";
 
 			// createSession Success Check
-			if (sessionId == -1)
+			if (sessionId == -1) {
 				uploadSuccess = false;
-			else uploadSuccess = true;
+			} else {
+				uploadSuccess = true;
+			}
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
-				Log.e("madlogs", "returning from -400");
 				status400 = true;
 			} else {
 				status400 = false;
@@ -847,7 +843,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				int pic = pictureArray.size();
 
 				while (pic > 0) {
-					Log.e("madlogs", "doin picchas");
 					boolean picSuccess = rapi.uploadPictureToSession(
 							pictureArray.get(pic - 1), eid, sessionId,
 							nameOfSession, description);
@@ -882,16 +877,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
-			Log.e("madlogs", "starting task");
-
 		}
 
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			Log.e("madlogs", "starting uploader");
 			uploader.run();
-			Log.e("madlogs", "all done");
 			publishProgress(100);
 			return null;
 
@@ -926,6 +917,57 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 
 	}
+	
+	// Control task for uploading data
+		private class SetupTask extends AsyncTask<Void, Integer, Void> {
+
+			Intent iSetup;
+			
+			@Override
+			protected void onPreExecute() {
+				OrientationManager.disableRotation(DataCollector.this);
+				dia = new ProgressDialog(DataCollector.this);
+				dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				dia.setMessage("Loading experiment data...");
+				dia.setCancelable(false);
+				dia.show();
+
+			}
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+
+				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+				
+				String eid = mPrefs.getString("experiment_id", "-1");
+				Experiment e = rapi.getExperiment(Integer.parseInt(eid));
+				
+				iSetup = new Intent(DataCollector.this, Setup.class);
+				
+				if (e != null) {
+					iSetup.putExtra("experiment_id", "" + e.experiment_id);
+					iSetup.putExtra("srate", "" + e.srate);
+				} else {
+					iSetup.putExtra("experiment_id", "");
+					iSetup.putExtra("srate", "");
+				}
+				publishProgress(100);
+				return null;
+
+			}
+
+			@Override
+			protected void onPostExecute(Void voids) {
+				dia.setMessage("Done");
+				dia.cancel();
+				
+				OrientationManager.enableRotation(DataCollector.this);
+				
+				startActivityForResult(iSetup, SETUP_REQUESTED);
+
+			}
+
+		}
 
 	public void setTime(int seconds) {
 		int min = seconds / 60;
@@ -960,12 +1002,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iEula, EULA_REQUESTED);
 		}
 
-		/*
-		 * AlertDialog.Builder adb = new SimpleEula(this).show(); if (adb !=
-		 * null) { Dialog dialog = adb.create(); dialog.show();
-		 * 
-		 * apiTabletDisplay(dialog); }
-		 */
 	}
 
 	private PackageInfo getPackageInfo() {
@@ -1280,8 +1316,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							Toast.LENGTH_LONG, "x");
 
 					startStop.setEnabled(false);
-					Intent iSetup = new Intent(DataCollector.this, Setup.class);
-					startActivityForResult(iSetup, SETUP_REQUESTED);
+					new SetupTask().execute();
 
 				} else {
 
