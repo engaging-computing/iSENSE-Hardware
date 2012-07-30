@@ -4,7 +4,7 @@
       android:versionCode="2"
       android:versionName="1.1">
       
- 	  <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>
+ 	  <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15"/>
     
       <uses-permission android:name="android.permission.VIBRATE"/>
       <uses-permission android:name="android.permission.INTERNET" />
@@ -36,6 +36,10 @@
                   android:label="SyncTime"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden" />
+        <activity
+            android:name=".MediaManager"
+            android:label="Media Manager"
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".QueueUploader"
                   android:label="Retry Upload" />
 

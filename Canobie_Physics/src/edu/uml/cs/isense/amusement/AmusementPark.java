@@ -42,19 +42,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
@@ -69,17 +65,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -103,6 +98,7 @@ import android.widget.Toast;
 import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.comm.RestAPI;
 
+
 /* Experiment 422 on iSENSE and 277 on Dev */
 
 @SuppressLint("NewApi")
@@ -123,7 +119,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private TextView values;
 	private Boolean running = false;
 	private Vibrator vibrator;
-	private TextView picCount;
 	private TextView loginInfo;
 	private String rideNameString = "NOT SET";
 	private SensorManager mSensorManager;
@@ -144,11 +139,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_LOGIN = 1;
 	private static final int MENU_ITEM_UPLOAD = 2;
 	private static final int MENU_ITEM_TIME = 3;
+	private static final int MENU_ITEM_MEDIA = 4;
 
-	private static final int SAVE_DATA = 4;
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int EXPERIMENT_CODE = 7;
+	private static final int SAVE_DATA = 5;
+	private static final int DIALOG_SUMMARY = 6;
+	private static final int DIALOG_CHOICE = 7;
 	private static final int DIALOG_NO_ISENSE = 8;
 	private static final int RECORDING_STOPPED = 9;
 	private static final int DIALOG_NO_GPS = 10;
@@ -158,21 +153,17 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	private static final int CAMERA_PIC_REQUESTED = 1;
-	private static final int CAMERA_VID_REQUESTED = 2;
-	private static final int SYNC_TIME_REQUESTED = 3;
-	private static final int QUEUE_UPLOAD_REQUESTED = 4;
+	private static final int SYNC_TIME_REQUESTED = 0;
+	private static final int QUEUE_UPLOAD_REQUESTED = 1;
+	private static final int EXPERIMENT_CODE = 2;
 
 	private int count = 0;
 	private String data;
 
-	private Uri imageUri;
-	private Uri videoUri;
-
 	private MediaPlayer mMediaPlayer;
 
-	private ArrayList<File> pictures;
-	private ArrayList<File> videos;
+	public static ArrayList<File> pictures;
+	public static ArrayList<File> videos;
 
 	private static int rideIndex = 0;
 
@@ -202,12 +193,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	private EditText sessionName;
 	String nameOfSession = "";
-	String partialSessionName = "";
+	static String partialSessionName = "";
 
 	public static boolean inPausedState = false;
 
 	private static int mwidth = 1;
-	private static int mediaCount = 0;
 	private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
@@ -234,7 +224,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	public static Context mContext;
 
-	private static ArrayList<File> pictureArray = new ArrayList<File>();
+	public static ArrayList<File> pictureArray = new ArrayList<File>();
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -530,58 +520,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Adds pictures to the SD Card
-	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-
-		dateString = sdf.format(dt);
-
-		if (rideNameString.equals("NOT SET"))
-			rideNameString = "Unspecified Ride";
-
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < pictures.size(); i++) {
-			File f = pictures.get(i);
-			File newFile = new File(folder, rideNameString + "-" + stNumber
-					+ "-" + dateString + "-" + (i + 1) + ".jpeg");
-			f.renameTo(newFile);
-			pictureArray.add(newFile);
-		}
-
-		pictures.clear();
-	}
-
-	// Adds videos to the SD Card
-	public void pushVideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-
-		dateString = sdf.format(dt);
-
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < videos.size(); i++) {
-			File f = videos.get(i);
-			File newFile = new File(folder, rideNameString + "-" + stNumber
-					+ "-" + dateString + "-" + (i + 1) + ".3gp");
-			f.renameTo(newFile);
-		}
-
-		videos.clear();
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -591,10 +529,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
 	}
 
 	@Override
@@ -606,10 +540,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
 
 		// stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
 		storeQueue();
@@ -640,7 +570,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -671,6 +600,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				R.drawable.ic_menu_upload);
 		menu.add(Menu.NONE, MENU_ITEM_TIME, Menu.NONE, "Sync Time").setIcon(
 				R.drawable.ic_menu_synctime);
+		menu.add(Menu.NONE, MENU_ITEM_MEDIA, Menu.NONE, "Media").setIcon(
+				R.drawable.ic_menu_media);
 		return true;
 	}
 
@@ -681,11 +612,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
@@ -705,8 +638,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
-			Intent i = new Intent(AmusementPark.this, SyncTime.class);
-			startActivityForResult(i, SYNC_TIME_REQUESTED);
+			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
+			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
+			return true;
+		case MENU_ITEM_MEDIA:
+			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+			startActivity(iMedia);
 			return true;
 		}
 		return false;
@@ -737,8 +674,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						+ ", Z: " + zPrepend + oneDigit.format(accel[2]));
 			}
 
-			accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-					+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+			accel[3] = (float) FloatMath.sqrt((float) ((Math.pow(accel[0], 2)
+					+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2))));
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			rawMag = event.values.clone();
@@ -772,6 +709,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
+	@SuppressLint("HandlerLeak")
 	@SuppressWarnings("deprecation")
 	protected Dialog onCreateDialog(final int id) {
 
@@ -794,17 +732,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						canobieBackup = canobieIsChecked;
 						rideName.setText("Ride/St#: " + rideNameString + " "
 								+ stNumber);
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
 						break;
 					case DIALOG_CANCELED:
 						canobieIsChecked = canobieBackup;
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
 						break;
 					}
 					rideName.setText("Ride/St#: " + rideNameString + " "
@@ -813,15 +743,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 			}, "Configure Options");
 			dialog.setCancelable(true);
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					if (pictures.size() > 0)
-						pushPicture();
-					if (videos.size() > 0)
-						pushVideo();
-				}
-			});
 
 			sessionName.setText(partialSessionName);
 			break;
@@ -877,7 +798,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			break;
 		case DIALOG_SUMMARY:
 
-			mediaCount = 0;
 			elapsedMillis = totalMillis;
 			elapsedSeconds = elapsedMillis / 1000;
 			elapsedMillis %= 1000;
@@ -923,8 +843,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
-									picCount.setText(getString(R.string.picAndVidCount)
-											+ mediaCount);
 								}
 							}).setCancelable(true);
 
@@ -1181,64 +1099,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		rides.setSelection(rideIndex);
 		seats.setText(stNumber);
 
-		Button b = (Button) v.findViewById(R.id.pictureButton);
-
-		b.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues values = new ContentValues();
-
-					imageUri = getContentResolver().insert(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							values);
-
-					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
-							Toast.LENGTH_LONG, "x");
-				}
-
-			}
-
-		});
-
-		Button bv = (Button) v.findViewById(R.id.videoButton);
-
-		bv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues valuesVideos = new ContentValues();
-
-					videoUri = getContentResolver().insert(
-							MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-							valuesVideos);
-
-					Intent intentVid = new Intent(
-							MediaStore.ACTION_VIDEO_CAPTURE);
-					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-					intentVid.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
-							Toast.LENGTH_LONG, "x");
-				}
-			}
-		});
-
 		builder.setTitle(message)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					@Override
@@ -1320,143 +1180,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		return ad;
 	}
 
-	// Converts the captured picture's uri to a file that is save-able to the SD
-	// Card
-	@TargetApi(11)
-	@SuppressWarnings("deprecation")
-	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
-
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Images.Media.DATA,
-					MediaStore.Images.Media._ID,
-					MediaStore.Images.ImageColumns.ORIENTATION };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			int orientation_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-			if (cursor.moveToFirst()) {
-				@SuppressWarnings("unused")
-				String orientation = cursor.getString(orientation_ColumnIndex);
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-
-			Cursor cursor = null;
-			try {
-				String[] proj = { MediaStore.Images.Media.DATA,
-						MediaStore.Images.Media._ID,
-						MediaStore.Images.ImageColumns.ORIENTATION };
-				cursor = activity.managedQuery(imageUri, proj, // Which columns
-																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				int orientation_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-				if (cursor.moveToFirst()) {
-					@SuppressWarnings("unused")
-					String orientation = cursor
-							.getString(orientation_ColumnIndex);
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
-	}
-
-	// Converts the recorded video's uri to a file that is save-able to the SD
-	// Card
-	@SuppressWarnings("deprecation")
-	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
-
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Video.Media.DATA,
-					MediaStore.Video.Media._ID };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, videoUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-			if (cursor.moveToFirst()) {
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-
-			Cursor cursor = null;
-
-			try {
-				String[] proj = { MediaStore.Video.Media.DATA,
-						MediaStore.Video.Media._ID };
-				cursor = activity.managedQuery(videoUri, proj, // Which columns
-																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-				if (cursor.moveToFirst()) {
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
-
-	}
-
 	// Performs tasks after returning to main UI from previous activities
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertImageUriToFile(imageUri, this);
-				pictures.add(f);
-				mediaCount++;
-				picCount.setText(getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == CAMERA_VID_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertVideoUriToFile(videoUri, this);
-				videos.add(f);
-				mediaCount++;
-				picCount.setText("" + getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == EXPERIMENT_CODE) {
+		if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.pictures.experiments.exp_id");
@@ -1614,7 +1343,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			len = 0;
 			len2 = 0;
-			mediaCount = 0;
+			MediaManager.mediaCount = 0;
 
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
@@ -1628,7 +1357,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				manageUploadQueue();
 			}
 
-			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 			showDialog(DIALOG_SUMMARY);
 
 		}
@@ -1671,9 +1399,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		rideName = (TextView) findViewById(R.id.ridename);
 
 		rideName.setText("Ride/St#: " + rideNameString);
-
-		picCount = (TextView) findViewById(R.id.pictureCount);
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
 
 		loginInfo = (TextView) findViewById(R.id.loginInfo);
 		loginInfo.setText(R.string.notLoggedIn);

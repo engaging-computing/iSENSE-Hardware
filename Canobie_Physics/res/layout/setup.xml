@@ -161,27 +161,7 @@
                 android:layout_toRightOf="@+id/rideNameLabel"
                 android:prompt="@string/rides_prompt" />
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/pictureButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/takePic" />
-
-            <Button
-                android:id="@+id/videoButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/takeVid" />
-        </LinearLayout>
+    
     </LinearLayout>
 
 </ScrollView>
