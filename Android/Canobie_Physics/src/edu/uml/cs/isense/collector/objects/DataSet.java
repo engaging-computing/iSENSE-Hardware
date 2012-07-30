@@ -6,8 +6,9 @@ import java.io.Serializable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import edu.uml.cs.isense.amusement.AmusementPark;
+
 import android.annotation.SuppressLint;
-import edu.uml.cs.isense.collector.DataCollector;
 
 @SuppressLint("ParserError")
 public class DataSet implements Serializable {
@@ -70,16 +71,16 @@ public class DataSet implements Serializable {
 				if (sid == -1) {
 
 					if (addr.equals("")) {
-						sid = DataCollector.rapi.createSession(eid, name, desc,
+						sid = AmusementPark.rapi.createSession(eid, name, desc,
 								"N/A", "N/A", "United States");
 					} else {
-						sid = DataCollector.rapi.createSession(eid, name, desc,
+						sid = AmusementPark.rapi.createSession(eid, name, desc,
 								addr, city + ", " + state, country);
 					}
 
 					if (sid == -1) {
 						success = false;
-						DataCollector.uploadQueue.add(this);
+						AmusementPark.uploadQueue.add(this);
 						break;
 					}
 				}
@@ -87,30 +88,30 @@ public class DataSet implements Serializable {
 				// Experiment Closed Checker
 				if (sid == -400) {
 					success = false;
-					DataCollector.uploadQueue.add(this);
+					AmusementPark.uploadQueue.add(this);
 					break;
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
-						success = DataCollector.rapi.putSessionData(sid, eid,
+						success = AmusementPark.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
-							DataCollector.uploadQueue.add(this);
+							AmusementPark.uploadQueue.add(this);
 					}
 				}
 				break;
 
 			case PIC:
 				if (name.equals("")) {
-					success = DataCollector.rapi.uploadPictureToSession(
+					success = AmusementPark.rapi.uploadPictureToSession(
 							picture, eid, sid, "*Session Name Not Provided*",
 							"N/A");
 				} else {
-					success = DataCollector.rapi.uploadPictureToSession(
+					success = AmusementPark.rapi.uploadPictureToSession(
 							picture, eid, sid, name, "N/A");
 				}
 				if (!success)
-					DataCollector.uploadQueue.add(this);
+					AmusementPark.uploadQueue.add(this);
 				break;
 
 			}
