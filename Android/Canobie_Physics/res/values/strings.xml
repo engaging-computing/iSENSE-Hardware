@@ -3,7 +3,7 @@
     <string name="hello">Hello World, AmuesmentPark!</string>
     <string name="app_name">Amusement Park Physics</string>
     
-    <string name="iSenseConfig"><u><b>iSENSE Only Configurations</b></u></string>
+    <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
     <string name="otherConfig"><u><b>Other Configurations</b></u></string>
     
     <string name="rides_prompt">Choose a ride</string>
@@ -273,6 +273,7 @@
 	<string name="media_desc">Select one of the following options:</string>
 	<string name="upload">Upload</string>
 	<string name="okay">Okay</string>
+	<string name="sample_rate">Sample Interval: </string>
 	
 	<string name="syncTime">
 	    Synchronizing time is useful when using multiple devices on a ride at the

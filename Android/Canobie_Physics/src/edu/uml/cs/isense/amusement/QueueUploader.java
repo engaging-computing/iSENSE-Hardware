@@ -15,7 +15,7 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.amusement.objects.DataSet;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 

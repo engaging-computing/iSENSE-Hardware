@@ -80,7 +80,8 @@ public class Experiments extends ListActivity {
 		Experiment e = m_experiments.get(position);
 
 		Intent intent = new Intent();
-        intent.putExtra("edu.uml.cs.isense.pictures.experiments.exp_id", e.experiment_id);
+        intent.putExtra("edu.uml.cs.isense.experiments.exp_id", e.experiment_id);
+        intent.putExtra("edu.uml.cs.isense.experiments.srate", e.srate);
 
         setResult(Activity.RESULT_OK, intent);
         finish();

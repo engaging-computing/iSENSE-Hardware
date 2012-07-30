@@ -95,13 +95,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.collector.objects.DataFieldManager;
-import edu.uml.cs.isense.collector.objects.DataSet;
-import edu.uml.cs.isense.collector.objects.Fields;
-import edu.uml.cs.isense.collector.objects.SensorCompatibility;
+import edu.uml.cs.isense.amusement.objects.DataFieldManager;
+import edu.uml.cs.isense.amusement.objects.DataSet;
+import edu.uml.cs.isense.amusement.objects.Fields;
+import edu.uml.cs.isense.amusement.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.supplements.OrientationManager;
-
 
 /* Experiment 422 on iSENSE and 491/277 on Dev */
 
@@ -121,6 +119,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static TextView rideName;
 	private static TextView time;
 	private static CheckBox canobieCheck;
+	private static EditText sampleRate;
 
 	private Button startStop;
 	private Button browseButton;
@@ -135,6 +134,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private Location loc;
 	private Location roughLoc;
 	private Timer timeTimer;
+	private Timer timeElapsedTimer;
 
 	private float rawAccel[];
 	private float rawMag[];
@@ -142,6 +142,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private float orientation[];
 
 	private static final int INTERVAL = 200;
+	private static long srate = INTERVAL;
 
 	private static final int MENU_ITEM_SETUP = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
@@ -164,7 +165,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static final int QUEUE_UPLOAD_REQUESTED = 1;
 	private static final int EXPERIMENT_CODE = 2;
 	private static final int CHOOSE_SENSORS_REQUESTED = 3;
-	
+
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
 	private static final int ACCEL_Y = 2;
@@ -248,7 +249,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static String textToSession = "";
 	public static String toSendOut = "";
 	private static String stNumber = "1";
-	
+
 	private static String sdFileName = "";
 	private static String niceDateString = "";
 
@@ -310,6 +311,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						rideName.setText("Ride/St#: NOT SET");
 
 						timeTimer.cancel();
+						timeElapsedTimer.cancel();
 						count++;
 						startStop.getBackground().setColorFilter(0xFFFF0000,
 								PorterDuff.Mode.MULTIPLY);
@@ -368,6 +370,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
 						running = true;
 						startStop.setText(R.string.stopString);
+						
+						timeElapsedTimer = new Timer();
+						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
+							public void run() {
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										setTime(secondsElapsed++);
+									}
+								});
+							}
+						}, 0, 1000);
 
 						timeTimer = new Timer();
 						timeTimer.scheduleAtFixedRate(new TimerTask() {
@@ -375,22 +389,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 								dataPointCount++;
 								count = (count + 1) % 2;
-								elapsedMillis += INTERVAL;
+								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
-
-								if ((i % 5) == 0) {
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											setTime(secondsElapsed++);
-										}
-									});
-								}
 
 								if (i >= 3000) {
 
 									timeTimer.cancel();
-
+									timeElapsedTimer.cancel();
+									
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -456,7 +462,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								}
 
 							}
-						}, 0, INTERVAL);
+						}, 0, srate);
 						startStop.getBackground().setColorFilter(0xFF00FF00,
 								PorterDuff.Mode.MULTIPLY);
 					}
@@ -502,7 +508,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
 			SimpleDateFormat niceFormat = new SimpleDateFormat(
 					"MM/dd/yyyy, HH:mm:ss");
-			
+
 			Date dt = new Date();
 
 			dateString = sdf.format(dt);
@@ -514,9 +520,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
-			
-			sdFileName = rides.getSelectedItem() + "-" + stNumber
-					+ "-" + dateString + ".csv";
+
+			sdFileName = rides.getSelectedItem() + "-" + stNumber + "-"
+					+ dateString + ".csv";
 			SDFile = new File(folder, sdFileName);
 
 			try {
@@ -565,6 +571,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mSensorManager.unregisterListener(AmusementPark.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
+		if (timeElapsedTimer != null)
+			timeElapsedTimer.cancel();
 		inPausedState = true;
 	}
 
@@ -576,6 +584,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mSensorManager.unregisterListener(AmusementPark.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
+		if (timeElapsedTimer != null)
+			timeElapsedTimer.cancel();
 		inPausedState = true;
 
 		// stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
@@ -665,6 +675,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ITEM_SETUP:
+			startStop.setEnabled(false);
 			showDialog(MENU_ITEM_SETUP);
 			return true;
 		case MENU_ITEM_LOGIN:
@@ -770,6 +781,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						rideName.setText("Ride/St#: " + rideNameString + " "
 								+ stNumber);
 						new SensorCheckTask().execute();
+						startStop.setEnabled(true); // TODO - move this to the onActiv of this intent ret
 						break;
 					case DIALOG_CANCELED:
 						canobieIsChecked = canobieBackup;
@@ -995,6 +1007,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		builder.setView(v);
 
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		
 		rides = (Spinner) v.findViewById(R.id.rides);
 
 		final ArrayAdapter<CharSequence> generalAdapter = ArrayAdapter
@@ -1019,8 +1033,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		sessionName = (EditText) v.findViewById(R.id.sessionName);
 
 		experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		experimentInput.setText(mPrefs.getString("experiment_id", ""));
+		
+		sampleRate = (EditText) v.findViewById(R.id.srate);
+		sampleRate.setText(mPrefs.getString("sample_rate", ""));
 
 		experimentInput.setKeyListener(new NumberKeyListener() {
 			@Override
@@ -1084,7 +1100,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		rides.setSelection(rideIndex);
 		seats.setText(stNumber);
-
+		
 		builder.setTitle(message)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					@Override
@@ -1121,6 +1137,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							seats.setError("Enter a St#");
 							pass = false;
 						}
+						if (sampleRate.getText().length() == 0) {
+							sampleRate.setError("Enter a Sample Interval");
+							pass = false;
+						}
+						if (Long.parseLong(sampleRate.getText().toString()) < 200) {
+							sampleRate.setError("Interval Must be >= 200");
+							pass = false;
+						}
+						
 						if (pass) {
 							rideIndex = rides.getSelectedItemPosition();
 							stNumber = seats.getText().toString();
@@ -1130,11 +1155,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							nameOfSession = sessionName.getText().toString()
 									+ " - " + rideNameString + " " + stNumber;
 
+							srate = Long.parseLong(sampleRate.getText().toString());
+							
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
 							SharedPreferences.Editor mEditor = mPrefs.edit();
 							mEditor.putString("experiment_id",
 									experimentInput.getText().toString())
+									.commit();
+							mEditor.putString("sample_rate",
+									sampleRate.getText().toString())
 									.commit();
 
 							final Message dialogOk = Message.obtain();
@@ -1174,8 +1204,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
-						"edu.uml.cs.isense.pictures.experiments.exp_id");
+						"edu.uml.cs.isense.experiments.exp_id");
+				int sr  = data.getExtras().getInt(
+						"edu.uml.cs.isense.experiments.srate");
 				experimentInput.setText("" + eid);
+				sampleRate.setText("" + sr);
 			}
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1482,94 +1515,94 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			return dialog;
 		}
 	}
-	
+
 	// Task for checking sensor availability along with enabling/disabling
-		private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
+	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
 
-			@Override
-			protected void onPreExecute() {
-				OrientationManager.disableRotation(AmusementPark.this);
-				
-				dia = new ProgressDialog(AmusementPark.this);
-				dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				dia.setMessage("Gathering experiment fields...");
-				dia.setCancelable(false);
-				dia.show();
+		@Override
+		protected void onPreExecute() {
+			//OrientationManager.disableRotation(AmusementPark.this);
 
-			}
+			dia = new ProgressDialog(AmusementPark.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Gathering experiment fields...");
+			dia.setCancelable(false);
+			dia.show();
 
-			@Override
-			protected Void doInBackground(Void... voids) {
-
-				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				String experimentInput = mPrefs.getString("experiment_id", "");
-
-				dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
-						mContext, f);
-				dfm.getOrder();
-
-				sc = dfm.checkCompatibility();
-
-				publishProgress(100);
-				return null;
-
-			}
-
-			@Override
-			protected void onPostExecute(Void voids) {
-				dia.setMessage("Done");
-				dia.cancel();
-				
-				OrientationManager.enableRotation(AmusementPark.this);
-
-				Intent i = new Intent(mContext, ChooseSensorDialog.class);
-				startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
-
-			}
 		}
 
-		private void getEnabledFields() {
-			for (String s : acceptedFields) {
-				if (s.equals(getString(R.string.time)))
-					dfm.enabledFields[TIME] = true;
-				if (s.equals(getString(R.string.accel_x)))
-					dfm.enabledFields[ACCEL_X] = true;
-				if (s.equals(getString(R.string.accel_y)))
-					dfm.enabledFields[ACCEL_Y] = true;
-				if (s.equals(getString(R.string.accel_z)))
-					dfm.enabledFields[ACCEL_Z] = true;
-				if (s.equals(getString(R.string.accel_total)))
-					dfm.enabledFields[ACCEL_TOTAL] = true;
-				if (s.equals(getString(R.string.latitude)))
-					dfm.enabledFields[LATITUDE] = true;
-				if (s.equals(getString(R.string.longitude)))
-					dfm.enabledFields[LONGITUDE] = true;
-				if (s.equals(getString(R.string.magnetic_x)))
-					dfm.enabledFields[MAG_X] = true;
-				if (s.equals(getString(R.string.magnetic_y)))
-					dfm.enabledFields[MAG_Y] = true;
-				if (s.equals(getString(R.string.magnetic_z)))
-					dfm.enabledFields[MAG_Z] = true;
-				if (s.equals(getString(R.string.magnetic_total)))
-					dfm.enabledFields[MAG_TOTAL] = true;
-				if (s.equals(getString(R.string.heading_deg)))
-					dfm.enabledFields[HEADING_DEG] = true;
-				if (s.equals(getString(R.string.heading_rad)))
-					dfm.enabledFields[HEADING_RAD] = true;
-				if (s.equals(getString(R.string.temperature_c)))
-					dfm.enabledFields[TEMPERATURE_C] = true;
-				if (s.equals(getString(R.string.temperature_f)))
-					dfm.enabledFields[TEMPERATURE_F] = true;
-				if (s.equals(getString(R.string.temperature_k)))
-					dfm.enabledFields[TEMPERATURE_K] = true;
-				if (s.equals(getString(R.string.pressure)))
-					dfm.enabledFields[PRESSURE] = true;
-				if (s.equals(getString(R.string.altitude)))
-					dfm.enabledFields[ALTITUDE] = true;
-				if (s.equals(getString(R.string.luminous_flux)))
-					dfm.enabledFields[LIGHT] = true;
-			}
+		@Override
+		protected Void doInBackground(Void... voids) {
+
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			String eidInput = mPrefs.getString("experiment_id", "");
+
+			dfm = new DataFieldManager(Integer.parseInt(eidInput), rapi,
+					mContext, f);
+			dfm.getOrder();
+
+			sc = dfm.checkCompatibility();
+
+			publishProgress(100);
+			return null;
+
 		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			dia.setMessage("Done");
+			dia.cancel();
+
+			//OrientationManager.enableRotation(AmusementPark.this);
+
+			Intent i = new Intent(mContext, ChooseSensorDialog.class);
+			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
+
+		}
+	}
+
+	private void getEnabledFields() {
+		for (String s : acceptedFields) {
+			if (s.equals(getString(R.string.time)))
+				dfm.enabledFields[TIME] = true;
+			if (s.equals(getString(R.string.accel_x)))
+				dfm.enabledFields[ACCEL_X] = true;
+			if (s.equals(getString(R.string.accel_y)))
+				dfm.enabledFields[ACCEL_Y] = true;
+			if (s.equals(getString(R.string.accel_z)))
+				dfm.enabledFields[ACCEL_Z] = true;
+			if (s.equals(getString(R.string.accel_total)))
+				dfm.enabledFields[ACCEL_TOTAL] = true;
+			if (s.equals(getString(R.string.latitude)))
+				dfm.enabledFields[LATITUDE] = true;
+			if (s.equals(getString(R.string.longitude)))
+				dfm.enabledFields[LONGITUDE] = true;
+			if (s.equals(getString(R.string.magnetic_x)))
+				dfm.enabledFields[MAG_X] = true;
+			if (s.equals(getString(R.string.magnetic_y)))
+				dfm.enabledFields[MAG_Y] = true;
+			if (s.equals(getString(R.string.magnetic_z)))
+				dfm.enabledFields[MAG_Z] = true;
+			if (s.equals(getString(R.string.magnetic_total)))
+				dfm.enabledFields[MAG_TOTAL] = true;
+			if (s.equals(getString(R.string.heading_deg)))
+				dfm.enabledFields[HEADING_DEG] = true;
+			if (s.equals(getString(R.string.heading_rad)))
+				dfm.enabledFields[HEADING_RAD] = true;
+			if (s.equals(getString(R.string.temperature_c)))
+				dfm.enabledFields[TEMPERATURE_C] = true;
+			if (s.equals(getString(R.string.temperature_f)))
+				dfm.enabledFields[TEMPERATURE_F] = true;
+			if (s.equals(getString(R.string.temperature_k)))
+				dfm.enabledFields[TEMPERATURE_K] = true;
+			if (s.equals(getString(R.string.pressure)))
+				dfm.enabledFields[PRESSURE] = true;
+			if (s.equals(getString(R.string.altitude)))
+				dfm.enabledFields[ALTITUDE] = true;
+			if (s.equals(getString(R.string.luminous_flux)))
+				dfm.enabledFields[LIGHT] = true;
+		}
+	}
 
 	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
 	public static void getUploadQueue() {
@@ -1610,7 +1643,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) { 
+		if (uploadSuccess) {
 			if (!uploadQueue.isEmpty()) {
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
@@ -1652,7 +1685,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static SharedPreferences getSharedPreferences(Context ctxt) {
 		return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
 	}
-	
+
 	private void showSummary() {
 
 		elapsedMillis = totalMillis;
