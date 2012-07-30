@@ -111,8 +111,27 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 		}
 		return v;
 	}
-
+	
 	class LoadingThread extends Thread {
+		public void run() {
+			ArrayList<Experiment> new_items = rapi.getExperiments(page, pageSize, action, query);
+			if (new_items.size() == 0) {
+				allItemsLoaded = true;
+			} else {
+				synchronized(items) {
+					items.addAll(new_items);
+				}
+				itemsLoaded += new_items.size();
+			}
+			
+			synchronized( loading ) {
+				loading = Boolean.FALSE;
+			}
+			uiHandler.post( updateTask );
+		}
+	}
+
+	/* class LoadingThread extends Thread {
 		public void run() {
 			ExpLoaded expPair = rapi.getAllExperiments(page, pageSize, action,
 					query);
@@ -213,7 +232,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 			}
 			uiHandler.post(updateTask);
 		}
-	}
+	} */
 
 	class UIUpdateTask implements Runnable {
 		public void run() {

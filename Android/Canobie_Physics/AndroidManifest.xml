@@ -46,11 +46,15 @@
             android:theme="@android:style/Theme.Dialog"
             android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden" />
-        
         <activity android:name=".QueueUploader"
                   android:label="Retry Upload"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".ChooseSensorDialog"
+                  android:label="Choose Compatible Sensors"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:theme="@android:style/Theme.Dialog" />
 
     </application>
 </manifest>
