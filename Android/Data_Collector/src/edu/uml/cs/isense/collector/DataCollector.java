@@ -1536,7 +1536,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void showSummary() {
-		MediaManager.mediaCount = 0;
+
 		elapsedMillis = totalMillis;
 		elapsedSeconds = elapsedMillis / 1000;
 		elapsedMillis %= 1000;
