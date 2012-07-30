@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.objects;
+package edu.uml.cs.isense.amusement.objects;
 
 public class Fields {
 	public String accel_x, accel_y, accel_z, accel_total;

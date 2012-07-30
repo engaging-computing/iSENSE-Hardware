@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.objects;
+package edu.uml.cs.isense.amusement.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

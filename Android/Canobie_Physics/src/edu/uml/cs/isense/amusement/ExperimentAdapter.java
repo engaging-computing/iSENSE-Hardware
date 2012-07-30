@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.ExpLoaded;
 import edu.uml.cs.isense.objects.Experiment;
-import edu.uml.cs.isense.objects.ExperimentField;
 
 public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 	@SuppressWarnings("unused")
