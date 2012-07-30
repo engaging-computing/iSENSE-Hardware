@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:tools="http://schemas.android.com/tools"
 	android:layout_height="?android:attr/listPreferredItemHeight"
 	android:layout_width="fill_parent" 
 	android:orientation="vertical"
 	android:background="@android:color/white">
 
-	<RelativeLayout android:layout_height="fill_parent"
+	<RelativeLayout 
+	    android:layout_height="fill_parent"
 		android:layout_width="wrap_content"
 		android:layout_centerInParent="true"
-		android:paddingTop="20dip">
+		android:paddingTop="20dip"
+		tools:ignore="UselessParent" >
 		
 		<ProgressBar android:layout_width="wrap_content" 
 			android:layout_height="wrap_content" 
@@ -20,7 +23,7 @@
 			
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Loading..."
+			android:text="@string/loading"
 			android:layout_toRightOf="@id/trobber"
 			android:paddingLeft="5dip"/>
 			
