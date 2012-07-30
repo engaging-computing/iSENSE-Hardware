@@ -95,7 +95,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.amusement.AmusementPark;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
 import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
@@ -770,6 +769,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						canobieBackup = canobieIsChecked;
 						rideName.setText("Ride/St#: " + rideNameString + " "
 								+ stNumber);
+						new SensorCheckTask().execute();
 						break;
 					case DIALOG_CANCELED:
 						canobieIsChecked = canobieBackup;
