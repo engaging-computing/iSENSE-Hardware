@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector;
+package edu.uml.cs.isense.amusement;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -43,13 +43,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 		cancel.setOnClickListener(this);
 
 		// Make sure the queue is written before we fetch it
-		if (!(DataCollector.uploadQueue.isEmpty()))
-			DataCollector.storeQueue();
+		if (!(AmusementPark.uploadQueue.isEmpty()))
+			AmusementPark.storeQueue();
 
-		DataCollector.getUploadQueue();
+		AmusementPark.getUploadQueue();
 
 		mirrorQueue = new LinkedList<DataSet>();
-		mirrorQueue.addAll(DataCollector.uploadQueue);
+		mirrorQueue.addAll(AmusementPark.uploadQueue);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue(scrollQueue);
@@ -157,7 +157,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 		switch (v.getId()) {
 
 		case R.id.upload:
-			DataCollector.uploadQueue = new LinkedList<DataSet>();
+			AmusementPark.uploadQueue = new LinkedList<DataSet>();
 			new UploadSDTask().execute();
 			break;
 
@@ -203,7 +203,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 			OrientationManager.enableRotation(QueueUploader.this);
 
 			if (mirrorQueue.isEmpty()) {
-				DataCollector.storeQueue();
+				AmusementPark.storeQueue();
 				setResult(RESULT_OK);
 				finish();
 				return;
@@ -221,7 +221,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 				if (ds.isUploadable()) {
 					uploadSuccess = ds.upload();
 				} else {
-					DataCollector.uploadQueue.add(ds);
+					AmusementPark.uploadQueue.add(ds);
 				}
 			}
 

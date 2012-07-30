@@ -36,6 +36,8 @@
                   android:label="SyncTime"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".QueueUploader"
+                  android:label="Retry Upload" />
 
     </application>
 </manifest>
