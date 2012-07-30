@@ -1561,6 +1561,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
+	@SuppressWarnings("unused") //TODO - remove this suppresswarnings when it actually becomes used!!
 	private void getEnabledFields() {
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
