@@ -38,6 +38,7 @@ public final class R {
         public static final int toast_background_x=0x7f020014;
     }
     public static final class id {
+<<<<<<< HEAD
         public static final int BrowseButton=0x7f08002b;
         public static final int ExperimentInput=0x7f08002a;
         public static final int ExperimentLabel=0x7f080029;
@@ -126,6 +127,92 @@ public final class R {
         public static final int time_sent=0x7f03000f;
         public static final int toast_layout=0x7f030010;
         public static final int toast_layout_x=0x7f030011;
+=======
+        public static final int BrowseButton=0x7f080026;
+        public static final int ExperimentInput=0x7f080025;
+        public static final int ExperimentLabel=0x7f080024;
+        public static final int ImageViewLogo=0x7f08000b;
+        public static final int aboutSync=0x7f080033;
+        public static final int bottomLayout=0x7f080032;
+        public static final int bottomtext=0x7f080003;
+        public static final int buttonGoBack=0x7f080036;
+        public static final int buttons=0x7f08001c;
+        public static final int cancel=0x7f08001f;
+        public static final int check_layout=0x7f080017;
+        public static final int description=0x7f08001a;
+        public static final int experimentid=0x7f080019;
+        public static final int iSenseOnlyOptions=0x7f080021;
+        public static final int icon=0x7f080001;
+        public static final int image=0x7f08003f;
+        public static final int instructions=0x7f080030;
+        public static final int isCanobie=0x7f08002a;
+        public static final int itemContent=0x7f080000;
+        public static final int layout_root=0x7f080005;
+        public static final int loginInfo=0x7f08000a;
+        public static final int mediaBack=0x7f080015;
+        public static final int mediaCounter=0x7f080016;
+        public static final int mediaManagerInstructions=0x7f080011;
+        public static final int mediaPicture=0x7f080013;
+        public static final int mediaVideo=0x7f080014;
+        public static final int menuPrompt=0x7f080010;
+        public static final int middleLayout=0x7f080031;
+        public static final int name=0x7f080018;
+        public static final int nameLabel=0x7f080022;
+        public static final int no_qr_text=0x7f080037;
+        public static final int otherOptions=0x7f080027;
+        public static final int passwordInput=0x7f080009;
+        public static final int passwordLabel=0x7f080008;
+        public static final int picAndVidLayout=0x7f080012;
+        public static final int prompt=0x7f08001b;
+        public static final int receiveButton=0x7f080035;
+        public static final int rideNameLabel=0x7f08002b;
+        public static final int ridename=0x7f08000c;
+        public static final int rides=0x7f08002c;
+        public static final int scrollqueue=0x7f08001d;
+        public static final int sendButton=0x7f080034;
+        public static final int sessionName=0x7f080023;
+        public static final int setupScroll=0x7f080020;
+        public static final int startStop=0x7f08000f;
+        public static final int studentLabel=0x7f080028;
+        public static final int studentNumber=0x7f080029;
+        public static final int summary_ok=0x7f08002e;
+        public static final int summary_text=0x7f08002d;
+        public static final int text=0x7f080040;
+        public static final int time=0x7f08000e;
+        public static final int time_fail_cancel=0x7f080039;
+        public static final int time_fail_retry=0x7f080038;
+        public static final int time_received_done=0x7f08003b;
+        public static final int time_received_text=0x7f08003a;
+        public static final int time_sent_done=0x7f08003d;
+        public static final int time_sent_text=0x7f08003c;
+        public static final int toast_layout_root=0x7f08003e;
+        public static final int topLayout=0x7f08002f;
+        public static final int toptext=0x7f080002;
+        public static final int trobber=0x7f080004;
+        public static final int upload=0x7f08001e;
+        public static final int usernameInput=0x7f080007;
+        public static final int usernameLabel=0x7f080006;
+        public static final int values=0x7f08000d;
+    }
+    public static final class layout {
+        public static final int experimentrow=0x7f030000;
+        public static final int experiments=0x7f030001;
+        public static final int loadrow=0x7f030002;
+        public static final int logindialog=0x7f030003;
+        public static final int main=0x7f030004;
+        public static final int media_manager=0x7f030005;
+        public static final int queueblock_data=0x7f030006;
+        public static final int queueblock_pic=0x7f030007;
+        public static final int queueprompt=0x7f030008;
+        public static final int setup=0x7f030009;
+        public static final int summary=0x7f03000a;
+        public static final int synctime=0x7f03000b;
+        public static final int time_fail=0x7f03000c;
+        public static final int time_received=0x7f03000d;
+        public static final int time_sent=0x7f03000e;
+        public static final int toast_layout=0x7f03000f;
+        public static final int toast_layout_x=0x7f030010;
+>>>>>>> upstream/master
     }
     public static final class raw {
         public static final int beep=0x7f040000;
