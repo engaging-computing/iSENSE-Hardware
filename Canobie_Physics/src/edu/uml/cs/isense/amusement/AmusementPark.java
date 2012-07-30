@@ -95,8 +95,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.amusement.AmusementPark;
+import edu.uml.cs.isense.collector.objects.DataFieldManager;
 import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.collector.objects.Fields;
+import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.supplements.OrientationManager;
 
 
 /* Experiment 422 on iSENSE and 277 on Dev */
@@ -106,6 +111,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
 	public static Queue<DataSet> uploadQueue;
+	public static DataFieldManager dfm;
+	public static SensorCompatibility sc;
+	LinkedList<String> acceptedFields;
+	Fields f;
 
 	private static EditText experimentInput;
 	private static EditText seats;
@@ -156,6 +165,28 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static final int SYNC_TIME_REQUESTED = 0;
 	private static final int QUEUE_UPLOAD_REQUESTED = 1;
 	private static final int EXPERIMENT_CODE = 2;
+	private static final int CHOOSE_SENSORS_REQUESTED = 3;
+	
+	private static final int TIME = 0;
+	private static final int ACCEL_X = 1;
+	private static final int ACCEL_Y = 2;
+	private static final int ACCEL_Z = 3;
+	private static final int ACCEL_TOTAL = 4;
+	private static final int LATITUDE = 5;
+	private static final int LONGITUDE = 6;
+	private static final int MAG_X = 7;
+	private static final int MAG_Y = 8;
+	private static final int MAG_Z = 9;
+	private static final int MAG_TOTAL = 10;
+	private static final int HEADING_DEG = 11;
+	private static final int HEADING_RAD = 12;
+	private static final int TEMPERATURE_C = 13;
+	private static final int PRESSURE = 14;
+	private static final int ALTITUDE = 15;
+	private static final int LIGHT = 16;
+
+	private static final int TEMPERATURE_F = 17;
+	private static final int TEMPERATURE_K = 18;
 
 	private int count = 0;
 	private String data;
@@ -1498,6 +1529,94 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			return dialog;
 		}
 	}
+	
+	// Task for checking sensor availability along with enabling/disabling
+		private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
+
+			@Override
+			protected void onPreExecute() {
+				OrientationManager.disableRotation(AmusementPark.this);
+				
+				dia = new ProgressDialog(AmusementPark.this);
+				dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				dia.setMessage("Gathering experiment fields...");
+				dia.setCancelable(false);
+				dia.show();
+
+			}
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+
+				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+				String experimentInput = mPrefs.getString("experiment_id", "");
+
+				dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+						mContext, f);
+				dfm.getOrder();
+
+				sc = dfm.checkCompatibility();
+
+				publishProgress(100);
+				return null;
+
+			}
+
+			@Override
+			protected void onPostExecute(Void voids) {
+				dia.setMessage("Done");
+				dia.cancel();
+				
+				OrientationManager.enableRotation(AmusementPark.this);
+
+				Intent i = new Intent(mContext, ChooseSensorDialog.class);
+				startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
+
+			}
+		}
+
+		private void getEnabledFields() {
+			for (String s : acceptedFields) {
+				if (s.equals(getString(R.string.time)))
+					dfm.enabledFields[TIME] = true;
+				if (s.equals(getString(R.string.accel_x)))
+					dfm.enabledFields[ACCEL_X] = true;
+				if (s.equals(getString(R.string.accel_y)))
+					dfm.enabledFields[ACCEL_Y] = true;
+				if (s.equals(getString(R.string.accel_z)))
+					dfm.enabledFields[ACCEL_Z] = true;
+				if (s.equals(getString(R.string.accel_total)))
+					dfm.enabledFields[ACCEL_TOTAL] = true;
+				if (s.equals(getString(R.string.latitude)))
+					dfm.enabledFields[LATITUDE] = true;
+				if (s.equals(getString(R.string.longitude)))
+					dfm.enabledFields[LONGITUDE] = true;
+				if (s.equals(getString(R.string.magnetic_x)))
+					dfm.enabledFields[MAG_X] = true;
+				if (s.equals(getString(R.string.magnetic_y)))
+					dfm.enabledFields[MAG_Y] = true;
+				if (s.equals(getString(R.string.magnetic_z)))
+					dfm.enabledFields[MAG_Z] = true;
+				if (s.equals(getString(R.string.magnetic_total)))
+					dfm.enabledFields[MAG_TOTAL] = true;
+				if (s.equals(getString(R.string.heading_deg)))
+					dfm.enabledFields[HEADING_DEG] = true;
+				if (s.equals(getString(R.string.heading_rad)))
+					dfm.enabledFields[HEADING_RAD] = true;
+				if (s.equals(getString(R.string.temperature_c)))
+					dfm.enabledFields[TEMPERATURE_C] = true;
+				if (s.equals(getString(R.string.temperature_f)))
+					dfm.enabledFields[TEMPERATURE_F] = true;
+				if (s.equals(getString(R.string.temperature_k)))
+					dfm.enabledFields[TEMPERATURE_K] = true;
+				if (s.equals(getString(R.string.pressure)))
+					dfm.enabledFields[PRESSURE] = true;
+				if (s.equals(getString(R.string.altitude)))
+					dfm.enabledFields[ALTITUDE] = true;
+				if (s.equals(getString(R.string.luminous_flux)))
+					dfm.enabledFields[LIGHT] = true;
+			}
+		}
 
 	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
 	public static void getUploadQueue() {
