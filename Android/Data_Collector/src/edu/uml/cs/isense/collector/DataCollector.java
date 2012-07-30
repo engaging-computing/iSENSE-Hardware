@@ -276,7 +276,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		// Display the End User Agreement
 		displayEula();
-		
+
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
 		if (running) {
@@ -644,9 +644,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				partialSessionName = nameOfSession = data
 						.getStringExtra("sessionName");
-				
+
 				srate = data.getIntExtra("srate", INTERVAL);
-				
+
 				String showSessionName;
 				if (partialSessionName.length() > 15) {
 					showSessionName = partialSessionName.substring(0, 15)
@@ -759,7 +759,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				((Activity) mContext).finish();
 			}
-		
+
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				getUploadQueue();
@@ -894,7 +894,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 			dia.setMessage("Done");
 			dia.cancel();
-			
+
 			OrientationManager.enableRotation(DataCollector.this);
 
 			len = 0;
@@ -919,57 +919,57 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 
 	}
-	
+
 	// Control task for uploading data
-		private class SetupTask extends AsyncTask<Void, Integer, Void> {
+	private class SetupTask extends AsyncTask<Void, Integer, Void> {
 
-			Intent iSetup;
-			
-			@Override
-			protected void onPreExecute() {
-				OrientationManager.disableRotation(DataCollector.this);
-				dia = new ProgressDialog(DataCollector.this);
-				dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				dia.setMessage("Loading experiment data...");
-				dia.setCancelable(false);
-				dia.show();
+		Intent iSetup;
 
-			}
-
-			@Override
-			protected Void doInBackground(Void... voids) {
-
-				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				
-				String eid = mPrefs.getString("experiment_id", "-1");
-				Experiment e = rapi.getExperiment(Integer.parseInt(eid));
-				
-				iSetup = new Intent(DataCollector.this, Setup.class);
-				
-				if (e != null) {
-					iSetup.putExtra("experiment_id", "" + e.experiment_id);
-					iSetup.putExtra("srate", "" + e.srate);
-				} else {
-					iSetup.putExtra("experiment_id", "");
-					iSetup.putExtra("srate", "");
-				}
-				publishProgress(100);
-				return null;
-
-			}
-
-			@Override
-			protected void onPostExecute(Void voids) {
-				dia.setMessage("Done");
-				dia.cancel();
-				
-				OrientationManager.enableRotation(DataCollector.this);
-				
-				startActivityForResult(iSetup, SETUP_REQUESTED);
-
-			}
+		@Override
+		protected void onPreExecute() {
+			OrientationManager.disableRotation(DataCollector.this);
+			dia = new ProgressDialog(DataCollector.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Loading experiment data...");
+			dia.setCancelable(false);
+			dia.show();
 
 		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+
+			String eid = mPrefs.getString("experiment_id", "-1");
+			Experiment e = rapi.getExperiment(Integer.parseInt(eid));
+
+			iSetup = new Intent(DataCollector.this, Setup.class);
+
+			if (e != null) {
+				iSetup.putExtra("experiment_id", "" + e.experiment_id);
+				iSetup.putExtra("srate", "" + e.srate);
+			} else {
+				iSetup.putExtra("experiment_id", "");
+				iSetup.putExtra("srate", "");
+			}
+			publishProgress(100);
+			return null;
+
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			dia.setMessage("Done");
+			dia.cancel();
+
+			OrientationManager.enableRotation(DataCollector.this);
+
+			startActivityForResult(iSetup, SETUP_REQUESTED);
+
+		}
+
+	}
 
 	public void setTime(int seconds) {
 		int min = seconds / 60;
@@ -1120,7 +1120,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(DataCollector.this);
-			
+
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Gathering experiment fields...");
@@ -1150,7 +1150,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 			dia.setMessage("Done");
 			dia.cancel();
-			
+
 			OrientationManager.enableRotation(DataCollector.this);
 
 			Intent i = new Intent(mContext, ChooseSensorDialog.class);
@@ -1397,7 +1397,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
 						running = true;
 						startStop.setText(R.string.stopString);
-						
+
 						timeElapsedTimer = new Timer();
 						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
@@ -1406,7 +1406,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 									public void run() {
 										setTime(secondsElapsed++);
 									}
-								});			
+								});
 							}
 						}, 0, 1000);
 
@@ -1584,7 +1584,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
 	public static void getUploadQueue() {
-		
+
 		uploadQueue = new LinkedList<DataSet>();
 
 		// Makes sure there is an iSENSE folder

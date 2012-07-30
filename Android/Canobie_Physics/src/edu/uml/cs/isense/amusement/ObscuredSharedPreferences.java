@@ -9,6 +9,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
@@ -30,6 +31,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
         this.context = context;
     }
 
+    @SuppressLint("NewApi")
     public class Editor implements SharedPreferences.Editor {
         protected SharedPreferences.Editor delegate;
 
