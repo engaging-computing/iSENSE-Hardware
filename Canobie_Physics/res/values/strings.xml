@@ -266,6 +266,7 @@
 	<string name="send">Send</string>
 	<string name="receive">Receive</string>
 	<string name="cancel">Cancel</string>
+	<string name="upload">Upload</string>
 	
 	<string name="syncTime">
 	    Synchronizing time is useful when using multiple devices on a ride at the
@@ -292,5 +293,6 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.
 	</string>
+	<string name="prompt">Would you like to retry uploading any of the following?</string>
 
 </resources>
