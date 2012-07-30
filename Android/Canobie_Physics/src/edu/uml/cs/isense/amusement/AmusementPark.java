@@ -18,15 +18,23 @@ package edu.uml.cs.isense.amusement;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -87,12 +95,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.comm.RestAPI;
+
 
 /* Experiment 422 on iSENSE and 277 on Dev */
 
+@SuppressLint("NewApi")
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
+
+	public static Queue<DataSet> uploadQueue;
 
 	private static EditText experimentInput;
 	private static EditText seats;
@@ -140,8 +153,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	private static final int EXPERIMENT_CODE = 1;
-	public static final int SYNC_TIME_REQUESTED = 2;
+	private static final int SYNC_TIME_REQUESTED = 0;
+	private static final int QUEUE_UPLOAD_REQUESTED = 1;
+	private static final int EXPERIMENT_CODE = 2;
 
 	private int count = 0;
 	private String data;
@@ -168,9 +182,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	private String dateString, s_elapsedSeconds, s_elapsedMillis,
 			s_elapsedMinutes;
-	
-	RestAPI rapi;
-	Waffle w;
+
+	public static RestAPI rapi;
+	static Waffle w;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -296,8 +310,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
-							w.make(
-									"Data recording interrupted! Time values may be inconsistent.",
+							w.make("Data recording interrupted! Time values may be inconsistent.",
 									Toast.LENGTH_SHORT, "x");
 							e.printStackTrace();
 						}
@@ -527,12 +540,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
+
+		// stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
+		storeQueue();
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		inPausedState = false;
+
+		// rebuilds uploadQueue from saved info
+		getUploadQueue();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -559,12 +578,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onBackPressed() {
 		if (!w.dontToastMeTwice) {
 			if (running)
-				w.make(
-						"Cannot exit via BACK while recording data; use HOME instead.",
+				w.make("Cannot exit via BACK while recording data; use HOME instead.",
 						Toast.LENGTH_LONG, "x");
 			else
-				w.make("Press back again to exit.", Toast.LENGTH_SHORT,
-						"check");
+				w.make("Press back again to exit.", Toast.LENGTH_SHORT, "check");
 
 			// new NoToastTwiceTask().execute();
 		} else if (w.exitAppViaBack && !running) {
@@ -744,8 +761,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								+ mPrefs.getString("username", ""));
 						loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG,
-								"check");
+						w.make("Login successful", Toast.LENGTH_LONG, "check");
 						break;
 					case LoginActivity.LOGIN_CANCELED:
 						break;
@@ -846,8 +862,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									dialoginterface.dismiss();
 
 									if (len == 0 || len2 == 0)
-										w.make(
-												"There is no data to upload!",
+										w.make("There is no data to upload!",
 												Toast.LENGTH_LONG, "x");
 									else {
 
@@ -1041,8 +1056,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			public void onClick(View v) {
 
 				if (!rapi.isConnectedToInternet()) {
-					w.make(
-							"You must enable wifi or mobile connectivity to do this.",
+					w.make("You must enable wifi or mobile connectivity to do this.",
 							Toast.LENGTH_SHORT, "x");
 				} else {
 
@@ -1126,10 +1140,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							stNumber = seats.getText().toString();
 
 							rideNameString = (String) rides.getSelectedItem();
-							
+
 							nameOfSession = sessionName.getText().toString()
-									+ " - " + rideNameString
-									+ " " + stNumber;
+									+ " - " + rideNameString + " " + stNumber;
 
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
@@ -1190,6 +1203,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			} else if (resultCode == RESULT_CANCELED) {
 				// oh no they canceled!
 			}
+		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				getUploadQueue();
+			}
 		}
 
 	}
@@ -1210,6 +1227,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
+			Date dt = new Date();
+			String dateString = sdf.format(dt);
+
 			try {
 				if (roughLoc != null) {
 					address = new Geocoder(AmusementPark.this,
@@ -1226,23 +1247,24 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				e.printStackTrace();
 			}
 
+			String description = "Automated Submission Through Android Canobie Physics App";
+
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String eid = mPrefs.getString("experiment_id", "");
 
 			if (address == null || address.size() <= 0) {
-				sessionId = rapi.createSession(eid, nameOfSession,
-						"Automated Submission Through Android App", "N/A",
-						"N/A", "United States");
+				sessionId = rapi.createSession(eid, nameOfSession, description,
+						"N/A", "N/A", "United States");
 			} else {
-				sessionId = rapi.createSession(eid, nameOfSession,
-						"Automated Submission Through Android App", addr, city
-								+ ", " + state, country);
+				sessionId = rapi.createSession(eid, nameOfSession, description,
+						addr, city + ", " + state, country);
 			}
 
 			// createSession Success Check
 			if (sessionId == -1) {
 				uploadSuccess = false;
-				return;
+			} else {
+				uploadSuccess = false; // TODO
 			}
 
 			// Experiment Closed Checker
@@ -1250,25 +1272,36 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				status400 = true;
 			} else {
 				status400 = false;
-				uploadSuccess = rapi.putSessionData(sessionId, experimentInput
-						.getText().toString(), dataSet);
-				if (!uploadSuccess)
-					return;
+				if (uploadSuccess)
+					uploadSuccess = rapi
+							.putSessionData(sessionId, eid, dataSet);
+
+				// Saves data for later upload
+				if (!uploadSuccess) {
+					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession
+							+ " - " + dateString, description, eid,
+							dataSet.toString(), null, sessionId, city, state,
+							country, addr);
+					uploadQueue.add(ds);
+				}
 
 				int pic = pictureArray.size();
 
 				while (pic > 0) {
-					if (nameOfSession.equals(""))
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, "*Session Name Not Provided*",
-								"N/A");
-					else
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, sessionName.getText()
-										.toString(), "N/A");
+					boolean picSuccess = rapi.uploadPictureToSession(
+							pictureArray.get(pic - 1), eid, sessionId,
+							nameOfSession, description);
 
+					// Saves pictures for later upload
+					if (picSuccess) {
+						DataSet ds = new DataSet(DataSet.Type.PIC,
+								nameOfSession + " - " + dateString,
+								description, eid, null,
+								pictureArray.get(pic - 1), sessionId, city,
+								state, country, addr);
+						uploadQueue.add(ds);
+					}
 					pic--;
-
 				}
 
 				pictureArray.clear();
@@ -1313,15 +1346,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			MediaManager.mediaCount = 0;
 
 			if (status400)
-				w.make(
-						"Your data cannot be uploaded to this experiment.  It has been closed.",
+				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Toast.LENGTH_LONG, "x");
-			else if (!uploadSuccess)
-				w.make(
-						"An error occured during upload.  Please check internet connectivity.",
+			else if (!uploadSuccess) {
+				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-			else
+				manageUploadQueue();
+			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+				manageUploadQueue();
+			}
 
 			showDialog(DIALOG_SUMMARY);
 
@@ -1375,7 +1409,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
+
 		w = new Waffle(this);
 	}
 
@@ -1465,4 +1499,85 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
+	public static void getUploadQueue() {
+
+		uploadQueue = new LinkedList<DataSet>();
+
+		// Makes sure there is an iSENSE folder
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/iSENSE");
+		if (!folder.exists())
+			folder.mkdir();
+
+		// Gets Q_COUNT back from Shared Prefs
+		final SharedPreferences mPrefs = getSharedPreferences(mContext);
+		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
+
+		try {
+			// Deserialize the file as a whole
+			File file = new File(folder.getAbsolutePath() + "/uploadqueue.ser");
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
+					file));
+			// Deserialize the objects one by one
+			for (int i = 0; i < Q_COUNT; i++) {
+				DataSet dataSet = (DataSet) in.readObject();
+				uploadQueue.add(dataSet);
+			}
+			in.close();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			w.make(e.toString(), Toast.LENGTH_SHORT, "x");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Prompts the user to upload the rest of their content
+	// upon successful upload of data
+	private void manageUploadQueue() {
+		//if (uploadSuccess) { TODO
+			if (!uploadQueue.isEmpty()) {
+				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+			}
+		//}
+	}
+
+	// Saves Q_COUNT and uploadQueue into memory for later use
+	public static void storeQueue() {
+
+		// Save Q_COUNT in SharedPrefs
+		final SharedPreferences mPrefs = getSharedPreferences(mContext);
+		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
+		int Q_COUNT = uploadQueue.size();
+		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
+		mPrefsEditor.commit();
+
+		// writes uploadqueue.ser
+		File uploadQueueFile = new File(
+				Environment.getExternalStorageDirectory() + "/iSENSE"
+						+ "/uploadqueue.ser");
+		ObjectOutput out;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
+
+			// Serializes DataSets from uploadQueue into uploadqueue.ser
+			while (Q_COUNT > 0) {
+				DataSet ds = uploadQueue.remove();
+				out.writeObject(ds);
+				Q_COUNT--;
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// get shared Q_COUNT
+	public static SharedPreferences getSharedPreferences(Context ctxt) {
+		return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
+	}
 }

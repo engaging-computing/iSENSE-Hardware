@@ -119,6 +119,7 @@ public class DataSet implements Serializable {
 		return success;
 	}
 
+	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
 		JSONArray dataJSON = null;
 		try {

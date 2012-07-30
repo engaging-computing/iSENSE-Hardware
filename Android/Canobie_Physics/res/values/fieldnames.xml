@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="null_string">Null</string>
+    <string name="time">Time</string>                           <!-- 0  -->
+    <string name="accel_x">Accel-X</string>                     <!-- 1  -->
+    <string name="accel_y">Accel-Y</string>                     <!-- 2  -->
+    <string name="accel_z">Accel-Z</string>                     <!-- 3  -->
+    <string name="accel_total">Accel-Total</string>             <!-- 4  -->
+    <string name="latitude">Latitude</string>                   <!-- 5  -->
+    <string name="longitude">Longitude</string>                 <!-- 6  -->
+    <string name="magnetic_x">Magnetic-X</string>               <!-- 7  -->
+    <string name="magnetic_y">Magnetic-Y</string>               <!-- 8  --> 
+    <string name="magnetic_z">Magnetic-Z</string>               <!-- 9  -->
+    <string name="magnetic_total">Magnetic-Total</string>       <!-- 10 -->
+    <string name="heading_deg">Heading-Deg</string>             <!-- 11 -->
+    <string name="heading_rad">Heading-Rad</string>             <!-- 12 -->
+    <string name="temperature_c">Temperature-C</string>         <!-- 13 -->
+    <string name="pressure">Pressure</string>                   <!-- 14 -->
+    <string name="altitude">Altitude</string>                   <!-- 15 -->
+    <string name="luminous_flux">Luminous Flux</string>         <!-- 16 -->
+    
+    <string name="temperature_f">Temperature-F</string>         <!-- 17 -->
+    <string name="temperature_k">Temperature-K</string>			<!-- 18 -->
+    
+    <string name="compatible">Compatible</string>
+    <string name="incompatible">Incompatible</string>
+    <string name="noCompatibleFields">No compatible fields found. (Hitting \"Okay\" 
+        will return you to the configuration menu to select a new experiment.)</string>
+    <string name="invalidExperiment">No fields found for this experiment. 
+        This experiment may have been deleted, or may not exist at all. (Hitting \"Okay\" 
+        will return you to the configuration menu to select a new experiment.)</string>
+    
+</resources>

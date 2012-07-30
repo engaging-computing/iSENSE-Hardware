@@ -40,6 +40,8 @@
             android:name=".MediaManager"
             android:label="Media Manager"
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".QueueUploader"
+                  android:label="Retry Upload" />
 
     </application>
 </manifest>

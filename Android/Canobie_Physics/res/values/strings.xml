@@ -271,6 +271,7 @@
 	<string name="done">Done</string>
 	<string name="back">Back</string>
 	<string name="media_desc">Select one of the following options:</string>
+	<string name="upload">Upload</string>
 	
 	<string name="syncTime">
 	    Synchronizing time is useful when using multiple devices on a ride at the
@@ -297,5 +298,6 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.
 	</string>
+	<string name="prompt">Would you like to retry uploading any of the following?</string>
 
 </resources>

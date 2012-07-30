@@ -212,6 +212,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 		}
 	}
 
+	// Create an uploader particular to the DataSet to be uploaded in the queue
 	void createRunnable(final DataSet ds) {
 		sdUploader = new Runnable() {
 
@@ -228,6 +229,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	}
 
+	// Calls the next upload task if there are more DataSets in the queue
 	private void continueUploading() {
 		new UploadSDTask().execute();
 	}
