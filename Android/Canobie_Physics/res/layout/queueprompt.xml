@@ -43,9 +43,7 @@
             android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:layout_weight="1"
-            android:background="@drawable/colorless"
-            android:text="@string/upload"
-            android:textColor="@android:color/white" />
+            android:text="@string/upload" />
 
         <Button
             android:id="@+id/cancel"
@@ -53,9 +51,7 @@
             android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:layout_weight="1"
-            android:background="@drawable/colorless"
-            android:text="@string/cancel"
-            android:textColor="@android:color/white" />
+            android:text="@string/cancel" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -99,7 +99,7 @@ import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.comm.RestAPI;
 
 
-/* Experiment 422 on iSENSE and 277 on Dev */
+/* Experiment 422 on iSENSE and 491/277 on Dev */
 
 @SuppressLint("NewApi")
 public class AmusementPark extends Activity implements SensorEventListener,
@@ -142,12 +142,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_MEDIA = 4;
 
 	private static final int SAVE_DATA = 5;
-	private static final int DIALOG_SUMMARY = 6;
-	private static final int DIALOG_CHOICE = 7;
-	private static final int DIALOG_NO_ISENSE = 8;
-	private static final int RECORDING_STOPPED = 9;
-	private static final int DIALOG_NO_GPS = 10;
-	private static final int DIALOG_FORCE_STOP = 11;
+	private static final int DIALOG_CHOICE = 6;
+	private static final int DIALOG_NO_ISENSE = 7;
+	private static final int RECORDING_STOPPED = 8;
+	private static final int DIALOG_NO_GPS = 9;
+	private static final int DIALOG_FORCE_STOP = 10;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -219,6 +218,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static String textToSession = "";
 	public static String toSendOut = "";
 	private static String stNumber = "1";
+	
+	private static String sdFileName = "";
+	private static String niceDateString = "";
 
 	public static JSONArray dataSet;
 
@@ -468,9 +470,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+			SimpleDateFormat niceFormat = new SimpleDateFormat(
+					"MM/dd/yyyy, HH:mm:ss");
+			
 			Date dt = new Date();
 
 			dateString = sdf.format(dt);
+			niceDateString = niceFormat.format(dt);
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -478,9 +484,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
-
-			SDFile = new File(folder, rides.getSelectedItem() + "-" + stNumber
-					+ "-" + dateString + ".csv");
+			
+			sdFileName = rides.getSelectedItem() + "-" + stNumber
+					+ "-" + dateString + ".csv";
+			SDFile = new File(folder, sdFileName);
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -796,58 +803,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}, "Final Step");
 			sessionName.setText(partialSessionName);
 			break;
-		case DIALOG_SUMMARY:
-
-			elapsedMillis = totalMillis;
-			elapsedSeconds = elapsedMillis / 1000;
-			elapsedMillis %= 1000;
-			elapsedMinutes = elapsedSeconds / 60;
-			elapsedSeconds %= 60;
-
-			if (elapsedSeconds < 10) {
-				s_elapsedSeconds = "0" + elapsedSeconds;
-			} else {
-				s_elapsedSeconds = "" + elapsedSeconds;
-			}
-
-			if (elapsedMillis < 10) {
-				s_elapsedMillis = "00" + elapsedMillis;
-			} else if (elapsedMillis < 100) {
-				s_elapsedMillis = "0" + elapsedMillis;
-			} else {
-				s_elapsedMillis = "" + elapsedMillis;
-			}
-
-			if (elapsedMinutes < 10) {
-				s_elapsedMinutes = "0" + elapsedMinutes;
-			} else {
-				s_elapsedMinutes = "" + elapsedMinutes;
-			}
-
-			String appendMe = "";
-			if (sdCardError)
-				appendMe = "File not written to SD Card.";
-			else
-				appendMe = "Filename: \n" + rideNameString + "-" + stNumber
-						+ "-" + dateString;
-
-			builder.setTitle("Session Summary")
-					.setMessage(
-							"Elapsed time: " + s_elapsedMinutes + ":"
-									+ s_elapsedSeconds + "." + s_elapsedMillis
-									+ "\n" + "Data points: " + dataPointCount
-									+ "\n" + "End date and time: \n"
-									+ dateString + "\n" + appendMe)
-					.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-			break;
 
 		case DIALOG_CHOICE:
 
@@ -887,7 +842,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 									dialoginterface.dismiss();
 									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
+										showSummary();
 								}
 							}).setCancelable(true);
 
@@ -909,7 +864,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
 									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
+										showSummary();
 								}
 							}).setCancelable(true);
 
@@ -1264,7 +1219,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (sessionId == -1) {
 				uploadSuccess = false;
 			} else {
-				uploadSuccess = false; // TODO
+				uploadSuccess = true;
 			}
 
 			// Experiment Closed Checker
@@ -1334,7 +1289,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void onPostExecute(Void voids) {
 
@@ -1351,13 +1305,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Toast.LENGTH_LONG, "x");
-				manageUploadQueue();
 			} else {
 				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
 				manageUploadQueue();
 			}
 
-			showDialog(DIALOG_SUMMARY);
+			showSummary();
 
 		}
 	}
@@ -1538,12 +1491,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		//if (uploadSuccess) { TODO
+		if (uploadSuccess) { 
 			if (!uploadQueue.isEmpty()) {
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			}
-		//}
+		}
 	}
 
 	// Saves Q_COUNT and uploadQueue into memory for later use
@@ -1579,5 +1532,50 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	// get shared Q_COUNT
 	public static SharedPreferences getSharedPreferences(Context ctxt) {
 		return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
+	}
+	
+	private void showSummary() {
+
+		elapsedMillis = totalMillis;
+		elapsedSeconds = elapsedMillis / 1000;
+		elapsedMillis %= 1000;
+		elapsedMinutes = elapsedSeconds / 60;
+		elapsedSeconds %= 60;
+
+		if (elapsedSeconds < 10) {
+			s_elapsedSeconds = "0" + elapsedSeconds;
+		} else {
+			s_elapsedSeconds = "" + elapsedSeconds;
+		}
+
+		if (elapsedMillis < 10) {
+			s_elapsedMillis = "00" + elapsedMillis;
+		} else if (elapsedMillis < 100) {
+			s_elapsedMillis = "0" + elapsedMillis;
+		} else {
+			s_elapsedMillis = "" + elapsedMillis;
+		}
+
+		if (elapsedMinutes < 10) {
+			s_elapsedMinutes = "0" + elapsedMinutes;
+		} else {
+			s_elapsedMinutes = "" + elapsedMinutes;
+		}
+
+		String appendMe = "";
+		if (sdCardError)
+			appendMe = "File not written to SD Card.";
+		else
+			appendMe = "Filename: \n" + sdFileName;
+
+		Intent iSummary = new Intent(mContext, Summary.class);
+		iSummary.putExtra("millis", s_elapsedMillis)
+				.putExtra("seconds", s_elapsedSeconds)
+				.putExtra("minutes", s_elapsedMinutes)
+				.putExtra("append", appendMe).putExtra("date", niceDateString)
+				.putExtra("points", "" + dataPointCount);
+
+		startActivity(iSummary);
+
 	}
 }

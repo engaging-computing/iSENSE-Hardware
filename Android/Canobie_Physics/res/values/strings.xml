@@ -272,6 +272,7 @@
 	<string name="back">Back</string>
 	<string name="media_desc">Select one of the following options:</string>
 	<string name="upload">Upload</string>
+	<string name="okay">Okay</string>
 	
 	<string name="syncTime">
 	    Synchronizing time is useful when using multiple devices on a ride at the
