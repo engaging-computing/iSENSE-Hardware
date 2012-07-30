@@ -152,34 +152,33 @@ public final class R {
          */
         public static final int altitude=0x7f050012;
         public static final int app_name=0x7f050000;
-        public static final int back=0x7f05003a;
-        public static final int browse=0x7f05002c;
-        public static final int cancel=0x7f050036;
-        public static final int canobieRides=0x7f05002f;
+        public static final int back=0x7f050038;
+        public static final int browse=0x7f05002a;
+        public static final int cancel=0x7f050034;
+        public static final int canobieRides=0x7f05002d;
         /**  18 
          */
         public static final int compatible=0x7f050016;
         public static final int contentDesc=0x7f050001;
-        public static final int done=0x7f050039;
-        public static final int eula=0x7f050020;
-        public static final int experimentNum=0x7f05002b;
-        public static final int experiments_no_items=0x7f05001e;
+        public static final int done=0x7f050037;
+        public static final int eula=0x7f05001f;
+        public static final int experimentNum=0x7f050029;
+        public static final int experiments_no_items=0x7f05001d;
         /**  10 
          */
         public static final int heading_deg=0x7f05000e;
         /**  11 
          */
         public static final int heading_rad=0x7f05000f;
-        public static final int hello=0x7f05001a;
-        public static final int iSENSELogo=0x7f050026;
-        public static final int iSENSElogo=0x7f050041;
-        public static final int iSenseConfig=0x7f05001b;
+        public static final int iSENSElogo=0x7f050042;
+        public static final int iSenseConfig=0x7f05001a;
         public static final int incompatible=0x7f050017;
-        public static final int instructions=0x7f050033;
+        public static final int instructions=0x7f050031;
         public static final int invalidExperiment=0x7f050019;
         /**  4  
          */
         public static final int latitude=0x7f050008;
+        public static final int loading=0x7f050041;
         /**  5  
          */
         public static final int longitude=0x7f050009;
@@ -198,33 +197,34 @@ public final class R {
         /**  8  
          */
         public static final int magnetic_z=0x7f05000c;
-        public static final int media_desc=0x7f05003b;
-        public static final int menuDirections=0x7f050028;
+        public static final int media_desc=0x7f050039;
+        public static final int menuDirections=0x7f050026;
         public static final int noCompatibleFields=0x7f050018;
-        public static final int notLoggedIn=0x7f050024;
+        public static final int notLoggedIn=0x7f050023;
         public static final int null_string=0x7f050002;
-        public static final int okay=0x7f05003d;
-        public static final int otherConfig=0x7f05001c;
-        public static final int picAndVidCount=0x7f050027;
+        public static final int okay=0x7f05003b;
+        public static final int otherConfig=0x7f05001b;
+        public static final int password=0x7f050040;
+        public static final int picAndVidCount=0x7f050025;
         /**  13 
          */
         public static final int pressure=0x7f050011;
-        public static final int prompt=0x7f050040;
-        public static final int receive=0x7f050035;
-        public static final int retry=0x7f050038;
-        public static final int ride=0x7f050030;
-        public static final int rideAndSeat=0x7f050025;
-        public static final int rides_prompt=0x7f05001d;
-        public static final int sample_rate=0x7f05003e;
-        public static final int seatNum=0x7f05002d;
-        public static final int seatNumber=0x7f05002e;
-        public static final int send=0x7f050034;
-        public static final int sessionName=0x7f05002a;
-        public static final int startString=0x7f050022;
-        public static final int stopString=0x7f050023;
-        public static final int syncTime=0x7f05003f;
-        public static final int takePic=0x7f050031;
-        public static final int takeVid=0x7f050032;
+        public static final int prompt=0x7f05003e;
+        public static final int receive=0x7f050033;
+        public static final int retry=0x7f050036;
+        public static final int ride=0x7f05002e;
+        public static final int rideAndSeat=0x7f050024;
+        public static final int rides_prompt=0x7f05001c;
+        public static final int sample_rate=0x7f05003c;
+        public static final int seatNum=0x7f05002b;
+        public static final int seatNumber=0x7f05002c;
+        public static final int send=0x7f050032;
+        public static final int sessionName=0x7f050028;
+        public static final int startString=0x7f050021;
+        public static final int stopString=0x7f050022;
+        public static final int syncTime=0x7f05003d;
+        public static final int takePic=0x7f05002f;
+        public static final int takeVid=0x7f050030;
         /**  12 
          */
         public static final int temperature_c=0x7f050010;
@@ -235,11 +235,12 @@ public final class R {
          */
         public static final int temperature_k=0x7f050015;
         public static final int time=0x7f050003;
-        public static final int timeElapsed=0x7f050029;
-        public static final int timeFailed=0x7f050037;
-        public static final int updates=0x7f05001f;
-        public static final int upload=0x7f05003c;
-        public static final int xyz=0x7f050021;
+        public static final int timeElapsed=0x7f050027;
+        public static final int timeFailed=0x7f050035;
+        public static final int updates=0x7f05001e;
+        public static final int upload=0x7f05003a;
+        public static final int username=0x7f05003f;
+        public static final int xyz=0x7f050020;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;
