@@ -267,5 +267,8 @@
 	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
 	<string name="retry">Try Again</string>
 	<string name="sample_rate">Sample Interval: </string>
+	<string name="welcome">Welcome</string>
+	<string name="cont">Continue</string>
+	<string name="exit">Exit</string>
 	
 </resources>

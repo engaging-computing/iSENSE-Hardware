@@ -118,6 +118,9 @@
             android:name="edu.uml.cs.isense.sync.TimeFailed"
             android:label="Connection Timed Out"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.complexdialogs.Splash"
+            android:label="" />
         
     </application>
 

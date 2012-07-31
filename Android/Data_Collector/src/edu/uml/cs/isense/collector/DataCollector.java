@@ -88,10 +88,10 @@ import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.complexdialogs.ChooseSensorDialog;
 import edu.uml.cs.isense.complexdialogs.Description;
-import edu.uml.cs.isense.complexdialogs.Eula;
 import edu.uml.cs.isense.complexdialogs.LoginActivity;
 import edu.uml.cs.isense.complexdialogs.MediaManager;
 import edu.uml.cs.isense.complexdialogs.Setup;
+import edu.uml.cs.isense.complexdialogs.Splash;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.simpledialogs.ForceStop;
 import edu.uml.cs.isense.simpledialogs.NoGps;
@@ -159,7 +159,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int FORCE_STOP_REQUESTED = 9;
 	public static final int RECORDING_STOPPED_REQUESTED = 10;
 	public static final int DESCRIPTION_REQUESTED = 11;
-	public static final int EULA_REQUESTED = 12;
+	public static final int SPLASH_REQUESTED = 12;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -274,8 +274,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Assign everything to respective variables
 		assignVars();
 
-		// Display the End User Agreement
-		displayEula();
+		// Display the Splash Screen
+		displaySplash();
 
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
@@ -751,7 +751,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				showSummary();
 			}
 
-		} else if (requestCode == EULA_REQUESTED) {
+		} else if (requestCode == SPLASH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences.Editor editor = eulaPrefs.edit();
 				editor.putBoolean(eulaKey, true);
@@ -985,7 +985,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Takes care of everything to do with EULA
-	private void displayEula() {
+	private void displaySplash() {
 
 		PackageInfo versionInfo = getPackageInfo();
 
@@ -999,9 +999,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		boolean hasBeenShown = eulaPrefs.getBoolean(eulaKey, false);
 
 		if (hasBeenShown == false) {
-			Intent iEula = new Intent(mContext, Eula.class);
-			iEula.putExtra("versionName", versionInfo.versionName);
-			startActivityForResult(iEula, EULA_REQUESTED);
+			Intent iSplash = new Intent(mContext, Splash.class);
+			startActivityForResult(iSplash, SPLASH_REQUESTED);
 		}
 
 	}
