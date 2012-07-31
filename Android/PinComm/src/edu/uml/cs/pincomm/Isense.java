@@ -207,7 +207,6 @@ public class Isense extends Activity implements OnClickListener {
 
 		launchLayout.setVisibility(View.VISIBLE);
 
-		mAdapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(
 				this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
@@ -289,10 +288,11 @@ public class Isense extends Activity implements OnClickListener {
 	public synchronized void onResume() {
 		super.onResume();
 
-		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
-		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 		if(Build.VERSION.SDK_INT >= 10) {
-			mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+			mAdapter = NfcAdapter.getDefaultAdapter(this);
+			if(mAdapter != null) {
+				mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+			}
 		}
 
 		// Performing this check in onResume() covers the case in which BT was
@@ -316,7 +316,9 @@ public class Isense extends Activity implements OnClickListener {
 	public void onPause() {
 		super.onPause();
 		if(Build.VERSION.SDK_INT >= 10) {
-			mAdapter.disableForegroundDispatch(this);
+			if(mAdapter != null) {
+				mAdapter.disableForegroundDispatch(this);
+			}
 		}
 	}
 
