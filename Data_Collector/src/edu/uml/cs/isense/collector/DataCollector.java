@@ -205,12 +205,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	public static RestAPI rapi;
 	static Waffle w;
-	// Start Here
 	public static DataFieldManager dfm;
 	Fields f;
 	public static SensorCompatibility sc;
 	LinkedList<String> acceptedFields;
-	// End Here
 	public static Queue<DataSet> uploadQueue;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
