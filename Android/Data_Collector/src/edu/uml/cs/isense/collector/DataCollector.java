@@ -75,6 +75,8 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -125,6 +127,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private Location roughLoc;
 	private Timer timeTimer;
 	private Timer timeElapsedTimer;
+	private Animation rotateInPlace;
 
 	private float rawAccel[];
 	private float rawMag[];
@@ -261,19 +264,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.loading);
 
+		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
+		ImageView spinner = (ImageView) findViewById(R.id.spinner);
+		spinner.startAnimation(rotateInPlace);
 		// Set main context of application once
 		mContext = this;
 
-		// Initialize everything you're going to need
-		initVars();
-
-		// Assign everything to respective variables
-		assignVars();
-
-		// Display the End User Agreement
-		displayEula();
+		new LoadingMainTask().execute();
 
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
@@ -378,7 +377,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onStart() {
 		super.onStart();
-		inPausedState = false;
 
 		// rebuilds uploadQueue from saved info
 		getUploadQueue();
@@ -388,26 +386,33 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		setContentView(R.layout.main);
+
+		// Initialize everything you're going to need
 		initVars();
+
+		// Assign everything to respective variables
 		assignVars();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		inPausedState = false;
+
+		
 		if (running) {
 			Intent iForceStop = new Intent(mContext, ForceStop.class);
 			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
 		}
-		// Will call the login dialogue if necessary and update UI
+		// Will call the login dialogue if necessary
+		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		if (!(mPrefs.getString("username", "").equals("")))
+		if (!(mPrefs.getString("username", "").equals("")) && !inPausedState)
 			login();
 
+		inPausedState = false;
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -1217,7 +1222,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
 		isenseLogo = (ImageView) findViewById(R.id.ImageViewLogo);
-		mHandler = new Handler();
 
 		Display deviceDisplay = getWindowManager().getDefaultDisplay();
 		mwidth = deviceDisplay.getWidth();
@@ -1268,6 +1272,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 		else {
 			loginInfo.setText("Username: " + loginName);
 		}
+		
+		if (!(mPrefs.getString("username", "").equals("")))
+			login();
 
 		// Set session name
 		if (nameOfSession.equals(""))
@@ -1644,6 +1651,55 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	// Loads the main screen
+	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
+		Runnable loadingScreen;
+
+		@Override
+		protected void onPreExecute() {
+			inPausedState = true;
+			mHandler = new Handler();
+			loadingScreen = new Runnable() {
+
+				@Override
+				public void run() {
+					setContentView(R.layout.main);
+
+					// Initialize everything you're going to need
+					initVars();
+
+					// Assign everything to respective variables
+					assignVars();
+
+					// Display the End User Agreement
+					displayEula();
+
+				}
+			};
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			mHandler.post(loadingScreen);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			inPausedState = false;
+			super.onPostExecute(result);
+		}
+		
+		
+
 	}
 
 }
