@@ -39,7 +39,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -140,6 +139,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private float rawMag[];
 	private float accel[];
 	private float orientation[];
+	private float mag[];
+	private String temperature = "";
+	private String pressure = "";
+	private String light = "";
 
 	private static final int INTERVAL = 200;
 	private static long srate = INTERVAL;
@@ -288,6 +291,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 				if (!setupDone || rideName.getText().toString() == null) {
 
+					startStop.setEnabled(false);
 					showDialog(MENU_ITEM_SETUP);
 					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
@@ -327,6 +331,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							showDialog(DIALOG_CHOICE);
 
 					} else {
+
+						registerSensors();
 
 						dataSet = new JSONArray();
 						secondsElapsed = 0;
@@ -370,7 +376,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
 						running = true;
 						startStop.setText(R.string.stopString);
-						
+
 						timeElapsedTimer = new Timer();
 						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
@@ -396,7 +402,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 									timeTimer.cancel();
 									timeElapsedTimer.cancel();
-									
+
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -411,47 +417,58 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									len++;
 									len2++;
 
-									data = toThou.format(accel[0]) + ", "
-											+ toThou.format(accel[1]) + ", "
-											+ toThou.format(accel[2]) + ", "
-											+ toThou.format(accel[3]) + ", "
-											+ loc.getLatitude() + ", "
-											+ loc.getLongitude() + ", "
-											+ toThou.format(orientation[0])
-											+ ", " + rawMag[0] + ", "
-											+ rawMag[1] + ", " + rawMag[2]
-											+ ", " + currentTime
-											+ elapsedMillis + "\n";
+									if (dfm.enabledFields[ACCEL_X])
+										f.accel_x = toThou.format(accel[0]);
+									if (dfm.enabledFields[ACCEL_Y])
+										f.accel_y = toThou.format(accel[1]);
+									if (dfm.enabledFields[ACCEL_Z])
+										f.accel_z = toThou.format(accel[2]);
+									if (dfm.enabledFields[ACCEL_TOTAL])
+										f.accel_total = toThou.format(accel[3]);
+									if (dfm.enabledFields[LATITUDE])
+										f.latitude = loc.getLatitude();
+									if (dfm.enabledFields[LONGITUDE])
+										f.longitude = loc.getLongitude();
+									if (dfm.enabledFields[HEADING_DEG])
+										f.angle_deg = toThou
+												.format(orientation[0]);
+									if (dfm.enabledFields[HEADING_RAD])
+										f.angle_rad = ""
+												+ (Double
+														.parseDouble(f.angle_deg) * (Math.PI / 180));
+									if (dfm.enabledFields[MAG_X])
+										f.mag_x = mag[0];
+									if (dfm.enabledFields[MAG_Y])
+										f.mag_y = mag[1];
+									if (dfm.enabledFields[MAG_Z])
+										f.mag_z = mag[2];
+									if (dfm.enabledFields[MAG_TOTAL])
+										f.mag_total = Math.sqrt(Math.pow(
+												f.mag_x, 2)
+												+ Math.pow(f.mag_y, 2)
+												+ Math.pow(f.mag_z, 2));
+									if (dfm.enabledFields[TIME])
+										f.timeMillis = currentTime
+												+ elapsedMillis;
+									if (dfm.enabledFields[TEMPERATURE_C])
+										f.temperature_c = temperature;
+									if (dfm.enabledFields[TEMPERATURE_F])
+										f.temperature_f = ""
+												+ ((Double
+														.parseDouble(temperature) * 1.8) + 32);
+									if (dfm.enabledFields[TEMPERATURE_K])
+										f.temperature_k = ""
+												+ (Double
+														.parseDouble(temperature) + 273.15);
+									if (dfm.enabledFields[PRESSURE])
+										f.pressure = pressure;
+									if (dfm.enabledFields[ALTITUDE])
+										f.altitude = calcAltitude();
+									if (dfm.enabledFields[LIGHT])
+										f.lux = light;
 
-									JSONArray dataJSON = new JSONArray();
-
-									try {
-
-										/* Accel-x */dataJSON.put(toThou
-												.format(accel[0]));
-										/* Accel-y */dataJSON.put(toThou
-												.format(accel[1]));
-										/* Accel-z */dataJSON.put(toThou
-												.format(accel[2]));
-										/* Accel-Total */dataJSON.put(toThou
-												.format(accel[3]));
-										/* Latitude */dataJSON.put(loc
-												.getLatitude());
-										/* Longitude */dataJSON.put(loc
-												.getLongitude());
-										/* Heading */dataJSON.put(toThou
-												.format(orientation[0]));
-										/* Magnetic-x */dataJSON.put(rawMag[0]);
-										/* Magnetic-y */dataJSON.put(rawMag[1]);
-										/* Magnetic-z */dataJSON.put(rawMag[2]);
-										/* Time */dataJSON.put(currentTime
-												+ elapsedMillis);
-
-										dataSet.put(dataJSON);
-
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
+									dataSet.put(dfm.putData());
+									data = dfm.writeSdCardLine();
 
 									if (beginWrite) {
 										writeToSDCard(data, 's');
@@ -474,29 +491,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 
 		});
-
-		Criteria c = new Criteria();
-		c.setAccuracy(Criteria.ACCURACY_FINE);
-
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			mLocationManager.requestLocationUpdates(
-					mLocationManager.getBestProvider(c, true), 0, 0,
-					AmusementPark.this);
-			mRoughLocManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, AmusementPark.this);
-		} else {
-			showDialog(DIALOG_NO_GPS);
-		}
-
-		accel = new float[4];
-		orientation = new float[3];
-		rawAccel = new float[3];
-		rawMag = new float[3];
-		loc = new Location(mLocationManager.getBestProvider(c, true));
-
-		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 	}
 
@@ -703,39 +697,64 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-
 		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			rawAccel = event.values.clone();
-			accel[0] = event.values[0];
-			accel[1] = event.values[1];
-			accel[2] = event.values[2];
+			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
+					|| dfm.enabledFields[ACCEL_Z]
+					|| dfm.enabledFields[ACCEL_TOTAL]) {
 
-			String xPrepend = accel[0] > 0 ? "+" : "";
-			String yPrepend = accel[1] > 0 ? "+" : "";
-			String zPrepend = accel[2] > 0 ? "+" : "";
+				rawAccel = event.values.clone();
+				accel[0] = event.values[0];
+				accel[1] = event.values[1];
+				accel[2] = event.values[2];
 
-			if (count == 0) {
-				values.setText("X: " + xPrepend + oneDigit.format(accel[0])
-						+ ", Y: " + yPrepend + oneDigit.format(accel[1])
-						+ ", Z: " + zPrepend + oneDigit.format(accel[2]));
+				String xPrepend = accel[0] > 0 ? "+" : "";
+				String yPrepend = accel[1] > 0 ? "+" : "";
+				String zPrepend = accel[2] > 0 ? "+" : "";
+
+				if (count == 0) {
+					values.setText("X: " + xPrepend + oneDigit.format(accel[0])
+							+ ", Y: " + yPrepend + oneDigit.format(accel[1])
+							+ ", Z: " + zPrepend + oneDigit.format(accel[2]));
+				}
+
+				accel[3] = (float) FloatMath.sqrt((float) ((Math.pow(accel[0],
+						2) + Math.pow(accel[1], 2) + Math.pow(accel[2], 2))));
+
 			}
-
-			accel[3] = (float) FloatMath.sqrt((float) ((Math.pow(accel[0], 2)
-					+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2))));
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			rawMag = event.values.clone();
+			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
+					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
+					|| dfm.enabledFields[HEADING_DEG]
+					|| dfm.enabledFields[HEADING_RAD]) {
 
-			float rotation[] = new float[9];
+				rawMag = event.values.clone();
 
-			if (SensorManager.getRotationMatrix(rotation, null, rawAccel,
-					rawMag)) {
-				orientation = new float[3];
-				SensorManager.getOrientation(rotation, orientation);
+				mag[0] = event.values[0];
+				mag[1] = event.values[1];
+				mag[2] = event.values[2];
+
+				float rotation[] = new float[9];
+
+				if (SensorManager.getRotationMatrix(rotation, null, rawAccel,
+						rawMag)) {
+					orientation = new float[3];
+					SensorManager.getOrientation(rotation, orientation);
+				}
 			}
 
+		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+			if (dfm.enabledFields[TEMPERATURE_C]
+					|| dfm.enabledFields[TEMPERATURE_F]
+					|| dfm.enabledFields[TEMPERATURE_K])
+				temperature = toThou.format(event.values[0]);
+		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+			if (dfm.enabledFields[PRESSURE])
+				pressure = toThou.format(event.values[0]);
+		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+			if (dfm.enabledFields[LIGHT])
+				light = toThou.format(event.values[0]);
 		}
 	}
 
@@ -781,10 +800,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						rideName.setText("Ride/St#: " + rideNameString + " "
 								+ stNumber);
 						new SensorCheckTask().execute();
-						startStop.setEnabled(true); // TODO - move this to the onActiv of this intent ret
 						break;
 					case DIALOG_CANCELED:
 						canobieIsChecked = canobieBackup;
+						startStop.setEnabled(true);
 						break;
 					}
 					rideName.setText("Ride/St#: " + rideNameString + " "
@@ -1008,7 +1027,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		builder.setView(v);
 
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		
+
 		rides = (Spinner) v.findViewById(R.id.rides);
 
 		final ArrayAdapter<CharSequence> generalAdapter = ArrayAdapter
@@ -1034,7 +1053,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
 		experimentInput.setText(mPrefs.getString("experiment_id", ""));
-		
+
 		sampleRate = (EditText) v.findViewById(R.id.srate);
 		sampleRate.setText(mPrefs.getString("sample_rate", ""));
 
@@ -1100,7 +1119,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		rides.setSelection(rideIndex);
 		seats.setText(stNumber);
-		
+
 		builder.setTitle(message)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					@Override
@@ -1145,7 +1164,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							sampleRate.setError("Interval Must be >= 200");
 							pass = false;
 						}
-						
+
 						if (pass) {
 							rideIndex = rides.getSelectedItemPosition();
 							stNumber = seats.getText().toString();
@@ -1155,8 +1174,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							nameOfSession = sessionName.getText().toString()
 									+ " - " + rideNameString + " " + stNumber;
 
-							srate = Long.parseLong(sampleRate.getText().toString());
-							
+							srate = Long.parseLong(sampleRate.getText()
+									.toString());
+
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
 							SharedPreferences.Editor mEditor = mPrefs.edit();
@@ -1164,8 +1184,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									experimentInput.getText().toString())
 									.commit();
 							mEditor.putString("sample_rate",
-									sampleRate.getText().toString())
-									.commit();
+									sampleRate.getText().toString()).commit();
 
 							final Message dialogOk = Message.obtain();
 							dialogOk.setTarget(h);
@@ -1197,6 +1216,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	// Performs tasks after returning to main UI from previous activities
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1205,7 +1225,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.experiments.exp_id");
-				int sr  = data.getExtras().getInt(
+				int sr = data.getExtras().getInt(
 						"edu.uml.cs.isense.experiments.srate");
 				experimentInput.setText("" + eid);
 				sampleRate.setText("" + sr);
@@ -1225,6 +1245,22 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				getUploadQueue();
+			}
+		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
+			startStop.setEnabled(true);
+			if (resultCode == RESULT_OK) {
+				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
+					startStop.setEnabled(false);
+					showDialog(MENU_ITEM_SETUP);
+				} else if (!ChooseSensorDialog.compatible) {
+					startStop.setEnabled(false);
+					showDialog(MENU_ITEM_SETUP);
+				} else {
+					acceptedFields = ChooseSensorDialog.acceptedFields;
+					getEnabledFields();
+				}
+			} else if (resultCode == RESULT_CANCELED) {
+				setupDone = false;
 			}
 		}
 
@@ -1428,6 +1464,33 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		w = new Waffle(this);
+		f = new Fields();
+
+		accel = new float[4];
+		orientation = new float[3];
+		rawAccel = new float[3];
+		rawMag = new float[3];
+		mag = new float[3];
+
+		Criteria c = new Criteria();
+		c.setAccuracy(Criteria.ACCURACY_FINE);
+
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+				&& mRoughLocManager
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+			mLocationManager.requestLocationUpdates(
+					mLocationManager.getBestProvider(c, true), 0, 0,
+					AmusementPark.this);
+			mRoughLocManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, AmusementPark.this);
+		} else {
+			showDialog(DIALOG_NO_GPS);
+		}
+
+		loc = new Location(mLocationManager.getBestProvider(c, true));
+
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+
 	}
 
 	// Takes care of everything to do with EULA
@@ -1521,7 +1584,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPreExecute() {
-			//OrientationManager.disableRotation(AmusementPark.this);
+			// OrientationManager.disableRotation(AmusementPark.this);
 
 			dia = new ProgressDialog(AmusementPark.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -1553,7 +1616,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dia.setMessage("Done");
 			dia.cancel();
 
-			//OrientationManager.enableRotation(AmusementPark.this);
+			// OrientationManager.enableRotation(AmusementPark.this);
 
 			Intent i = new Intent(mContext, ChooseSensorDialog.class);
 			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
@@ -1561,7 +1624,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
-	@SuppressWarnings("unused") //TODO - remove this suppresswarnings when it actually becomes used!!
 	private void getEnabledFields() {
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
@@ -1731,4 +1793,75 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		startActivity(iSummary);
 
 	}
+
+	// Registers Sensors
+	private void registerSensors() {
+		if (mSensorManager != null && setupDone && dfm != null) {
+
+			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
+					|| dfm.enabledFields[ACCEL_Z]
+					|| dfm.enabledFields[ACCEL_TOTAL]) {
+				mSensorManager.registerListener(AmusementPark.this,
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						SensorManager.SENSOR_DELAY_FASTEST);
+			}
+
+			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
+					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
+					|| dfm.enabledFields[HEADING_DEG]
+					|| dfm.enabledFields[HEADING_RAD]) {
+				mSensorManager.registerListener(AmusementPark.this,
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+						SensorManager.SENSOR_DELAY_FASTEST);
+			}
+
+			if (dfm.enabledFields[TEMPERATURE_C]
+					|| dfm.enabledFields[TEMPERATURE_F]
+					|| dfm.enabledFields[TEMPERATURE_K]
+					|| dfm.enabledFields[ALTITUDE]) {
+				mSensorManager
+						.registerListener(
+								AmusementPark.this,
+								mSensorManager
+										.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+								SensorManager.SENSOR_DELAY_FASTEST);
+			}
+
+			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
+				mSensorManager.registerListener(AmusementPark.this,
+						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
+						SensorManager.SENSOR_DELAY_FASTEST);
+			}
+
+			if (dfm.enabledFields[LIGHT]) {
+				mSensorManager.registerListener(AmusementPark.this,
+						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
+						SensorManager.SENSOR_DELAY_FASTEST);
+			}
+
+		}
+	}
+
+	// Calculates Altitude from Temperature and Pressure if Possible
+	private String calcAltitude() {
+		if ((dfm.enabledFields[TEMPERATURE_C]
+				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
+				&& dfm.enabledFields[PRESSURE]) {
+			if (pressure.equals("") || temperature.equals("")) {
+				return "";
+			} else {
+				double temp = Math.pow(1013.25 / Double.parseDouble(pressure),
+						(1 / 5.257));
+				temp *= (Double.parseDouble(temperature) + 273.15);
+				temp /= 0.0065;
+
+				String altitude = toThou.format(temp);
+				return altitude;
+			}
+		} else
+			return "";
+	}
+
 }
