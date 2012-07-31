@@ -4,7 +4,7 @@
 /**      IIIIIIIIIIIII            General Purpose Amusement Park App             SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                    Original Creator: John Fertita            SSS                **/
-/**           III                    Edits By:         Jeremy Poulin,           SSS               **/
+/**           III                    Optimized By:     Jeremy Poulin,           SSS               **/
 /**           III                                      Michael Stowell           SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
 /**           III                    Special Thanks:   Don Rhine                         SSS      **/
@@ -1160,8 +1160,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							sampleRate.setError("Enter a Sample Interval");
 							pass = false;
 						}
-						if (Long.parseLong(sampleRate.getText().toString()) < 200) {
-							sampleRate.setError("Interval Must be >= 200");
+						try {
+							if (Long.parseLong(sampleRate.getText().toString()) < 200) {
+								sampleRate.setError("Interval Must be >= 200");
+								pass = false;
+							}
+						} catch (NumberFormatException e) {
 							pass = false;
 						}
 
@@ -1348,7 +1352,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
-					if (picSuccess) {
+					if (!picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC,
 								nameOfSession + " - " + dateString,
 								description, eid, null,
@@ -1374,7 +1378,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dia = new ProgressDialog(AmusementPark.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data and media are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 

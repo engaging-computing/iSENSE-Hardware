@@ -850,7 +850,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
-					if (picSuccess) {
+					if (!picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC,
 								nameOfSession + " - " + dateString,
 								description, eid, null,
