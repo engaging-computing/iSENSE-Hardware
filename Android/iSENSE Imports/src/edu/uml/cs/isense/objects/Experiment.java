@@ -19,5 +19,22 @@ public class Experiment {
     public String date_diff = "";
     public int session_count;
     public String provider_url = "";
+    
+    // New API fields:
+    public String name_prefix = "";
+    public String location = "";
+    public int req_name;
+    public int req_location;
+    public int req_procedure;
+    public int activity;
+    public int recommended;
+    public int srate;
+    public int activity_for;
+    public int closed;
+    public String exp_image = "";
+    // From getExperiments() only
+    public String tags = "";
+    public int contrib_count;
+    public String rating_comp = "";
    
 }

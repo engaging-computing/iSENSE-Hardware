@@ -1,0 +1,14 @@
+#	Class Files
+
+*.class
+
+#	Useless Mac files
+
+*.DS_Store
+
+#	Backup Files
+*.*~
+
+#	Eclipse files
+.classpath
+.project
