@@ -5,7 +5,7 @@
 	android:layout_height="?android:attr/listPreferredItemHeight"
 	android:layout_width="fill_parent" 
 	android:orientation="vertical"
-	android:background="@android:color/white">
+	style="@android:style/Theme.Light">
 
 	<RelativeLayout 
 	    android:layout_height="fill_parent"

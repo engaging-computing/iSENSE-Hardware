@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#000000"
     android:padding="10dp" >
 
     <ScrollView
@@ -83,30 +82,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal" >
 
                 <Button
                     android:id="@+id/qrCode"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginRight="2dp"
+                    android:layout_weight="1"
                     android:background="@drawable/colorless"
-                    android:textColor="@android:color/white"
-                    android:text="@string/scan_qr" />
+                    android:text="@string/scan_qr"
+                    android:textColor="@android:color/white" />
 
                 <Button
                     android:id="@+id/BrowseButton"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
                     android:background="@drawable/colorless"
-                    android:textColor="@android:color/white"
-                    android:text="@string/browse" />
+                    android:text="@string/browse"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
-            
+
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -134,7 +133,6 @@
                     android:inputType="phone"
                     android:maxLength="20" />
             </RelativeLayout>
-            
         </LinearLayout>
     </ScrollView>
 
@@ -147,24 +145,24 @@
         android:weightSum="2" >
 
         <Button
-            android:id="@+id/setup_ok"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginRight="2dp"
-            android:background="@drawable/colorless"
-            android:textColor="@android:color/white"
-            android:text="@string/okay" />
-
-        <Button
             android:id="@+id/setup_cancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_marginLeft="2dp"
+            android:layout_weight="1"
             android:background="@drawable/colorless"
-            android:textColor="@android:color/white"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/setup_ok"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/colorless"
+            android:text="@string/okay"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </RelativeLayout>

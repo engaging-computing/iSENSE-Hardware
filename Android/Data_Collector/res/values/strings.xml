@@ -3,7 +3,6 @@
     <string name="app_name">iSENSE Data Collector</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="prompt">Would you like to retry uploading any of the following?</string>
-    <string name="updates">Please carefully review the following agreement for this version of this app:</string>
 	
 	<string name ="eula">
 	    Please carefully review the following agreement for this version of this app:\n

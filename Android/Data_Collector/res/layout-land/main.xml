@@ -25,7 +25,7 @@
             android:layout_marginTop="10dp"
             android:layout_weight=".75"
             android:background="@android:color/transparent"
-            android:contentDescription="@+string/iSENSElogo"
+            android:contentDescription="@string/iSENSELogo"
             android:scaleType="fitCenter"
             android:src="@drawable/logo_red"
             tools:ignore="NestedWeights" />

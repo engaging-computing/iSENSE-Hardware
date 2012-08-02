@@ -23,16 +23,6 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/time_fail_retry"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/retry"
-                android:textColor="@android:color/white" />
-
-            <Button
                 android:id="@+id/time_fail_cancel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -40,6 +30,16 @@
                 android:layout_weight="1"
                 android:background="@drawable/colorless"
                 android:text="@string/cancel"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/time_fail_retry"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/colorless"
+                android:text="@string/retry"
                 android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>

@@ -122,6 +122,7 @@ public class RestAPI {
 		uid = 0;
 	}
 	
+	@SuppressWarnings("resource")
 	private static byte[] getBytesFromFile(File file) throws IOException {
 	    InputStream is = new FileInputStream(file);
 
