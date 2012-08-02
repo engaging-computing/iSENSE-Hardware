@@ -14,7 +14,7 @@
     	android:layout_weight="1">
 
 			<ImageView android:id="@+id/ImageViewLogo"
-			    android:contentDescription="@+string/iSENSElogo"
+			    android:contentDescription="@string/iSENSELogo"
 				android:layout_width="fill_parent" 
 				android:background="@android:color/transparent" 
 				android:src="@drawable/logo_red"
