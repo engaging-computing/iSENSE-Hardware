@@ -1,67 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    
+    android:layout_height="fill_parent" >
+
     <TextView
-		android:id="@+id/usernameLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/username"
-		android:layout_alignParentLeft="true"
-		android:layout_marginTop="5dip"/>
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dip"
+        android:text="@string/username" />
 
     <EditText
         android:id="@+id/usernameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/usernameLabel"
-        android:paddingLeft="6dip"
+        android:background="@android:drawable/editbox_background"
         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-        android:inputType="textEmailAddress"/>
-        
+        android:inputType="textEmailAddress"
+        android:paddingLeft="6dip" />
+
     <TextView
-		android:id="@+id/passwordLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/password"
-		android:layout_marginTop="5dip"
-		android:layout_below="@id/usernameInput"
-		android:layout_alignParentLeft="true"/>
-		
-	<EditText
+        android:id="@+id/passwordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/usernameInput"
+        android:layout_marginTop="5dip"
+        android:text="@string/password" />
+
+    <EditText
         android:id="@+id/passwordInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:layout_toRightOf="@id/passwordLabel"
         android:layout_below="@id/usernameInput"
-        android:paddingLeft="6dip"
-        android:inputType="textPassword"
+        android:layout_toRightOf="@id/passwordLabel"
+        android:background="@android:drawable/editbox_background"
         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-        android:singleLine="true"/>
-	
-	<LinearLayout
+        android:inputType="textPassword"
+        android:paddingLeft="6dip"
+        android:singleLine="true" />
+
+    <LinearLayout
         android:id="@+id/okAndCancelButtons"
-        android:layout_below="@+id/passwordInput"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordInput"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:weightSum="2" >
-
-        <Button
-            android:id="@+id/login_ok"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/colorless"
-            android:text="@string/okay"
-            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/login_cancel"
@@ -71,6 +60,16 @@
             android:layout_weight="1"
             android:background="@drawable/colorless"
             android:text="@string/cancel"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/login_ok"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/colorless"
+            android:text="@string/okay"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
