@@ -120,7 +120,8 @@
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name="edu.uml.cs.isense.complexdialogs.Splash"
-            android:label="" />
+            android:label=""
+            android:configChanges="orientation|keyboardHidden" />
         
     </application>
 

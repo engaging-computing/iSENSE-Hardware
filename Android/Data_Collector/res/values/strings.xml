@@ -270,5 +270,8 @@
 	<string name="welcome">Welcome</string>
 	<string name="cont">Continue</string>
 	<string name="exit">Exit</string>
+	<string name="to">To</string>
+	<string name="about">A\nb\no\nu\nt</string>
+	<string name="guide">G\nu\ni\nd\ne</string>
 	
 </resources>
