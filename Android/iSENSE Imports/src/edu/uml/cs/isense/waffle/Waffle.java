@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.waffle;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ public class Waffle {
 		this.mContext = c;
 	}
 
+	@SuppressLint("NewApi")
 	public void make(String message, int length, String image_id) {
 
 		if (!dontToastMeTwice) {
@@ -57,6 +59,7 @@ public class Waffle {
 
 	}
 
+	@SuppressLint("NewApi")
 	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
 		@Override
 		protected void onPreExecute() {

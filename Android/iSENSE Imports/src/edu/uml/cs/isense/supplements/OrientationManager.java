@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.supplements;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -8,6 +9,7 @@ import android.view.Surface;
 
 public class OrientationManager {
 	
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static void disableRotation(Activity activity) {       
 	    final int orientation = activity.getResources().getConfiguration().orientation;
