@@ -106,7 +106,7 @@ import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
-/* Experiment 422 on iSENSE and 277 on Dev */
+/* Experiment 422 on iSENSE and 491 on Dev */
 
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
@@ -264,11 +264,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Set view to the loading screen
 		setContentView(R.layout.loading);
 
+		// Disable orientation changing while app is loading
 		OrientationManager.disableRotation(DataCollector.this);
+
+		// Disable use of menu while loading
 		useMenu = false;
 
+		// Begin animation for loading screen
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
 		spinner.startAnimation(rotateInPlace);
@@ -276,6 +282,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Set main context of application once
 		mContext = this;
 
+		// Task to execute loading/switching to main UI or Splash
 		new LoadingMainTask().execute();
 
 		// This block useful for if onBackPressed - retains some things from
@@ -436,6 +443,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Configurations for the in-app menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(Menu.NONE, MENU_ITEM_SETUP, Menu.NONE, "Setup").setIcon(
@@ -501,6 +509,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
 
+	// Overridden method to record new data as sensors change
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 
@@ -511,6 +520,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				rawAccel = event.values.clone();
 
+				// Handles x/y/z recording based on user orientation
 				switch (rotation) {
 				case 90:
 					// x = -y && y = x
@@ -546,6 +556,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				rawMag = event.values.clone();
 
+				// Handles x/y/z recording based on user orientation
 				switch (rotation) {
 				case 90:
 					// x = -y && y = x
@@ -584,13 +595,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[TEMPERATURE_F]
 					|| dfm.enabledFields[TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
+
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
 			if (dfm.enabledFields[PRESSURE])
 				pressure = toThou.format(event.values[0]);
+
 		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
 			if (dfm.enabledFields[LIGHT])
 				light = toThou.format(event.values[0]);
 		}
+
 	}
 
 	@Override
@@ -926,7 +940,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// Control task for uploading data
+	// Task executed to load experiment data and launch setup intent
 	private class SetupTask extends AsyncTask<Void, Integer, Void> {
 
 		Intent iSetup;
@@ -977,6 +991,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// Set TimeElapsed text given seconds as a parameter
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -1011,6 +1026,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// EULA function
 	private PackageInfo getPackageInfo() {
 		PackageInfo pi = null;
 		try {
@@ -1040,7 +1056,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Gets the milliseconds since Epoch
+	// Gets the milliseconds since Epoch + timeOffset
 	private long getUploadTime() {
 		Calendar c = Calendar.getInstance();
 		SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
@@ -1164,6 +1180,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Set boolean array's enabled features for fields to be recorded
 	private void getEnabledFields() {
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
@@ -1290,6 +1307,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setStartStopListener();
 	}
 
+	// Initialize location managers
 	public void initLocations() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -1313,6 +1331,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
 
+	// Lengthy onLongClickListener for the main UI button
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -1320,6 +1339,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			public boolean onLongClick(View arg0) {
 
 				if (!setupDone) {
+
+					// Prevent data recording pre-setting up
 
 					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
@@ -1329,11 +1350,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				} else {
 
+					// Start recording/stopping process
+
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
 
 					if (running) {
+
+						// Determined data was recording - stop it from running
+
 						OrientationManager.enableRotation((Activity) mContext);
 
 						writeToSDCard(null, 'f');
@@ -1372,6 +1398,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 					} else {
+
+						// Data was not recording - start recording now
 
 						registerSensors();
 						OrientationManager.disableRotation((Activity) mContext);
@@ -1545,6 +1573,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Do the summary's dirty work before launching the intent
 	private void showSummary() {
 
 		elapsedMillis = totalMillis;

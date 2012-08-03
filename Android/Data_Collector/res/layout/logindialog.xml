@@ -69,7 +69,7 @@
             android:layout_marginRight="2dp"
             android:layout_weight="1"
             android:background="@drawable/colorless"
-            android:text="@string/okay"
+            android:text="@string/login"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
