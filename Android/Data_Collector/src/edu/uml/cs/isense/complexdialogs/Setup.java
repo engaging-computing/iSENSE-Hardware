@@ -103,8 +103,7 @@ public class Setup extends Activity implements OnClickListener {
 			if (srate.getText().length() == 0) {
 				srate.setError("Enter a Sample Interval");
 				pass = false;
-			}
-			if (Long.parseLong(srate.getText().toString()) < 200) {
+			} else if (Long.parseLong(srate.getText().toString()) < 200) {
 				srate.setError("Interval Must be >= 200");
 				pass = false;
 			}

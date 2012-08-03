@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.util.Base64;
 
+@SuppressLint("NewApi")
 public class ObscuredSharedPreferences implements SharedPreferences {
 	protected static final String UTF8 = "utf-8";
 	private static final char[] SEKRIT = { 'h', 'i' }; // INSERT A RANDOM
