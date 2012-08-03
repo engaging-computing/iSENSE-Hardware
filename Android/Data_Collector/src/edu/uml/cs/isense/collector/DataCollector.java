@@ -265,16 +265,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		
+
 		OrientationManager.disableRotation(DataCollector.this);
-		
+		useMenu = false;
+
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
 		spinner.startAnimation(rotateInPlace);
-		
+
 		// Set main context of application once
 		mContext = this;
-		
+
 		new LoadingMainTask().execute();
 
 		// This block useful for if onBackPressed - retains some things from
@@ -401,7 +402,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 
-		
 		if (running) {
 			Intent iForceStop = new Intent(mContext, ForceStop.class);
 			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
@@ -1274,7 +1274,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		else {
 			loginInfo.setText("Username: " + loginName);
 		}
-		
+
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
@@ -1527,6 +1527,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
 	}
 
+	// Used to adjust for sensor data
 	public int getRotation(Context context) {
 		@SuppressWarnings("deprecation")
 		final int rotation = ((WindowManager) context
@@ -1667,6 +1668,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				@Override
 				public void run() {
+
+					// Display the Splash Screen
+					displaySplash();
+
 					setContentView(R.layout.main);
 
 					// Initialize everything you're going to need
@@ -1674,9 +1679,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// Assign everything to respective variables
 					assignVars();
-
-					// Display the Splash Screen
-					displaySplash();
 
 				}
 			};
@@ -1686,7 +1688,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -1698,6 +1700,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
+			useMenu = true;
 			super.onPostExecute(result);
 		}
 

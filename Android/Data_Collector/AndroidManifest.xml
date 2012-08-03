@@ -7,13 +7,14 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
-   
-    <supports-screens android:resizeable="true"
-                  android:smallScreens="true"
-                  android:normalScreens="true"
-                  android:largeScreens="true"
-                  android:xlargeScreens="true"
-                  android:anyDensity="true"/>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -102,7 +103,7 @@
             android:name="edu.uml.cs.isense.complexdialogs.Eula"
             android:label="End User License Agreement"
             android:theme="@style/theme_dialog_black" />
-        <activity 
+        <activity
             android:name="edu.uml.cs.isense.collector.QueueUploader"
             android:label="Retry Uploading"
             android:theme="@style/theme_dialog_black" />
