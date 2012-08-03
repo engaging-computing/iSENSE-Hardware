@@ -12,9 +12,11 @@ public final class R {
     }
     public static final class drawable {
         public static int checkmark=0x7f020000;
-        public static int red_x=0x7f020001;
-        public static int toast_background_check=0x7f020002;
-        public static int toast_background_x=0x7f020003;
+        public static int ic_action_search=0x7f020001;
+        public static int ic_launcher=0x7f020002;
+        public static int red_x=0x7f020003;
+        public static int toast_background_check=0x7f020004;
+        public static int toast_background_x=0x7f020005;
     }
     public static final class id {
         public static int image=0x7f060001;
