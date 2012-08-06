@@ -180,7 +180,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			if (ctv.isChecked())
 				ctv.setCheckMarkDrawable(R.drawable.red_x);
 			else
-				ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+				ctv.setCheckMarkDrawable(R.drawable.bluecheck);
 			ctv.toggle();
 			break;
 		}
