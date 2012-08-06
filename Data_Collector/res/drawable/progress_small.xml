@@ -18,6 +18,6 @@
 */
 -->
 <rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/spinner_black_16"
+    android:drawable="@drawable/spinner_1_black"
     android:pivotX="50%"
     android:pivotY="50%"/>

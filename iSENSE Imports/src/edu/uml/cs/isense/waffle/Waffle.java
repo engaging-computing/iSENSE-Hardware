@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.waffle;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.Gravity;
@@ -8,27 +9,32 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.R;
 
 public class Waffle {
 	public boolean dontToastMeTwice;
 	public boolean exitAppViaBack;
 	private Context mContext;
-	
+
 	public Waffle(Context c) {
 		this.dontToastMeTwice = false;
-		this.exitAppViaBack   = false;
-		this.mContext         = c;
+		this.exitAppViaBack = false;
+		this.mContext = c;
 	}
-	
+
+	@SuppressLint("NewApi")
 	public void make(String message, int length, String image_id) {
 
 		if (!dontToastMeTwice) {
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View layout;
+			LayoutInflater inflater = (LayoutInflater) mContext
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View layout = null;
 			if (image_id.equals("check"))
-				layout = inflater.inflate(R.layout.toast_layout, null);
-			else
+				layout = inflater.inflate(R.layout.toast_layout_check, null);
+			else if (image_id.equals("x"))
 				layout = inflater.inflate(R.layout.toast_layout_x, null);
+			else
+				return;
 
 			ImageView image = (ImageView) layout.findViewById(R.id.image);
 			if (image_id.equals("check"))
@@ -52,7 +58,8 @@ public class Waffle {
 		}
 
 	}
-	
+
+	@SuppressLint("NewApi")
 	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
 		@Override
 		protected void onPreExecute() {
@@ -78,6 +85,5 @@ public class Waffle {
 			dontToastMeTwice = false;
 		}
 	}
-	
 
 }
