@@ -14,70 +14,39 @@
         android:background="@drawable/black_white_circle"
         android:orientation="vertical" />
 
-    <LinearLayout
-        android:id="@+id/welcome_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:paddingTop="10dp" >
-
-        <TextView
-            android:id="@+id/welcome_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:singleLine="true"
-            android:text="@string/welcome"
-            android:textColor="#CCCCCC"
-            android:textSize="60dp" />
-
-        <TextView
-            android:id="@+id/to_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".8"
-            android:paddingLeft="15dp"
-            android:singleLine="true"
-            android:text="@string/to"
-            android:textColor="#CCCCCC"
-            android:textSize="20dp" />
-    </LinearLayout>
-
     <edu.uml.cs.isense.collector.objects.FontFitTextView
         android:id="@+id/title_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/welcome_title"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:paddingTop="20dp"
         android:text="@string/app_name"
         android:textColor="@android:color/white" />
-    
+
     <Button
         android:id="@+id/splash_about"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/buttons_sync_time"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="5dp"
-        android:text="@string/about" />
-    
-     <Button
-        android:id="@+id/splash_how_to"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/colorless"
+        android:text="@string/about"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/splash_how_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="@drawable/buttons_sync_time"
-        android:textColor="@android:color/white"
+        android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:text="@string/guide" />
+        android:background="@drawable/colorless"
+        android:text="@string/guide"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:id="@+id/button_layout"
@@ -100,10 +69,10 @@
 
         <CheckBox
             android:id="@+id/eula_check"
-            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:clickable="false"
             android:paddingTop="10dp"
             android:textSize="18dp" />
 
@@ -125,23 +94,23 @@
         android:paddingTop="30dp" >
 
         <Button
-            android:id="@+id/splash_continue"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_continue"
-            android:text="@string/cont"
-            android:textColor="@android:color/white" />
-
-        <Button
             android:id="@+id/splash_exit"
             android:layout_width="wrap_content"
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/button_exit"
+            android:background="@drawable/colorless"
             android:text="@string/exit"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/splash_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/colorless"
+            android:text="@string/cont"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

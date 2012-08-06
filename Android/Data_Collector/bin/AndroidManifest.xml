@@ -123,6 +123,10 @@
             android:name="edu.uml.cs.isense.complexdialogs.Splash"
             android:label=""
             android:configChanges="orientation|keyboardHidden" />
+        <activity
+            android:name="edu.uml.cs.isense.simpledialogs.ApplicationGuide"
+            android:label="Application Guide"
+            android:theme="@style/theme_dialog_black" />
         
     </application>
 
