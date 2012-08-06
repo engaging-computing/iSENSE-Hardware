@@ -56,28 +56,28 @@
         android:paddingRight="10dp"
         android:text="@string/app_name"
         android:textColor="@android:color/white" />
-    
+
     <Button
         android:id="@+id/splash_about"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/buttons_sync_time"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="5dp"
-        android:text="@string/about" />
-    
-     <Button
-        android:id="@+id/splash_how_to"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/colorless"
+        android:text="@string/about"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/splash_how_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="@drawable/buttons_sync_time"
-        android:textColor="@android:color/white"
+        android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:text="@string/guide" />
+        android:background="@drawable/colorless"
+        android:text="@string/guide"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:id="@+id/button_layout"
@@ -100,10 +100,10 @@
 
         <CheckBox
             android:id="@+id/eula_check"
-            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:clickable="false"
             android:paddingTop="10dp"
             android:textSize="18dp" />
 
@@ -125,23 +125,23 @@
         android:paddingTop="30dp" >
 
         <Button
-            android:id="@+id/splash_continue"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_continue"
-            android:text="@string/cont"
-            android:textColor="@android:color/white" />
-
-        <Button
             android:id="@+id/splash_exit"
             android:layout_width="wrap_content"
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/button_exit"
+            android:background="@drawable/colorless"
             android:text="@string/exit"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/splash_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/colorless"
+            android:text="@string/cont"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
