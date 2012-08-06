@@ -422,4 +422,7 @@
 	    
 	</string>
 	
+	<string name="about_long">&#160;&#160;&#160;&#160;&#160;About&#160;&#160;&#160;&#160;&#160;</string>
+	<string name="guide_long">&#160;&#160;&#160;&#160;&#160;Guide&#160;&#160;&#160;&#160;&#160;</string>
+	
 </resources>

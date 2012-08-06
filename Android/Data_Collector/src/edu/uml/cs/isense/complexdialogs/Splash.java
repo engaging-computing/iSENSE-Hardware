@@ -35,7 +35,6 @@ public class Splash extends Activity {
 	private TextView eulaText;
 	private CheckBox eulaCheck;
 	private FontFitTextView appName;
-	private TextView welcome;
 
 	private static final int EULA_REQUESTED = 100;
 
@@ -59,13 +58,6 @@ public class Splash extends Activity {
 		final RelativeLayout abstractCircle = (RelativeLayout) findViewById(R.id.abstract_layout);
 		final Animation rotate = AnimationUtils.loadAnimation(this, R.anim.fastspinner);
 		abstractCircle.startAnimation(rotate);
-		
-			
-		// Apply custom font to "Welcome"
-		welcome = (TextView) findViewById(R.id.welcome_text);
-		final Typeface tf2 = Typeface.createFromAsset(getAssets(),
-				"flight_sterwadess.otf");
-		welcome.setTypeface(tf2);
 		
 		// Set "EULA" in the CheckBox's string to become clickable
 		eulaCheck = (CheckBox) findViewById(R.id.eula_check);
