@@ -81,7 +81,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 						ctv.toggle();
 
 						if (ctv.isChecked())
-							ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
 						else
 							ctv.setCheckMarkDrawable(R.drawable.red_x);
 
@@ -112,7 +112,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 						ctv.toggle();
 
 						if (ctv.isChecked())
-							ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
 						else
 							ctv.setCheckMarkDrawable(R.drawable.red_x);
 

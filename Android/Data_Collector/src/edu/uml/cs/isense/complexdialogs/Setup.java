@@ -80,7 +80,9 @@ public class Setup extends Activity implements OnClickListener {
 		browse.setOnClickListener(this);
 		
 		srate = (EditText) findViewById(R.id.srate);
-		srate.setText(sample);
+		if (sample.length() >= 3)
+			srate.setText(sample);
+		else srate.setText("200");
 
 	}
 
