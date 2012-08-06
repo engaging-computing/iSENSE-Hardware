@@ -238,7 +238,7 @@ containing a value of this type.
         public static final int loginbox=0x7f030008;
         public static final int main=0x7f030009;
         public static final int sensors_selector=0x7f03000a;
-        public static final int toast_layout=0x7f03000b;
+        public static final int toast_layout_check=0x7f03000b;
         public static final int toast_layout_x=0x7f03000c;
         public static final int uploadfinalizebox=0x7f03000d;
         public static final int view_page=0x7f03000e;
@@ -248,7 +248,7 @@ containing a value of this type.
         public static final int menu=0x7f090000;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
+        public static final int app_name=0x7f050003;
         public static final int aveval=0x7f050019;
         public static final int bt_not_enabled_leaving=0x7f05000b;
         public static final int btn_upload=0x7f05002a;
@@ -258,7 +258,7 @@ containing a value of this type.
         public static final int cancel=0x7f05000e;
         public static final int change_eid=0x7f05002c;
         public static final int changefield_prompt1=0x7f050032;
-        public static final int contentDesc=0x7f050001;
+        public static final int contentDesc=0x7f050000;
         public static final int expr_msg=0x7f05002b;
         public static final int finalize_city=0x7f050028;
         public static final int finalize_geo=0x7f050029;
@@ -296,8 +296,8 @@ containing a value of this type.
         public static final int title_paired_devices=0x7f050005;
         public static final int upload=0x7f05001d;
         public static final int view_page=0x7f05001b;
-        public static final int wifi_message=0x7f050003;
-        public static final int wifi_page=0x7f050002;
+        public static final int wifi_message=0x7f050002;
+        public static final int wifi_page=0x7f050001;
         public static final int yes=0x7f05000f;
     }
     public static final class style {

@@ -150,7 +150,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int launch=0x7f030003;
         public static final int main=0x7f030004;
         public static final int sensors_selector=0x7f030005;
-        public static final int toast_layout=0x7f030006;
+        public static final int toast_layout_check=0x7f030006;
         public static final int toast_layout_x=0x7f030007;
         public static final int view_page=0x7f030008;
         public static final int wifi_page=0x7f030009;
@@ -159,12 +159,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int menu=0x7f090000;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
+        public static final int app_name=0x7f050002;
         public static final int aveval=0x7f050012;
         public static final int bt_not_enabled_leaving=0x7f05000a;
         public static final int button_scan=0x7f050003;
         public static final int change_eid=0x7f050015;
-        public static final int contentDesc=0x7f050001;
+        public static final int contentDesc=0x7f050000;
         public static final int maxval=0x7f050011;
         public static final int medval=0x7f050013;
         public static final int menu_connect=0x7f05000b;
@@ -183,7 +183,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int title_paired_devices=0x7f050004;
         public static final int upload=0x7f050017;
         public static final int view_page=0x7f050014;
-        public static final int wifi_page=0x7f050002;
+        public static final int wifi_page=0x7f050001;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;
