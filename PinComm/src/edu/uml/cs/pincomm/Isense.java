@@ -43,11 +43,13 @@ import java.util.UUID;
 import org.json.JSONArray;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -118,6 +120,7 @@ public class Isense extends Activity implements OnClickListener {
 	String sessionName, sessionDesc, sessionStreet, sessionCity;
 
 	NfcAdapter mAdapter;
+	PendingIntent pendingIntent;
 
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
@@ -204,6 +207,9 @@ public class Isense extends Activity implements OnClickListener {
 
 		launchLayout.setVisibility(View.VISIBLE);
 
+		pendingIntent = PendingIntent.getActivity(
+				this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
@@ -281,6 +287,14 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
+
+		if(Build.VERSION.SDK_INT >= 10) {
+			mAdapter = NfcAdapter.getDefaultAdapter(this);
+			if(mAdapter != null) {
+				mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+			}
+		}
+
 		// Performing this check in onResume() covers the case in which BT was
 		// not enabled during onStart(), so we were paused to enable it...
 		// onResume() will be called when ACTION_REQUEST_ENABLE activity
@@ -298,28 +312,40 @@ public class Isense extends Activity implements OnClickListener {
 		}
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		if(Build.VERSION.SDK_INT >= 10) {
+			if(mAdapter != null) {
+				mAdapter.disableForegroundDispatch(this);
+			}
+		}
+	}
+
 	void handleNFCIntent(Intent intent) {
 		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-		if (rawMsgs != null) {
-			NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
-			for (int i = 0; i < rawMsgs.length; i++) {
-				msgs[i] = (NdefMessage) rawMsgs[i];
-			}
-			byte[] payload = msgs[0].getRecords()[0].getPayload();
-			String text = "";
-			//Get the Text Encoding
-			String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
-			//Get the Language Code
-			int languageCodeLength = payload[0] & 0077;
-			try {
-				//Get the Text
-				text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(Build.VERSION.SDK_INT >= 9) {
+			if (rawMsgs != null) {
+				NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+				for (int i = 0; i < rawMsgs.length; i++) {
+					msgs[i] = (NdefMessage) rawMsgs[i];
+				}
+				byte[] payload = msgs[0].getRecords()[0].getPayload();
+				String text = "";
+				//Get the Text Encoding
+				String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+				//Get the Language Code
+				int languageCodeLength = payload[0] & 0077;
+				try {
+					//Get the Text
+					text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-			connectToBluetooth(text);
+				connectToBluetooth(text);
+			}
 		}
 	}
 
@@ -571,6 +597,8 @@ public class Isense extends Activity implements OnClickListener {
 				edu.uml.cs.pincomm.DatapointRow newRow = new edu.uml.cs.pincomm.DatapointRow(getBaseContext(), null);
 				if(i%2 != 0) {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
+				} else {
+					newRow.setLayoutBg(res.getColor(R.color.rowcols2));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
 
@@ -622,7 +650,6 @@ public class Isense extends Activity implements OnClickListener {
 		allSensors.remove(0);
 		allSensors.remove(0);
 
-		System.out.println(prefs2.getString("sensorspin_value", ""));
 		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
 
 		if (sensorData.get(lookup).size() != 0) {
