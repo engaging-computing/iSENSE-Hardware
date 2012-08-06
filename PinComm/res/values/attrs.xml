@@ -15,5 +15,13 @@
         <attr name="label" format="string" />
         <attr name="data" format="string" />
     </declare-styleable>
+    
+    <declare-styleable name="theme">
+        <attr name="menuConnect" format="reference"/>
+        <attr name="menuRefresh" format="reference"/>
+        <attr name="menuSensor" format="reference"/>
+        <attr name="menuShare" format="reference"/>
+        <attr name="menuTime" format="reference"/>
+    </declare-styleable>
 
 </resources>

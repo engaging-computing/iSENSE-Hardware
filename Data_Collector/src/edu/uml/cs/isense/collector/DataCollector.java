@@ -69,6 +69,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -106,7 +107,7 @@ import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
-/* Experiment 422 on iSENSE and 491 on Dev */
+/* Experiment 422 on iSENSE and 277 on Dev */
 
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
@@ -236,7 +237,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
 	private static boolean showGpsDialog = true;
-
+	private static boolean alreadySaved = false;
+	
 	private static Handler mHandler;
 	private boolean throughHandler = false;
 
@@ -264,17 +266,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Set view to the loading screen
 		setContentView(R.layout.loading);
 
-		// Disable orientation changing while app is loading
 		OrientationManager.disableRotation(DataCollector.this);
-
-		// Disable use of menu while loading
 		useMenu = false;
 
-		// Begin animation for loading screen
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
 		spinner.startAnimation(rotateInPlace);
@@ -282,7 +278,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Set main context of application once
 		mContext = this;
 
-		// Task to execute loading/switching to main UI or Splash
 		new LoadingMainTask().execute();
 
 		// This block useful for if onBackPressed - retains some things from
@@ -443,7 +438,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Configurations for the in-app menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(Menu.NONE, MENU_ITEM_SETUP, Menu.NONE, "Setup").setIcon(
@@ -492,6 +486,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			choiceViaMenu = true;
 			Intent iUpload = new Intent(mContext, UploadChoice.class);
 			startActivityForResult(iUpload, UPLOAD_CHOICE_REQUESTED);
+
+			// Gets the previous unuploaded sessions
+			uploadSuccess = true;
+			manageUploadQueue();
 			return true;
 		case MENU_ITEM_TIME:
 			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
@@ -509,7 +507,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
 
-	// Overridden method to record new data as sensors change
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 
@@ -520,7 +517,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				rawAccel = event.values.clone();
 
-				// Handles x/y/z recording based on user orientation
 				switch (rotation) {
 				case 90:
 					// x = -y && y = x
@@ -556,7 +552,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				rawMag = event.values.clone();
 
-				// Handles x/y/z recording based on user orientation
 				switch (rotation) {
 				case 90:
 					// x = -y && y = x
@@ -595,16 +590,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[TEMPERATURE_F]
 					|| dfm.enabledFields[TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
-
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
 			if (dfm.enabledFields[PRESSURE])
 				pressure = toThou.format(event.values[0]);
-
 		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
 			if (dfm.enabledFields[LIGHT])
 				light = toThou.format(event.values[0]);
 		}
-
 	}
 
 	@Override
@@ -760,8 +752,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 				String experimentInput = mPrefs.getString("experiment_id", "");
 
-				if (successLogin && (experimentInput.length() > 0)) {
+				if ((experimentInput.length() >= 0) && successLogin) {
 					new UploadTask().execute();
+				} else if ((experimentInput.length() >= 0) && !successLogin) {
+					Intent iNoIsense = new Intent(mContext, NoIsense.class);
+					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
+					if (!alreadySaved) saveOnUploadQueue();
 				} else {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
@@ -786,6 +782,68 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		}
 
+
+	}
+
+	// Saves dataSet on queue when you aren't logged in
+	private void saveOnUploadQueue() {
+		// Session Id
+		int sessionId = -1;
+
+		// Date
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
+		Date dt = new Date();
+		String dateString = sdf.format(dt);
+
+		// Location
+		List<Address> address = null;
+		String city = "", state = "", country = "", addr = "";
+
+		try {
+			if (roughLoc != null) {
+				address = new Geocoder(DataCollector.this, Locale.getDefault())
+						.getFromLocation(roughLoc.getLatitude(),
+								roughLoc.getLongitude(), 1);
+				if (address.size() > 0) {
+					city = address.get(0).getLocality();
+					state = address.get(0).getAdminArea();
+					country = address.get(0).getCountryName();
+					addr = address.get(0).getAddressLine(0);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Session Description
+		String description;
+		if (sessionDescription.equals(""))
+			description = "Automated Submission Through Android Data Collection App";
+		else
+			description = sessionDescription;
+
+		// Experiment Id
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		String eid = mPrefs.getString("experiment_id", "");
+
+		// Chucks all the info into the queue
+		DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession + " - "
+				+ dateString, description, eid, dataSet.toString(), null,
+				sessionId, city, state, country, addr);
+		uploadQueue.add(ds);
+
+		// Saves pictures for later upload
+		int pic = pictureArray.size();
+		while (pic > 0) {
+			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession + " - "
+					+ dateString, description, eid, null,
+					pictureArray.get(pic - 1), sessionId, city, state, country,
+					addr);
+			uploadQueue.add(dsPic);
+			pic--;
+		}
+		
+		alreadySaved = true;
 	}
 
 	// Calls the rapi primitives for actual uploading
@@ -940,7 +998,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// Task executed to load experiment data and launch setup intent
+	// Control task for uploading data
 	private class SetupTask extends AsyncTask<Void, Integer, Void> {
 
 		Intent iSetup;
@@ -991,7 +1049,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// Set TimeElapsed text given seconds as a parameter
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -1026,7 +1083,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// EULA function
 	private PackageInfo getPackageInfo() {
 		PackageInfo pi = null;
 		try {
@@ -1056,7 +1112,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Gets the milliseconds since Epoch + timeOffset
+	// Gets the milliseconds since Epoch
 	private long getUploadTime() {
 		Calendar c = Calendar.getInstance();
 		SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
@@ -1180,7 +1236,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Set boolean array's enabled features for fields to be recorded
 	private void getEnabledFields() {
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
@@ -1231,7 +1286,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (!uploadQueue.isEmpty()) {
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			}
+			} else
+				Log.w("uploadQueue", "empty queue");
 		}
 	}
 
@@ -1307,7 +1363,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setStartStopListener();
 	}
 
-	// Initialize location managers
 	public void initLocations() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -1331,7 +1386,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
 
-	// Lengthy onLongClickListener for the main UI button
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -1339,8 +1393,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			public boolean onLongClick(View arg0) {
 
 				if (!setupDone) {
-
-					// Prevent data recording pre-setting up
 
 					w.make("You must setup before recording data.",
 							Toast.LENGTH_LONG, "x");
@@ -1350,21 +1402,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				} else {
 
-					// Start recording/stopping process
-
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
 
 					if (running) {
-
-						// Determined data was recording - stop it from running
-
 						OrientationManager.enableRotation((Activity) mContext);
 
 						writeToSDCard(null, 'f');
 						setupDone = false;
 						useMenu = true;
+						alreadySaved = false;
 
 						mSensorManager.unregisterListener(DataCollector.this);
 						running = false;
@@ -1398,8 +1446,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 					} else {
-
-						// Data was not recording - start recording now
 
 						registerSensors();
 						OrientationManager.disableRotation((Activity) mContext);
@@ -1573,7 +1619,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Do the summary's dirty work before launching the intent
 	private void showSummary() {
 
 		elapsedMillis = totalMillis;
