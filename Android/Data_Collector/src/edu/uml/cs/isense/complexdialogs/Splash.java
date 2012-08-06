@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.objects.FontFitTextView;
+import edu.uml.cs.isense.simpledialogs.ApplicationGuide;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Splash extends Activity {
@@ -109,6 +110,15 @@ public class Splash extends Activity {
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
+			}
+		});
+		
+		final Button guide = (Button) findViewById(R.id.splash_how_to);
+		guide.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent iAppGuide = new Intent(Splash.this, ApplicationGuide.class);
+				startActivity(iAppGuide);
 			}
 		});
 
