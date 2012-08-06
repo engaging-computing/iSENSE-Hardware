@@ -424,5 +424,6 @@
 	
 	<string name="about_long">&#160;&#160;&#160;&#160;&#160;About&#160;&#160;&#160;&#160;&#160;</string>
 	<string name="guide_long">&#160;&#160;&#160;&#160;&#160;Guide&#160;&#160;&#160;&#160;&#160;</string>
+	<string name="accept_eula">I have read and accept the EULA.</string>
 	
 </resources>
