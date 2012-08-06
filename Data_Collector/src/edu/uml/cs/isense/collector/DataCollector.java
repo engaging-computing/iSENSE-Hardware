@@ -354,9 +354,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(DataCollector.this);
-		mRoughLocManager.removeUpdates(DataCollector.this);
-		mSensorManager.unregisterListener(DataCollector.this);
+		if (mLocationManager != null)
+			mLocationManager.removeUpdates(DataCollector.this);
+		if (mRoughLocManager != null)
+			mRoughLocManager.removeUpdates(DataCollector.this);
+		if (mSensorManager != null)
+			mSensorManager.unregisterListener(DataCollector.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		if (timeElapsedTimer != null)
@@ -367,9 +370,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onStop() {
 		super.onStop();
-		mLocationManager.removeUpdates(DataCollector.this);
-		mRoughLocManager.removeUpdates(DataCollector.this);
-		mSensorManager.unregisterListener(DataCollector.this);
+		if (mLocationManager != null)
+			mLocationManager.removeUpdates(DataCollector.this);
+		if (mRoughLocManager != null)
+			mRoughLocManager.removeUpdates(DataCollector.this);
+		if (mSensorManager != null)
+			mSensorManager.unregisterListener(DataCollector.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		if (timeElapsedTimer != null)
@@ -768,6 +774,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (requestCode == SPLASH_REQUESTED) {
+			Log.e("resultCode", "" + resultCode);
 			if (resultCode == RESULT_OK) {
 				SharedPreferences.Editor editor = eulaPrefs.edit();
 				editor.putBoolean(eulaKey, true);
