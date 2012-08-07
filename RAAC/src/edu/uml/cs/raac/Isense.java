@@ -450,16 +450,7 @@ public class Isense extends Activity implements OnClickListener {
 			getRecords();
 		}
 		if (v == pushToISENSE) {
-			if (nameField.length() == 0) {
-				Date dNow = new Date( );
-				SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yy 'at' hh:mm a");
-				nameField.setText(ft.format(dNow));
-			}
-			if (!dataRdy) {
-				Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
-			} else {
-				uploadData();
-			}
+			uploadData();
 		}
 
 	}
@@ -473,7 +464,7 @@ public class Isense extends Activity implements OnClickListener {
 				x++;
 				switch(x) {
 				case 1:  timeData.add(fmtData(str));           									break;
-				case 14: bta1Data.add(Double.parseDouble(str));			break;
+				case 14: bta1Data.add(Double.parseDouble(str));									break;
 				default:                                        								break;
 				}
 			}
@@ -787,6 +778,15 @@ public class Isense extends Activity implements OnClickListener {
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
+		if (nameField.length() == 0) {
+			Date dNow = new Date( );
+			SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yy 'at' hh:mm a");
+			nameField.setText(ft.format(dNow));
+		}
+		if (!dataRdy) {
+			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+		}
+		
 		if (timeData.size() != bta1Data.size()) {
 			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
 					Toast.LENGTH_LONG).show();
