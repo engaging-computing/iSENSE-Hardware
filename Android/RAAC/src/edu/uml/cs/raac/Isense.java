@@ -427,7 +427,6 @@ public class Isense extends Activity implements OnClickListener {
 								if (data != null) {
 									prepDataForUpload();
 									writeDataToScreen();
-									dataRdy = true;
 								}
 							}
 
@@ -470,8 +469,9 @@ public class Isense extends Activity implements OnClickListener {
 			}
 			x = 0;
 		}
-
-		findStatistics();	
+		dataRdy = true;
+		findStatistics();
+		uploadData();
 	}
 
 	public void writeDataToScreen() {
