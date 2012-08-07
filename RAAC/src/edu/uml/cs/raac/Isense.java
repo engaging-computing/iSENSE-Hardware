@@ -238,7 +238,7 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
-	
+
 		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
 		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 		if(Build.VERSION.SDK_INT >= 10) {
@@ -449,16 +449,17 @@ public class Isense extends Activity implements OnClickListener {
 		if (v == rcrdBtn) {
 			getRecords();
 		}
-		if (v == pushToISENSE)
+		if (v == pushToISENSE) {
 			if (nameField.length() == 0) {
-				Time now = new Time();
-				now.setToNow();
-				nameField.setText(now.month+"/"+now.monthDay+"/"+now.year+" "+now.hour+":"+now.minute);
+				Date dNow = new Date( );
+				SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yy 'at' hh:mm a");
+				nameField.setText(ft.format(dNow));
 			}
-		if (!dataRdy) {
-			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
-		} else {
-			uploadData();
+			if (!dataRdy) {
+				Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+			} else {
+				uploadData();
+			}
 		}
 
 	}
@@ -835,12 +836,12 @@ public class Isense extends Activity implements OnClickListener {
 				SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
 
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(expr.getString("experiment_number", "None"), 
+					sessionId = rapi.createSession(expr.getString("experiment_number", "427"), 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
 							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
 					if (sessionId != -1) {
-						rapi.putSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet);
+						rapi.putSessionData(sessionId, expr.getString("experiment_number", "427"), dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
 					} else {
 						sessionUrl = baseSessionUrl;
@@ -849,7 +850,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet))) {
+					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "427"), dataSet))) {
 						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
 					}
 				}
