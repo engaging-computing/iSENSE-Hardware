@@ -204,8 +204,8 @@ public class Isense extends Activity implements OnClickListener {
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
-		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
-		sensorType = prefs.getString("name_bta1", "None");
+		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "Vernier pH Sensor"));
+		sensorType = prefs.getString("name_bta1", "Vernier pH Sensor");
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
