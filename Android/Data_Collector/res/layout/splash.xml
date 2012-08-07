@@ -35,7 +35,7 @@
 
         <Button
             android:id="@+id/splash_exit"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
@@ -45,7 +45,7 @@
 
         <Button
             android:id="@+id/splash_continue"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
