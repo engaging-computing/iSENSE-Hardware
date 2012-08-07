@@ -32,12 +32,12 @@
 		on your present Android device that you own or control. For the avoidance of doubt, the Application 
 		is licensed, not sold, to you by Developer pursuant to and subject to the terms and conditions of 
 		this Agreement and any other applicable terms and conditions promulgated by any third party (e.g., 
-		Android Marketplace, storefront, network, and other operators, etc.), including, without limitation, 
+		Google Play, network, and other operators, etc.), including, without limitation, 
 		Google. Developer reserves all rights not expressly granted to you herein. You acknowledge and 
 		agree that this Agreement is between you and Developer, and Google and its subsidiaries are not 
 		a party to this Agreement and are not responsible for the Application.  In the event of a conflict, 
 		the terms and conditions of the present Agreement shall supersede and have priority over the 
-		terms and conditions of the Android Marketplace.\n
+		terms and conditions of Google Play.\n
 		
 		\n2. RESTRICTIONS. This Agreement does not allow you to use the Application on any Android 
 		device that you do not own or control, and you may not distribute or make the Application 
@@ -169,9 +169,7 @@
 		full force and effect. You may not assign your rights under this Agreement without Developer’s 
 		prior written permission and any attempt by you to do so shall be void. Any provision of this 
 		Agreement which by its nature must survive the termination of this Agreement in order to 
-		give effect to its meaning shall survive such termination. You agree that Apple is an 
-		intended third party beneficiary of this Agreement and will have the right to enforce this 
-		Agreement as a third party beneficiary.\n
+		give effect to its meaning shall survive such termination.\n
 		
 		\n14. CONTACT INFORMATION. You may contact Developer at:\n
 		Engaging Computing Group\n
@@ -179,7 +177,6 @@
 		198 Riverside St.\n
 		Lowell, MA 01854\n
 		http://isenseproject.org\n
-		
 	</string>
 	
 	<string name="syncTime">
@@ -425,5 +422,38 @@
 	<string name="about_long">&#160;&#160;&#160;&#160;&#160;About&#160;&#160;&#160;&#160;&#160;</string>
 	<string name="guide_long">&#160;&#160;&#160;&#160;&#160;Guide&#160;&#160;&#160;&#160;&#160;</string>
 	<string name="accept_eula">I have read and accept the EULA.</string>
+	
+	<string name="about_text">
+	    Welcome to the iSENSE Data Collector Android Application, developed by 
+	    UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE 
+	    team under Fred Martin.
+
+		\n\nThe Engaging Computing Group “develops new technologies to enable 
+		learners - youth, teachers, undergraduates, and others - be creative in 
+		science, engineering, and computing, and studies how these technologies 
+		improve learning.”
+
+		\n\niSENSE exists as a branch off of the ECG, which involves “teachers 
+		and kids in inquiry-rich science projects with electronic data collection.” 
+		Data collected from iSENSE experiments may be found on the isenseproject.org 
+		website.
+
+		\n\nThis Android application is essentially the general data collection 
+		Android platform to utilize the iSENSE visualization tools.  With this 
+		application, you may simply contribute session data to an existing iSENSE 
+		experiment.  Android devices host many sensors, including an accelerometer, 
+		GPS, temperature sensor, gyroscope, magnetic sensor, pressure sensor, 
+		proximity sensor, and more.  These can all be utilized, should your device 
+		support them, to record data and visualize it on the iSENSE website.
+
+		\n\nThe purpose of the Data Collector application is to enable people of 
+		all ages to take advantage of the hardware sensors Android offers and use 
+		them to take real, personalized data and visualize it using a variety of 
+		visualization tools offered by the iSENSE website.
+
+		\n\nIn order to use this application, you must have an account on 
+		isenseproject.org.  You must also accept our End User License Agreement.
+	    
+	</string>
 	
 </resources>

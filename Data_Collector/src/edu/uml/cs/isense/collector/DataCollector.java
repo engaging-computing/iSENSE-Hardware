@@ -101,7 +101,6 @@ import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.simpledialogs.NoIsense;
 import edu.uml.cs.isense.simpledialogs.RecordingStopped;
 import edu.uml.cs.isense.simpledialogs.Summary;
-import edu.uml.cs.isense.simpledialogs.UploadChoice;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.sync.SyncTime;
@@ -157,13 +156,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int QUEUE_UPLOAD_REQUESTED = 3;
 	public static final int SETUP_REQUESTED = 4;
 	public static final int LOGIN_REQUESTED = 5;
-	public static final int UPLOAD_CHOICE_REQUESTED = 6;
-	public static final int NO_ISENSE_REQUESTED = 7;
-	public static final int NO_GPS_REQUESTED = 8;
-	public static final int FORCE_STOP_REQUESTED = 9;
-	public static final int RECORDING_STOPPED_REQUESTED = 10;
-	public static final int DESCRIPTION_REQUESTED = 11;
-	public static final int SPLASH_REQUESTED = 12;
+	public static final int NO_ISENSE_REQUESTED = 6;
+	public static final int NO_GPS_REQUESTED = 7;
+	public static final int FORCE_STOP_REQUESTED = 8;
+	public static final int RECORDING_STOPPED_REQUESTED = 9;
+	public static final int DESCRIPTION_REQUESTED = 10;
+	public static final int SPLASH_REQUESTED = 11;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -196,8 +194,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private int totalMillis = 0;
 	private int dataPointCount = 0;
 	private int iCount = 0;
-	private int len = 0;
-	private int len2 = 0;
 	private int secondsElapsed = 0;
 
 	private long currentTime = 0;
@@ -238,6 +234,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean uploadSuccess = false;
 	private static boolean showGpsDialog = true;
 	private static boolean alreadySaved = false;
+	private static boolean throughUploadMenuItem = false;
 	
 	private static Handler mHandler;
 	private boolean throughHandler = false;
@@ -490,11 +487,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			Intent iUpload = new Intent(mContext, UploadChoice.class);
-			startActivityForResult(iUpload, UPLOAD_CHOICE_REQUESTED);
 
 			// Gets the previous unuploaded sessions
 			uploadSuccess = true;
+			throughUploadMenuItem = true;
 			manageUploadQueue();
 			return true;
 		case MENU_ITEM_TIME:
@@ -705,32 +701,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// Should never get here
 				}
 
-			}
-
-		} else if (requestCode == UPLOAD_CHOICE_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				if (len == 0 || len2 == 0)
-					w.make("There is no data to upload!", Toast.LENGTH_LONG,
-							"x");
-				else {
-
-					SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-					String experimentInput = mPrefs.getString("experiment_id",
-							"");
-
-					if (successLogin && (experimentInput.length() > 0)) {
-						Intent iDescription = new Intent(mContext,
-								Description.class);
-						startActivityForResult(iDescription,
-								DESCRIPTION_REQUESTED);
-					} else {
-						Intent iNoIsense = new Intent(mContext, NoIsense.class);
-						startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
-					}
-				}
-			} else if (resultCode == RESULT_CANCELED) {
-				if (!choiceViaMenu)
-					showSummary();
 			}
 
 		} else if (requestCode == NO_ISENSE_REQUESTED) {
@@ -982,8 +952,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 
-			len = 0;
-			len2 = 0;
+			//len = 0;
+			//len2 = 0;
 			MediaManager.mediaCount = 0;
 			session.setText(getString(R.string.session));
 			nameOfSession = "";
@@ -1291,10 +1261,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private void manageUploadQueue() {
 		if (uploadSuccess) {
 			if (!uploadQueue.isEmpty()) {
+				throughUploadMenuItem = false;
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			} else
-				Log.w("uploadQueue", "empty queue");
+			} else {
+				if (throughUploadMenuItem) {
+					throughUploadMenuItem = false;
+					w.make("There is no data to upload.", Toast.LENGTH_LONG, "check");
+				}
+			}
 		}
 	}
 
@@ -1462,8 +1437,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						secondsElapsed = 0;
 						elapsedMillis = 0;
 						totalMillis = 0;
-						len = 0;
-						len2 = 0;
+						//len = 0;
+						//len2 = 0;
 						dataPointCount = 0;
 						iCount = 0;
 						beginWrite = true;
@@ -1480,9 +1455,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 						useMenu = false;
-
-						data = "X Acceleration, Y Acceleration, Z Acceleration, Acceleration, "
-								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
+						
 						running = true;
 						startStop.setText(R.string.stopString);
 
@@ -1522,8 +1495,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 								} else {
 
 									iCount++;
-									len++;
-									len2++;
+									//len++;
+									//len2++;
 
 									if (dfm.enabledFields[ACCEL_X])
 										f.accel_x = toThou.format(accel[0]);
