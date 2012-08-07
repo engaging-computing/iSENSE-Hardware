@@ -11,7 +11,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/black_white_circle"
+        android:background="@drawable/spinner_orb"
         android:orientation="vertical" />
 
     <edu.uml.cs.isense.collector.objects.FontFitTextView
