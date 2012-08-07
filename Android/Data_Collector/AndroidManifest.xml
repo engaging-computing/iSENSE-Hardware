@@ -72,10 +72,6 @@
             android:label="Session Summary"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.simpledialogs.UploadChoice"
-            android:label="Select an Action:"
-            android:theme="@style/theme_dialog_black" />
-        <activity
             android:name="edu.uml.cs.isense.simpledialogs.NoIsense"
             android:label="Upload Error"
             android:theme="@style/theme_dialog_black" />
@@ -129,6 +125,9 @@
             android:name=".splash.SplashGuide" />
         <activity
             android:name=".splash.SplashEula" />
+        
+        <activity
+            android:name=".splash.SplashAbout" />
         
     </application>
 
