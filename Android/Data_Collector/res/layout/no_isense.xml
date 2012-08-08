@@ -2,12 +2,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@android:color/transparent" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="@android:color/transparent" >
 
         <TextView
             android:id="@+id/no_isense_text"
@@ -15,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/no_isense"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:background="@android:color/transparent" />
 
         <Button
             android:id="@+id/no_isense_ok"
