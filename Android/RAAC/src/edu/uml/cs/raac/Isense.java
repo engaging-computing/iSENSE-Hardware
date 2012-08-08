@@ -204,8 +204,8 @@ public class Isense extends Activity implements OnClickListener {
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
-		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "None"));
-		sensorType = prefs.getString("name_bta1", "None");
+		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "Vernier pH Sensor"));
+		sensorType = prefs.getString("name_bta1", "Vernier pH Sensor");
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
@@ -238,7 +238,7 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
-	
+
 		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
 		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 		if(Build.VERSION.SDK_INT >= 10) {
@@ -427,7 +427,6 @@ public class Isense extends Activity implements OnClickListener {
 								if (data != null) {
 									prepDataForUpload();
 									writeDataToScreen();
-									dataRdy = true;
 								}
 							}
 
@@ -449,15 +448,7 @@ public class Isense extends Activity implements OnClickListener {
 		if (v == rcrdBtn) {
 			getRecords();
 		}
-		if (v == pushToISENSE)
-			if (nameField.length() == 0) {
-				Time now = new Time();
-				now.setToNow();
-				nameField.setText(now.month+"/"+now.monthDay+"/"+now.year+" "+now.hour+":"+now.minute);
-			}
-		if (!dataRdy) {
-			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
-		} else {
+		if (v == pushToISENSE) {
 			uploadData();
 		}
 
@@ -472,14 +463,15 @@ public class Isense extends Activity implements OnClickListener {
 				x++;
 				switch(x) {
 				case 1:  timeData.add(fmtData(str));           									break;
-				case 14: bta1Data.add(Double.parseDouble(str));			break;
+				case 14: bta1Data.add(Double.parseDouble(str));									break;
 				default:                                        								break;
 				}
 			}
 			x = 0;
 		}
-
-		findStatistics();	
+		dataRdy = true;
+		findStatistics();
+		uploadData();
 	}
 
 	public void writeDataToScreen() {
@@ -786,6 +778,15 @@ public class Isense extends Activity implements OnClickListener {
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
+		if (nameField.length() == 0) {
+			Date dNow = new Date( );
+			SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yy 'at' hh:mm a");
+			nameField.setText(ft.format(dNow));
+		}
+		if (!dataRdy) {
+			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+		}
+		
 		if (timeData.size() != bta1Data.size()) {
 			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
 					Toast.LENGTH_LONG).show();
@@ -835,12 +836,12 @@ public class Isense extends Activity implements OnClickListener {
 				SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
 
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(expr.getString("experiment_number", "None"), 
+					sessionId = rapi.createSession(expr.getString("experiment_number", "427"), 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
 							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
 					if (sessionId != -1) {
-						rapi.putSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet);
+						rapi.putSessionData(sessionId, expr.getString("experiment_number", "427"), dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
 					} else {
 						sessionUrl = baseSessionUrl;
@@ -849,7 +850,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "None"), dataSet))) {
+					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "427"), dataSet))) {
 						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
 					}
 				}
