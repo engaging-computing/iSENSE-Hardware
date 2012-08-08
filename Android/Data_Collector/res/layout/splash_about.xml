@@ -2,13 +2,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/splash_about_scroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:scrollbarThumbVertical="@drawable/grey_scroll" >
 
     <TextView
         android:id="@+id/splash_about_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/about_text"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_margin="5dp" />
 
 </ScrollView>

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:background="@android:color/transparent" >
 
     <ScrollView
         android:id="@+id/setupScroll"
@@ -11,19 +12,22 @@
         android:layout_above="@+id/okAndCancelButtons"
         android:layout_alignParentTop="true"
         android:padding="5dp"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical"
+        android:background="@android:color/transparent"
+        android:scrollbarThumbVertical="@drawable/grey_scroll" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
             android:scrollbars="vertical" >
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@android:color/transparent" >
 
                 <TextView
                     android:id="@+id/nameLabel"
@@ -32,7 +36,8 @@
                     android:paddingTop="12dip"
                     android:text="@string/sessionName"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:background="@android:color/transparent" />
 
                 <EditText
                     android:id="@+id/sessionName"
@@ -44,7 +49,8 @@
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:maxLength="50"
-                    android:text="" >
+                    android:text=""
+                    android:background="@drawable/edit_text_background" >
 
                     <requestFocus />
                 </EditText>
@@ -55,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="vertical"
-                android:paddingBottom="5dp" >
+                android:paddingBottom="5dp"
+                android:background="@android:color/transparent" >
 
                 <TextView
                     android:id="@+id/ExperimentLabel"
@@ -65,7 +72,8 @@
                     android:paddingTop="15dip"
                     android:text="@string/experimentNum"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:background="@android:color/transparent" />
 
                 <EditText
                     android:id="@+id/ExperimentInput"
@@ -76,14 +84,16 @@
                     android:digits="1234567890"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
-                    android:maxLength="5" />
+                    android:maxLength="5"
+                    android:background="@drawable/edit_text_background" />
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:background="@android:color/transparent" >
 
                 <Button
                     android:id="@+id/qrCode"
@@ -111,7 +121,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="vertical"
-                android:paddingBottom="5dp" >
+                android:paddingBottom="5dp"
+                android:background="@android:color/transparent" >
 
                 <TextView
                     android:id="@+id/sample_rate_prompt"
@@ -121,7 +132,8 @@
                     android:paddingTop="15dip"
                     android:text="@string/sample_rate"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:background="@android:color/transparent" />
 
                 <EditText
                     android:id="@+id/srate"
@@ -131,7 +143,8 @@
                     android:digits="1234567890"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
-                    android:maxLength="20" />
+                    android:maxLength="20"
+                    android:background="@drawable/edit_text_background" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
@@ -142,7 +155,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:weightSum="2" >
+        android:weightSum="2"
+        android:background="@android:color/transparent" >
 
         <Button
             android:id="@+id/setup_cancel"

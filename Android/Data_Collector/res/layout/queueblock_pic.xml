@@ -16,27 +16,31 @@
         android:checkMark="@drawable/bluecheck"
         android:checked="true"
         android:gravity="left"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:background="@android:color/transparent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="4" >
+        android:weightSum="4"
+        android:background="@android:color/transparent" >
 
         <TextView
             android:id="@+id/experimentid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:background="@android:color/transparent" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:background="@android:color/transparent" />
     </LinearLayout>
 
 </LinearLayout>

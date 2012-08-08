@@ -228,8 +228,8 @@
 	<string name="upload">Upload</string>
 	<string name="media_desc">Select one of the following options:</string>
 	<string name="scan_qr">Scan QR Code</string>
-    <string name="username">Username:    \0</string>
-	<string name="password">Password:    \0</string>
+    <string name="username">Username:&#160;&#160;</string>
+	<string name="password">Password:&#160;&#160;&#160;</string>
 	<string name="loading">Loading&#x2026;</string>
 	<string name="no_isense">
 	    You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
