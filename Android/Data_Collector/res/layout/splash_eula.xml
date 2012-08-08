@@ -7,7 +7,8 @@
         android:id="@+id/application_guide_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/eula_check_box" >
+        android:layout_above="@+id/eula_check_box"
+        android:scrollbarThumbVertical="@drawable/grey_scroll" >
 
         <TextView
             android:id="@+id/splash_eula_text"
