@@ -9,6 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/guide_text"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_margin="5dp" />
 
 </ScrollView>

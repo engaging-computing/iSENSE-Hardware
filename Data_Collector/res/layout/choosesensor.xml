@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:background="@android:color/transparent" >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -10,13 +11,15 @@
         android:layout_above="@+id/buttons"
         android:layout_alignParentTop="true"
         android:padding="5dp"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical"
+        android:background="@android:color/transparent" >
 
         <LinearLayout
             android:id="@+id/sensorscrollview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:background="@android:color/transparent" >
         </LinearLayout>
     </ScrollView>
 
@@ -26,7 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:weightSum="2" >
+        android:weightSum="2"
+        android:background="@android:color/transparent" >
 
         <Button
             android:id="@+id/sensor_back"
