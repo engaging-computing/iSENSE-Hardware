@@ -231,8 +231,6 @@
     <string name="username">Username:&#160;&#160;</string>
 	<string name="password">Password:&#160;&#160;&#160;</string>
 	<string name="loading">Loading&#x2026;</string>
-	
-	<string name="uploadString">Would you like to upload your data and media to iSENSE?</string>
 	<string name="no_isense">
 	    You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
 		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in
@@ -257,18 +255,13 @@
 		to use this feature.  However, you may visit the Google Play store to download 
 		this application (\"Barcode Scanner\" by the Zxing Team).
 	</string>
-	<string name="accept">Accept</string>
-	<string name="decline">Decline</string>
+
 	<string name="done">Done</string>
 	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
 	<string name="retry">Try Again</string>
 	<string name="sample_rate">Sample Interval: </string>
-	<string name="welcome">Welcome</string>
 	<string name="cont">Continue</string>
 	<string name="exit">Exit</string>
-	<string name="to">To</string>
-	<string name="about">A\nb\no\nu\nt</string>
-	<string name="guide">G\nu\ni\nd\ne</string>
 	<string name="login">Login</string>
 	
 	<string name="guide_text">
@@ -418,9 +411,6 @@
 		\n\nThank you for choosing to use our application - we hope you enjoy it!
 	    
 	</string>
-	
-	<string name="about_long">&#160;&#160;&#160;&#160;&#160;About&#160;&#160;&#160;&#160;&#160;</string>
-	<string name="guide_long">&#160;&#160;&#160;&#160;&#160;Guide&#160;&#160;&#160;&#160;&#160;</string>
 	<string name="accept_eula">I have read and accept the EULA.</string>
 	
 	<string name="about_text">

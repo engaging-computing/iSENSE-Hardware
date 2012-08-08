@@ -444,7 +444,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(Menu.NONE, MENU_ITEM_SETUP, Menu.NONE, "Setup").setIcon(
-				R.drawable.ic_menu_settings);
+				R.drawable.ic_menu_setup);
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login").setIcon(
 				R.drawable.ic_menu_login);
 		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload").setIcon(
