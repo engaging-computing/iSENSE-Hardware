@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.util.Log;
 import edu.uml.cs.isense.objects.ExpLoaded;
@@ -43,7 +44,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
+	private final String base_url = "http://isense.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;
@@ -1436,12 +1437,9 @@ public class RestAPI {
 	 */
 	public boolean isConnectedToInternet() {
 	
-		if(((connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected())) ||
-				((connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()))) {
-			return true;
-		} else {
-			return false;
-		}
+		NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        return (info != null && info.isConnected());
+        
 	}
 
 }
