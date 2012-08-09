@@ -11,15 +11,18 @@
 
     <ImageView
         android:id="@+id/image"
+        android:src="@drawable/red_x"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginRight="10dp"
-        android:contentDescription="@string/contentDesc" />
+        android:contentDescription="@string/contentDesc"
+        android:background="@android:color/transparent" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:textColor="#FFF" />
+        android:textColor="#FFF"
+        android:background="@android:color/transparent" />
 
 </LinearLayout>
