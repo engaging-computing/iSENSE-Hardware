@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.json.JSONArray;
 
@@ -49,16 +48,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -183,8 +178,14 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i = new Intent(this, Login.class);
 			startActivityForResult(i, LOGIN_BOX);
 		} else {
-			if (!loggedIn && rapi.isConnectedToInternet()
-					&& !username.equals("") && !password.equals("")) new PerformLogin().execute();
+			boolean connected = rapi.isConnectedToInternet();
+			if (!connected) {
+				Intent i = new Intent(Isense.mContext, WifiDisabled.class);
+				startActivity(i);
+			}
+			if (!loggedIn && connected && !username.equals("") && !password.equals("")) {
+				new PerformLogin().execute();
+			}
 		}
 
 		flipper.setInAnimation(mSlideInTop);

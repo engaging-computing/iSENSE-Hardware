@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.util.Log;
 import edu.uml.cs.isense.objects.ExpLoaded;
@@ -1436,12 +1437,9 @@ public class RestAPI {
 	 */
 	public boolean isConnectedToInternet() {
 	
-		if(((connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected())) ||
-				((connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()))) {
-			return true;
-		} else {
-			return false;
-		}
+		NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        return (info != null && info.isConnected());
+        
 	}
 
 }

@@ -785,6 +785,7 @@ public class Isense extends Activity implements OnClickListener {
 		}
 		if (!dataRdy) {
 			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+			return;
 		}
 		
 		if (timeData.size() != bta1Data.size()) {
