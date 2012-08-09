@@ -44,7 +44,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private String username = null;
 	private static String session_key = null;
-	private final String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
+	private String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
     private final String charEncoding = "iso-8859-1";
 	private ConnectivityManager connectivityManager;
 	private RestAPIDbAdapter mDbHelper;
@@ -1440,6 +1440,13 @@ public class RestAPI {
 		NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         return (info != null && info.isConnected());
         
+	}
+	
+	// Switch between iSENSEdev and iSENSE (default behavior is true)
+	public void useDev(boolean devSwitch) {
+		if (devSwitch)
+			base_url = "http://isensedev.cs.uml.edu/ws/api.php";
+		else base_url = "http://isense.cs.uml.edu/ws/api.php";
 	}
 
 }
