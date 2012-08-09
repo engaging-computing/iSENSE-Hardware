@@ -446,4 +446,10 @@
 	    
 	</string>
 	
+	<string name="menu_login">Login</string>
+	<string name="menu_media">Media</string>
+	<string name="menu_setup">Setup</string>
+	<string name="menu_sync">Sync Time</string>
+	<string name="menu_upload">Upload</string>
+	
 </resources>

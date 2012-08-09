@@ -72,13 +72,14 @@ import android.util.FloatMath;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -142,10 +143,21 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static long srate = INTERVAL;
 
 	private static final int MENU_ITEM_SETUP = 0;
-	private static final int MENU_ITEM_LOGIN = 1;
-	private static final int MENU_ITEM_UPLOAD = 2;
-	private static final int MENU_ITEM_TIME = 3;
-	private static final int MENU_ITEM_MEDIA = 4;
+	private static final int MENU_ITEM_UPLOAD = 1;
+	private static final int MENU_ITEM_LOGIN = 2;
+	private static final int MENU_ITEM_MEDIA = 3;
+	private static final int MENU_ITEM_SYNC = 4;
+	
+	private Menu mMenu;
+	
+	private MenuItem menuSetup;
+	private MenuItem menuLogin;
+	private MenuItem menuUpload;
+	private MenuItem menuSync;
+	private MenuItem menuMedia;
+	
+	private static boolean useMenu = false;
+	private static boolean preLoad = false;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -224,7 +236,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static int mwidth = 1;
 	private static int rotation = 0;
 
-	private static boolean useMenu = true;
+	//private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
 	private static boolean choiceViaMenu = false;
@@ -266,7 +278,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setContentView(R.layout.loading);
 
 		OrientationManager.disableRotation(DataCollector.this);
-		useMenu = false;
+		//setMenuStatus(false);
 
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
@@ -443,33 +455,36 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_SETUP, Menu.NONE, "Setup").setIcon(
-				R.drawable.ic_menu_setup);
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login").setIcon(
-				R.drawable.ic_menu_login);
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload").setIcon(
-				R.drawable.ic_menu_upload);
-		menu.add(Menu.NONE, MENU_ITEM_TIME, Menu.NONE, "Sync Time").setIcon(
-				R.drawable.ic_menu_synctime);
-		menu.add(Menu.NONE, MENU_ITEM_MEDIA, Menu.NONE, "Media").setIcon(
-				R.drawable.ic_menu_media);
+		super.onCreateOptionsMenu(menu);
+		mMenu = menu;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		menuSetup = menu.getItem(MENU_ITEM_SETUP);
+		menuUpload = menu.getItem(MENU_ITEM_UPLOAD);
+		menuLogin = menu.getItem(MENU_ITEM_LOGIN);
+		menuMedia = menu.getItem(MENU_ITEM_MEDIA);
+		menuSync = menu.getItem(MENU_ITEM_SYNC);
+		if (preLoad)
+			setMenuStatus(false);
 		return true;
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (!preLoad)
+			setMenuStatus(true);
 		if (!useMenu) {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+			menu.getItem(0).setEnabled(false);
+			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
+			menu.getItem(3).setEnabled(false);
+			menu.getItem(4).setEnabled(false);
 		} else {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
+			menu.getItem(3).setEnabled(true);
+			menu.getItem(4).setEnabled(true);
 		}
 		return true;
 	}
@@ -477,15 +492,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ITEM_SETUP:
+		case R.id.menu_item_setup:
 			startStop.setEnabled(false);
 			new SetupTask().execute();
 			return true;
-		case MENU_ITEM_LOGIN:
+		case R.id.menu_item_login:
 			Intent iLogin = new Intent(mContext, LoginActivity.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
-		case MENU_ITEM_UPLOAD:
+		case R.id.menu_item_upload:
 			choiceViaMenu = true;
 
 			// Gets the previous unuploaded sessions
@@ -493,11 +508,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			throughUploadMenuItem = true;
 			manageUploadQueue();
 			return true;
-		case MENU_ITEM_TIME:
+		case R.id.menu_item_sync:
 			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
 			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
 			return true;
-		case MENU_ITEM_MEDIA:
+		case R.id.menu_item_media:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
 			startActivity(iMedia);
 			return true;
@@ -1393,7 +1408,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						writeToSDCard(null, 'f');
 						setupDone = false;
-						useMenu = true;
+						setMenuStatus(true);
 						alreadySaved = false;
 
 						mSensorManager.unregisterListener(DataCollector.this);
@@ -1454,7 +1469,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							e.printStackTrace();
 						}
 
-						useMenu = false;
+						setMenuStatus(false);
 						
 						running = true;
 						startStop.setText(R.string.stopString);
@@ -1716,6 +1731,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPreExecute() {
+			preLoad = true;
 			inPausedState = true;
 			mHandler = new Handler();
 			loadingScreen = new Runnable() {
@@ -1754,10 +1770,24 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
-			useMenu = true;
+			//onCreateOptionsMenu(mMenu);
+			if (mMenu != null) {
+				onPrepareOptionsMenu(mMenu);
+				setMenuStatus(true);
+			}
+			preLoad = false;
 			super.onPostExecute(result);
 		}
 
+	}
+	
+	private void setMenuStatus(boolean enabled) {
+		useMenu = enabled;
+		menuSetup.setEnabled(enabled);
+		menuUpload.setEnabled(enabled);
+		menuLogin.setEnabled(enabled);
+		menuMedia.setEnabled(enabled);
+		menuSync.setEnabled(enabled);
 	}
 
 }

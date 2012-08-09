@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
@@ -36,11 +35,11 @@ public class Waffle {
 			else
 				return;
 
-			ImageView image = (ImageView) layout.findViewById(R.id.image);
+			/*ImageView image = (ImageView) layout.findViewById(R.id.image);
 			if (image_id.equals("check"))
 				image.setImageResource(R.drawable.checkmark);
 			else
-				image.setImageResource(R.drawable.red_x);
+				image.setImageResource(R.drawable.red_x);*/
 
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);
