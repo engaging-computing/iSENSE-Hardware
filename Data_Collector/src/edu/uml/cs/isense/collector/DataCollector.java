@@ -70,7 +70,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -233,7 +232,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	public static boolean inPausedState = false;
 
-	public static int mwidth = 1;
 	private static int rotation = 0;
 
 	//private static boolean useMenu = true;
@@ -410,6 +408,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		// Initialize everything you're going to need
 		initVars();
+		initMainUI();
 
 		// Assign everything to respective variables
 		assignVars();
@@ -762,7 +761,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			Log.e("resultCode", "" + resultCode);
 			if (resultCode == RESULT_OK) {
 				setContentView(R.layout.main);
-				initVars();
+				initMainUI();
 				assignVars();
 				
 				SharedPreferences.Editor editor = eulaPrefs.edit();
@@ -1077,7 +1076,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iSplash, SPLASH_REQUESTED);
 		} else {
 			setContentView(R.layout.main);
-			initVars();
+			initMainUI();
 			assignVars();
 		}
 
@@ -1295,30 +1294,24 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		}
 	}
-
-	// Everything needed to be initialized for onCreate
-	@SuppressWarnings("deprecation")
-	private void initVars() {
-
+	
+	// UI variables initialized for onCreate
+	private void initMainUI() {
 		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
 		isenseLogo = (ImageView) findViewById(R.id.ImageViewLogo);
+		startStop = (Button) findViewById(R.id.startStop);
+		session = (TextView) findViewById(R.id.sessionName);
+		time = (TextView) findViewById(R.id.time);
+		loginInfo = (TextView) findViewById(R.id.loginInfo);
+	}
 
-		Display deviceDisplay = getWindowManager().getDefaultDisplay();
-		mwidth = deviceDisplay.getWidth();
-
+	// Variables needed to be initialized for onCreate
+	private void initVars() {
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-
-		startStop = (Button) findViewById(R.id.startStop);
-
-		session = (TextView) findViewById(R.id.sessionName);
-
-		time = (TextView) findViewById(R.id.time);
-
-		loginInfo = (TextView) findViewById(R.id.loginInfo);
-
+		
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -1735,13 +1728,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Loads the main screen
 	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
-		Runnable loadingScreen;
+		Runnable loadingThread, loadingScreen;
 
 		@Override
 		protected void onPreExecute() {
 			preLoad = true;
 			inPausedState = true;
 			mHandler = new Handler();
+			loadingThread = new Runnable() {
+
+				@Override
+				public void run() {
+					// Initializes everything we can
+					initVars();
+				}
+				
+			};
 			loadingScreen = new Runnable() {
 
 				@Override
@@ -1757,8 +1759,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			long timeStart = System.currentTimeMillis();
+			mHandler.post(loadingThread);
+			long timeEllapsed = System.currentTimeMillis() - timeStart;
 			try {
-				Thread.sleep(2000);
+				if (timeEllapsed < 2000)
+					Thread.sleep(2000 - timeEllapsed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
