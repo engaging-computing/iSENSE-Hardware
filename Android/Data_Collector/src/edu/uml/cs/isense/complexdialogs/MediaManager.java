@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
@@ -127,7 +126,6 @@ public class MediaManager extends Activity {
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				File f = convertImageUriToFile(imageUri);
-				Log.d("pic file", f.toString());
 				DataCollector.pictures.add(f);
 				mediaCount++;
 				mediaCountLabel.setText(getString(R.string.picAndVidCount)
