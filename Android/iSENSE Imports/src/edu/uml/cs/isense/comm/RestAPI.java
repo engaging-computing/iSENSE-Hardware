@@ -24,7 +24,6 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.StrictMode;
-import android.util.Log;
 import edu.uml.cs.isense.objects.ExpLoaded;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
@@ -412,7 +411,7 @@ public class RestAPI {
 				session_key = o.getJSONObject("data").getString("session");
 				uid = o.getJSONObject("data").getInt("uid");
 				
-				Log.e("login result", "Result = " + o.toString());
+				//Log.e("login result", "Result = " + o.toString());
 				
 				if (isLoggedIn()) {
 					this.username = username;
@@ -1298,7 +1297,7 @@ public class RestAPI {
 	
 	public boolean putSessionData(int sid, String eid, JSONArray dataJSON) {
 		String url = "method=putSessionData&session_key=" + session_key + "&sid=" + sid + "&eid=" + eid + "&data=" + dataJSON.toString();
-		Log.e("putsession", url);
+		//Log.e("putsession", url);
 		boolean ret = false;
 		
 		if (connectivityManager != null && connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()) {
@@ -1310,8 +1309,8 @@ public class RestAPI {
 				
                 if (status.equals("200")) ret = true;
                 else {
-                	JSONObject msg = o.getJSONObject("data");
-                	Log.e("RAPI", msg.getString("msg"));
+                	//JSONObject msg = o.getJSONObject("data");
+                	//og.d("RAPI", msg.getString("msg"));
                 	ret = false;
                 }
 				//if (data.compareTo("{}") != 0) ret = true;
@@ -1346,8 +1345,8 @@ public class RestAPI {
                 	dataCache = new JSONArray();
                 	ret = true;
                 } else {
-                	JSONObject msg = o.getJSONObject("data");
-                	Log.e("RAPI", msg.getString("msg"));
+                	//JSONObject msg = o.getJSONObject("data");
+                	//Log.e("RAPI", msg.getString("msg"));
                 	ret = false;
                 }
 				//if (data.compareTo("{}") != 0) ret = true;if (data.compareTo("{}") != 0) {
@@ -1428,7 +1427,7 @@ public class RestAPI {
 				break;
 		}
 		
-		Log.e("make request string", output);
+		//Log.e("make request string", output);
 		return output;
 	}
 	
