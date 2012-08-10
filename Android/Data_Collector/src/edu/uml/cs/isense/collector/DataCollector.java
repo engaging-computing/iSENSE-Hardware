@@ -4,8 +4,8 @@
 /**      IIIIIIIIIIIII            General Purpose Data Collector App             SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                                                              SSS                **/
-/**           III                    By:               Jeremy Poulin,           SSS               **/
-/**           III                                      Michael Stowell           SSSSSSSSS        **/
+/**           III                    By:               Michael Stowell,         SSS               **/
+/**           III                                      Jeremy Poulin,            SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
 /**           III                                                                        SSS      **/
 /**           III                    Group:            ECG / iSENSE                     SSS       **/
@@ -69,7 +69,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -105,8 +104,6 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
-
-/* Experiment 422 on iSENSE and 277 on Dev */
 
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
@@ -146,15 +143,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int MENU_ITEM_LOGIN = 2;
 	private static final int MENU_ITEM_MEDIA = 3;
 	private static final int MENU_ITEM_SYNC = 4;
-	
+
 	private Menu mMenu;
-	
+
 	private MenuItem menuSetup;
 	private MenuItem menuLogin;
 	private MenuItem menuUpload;
 	private MenuItem menuSync;
 	private MenuItem menuMedia;
-	
+
 	private static boolean useMenu = false;
 	private static boolean preLoad = false;
 
@@ -234,7 +231,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private static int rotation = 0;
 
-	//private static boolean useMenu = true;
+	// private static boolean useMenu = true;
 	private static boolean beginWrite = true;
 	private static boolean setupDone = false;
 	private static boolean choiceViaMenu = false;
@@ -245,7 +242,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean showGpsDialog = true;
 	private static boolean alreadySaved = false;
 	private static boolean throughUploadMenuItem = false;
-	
+
 	private static Handler mHandler;
 	private boolean throughHandler = false;
 
@@ -276,7 +273,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setContentView(R.layout.loading);
 
 		OrientationManager.disableRotation(DataCollector.this);
-		//setMenuStatus(false);
+		// setMenuStatus(false);
 
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
@@ -747,7 +744,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else if ((experimentInput.length() >= 0) && !successLogin) {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
-					if (!alreadySaved) saveOnUploadQueue();
+					if (!alreadySaved)
+						saveOnUploadQueue();
 				} else {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
@@ -758,12 +756,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (requestCode == SPLASH_REQUESTED) {
-			Log.e("resultCode", "" + resultCode);
 			if (resultCode == RESULT_OK) {
 				setContentView(R.layout.main);
 				initMainUI();
 				assignVars();
-				
+
 				SharedPreferences.Editor editor = eulaPrefs.edit();
 				editor.putBoolean(eulaKey, true);
 				editor.commit();
@@ -776,7 +773,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				getUploadQueue();
 			}
 		}
-
 
 	}
 
@@ -837,7 +833,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			uploadQueue.add(dsPic);
 			pic--;
 		}
-		
+
 		alreadySaved = true;
 	}
 
@@ -970,8 +966,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 
-			//len = 0;
-			//len2 = 0;
+			// len = 0;
+			// len2 = 0;
 			MediaManager.mediaCount = 0;
 			session.setText(getString(R.string.session));
 			nameOfSession = "";
@@ -1044,6 +1040,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// updates time on main UI
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -1082,6 +1079,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// Get the package so we can check if EULA was checked
 	private PackageInfo getPackageInfo() {
 		PackageInfo pi = null;
 		try {
@@ -1106,7 +1104,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (loginName.length() >= 18)
 				loginName = loginName.substring(0, 18) + "...";
 			loginInfo.setText("Username: " + loginName);
-			// loginInfo.setTextColor(Color.GREEN);
 			successLogin = true;
 		}
 	}
@@ -1289,12 +1286,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				if (throughUploadMenuItem) {
 					throughUploadMenuItem = false;
-					w.make("There is no data to upload.", Toast.LENGTH_LONG, "check");
+					w.make("There is no data to upload.", Toast.LENGTH_LONG,
+							"check");
 				}
 			}
 		}
 	}
-	
+
 	// UI variables initialized for onCreate
 	private void initMainUI() {
 		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
@@ -1311,7 +1309,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		
+
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -1361,6 +1359,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setStartStopListener();
 	}
 
+	// Allows for GPS to be recorded
 	public void initLocations() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -1384,6 +1383,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
 
+	// All the code for the main button!
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -1453,8 +1453,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						secondsElapsed = 0;
 						elapsedMillis = 0;
 						totalMillis = 0;
-						//len = 0;
-						//len2 = 0;
 						dataPointCount = 0;
 						iCount = 0;
 						beginWrite = true;
@@ -1471,7 +1469,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 						setMenuStatus(false);
-						
+
 						running = true;
 						startStop.setText(R.string.stopString);
 
@@ -1511,8 +1509,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 								} else {
 
 									iCount++;
-									//len++;
-									//len2++;
 
 									if (dfm.enabledFields[ACCEL_X])
 										f.accel_x = toThou.format(accel[0]);
@@ -1742,7 +1738,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// Initializes everything we can
 					initVars();
 				}
-				
+
 			};
 			loadingScreen = new Runnable() {
 
@@ -1751,7 +1747,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// Display the Splash Screen
 					displaySplash();
-					
+
 				}
 			};
 			super.onPreExecute();
@@ -1776,7 +1772,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
-			//onCreateOptionsMenu(mMenu);
 			if (mMenu != null) {
 				onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);
@@ -1786,7 +1781,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 
 	}
-	
+
+	// allows for menu to be turned off when necessary
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
 		menuSetup.setEnabled(enabled);
