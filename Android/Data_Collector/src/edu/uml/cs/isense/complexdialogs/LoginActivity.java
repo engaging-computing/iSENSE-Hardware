@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -67,7 +66,6 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				success = rapi.login(username.getText().toString(), password.getText().toString());
-				Log.e("success", "success = " + success);
        			   
 				if (success) {
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
