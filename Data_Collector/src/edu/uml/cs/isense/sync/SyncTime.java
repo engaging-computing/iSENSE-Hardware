@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -49,7 +48,7 @@ public class SyncTime extends Activity {
 	boolean preInit = false;
 	boolean success = false;
 
-	ProgressDialog dia;
+	private ProgressDialog dia;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -76,10 +75,9 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Log.d(tag, "Sent pack successfully: " + sendPack());
-				Log.d(tag, "Sent pack: " + mPack);
+				sendPack();
 
-				Log.d(tag, "Received message: " + receivePack());
+				receivePack();
 
 				String timeSent = convertTimeStamp(timeReceived);
 				
@@ -114,11 +112,10 @@ public class SyncTime extends Activity {
 	// -1 for UnknownHost exception
 	// -2 for Socket exception for socket creation
 	// -3 for Timeout exception
-	int initSocket() {
+	private int initSocket() {
 
 		try {
 			sendAddress = InetAddress.getByName(host);
-			Log.d(tag, "Send address is: " + sendAddress);
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -145,23 +142,22 @@ public class SyncTime extends Activity {
 	}
 
 	// set socket for sending (fails if closed)
-	boolean prepForBroadcast() {
+	private void prepForBroadcast() {
 		try {
 			mSocket.setBroadcast(true);
 		} catch (SocketException e) {
 			e.printStackTrace();
-			return false;
 		}
-		return true;
+
 	}
 
 	// attempts to send packet
-	boolean sendPack() {
+	private void sendPack() {
 
 		initSocket();
 		preInit = true;
 		
-		Log.d(tag, "Broadcast prepared: " + prepForBroadcast());
+		prepForBroadcast();
 		
 		try {
 			currentTime = "" + System.currentTimeMillis();
@@ -170,15 +166,13 @@ public class SyncTime extends Activity {
 					sendAddress, mPort);
 			mSocket.send(mPack);
 		} catch (IOException e) {
-			Log.d(tag, "" + e);
 			e.printStackTrace();
-			return false;
 		}
-		return true;
+		
 	}
 
 	// attempts to receive packet
-	boolean receivePack() {
+	private void receivePack() {
 	
 		if (!preInit) initSocket();
 		
@@ -191,7 +185,6 @@ public class SyncTime extends Activity {
 		} catch (IOException e) {
 			success = false;
 			e.printStackTrace();
-			return false;
 		}
 
 		receivedMessage = newPack.getData();
@@ -201,7 +194,6 @@ public class SyncTime extends Activity {
 		timeReceived = Long.parseLong(receivedTime);
 		timeOffset = timeReceived - myTime;
 
-		return true;
 	}
 
 	private String convertTimeStamp(long timeStamp) {
@@ -239,7 +231,7 @@ public class SyncTime extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			Log.d(tag, "Received message: " + receivePack());
+			receivePack();
 			publishProgress(100);
 			return null;
 		}
@@ -285,7 +277,7 @@ public class SyncTime extends Activity {
 	}
 
 	// used to convert wifi ip address
-	String formatIp(int ipAddress) {
+	public String formatIp(int ipAddress) {
 		int intMyIp3 = ipAddress / 0x1000000;
 		int intMyIp3mod = ipAddress % 0x1000000;
 
