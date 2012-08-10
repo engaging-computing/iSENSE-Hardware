@@ -761,6 +761,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == SPLASH_REQUESTED) {
 			Log.e("resultCode", "" + resultCode);
 			if (resultCode == RESULT_OK) {
+				setContentView(R.layout.main);
+				initVars();
+				assignVars();
+				
 				SharedPreferences.Editor editor = eulaPrefs.edit();
 				editor.putBoolean(eulaKey, true);
 				editor.commit();
@@ -1071,6 +1075,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (hasBeenShown == false) {
 			Intent iSplash = new Intent(mContext, Splash.class);
 			startActivityForResult(iSplash, SPLASH_REQUESTED);
+		} else {
+			setContentView(R.layout.main);
+			initVars();
+			assignVars();
 		}
 
 	}
@@ -1741,15 +1749,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// Display the Splash Screen
 					displaySplash();
-
-					setContentView(R.layout.main);
-
-					// Initialize everything you're going to need
-					initVars();
-
-					// Assign everything to respective variables
-					assignVars();
-
+					
 				}
 			};
 			super.onPreExecute();
