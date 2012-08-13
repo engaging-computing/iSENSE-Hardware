@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.Experiments;
 import edu.uml.cs.isense.collector.R;
@@ -150,7 +149,7 @@ public class Setup extends Activity implements OnClickListener {
 
 			if (!rapi.isConnectedToInternet()) {
 				w.make("You must enable wifi or mobile connectivity to do this.",
-						Toast.LENGTH_SHORT, "x");
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			} else {
 
 				Intent experimentIntent = new Intent(getApplicationContext(),
@@ -182,7 +181,7 @@ public class Setup extends Activity implements OnClickListener {
 				try {
 					eidInput.setText(split[1]);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					w.make("Invalid QR Code!", Toast.LENGTH_LONG, "x");
+					w.make("Invalid QR Code!", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
 				// Handle successful scan

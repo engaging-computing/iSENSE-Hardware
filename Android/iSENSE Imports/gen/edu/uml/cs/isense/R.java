@@ -17,9 +17,10 @@ public final class R {
         public static int toast_background_x=0x7f020003;
     }
     public static final class id {
-        public static int image=0x7f060001;
         public static int text=0x7f060002;
         public static int toast_layout_root=0x7f060000;
+        public static int waffle_check=0x7f060001;
+        public static int waffle_x=0x7f060003;
     }
     public static final class layout {
         public static int toast_layout_check=0x7f030000;
