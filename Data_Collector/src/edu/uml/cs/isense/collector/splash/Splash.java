@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -83,7 +82,7 @@ public class Splash extends TabActivity {
 					finish();
 				} else
 					Splash.w.make("You must accept the EULA to continue!",
-							Toast.LENGTH_LONG, "x");
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 		});
 

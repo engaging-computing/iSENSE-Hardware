@@ -7,8 +7,19 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.view.Surface;
 
+/**
+ * Class that enables/disables the ability to rotate the Android device's orientation.
+ * 
+ * @author User "roboshed" of stackoverflow.com
+ *
+ */
 public class OrientationManager {
 	
+	/**
+	 * Locks the user's orientation in its current state.
+	 * 
+	 * @param activity Activity whose orientation will be locked.
+	 */
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static void disableRotation(Activity activity) {       
@@ -54,6 +65,11 @@ public class OrientationManager {
 	    }
 	}
 
+	/**
+	 * Allows the rotation of the user's activity.
+	 * 
+	 * @param activity Activity whose orientation will re-enabled to rotate.
+	 */
 	public static void enableRotation(Activity activity) {
 	    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
