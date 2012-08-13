@@ -15,84 +15,91 @@ import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.util.Base64;
 
+/**
+ * Implements the SharedPreferences class and enables the encryption of data to
+ * the SharedPreferences of an application.
+ * 
+ * @author User "emmby" of stackoverflow.com
+ * 
+ */
 @SuppressLint("NewApi")
 public class ObscuredSharedPreferences implements SharedPreferences {
 	protected static final String UTF8 = "utf-8";
-	private static final char[] SEKRIT = { 'h', 'i' }; // INSERT A RANDOM
-														// PASSWORD HERE.
-	// Don't use anything you wouldn't want to
-	// get out there if someone decompiled
-	// your app.
+	private static final char[] SEKRIT = { 'A', 'n', 'd', 'r', 'o', 'i', 'd', '9' };
 
 	protected SharedPreferences delegate;
 	protected Context context;
 
+	/**
+	 * Default constructor of the ObscuredSharedPreferences class.
+	 * 
+	 * @param context Context of activity to utilize these ObscuredSharedPreferences
+	 * @param delegate SharedPreferences object to use
+	 */
 	public ObscuredSharedPreferences(Context context, SharedPreferences delegate) {
 		this.delegate = delegate;
 		this.context = context;
 	}
 
+	/**
+	 * Class that allows the editing of the ObscuredSharedPreferences object
+	 * 
+	 */
 	public class Editor implements SharedPreferences.Editor {
 		protected SharedPreferences.Editor delegate;
 
+		/**
+		 * Default constructor of the Editor class.
+		 * 
+		 */
 		public Editor() {
 			this.delegate = ObscuredSharedPreferences.this.delegate.edit();
 		}
 
-		
 		public Editor putBoolean(String key, boolean value) {
 			delegate.putString(key, encrypt(Boolean.toString(value)));
 			return this;
 		}
 
-		
 		public Editor putFloat(String key, float value) {
 			delegate.putString(key, encrypt(Float.toString(value)));
 			return this;
 		}
 
-		
 		public Editor putInt(String key, int value) {
 			delegate.putString(key, encrypt(Integer.toString(value)));
 			return this;
 		}
 
-		
 		public Editor putLong(String key, long value) {
 			delegate.putString(key, encrypt(Long.toString(value)));
 			return this;
 		}
 
-		
 		public Editor putString(String key, String value) {
 			delegate.putString(key, encrypt(value));
 			return this;
 		}
 
-		
 		public Editor clear() {
 			delegate.clear();
 			return this;
 		}
 
-		
 		public boolean commit() {
 			return delegate.commit();
 		}
 
-		
 		public Editor remove(String s) {
 			delegate.remove(s);
 			return this;
 		}
 
 		@SuppressLint("NewApi")
-		
 		public void apply() {
 			delegate.apply();
 		}
 
-		
 		public android.content.SharedPreferences.Editor putStringSet(
 				String arg0, Set<String> arg1) {
 			return null;
@@ -103,54 +110,44 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 		return new Editor();
 	}
 
-	
 	public Map<String, ?> getAll() {
-		throw new UnsupportedOperationException(); // left as an exercise to the
-													// reader
+		throw new UnsupportedOperationException(); 
 	}
 
-	
 	public boolean getBoolean(String key, boolean defValue) {
 		final String v = delegate.getString(key, null);
 		return v != null ? Boolean.parseBoolean(decrypt(v)) : defValue;
 	}
 
-	
 	public float getFloat(String key, float defValue) {
 		final String v = delegate.getString(key, null);
 		return v != null ? Float.parseFloat(decrypt(v)) : defValue;
 	}
 
-	
 	public int getInt(String key, int defValue) {
 		final String v = delegate.getString(key, null);
 		return v != null ? Integer.parseInt(decrypt(v)) : defValue;
 	}
 
-	
 	public long getLong(String key, long defValue) {
 		final String v = delegate.getString(key, null);
 		return v != null ? Long.parseLong(decrypt(v)) : defValue;
 	}
 
-	
 	public String getString(String key, String defValue) {
 		final String v = delegate.getString(key, null);
 		return v != null ? decrypt(v) : defValue;
 	}
 
-	
 	public boolean contains(String s) {
 		return delegate.contains(s);
 	}
 
-	
 	public void registerOnSharedPreferenceChangeListener(
 			OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
 		delegate.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
 	}
 
-	
 	public void unregisterOnSharedPreferenceChangeListener(
 			OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
 		delegate.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
@@ -203,7 +200,6 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 		}
 	}
 
-	
 	public Set<String> getStringSet(String arg0, Set<String> arg1) {
 		return null;
 	}

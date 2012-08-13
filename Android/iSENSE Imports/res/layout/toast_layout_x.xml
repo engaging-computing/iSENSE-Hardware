@@ -10,7 +10,7 @@
     tools:ignore="UnusedResources" >
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/waffle_x"
         android:src="@drawable/red_x"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"

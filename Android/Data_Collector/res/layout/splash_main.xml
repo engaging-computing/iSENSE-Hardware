@@ -14,7 +14,7 @@
         android:background="@drawable/spinner_orb"
         android:orientation="vertical" />
 
-    <edu.uml.cs.isense.collector.objects.FontFitTextView
+    <edu.uml.cs.isense.supplements.FontFitTextView
         android:id="@+id/title_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

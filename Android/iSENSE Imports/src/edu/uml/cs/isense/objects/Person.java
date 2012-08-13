@@ -1,5 +1,11 @@
 package edu.uml.cs.isense.objects;
 
+/**
+ * Class that includes every field about a user on iSENSE that the web server
+ * will provide.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class Person {
 	public String firstname = "";
 	public int user_id;
@@ -8,7 +14,7 @@ public class Person {
 	public int experiment_count;
 
 	/*
-	 * Older Api Fields
+	 * Old Api Fields
 	 * 
 	 * public String lastname = ""; 
 	 * public int confirmed; 

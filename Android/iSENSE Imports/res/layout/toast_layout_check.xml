@@ -9,7 +9,7 @@
               android:background="@drawable/toast_background_check"
               tools:ignore="UnusedResources"
               >
-    <ImageView android:id="@+id/image"
+    <ImageView android:id="@+id/waffle_check"
         	   android:src="@drawable/checkmark"
         	   android:contentDescription="@string/contentDesc"
                android:layout_width="wrap_content"

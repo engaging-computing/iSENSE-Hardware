@@ -1,5 +1,10 @@
 package edu.uml.cs.isense.objects;
 
+/**
+ * Class that includes information about a particular experiment on iSENSE.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class Experiment {
     public int experiment_id;
     public int owner_id;
