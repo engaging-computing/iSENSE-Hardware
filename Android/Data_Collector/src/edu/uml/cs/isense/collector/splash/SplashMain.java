@@ -8,7 +8,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.collector.objects.FontFitTextView;
+import edu.uml.cs.isense.supplements.FontFitTextView;
 
 public class SplashMain extends Activity {
 
