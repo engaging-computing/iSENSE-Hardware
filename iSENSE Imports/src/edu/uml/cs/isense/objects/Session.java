@@ -1,5 +1,11 @@
 package edu.uml.cs.isense.objects;
 
+/**
+ * Class that includes every potential variable/object associated with a session
+ * when a session is created.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class Session {
     public int session_id;
     public int owner_id;

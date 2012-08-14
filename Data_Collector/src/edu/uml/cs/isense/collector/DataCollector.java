@@ -82,7 +82,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
 import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
@@ -532,18 +531,21 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// twice
 	@Override
 	public void onBackPressed() {
-		if (!w.dontToastMeTwice) {
+		
+		
+		if (!w.isDisplaying) {
 			if (running)
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make("Double press \"Back\" to exit.", Toast.LENGTH_SHORT,
-						"check");
+				w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 
-		} else if (w.exitAppViaBack && !running) {
+		} else if (w.canPerformTask && !running) {
 			setupDone = false;
 			super.onBackPressed();
 		}
+		
 	}
 
 	@Override
@@ -811,7 +813,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						loginName = loginName.substring(0, 18) + "...";
 					loginInfo.setText("Username: " + loginName);
 					successLogin = true;
-					w.make("Login successful", Toast.LENGTH_LONG, "check");
+					w.make("Login successful", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
 					successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
@@ -859,7 +861,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
 				}
 			} else if (resultCode == RESULT_CANCELED) {
-				w.make("Data not uploaded.", Toast.LENGTH_SHORT, "x");
+				w.make("Data not uploaded.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 				showSummary();
 			}
 
@@ -1089,12 +1091,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+				w.make("Upload Success", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
 				manageUploadQueue();
 			}
 
@@ -1424,8 +1426,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				if (throughUploadMenuItem) {
 					throughUploadMenuItem = false;
-					w.make("There is no data to upload.", Toast.LENGTH_LONG,
-							"check");
+					w.make("There is no data to upload.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 				}
 			}
 		}
@@ -1532,7 +1533,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if (!setupDone) {
 
 					w.make("You must setup before recording data.",
-							Toast.LENGTH_LONG, "x");
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 					startStop.setEnabled(false);
 					new SetupTask().execute();
@@ -1568,7 +1569,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						if (sdCardError)
 							w.make("Could not write file to SD Card.",
-									Toast.LENGTH_SHORT, "x");
+									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
 						if (throughHandler) {
 							Intent iRecordingStopped = new Intent(mContext,
@@ -1603,7 +1604,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							w.make("Data recording interrupted! Time values may be inconsistent.",
-									Toast.LENGTH_SHORT, "x");
+									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 							e.printStackTrace();
 						}
 
