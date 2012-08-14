@@ -26,7 +26,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.util.Log;
-import edu.uml.cs.isense.objects.ExpLoaded;
+import edu.uml.cs.isense.objects.LoadedExperiment;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.objects.Item;
@@ -36,16 +36,18 @@ import edu.uml.cs.isense.objects.SessionData;
 
 /**
  * This class handles all the communications with the API provided by the
- * website. ALl functions are blocking and self caching.
+ * website. Most functions are blocking and supposed to be self caching.
  * 
- * Version 1.1
+ * Version 2.0
+ * 
+ * @author iSENSE Android-Development Team including Mike Stowell, Nick Ver
+ *         Voort, Jeremy Poulin, and James Dalphond
  */
 public class RestAPI {
 	private static RestAPI instance = null;
-	private static final String LOG_TAG = "RestAPI";
-	private static final String error = "An error has occurred: ";
+	private static final String TAG = "RestAPI";
 	private static final String serverRep = "Server Response: ";
-	private static String base_url = "http://isensedev.cs.uml.edu/ws/api.php";
+	private static String base_url = "http://isense.cs.uml.edu/ws/api.php";
 	private static String session_key = null;
 	private final String charEncoding = "iso-8859-1";
 	private String username = null;
@@ -54,7 +56,12 @@ public class RestAPI {
 	private int uid;
 	private JSONArray dataCache;
 
-	public String connection = "";
+	/**
+	 * Current connection status of RestAPI.
+	 * 
+	 * 200: valid connection 600: invalid connection NONE: not yet logged in
+	 */
+	public String connection = "NONE";
 
 	@SuppressLint("NewApi")
 	protected RestAPI() {
@@ -79,9 +86,11 @@ public class RestAPI {
 	}
 
 	/**
-	 * Get the one instance of the RestAPI class
+	 * Gets the one instance of the RestAPI class (instead of recreating a new
+	 * one every time). Functions as a constructor if the current instance is
+	 * null.
 	 * 
-	 * @return RestAPI
+	 * @return current or new RestAPI
 	 */
 	public static RestAPI getInstance() {
 		if (instance == null) {
@@ -92,13 +101,18 @@ public class RestAPI {
 	}
 
 	/**
-	 * Get the one instance of the RestAPI class
+	 * Get the one instance of the RestAPI class (instead of recreating a new
+	 * one every time). Functions as a constructor if the current instance is
+	 * null.
+	 * 
+	 * Will not overwrite the current instance with the new ConnectivityManager
+	 * or Context.
 	 * 
 	 * @param cm
-	 *            ContextManager
+	 *            ContextManager to be used by RestAPI
 	 * @param c
-	 *            Context
-	 * @return RestAPI
+	 *            Context RestAPI will be created to
+	 * @return current or new RestAPI
 	 */
 	public static RestAPI getInstance(ConnectivityManager cm, Context c) {
 		if (instance == null) {
@@ -111,7 +125,7 @@ public class RestAPI {
 	/**
 	 * Gets the current session_key.
 	 * 
-	 * @return String
+	 * @return session_key as a String
 	 */
 	public String getSessionKey() {
 		return session_key;
@@ -120,25 +134,25 @@ public class RestAPI {
 	/**
 	 * Gets the current user id.
 	 * 
-	 * @return int
+	 * @return user id as an int
 	 */
 	public int getUID() {
 		return uid;
 	}
 
 	/**
-	 * Makes sure session_key isn't null.
+	 * Verifies that session_key isn't null.
 	 * 
-	 * @return boolean
+	 * @return TRUE: valid session key FALSE: session key is null
 	 */
 	public boolean isLoggedIn() {
 		return (session_key != null && session_key != "null" && session_key != "");
 	}
 
 	/**
-	 * Returns current username if logged in, else returns null.
+	 * Gets current username if logged in, else returns null.
 	 * 
-	 * @return String
+	 * @return username as a String
 	 */
 	public String getLoggedInUsername() {
 		return username;
@@ -157,8 +171,8 @@ public class RestAPI {
 	 * Breaks file up into a byte[] for internal use.
 	 * 
 	 * @param file
-	 *            File
-	 * @return byte[]
+	 *            file to be broken down
+	 * @return file as a byte[]
 	 * @throws IOException
 	 */
 	@SuppressWarnings("resource")
@@ -203,18 +217,17 @@ public class RestAPI {
 	 * Uploads an image in conjunction to a specific session.
 	 * 
 	 * @param image
-	 *            File
+	 *            file to be uploaded
 	 * @param eid
-	 *            String
+	 *            experiment id as a String
 	 * @param sid
-	 *            int
+	 *            session id as an integer
 	 * @param img_name
-	 *            String
+	 *            name of the image
 	 * @param img_desc
-	 *            String
-	 * @return boolean
+	 *            description of the image
+	 * @return whether or not uploading was successful
 	 */
-	@SuppressWarnings("deprecation")
 	public boolean uploadPictureToSession(File image, String eid, int sid,
 			String img_name, String img_desc) {
 		// String target = "?method=uploadImageToSession&session_key=" +
@@ -340,12 +353,14 @@ public class RestAPI {
 			dos.close();
 
 			// used to be used for error checking
+			DataInputStream inStream = new DataInputStream(
+					conn.getInputStream());
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					inStream));
+			String str;
 			try {
-				DataInputStream inStream = new DataInputStream(
-						conn.getInputStream());
-				String str;
-				while ((str = inStream.readLine()) != null) {
-					Log.i(LOG_TAG, serverRep + str);
+				while ((str = in.readLine()) != null) {
+					Log.i(TAG, serverRep + str);
 				}
 				inStream.close();
 				return true;
@@ -365,16 +380,15 @@ public class RestAPI {
 	 * Uploads an image to an experiment (NOT session specific).
 	 * 
 	 * @param image
-	 *            File
+	 *            file to be uploaded
 	 * @param eid
-	 *            String
+	 *            experiment id as a String
 	 * @param img_name
-	 *            String
+	 *            name of the image
 	 * @param img_desc
-	 *            String
-	 * @return boolean
+	 *            description of the image
+	 * @return whether or not uploading was successful
 	 */
-	@SuppressWarnings("deprecation")
 	public boolean uploadPicture(File image, String eid, String img_name,
 			String img_desc) {
 		// String target = "?method=uploadImageToExperiment&session_key=" +
@@ -489,11 +503,12 @@ public class RestAPI {
 			try {
 				DataInputStream inStream = new DataInputStream(
 						conn.getInputStream());
-
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						inStream));
 				String str;
 
-				while ((str = inStream.readLine()) != null) {
-					Log.i(LOG_TAG, serverRep + str);
+				while ((str = in.readLine()) != null) {
+					Log.i(TAG, serverRep + str);
 				}
 				inStream.close();
 				return true;
@@ -510,13 +525,13 @@ public class RestAPI {
 	}
 
 	/**
-	 * Attempts to login with encoded username and password.
+	 * Attempts to login with the given username and password.
 	 * 
 	 * @param username
-	 *            String
+	 *            provided username
 	 * @param password
-	 *            String
-	 * @return boolean
+	 *            provided password
+	 * @return whether or not the login was successful
 	 */
 	public boolean login(String username, String password) {
 		String url = null;
@@ -531,18 +546,19 @@ public class RestAPI {
 		if (url == null)
 			return false;
 
-		if (connectivityManager != null
-				&& (connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected() || connectivityManager
-						.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-						.isConnected())) {
+		if (isConnected()) {
 			try {
-				connection = "";
+				connection = "NONE";
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
 				connection = o.getString("status");
+				checkStatus(connection);
+				if (connection.equals("600")) {
+					Log.e(TAG, "Invalid username or password.");
+					return false;
+				}
 				session_key = o.getJSONObject("data").getString("session");
 				uid = o.getJSONObject("data").getInt("uid");
 
@@ -575,23 +591,20 @@ public class RestAPI {
 	 * Gets all the information associated with a given experiment.
 	 * 
 	 * @param id
-	 *            int
-	 * @return Experiment
+	 *            experiment id as an int
+	 * @return Experiment object filled with meta-data
 	 */
 	public Experiment getExperiment(int id) {
 		String url = "method=getExperiment&experiment=" + id;
 		Experiment e = new Experiment();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONObject obj = o.getJSONObject("data");
 
 				e.experiment_id = obj.getInt("experiment_id");
@@ -606,19 +619,18 @@ public class RestAPI {
 				e.rating = obj.getInt("rating");
 				e.rating_votes = obj.getInt("rating_votes");
 				e.hidden = obj.getInt("hidden");
-				e.firstname = obj.getString("firstname");
-				e.lastname = obj.getString("lastname");
-				// New API fields
-				e.name_prefix = obj.getString("name_prefix");
-				e.location = obj.getString("location");
+				e.activity = obj.getInt("activity");
+				e.activity_for = obj.getInt("activity_for");
 				e.req_name = obj.getInt("req_name");
 				e.req_location = obj.getInt("req_location");
 				e.req_procedure = obj.getInt("req_procedure");
-				e.activity = obj.getInt("activity");
+				e.name_prefix = obj.getString("name_prefix");
+				e.location = obj.getString("location");
+				e.closed = obj.getInt("closed");
 				e.recommended = obj.getInt("recommended");
 				e.srate = obj.getInt("srate");
-				e.activity_for = obj.getInt("activity_for");
-				e.closed = obj.getInt("closed");
+				e.firstname = obj.getString("firstname");
+				e.lastname = obj.getString("lastname");
 
 				mDbHelper.open();
 				mDbHelper.deleteExperiment(e);
@@ -670,8 +682,25 @@ public class RestAPI {
 					.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 			e.provider_url = c.getString(c
 					.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
+			e.activity = c.getInt(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_ACTIVITY));
+			e.activity_for = c.getInt(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_ACTIVITY_FOR));
+			e.req_name = c.getInt(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_REQ_NAME));
+			e.req_location = c.getInt(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_REQ_LOCATION));
+			e.req_procedure = c.getInt(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_REQ_PROCEDURE));
+			e.name_prefix = c.getString(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_NAME_PREFIX));
+			e.location = c.getString(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_LOCATION));
+			e.closed = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_CLOSED));
+			e.recommended = c.getInt(c
+					.getColumnIndex(RestAPIDbAdapter.KEY_RECOMMENDED));
+			e.srate = c.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_SRATE));
 		}
-
 		return e;
 	}
 
@@ -680,22 +709,20 @@ public class RestAPI {
 	 * 
 	 * @param sessions
 	 *            String corresponding to session number.
-	 * @return ArrayList<SessionData>
+	 * @return ArrayList of session information
 	 */
 	public ArrayList<SessionData> sessiondata(String sessions) {
 		String url = "method=sessiondata&sessions=" + sessions;
 		String dataString;
 		ArrayList<SessionData> ses = new ArrayList<SessionData>();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				dataString = makeRequest(url);
 
+				// parse JSON result
 				JSONObject o = new JSONObject(dataString);
+				checkStatus(o.getString("status"));
 				JSONArray data = o.getJSONArray("data");
 
 				int length = data.length();
@@ -739,18 +766,19 @@ public class RestAPI {
 	/**
 	 * Gets a list of iSENSE users.
 	 * 
-	 * @deprecated Since version 1.0. Use getPeople(int page, int limit, String
-	 *             queury) instead.
+	 * @deprecated Since version 2.0. Use getPeople(int page, int limit, String
+	 *             query) instead.
 	 * 
 	 * @param page
-	 *            int
+	 *            page of size limit, offset into the full list of results,
+	 *            default 1
 	 * @param limit
-	 *            int
+	 *            number of results desired, default 10
 	 * @param action
-	 *            String
+	 *            how the results are to be sorted (NO LONGER SUPPORTED)
 	 * @param query
-	 *            String
-	 * @return ArrayList<Person>
+	 *            person you are searching for
+	 * @return ArrayList of Person objects
 	 */
 	public ArrayList<Person> getPeople(int page, int limit, String action,
 			String query) {
@@ -758,16 +786,13 @@ public class RestAPI {
 				+ "&action=" + action + "&query=" + query;
 		ArrayList<Person> pList = new ArrayList<Person>();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -844,31 +869,27 @@ public class RestAPI {
 	 * Gets a list of iSENSE users.
 	 * 
 	 * @param page
-	 *            int
+	 *            page of size limit, offset into the full list of results,
+	 *            default 1
 	 * @param limit
-	 *            int
-	 * @param action
-	 *            String
+	 *            number of results desired, default 10
 	 * @param query
-	 *            String Person you are searching for.
+	 *            person you searching for
 	 * 
-	 * @return ArrayList<Person>
+	 * @return ArrayList of Person objects
 	 */
 	public ArrayList<Person> getPeople(int page, int limit, String query) {
 		String url = "method=getPeople&page=" + page + "&count=" + limit
 				+ "&query=" + query;
 		ArrayList<Person> pList = new ArrayList<Person>();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -899,31 +920,60 @@ public class RestAPI {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		} else {
+			mDbHelper.open();
 
+			Cursor c = mDbHelper.getPeople(page, limit);
+			mDbHelper.close();
+
+			if (c == null || c.getCount() == 0)
+				return pList;
+
+			while (!c.isAfterLast()) {
+
+				Person p = new Person();
+
+				p.firstname = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
+				p.user_id = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_USER_ID));
+				p.picture = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_PICTURE));
+				p.session_count = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_SESSION_COUNT));
+				p.experiment_count = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_EXPERIMENT_COUNT));
+
+				pList.add(p);
+
+				if (c.isLast())
+					break;
+				c.moveToNext();
+			}
+		}
 		return pList;
 	}
 
 	/**
+	 * Returns profile information the specified user or null if user_id is
+	 * invalid.
 	 * 
 	 * @param user_id
-	 * @return
+	 *            user_id as an int
+	 * @return Item object that contains user specific information
 	 */
 	public Item getProfile(int user_id) {
 		String url = "method=getUserProfile&user=" + user_id + "&session_key="
 				+ session_key;
 		Item i = new Item();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONObject a = o.getJSONObject("data");
 				JSONArray experiments;
 				try {
@@ -951,24 +1001,26 @@ public class RestAPI {
 					e.description = obj.getString("description");
 					e.timecreated = obj.getString("timecreated");
 					e.timemodified = obj.getString("timemodified");
-					e.hidden = obj.getInt("hidden");
-					// New api fields
 					e.default_read = obj.getInt("default_read");
 					e.default_join = obj.getInt("default_join");
 					e.featured = obj.getInt("featured");
 					e.rating = obj.getInt("rating");
 					e.rating_votes = obj.getInt("rating_votes");
-					e.activity = obj.getInt("activity");
-					e.activity_for = obj.getInt("activity_for");
-					e.req_name = obj.getInt("req_name");
-					e.req_procedure = obj.getInt("req_procedure");
-					e.req_location = obj.getInt("req_location");
+					e.hidden = obj.getInt("hidden");
+					e.firstname = obj.getString("firstname");
+					e.provider_url = obj.getString("provider_url");
 					e.name_prefix = obj.getString("name_prefix");
 					e.location = obj.getString("location");
-					e.closed = obj.getInt("closed");
-					e.exp_image = obj.getString("exp_image");
 					e.recommended = obj.getInt("recommended");
+					e.activity_for = obj.getInt("activity_for");
+					e.closed = obj.getInt("closed");
+					e.rating_comp = obj.getString("rating_comp");
+					e.activity = obj.getInt("activity");
+					e.req_name = obj.getInt("req_name");
+					e.req_location = obj.getInt("req_location");
+					e.req_procedure = obj.getInt("req_procedure");
 					e.srate = obj.getInt("srate");
+					e.exp_image = obj.getString("exp_image");
 					e.timeobj = obj.getString("timeobj");
 
 					i.e.add(e);
@@ -988,7 +1040,6 @@ public class RestAPI {
 					s.timecreated = obj.getString("timeobj");
 					s.timemodified = obj.getString("timemodified");
 					s.experiment_id = obj.getInt("experiment_id");
-					// New API fields
 					s.timeobj = obj.getString("timeobj");
 					s.owner_id = obj.getInt("owner_id");
 					s.experiment_name = obj.getString("experiment_name");
@@ -1007,40 +1058,49 @@ public class RestAPI {
 		return i;
 	}
 
+	/**
+	 * Returns a list of experiments.
+	 * 
+	 * @param page
+	 *            page of size limit, offset into the full list of results,
+	 *            default 1
+	 * @param limit
+	 *            number of results desired, default 10
+	 * @param query
+	 *            search terms by tags/name of experiment example "water"
+	 * @param sort
+	 *            what to sort results by - accepts the following: recent,
+	 *            popularity, activity, rating
+	 * 
+	 * @return ArrayList of Experiment objects
+	 */
 	public ArrayList<Experiment> getExperiments(int page, int limit,
-			String action, String query) {
+			String query, String sort) {
 		String url = "method=getExperiments&page=" + page + "&limit=" + limit
-				+ "&action=" + action + "&query=" + query + "&sort=recent";
+				+ "&query=" + query + "&sort=" + sort;
 
 		ArrayList<Experiment> expList = new ArrayList<Experiment>();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
-				if (action.toLowerCase().compareTo("browse") == 0)
-					mDbHelper.open();
 				for (int i = 0; i < length; i++) {
 					try {
 						JSONObject current = a.getJSONObject(i);
 						JSONObject obj = current.getJSONObject("meta");
 						Experiment e = new Experiment();
 
-						// New API Fields (non-meta)
 						e.tags = current.getString("tags");
 						e.contrib_count = current.getInt("contrib_count");
 						e.session_count = current.getInt("session_count");
-						// Old API Fields (all meta data)
 						e.experiment_id = obj.getInt("experiment_id");
 						e.owner_id = obj.getInt("owner_id");
 						e.name = obj.getString("name");
@@ -1055,7 +1115,6 @@ public class RestAPI {
 						e.hidden = obj.getInt("hidden");
 						e.firstname = obj.getString("firstname");
 						e.provider_url = obj.getString("provider_url");
-						// New Fields Again (meta)
 						e.name_prefix = obj.getString("name_prefix");
 						e.location = obj.getString("location");
 						e.recommended = obj.getInt("recommended");
@@ -1064,22 +1123,18 @@ public class RestAPI {
 						e.rating_comp = obj.getString("rating_comp");
 						e.activity = obj.getInt("activity");
 						e.req_name = obj.getInt("req_name");
+						e.req_location = obj.getInt("req_location");
+						e.req_procedure = obj.getInt("req_procedure");
 						e.srate = obj.getInt("srate");
 						e.exp_image = obj.getString("exp_image");
 
 						expList.add(e);
-						if (action.toLowerCase().compareTo("browse") == 0) {
-							mDbHelper.deleteExperiment(e);
-							mDbHelper.insertExperiment(e);
-						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 
 						continue;
 					}
 				}
-				if (action.toLowerCase().compareTo("browse") == 0)
-					mDbHelper.close();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1087,7 +1142,7 @@ public class RestAPI {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (action.toLowerCase().compareTo("browse") == 0) {
+		} else {
 			mDbHelper.open();
 			Cursor c = mDbHelper.getExperiments(page, limit);
 			mDbHelper.close();
@@ -1127,6 +1182,36 @@ public class RestAPI {
 						.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
 				e.provider_url = c.getString(c
 						.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
+				e.tags = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_TAGS));
+				e.contrib_count = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_CONTRIB_COUNT));
+				e.session_count = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_SESSION_COUNT));
+				e.name_prefix = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_NAME_PREFIX));
+				e.location = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_LOCATION));
+				e.recommended = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_RECOMMENDED));
+				e.activity_for = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_ACTIVITY_FOR));
+				e.closed = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_CLOSED));
+				e.rating_comp = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_RATING_COMP));
+				e.activity = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_ACTIVITY));
+				e.req_name = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_REQ_NAME));
+				e.req_location = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_REQ_LOCATION));
+				e.req_procedure = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_REQ_PROCEDURE));
+				e.srate = c
+						.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_SRATE));
+				e.exp_image = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_EXP_IMAGE));
 
 				expList.add(e);
 
@@ -1134,30 +1219,43 @@ public class RestAPI {
 					break;
 				c.moveToNext();
 			}
+
 		}
 		return expList;
 	}
 
-	public ExpLoaded getAllExperiments(int page, int limit, String action,
-			String query) {
+	/**
+	 * Gets experiments by page as a LoadedExperiment object.
+	 * 
+	 * @param page
+	 *            page of size limit, offset into the full list of results,
+	 *            default 1
+	 * @param limit
+	 *            number of results desired, default 10
+	 * @param query
+	 *            search terms by tags/name of experiment example "water"
+	 * @param sort
+	 *            what to sort results by - accepts the following: recent,
+	 *            popularity, activity, rating
+	 * @return LoadedExperiment object containing Experiment objects
+	 */
+	public LoadedExperiment getAllExperiments(int page, int limit,
+			String query, String sort) {
 		String url = "method=getExperiments&page=" + page + "&limit=" + limit
-				+ "&action=" + action + "&query=" + query + "&sort=recent";
+				+ "&query=" + query + "&sort=" + sort;
 
-		ExpLoaded expPair = new ExpLoaded();
+		LoadedExperiment expPair = new LoadedExperiment();
 		expPair.exp = new ArrayList<Experiment>();
 		expPair.setLoaded(false);
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -1166,19 +1264,15 @@ public class RestAPI {
 				else
 					expPair.setLoaded(false);
 
-				if (action.toLowerCase().compareTo("browse") == 0)
-					mDbHelper.open();
 				for (int i = 0; i < length; i++) {
 					try {
 						JSONObject current = a.getJSONObject(i);
 						JSONObject obj = current.getJSONObject("meta");
 						Experiment e = new Experiment();
 
-						// New API Fields (non-meta)
 						e.tags = current.getString("tags");
 						e.contrib_count = current.getInt("contrib_count");
 						e.session_count = current.getInt("session_count");
-						// Old API Fields (all meta data)
 						e.experiment_id = obj.getInt("experiment_id");
 						e.owner_id = obj.getInt("owner_id");
 						e.name = obj.getString("name");
@@ -1193,7 +1287,6 @@ public class RestAPI {
 						e.hidden = obj.getInt("hidden");
 						e.firstname = obj.getString("firstname");
 						e.provider_url = obj.getString("provider_url");
-						// New Fields Again (meta)
 						e.name_prefix = obj.getString("name_prefix");
 						e.location = obj.getString("location");
 						e.recommended = obj.getInt("recommended");
@@ -1202,22 +1295,18 @@ public class RestAPI {
 						e.rating_comp = obj.getString("rating_comp");
 						e.activity = obj.getInt("activity");
 						e.req_name = obj.getInt("req_name");
+						e.req_location = obj.getInt("req_location");
+						e.req_procedure = obj.getInt("req_procedure");
 						e.srate = obj.getInt("srate");
 						e.exp_image = obj.getString("exp_image");
 
 						expPair.exp.add(e);
-						if (action.toLowerCase().compareTo("browse") == 0) {
-							mDbHelper.deleteExperiment(e);
-							mDbHelper.insertExperiment(e);
-						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 
 						continue;
 					}
 				}
-				if (action.toLowerCase().compareTo("browse") == 0)
-					mDbHelper.close();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1225,7 +1314,7 @@ public class RestAPI {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (action.toLowerCase().compareTo("browse") == 0) {
+		} else {
 			mDbHelper.open();
 			Cursor c = mDbHelper.getExperiments(page, limit);
 			mDbHelper.close();
@@ -1263,35 +1352,70 @@ public class RestAPI {
 						.getColumnIndex(RestAPIDbAdapter.KEY_HIDDEN));
 				e.firstname = c.getString(c
 						.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
-				// e.lastname =
-				// c.getString(c.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
 				e.provider_url = c.getString(c
 						.getColumnIndex(RestAPIDbAdapter.KEY_PROVIDER_URL));
+				e.tags = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_TAGS));
+				e.contrib_count = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_CONTRIB_COUNT));
+				e.session_count = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_SESSION_COUNT));
+				e.name_prefix = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_NAME_PREFIX));
+				e.location = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_LOCATION));
+				e.recommended = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_RECOMMENDED));
+				e.activity_for = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_ACTIVITY_FOR));
+				e.closed = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_CLOSED));
+				e.rating_comp = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_RATING_COMP));
+				e.activity = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_ACTIVITY));
+				e.req_name = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_REQ_NAME));
+				e.req_location = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_REQ_LOCATION));
+				e.req_procedure = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_REQ_PROCEDURE));
+				e.srate = c
+						.getInt(c.getColumnIndex(RestAPIDbAdapter.KEY_SRATE));
+				e.exp_image = c.getString(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_EXP_IMAGE));
 
 				expPair.exp.add(e);
 
-				if (c.isLast())
+				if (c.isLast()) {
+					expPair.setLoaded(true);
 					break;
+				}
 				c.moveToNext();
 			}
+
 		}
 		return expPair;
 	}
 
+	/**
+	 * Gets all images associated with an experiment.
+	 * 
+	 * @param id
+	 *            experiment id as an int
+	 * @return ArrayList of Strings listing images
+	 */
 	public ArrayList<String> getExperimentImages(int id) {
 		ArrayList<String> imgList = new ArrayList<String>();
 		String url = "method=getExperimentImages&experiment=" + id;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -1335,21 +1459,24 @@ public class RestAPI {
 		return imgList;
 	}
 
-	// Never used?
+	/**
+	 * Returns all videos associated with an experiment.
+	 * 
+	 * @param id
+	 *            experiment id as an int
+	 * @return ArrayList of Strings listing videos
+	 */
 	public ArrayList<String> getExperimentVideos(int id) {
 		ArrayList<String> vidList = new ArrayList<String>();
 		String url = "method=getExperimentVideos&experiment=" + id;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -1389,6 +1516,13 @@ public class RestAPI {
 		return vidList;
 	}
 
+	/**
+	 * Gets all tags associated with an experiment.
+	 * 
+	 * @param id
+	 *            experiment id as an int
+	 * @return list of tags as a String
+	 */
 	public String getExperimentTags(int id) {
 		// Added StringBuilder for efficiency
 		StringBuilder builder = new StringBuilder();
@@ -1396,16 +1530,13 @@ public class RestAPI {
 		String tags = "";
 		String url = "method=getExperimentTags&experiment=" + id;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -1414,7 +1545,6 @@ public class RestAPI {
 				for (int i = 0; i < length; i++) {
 					JSONObject obj = a.getJSONObject(i);
 					builder.append(obj.getString("tag")).append(", ");
-					// tags += obj.getString("tag") + ", ";
 				}
 
 				tags = builder.toString();
@@ -1444,20 +1574,24 @@ public class RestAPI {
 		return tags;
 	}
 
+	/**
+	 * Returns the fields associated with a given experiment.
+	 * 
+	 * @param id
+	 *            experiment id as an int
+	 * @return ArrayList of ExperimentField objects
+	 */
 	public ArrayList<ExperimentField> getExperimentFields(int id) {
 		String url = "method=getExperimentFields&experiment=" + id;
 		ArrayList<ExperimentField> fields = new ArrayList<ExperimentField>();
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -1474,8 +1608,6 @@ public class RestAPI {
 					f.unit_abbreviation = obj.getString("unit_abbreviation");
 					f.unit_id = obj.getInt("unit_id");
 					f.unit_name = obj.getString("unit_name");
-					// New API Field
-					f.experiment_id = obj.getString("experiment_id");
 
 					fields.add(f);
 				}
@@ -1526,20 +1658,24 @@ public class RestAPI {
 		return fields;
 	}
 
+	/**
+	 * Returns the sessions associated with an experiment.
+	 * 
+	 * @param id
+	 *            experiment id as an int
+	 * @return ArrayList of Session objects
+	 */
 	public ArrayList<Session> getSessions(int id) {
 		ArrayList<Session> sesList = new ArrayList<Session>();
 		String url = "method=getSessions&experiment=" + id;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONArray a = o.getJSONArray("data");
 
 				int length = a.length();
@@ -1564,7 +1700,6 @@ public class RestAPI {
 					s.debug_data = obj.getString("debug_data");
 					s.firstname = obj.getString("firstname");
 					s.lastname = obj.getString("lastname");
-					// New API Field
 					s.priv = obj.getInt("private");
 
 					sesList.add(s);
@@ -1619,8 +1754,8 @@ public class RestAPI {
 						.getColumnIndex(RestAPIDbAdapter.KEY_DEBUG_DATA));
 				s.firstname = c.getString(c
 						.getColumnIndex(RestAPIDbAdapter.KEY_FIRSTNAME));
-				s.lastname = c.getString(c
-						.getColumnIndex(RestAPIDbAdapter.KEY_LASTNAME));
+				s.priv = c.getInt(c
+						.getColumnIndex(RestAPIDbAdapter.KEY_PRIVATE));
 
 				sesList.add(s);
 
@@ -1633,6 +1768,24 @@ public class RestAPI {
 		return sesList;
 	}
 
+	/**
+	 * Creates a session under a given experiment.
+	 * 
+	 * @param eid
+	 *            experiment id as a String
+	 * @param name
+	 *            name of the session
+	 * @param description
+	 *            description of the session
+	 * @param street
+	 *            street where the session was created
+	 * @param city
+	 *            city/locality where the session was created
+	 * @param country
+	 *            country where where the session was created
+	 * @return int that equals a new session id if successful, -400 if the
+	 *         experiment is closed, or -1 if failure
+	 */
 	public int createSession(String eid, String name, String description,
 			String street, String city, String country) {
 		int sid = -1;
@@ -1641,16 +1794,13 @@ public class RestAPI {
 				+ description + "&street=" + street + "&city=" + city
 				+ "&country=" + country;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
 				// Parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				JSONObject obj = o.getJSONObject("data");
 
 				String msg = obj.optString("msg");
@@ -1671,33 +1821,39 @@ public class RestAPI {
 		return sid;
 	}
 
+	/**
+	 * Puts a JSON array of data in a given experiment's specified session.
+	 * 
+	 * @param sid
+	 *            session id as an integer
+	 * @param eid
+	 *            experiment id as a String
+	 * @param dataJSON
+	 *            JSONArray of data to be uploaded
+	 * @return whether or not putSessionData was successful
+	 */
 	public boolean putSessionData(int sid, String eid, JSONArray dataJSON) {
 		String url = "method=putSessionData&session_key=" + session_key
 				+ "&sid=" + sid + "&eid=" + eid + "&data="
 				+ dataJSON.toString();
-		// Log.e("putsession", url);
 		boolean ret = false;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
+				// parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				String status = o.getString("status");
 
 				if (status.equals("200"))
 					ret = true;
 				else {
-					// JSONObject msg = o.getJSONObject("data");
-					// og.d("RAPI", msg.getString("msg"));
+					JSONObject msg = o.getJSONObject("data");
+					Log.e(TAG, msg.getString("msg"));
 					ret = false;
 				}
-				// if (data.compareTo("{}") != 0) ret = true;
-
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1711,8 +1867,18 @@ public class RestAPI {
 	}
 
 	/**
+	 * Puts a JSON array of data in a given experiment's specified session.
+	 * 
 	 * Method has been updated from original: in String url = ..., changed
 	 * dataJSON.tostring(); from dataCache.toString();
+	 * 
+	 * @param sid
+	 *            session id as an integer
+	 * @param eid
+	 *            experiment id as a String
+	 * @param dataJSON
+	 *            JSONArray of data to be uploaded
+	 * @return whether or not putSessionData was successful
 	 */
 	public boolean updateSessionData(int sid, String eid, JSONArray dataJSON) {
 		dataCache.put(dataJSON);
@@ -1721,31 +1887,23 @@ public class RestAPI {
 				+ dataJSON.toString();
 		boolean ret = false;
 
-		if (connectivityManager != null
-				&& connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_WIFI).isConnected()
-				|| connectivityManager.getNetworkInfo(
-						ConnectivityManager.TYPE_MOBILE).isConnected()) {
+		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
 
+				// parse JSON Result
 				JSONObject o = new JSONObject(data);
+				checkStatus(o.getString("status"));
 				String status = o.getString("status");
 
 				if (status.equals("200")) {
 					dataCache = new JSONArray();
 					ret = true;
 				} else {
-					// JSONObject msg = o.getJSONObject("data");
-					// Log.e("RAPI", msg.getString("msg"));
+					JSONObject msg = o.getJSONObject("data");
+					Log.e(TAG, msg.getString("msg"));
 					ret = false;
 				}
-				// if (data.compareTo("{}") != 0) ret = true;if
-				// (data.compareTo("{}") != 0) {
-				// dataCache = new JSONArray();
-				// ret = true;
-				// }
-
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1758,12 +1916,19 @@ public class RestAPI {
 		return ret;
 	}
 
-	// Will always return status 600 - do not use
+	/**
+	 * Returns IP as a String.
+	 * 
+	 * @deprecated Since version 2.0. Will always return status 600 - DO NOT
+	 *             USE. This function was removed in iSENSE API v1.0.
+	 * @return IP address as a String
+	 */
 	public String getMyIp() {
 		String url = "method=whatsMyIp";
 		try {
 			String data = makeRequest(url);
 			JSONObject o = new JSONObject(data);
+			checkStatus(o.getString("status"));
 			JSONObject obj = o.getJSONObject("data");
 			return obj.getString("msg");
 		} catch (Exception e) {
@@ -1772,13 +1937,22 @@ public class RestAPI {
 		return null;
 	}
 
+	/**
+	 * Internal method that handles data requests.
+	 * 
+	 * @param target
+	 *            url of the request
+	 * @return server response from the request
+	 * @throws Exception
+	 *             : IOException (unhandled http status)
+	 */
 	public String makeRequest(String target) throws Exception {
 
 		String output = "{}";
 
 		String data = target.replace(" ", "+");
 
-		HttpURLConnection conn = (HttpURLConnection) new URL(this.base_url)
+		HttpURLConnection conn = (HttpURLConnection) new URL(RestAPI.base_url)
 				.openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");
@@ -1795,9 +1969,8 @@ public class RestAPI {
 		switch (status) {
 
 		case 200:
-			// Log.d("rapi", "Successful request");
 
-			// Build Reader and StringBuilder to output to string
+			// Build Reader and StringBuilder to output to String
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
 			StringBuilder sb = new StringBuilder();
@@ -1814,21 +1987,22 @@ public class RestAPI {
 
 		case 404:
 			// Handle 404 page not found
-			// Log.d("rapi", "Could not find URL!");
-			break;
+			Log.e(TAG, "Could not find URL! (404 Exception)");
+			throw new IOException();
 
 		default:
 			// Catch all for all other HTTP response codes
-			// Log.d("rapi", "Returned unhandled error code: " + status);
-			break;
+			Log.e(TAG, "Returned unhandled error code: " + status);
+			throw new IOException();
 		}
 
-		// Log.e("make request string", output);
 		return output;
 	}
 
-	/*
-	 * Additional method by Mike S.
+	/**
+	 * Returns status on whether you are connected to the Internet.
+	 * 
+	 * @return current connection status
 	 */
 	public boolean isConnectedToInternet() {
 
@@ -1837,7 +2011,12 @@ public class RestAPI {
 
 	}
 
-	// Switch between iSENSEdev and iSENSE (default behavior is true)
+	/**
+	 * Switch between iSENSEdev and iSENSE (default behavior is FALSE).
+	 * 
+	 * @param devSwitch
+	 *            true if you want to use iSENSEdev, false for iSENSE
+	 */
 	public void useDev(boolean devSwitch) {
 		if (devSwitch)
 			base_url = "http://isensedev.cs.uml.edu/ws/api.php";
@@ -1845,4 +2024,32 @@ public class RestAPI {
 			base_url = "http://isense.cs.uml.edu/ws/api.php";
 	}
 
+	/**
+	 * Internal error checking. Logs for invalid statuses.
+	 * 
+	 * @param status
+	 *            from JSONObject
+	 */
+	private void checkStatus(String status) {
+		if (!status.equals("200")) {
+			Log.e(TAG, serverRep + status);
+			if (status.equals("600"))
+				Log.e(TAG, "Bad request");
+			else if (status.equals("551"))
+				Log.e(TAG, "Missing parameter");
+		}
+	}
+
+	/**
+	 * Internal check that ConnectivityManager isn't null.
+	 * 
+	 * @return whether or not you are connected
+	 */
+	private boolean isConnected() {
+		return (connectivityManager != null
+				&& connectivityManager.getNetworkInfo(
+						ConnectivityManager.TYPE_WIFI).isConnected() || (connectivityManager
+				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null && connectivityManager
+				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()));
+	}
 }
