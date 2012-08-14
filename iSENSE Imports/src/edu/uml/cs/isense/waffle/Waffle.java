@@ -309,6 +309,9 @@ public class Waffle {
 			ImageView image = (ImageView) layout
 					.findViewById(R.id.waffle_check);
 			image.setVisibility(View.GONE);
+			
+			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
+			background.setBackgroundResource(R.drawable.toast_background_default);
 
 			Toast toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
@@ -437,6 +440,9 @@ public class Waffle {
 					.findViewById(R.id.waffle_check);
 			image.setVisibility(View.GONE);
 
+			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
+			background.setBackgroundResource(R.drawable.toast_background_default);
+			
 			Toast toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 
