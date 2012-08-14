@@ -13,8 +13,6 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
 
 public class ExperimentAdapter extends ArrayAdapter<Experiment> {
-	@SuppressWarnings("unused")
-	private final int maxDimension = 50;
 	public ArrayList<Experiment> items;
 	private Context mContext;
 	private int resourceID;
@@ -29,6 +27,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 	public int page = 0;
 	public String action = "browse";
 	public String query = "";
+	private final String sort = "recent";
 
 	public ExperimentAdapter(Context context, int textViewResourceId,
 			int loadingRow, ArrayList<Experiment> items) {
@@ -112,7 +111,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 
 	class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<Experiment> new_items = rapi.getExperiments(page, pageSize, action, query);
+			ArrayList<Experiment> new_items = rapi.getExperiments(page, pageSize, query, sort);
 			if (new_items.size() == 0) {
 				allItemsLoaded = true;
 			} else {
