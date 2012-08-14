@@ -5,18 +5,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.Experiments;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.simpledialogs.NoQR;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -33,7 +30,7 @@ public class Setup extends Activity implements OnClickListener {
 
 	private Context mContext;
 	private Waffle w;
-	private RestAPI rapi;
+	//private RestAPI rapi;
 	
 	private SharedPreferences mPrefs;
 
@@ -50,10 +47,10 @@ public class Setup extends Activity implements OnClickListener {
 
 		w = new Waffle(mContext);
 		
-		rapi = RestAPI
+		/*rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+						getApplicationContext());*/
 
 		Bundle extras = getIntent().getExtras();
 		String eid    = extras.getString("experiment_id");
@@ -148,10 +145,10 @@ public class Setup extends Activity implements OnClickListener {
 
 		case R.id.BrowseButton:
 
-			if (!rapi.isConnectedToInternet()) {
+			/*if (!rapi.isConnectedToInternet()) {
 				w.make("You must enable wifi or mobile connectivity to do this.",
-						Toast.LENGTH_SHORT, "x");
-			} else {
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+			} else {*/
 
 				Intent experimentIntent = new Intent(getApplicationContext(),
 						Experiments.class);
@@ -160,7 +157,7 @@ public class Setup extends Activity implements OnClickListener {
 						EXPERIMENT_CODE);
 
 				startActivityForResult(experimentIntent, EXPERIMENT_CODE);
-			}
+			//}
 
 			break;
 		}
@@ -182,7 +179,7 @@ public class Setup extends Activity implements OnClickListener {
 				try {
 					eidInput.setText(split[1]);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					w.make("Invalid QR Code!", Toast.LENGTH_LONG, "x");
+					w.make("Invalid QR Code!", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
 				// Handle successful scan
