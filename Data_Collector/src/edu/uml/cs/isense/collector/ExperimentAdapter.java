@@ -111,7 +111,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 
 	class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<Experiment> new_items = rapi.getExperimentsByPage(page, pageSize, query, sort);
+			ArrayList<Experiment> new_items = rapi.getExperiments(page, pageSize, query, sort);
 			if (new_items.size() == 0) {
 				allItemsLoaded = true;
 			} else {
