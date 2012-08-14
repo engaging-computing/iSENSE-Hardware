@@ -533,8 +533,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// twice
 	@Override
 	public void onBackPressed() {
-		
-		
+			
 		if (!w.isDisplaying) {
 			if (running)
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
@@ -546,8 +545,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (w.canPerformTask && !running) {
 			setupDone = false;
 			super.onBackPressed();
-		}
-		
+		}	
 	}
 
 	@Override
