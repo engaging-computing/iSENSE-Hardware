@@ -77,15 +77,9 @@ public class pictures extends Activity implements LocationListener {
 
 	RestAPI rapi;
 
-	// private static final String loginName = "RiverWalk App User";
-	// private static final String loginPass = "nexusWINS";
-	// private static final String experimentNum = "424";
-	// real iSENSE
-
 	private static final String loginName = "sor";
 	private static final String loginPass = "sor";
-	private static final String experimentNum = "347";
-	// dev
+	private static final String experimentNum = "424";
 
 	private static boolean gpsWorking = false;
 	private static boolean userLoggedIn = false;
@@ -99,7 +93,6 @@ public class pictures extends Activity implements LocationListener {
 	private Picture uploaderPic = null;
 
 	private EditText name;
-	// private EditText experimentInput;
 	private Vibrator vibrator;
 	private Timer mTimer = null;
 	private Handler mHandler;
@@ -321,18 +314,7 @@ public class pictures extends Activity implements LocationListener {
 
 		mQ = new LinkedList<Picture>();
 
-		// takePhoto = (Button) findViewById(R.id.takePicture);
-		// takePhoto.setEnabled(false);
-
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-		/*
-		 * Button browse = (Button) findViewById(R.id.BrowseButton);
-		 * browse.setEnabled(false);
-		 * 
-		 * EditText input = (EditText) findViewById(R.id.ExperimentInput);
-		 * input.setText("347"); input.setEnabled(false);
-		 */
 
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
@@ -352,7 +334,6 @@ public class pictures extends Activity implements LocationListener {
 						getApplicationContext());
 
 		name = (EditText) findViewById(R.id.name);
-		// experimentInput = (EditText) findViewById(R.id.ExperimentInput);
 
 		latLong = (TextView) findViewById(R.id.myLocation);
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
@@ -399,22 +380,6 @@ public class pictures extends Activity implements LocationListener {
 
 		});
 
-		/*
-		 * Button browseButton = (Button) findViewById(R.id.BrowseButton);
-		 * browseButton.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) {
-		 * 
-		 * Intent experimentIntent = new Intent(getApplicationContext(),
-		 * Experiments.class);
-		 * 
-		 * experimentIntent.putExtra(
-		 * "edu.uml.cs.isense.pictures.experiments.prupose", EXPERIMENT_CODE);
-		 * 
-		 * startActivityForResult(experimentIntent, EXPERIMENT_CODE); }
-		 * 
-		 * });
-		 */
 	}
 
 	@Override
@@ -587,13 +552,6 @@ public class pictures extends Activity implements LocationListener {
 						Toast.LENGTH_SHORT);
 			}
 		}
-
-		/*
-		 * else if (requestCode == EXPERIMENT_CODE) { if (resultCode ==
-		 * Activity.RESULT_OK) { experimentInput.setText("" +
-		 * data.getExtras().getInt
-		 * ("edu.uml.cs.isense.pictures.experiments.exp_id")); } }
-		 */
 	}
 
 	@Override
