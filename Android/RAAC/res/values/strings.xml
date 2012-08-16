@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="wifi_page">WiFi Disabled</string>
     <string name="app_name">Science of Rivers</string>
     <string name="button_scan">Scan for Devices</string>
-	<string name="title_paired_devices">Paired Devices</string>
+    <string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
     <string name="none_paired">No paired devices found</string>
     <string name="scanning">Scanning&#8230;</string>
@@ -15,6 +16,7 @@
     <string name="menu_setsensors">Select Sensors</string>
     <string name="menu_login">Retry Login</string>
     <string name="menu_experiment">Set Experiment</string>
+    <string name="menu_prefs">Preferences</string>
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
     <string name="aveval">Average/Mean</string>
@@ -24,4 +26,13 @@
     <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
+    
+    <string name="prefs_label">Preferences</string>
+    <string name="prefs_expid_title">Experiment ID</string>
+    <string name="prefs_expid_desc">The ID number of the experiment on iSENSE that you want to upload data to</string>
+    <string name="prefs_gname_title">Group Name</string>
+    <string name="prefs_gname_desc">The name of your experiment group</string>
+    <string name="prefs_auto_title">Auto-Upload</string>
+    <string name="prefs_auto_desc">Automatically pull data and upload it to iSENSE after connecting to a PINPoint</string>
+
 </resources>

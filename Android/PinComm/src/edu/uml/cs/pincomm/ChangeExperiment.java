@@ -102,7 +102,7 @@ class LoadExperimentListTask extends AsyncTask<Integer, Void, ArrayList<Experime
 	protected ArrayList<Experiment> doInBackground(Integer... params) {
 
 		rapi = RestAPI.getInstance();
-		return rapi.getExperiments(params[0], 10, "browse", "");
+		return rapi.getExperiments(params[0], 10, "", "recent");
 
 	}
 

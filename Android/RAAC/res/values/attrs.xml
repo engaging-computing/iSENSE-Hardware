@@ -5,7 +5,7 @@
         <attr name="menuConnect" format="reference" />
         <attr name="menuRefresh" format="reference" />
         <attr name="menuSensor" format="reference" />
-        <attr name="menuShare" format="reference" />
+        <attr name="menuSettings" format="reference" />
         <attr name="menuTime" format="reference" />
     </declare-styleable>
 

@@ -16,10 +16,10 @@ public final class R {
     public static final class array {
         /**  Possible sensors for a BTA port 
          */
-        public static final int btasensors=0x7f070000;
+        public static final int btasensors=0x7f080000;
         /**  Possible sensors for a Mini port 
          */
-        public static final int minisensors=0x7f070001;
+        public static final int minisensors=0x7f080001;
     }
     public static final class attr {
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -37,14 +37,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
-        public static final int menuShare=0x7f010003;
+        public static final int menuSettings=0x7f010003;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int menuTime=0x7f010004;
     }
     public static final class color {
-        public static final int rowcols=0x7f080000;
+        public static final int rowcols=0x7f090000;
     }
     public static final class drawable {
         public static final int actionbg=0x7f020000;
@@ -65,8 +65,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int menu_refresh_light=0x7f02000f;
         public static final int menu_sensor_dark=0x7f020010;
         public static final int menu_sensor_light=0x7f020011;
-        public static final int menu_share_dark=0x7f020012;
-        public static final int menu_share_light=0x7f020013;
+        public static final int menu_settings_dark=0x7f020012;
+        public static final int menu_settings_light=0x7f020013;
         public static final int menu_time_dark=0x7f020014;
         public static final int menu_time_light=0x7f020015;
         public static final int nopptbtn=0x7f020016;
@@ -76,72 +76,74 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int red_x=0x7f02001a;
         public static final int superspin=0x7f02001b;
         public static final int toast_background_check=0x7f02001c;
-        public static final int toast_background_x=0x7f02001d;
+        public static final int toast_background_default=0x7f02001d;
+        public static final int toast_background_x=0x7f02001e;
     }
     public static final class id {
-        public static final int LinearLayout01=0x7f0a0023;
-        public static final int LinearLayout02=0x7f0a0020;
-        public static final int LinearLayout03=0x7f0a0026;
-        public static final int TextView01=0x7f0a0024;
-        public static final int TextView02=0x7f0a0021;
-        public static final int TextView03=0x7f0a0027;
-        public static final int btaSpin1=0x7f0a002a;
-        public static final int btaSpin2=0x7f0a002c;
-        public static final int btn_cancel=0x7f0a0032;
-        public static final int btn_getRcrd=0x7f0a0011;
-        public static final int btn_okay=0x7f0a0031;
-        public static final int btn_pushToISENSE=0x7f0a0017;
-        public static final int button_scan=0x7f0a000a;
-        public static final int et_ave=0x7f0a0025;
-        public static final int et_max=0x7f0a0022;
-        public static final int et_medi=0x7f0a0028;
-        public static final int et_min=0x7f0a001f;
-        public static final int experiment_cancel=0x7f0a0005;
-        public static final int experiment_layout_root=0x7f0a0001;
-        public static final int experiment_ok=0x7f0a0004;
-        public static final int experiment_prompt=0x7f0a0002;
-        public static final int flipper=0x7f0a000d;
-        public static final int image=0x7f0a0034;
-        public static final int imageView1=0x7f0a000b;
-        public static final int launchlayout=0x7f0a000e;
-        public static final int layout_root=0x7f0a0036;
-        public static final int linearLayout1=0x7f0a0019;
-        public static final int linearLayout2=0x7f0a0010;
-        public static final int linearLayout21=0x7f0a0013;
-        public static final int linearLayout3=0x7f0a001b;
-        public static final int linearLayout4=0x7f0a001d;
-        public static final int linearLayout5=0x7f0a0029;
-        public static final int menu_connect=0x7f0a003a;
-        public static final int menu_experiment=0x7f0a003e;
-        public static final int menu_login=0x7f0a003d;
-        public static final int menu_setSensors=0x7f0a003b;
-        public static final int menu_setTime=0x7f0a003c;
-        public static final int miniSpin1=0x7f0a002e;
-        public static final int miniSpin2=0x7f0a0030;
-        public static final int mySpin=0x7f0a000f;
-        public static final int nameContainer=0x7f0a0014;
-        public static final int nameField=0x7f0a0016;
-        public static final int namePrompt=0x7f0a0015;
-        public static final int new_devices=0x7f0a0009;
-        public static final int new_eid=0x7f0a0003;
-        public static final int no=0x7f0a0039;
-        public static final int onlyTenPoints=0x7f0a001a;
-        public static final int paired_devices=0x7f0a0007;
-        public static final int pinpoint_select_btn=0x7f0a000c;
-        public static final int prompt=0x7f0a0037;
-        public static final int scrollView1=0x7f0a0018;
-        public static final int sensorNameHeader=0x7f0a001c;
-        public static final int statusField=0x7f0a0012;
-        public static final int text=0x7f0a0035;
-        public static final int textView1=0x7f0a001e;
-        public static final int textView2=0x7f0a002b;
-        public static final int textView3=0x7f0a002d;
-        public static final int textView4=0x7f0a002f;
-        public static final int title_new_devices=0x7f0a0008;
-        public static final int title_paired_devices=0x7f0a0006;
-        public static final int toast_layout_root=0x7f0a0033;
-        public static final int trollview=0x7f0a0000;
-        public static final int yes=0x7f0a0038;
+        public static final int LinearLayout01=0x7f0b0023;
+        public static final int LinearLayout02=0x7f0b0020;
+        public static final int LinearLayout03=0x7f0b0026;
+        public static final int TextView01=0x7f0b0024;
+        public static final int TextView02=0x7f0b0021;
+        public static final int TextView03=0x7f0b0027;
+        public static final int btaSpin1=0x7f0b002a;
+        public static final int btaSpin2=0x7f0b002c;
+        public static final int btn_cancel=0x7f0b0032;
+        public static final int btn_getRcrd=0x7f0b0011;
+        public static final int btn_okay=0x7f0b0031;
+        public static final int btn_pushToISENSE=0x7f0b0017;
+        public static final int button_scan=0x7f0b000a;
+        public static final int et_ave=0x7f0b0025;
+        public static final int et_max=0x7f0b0022;
+        public static final int et_medi=0x7f0b0028;
+        public static final int et_min=0x7f0b001f;
+        public static final int experiment_cancel=0x7f0b0005;
+        public static final int experiment_layout_root=0x7f0b0001;
+        public static final int experiment_ok=0x7f0b0004;
+        public static final int experiment_prompt=0x7f0b0002;
+        public static final int flipper=0x7f0b000d;
+        public static final int imageView1=0x7f0b000b;
+        public static final int launchlayout=0x7f0b000e;
+        public static final int layout_root=0x7f0b0037;
+        public static final int linearLayout1=0x7f0b0019;
+        public static final int linearLayout2=0x7f0b0010;
+        public static final int linearLayout21=0x7f0b0013;
+        public static final int linearLayout3=0x7f0b001b;
+        public static final int linearLayout4=0x7f0b001d;
+        public static final int linearLayout5=0x7f0b0029;
+        public static final int menu_connect=0x7f0b003b;
+        public static final int menu_login=0x7f0b003e;
+        public static final int menu_setSensors=0x7f0b003c;
+        public static final int menu_setTime=0x7f0b003d;
+        public static final int menu_settings=0x7f0b003f;
+        public static final int miniSpin1=0x7f0b002e;
+        public static final int miniSpin2=0x7f0b0030;
+        public static final int mySpin=0x7f0b000f;
+        public static final int nameContainer=0x7f0b0014;
+        public static final int nameField=0x7f0b0016;
+        public static final int namePrompt=0x7f0b0015;
+        public static final int new_devices=0x7f0b0009;
+        public static final int new_eid=0x7f0b0003;
+        public static final int no=0x7f0b003a;
+        public static final int onlyTenPoints=0x7f0b001a;
+        public static final int paired_devices=0x7f0b0007;
+        public static final int pinpoint_select_btn=0x7f0b000c;
+        public static final int prompt=0x7f0b0038;
+        public static final int scrollView1=0x7f0b0018;
+        public static final int sensorNameHeader=0x7f0b001c;
+        public static final int statusField=0x7f0b0012;
+        public static final int text=0x7f0b0035;
+        public static final int textView1=0x7f0b001e;
+        public static final int textView2=0x7f0b002b;
+        public static final int textView3=0x7f0b002d;
+        public static final int textView4=0x7f0b002f;
+        public static final int title_new_devices=0x7f0b0008;
+        public static final int title_paired_devices=0x7f0b0006;
+        public static final int toast_layout_root=0x7f0b0033;
+        public static final int trollview=0x7f0b0000;
+        public static final int waffle_check=0x7f0b0034;
+        public static final int waffle_x=0x7f0b0036;
+        public static final int yes=0x7f0b0039;
     }
     public static final class layout {
         public static final int change_experiment=0x7f030000;
@@ -156,38 +158,49 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int wifi_page=0x7f030009;
     }
     public static final class menu {
-        public static final int menu=0x7f090000;
+        public static final int menu=0x7f0a0000;
     }
     public static final class string {
-        public static final int app_name=0x7f050002;
-        public static final int aveval=0x7f050012;
-        public static final int bt_not_enabled_leaving=0x7f05000a;
-        public static final int button_scan=0x7f050003;
-        public static final int change_eid=0x7f050015;
-        public static final int contentDesc=0x7f050000;
-        public static final int maxval=0x7f050011;
-        public static final int medval=0x7f050013;
-        public static final int menu_connect=0x7f05000b;
-        public static final int menu_experiment=0x7f05000f;
-        public static final int menu_login=0x7f05000e;
-        public static final int menu_setsensors=0x7f05000d;
-        public static final int menu_settime=0x7f05000c;
-        public static final int minval=0x7f050010;
-        public static final int none_found=0x7f050009;
-        public static final int none_paired=0x7f050006;
-        public static final int retrieve_data=0x7f050018;
-        public static final int scanning=0x7f050007;
-        public static final int select_device=0x7f050008;
-        public static final int tenPoints=0x7f050016;
-        public static final int title_other_devices=0x7f050005;
-        public static final int title_paired_devices=0x7f050004;
-        public static final int upload=0x7f050017;
-        public static final int view_page=0x7f050014;
-        public static final int wifi_page=0x7f050001;
+        public static final int app_name=0x7f060002;
+        public static final int aveval=0x7f060013;
+        public static final int bt_not_enabled_leaving=0x7f06000a;
+        public static final int button_scan=0x7f060003;
+        public static final int change_eid=0x7f060016;
+        public static final int contentDesc=0x7f060000;
+        public static final int maxval=0x7f060012;
+        public static final int medval=0x7f060014;
+        public static final int menu_connect=0x7f06000b;
+        public static final int menu_experiment=0x7f06000f;
+        public static final int menu_login=0x7f06000e;
+        public static final int menu_prefs=0x7f060010;
+        public static final int menu_setsensors=0x7f06000d;
+        public static final int menu_settime=0x7f06000c;
+        public static final int minval=0x7f060011;
+        public static final int none_found=0x7f060009;
+        public static final int none_paired=0x7f060006;
+        public static final int prefs_auto_desc=0x7f060020;
+        public static final int prefs_auto_title=0x7f06001f;
+        public static final int prefs_expid_desc=0x7f06001c;
+        public static final int prefs_expid_title=0x7f06001b;
+        public static final int prefs_gname_desc=0x7f06001e;
+        public static final int prefs_gname_title=0x7f06001d;
+        public static final int prefs_label=0x7f06001a;
+        public static final int retrieve_data=0x7f060019;
+        public static final int scanning=0x7f060007;
+        public static final int select_device=0x7f060008;
+        public static final int tenPoints=0x7f060017;
+        public static final int title_other_devices=0x7f060005;
+        public static final int title_paired_devices=0x7f060004;
+        public static final int upload=0x7f060018;
+        public static final int view_page=0x7f060015;
+        public static final int wifi_page=0x7f060001;
     }
     public static final class style {
-        public static final int AppTheme=0x7f060000;
-        public static final int Theme_MyTheme=0x7f060001;
+        public static final int AppTheme=0x7f070000;
+        public static final int Theme_MyTheme=0x7f070001;
+    }
+    public static final class xml {
+        public static final int prefs=0x7f050000;
     }
     public static final class styleable {
         /** Attributes that can be used with a theme.
@@ -199,13 +212,13 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
            <tr><td><code>{@link #theme_menuConnect edu.uml.cs.raac:menuConnect}</code></td><td></td></tr>
            <tr><td><code>{@link #theme_menuRefresh edu.uml.cs.raac:menuRefresh}</code></td><td></td></tr>
            <tr><td><code>{@link #theme_menuSensor edu.uml.cs.raac:menuSensor}</code></td><td></td></tr>
-           <tr><td><code>{@link #theme_menuShare edu.uml.cs.raac:menuShare}</code></td><td></td></tr>
+           <tr><td><code>{@link #theme_menuSettings edu.uml.cs.raac:menuSettings}</code></td><td></td></tr>
            <tr><td><code>{@link #theme_menuTime edu.uml.cs.raac:menuTime}</code></td><td></td></tr>
            </table>
            @see #theme_menuConnect
            @see #theme_menuRefresh
            @see #theme_menuSensor
-           @see #theme_menuShare
+           @see #theme_menuSettings
            @see #theme_menuTime
          */
         public static final int[] theme = {
@@ -243,15 +256,15 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         */
         public static final int theme_menuSensor = 2;
         /**
-          <p>This symbol is the offset where the {@link edu.uml.cs.raac.R.attr#menuShare}
+          <p>This symbol is the offset where the {@link edu.uml.cs.raac.R.attr#menuSettings}
           attribute's value can be found in the {@link #theme} array.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:menuShare
+          @attr name android:menuSettings
         */
-        public static final int theme_menuShare = 3;
+        public static final int theme_menuSettings = 3;
         /**
           <p>This symbol is the offset where the {@link edu.uml.cs.raac.R.attr#menuTime}
           attribute's value can be found in the {@link #theme} array.

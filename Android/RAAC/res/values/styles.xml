@@ -5,7 +5,7 @@
         <item name="menuConnect">@drawable/menu_connect_light</item>
         <item name="menuRefresh">@drawable/menu_refresh_light</item>
         <item name="menuSensor">@drawable/menu_sensor_light</item>
-        <item name="menuShare">@drawable/menu_share_light</item>
+        <item name="menuSettings">@drawable/menu_settings_light</item>
         <item name="menuTime">@drawable/menu_time_light</item>
     </style>
 
