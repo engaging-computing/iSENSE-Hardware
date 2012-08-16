@@ -4,7 +4,7 @@
         <item name="menuConnect">@drawable/menu_connect_dark</item>
         <item name="menuRefresh">@drawable/menu_refresh_dark</item>
         <item name="menuSensor">@drawable/menu_sensor_dark</item>
-        <item name="menuShare">@drawable/menu_share_dark</item>
+        <item name="menuSettings">@drawable/menu_settings_dark</item>
         <item name="menuTime">@drawable/menu_time_dark</item>
     </style>
 </resources>
