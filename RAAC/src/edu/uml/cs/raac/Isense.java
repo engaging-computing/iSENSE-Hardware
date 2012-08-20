@@ -214,6 +214,9 @@ public class Isense extends Activity implements OnClickListener {
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
+		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		nameField.setText(defPrefs.getString("group_name", "SoR User"));
+		
 		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "Vernier pH Sensor"));
 		sensorType = prefs.getString("name_bta1", "Vernier pH Sensor");
 
@@ -278,6 +281,7 @@ public class Isense extends Activity implements OnClickListener {
 		//Update preferences set in PreferenceActivity
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		autoRun = prefs.getBoolean("auto_upload", false);
+		nameField.setText(prefs.getString("group_name", "SoR User"));
 		experimentId = prefs.getString("experiment_number", "421");
 	}
 
@@ -798,9 +802,8 @@ public class Isense extends Activity implements OnClickListener {
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
 		if (nameField.length() == 0) {
-			Date dNow = new Date( );
-			SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yy 'at' hh:mm a");
-			nameField.setText(ft.format(dNow));
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			nameField.setText(prefs.getString("group_name", "SoR User"));
 		}
 		if (!dataRdy) {
 			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
