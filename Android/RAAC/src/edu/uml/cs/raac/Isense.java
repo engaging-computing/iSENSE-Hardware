@@ -153,6 +153,13 @@ public class Isense extends Activity implements OnClickListener {
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 		rapi.useDev(false);
 
+		//Show name selection dialog on first run
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("firstrun", true) == true) {
+			Intent i =  new Intent(this, SetName.class);
+			startActivity(i);
+		}
+		
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
 
