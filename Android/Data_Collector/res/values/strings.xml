@@ -231,9 +231,7 @@
 
 		\n\nThank you for choosing to use our application - we hope you enjoy it!
 	    
-	</string>
-	<string name="accept_eula">I have read and accept the EULA.</string>
-	
+	</string>	
 	<string name="about_text">
 	    Welcome to the iSENSE Data Collector Android Application, developed by 
 	    UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE 
