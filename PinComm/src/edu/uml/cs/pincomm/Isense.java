@@ -159,6 +159,7 @@ public class Isense extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+		rapi.useDev(false);
 
 		//Initialize sensor data nested array list
 		for(int i = 0; i<16; i++) {
