@@ -52,8 +52,8 @@
             android:theme="@android:style/Theme.Dialog">
         </activity>
         <activity
-            android:name=".ChangeExperiment"
-            android:label="@string/change_eid"
+            android:name=".SetName"
+            android:label="@string/set_name"
             android:theme="@android:style/Theme.Dialog">
         </activity>
         <activity
