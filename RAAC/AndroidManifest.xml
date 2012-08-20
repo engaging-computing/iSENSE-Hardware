@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.raac"
-    android:versionCode="3"
-    android:versionName="2.5" >
+    android:versionCode="5"
+    android:versionName="2.6" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -60,6 +60,11 @@
             android:name=".WifiDisabled"
             android:label="@string/wifi_page"
             android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <activity
+            android:name=".Preferences"
+            android:label="@string/prefs_label"
+            android:theme="@style/Theme.MyTheme">
         </activity>
     </application>
 
