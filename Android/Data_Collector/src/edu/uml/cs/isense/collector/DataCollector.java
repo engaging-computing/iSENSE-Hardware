@@ -40,7 +40,6 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -70,7 +69,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -1229,7 +1227,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Registers Sensors
-	@SuppressLint("NewApi")
 	private void registerSensors() {		
 		if (mSensorManager != null && setupDone && dfm != null) {
 
@@ -1240,9 +1237,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
-				
-				Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-				Log.d("tag", "" + sensor.getMinDelay());
 			}
 
 			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
