@@ -4,8 +4,8 @@
 /**      IIIIIIIIIIIII            General Purpose Data Collector App             SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                                                              SSS                **/
-/**           III                    By:               Michael Stowell,         SSS               **/
-/**           III                                      Jeremy Poulin,            SSSSSSSSS        **/
+/**           III                    By:               Jeremy Poulin,           SSS               **/
+/**           III                                      Michael Stowell           SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
 /**           III                                                                        SSS      **/
 /**           III                    Group:            ECG / iSENSE                     SSS       **/
@@ -1447,7 +1447,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
-
+		
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -1936,11 +1936,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
 		
-		menuSetup.setEnabled(enabled);
-		menuUpload.setEnabled(enabled);
-		menuLogin.setEnabled(enabled);
-		menuMedia.setEnabled(enabled);
-		menuSync.setEnabled(enabled);
+		if (mMenu != null) {
+			menuSetup.setEnabled(enabled);
+			menuUpload.setEnabled(enabled);
+			menuLogin.setEnabled(enabled);
+			menuMedia.setEnabled(enabled);
+			menuSync.setEnabled(enabled);
+		}
 	}
 
 }

@@ -123,6 +123,8 @@ public class Experiments extends ListActivity {
 		Intent intent = new Intent();
 		intent.putExtra("edu.uml.cs.isense.pictures.experiments.exp_id",
 				e.experiment_id);
+		intent.putExtra("edu.uml.cs.isense.pictures.experiments.srate",
+				e.srate);
 
 		setResult(Activity.RESULT_OK, intent);
 		finish();
