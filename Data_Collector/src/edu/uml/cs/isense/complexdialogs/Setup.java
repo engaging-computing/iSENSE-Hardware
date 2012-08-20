@@ -46,7 +46,7 @@ public class Setup extends Activity implements OnClickListener {
 	private static final int EXPERIMENT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
 
-	private static final long MIN_SAMPLE_INTERVAL = 200;
+	private static final long MIN_SAMPLE_INTERVAL = 50;
 
 	private static boolean hasChanged = false;
 
@@ -67,6 +67,7 @@ public class Setup extends Activity implements OnClickListener {
 		Bundle extras = getIntent().getExtras();
 		final String eid = extras.getString("experiment_id");
 		final String sample = extras.getString("srate");
+		final int recLength = extras.getInt("recLength");
 
 		mPrefs = getSharedPreferences("EID", 0);
 
@@ -157,7 +158,7 @@ public class Setup extends Activity implements OnClickListener {
 		}
 
 		recordingLength = (EditText) findViewById(R.id.recLength);
-		recordingLength.setText("600");
+		recordingLength.setText(""+recLength);
 
 	}
 

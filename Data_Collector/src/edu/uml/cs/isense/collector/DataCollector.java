@@ -40,6 +40,7 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -69,6 +70,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -111,7 +113,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	/** Constants */
 
 	// Numerical constants
-	private static final int INTERVAL = 200;
+	private static final int INTERVAL = 50;
 	private static final int TEST_LENGTH = 600;
 	private static long srate = INTERVAL;
 	private static int recLength = TEST_LENGTH;
@@ -1122,11 +1124,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			if (e != null) {
 				iSetup.putExtra("experiment_id", "" + e.experiment_id);
-				iSetup.putExtra("srate", "" + e.srate);
+				iSetup.putExtra("srate", "" + e.srate);				
 			} else {
 				iSetup.putExtra("experiment_id", "");
 				iSetup.putExtra("srate", "");
 			}
+			iSetup.putExtra("recLength", recLength);
 			publishProgress(100);
 			return null;
 
@@ -1226,7 +1229,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Registers Sensors
-	private void registerSensors() {
+	@SuppressLint("NewApi")
+	private void registerSensors() {		
 		if (mSensorManager != null && setupDone && dfm != null) {
 
 			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
@@ -1236,6 +1240,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
+				
+				Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+				Log.d("tag", "" + sensor.getMinDelay());
 			}
 
 			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
@@ -1601,7 +1608,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								mHandler.post(new Runnable() {
 									@Override
 									public void run() {
-										if (secondsElapsed > recLength) {
+										if (secondsElapsed > (recLength - 1)) {
 											mHandler.post(new Runnable() {
 												@Override
 												public void run() {
