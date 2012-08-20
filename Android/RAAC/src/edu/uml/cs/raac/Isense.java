@@ -61,6 +61,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.format.Time;
 import android.view.Menu;
@@ -107,7 +108,7 @@ public class Isense extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	//public static String experimentId = "427";
+	String experimentId = "421";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
@@ -119,6 +120,7 @@ public class Isense extends Activity implements OnClickListener {
 	private ProgressDialog dia;
 	JSONArray dataSet;
 	public static Context mContext;
+	boolean autoRun = false;
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
@@ -149,6 +151,7 @@ public class Isense extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+		rapi.useDev(false);
 
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
@@ -264,6 +267,11 @@ public class Isense extends Activity implements OnClickListener {
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			handleNFCIntent(getIntent());
 		}
+
+		//Update preferences set in PreferenceActivity
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		autoRun = prefs.getBoolean("auto_upload", false);
+		experimentId = prefs.getString("experiment_number", "421");
 	}
 
 	@Override
@@ -344,10 +352,10 @@ public class Isense extends Activity implements OnClickListener {
 				Toast.makeText(Isense.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
 			else
 				if (rapi.isConnectedToInternet()) new PerformLogin().execute();
-		} else if (item.getItemId() == R.id.menu_experiment) {
-			Intent i = new Intent(this, ChangeExperiment.class);
-			startActivityForResult(i, CHANGE_EXPERIMENT);
-		} 
+		} else if (item.getItemId() == R.id.menu_settings) {
+			Intent i = new Intent(this, Preferences.class);
+			startActivity(i);
+		}
 		return true;
 
 	}
@@ -471,7 +479,9 @@ public class Isense extends Activity implements OnClickListener {
 		}
 		dataRdy = true;
 		findStatistics();
-		uploadData();
+		if(autoRun) {
+			uploadData();
+		}
 	}
 
 	public void writeDataToScreen() {
@@ -671,7 +681,9 @@ public class Isense extends Activity implements OnClickListener {
 						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 					else
 						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
-					getRecords();
+					if(autoRun) {
+						getRecords();
+					}
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					pinpointBtn.setImageResource(R.drawable.pptbtntry);
@@ -787,7 +799,7 @@ public class Isense extends Activity implements OnClickListener {
 			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
 			return;
 		}
-		
+
 		if (timeData.size() != bta1Data.size()) {
 			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
 					Toast.LENGTH_LONG).show();
@@ -834,15 +846,14 @@ public class Isense extends Activity implements OnClickListener {
 				new PerformLogin().execute();
 
 			if (loggedIn) {
-				SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
 
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(expr.getString("experiment_number", "427"), 
+					sessionId = rapi.createSession(experimentId, 
 							nameOfSession, 
 							"Automated Submission Through Android App", 
 							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
 					if (sessionId != -1) {
-						rapi.putSessionData(sessionId, expr.getString("experiment_number", "427"), dataSet);
+						rapi.putSessionData(sessionId, experimentId, dataSet);
 						sessionUrl = baseSessionUrl + sessionId;
 					} else {
 						sessionUrl = baseSessionUrl;
@@ -851,7 +862,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, expr.getString("experiment_number", "427"), dataSet))) {
+					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
 						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
 					}
 				}
