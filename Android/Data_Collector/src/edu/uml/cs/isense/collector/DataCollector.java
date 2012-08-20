@@ -4,8 +4,8 @@
 /**      IIIIIIIIIIIII            General Purpose Data Collector App             SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                                                              SSS                **/
-/**           III                    By:               Jeremy Poulin,           SSS               **/
-/**           III                                      Michael Stowell           SSSSSSSSS        **/
+/**           III                    By:               Michael Stowell,         SSS               **/
+/**           III                                      Jeremy Poulin,            SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
 /**           III                                                                        SSS      **/
 /**           III                    Group:            ECG / iSENSE                     SSS       **/
@@ -97,7 +97,6 @@ import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.simpledialogs.ForceStop;
 import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.simpledialogs.NoIsense;
-import edu.uml.cs.isense.simpledialogs.RecordingStopped;
 import edu.uml.cs.isense.simpledialogs.Summary;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -107,13 +106,15 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
-	/* Global Variables **/
-	
+	/* Global Variables * */
+
 	/** Constants */
-	
+
 	// Numerical constants
 	private static final int INTERVAL = 200;
+	private static final int TEST_LENGTH = 600;
 	private static long srate = INTERVAL;
+	private static int recLength = TEST_LENGTH;
 
 	private static final int MENU_ITEM_SETUP = 0;
 	private static final int MENU_ITEM_UPLOAD = 1;
@@ -137,28 +138,27 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int DESCRIPTION_REQUESTED = 10;
 	public static final int SPLASH_REQUESTED = 11;
 
-	private static final int TIME          = 0;
-	private static final int ACCEL_X       = 1;
-	private static final int ACCEL_Y       = 2;
-	private static final int ACCEL_Z       = 3;
-	private static final int ACCEL_TOTAL   = 4;
-	private static final int LATITUDE      = 5;
-	private static final int LONGITUDE     = 6;
-	private static final int MAG_X         = 7;
-	private static final int MAG_Y         = 8;
-	private static final int MAG_Z         = 9;
-	private static final int MAG_TOTAL     = 10;
-	private static final int HEADING_DEG   = 11;
-	private static final int HEADING_RAD   = 12;
+	private static final int TIME = 0;
+	private static final int ACCEL_X = 1;
+	private static final int ACCEL_Y = 2;
+	private static final int ACCEL_Z = 3;
+	private static final int ACCEL_TOTAL = 4;
+	private static final int LATITUDE = 5;
+	private static final int LONGITUDE = 6;
+	private static final int MAG_X = 7;
+	private static final int MAG_Y = 8;
+	private static final int MAG_Z = 9;
+	private static final int MAG_TOTAL = 10;
+	private static final int HEADING_DEG = 11;
+	private static final int HEADING_RAD = 12;
 	private static final int TEMPERATURE_C = 13;
-	private static final int PRESSURE      = 14;
-	private static final int ALTITUDE      = 15;
-	private static final int LIGHT         = 16;
+	private static final int PRESSURE = 14;
+	private static final int ALTITUDE = 15;
+	private static final int LIGHT = 16;
 	private static final int TEMPERATURE_F = 17;
 	private static final int TEMPERATURE_K = 18;
-	
-	/** \Constants */
 
+	/** \Constants */
 
 	/** UI Objects */
 
@@ -172,7 +172,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Menu Items
 	private Menu mMenu;
-	
+
 	private MenuItem menuSetup;
 	private MenuItem menuLogin;
 	private MenuItem menuUpload;
@@ -184,19 +184,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// LinearLayouts
 	private LinearLayout mScreen;
-	
+
 	// ImageViews
 	private ImageView isenseLogo;
-	
+
 	/** \UI Objects */
-	
 
 	/** Formatters */
 
 	private final DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
-	
-	/** \Formatters */
 
+	/** \Formatters */
 
 	/** GeoSpacial and Sensor Components */
 
@@ -209,18 +207,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Sensor Components
 	private SensorManager mSensorManager;
-	
+
 	/** \GeoSpacial and Sensor Components */
-	
 
 	/** Data Recording Specific Components */
 
 	// Recording status trigger
 	private Boolean running = false;
 
-	// Elapsed timer tasks counter
-	private int iCount = 0;
-	
 	// Start/stop vibrator and beeper
 	private Vibrator vibrator;
 	private MediaPlayer mMediaPlayer;
@@ -228,9 +222,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Timer Objects
 	private Timer timeTimer;
 	private Timer timeElapsedTimer;
-	
-	/** \Data Recording Specific Components */
 
+	/** \Data Recording Specific Components */
 
 	/** Data Variables */
 
@@ -249,9 +242,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private float accel[];
 	private float mag[];
 	private float orientation[];
-	
-	/** \Data Variables */
 
+	/** \Data Variables */
 
 	/** Publicized Variables */
 
@@ -271,20 +263,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static String textToSession = "";
 	public static String toSendOut = "";
 	public static String sdFileName = "";
-	
+
 	public static String nameOfSession = "";
 	public static String partialSessionName = "";
-	
-	/** \Publicized Variables */
 
+	/** \Publicized Variables */
 
 	/** Additional Private Variables */
 
 	// Integers
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
-	private int elapsedMillis  = 0;
-	private int totalMillis    = 0;
+	private int elapsedMillis = 0;
+	private int totalMillis = 0;
 
 	private int secondsElapsed = 0;
 
@@ -293,19 +284,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Longs
 	private long currentTime = 0;
 	private long timeOffset = 0;
-	
+
 	// Strings
-	private String dateString; 
+	private String dateString;
 	private String niceDateString;
 
 	private String s_elapsedMinutes;
 	private String s_elapsedSeconds;
-	private String s_elapsedMillis; 
+	private String s_elapsedMillis;
 
 	private String sessionDescription = "";
 
 	private String eulaKey;
-	
+
 	// Booleans
 	private static boolean useMenu = false;
 	private static boolean preLoad = false;
@@ -319,10 +310,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean showGpsDialog = true;
 	private static boolean alreadySaved = false;
 	private static boolean throughUploadMenuItem = false;
-	private static boolean throughHandler = false;
 
 	/** \Additional Private Variables */
-	
 
 	/** Additional Objects */
 
@@ -346,11 +335,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static DataFieldManager dfm;
 	public static Fields f;
 	public static SensorCompatibility sc;
-	
+
 	/** \Additional Objects */
-	
-	/* \Global Variables **/
-	
+
+	/* \Global Variables * */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -445,19 +433,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 		super.onPause();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(DataCollector.this);
-		
+
 		if (mRoughLocManager != null)
 			mRoughLocManager.removeUpdates(DataCollector.this);
-		
+
 		if (mSensorManager != null)
 			mSensorManager.unregisterListener(DataCollector.this);
-		
+
 		if (timeTimer != null)
 			timeTimer.cancel();
-		
+
 		if (timeElapsedTimer != null)
 			timeElapsedTimer.cancel();
-		
+
 		inPausedState = true;
 	}
 
@@ -466,19 +454,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 		super.onStop();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(DataCollector.this);
-		
+
 		if (mRoughLocManager != null)
 			mRoughLocManager.removeUpdates(DataCollector.this);
-		
+
 		if (mSensorManager != null)
 			mSensorManager.unregisterListener(DataCollector.this);
-		
+
 		if (timeTimer != null)
 			timeTimer.cancel();
-		
+
 		if (timeElapsedTimer != null)
 			timeElapsedTimer.cancel();
-		
+
 		inPausedState = true;
 
 		// Stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
@@ -520,7 +508,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				DataCollector.mContext,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		
+
 		if (!(mPrefs.getString("username", "").equals("")) && !inPausedState)
 			login();
 
@@ -531,7 +519,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// twice
 	@Override
 	public void onBackPressed() {
-			
+
 		if (!w.isDisplaying) {
 			if (running)
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
@@ -543,30 +531,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (w.canPerformTask && !running) {
 			setupDone = false;
 			super.onBackPressed();
-		}	
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
+
 		super.onCreateOptionsMenu(menu);
-		
+
 		mMenu = menu;
-		
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
-		
+
 		menuSetup = menu.getItem(MENU_ITEM_SETUP);
 		menuUpload = menu.getItem(MENU_ITEM_UPLOAD);
 		menuLogin = menu.getItem(MENU_ITEM_LOGIN);
 		menuMedia = menu.getItem(MENU_ITEM_MEDIA);
 		menuSync = menu.getItem(MENU_ITEM_SYNC);
-		
+
 		if (preLoad)
 			setMenuStatus(false);
-		
+
 		return true;
-		
+
 	}
 
 	@Override
@@ -574,21 +562,21 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!preLoad)
 			setMenuStatus(true);
 		if (!useMenu) {
-			
+
 			menu.getItem(0).setEnabled(false);
 			menu.getItem(1).setEnabled(false);
 			menu.getItem(2).setEnabled(false);
 			menu.getItem(3).setEnabled(false);
 			menu.getItem(4).setEnabled(false);
-			
+
 		} else {
-			
+
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
 			menu.getItem(3).setEnabled(true);
 			menu.getItem(4).setEnabled(true);
-			
+
 		}
 		return true;
 	}
@@ -608,7 +596,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			choiceViaMenu = true;
 			uploadSuccess = true;
 			throughUploadMenuItem = true;
-			
+
 			// Gets the previous unuploaded sessions
 			manageUploadQueue();
 			return true;
@@ -779,6 +767,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						.getStringExtra("sessionName");
 
 				srate = data.getIntExtra("srate", INTERVAL);
+				recLength = data.getIntExtra("recLength", TEST_LENGTH);
 
 				String showSessionName;
 				if (partialSessionName.length() > 15) {
@@ -811,7 +800,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						loginName = loginName.substring(0, 18) + "...";
 					loginInfo.setText("Username: " + loginName);
 					successLogin = true;
-					w.make("Login successful", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					w.make("Login successful", Waffle.LENGTH_LONG,
+							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
 					successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
@@ -859,7 +849,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
 				}
 			} else if (resultCode == RESULT_CANCELED) {
-				w.make("Data not uploaded.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				w.make("Data not uploaded.", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_X);
 				showSummary();
 			}
 
@@ -874,7 +865,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				editor.commit();
 			} else
 				((Activity) mContext).finish();
-			
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -900,17 +890,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		try {
 			if (roughLoc != null) {
-				
+
 				address = new Geocoder(DataCollector.this, Locale.getDefault())
 						.getFromLocation(roughLoc.getLatitude(),
 								roughLoc.getLongitude(), 1);
-				
+
 				if (address.size() > 0) {
 					city = address.get(0).getLocality();
 					state = address.get(0).getAdminArea();
 					country = address.get(0).getCountryName();
 					addr = address.get(0).getAddressLine(0);
-					
+
 				}
 			}
 		} catch (IOException e) {
@@ -955,10 +945,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		public void run() {
 			status400 = false;
 			int sessionId = -1;
-			
+
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
-			
+
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
 			Date dt = new Date();
 			String dateString = sdf.format(dt);
@@ -1054,15 +1044,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPreExecute() {
-			
+
 			OrientationManager.disableRotation(DataCollector.this);
-			
+
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
-			
+
 		}
 
 		@Override
@@ -1094,7 +1084,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("An error occured during upload.  Please check internet connectivity.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Upload Success", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				w.make("Upload Success", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 				manageUploadQueue();
 			}
 
@@ -1109,7 +1100,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPreExecute() {
-			
+
 			OrientationManager.disableRotation(DataCollector.this);
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -1143,7 +1134,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			
+
 			dia.setMessage("Done");
 			dia.cancel();
 
@@ -1212,7 +1203,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				DataCollector.mContext,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		
+
 		boolean success = rapi.login(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 		if (success) {
@@ -1289,7 +1280,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if ((dfm.enabledFields[TEMPERATURE_C]
 				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
 				&& dfm.enabledFields[PRESSURE]) {
-			
+
 			if (pressure.equals("") || temperature.equals("")) {
 				return "";
 			} else {
@@ -1301,7 +1292,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				String altitude = toThou.format(temp);
 				return altitude;
 			}
-			
+
 		} else
 			return "";
 	}
@@ -1355,61 +1346,61 @@ public class DataCollector extends Activity implements SensorEventListener,
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[TIME] = true;
-			
+
 			if (s.equals(getString(R.string.accel_x)))
 				dfm.enabledFields[ACCEL_X] = true;
-			
+
 			if (s.equals(getString(R.string.accel_y)))
 				dfm.enabledFields[ACCEL_Y] = true;
-			
+
 			if (s.equals(getString(R.string.accel_z)))
 				dfm.enabledFields[ACCEL_Z] = true;
-			
+
 			if (s.equals(getString(R.string.accel_total)))
 				dfm.enabledFields[ACCEL_TOTAL] = true;
-			
+
 			if (s.equals(getString(R.string.latitude)))
 				dfm.enabledFields[LATITUDE] = true;
-			
+
 			if (s.equals(getString(R.string.longitude)))
 				dfm.enabledFields[LONGITUDE] = true;
-			
+
 			if (s.equals(getString(R.string.magnetic_x)))
 				dfm.enabledFields[MAG_X] = true;
-			
+
 			if (s.equals(getString(R.string.magnetic_y)))
 				dfm.enabledFields[MAG_Y] = true;
-			
+
 			if (s.equals(getString(R.string.magnetic_z)))
 				dfm.enabledFields[MAG_Z] = true;
-			
+
 			if (s.equals(getString(R.string.magnetic_total)))
 				dfm.enabledFields[MAG_TOTAL] = true;
-			
+
 			if (s.equals(getString(R.string.heading_deg)))
 				dfm.enabledFields[HEADING_DEG] = true;
-			
+
 			if (s.equals(getString(R.string.heading_rad)))
 				dfm.enabledFields[HEADING_RAD] = true;
-			
+
 			if (s.equals(getString(R.string.temperature_c)))
 				dfm.enabledFields[TEMPERATURE_C] = true;
-			
+
 			if (s.equals(getString(R.string.temperature_f)))
 				dfm.enabledFields[TEMPERATURE_F] = true;
-			
+
 			if (s.equals(getString(R.string.temperature_k)))
 				dfm.enabledFields[TEMPERATURE_K] = true;
-			
+
 			if (s.equals(getString(R.string.pressure)))
 				dfm.enabledFields[PRESSURE] = true;
-			
+
 			if (s.equals(getString(R.string.altitude)))
 				dfm.enabledFields[ALTITUDE] = true;
-			
+
 			if (s.equals(getString(R.string.luminous_flux)))
 				dfm.enabledFields[LIGHT] = true;
-			
+
 		}
 	}
 
@@ -1424,7 +1415,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				if (throughUploadMenuItem) {
 					throughUploadMenuItem = false;
-					w.make("There is no data to upload.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+							Waffle.IMAGE_CHECK);
 				}
 			}
 		}
@@ -1569,17 +1561,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 							w.make("Could not write file to SD Card.",
 									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
-						if (throughHandler) {
-							Intent iRecordingStopped = new Intent(mContext,
-									RecordingStopped.class);
-							startActivityForResult(iRecordingStopped,
-									RECORDING_STOPPED_REQUESTED);
-						} else {
-							Intent iDescription = new Intent(mContext,
-									Description.class);
-							startActivityForResult(iDescription,
-									DESCRIPTION_REQUESTED);
-						}
+						Intent iDescription = new Intent(mContext,
+								Description.class);
+						startActivityForResult(iDescription,
+								DESCRIPTION_REQUESTED);
 
 					} else {
 
@@ -1592,7 +1577,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						elapsedMillis = 0;
 						totalMillis = 0;
 						dataPointCount = 0;
-						iCount = 0;
 						beginWrite = true;
 						sdCardError = false;
 
@@ -1617,6 +1601,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 								mHandler.post(new Runnable() {
 									@Override
 									public void run() {
+										if (secondsElapsed > recLength) {
+											mHandler.post(new Runnable() {
+												@Override
+												public void run() {
+													startStop
+															.performLongClick();
+												}
+											});
+										}
 										setTime(secondsElapsed++);
 									}
 								});
@@ -1631,83 +1624,58 @@ public class DataCollector extends Activity implements SensorEventListener,
 								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
 
-								if (iCount >= 3000) {
+								if (dfm.enabledFields[ACCEL_X])
+									f.accel_x = toThou.format(accel[0]);
+								if (dfm.enabledFields[ACCEL_Y])
+									f.accel_y = toThou.format(accel[1]);
+								if (dfm.enabledFields[ACCEL_Z])
+									f.accel_z = toThou.format(accel[2]);
+								if (dfm.enabledFields[ACCEL_TOTAL])
+									f.accel_total = toThou.format(accel[3]);
+								if (dfm.enabledFields[LATITUDE])
+									f.latitude = loc.getLatitude();
+								if (dfm.enabledFields[LONGITUDE])
+									f.longitude = loc.getLongitude();
+								if (dfm.enabledFields[HEADING_DEG])
+									f.angle_deg = toThou.format(orientation[0]);
+								if (dfm.enabledFields[HEADING_RAD])
+									f.angle_rad = ""
+											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+								if (dfm.enabledFields[MAG_X])
+									f.mag_x = mag[0];
+								if (dfm.enabledFields[MAG_Y])
+									f.mag_y = mag[1];
+								if (dfm.enabledFields[MAG_Z])
+									f.mag_z = mag[2];
+								if (dfm.enabledFields[MAG_TOTAL])
+									f.mag_total = Math.sqrt(Math
+											.pow(f.mag_x, 2)
+											+ Math.pow(f.mag_y, 2)
+											+ Math.pow(f.mag_z, 2));
+								if (dfm.enabledFields[TIME])
+									f.timeMillis = currentTime + elapsedMillis;
+								if (dfm.enabledFields[TEMPERATURE_C])
+									f.temperature_c = temperature;
+								if (dfm.enabledFields[TEMPERATURE_F])
+									f.temperature_f = ""
+											+ ((Double.parseDouble(temperature) * 1.8) + 32);
+								if (dfm.enabledFields[TEMPERATURE_K])
+									f.temperature_k = ""
+											+ (Double.parseDouble(temperature) + 273.15);
+								if (dfm.enabledFields[PRESSURE])
+									f.pressure = pressure;
+								if (dfm.enabledFields[ALTITUDE])
+									f.altitude = calcAltitude();
+								if (dfm.enabledFields[LIGHT])
+									f.lux = light;
 
-									timeTimer.cancel();
-									dataPointCount--;
+								dataSet.put(dfm.putData());
+								data = dfm.writeSdCardLine();
 
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											throughHandler = true;
-											startStop.performLongClick();
-										}
-									});
-
+								if (beginWrite) {
+									writeToSDCard(data, 's');
 								} else {
-
-									iCount++;
-
-
-									if (dfm.enabledFields[ACCEL_X])
-										f.accel_x = toThou.format(accel[0]);
-									if (dfm.enabledFields[ACCEL_Y])
-										f.accel_y = toThou.format(accel[1]);
-									if (dfm.enabledFields[ACCEL_Z])
-										f.accel_z = toThou.format(accel[2]);
-									if (dfm.enabledFields[ACCEL_TOTAL])
-										f.accel_total = toThou.format(accel[3]);
-									if (dfm.enabledFields[LATITUDE])
-										f.latitude = loc.getLatitude();
-									if (dfm.enabledFields[LONGITUDE])
-										f.longitude = loc.getLongitude();
-									if (dfm.enabledFields[HEADING_DEG])
-										f.angle_deg = toThou
-												.format(orientation[0]);
-									if (dfm.enabledFields[HEADING_RAD])
-										f.angle_rad = ""
-												+ (Double
-														.parseDouble(f.angle_deg) * (Math.PI / 180));
-									if (dfm.enabledFields[MAG_X])
-										f.mag_x = mag[0];
-									if (dfm.enabledFields[MAG_Y])
-										f.mag_y = mag[1];
-									if (dfm.enabledFields[MAG_Z])
-										f.mag_z = mag[2];
-									if (dfm.enabledFields[MAG_TOTAL])
-										f.mag_total = Math.sqrt(Math.pow(
-												f.mag_x, 2)
-												+ Math.pow(f.mag_y, 2)
-												+ Math.pow(f.mag_z, 2));
-									if (dfm.enabledFields[TIME])
-										f.timeMillis = currentTime
-												+ elapsedMillis;
-									if (dfm.enabledFields[TEMPERATURE_C])
-										f.temperature_c = temperature;
-									if (dfm.enabledFields[TEMPERATURE_F])
-										f.temperature_f = ""
-												+ ((Double
-														.parseDouble(temperature) * 1.8) + 32);
-									if (dfm.enabledFields[TEMPERATURE_K])
-										f.temperature_k = ""
-												+ (Double
-														.parseDouble(temperature) + 273.15);
-									if (dfm.enabledFields[PRESSURE])
-										f.pressure = pressure;
-									if (dfm.enabledFields[ALTITUDE])
-										f.altitude = calcAltitude();
-									if (dfm.enabledFields[LIGHT])
-										f.lux = light;
-
-									dataSet.put(dfm.putData());
-									data = dfm.writeSdCardLine();
-
-									if (beginWrite) {
-										writeToSDCard(data, 's');
-									} else {
-										writeToSDCard(data, 'u');
-									}
-
+									writeToSDCard(data, 'u');
 								}
 
 							}
@@ -1738,21 +1706,21 @@ public class DataCollector extends Activity implements SensorEventListener,
 		final int rotation = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
 				.getOrientation();
-		
+
 		switch (rotation) {
-		
+
 		case Surface.ROTATION_0:
 			return 0;
-		
+
 		case Surface.ROTATION_90:
 			return 90;
-		
+
 		case Surface.ROTATION_180:
 			return 180;
-		
+
 		default:
 			return 270;
-		
+
 		}
 	}
 
@@ -1844,7 +1812,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		final SharedPreferences mPrefs = getSharedPreferences(mContext);
 		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
 		int Q_COUNT = uploadQueue.size();
-		
+
 		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
 		mPrefsEditor.commit();
 
@@ -1862,7 +1830,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				out.writeObject(ds);
 				Q_COUNT--;
 			}
-			
+
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1892,7 +1860,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				@Override
 				public void run() {
 					// Display the Splash Screen
-					displaySplash();			
+					displaySplash();
 				}
 			};
 			super.onPreExecute();
@@ -1901,9 +1869,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 			long timeStart = System.currentTimeMillis();
-			
+
 			mHandler.post(loadingThread);
-			
+
 			long timeEllapsed = System.currentTimeMillis() - timeStart;
 			try {
 				if (timeEllapsed < 2000)
@@ -1911,9 +1879,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
+
 			mHandler.post(loadingScreen);
-			
+
 			return null;
 		}
 
@@ -1921,7 +1889,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
-	
+
 			if (mMenu != null) {
 				onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);

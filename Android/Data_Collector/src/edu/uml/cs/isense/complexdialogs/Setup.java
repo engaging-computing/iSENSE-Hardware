@@ -30,6 +30,7 @@ public class Setup extends Activity implements OnClickListener {
 	private EditText sessionName;
 	private EditText eidInput;
 	private EditText srate;
+	private EditText recordingLength;
 
 	private Button okay;
 	private Button cancel;
@@ -156,6 +157,9 @@ public class Setup extends Activity implements OnClickListener {
 			srate.setText("" + MIN_SAMPLE_INTERVAL);
 		}
 
+		recordingLength = (EditText) findViewById(R.id.recLength);
+		recordingLength.setText("600");
+
 	}
 
 	@Override
@@ -181,6 +185,12 @@ public class Setup extends Activity implements OnClickListener {
 				srate.setError("Interval Must be >= 200");
 				pass = false;
 			}
+			if (recordingLength.getText().length() == 0) {
+				recordingLength.setText("600");
+			} else if (Long.parseLong(recordingLength.getText().toString()) < 1
+					|| Long.parseLong(recordingLength.getText().toString()) > 600)
+				recordingLength
+						.setError("Recording time must be between 1 and 600.");
 
 			if (pass) {
 
@@ -188,6 +198,8 @@ public class Setup extends Activity implements OnClickListener {
 				i.putExtra("sessionName", sessionName.getText().toString());
 				i.putExtra("srate",
 						Integer.parseInt(srate.getText().toString()));
+				i.putExtra("recLength",
+						Integer.parseInt(recordingLength.getText().toString()));
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putString("experiment_id",
 						eidInput.getText().toString()).commit();
