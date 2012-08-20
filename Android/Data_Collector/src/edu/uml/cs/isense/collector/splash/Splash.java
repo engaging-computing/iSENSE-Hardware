@@ -33,14 +33,14 @@ public class Splash extends TabActivity {
 
 		// Main Tab
 		TabSpec mainSpec = tabHost.newTabSpec("Welcome");
-		mainSpec.setIndicator("Welcome", 
+		mainSpec.setIndicator("Welcome",
 				getResources().getDrawable(R.drawable.icon_splash_main));
 		Intent iMain = new Intent(mContext, SplashMain.class);
 		mainSpec.setContent(iMain);
-		
+
 		// About Tab
 		TabSpec aboutSpec = tabHost.newTabSpec("About");
-		aboutSpec.setIndicator("About", 
+		aboutSpec.setIndicator("About",
 				getResources().getDrawable(R.drawable.icon_splash_about));
 		Intent iAbout = new Intent(mContext, SplashAbout.class);
 		aboutSpec.setContent(iAbout);
@@ -52,37 +52,27 @@ public class Splash extends TabActivity {
 		Intent iGuide = new Intent(mContext, SplashGuide.class);
 		guideSpec.setContent(iGuide);
 
-		// Eula Tab
-		TabSpec eulaSpec = tabHost.newTabSpec("Eula");
-		eulaSpec.setIndicator("Eula", 
-				getResources().getDrawable(R.drawable.icon_splash_eula));
-		Intent iEula = new Intent(mContext, SplashEula.class);
-		eulaSpec.setContent(iEula);
-		
 		// Change tab text colors
-		for(int i = 0;i < tabHost.getTabWidget().getChildCount();i++) { 
-            TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title); 
-            tv.setTextColor(Color.parseColor("#FFFFFF"));
-        } 
-
+		for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+			TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i)
+					.findViewById(android.R.id.title);
+			tv.setTextColor(Color.parseColor("#FFFFFF"));
+		}
 
 		// Add specs to host
 		tabHost.addTab(mainSpec);
 		tabHost.addTab(aboutSpec);
 		tabHost.addTab(guideSpec);
-		tabHost.addTab(eulaSpec);
 
 		// Set listeners for the "Continue" and "Exit" buttons
 		final Button cont = (Button) findViewById(R.id.splash_continue);
 		cont.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (SplashEula.eulaIsChecked) {
-					setResult(RESULT_OK);
-					finish();
-				} else
-					Splash.w.make("You must accept the EULA to continue!",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+
+				setResult(RESULT_OK);
+				finish();
+
 			}
 		});
 
