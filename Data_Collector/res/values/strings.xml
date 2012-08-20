@@ -259,7 +259,7 @@
 	<string name="done">Done</string>
 	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
 	<string name="retry">Try Again</string>
-	<string name="sample_rate">Sample Interval: </string>
+	<string name="sample_rate">Sample Interval (ms): </string>
 	<string name="cont">Continue</string>
 	<string name="exit">Exit</string>
 	<string name="login">Login</string>
@@ -451,5 +451,6 @@
 	<string name="menu_setup">Setup</string>
 	<string name="menu_sync">Sync Time</string>
 	<string name="menu_upload">Upload</string>
+	<string name="record_length">Test Length (sec):</string>
 	
 </resources>
