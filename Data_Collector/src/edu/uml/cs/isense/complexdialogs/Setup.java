@@ -88,7 +88,7 @@ public class Setup extends Activity implements OnClickListener {
 						Experiment e = rapi.getExperiment(Integer
 								.parseInt(eidInput.getText().toString()));
 						if (e != null) {
-							if (e.srate < 200) {
+							if (e.srate < MIN_SAMPLE_INTERVAL) {
 								srate.setText("" + MIN_SAMPLE_INTERVAL);
 							} else {
 								srate.setText("" + e.srate);
@@ -113,7 +113,7 @@ public class Setup extends Activity implements OnClickListener {
 							Experiment e = rapi.getExperiment(Integer
 									.parseInt(eidInput.getText().toString()));
 							if (e != null) {
-								if (e.srate < 200) {
+								if (e.srate < MIN_SAMPLE_INTERVAL) {
 									srate.setText("" + MIN_SAMPLE_INTERVAL);
 								} else {
 									srate.setText("" + e.srate);
@@ -181,8 +181,8 @@ public class Setup extends Activity implements OnClickListener {
 			if (srate.getText().length() == 0) {
 				srate.setError("Enter a Sample Interval");
 				pass = false;
-			} else if (Long.parseLong(srate.getText().toString()) < 200) {
-				srate.setError("Interval Must be >= 200");
+			} else if (Long.parseLong(srate.getText().toString()) < MIN_SAMPLE_INTERVAL) {
+				srate.setError("Interval Must be >= " + MIN_SAMPLE_INTERVAL);
 				pass = false;
 			}
 			if (recordingLength.getText().length() == 0) {
