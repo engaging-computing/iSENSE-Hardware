@@ -10,3 +10,6 @@
 #	Other Useless Files
 /gen
 lint.xml
+
+#	.orig Files
+*.orig
