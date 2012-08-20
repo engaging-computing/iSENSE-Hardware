@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -104,7 +103,7 @@ public class Setup extends Activity implements OnClickListener {
 		TextView.OnEditorActionListener tval = new TextView.OnEditorActionListener() {
 			public boolean onEditorAction(TextView exampleView, int actionId,
 					KeyEvent event) {
-				Log.e("blargh", "" + event);
+				
 				if (event == null) {
 					if ((!(eidInput.getText().toString().equals(eid)))
 							|| hasChanged) {
