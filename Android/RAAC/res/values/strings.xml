@@ -22,17 +22,19 @@
     <string name="aveval">Average/Mean</string>
     <string name="medval">Median</string>
     <string name="view_page">View Data on iSENSE</string>
-    <string name="change_eid">Change Experiment ID</string>
+    <string name="set_name">Set Name</string>
     <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
     
-    <string name="prefs_label">Preferences</string>
+    <string name="prefs_label">Settings</string>
     <string name="prefs_expid_title">Experiment ID</string>
     <string name="prefs_expid_desc">The ID number of the experiment on iSENSE that you want to upload data to</string>
     <string name="prefs_gname_title">Group Name</string>
     <string name="prefs_gname_desc">The name of your experiment group</string>
     <string name="prefs_auto_title">Auto-Upload</string>
     <string name="prefs_auto_desc">Automatically pull data and upload it to iSENSE after connecting to a PINPoint</string>
+    
+    <string name="namediag_label">Please enter a group name (you can change this later in settings)</string>
 
 </resources>
