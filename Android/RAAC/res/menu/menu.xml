@@ -16,8 +16,8 @@
           android:icon="?attr/menuRefresh"
           android:title="@string/menu_login"
           android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/menu_experiment"
-          android:icon="?attr/menuShare"
-          android:title="@string/menu_experiment"
-          android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/menu_settings"
+        android:icon="?attr/menuSettings"
+        android:title="@string/menu_prefs"
+        android:showAsAction="ifRoom|withText" />
 </menu>

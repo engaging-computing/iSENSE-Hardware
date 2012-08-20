@@ -104,8 +104,6 @@ import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
-/* Experiment 422 on iSENSE and 277 on Dev */
-
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -360,7 +358,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setContentView(R.layout.loading);
 
 		OrientationManager.disableRotation(DataCollector.this);
-		//setMenuStatus(false);
+		// setMenuStatus(false);
 
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
@@ -854,7 +852,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else if ((experimentInput.length() >= 0) && !successLogin) {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
-					if (!alreadySaved) saveOnUploadQueue();
+					if (!alreadySaved)
+						saveOnUploadQueue();
 				} else {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
@@ -869,7 +868,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				setContentView(R.layout.main);
 				initMainUI();
 				assignVars();
-				
+
 				SharedPreferences.Editor editor = eulaPrefs.edit();
 				editor.putBoolean(eulaKey, true);
 				editor.commit();
@@ -882,7 +881,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				getUploadQueue();
 			}
 		}
-
 
 	}
 
@@ -946,7 +944,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			uploadQueue.add(dsPic);
 			pic--;
 		}
-		
+
 		alreadySaved = true;
 	}
 
@@ -1157,6 +1155,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// updates time on main UI
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -1195,6 +1194,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// Get the package so we can check if EULA was checked
 	private PackageInfo getPackageInfo() {
 		PackageInfo pi = null;
 		try {
@@ -1429,7 +1429,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		}
 	}
-	
+
 	// UI variables initialized for onCreate
 	private void initMainUI() {
 		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
@@ -1497,6 +1497,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setStartStopListener();
 	}
 
+	// Allows for GPS to be recorded
 	public void initLocations() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -1520,6 +1521,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
 
+	// All the code for the main button!
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -1605,7 +1607,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 						setMenuStatus(false);
-						
+
 						running = true;
 						startStop.setText(R.string.stopString);
 
@@ -1883,7 +1885,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// Initializes everything we can
 					initVars();
 				}
-				
+
 			};
 			loadingScreen = new Runnable() {
 
@@ -1929,7 +1931,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 
 	}
-	
+
+	// allows for menu to be turned off when necessary
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
 		
