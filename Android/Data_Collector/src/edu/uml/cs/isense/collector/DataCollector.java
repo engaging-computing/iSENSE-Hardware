@@ -1439,7 +1439,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
-
+		
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -1903,12 +1903,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// allows for menu to be turned off when necessary
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
-
-		menuSetup.setEnabled(enabled);
-		menuUpload.setEnabled(enabled);
-		menuLogin.setEnabled(enabled);
-		menuMedia.setEnabled(enabled);
-		menuSync.setEnabled(enabled);
+		
+		if (mMenu != null) {
+			menuSetup.setEnabled(enabled);
+			menuUpload.setEnabled(enabled);
+			menuLogin.setEnabled(enabled);
+			menuMedia.setEnabled(enabled);
+			menuSync.setEnabled(enabled);
+		}
 	}
 
 }
