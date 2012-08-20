@@ -25,7 +25,8 @@ public class Setup extends Activity implements OnClickListener {
 	private EditText sessionName;
 	private EditText eidInput;
 	private EditText srate;
-	
+	private EditText recordingLength;
+
 	private Button okay;
 	private Button cancel;
 	private Button qrCode;
@@ -58,29 +59,29 @@ public class Setup extends Activity implements OnClickListener {
 						getApplicationContext());
 
 		Bundle extras = getIntent().getExtras();
-		String eid    = extras.getString("experiment_id");
+		String eid = extras.getString("experiment_id");
 		String sample = extras.getString("srate");
-		
+
 		mPrefs = getSharedPreferences("EID", 0);
 
 		sessionName = (EditText) findViewById(R.id.sessionName);
 		sessionName.setText(DataCollector.partialSessionName);
-			
+
 		eidInput = (EditText) findViewById(R.id.ExperimentInput);
 		eidInput.setText(eid);
-		
+
 		okay = (Button) findViewById(R.id.setup_ok);
 		okay.setOnClickListener(this);
-		
+
 		cancel = (Button) findViewById(R.id.setup_cancel);
 		cancel.setOnClickListener(this);
-		
+
 		qrCode = (Button) findViewById(R.id.qrCode);
 		qrCode.setOnClickListener(this);
-		
+
 		browse = (Button) findViewById(R.id.BrowseButton);
 		browse.setOnClickListener(this);
-		
+
 		srate = (EditText) findViewById(R.id.srate);
 		try {
 			if (Long.parseLong(sample) < MIN_SAMPLE_INTERVAL)
@@ -90,6 +91,9 @@ public class Setup extends Activity implements OnClickListener {
 		} catch (NumberFormatException nfe) {
 			srate.setText("" + MIN_SAMPLE_INTERVAL);
 		}
+
+		recordingLength = (EditText) findViewById(R.id.recLength);
+		recordingLength.setText("600");
 
 	}
 
@@ -116,12 +120,21 @@ public class Setup extends Activity implements OnClickListener {
 				srate.setError("Interval Must be >= 200");
 				pass = false;
 			}
+			if (recordingLength.getText().length() == 0) {
+				recordingLength.setText("600");
+			} else if (Long.parseLong(recordingLength.getText().toString()) < 1
+					|| Long.parseLong(recordingLength.getText().toString()) > 600)
+				recordingLength
+						.setError("Recording time must be between 1 and 600.");
 
 			if (pass) {
 
 				Intent i = new Intent(mContext, DataCollector.class);
 				i.putExtra("sessionName", sessionName.getText().toString());
-				i.putExtra("srate", Integer.parseInt(srate.getText().toString()));
+				i.putExtra("srate",
+						Integer.parseInt(srate.getText().toString()));
+				i.putExtra("recLength",
+						Integer.parseInt(recordingLength.getText().toString()));
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putString("experiment_id",
 						eidInput.getText().toString()).commit();
@@ -192,7 +205,8 @@ public class Setup extends Activity implements OnClickListener {
 						srate.setText("" + MIN_SAMPLE_INTERVAL);
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
-					w.make("Invalid QR Code!", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					w.make("Invalid QR Code!", Waffle.LENGTH_LONG,
+							Waffle.IMAGE_X);
 				}
 					
 			}
@@ -217,14 +231,13 @@ public class Setup extends Activity implements OnClickListener {
 		} else if (requestCode == NO_QR_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				String url = "https://play.google.com/store/apps/details?id=com.google.zxing.client.android";
-				Intent urlIntent = new Intent(
-						Intent.ACTION_VIEW);
+				Intent urlIntent = new Intent(Intent.ACTION_VIEW);
 				urlIntent.setData(Uri.parse(url));
 				startActivity(urlIntent);
-			} 
+			}
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);
