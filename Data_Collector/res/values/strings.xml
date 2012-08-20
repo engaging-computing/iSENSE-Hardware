@@ -241,10 +241,6 @@
 	<string name="no">No</string>
 	<string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
 	<string name="force_stop">You exited the app while data was still being recorded.  Data has stopped recording.</string>
-	<string name="recording_stopped_text">
-	    You have recorded 3,000 data points.  For the sake of memory, we have capped this as the maximum
-	    amount of data points to be recorded at one time and have stopped recording for you.  Press \"Okay\" to continue.  
-	</string>
 	<string name="description_hint">Enter Description Here&#8230;</string>
 	<string name="description_prompt">
 	    Enter a session description (or leave blank if you\'d like an automatically generated description).

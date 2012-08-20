@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.Experiments;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.simpledialogs.NoQR;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -31,12 +34,15 @@ public class Setup extends Activity implements OnClickListener {
 
 	private Context mContext;
 	private Waffle w;
-
+	private RestAPI rapi;
+	
 	private SharedPreferences mPrefs;
 
 	private static final int QR_CODE_REQUESTED = 100;
 	private static final int EXPERIMENT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
+	
+	private static final long MIN_SAMPLE_INTERVAL = 200;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,11 @@ public class Setup extends Activity implements OnClickListener {
 		mContext = this;
 
 		w = new Waffle(mContext);
+		
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
 
 		Bundle extras = getIntent().getExtras();
 		String eid = extras.getString("experiment_id");
@@ -72,10 +83,14 @@ public class Setup extends Activity implements OnClickListener {
 		browse.setOnClickListener(this);
 
 		srate = (EditText) findViewById(R.id.srate);
-		if (sample.length() >= 3)
-			srate.setText(sample);
-		else
-			srate.setText("200");
+		try {
+			if (Long.parseLong(sample) < MIN_SAMPLE_INTERVAL)
+				srate.setText("" + MIN_SAMPLE_INTERVAL);
+			else
+				srate.setText(sample);
+		} catch (NumberFormatException nfe) {
+			srate.setText("" + MIN_SAMPLE_INTERVAL);
+		}
 
 		recordingLength = (EditText) findViewById(R.id.recLength);
 		recordingLength.setText("600");
@@ -153,14 +168,14 @@ public class Setup extends Activity implements OnClickListener {
 
 		case R.id.BrowseButton:
 
-			Intent experimentIntent = new Intent(getApplicationContext(),
-					Experiments.class);
-			experimentIntent.putExtra(
-					"edu.uml.cs.isense.amusement.experiments.propose",
-					EXPERIMENT_CODE);
+				Intent experimentIntent = new Intent(getApplicationContext(),
+						Experiments.class);
+				experimentIntent.putExtra(
+						"edu.uml.cs.isense.amusement.experiments.propose",
+						EXPERIMENT_CODE);
 
-			startActivityForResult(experimentIntent, EXPERIMENT_CODE);
-
+				startActivityForResult(experimentIntent, EXPERIMENT_CODE);
+		
 			break;
 		}
 
@@ -180,20 +195,38 @@ public class Setup extends Activity implements OnClickListener {
 
 				try {
 					eidInput.setText(split[1]);
+					Experiment e = rapi.getExperiment(Integer.parseInt(split[1]));
+					try {
+						if (e.srate < MIN_SAMPLE_INTERVAL)
+							srate.setText("" + MIN_SAMPLE_INTERVAL);
+						else
+							srate.setText("" + e.srate);
+					} catch (NumberFormatException nfe) {
+						srate.setText("" + MIN_SAMPLE_INTERVAL);
+					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					w.make("Invalid QR Code!", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
 				}
-
-				// Handle successful scan
-			} else if (resultCode == RESULT_CANCELED) {
-				// Handle cancel
+					
 			}
 		} else if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.pictures.experiments.exp_id");
 				eidInput.setText("" + eid);
+				
+				try {
+					long sr = data.getExtras().getLong(
+							"edu.uml.cs.isense.pictures.experiments.srate");
+					if (sr < MIN_SAMPLE_INTERVAL)
+						srate.setText("" + MIN_SAMPLE_INTERVAL);
+					else
+						srate.setText("" + sr);
+				} catch (NumberFormatException nfe) {
+					srate.setText("" + MIN_SAMPLE_INTERVAL);
+				}
+				
 			}
 		} else if (requestCode == NO_QR_REQUESTED) {
 			if (resultCode == RESULT_OK) {
