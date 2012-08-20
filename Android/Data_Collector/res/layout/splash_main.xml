@@ -6,13 +6,19 @@
     android:background="@drawable/splashground"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/abstract_layout"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/spinner_orb"
-        android:orientation="vertical" />
+        android:scrollbars="none" >
+
+        <RelativeLayout
+            android:id="@+id/abstract_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_orb"
+            android:orientation="vertical" />
+    </ScrollView>
 
     <edu.uml.cs.isense.supplements.FontFitTextView
         android:id="@+id/title_text"
@@ -35,7 +41,5 @@
         android:orientation="horizontal"
         android:paddingTop="10dp" >
     </LinearLayout>
-
-    
 
 </RelativeLayout>
