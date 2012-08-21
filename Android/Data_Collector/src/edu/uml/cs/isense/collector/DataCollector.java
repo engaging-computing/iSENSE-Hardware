@@ -1439,7 +1439,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 		
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
