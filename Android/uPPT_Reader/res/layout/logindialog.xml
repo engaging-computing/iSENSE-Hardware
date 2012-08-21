@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="5dp"
+        android:text="@string/username" />
+
+    <EditText
+        android:id="@+id/usernameInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/usernameLabel"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:inputType="textEmailAddress"
+        android:layout_margin="5dp" />
+
+    <TextView
+        android:id="@+id/passwordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/usernameInput"
+        android:layout_marginTop="5dip"
+        android:text="@string/password"
+        android:layout_margin="5dp" />
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/usernameInput"
+        android:layout_toRightOf="@id/passwordLabel"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:inputType="textPassword"
+        android:paddingLeft="6dip"
+        android:singleLine="true"
+        android:layout_margin="5dp" />
+
+    <LinearLayout
+        android:id="@+id/okAndCancelButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordInput"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/login_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:layout_margin="2dp" />
+
+        <Button
+            android:id="@+id/login_ok"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:text="@string/login"
+            android:layout_margin="2dp" />
+    </LinearLayout>
+
+</RelativeLayout>

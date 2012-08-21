@@ -24,13 +24,18 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class Main extends Activity {
     
@@ -43,18 +48,19 @@ public class Main extends Activity {
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
 	
 	private Vibrator vibrator;
+	private TextView loginInfo;
 	
-	private static final int MENU_ITEM_LOGIN   = 0;
+	private static final int MENU_ITEM_LOGIN = 0;
 	
-    static final public int DIALOG_CANCELED = 0;
-    static final public int DIALOG_OK = 1;
-    static final public int DIALOG_PICTURE = 2;
+	private static final int LOGIN_REQUESTED = 100;
     
-    private RestAPI rapi ;
+    private RestAPI rapi;
+    //private Waffle w;
     
     private ProgressDialog dia;
      
     private static boolean useMenu = true;
+    private static boolean successLogin = false;
     
 	private long uploadTime;
 	public JSONArray data;
@@ -67,10 +73,14 @@ public class Main extends Activity {
         setContentView(R.layout.main);
         
         mContext = this;
+        //w = new Waffle(mContext);
         
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+        rapi.useDev(true);
         
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        
+        loginInfo = (TextView) findViewById(R.id.loginEdit);
         
     }
     
@@ -107,26 +117,28 @@ public class Main extends Activity {
 
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
+    	super.onCreateOptionsMenu(menu);
+    	
+    	MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		
 		return true;
 	}
     
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
-        if (!useMenu) {
-            menu.getItem(0).setEnabled(false);
-        } else {
-            menu.getItem(0).setEnabled(true );
-        }
+
+        //menu.getItem(0).setEnabled(true);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        	case MENU_ITEM_LOGIN:
-        		// do login stuff
-        		return true;
+    	switch (item.getItemId()) {
+		case R.id.menu_item_login:
+			Intent iLogin = new Intent(mContext, LoginActivity.class);
+    		startActivityForResult(iLogin, LOGIN_REQUESTED);
+    		return true;
         	
         }
         return false;
@@ -138,9 +150,35 @@ public class Main extends Activity {
     }
     
     @Override  
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {  
-        super.onActivityResult(reqCode, resultCode, data); 
-        // do activity result stuff
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {  
+        super.onActivityResult(requestCode, resultCode, data); 
+        
+        if (requestCode == LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				String returnCode = data.getStringExtra("returnCode");
+
+				if (returnCode.equals("Success")) {
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							Main.mContext,
+							Main.mContext.getSharedPreferences(
+									"USER_INFO", Context.MODE_PRIVATE));
+					String loginName = mPrefs.getString("username", "");
+					if (loginName.length() >= 18)
+						loginName = loginName.substring(0, 18) + "...";
+					loginInfo.setText("" + loginName);
+					successLogin = true;
+					Toast.makeText(mContext, "Login successful", Toast.LENGTH_SHORT).show();
+				} else if (returnCode.equals("Failed")) {
+					successLogin = false;
+					Intent i = new Intent(mContext, LoginActivity.class);
+					startActivityForResult(i, LOGIN_REQUESTED);
+				} else {
+					// should never get here
+				}
+
+			}
+
+		}
     }
 	
 	private Runnable uploader = new Runnable() {
