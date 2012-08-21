@@ -287,7 +287,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Strings
 	private String dateString;
-	private String niceDateString;
 
 	private String s_elapsedMinutes;
 	private String s_elapsedSeconds;
@@ -372,12 +371,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-			SimpleDateFormat niceFormat = new SimpleDateFormat(
-					"MM/dd/yyyy, HH:mm:ss");
 			Date dt = new Date();
-
-			dateString = sdf.format(dt);
-			niceDateString = niceFormat.format(dt);
+			String csvDateString = sdf.format(dt);
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -386,9 +381,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, partialSessionName + " - " + dateString
-					+ ".csv");
-			sdFileName = partialSessionName + " - " + dateString;
+			SDFile = new File(folder, partialSessionName + " - "
+					+ csvDateString + ".csv");
+			sdFileName = partialSessionName + " - " + csvDateString;
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -879,11 +874,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Session Id
 		int sessionId = -1;
 
-		// Date
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
-		Date dt = new Date();
-		String dateString = sdf.format(dt);
-
 		// Location
 		List<Address> address = null;
 		String city = "", state = "", country = "", addr = "";
@@ -919,18 +909,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 		String eid = mPrefs.getString("experiment_id", "");
 
 		// Chucks all the info into the queue
-		DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession + " - "
-				+ dateString, description, eid, dataSet.toString(), null,
-				sessionId, city, state, country, addr);
+		DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession, description,
+				eid, dataSet.toString(), null, sessionId, city, state, country,
+				addr);
 		uploadQueue.add(ds);
 
 		// Saves pictures for later upload
 		int pic = pictureArray.size();
 		while (pic > 0) {
-			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession + " - "
-					+ dateString, description, eid, null,
-					pictureArray.get(pic - 1), sessionId, city, state, country,
-					addr);
+			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession,
+					description, eid, null, pictureArray.get(pic - 1),
+					sessionId, city, state, country, addr);
 			uploadQueue.add(dsPic);
 			pic--;
 		}
@@ -948,10 +937,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
-
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
-			Date dt = new Date();
-			String dateString = sdf.format(dt);
 
 			try {
 				if (roughLoc != null) {
@@ -1006,10 +991,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Saves data for later upload
 				if (!uploadSuccess) {
-					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession
-							+ " - " + dateString, description, eid,
-							dataSet.toString(), null, sessionId, city, state,
-							country, addr);
+					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+							description, eid, dataSet.toString(), null,
+							sessionId, city, state, country, addr);
 					uploadQueue.add(ds);
 				}
 
@@ -1023,8 +1007,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// Saves pictures for later upload
 					if (!picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC,
-								nameOfSession + " - " + dateString,
-								description, eid, null,
+								nameOfSession, description, eid, null,
 								pictureArray.get(pic - 1), sessionId, city,
 								state, country, addr);
 						uploadQueue.add(ds);
@@ -1122,7 +1105,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			if (e != null) {
 				iSetup.putExtra("experiment_id", "" + e.experiment_id);
-				iSetup.putExtra("srate", "" + e.srate);				
+				iSetup.putExtra("srate", "" + e.srate);
 			} else {
 				iSetup.putExtra("experiment_id", "");
 				iSetup.putExtra("srate", "");
@@ -1227,7 +1210,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Registers Sensors
-	private void registerSensors() {		
+	private void registerSensors() {
 		if (mSensorManager != null && setupDone && dfm != null) {
 
 			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
@@ -1439,8 +1422,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(false);
-		
+		rapi.useDev(true);
+
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -1547,6 +1530,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 						running = false;
 						startStop.setText(R.string.startString);
 						time.setText(R.string.timeElapsed);
+
+						// Date
+						SimpleDateFormat sdf = new SimpleDateFormat(
+								"MM-dd-yyyy, HH:mm:ss");
+						Date dt = new Date();
+						dateString = sdf.format(dt);
+						nameOfSession += " - " + dateString;
 
 						timeTimer.cancel();
 						timeElapsedTimer.cancel();
@@ -1763,7 +1753,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe).putExtra("date", niceDateString)
+				.putExtra("append", appendMe).putExtra("date", dateString)
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
@@ -1904,7 +1894,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// allows for menu to be turned off when necessary
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
-		
+
 		if (mMenu != null) {
 			menuSetup.setEnabled(enabled);
 			menuUpload.setEnabled(enabled);
