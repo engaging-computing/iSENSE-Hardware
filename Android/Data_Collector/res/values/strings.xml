@@ -74,7 +74,8 @@
     <string name="cont">Continue</string>
     <string name="exit">Exit</string>
     <string name="login">Login</string>
-    <string name="guide_text">	    This is a guide designed to help explain to you how to use our iSENSE Data 
+    <string name="guide_text">	    
+        This is a guide designed to help explain to you how to use our iSENSE Data 
 	    Collector application.
 
 		\n\nYou may have already noticed the initial splash screen (the previous 
@@ -116,7 +117,7 @@
 		“Sync Time” feature for you.  Selecting this feature will bring you to a whole 
 		new yellow-themed layout which will further explain how to use this incredibly
 		useful feature.
-
+		
 		\n\nBefore recording any data with this application, you must “setup.”  This can be 
 		done through the menu or by holding the “START” button prior to setting up the current 
 		session.  After experiment data has been loaded, you will see a dialog labeled “Step 
@@ -132,11 +133,10 @@
 		where you can download the latest version of the recommended QR Code scanning application.  
 		“Browse&#8230;” will allow you to scroll through a list of all existing experiments on 
 		the iSENSE website and select the one you’d like to use.  For experiments that have an 
-		optimal test length, we've provided the option to set a session length.  The maximum time 
+		optimal test length, we\'ve provided the option to set a session length.  The maximum time 
 		we support support is 600 seconds, or 10 minutes.  It should be noted, however, that the recording 
 		can be stopped short of the specified test length.
 		
-
 		\n\nWhen you’re done setting up we will gather the associated fields from that 
 		experiment and display another dialog, labeled “Step 2: Select Fields”,
 		where you may see every field that this experiment can accept data for.  
@@ -221,7 +221,9 @@
 		However, if you have any questions or comments regarding this application, our 
 		contact info may be found in the EULA (so be sure to read it!)
 
-		\n\nThank you for choosing to use our application - we hope you enjoy it!</string>
+		\n\nThank you for choosing to use our application - we hope you enjoy it!
+
+	</string>
     <string name="about_text">	    Welcome to the iSENSE Data Collector Android Application, developed by 
 	    UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE 
 	    team under Fred Martin.
