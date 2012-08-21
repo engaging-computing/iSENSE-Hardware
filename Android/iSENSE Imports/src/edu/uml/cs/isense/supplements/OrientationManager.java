@@ -21,10 +21,9 @@ public class OrientationManager {
 	 * @param activity Activity whose orientation will be locked.
 	 */
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	public static void disableRotation(Activity activity) {       
 	    final int orientation = activity.getResources().getConfiguration().orientation;
-	    final int rotation = activity.getWindowManager().getDefaultDisplay().getOrientation();
+	    final int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
 	    final int build = Build.VERSION.SDK_INT;
 
 	    // Copied from Android docs, since we don't have these values in Froyo 2.2
@@ -40,10 +39,10 @@ public class OrientationManager {
 	    	
 	        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 	        	
-	        	if (build < Build.VERSION_CODES.HONEYCOMB)
-	        		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-	        	else
+	        	if (build < Build.VERSION_CODES.JELLY_BEAN && build >= Build.VERSION_CODES.HONEYCOMB)
 	        		activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+	        	else
+	        		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	        	
 	        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 	            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -53,13 +52,13 @@ public class OrientationManager {
 	    	
 	        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 	        	
-	        	if (build < Build.VERSION_CODES.HONEYCOMB)
-	        		activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-	        	else
+	        	if (build < Build.VERSION_CODES.JELLY_BEAN && build >= Build.VERSION_CODES.HONEYCOMB)
 	        		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	        	else
+	        		activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
 	        	
 	        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE)  {
-	            activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+	        	activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 	        }
 	        
 	    }
