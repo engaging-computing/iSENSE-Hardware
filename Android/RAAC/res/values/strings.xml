@@ -27,6 +27,8 @@
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
     
+    <string name="prefs_label_expr">Experiment Settings</string>
+    <string name="prefs_label_conn">Connection Settings</string>
     <string name="prefs_label">Settings</string>
     <string name="prefs_expid_title">Experiment ID</string>
     <string name="prefs_expid_desc">The ID number of the experiment on iSENSE that you want to upload data to</string>
@@ -34,6 +36,8 @@
     <string name="prefs_gname_desc">The name of your experiment group</string>
     <string name="prefs_auto_title">Auto-Upload</string>
     <string name="prefs_auto_desc">Automatically pull data and upload it to iSENSE after connecting to a PINPoint</string>
+    <string name="prefs_auto2_title">Auto-Connect</string>
+    <string name="prefs_auto2_desc">Connect to the default PINPoint without showing the device list, if it is present</string>
     
     <string name="namediag_label">Please enter a group name (you can change this later in settings)</string>
 

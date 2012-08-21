@@ -121,6 +121,9 @@ public class Isense extends Activity implements OnClickListener {
 	JSONArray dataSet;
 	public static Context mContext;
 	boolean autoRun = false;
+	boolean autoConn = true;
+	String defaultMac = "";
+	boolean freshLaunch = true;	//used to determine whether to show the device list
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
@@ -159,6 +162,8 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i =  new Intent(this, SetName.class);
 			startActivity(i);
 		}
+		//Get the MAC address of the default PINPoint
+		defaultMac = prefs.getString("defaultPpt", "");
 		
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
@@ -192,11 +197,7 @@ public class Isense extends Activity implements OnClickListener {
 	// Set up all views from the XML layout
 	public void initializeLayout() {
 		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-		/*SharedPreferences expr  = getSharedPreferences("EXPERIMENT", 0);
-		SharedPreferences.Editor editor = expr.edit();
-		editor.putString("experiment_number", experimentId);
-		editor.commit();*/
-
+		
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -253,7 +254,6 @@ public class Isense extends Activity implements OnClickListener {
 		super.onResume();
 
 		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
-		IntentFilter discovery=new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 		if(Build.VERSION.SDK_INT >= 10) {
 			mAdapter = NfcAdapter.getDefaultAdapter(this);
 			if(mAdapter != null) {
@@ -283,6 +283,7 @@ public class Isense extends Activity implements OnClickListener {
 		autoRun = prefs.getBoolean("auto_upload", false);
 		nameField.setText(prefs.getString("group_name", "SoR User"));
 		experimentId = prefs.getString("experiment_number", "421");
+		autoConn = prefs.getBoolean("auto_connect", true);
 	}
 
 	@Override
@@ -318,7 +319,7 @@ public class Isense extends Activity implements OnClickListener {
 					e.printStackTrace();
 				}
 
-				connectToBluetooth(text);
+				connectToBluetooth(text, true);
 			}
 		}
 	}
@@ -378,7 +379,7 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.disconnect();
 	}
 
-	public void connectToBluetooth(String macAddr) {
+	public void connectToBluetooth(String macAddr, boolean fromNFC) {
 		try {
 			BluetoothDevice device = mBluetoothAdapter
 					.getRemoteDevice(macAddr);
@@ -386,6 +387,8 @@ public class Isense extends Activity implements OnClickListener {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
+			Intent serverIntent = new Intent(this, DeviceListActivity.class);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
 	}
 
@@ -461,8 +464,13 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v == pinpointBtn) {
-			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			if(!defaultMac.equals("") && autoConn == true) {
+				connectToBluetooth(defaultMac, false);
+				freshLaunch = false;
+			} else {
+				Intent serverIntent = new Intent(this, DeviceListActivity.class);
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			}
 		}
 		if (v == rcrdBtn) {
 			getRecords();
@@ -710,6 +718,10 @@ public class Isense extends Activity implements OnClickListener {
 					pinpointBtn.setImageResource(R.drawable.nopptbtn);
 					btStatNum = 0;
 					setBtStatus();
+					if(freshLaunch == false) {
+						Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
+						startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+					}
 					break;
 				}
 				break;
@@ -727,6 +739,8 @@ public class Isense extends Activity implements OnClickListener {
 	};
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor defEditor = defPrefs.edit();
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
 			connectFromSplash = true;
@@ -735,7 +749,11 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				connectToBluetooth(address);
+				if(defaultMac.equals("")) {
+					defEditor.putString("defaultPpt", address);
+					defEditor.commit();
+				}
+				connectToBluetooth(address, false);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_2:
@@ -745,7 +763,11 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				connectToBluetooth(address);
+				if(defaultMac.equals("")) {
+					defEditor.putString("defaultPpt", address);
+					defEditor.commit();
+				}
+				connectToBluetooth(address, false);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}
