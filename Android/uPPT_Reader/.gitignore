@@ -1,0 +1,11 @@
+#	.orig files
+*.orig
+
+#	bin
+bin/
+
+#	gen
+gen/
+
+#	ds store
+*.DS_Store
