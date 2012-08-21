@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">iSENSE Data Collector</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="prompt">Would you like to retry uploading any of the following?</string>
-	
-	<string name="syncTime">
-	    Synchronizing time is useful when using multiple devices on a ride at the
+    <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
 	    same time.  By default, many Android devices\' clocks will not match one
 	    another\'s, thus making recording data at similar times difficult.  However,
 	    you have a choice to fix this issue by setting a device as a \"host\".
@@ -27,66 +26,56 @@
 	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
 	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
-	    WiFi networks.
-	</string>
-	
-	<string name="search">Search</string>
-	<string name="startString">START\n(Press and Hold)</string>
-	<string name="stopString">STOP\n(Press and Hold)</string>
-	<string name="notLoggedIn">Username: NOT LOGGED IN</string>
-	<string name="session">Session Name: NOT SET</string>
-	<string name="iSENSELogo">iSENSE Logo</string>
-	<string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
-	<string name="menuDirections">Use Menu to Access Configurations</string>
-	<string name="timeElapsed">Time Elapsed: 0:00</string>
-	<string name="sessionName">Session Name: </string>
-	<string name="experimentNum">Experiment #: </string>
-	<string name="browse">  Browse&#8230;  </string>
-	<string name="takePic">Take Picture</string>
-	<string name="takeVid">Take Video"</string>
-	<string name="instructions"><u>Instructions:</u></string>
-	<string name="send">Send</string>
-	<string name="receive">Receive</string>
-	<string name="cancel">Cancel</string>
-	<string name="okay">Okay</string>
-	<string name="back">Back</string>
-	<string name="upload">Upload</string>
-	<string name="media_desc">Select one of the following options:</string>
-	<string name="scan_qr">Scan QR Code</string>
+	    WiFi networks.</string>
+    <string name="search">Search</string>
+    <string name="startString">START\n(Press and Hold)</string>
+    <string name="stopString">STOP\n(Press and Hold)</string>
+    <string name="notLoggedIn">Username: NOT LOGGED IN</string>
+    <string name="session">Session Name: NOT SET</string>
+    <string name="iSENSELogo">iSENSE Logo</string>
+    <string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
+    <string name="menuDirections">Use Menu to Access Configurations</string>
+    <string name="timeElapsed">Time Elapsed: 0:00</string>
+    <string name="sessionName">Session Name: </string>
+    <string name="experimentNum">Experiment #: </string>
+    <string name="browse">  Browse&#8230;  </string>
+    <string name="takePic">Take Picture</string>
+    <string name="takeVid">Take Video"</string>
+    <string name="instructions"><u>Instructions:</u></string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="cancel">Cancel</string>
+    <string name="okay">Okay</string>
+    <string name="back">Back</string>
+    <string name="upload">Upload</string>
+    <string name="media_desc">Select one of the following options:</string>
+    <string name="scan_qr">Scan QR Code</string>
     <string name="username">Username:&#160;&#160;</string>
-	<string name="password">Password:&#160;&#160;&#160;</string>
-	<string name="loading">Loading&#x2026;</string>
-	<string name="no_isense">
-	    You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
+    <string name="password">Password:&#160;&#160;&#160;</string>
+    <string name="loading">Loading&#x2026;</string>
+    <string name="no_isense">	    You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
 		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in
 		to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if
-		you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.
-	</string>
-	<string name="yes">Yes</string>
-	<string name="no">No</string>
-	<string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
-	<string name="force_stop">You exited the app while data was still being recorded.  Data has stopped recording.</string>
-	<string name="description_hint">Enter Description Here&#8230;</string>
-	<string name="description_prompt">
-	    Enter a session description (or leave blank if you\'d like an automatically generated description).
-	</string>
-	<string name="visit">Visit</string>
-	<string name="qr_prompt">
-	    Your device does not have the proper Barcode Scanner application installed
+		you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
+    <string name="force_stop">You exited the app while data was still being recorded.  Data has stopped recording.</string>
+    <string name="description_hint">Enter Description Here&#8230;</string>
+    <string name="description_prompt">	    Enter a session description (or leave blank if you\'d like an automatically generated description).</string>
+    <string name="visit">Visit</string>
+    <string name="qr_prompt">	    Your device does not have the proper Barcode Scanner application installed
 		to use this feature.  However, you may visit the Google Play store to download 
-		this application (\"Barcode Scanner\" by the Zxing Team).
-	</string>
-
-	<string name="done">Done</string>
-	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
-	<string name="retry">Try Again</string>
-	<string name="sample_rate">Sample Interval (ms): </string>
-	<string name="cont">Continue</string>
-	<string name="exit">Exit</string>
-	<string name="login">Login</string>
-	
-	<string name="guide_text">
-	    This is a guide designed to help explain to you how to use our iSENSE Data 
+		this application (\"Barcode Scanner\" by the Zxing Team).</string>
+    <string name="done">Done</string>
+    <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+    <string name="retry">Try Again</string>
+    <string name="sample_rate">Sample Interval (ms): </string>
+    <string name="cont">Continue</string>
+    <string name="exit">Exit</string>
+    <string name="login">Login</string>
+    <string name="guide_text">	    
+        This is a guide designed to help explain to you how to use our iSENSE Data 
 	    Collector application.
 
 		\n\nYou may have already noticed the initial splash screen (the previous 
@@ -128,23 +117,26 @@
 		“Sync Time” feature for you.  Selecting this feature will bring you to a whole 
 		new yellow-themed layout which will further explain how to use this incredibly
 		useful feature.
-
+		
 		\n\nBefore recording any data with this application, you must “setup.”  This can be 
 		done through the menu or by holding the “START” button prior to setting up the current 
 		session.  After experiment data has been loaded, you will see a dialog labeled “Step 
 		1: Identify Session”.  Here, you will enter the name you want to give the session you 
-		are going to record, the experiment you want to upload the data to, and the interval 
-		(in milliseconds) between each recorded data point.  You may enter an experiment 
-		number manually, should you know your experiment’s ID number off the top of your head, 
-		or you could use one of two additional features.  “Scan QR Code” will allow you to 
-		scan the QR Code that was generated on the associated experiment’s homepage and grab 
-		its experiment number and sample interval for you.  Of course, you are still welcome 
+		are going to record, the experiment you want to upload the data to, the interval (in milliseconds) 
+		between each recorded data point, and how long the recording should last (in seconds).  
+		You may enter an experiment number manually, should you know your experiment’s ID number off 
+		the top of your head, or you could use one of two additional features.  “Scan QR Code” will 
+		allow you to scan the QR Code that was generated on the associated experiment’s homepage and 
+		grab its experiment number and sample interval for you.  Of course, you are still welcome 
 		to change any of those credentials at any point.  Don’t have a QR Code scanner 
 		application?  No problem!  Our application will re-direct to the Google Play Store 
 		where you can download the latest version of the recommended QR Code scanning application.  
 		“Browse&#8230;” will allow you to scroll through a list of all existing experiments on 
-		the iSENSE website and select the one you’d like to use.
-
+		the iSENSE website and select the one you’d like to use.  For experiments that have an 
+		optimal test length, we\'ve provided the option to set a session length.  The maximum time 
+		we support support is 600 seconds, or 10 minutes.  It should be noted, however, that the recording 
+		can be stopped short of the specified test length.
+		
 		\n\nWhen you’re done setting up we will gather the associated fields from that 
 		experiment and display another dialog, labeled “Step 2: Select Fields”,
 		where you may see every field that this experiment can accept data for.  
@@ -230,10 +222,9 @@
 		contact info may be found in the EULA (so be sure to read it!)
 
 		\n\nThank you for choosing to use our application - we hope you enjoy it!
-	    
-	</string>	
-	<string name="about_text">
-	    Welcome to the iSENSE Data Collector Android Application, developed by 
+
+	</string>
+    <string name="about_text">	    Welcome to the iSENSE Data Collector Android Application, developed by 
 	    UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE 
 	    team under Fred Martin.
 
@@ -261,15 +252,12 @@
 		visualization tools offered by the iSENSE website.
 
 		\n\nIn order to use this application, you must have an account on 
-		isenseproject.org.  You must also accept our End User License Agreement.
-	    
-	</string>
-	
-	<string name="menu_login">Login</string>
-	<string name="menu_media">Media</string>
-	<string name="menu_setup">Setup</string>
-	<string name="menu_sync">Sync Time</string>
-	<string name="menu_upload">Upload</string>
-	<string name="record_length">Test Length (sec):</string>
-	
+		isenseproject.org.  You must also accept our End User License Agreement.</string>
+    <string name="menu_login">Login</string>
+    <string name="menu_media">Media</string>
+    <string name="menu_setup">Setup</string>
+    <string name="menu_sync">Sync Time</string>
+    <string name="menu_upload">Upload</string>
+    <string name="record_length">Test Length (sec):</string>
+
 </resources>
