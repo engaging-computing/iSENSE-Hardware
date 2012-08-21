@@ -28,21 +28,21 @@
             
             
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/loginLabel"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_alignParentLeft="true"
                 android:textSize="16sp"
-                android:text="@string/field1"
+                android:text="@string/loggedInAs"
                 android:paddingTop="8dp" />
-            <EditText 
-                android:id="@+id/editText1"
+            <TextView
+                android:id="@+id/loginEdit"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_toRightOf="@+id/textView1"
-                android:layout_alignParentRight="true"
-                android:hint="@string/field1hint" />
+                android:layout_toRightOf="@+id/loginLabel"
+                android:layout_alignParentRight="true" 
+                android:textSize="16sp" />
             
             
         </RelativeLayout>

@@ -2,10 +2,15 @@
 
     <string name="app_name">uPPT Reader</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">Main</string>
     <string name="submit">Submit</string>
     <string name="isense_logo_desc">iSENSE Logo</string>
-    <string name="field1">Field1: </string>
-    <string name="field1hint">Field1 Hint</string>
+    
+    <string name="loggedInAs">Logged In As: </string>
 
+    <string name="username">Username: </string>
+	<string name="password">Password: </string>
+    <string name="login">Login</string>
+	<string name="cancel">Cancel</string>
+    <string name="okay">Okay</string>
+	
 </resources>
