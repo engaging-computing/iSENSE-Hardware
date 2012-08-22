@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+   		android:text="@string/viewYourData" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+        
+        <Button
+    	    android:id="@+id/view_data_cancel"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="match_parent"
+    	    android:layout_weight="1"
+    	    android:text="@string/cancel"
+    	    android:textSize="18sp" />  
+        
+    	<Button
+    	    android:id="@+id/view_data_ok"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="match_parent"
+    	    android:layout_weight="1"
+    	    android:text="@string/okay"
+    	    android:textSize="18sp" />   	
+        
+    </LinearLayout>
+    
+
+</LinearLayout>
