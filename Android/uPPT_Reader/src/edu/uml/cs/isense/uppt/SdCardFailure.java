@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import edu.uml.cs.isense.uppt.R;
 
 public class SdCardFailure extends Activity {
 
