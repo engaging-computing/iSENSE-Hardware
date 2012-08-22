@@ -743,7 +743,6 @@ public class Isense extends Activity implements OnClickListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor defEditor = defPrefs.edit();
-		System.out.println("Result from code "+requestCode);
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
 			connectFromSplash = true;
