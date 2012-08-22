@@ -14,11 +14,19 @@
         Could not retrieve files from your SD card.  Is your SD card mounted?
         Are external storage permissions on?
     </string>
+    <string name="viewYourData">
+        Would you like to view your data on iSENSE?
+    </string>
+    <string name="chooseExperiment">
+        Please enter the experiment number you would like to upload to.
+    </string>
 
     <string name="username">Username: </string>
 	<string name="password">Password: </string>
 	
     <string name="login">Login</string>
+    <string name="experiment">Experiment</string>
+    
 	<string name="cancel">Cancel</string>
 	<string name="back">Back</string>
     <string name="okay">Okay</string>

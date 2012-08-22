@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="16sp"
+        android:text="@string/chooseExperiment"
+        android:gravity="center" />
+    
+    <EditText
+        android:id="@+id/experimentInput"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:digits="1234567890"
+        android:maxLength="6"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:imeOptions="actionDone" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >        
+        
+    	<Button
+    	    android:id="@+id/experiment_cancel"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="match_parent"
+    	    android:layout_weight="1"
+    	    android:text="@string/cancel"
+    	    android:textSize="18sp" />  
+    	    
+    	<Button
+    	    android:id="@+id/experiment_ok"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="match_parent"
+    	    android:layout_weight="1"
+    	    android:text="@string/okay"
+    	    android:textSize="18sp" /> 
+        
+    </LinearLayout>
+    
+
+</LinearLayout>

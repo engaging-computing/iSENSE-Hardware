@@ -43,6 +43,12 @@
         <activity
             android:name=".SdCardFailure" 
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".ViewData"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".Experiment"
+            android:theme="@android:style/Theme.Dialog" />
             
     </application>
 
