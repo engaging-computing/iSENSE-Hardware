@@ -1,16 +1,26 @@
 <resources>
 
     <string name="app_name">uPPT Reader</string>
-    <string name="menu_settings">Settings</string>
-    <string name="submit">Submit</string>
     <string name="isense_logo_desc">iSENSE Logo</string>
     
     <string name="loggedInAs">Logged In As: </string>
+    <string name="usingExperiment">Uploading to Experiment #: </string>
+    
+	<string name="refresh">Refresh Files</string>
+    <string name="upload">Upload Data</string>
+    
+    <string name="needData">No data currently available.</string>
+    <string name="sdFail">
+        Could not retrieve files from your SD card.  Is your SD card mounted?
+        Are external storage permissions on?
+    </string>
 
     <string name="username">Username: </string>
 	<string name="password">Password: </string>
+	
     <string name="login">Login</string>
 	<string name="cancel">Cancel</string>
+	<string name="back">Back</string>
     <string name="okay">Okay</string>
 	
 </resources>

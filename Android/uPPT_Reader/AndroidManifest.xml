@@ -40,6 +40,9 @@
         <activity
             android:name=".LoginError" 
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".SdCardFailure" 
+            android:theme="@android:style/Theme.Dialog" />
             
     </application>
 
