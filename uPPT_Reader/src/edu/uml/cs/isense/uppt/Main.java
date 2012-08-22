@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
@@ -57,6 +58,8 @@ public class Main extends Activity implements OnClickListener {
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
+	private Button refresh;
+	private Button upload;
 
 	private static final int MENU_ITEM_LOGIN = 0;
 
@@ -101,6 +104,37 @@ public class Main extends Activity implements OnClickListener {
 			w.make(e.toString(), Waffle.IMAGE_X);
 		}
 
+
+		refresh = (Button) findViewById(R.id.refresh);
+		refresh.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+
+				boolean success = false; // get SD card files and list them in a
+											// listview
+				if (!success) {
+					Intent iSdFail = new Intent(mContext, SdCardFailure.class);
+					startActivity(iSdFail);
+				}
+
+			}
+		});
+	
+		upload = (Button) findViewById(R.id.upload);
+		upload.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				
+				new UploadTask().execute();
+
+			}
+		});
+
+	}
+
+	long getUploadTime() {
+		Calendar c = Calendar.getInstance();
+		return (long) (c.getTimeInMillis());
 	}
 
 	long getUploadTime() {
@@ -144,13 +178,6 @@ public class Main extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-
-		// menu.getItem(0).setEnabled(true);
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_item_login:
@@ -158,8 +185,10 @@ public class Main extends Activity implements OnClickListener {
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
 
+		default:
+			return super.onOptionsItemSelected(item);
+
 		}
-		return false;
 	}
 
 	static int getApiLevel() {
@@ -181,7 +210,9 @@ public class Main extends Activity implements OnClickListener {
 					String loginName = mPrefs.getString("username", "");
 					if (loginName.length() >= 18)
 						loginName = loginName.substring(0, 18) + "...";
-					loginInfo.setText("" + loginName);
+					loginInfo.setText(getResources().getString(
+							R.string.loggedInAs)
+							+ loginName);
 					successLogin = true;
 					Toast.makeText(mContext, "Login successful",
 							Toast.LENGTH_SHORT).show();
