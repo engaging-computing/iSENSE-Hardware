@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:text="@string/refresh"
             android:textSize="20sp" />
-        
+
         <Button
             android:id="@+id/upload"
             android:layout_width="match_parent"
@@ -55,7 +55,6 @@
             android:layout_weight="1"
             android:text="@string/upload"
             android:textSize="20sp" />
-        
     </LinearLayout>
 
     <RelativeLayout
@@ -67,10 +66,17 @@
         android:paddingBottom="10dp"
         android:paddingTop="8dp" >
 
-        <ListView
-            android:id="@+id/dataView"
+        <ScrollView
+            android:id="@+id/scrollWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/dataView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 
         <TextView
             android:id="@+id/noItems"

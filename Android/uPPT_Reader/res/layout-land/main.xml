@@ -25,7 +25,7 @@
             android:id="@+id/loginLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image_view"
+            android:layout_below="@id/image_view"
             android:layout_marginLeft="2dp"
             android:paddingTop="8dp"
             android:text="@string/loggedInAs"
@@ -65,7 +65,6 @@
                 android:text="@string/upload"
                 android:textSize="20sp" />
         </LinearLayout>
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -74,10 +73,17 @@
         android:layout_height="match_parent"
         android:layout_weight=".4" >
 
-        <ListView
-            android:id="@+id/dataView"
+        <ScrollView
+            android:id="@+id/scrollWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/dataView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 
         <TextView
             android:id="@+id/noItems"
