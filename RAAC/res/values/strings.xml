@@ -38,6 +38,10 @@
     <string name="prefs_auto_desc">Automatically pull data and upload it to iSENSE after connecting to a PINPoint</string>
     <string name="prefs_auto2_title">Auto-Connect</string>
     <string name="prefs_auto2_desc">Connect to the default PINPoint without showing the device list, if it is present</string>
+    <string name="prefs_defmac_title">Default PINPoint</string>
+    <string name="prefs_defmac_desc">MAC Address of the default PINPoint. If blank, the next connection will be set as the default. Don\'t change unless you know what you\'re doing!</string>
+    <string name="prefs_cleardef_title">Clear Default PINPoint</string>
+    <string name="prefs_cleardef_desc">Removes default PINPoint from settings.</string>
     
     <string name="namediag_label">Please enter a group name (you can change this later in settings)</string>
 

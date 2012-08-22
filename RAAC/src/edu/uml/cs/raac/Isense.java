@@ -123,7 +123,6 @@ public class Isense extends Activity implements OnClickListener {
 	boolean autoRun = false;
 	boolean autoConn = true;
 	String defaultMac = "";
-	boolean freshLaunch = true;	//used to determine whether to show the device list
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
@@ -284,6 +283,7 @@ public class Isense extends Activity implements OnClickListener {
 		nameField.setText(prefs.getString("group_name", "SoR User"));
 		experimentId = prefs.getString("experiment_number", "421");
 		autoConn = prefs.getBoolean("auto_connect", true);
+		defaultMac = prefs.getString("defaultPpt", "");
 	}
 
 	@Override
@@ -319,7 +319,7 @@ public class Isense extends Activity implements OnClickListener {
 					e.printStackTrace();
 				}
 
-				connectToBluetooth(text, true);
+				connectToBluetooth(text);
 			}
 		}
 	}
@@ -379,7 +379,8 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.disconnect();
 	}
 
-	public void connectToBluetooth(String macAddr, boolean fromNFC) {
+	public void connectToBluetooth(String macAddr) {
+		System.out.println("conneting to "+macAddr);
 		try {
 			BluetoothDevice device = mBluetoothAdapter
 					.getRemoteDevice(macAddr);
@@ -465,8 +466,7 @@ public class Isense extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if (v == pinpointBtn) {
 			if(!defaultMac.equals("") && autoConn == true) {
-				connectToBluetooth(defaultMac, false);
-				freshLaunch = false;
+				connectToBluetooth(defaultMac);
 			} else {
 				Intent serverIntent = new Intent(this, DeviceListActivity.class);
 				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
@@ -718,10 +718,6 @@ public class Isense extends Activity implements OnClickListener {
 					pinpointBtn.setImageResource(R.drawable.nopptbtn);
 					btStatNum = 0;
 					setBtStatus();
-					if(freshLaunch == false) {
-						Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
-						startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-					}
 					break;
 				}
 				break;
@@ -734,6 +730,12 @@ public class Isense extends Activity implements OnClickListener {
 			case BluetoothService.MESSAGE_DEVICE_NAME:
 				break;
 			case BluetoothService.MESSAGE_TOAST:
+				Toast.makeText(getApplicationContext(), msg.getData().getString(BluetoothService.TOAST), Toast.LENGTH_SHORT).show();
+				if(msg.getData().getString(BluetoothService.TOAST).equals("Unable to connect device")) {
+					Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
+					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+				}
+				break;
 			}
 		}
 	};
@@ -741,6 +743,7 @@ public class Isense extends Activity implements OnClickListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor defEditor = defPrefs.edit();
+		System.out.println("Result from code "+requestCode);
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
 			connectFromSplash = true;
@@ -753,7 +756,7 @@ public class Isense extends Activity implements OnClickListener {
 					defEditor.putString("defaultPpt", address);
 					defEditor.commit();
 				}
-				connectToBluetooth(address, false);
+				connectToBluetooth(address);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_2:
@@ -767,7 +770,7 @@ public class Isense extends Activity implements OnClickListener {
 					defEditor.putString("defaultPpt", address);
 					defEditor.commit();
 				}
-				connectToBluetooth(address, false);
+				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}
