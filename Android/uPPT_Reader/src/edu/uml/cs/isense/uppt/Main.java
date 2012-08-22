@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -39,28 +40,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class Main extends Activity {
 
 	private static String username = "";
 	private static String password = "";
-	private static String experimentId = "";
 	private static String sessionName = "";
 	private static String sessionId = "";
 
-	private static final String baseUrl = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
+	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
+	private TextView experimentLabel;
 	private Button refresh;
 	private Button upload;
 
 	private static final int MENU_ITEM_LOGIN = 0;
+	private static final int MENU_ITEM_EXPERIMENT = 1;
 
 	private static final int LOGIN_REQUESTED = 100;
+	private static final int VIEW_DATA_REQUESTED = 101;
+	private static final int EXPERIMENT_REQUESTED = 102;
 
 	private RestAPI rapi;
-	// private Waffle w;
+	private Waffle w;
 
 	private ProgressDialog dia;
 
@@ -78,7 +83,7 @@ public class Main extends Activity {
 		setContentView(R.layout.main);
 
 		mContext = this;
-		// w = new Waffle(mContext);
+		w = new Waffle(mContext);
 
 		rapi = RestAPI
 				.getInstance(
@@ -88,7 +93,21 @@ public class Main extends Activity {
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
+				Main.mContext, Main.mContext.getSharedPreferences(
+						"USER_INFO", Context.MODE_PRIVATE));
+		final SharedPreferences mExpPrefs = getSharedPreferences("eid", 0);
+		
+		String loginName = mUserPrefs.getString("username", "");
+		if (loginName.length() >= 15)
+			loginName = loginName.substring(0, 15) + "...";
 		loginInfo = (TextView) findViewById(R.id.loginLabel);
+		loginInfo.setText(getResources().getString(R.string.loggedInAs) + 
+				" " + loginName);
+		
+		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
+		experimentLabel.setText(getResources().getString(R.string.usingExperiment)
+				+ " " + mExpPrefs.getString("eid", ""));
 
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
@@ -161,6 +180,11 @@ public class Main extends Activity {
 			Intent iLogin = new Intent(mContext, LoginActivity.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
+			
+		case R.id.menu_item_experiment:
+			Intent iExperiment = new Intent(mContext, Experiment.class);
+			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -189,10 +213,9 @@ public class Main extends Activity {
 						loginName = loginName.substring(0, 18) + "...";
 					loginInfo.setText(getResources().getString(
 							R.string.loggedInAs)
-							+ loginName);
+							+ " " + loginName);
 					successLogin = true;
-					Toast.makeText(mContext, "Login successful",
-							Toast.LENGTH_SHORT).show();
+					w.make("Login successful.", Waffle.LENGTH_SHORT);
 				} else if (returnCode.equals("Failed")) {
 					successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
@@ -203,6 +226,23 @@ public class Main extends Activity {
 
 			}
 
+		} else if (requestCode == VIEW_DATA_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
+				Intent iUrl = new Intent(Intent.ACTION_VIEW);
+				iUrl.setData(Uri.parse(baseUrl + mPrefs.getString("eid", "-1")));
+				startActivity(iUrl);
+			}
+			
+		} else if (requestCode == EXPERIMENT_REQUESTED) {
+			if (resultCode ==  RESULT_OK) {
+				String eid = data.getStringExtra("eid");
+				final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
+				final SharedPreferences.Editor mEditor = mPrefs.edit();
+				mEditor.putString("eid", eid).commit();
+				experimentLabel.setText(getResources().getString(R.string.usingExperiment)
+						+ " " + eid);
+			}
 		}
 	}
 
@@ -252,8 +292,8 @@ public class Main extends Activity {
 			dia.setMessage("Done");
 			dia.cancel();
 
-			// do post execute stuff
-
+			Intent iView = new Intent(mContext, ViewData.class);
+			startActivityForResult(iView, VIEW_DATA_REQUESTED);
 		}
 	}
 
