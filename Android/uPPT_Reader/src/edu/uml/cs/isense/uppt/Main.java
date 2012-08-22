@@ -17,7 +17,6 @@
 package edu.uml.cs.isense.uppt;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Calendar;
 
 import org.json.JSONArray;
@@ -37,22 +36,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.CheckedTextView;
-import android.widget.ListView;
 import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class Main extends Activity implements OnClickListener {
+public class Main extends Activity {
 
 	private static String username = "";
 	private static String password = "";
 	private static String experimentId = "";
 	private static String sessionName = "";
 	private static String sessionId = "";
+	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
 
@@ -60,6 +60,7 @@ public class Main extends Activity implements OnClickListener {
 	private TextView loginInfo;
 	private Button refresh;
 	private Button upload;
+	private TextView noData;
 
 	private static final int MENU_ITEM_LOGIN = 0;
 
@@ -78,7 +79,7 @@ public class Main extends Activity implements OnClickListener {
 
 	public static Context mContext;
 	
-	private ListView dataView;
+	private LinearLayout dataView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,22 +97,36 @@ public class Main extends Activity implements OnClickListener {
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		loginInfo = (TextView) findViewById(R.id.loginEdit);
+		loginInfo = (TextView) findViewById(R.id.loginLabel);
+		noData = (TextView) findViewById(R.id.noItems);
 		
+		dataView = (LinearLayout) findViewById(R.id.dataView);
+		
+		boolean success;
 		try {
-			getFiles(Environment.getExternalStorageDirectory(), dataView);
+			success = getFiles(Environment.getExternalStorageDirectory(), dataView);
 		} catch (Exception e) {
 			w.make(e.toString(), Waffle.IMAGE_X);
+			success = false;
 		}
-
+		
+		if (success) noData.setVisibility(View.GONE);
+		else noData.setVisibility(View.VISIBLE);
+		
 
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-
-				boolean success = false; // get SD card files and list them in a
-											// listview
+				
+				boolean success;
+				try {
+					success = getFiles(new File(currentDirectory), dataView);
+				} catch (Exception e) {
+					w.make(e.toString(), Waffle.IMAGE_X);
+					success = false;
+				}
+				
 				if (!success) {
 					Intent iSdFail = new Intent(mContext, SdCardFailure.class);
 					startActivity(iSdFail);
@@ -130,11 +145,6 @@ public class Main extends Activity implements OnClickListener {
 			}
 		});
 
-	}
-
-	long getUploadTime() {
-		Calendar c = Calendar.getInstance();
-		return (long) (c.getTimeInMillis());
 	}
 
 	long getUploadTime() {
@@ -273,7 +283,7 @@ public class Main extends Activity implements OnClickListener {
 		}
 	}
 
-	private boolean getFiles(File dir, ListView lv) throws Exception {
+	private boolean getFiles(File dir, LinearLayout dataView) throws Exception {
 
 		String state = Environment.getExternalStorageState();
 		if (!Environment.MEDIA_MOUNTED.equals(state)) {
@@ -284,30 +294,28 @@ public class Main extends Activity implements OnClickListener {
 		if (files.equals(null))
 			return false;
 		else {
+			dataView.removeAllViews();
 			for (int i = 0; i < files.length; i++) {
 				final CheckedTextView ctv = new CheckedTextView(mContext);
+				ctv.setText(files[i].toString());
+				ctv.setPadding(5, 10, 5, 10);
 				ctv.setChecked(false);
-				ctv.setCheckMarkDrawable(R.drawable.checkmark);
-				ctv.setText(files[0].toString());
 				ctv.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
 						ctv.toggle();
+						if (ctv.isChecked())
+							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+						else ctv.setCheckMarkDrawable(R.drawable.red_x);
+						
 					}
-
+					
 				});
-				lv.addView(ctv);
+				dataView.addView(ctv);
 			}
 		}
+		currentDirectory = dir.toString();
 		return true;
 	}
 
-	public void onClick(View v) {
-		switch (v.getId()) {
-		default:
-			break;
-
-		}
-
-	}
 }
