@@ -252,7 +252,6 @@ public class Main extends Activity implements OnClickListener {
 		File[] files = dir.listFiles();
 		if (files.equals(null))
 			return false;
-
 		else {
 			for (int i = 0; i < files.length; i++) {
 				final CheckedTextView ctv = new CheckedTextView(mContext);
