@@ -41,17 +41,20 @@ import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.uppt.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class Main extends Activity {
+public class Main extends Activity implements SimpleGestureListener {
 
 	private static String username = "";
 	private static String password = "";
@@ -67,6 +70,7 @@ public class Main extends Activity {
 	private Button refresh;
 	private Button upload;
 	private TextView noData;
+	private ImageView backImage;
 
 	private static final int MENU_ITEM_LOGIN = 0;
 	private static final int MENU_ITEM_EXPERIMENT = 1;
@@ -92,6 +96,8 @@ public class Main extends Activity {
 	
 	private ArrayList<File> checkedFiles;
 
+	private SimpleGestureFilter detector;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,6 +105,8 @@ public class Main extends Activity {
 
 		mContext = this;
 		w = new Waffle(mContext);
+
+		detector = new SimpleGestureFilter(this, this);
 
 		rapi = RestAPI
 				.getInstance(
@@ -126,8 +134,18 @@ public class Main extends Activity {
 		experimentLabel.setText(getResources().getString(
 				R.string.usingExperiment)
 				+ " " + mExpPrefs.getString("eid", ""));
+		
 		noData = (TextView) findViewById(R.id.noItems);
 
+		backImage = (ImageView) findViewById(R.id.back_image);
+		backImage.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				
+				previousDirectory();
+			}		
+		});
+		
 		dataView = (LinearLayout) findViewById(R.id.dataView);
 
 		boolean success;
@@ -139,11 +157,14 @@ public class Main extends Activity {
 			success = false;
 		}
 
-		if (success)
+		if (success) {
 			noData.setVisibility(View.GONE);
-		else
+			backImage.setVisibility(View.VISIBLE);
+		} else {
 			noData.setVisibility(View.VISIBLE);
-
+			backImage.setVisibility(View.GONE);
+		}
+			
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
 
@@ -172,7 +193,6 @@ public class Main extends Activity {
 			public void onClick(View v) {
 
 				new UploadTask().execute();
-
 			}
 		});
 
@@ -383,6 +403,33 @@ public class Main extends Activity {
 		}
 		currentDirectory = dir.toString();
 		return true;
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent me) {
+		this.detector.onTouchEvent(me);
+		return super.dispatchTouchEvent(me);
+	}
+
+	public void onSwipe(int direction) {
+
+		switch (direction) {
+
+		case SimpleGestureFilter.SWIPE_RIGHT:
+			previousDirectory();
+			break;
+		case SimpleGestureFilter.SWIPE_LEFT:	
+			break;
+		case SimpleGestureFilter.SWIPE_DOWN:	
+			break;
+		case SimpleGestureFilter.SWIPE_UP:	
+			break;
+
+		}
+	}
+	
+	private void previousDirectory() {
+		w.make("Goin back!", Waffle.LENGTH_LONG);
 	}
 
 	private boolean uploadFile(File sdFile) {
