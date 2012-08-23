@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false" >
+    android:baselineAligned="false"
+    android:background="@drawable/background" >
 
     <RelativeLayout
         android:id="@+id/leftSide"
