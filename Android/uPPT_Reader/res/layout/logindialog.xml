@@ -17,9 +17,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/usernameLabel"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:;[]01234567879()@"
         android:inputType="textEmailAddress"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:imeOptions="actionNext" />
 
     <TextView
         android:id="@+id/passwordLabel"
@@ -37,11 +38,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameInput"
         android:layout_toRightOf="@id/passwordLabel"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:;[]01234567879()@"
         android:inputType="textPassword"
         android:paddingLeft="6dip"
         android:singleLine="true"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:imeOptions="actionDone" />
 
     <LinearLayout
         android:id="@+id/okAndCancelButtons"

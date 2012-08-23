@@ -36,19 +36,19 @@
         
         <activity
             android:name=".LoginActivity"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".LoginError" 
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".SdCardFailure" 
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".ViewData"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".Experiment"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/DialogTheme" />
             
     </application>
 
