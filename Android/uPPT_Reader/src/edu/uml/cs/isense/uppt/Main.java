@@ -16,7 +16,13 @@
 
 package edu.uml.cs.isense.uppt;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.json.JSONArray;
@@ -87,6 +93,8 @@ public class Main extends Activity implements SimpleGestureListener {
 	public static Context mContext;
 
 	private LinearLayout dataView;
+	
+	private ArrayList<File> checkedFiles;
 
 	private SimpleGestureFilter detector;
 
@@ -107,6 +115,8 @@ public class Main extends Activity implements SimpleGestureListener {
 		rapi.useDev(true);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		
+		checkedFiles = new ArrayList<File>();
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
@@ -163,6 +173,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				boolean success;
 				try {
 					success = getFiles(new File(currentDirectory), dataView);
+					
 				} catch (Exception e) {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
@@ -306,7 +317,9 @@ public class Main extends Activity implements SimpleGestureListener {
 		public void run() {
 
 			// Do rapi uploading stuff
-
+			for (File f: checkedFiles) {
+				uploadFile(f);
+			}
 		}
 	};
 
@@ -345,7 +358,8 @@ public class Main extends Activity implements SimpleGestureListener {
 		}
 	}
 
-	private boolean getFiles(File dir, LinearLayout dataView) throws Exception {
+	private boolean getFiles(File dir, final LinearLayout dataView)
+			throws Exception {
 
 		String state = Environment.getExternalStorageState();
 		if (!Environment.MEDIA_MOUNTED.equals(state)) {
@@ -365,12 +379,22 @@ public class Main extends Activity implements SimpleGestureListener {
 				ctv.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
-						ctv.toggle();
-						if (ctv.isChecked())
-							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
-						else
-							ctv.setCheckMarkDrawable(R.drawable.red_x);
-
+						File nextFile = new File(ctv.getText().toString());
+						if (nextFile.isDirectory()) {
+							boolean success;
+							try {
+								success = getFiles(nextFile, dataView);
+							} catch (Exception e) {
+								w.make(e.toString(), Waffle.IMAGE_X);
+								success = false;
+							}
+						} else {
+							ctv.toggle();
+							if (ctv.isChecked())
+								ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+							else
+								ctv.setCheckMarkDrawable(0);
+						}
 					}
 
 				});
@@ -406,6 +430,22 @@ public class Main extends Activity implements SimpleGestureListener {
 	
 	private void previousDirectory() {
 		w.make("Goin back!", Waffle.LENGTH_LONG);
+	}
+
+	private boolean uploadFile(File sdFile) {
+		if (sdFile.isDirectory() || sdFile.isHidden() || !sdFile.canRead())
+			return false;
+		BufferedReader fReader = null;
+
+		try {
+			fReader = new BufferedReader(new FileReader(sdFile));
+			w.make(fReader.readLine());
+			fReader.close();
+		} catch (IOException e) {
+			w.make(e.toString(), Waffle.IMAGE_X);
+		}
+
+		return false;
 	}
 
 }
