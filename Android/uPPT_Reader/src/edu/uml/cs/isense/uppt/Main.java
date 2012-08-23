@@ -16,7 +16,13 @@
 
 package edu.uml.cs.isense.uppt;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.json.JSONArray;
@@ -83,6 +89,8 @@ public class Main extends Activity {
 	public static Context mContext;
 
 	private LinearLayout dataView;
+	
+	private ArrayList<File> checkedFiles;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +107,8 @@ public class Main extends Activity {
 		rapi.useDev(true);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		
+		checkedFiles = new ArrayList<File>();
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
@@ -142,6 +152,7 @@ public class Main extends Activity {
 				boolean success;
 				try {
 					success = getFiles(new File(currentDirectory), dataView);
+					
 				} catch (Exception e) {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
@@ -286,7 +297,9 @@ public class Main extends Activity {
 		public void run() {
 
 			// Do rapi uploading stuff
-
+			for (File f: checkedFiles) {
+				uploadFile(f);
+			}
 		}
 	};
 
@@ -370,6 +383,22 @@ public class Main extends Activity {
 		}
 		currentDirectory = dir.toString();
 		return true;
+	}
+
+	private boolean uploadFile(File sdFile) {
+		if (sdFile.isDirectory() || sdFile.isHidden() || !sdFile.canRead())
+			return false;
+		BufferedReader fReader = null;
+
+		try {
+			fReader = new BufferedReader(new FileReader(sdFile));
+			w.make(fReader.readLine());
+			fReader.close();
+		} catch (IOException e) {
+			w.make(e.toString(), Waffle.IMAGE_X);
+		}
+
+		return false;
 	}
 
 }
