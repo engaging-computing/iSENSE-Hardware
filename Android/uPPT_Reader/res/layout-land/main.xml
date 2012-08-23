@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:background="@drawable/background" >
+    android:background="@drawable/background"
+    android:baselineAligned="false" >
 
     <RelativeLayout
         android:id="@+id/leftSide"
@@ -77,7 +77,8 @@
         <ScrollView
             android:id="@+id/scrollWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/back_image" >
 
             <LinearLayout
                 android:id="@+id/dataView"
@@ -93,6 +94,19 @@
             android:layout_centerInParent="true"
             android:text="@string/needData"
             android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/back_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/isense_logo_desc"
+            android:scaleType="center"
+            android:src="@drawable/back_button" />
+        
     </RelativeLayout>
 
 </LinearLayout>

@@ -35,17 +35,20 @@ import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.uppt.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class Main extends Activity {
+public class Main extends Activity implements SimpleGestureListener {
 
 	private static String username = "";
 	private static String password = "";
@@ -61,6 +64,7 @@ public class Main extends Activity {
 	private Button refresh;
 	private Button upload;
 	private TextView noData;
+	private ImageView backImage;
 
 	private static final int MENU_ITEM_LOGIN = 0;
 	private static final int MENU_ITEM_EXPERIMENT = 1;
@@ -81,8 +85,10 @@ public class Main extends Activity {
 	public JSONArray data;
 
 	public static Context mContext;
-	
+
 	private LinearLayout dataView;
+
+	private SimpleGestureFilter detector;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +97,8 @@ public class Main extends Activity {
 
 		mContext = this;
 		w = new Waffle(mContext);
+
+		detector = new SimpleGestureFilter(this, this);
 
 		rapi = RestAPI
 				.getInstance(
@@ -101,41 +109,57 @@ public class Main extends Activity {
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
-				Main.mContext, Main.mContext.getSharedPreferences(
-						"USER_INFO", Context.MODE_PRIVATE));
+				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
 		final SharedPreferences mExpPrefs = getSharedPreferences("eid", 0);
-		
+
 		String loginName = mUserPrefs.getString("username", "");
 		if (loginName.length() >= 15)
 			loginName = loginName.substring(0, 15) + "...";
 		loginInfo = (TextView) findViewById(R.id.loginLabel);
-		loginInfo.setText(getResources().getString(R.string.loggedInAs) + 
-				" " + loginName);
-		
+		loginInfo.setText(getResources().getString(R.string.loggedInAs) + " "
+				+ loginName);
+
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		experimentLabel.setText(getResources().getString(R.string.usingExperiment)
+		experimentLabel.setText(getResources().getString(
+				R.string.usingExperiment)
 				+ " " + mExpPrefs.getString("eid", ""));
+		
 		noData = (TextView) findViewById(R.id.noItems);
+
+		backImage = (ImageView) findViewById(R.id.back_image);
+		backImage.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				
+				previousDirectory();
+			}		
+		});
 		
 		dataView = (LinearLayout) findViewById(R.id.dataView);
-		
+
 		boolean success;
 		try {
-			success = getFiles(Environment.getExternalStorageDirectory(), dataView);
+			success = getFiles(Environment.getExternalStorageDirectory(),
+					dataView);
 		} catch (Exception e) {
 			w.make(e.toString(), Waffle.IMAGE_X);
 			success = false;
 		}
-		
-		if (success) noData.setVisibility(View.GONE);
-		else noData.setVisibility(View.VISIBLE);
-		
 
+		if (success) {
+			noData.setVisibility(View.GONE);
+			backImage.setVisibility(View.VISIBLE);
+		} else {
+			noData.setVisibility(View.VISIBLE);
+			backImage.setVisibility(View.GONE);
+		}
+			
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				
+
 				boolean success;
 				try {
 					success = getFiles(new File(currentDirectory), dataView);
@@ -143,7 +167,7 @@ public class Main extends Activity {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
 				}
-				
+
 				if (!success) {
 					Intent iSdFail = new Intent(mContext, SdCardFailure.class);
 					startActivity(iSdFail);
@@ -151,14 +175,13 @@ public class Main extends Activity {
 
 			}
 		});
-	
+
 		upload = (Button) findViewById(R.id.upload);
 		upload.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				
-				new UploadTask().execute();
 
+				new UploadTask().execute();
 			}
 		});
 
@@ -211,7 +234,7 @@ public class Main extends Activity {
 			Intent iLogin = new Intent(mContext, LoginActivity.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
-			
+
 		case R.id.menu_item_experiment:
 			Intent iExperiment = new Intent(mContext, Experiment.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
@@ -264,14 +287,15 @@ public class Main extends Activity {
 				iUrl.setData(Uri.parse(baseUrl + mPrefs.getString("eid", "-1")));
 				startActivity(iUrl);
 			}
-			
+
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
-			if (resultCode ==  RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				String eid = data.getStringExtra("eid");
 				final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
 				final SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putString("eid", eid).commit();
-				experimentLabel.setText(getResources().getString(R.string.usingExperiment)
+				experimentLabel.setText(getResources().getString(
+						R.string.usingExperiment)
 						+ " " + eid);
 			}
 		}
@@ -344,16 +368,44 @@ public class Main extends Activity {
 						ctv.toggle();
 						if (ctv.isChecked())
 							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
-						else ctv.setCheckMarkDrawable(R.drawable.red_x);
-						
+						else
+							ctv.setCheckMarkDrawable(R.drawable.red_x);
+
 					}
-					
+
 				});
 				dataView.addView(ctv);
 			}
 		}
 		currentDirectory = dir.toString();
 		return true;
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent me) {
+		this.detector.onTouchEvent(me);
+		return super.dispatchTouchEvent(me);
+	}
+
+	public void onSwipe(int direction) {
+
+		switch (direction) {
+
+		case SimpleGestureFilter.SWIPE_RIGHT:
+			previousDirectory();
+			break;
+		case SimpleGestureFilter.SWIPE_LEFT:	
+			break;
+		case SimpleGestureFilter.SWIPE_DOWN:	
+			break;
+		case SimpleGestureFilter.SWIPE_UP:	
+			break;
+
+		}
+	}
+	
+	private void previousDirectory() {
+		w.make("Goin back!", Waffle.LENGTH_LONG);
 	}
 
 }
