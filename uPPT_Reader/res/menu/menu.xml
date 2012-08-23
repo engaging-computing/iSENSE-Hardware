@@ -4,11 +4,13 @@
     <item
         android:id="@+id/menu_item_login"
         android:icon="@drawable/ic_menu_login"
-        android:title="@string/login" />
+        android:title="@string/login"
+        android:showAsAction="ifRoom|withText" />
     
     <item
         android:id="@+id/menu_item_experiment"
         android:icon="@drawable/ic_menu_experiment"
-        android:title="@string/experiment" />
+        android:title="@string/experiment"
+        android:showAsAction="ifRoom|withText" />
     
 </menu>
