@@ -18,8 +18,6 @@ package edu.uml.cs.isense.uppt;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,9 +58,13 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String password = "";
 	private static String sessionName = "";
 	private static String sessionId = "";
+
+	private static String rootDirectory;
+	private static String previousDirectory;
 	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
+	private static final String tag = "main.java";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -93,7 +95,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	public static Context mContext;
 
 	private LinearLayout dataView;
-	
+
 	private ArrayList<File> checkedFiles;
 
 	private SimpleGestureFilter detector;
@@ -115,7 +117,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		rapi.useDev(true);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		
+
 		checkedFiles = new ArrayList<File>();
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
@@ -134,19 +136,23 @@ public class Main extends Activity implements SimpleGestureListener {
 		experimentLabel.setText(getResources().getString(
 				R.string.usingExperiment)
 				+ " " + mExpPrefs.getString("eid", ""));
-		
+
 		noData = (TextView) findViewById(R.id.noItems);
 
 		backImage = (ImageView) findViewById(R.id.back_image);
 		backImage.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				
-				previousDirectory();
-			}		
+
+				previousDirectory(currentDirectory);
+			}
 		});
-		
+
 		dataView = (LinearLayout) findViewById(R.id.dataView);
+
+		rootDirectory = Environment.getExternalStorageDirectory().getPath();
+		previousDirectory = rootDirectory;
+		currentDirectory = rootDirectory;
 
 		boolean success;
 		try {
@@ -164,7 +170,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			noData.setVisibility(View.VISIBLE);
 			backImage.setVisibility(View.GONE);
 		}
-			
+
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
 
@@ -173,7 +179,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				boolean success;
 				try {
 					success = getFiles(new File(currentDirectory), dataView);
-					
+
 				} catch (Exception e) {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
@@ -317,7 +323,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		public void run() {
 
 			// Do rapi uploading stuff
-			for (File f: checkedFiles) {
+			for (File f : checkedFiles) {
 				uploadFile(f);
 			}
 		}
@@ -373,27 +379,35 @@ public class Main extends Activity implements SimpleGestureListener {
 			dataView.removeAllViews();
 			for (int i = 0; i < files.length; i++) {
 				final CheckedTextView ctv = new CheckedTextView(mContext);
-				ctv.setText(files[i].toString());
+				ctv.setText(getFileName(dir.getName(), files[i].toString()));
 				ctv.setPadding(5, 10, 5, 10);
 				ctv.setChecked(false);
 				ctv.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
-						File nextFile = new File(ctv.getText().toString());
+						File nextFile = new File(currentDirectory
+								+ ctv.getText().toString());
 						if (nextFile.isDirectory()) {
+							previousDirectory = currentDirectory;
 							boolean success;
 							try {
 								success = getFiles(nextFile, dataView);
+								checkedFiles.removeAll(checkedFiles);
 							} catch (Exception e) {
 								w.make(e.toString(), Waffle.IMAGE_X);
 								success = false;
 							}
 						} else {
-							ctv.toggle();
-							if (ctv.isChecked())
-								ctv.setCheckMarkDrawable(R.drawable.bluecheck);
-							else
-								ctv.setCheckMarkDrawable(0);
+							if (isCSV(ctv.getText().toString())) {
+								ctv.toggle();
+								if (ctv.isChecked()) {
+									ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+									checkedFiles.add(nextFile);
+								} else {
+									ctv.setCheckMarkDrawable(0);
+									checkedFiles.remove(nextFile);
+								}
+							} else w.make("This file type is not supported.  Please choose a valid \".csv\".", Waffle.IMAGE_X);
 						}
 					}
 
@@ -416,20 +430,29 @@ public class Main extends Activity implements SimpleGestureListener {
 		switch (direction) {
 
 		case SimpleGestureFilter.SWIPE_RIGHT:
-			previousDirectory();
+			previousDirectory(currentDirectory);
 			break;
-		case SimpleGestureFilter.SWIPE_LEFT:	
+		case SimpleGestureFilter.SWIPE_LEFT:
 			break;
-		case SimpleGestureFilter.SWIPE_DOWN:	
+		case SimpleGestureFilter.SWIPE_DOWN:
 			break;
-		case SimpleGestureFilter.SWIPE_UP:	
+		case SimpleGestureFilter.SWIPE_UP:
 			break;
 
 		}
 	}
-	
-	private void previousDirectory() {
-		w.make("Goin back!", Waffle.LENGTH_LONG);
+
+	private void previousDirectory(String curr) {
+		if (curr.equals(rootDirectory)) {
+			w.make("Cannot go back from this point", Waffle.IMAGE_X);
+		}
+		else try {
+			getFiles(new File(previousDirectory), dataView);
+			currentDirectory = previousDirectory;
+			previousDirectory = getParentDir(currentDirectory);
+		} catch (Exception e) {
+			w.make(e.toString(), Waffle.IMAGE_X);
+		}
 	}
 
 	private boolean uploadFile(File sdFile) {
@@ -439,7 +462,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		try {
 			fReader = new BufferedReader(new FileReader(sdFile));
-			w.make(fReader.readLine());
+			fReader.readLine();
 			fReader.close();
 		} catch (IOException e) {
 			w.make(e.toString(), Waffle.IMAGE_X);
@@ -448,4 +471,29 @@ public class Main extends Activity implements SimpleGestureListener {
 		return false;
 	}
 
+	private String getFileName(String current, String absolutePath) {
+		return absolutePath.split(current)[1];
+	}
+
+	private String getParentDir(String absolutePath) {
+		String dir = "";
+		String[] sections = absolutePath.split("/");
+		for (int i = 1; i < (sections.length - 1); i++) {
+			dir += "/" + sections[i];
+		}
+
+		return dir;
+	}
+	
+	private boolean isCSV(String fileName) {
+		String[] splitName = fileName.split("\\.");
+		String fileType = splitName[splitName.length - 1].toLowerCase();
+		return fileType.equals("csv");
+	}
+
+	/*private void logDirectories() {
+		Log.d(tag, rootDirectory + " - root");
+		Log.d(tag, previousDirectory + " - prev");
+		Log.d(tag, currentDirectory + "- curr");
+	}*/
 }
