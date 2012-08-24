@@ -75,9 +75,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private TextView noData;
 	private ImageView backImage;
 
-	private static final int MENU_ITEM_LOGIN = 0;
-	private static final int MENU_ITEM_EXPERIMENT = 1;
-
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int VIEW_DATA_REQUESTED = 101;
 	private static final int EXPERIMENT_REQUESTED = 102;
@@ -87,6 +84,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private DataFieldManager dfm;
 	
 	private ProgressDialog dia;
+	private SharedPreferences swipePrefs;
 
 	private static boolean useMenu = true;
 	private static boolean successLogin = false;
@@ -117,6 +115,8 @@ public class Main extends Activity implements SimpleGestureListener {
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
+		
+		swipePrefs = getSharedPreferences("swipe", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -258,6 +258,11 @@ public class Main extends Activity implements SimpleGestureListener {
 			Intent iExperiment = new Intent(mContext, Experiment.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 			return true;
+			
+		case R.id.menu_item_options:
+			Intent iOptions = new Intent(mContext, Options.class);
+			startActivity(iOptions);
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -317,7 +322,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						R.string.usingExperiment)
 						+ " " + eid);
 			}
-		}
+		} 
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -432,15 +437,11 @@ public class Main extends Activity implements SimpleGestureListener {
 		switch (direction) {
 
 		case SimpleGestureFilter.SWIPE_RIGHT:
-			previousDirectory(currentDirectory);
+			if (swipePrefs.getBoolean("swipe", true))
+				previousDirectory(currentDirectory);
 			break;
-		case SimpleGestureFilter.SWIPE_LEFT:
+		default:
 			break;
-		case SimpleGestureFilter.SWIPE_DOWN:
-			break;
-		case SimpleGestureFilter.SWIPE_UP:
-			break;
-
 		}
 	}
 
