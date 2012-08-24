@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -76,9 +75,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private TextView noData;
 	private ImageView backImage;
 
-	private static final int MENU_ITEM_LOGIN = 0;
-	private static final int MENU_ITEM_EXPERIMENT = 1;
-
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int VIEW_DATA_REQUESTED = 101;
 	private static final int EXPERIMENT_REQUESTED = 102;
@@ -86,9 +82,9 @@ public class Main extends Activity implements SimpleGestureListener {
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
-	private Fields f;
 	
 	private ProgressDialog dia;
+	private SharedPreferences swipePrefs;
 
 	private static boolean useMenu = true;
 	private static boolean successLogin = false;
@@ -120,7 +116,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						getApplicationContext());
 		rapi.useDev(true);
 		
-		f = new Fields();
+		swipePrefs = getSharedPreferences("swipe", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -262,6 +258,11 @@ public class Main extends Activity implements SimpleGestureListener {
 			Intent iExperiment = new Intent(mContext, Experiment.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 			return true;
+			
+		case R.id.menu_item_options:
+			Intent iOptions = new Intent(mContext, Options.class);
+			startActivity(iOptions);
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -321,7 +322,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						R.string.usingExperiment)
 						+ " " + eid);
 			}
-		}
+		} 
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -436,15 +437,11 @@ public class Main extends Activity implements SimpleGestureListener {
 		switch (direction) {
 
 		case SimpleGestureFilter.SWIPE_RIGHT:
-			previousDirectory(currentDirectory);
+			if (swipePrefs.getBoolean("swipe", true))
+				previousDirectory(currentDirectory);
 			break;
-		case SimpleGestureFilter.SWIPE_LEFT:
+		default:
 			break;
-		case SimpleGestureFilter.SWIPE_DOWN:
-			break;
-		case SimpleGestureFilter.SWIPE_UP:
-			break;
-
 		}
 	}
 
@@ -491,7 +488,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		if (eid == -1)
 			return null;
 		
-		dfm = new DataFieldManager(eid, rapi, mContext, f);
+		dfm = new DataFieldManager(eid, rapi, mContext);
 		dfm.getFieldOrder();
 		
 		for (String s : dfm.order) {

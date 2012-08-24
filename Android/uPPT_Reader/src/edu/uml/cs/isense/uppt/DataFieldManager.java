@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
@@ -20,15 +19,13 @@ public class DataFieldManager extends Application {
 	ArrayList<ExperimentField> expFields;
 	public LinkedList<String> order;
 	JSONArray dataSet;
-	Fields f;
 
-	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
+	public DataFieldManager(int eid, RestAPI rapi, Context mContext) {
 		this.eid = eid;
 		this.rapi = rapi;
 		this.order = new LinkedList<String>();
 		this.mContext = mContext;
 		this.dataSet = new JSONArray();
-		this.f = f;
 	}
 
 	public void getFieldOrder() {
@@ -89,99 +86,6 @@ public class DataFieldManager extends Application {
 			return true;
 		
 		return false;
-	}
-	
-
-	public JSONArray putData() {
-
-		JSONArray dataJSON = new JSONArray();
-
-		for (String s : this.order) {
-			try {
-				if (s.equals(mContext.getString(R.string.accel_x))) {
-					dataJSON.put(f.accel_x);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.accel_y))) {
-					dataJSON.put(f.accel_y);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.accel_z))) {
-					dataJSON.put(f.accel_z);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.accel_total))) {
-					dataJSON.put(f.accel_total);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.temperature_c))) {
-					dataJSON.put(f.temperature_c);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.temperature_f))) {
-					dataJSON.put(f.temperature_f);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.temperature_k))) {
-					dataJSON.put(f.temperature_k);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.time))) {
-					dataJSON.put(f.timeMillis);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.luminous_flux))) {
-					dataJSON.put(f.lux);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.heading_deg))) {
-					dataJSON.put(f.angle_deg);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.heading_rad))) {
-					dataJSON.put(f.angle_rad);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.latitude))) {
-					dataJSON.put(f.latitude);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.longitude))) {
-					dataJSON.put(f.longitude);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_x))) {
-					dataJSON.put(f.mag_x);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_y))) {
-					dataJSON.put(f.mag_y);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_z))) {
-					dataJSON.put(f.mag_z);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_total))) {
-					dataJSON.put(f.mag_total);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.altitude))) {
-					dataJSON.put(f.altitude);
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.pressure))) {
-					dataJSON.put(f.pressure);
-					continue;
-				}
-				dataJSON.put(null);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return dataJSON;
-
 	}
 
 }

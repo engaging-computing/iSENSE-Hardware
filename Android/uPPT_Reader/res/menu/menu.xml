@@ -13,4 +13,10 @@
         android:title="@string/experiment"
         android:showAsAction="ifRoom|withText" />
     
+    <item 
+        android:id="@+id/menu_item_options"
+        android:icon="@drawable/ic_menu_settings"
+        android:title="@string/options"
+        android:showAsAction="ifRoom|withText"/>
+    
 </menu>
