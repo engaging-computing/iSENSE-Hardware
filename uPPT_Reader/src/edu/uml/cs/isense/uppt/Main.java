@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,7 +81,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
-	private Fields f;
 	
 	private ProgressDialog dia;
 
@@ -115,8 +113,6 @@ public class Main extends Activity implements SimpleGestureListener {
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
-		
-		f = new Fields();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
@@ -466,7 +462,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		if (eid == -1)
 			return null;
 		
-		dfm = new DataFieldManager(eid, rapi, mContext, f);
+		dfm = new DataFieldManager(eid, rapi, mContext);
 		dfm.getFieldOrder();
 		
 		for (String s : dfm.order) {
