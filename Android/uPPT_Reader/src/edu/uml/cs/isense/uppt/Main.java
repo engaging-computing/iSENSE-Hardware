@@ -18,12 +18,11 @@ package edu.uml.cs.isense.uppt;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 
 import org.json.JSONArray;
 
@@ -38,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -81,7 +81,9 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	private RestAPI rapi;
 	private Waffle w;
-
+	private DataFieldManager dfm;
+	private Fields f;
+	
 	private ProgressDialog dia;
 
 	private static boolean useMenu = true;
@@ -113,6 +115,8 @@ public class Main extends Activity implements SimpleGestureListener {
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
+		
+		f = new Fields();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
@@ -446,6 +450,44 @@ public class Main extends Activity implements SimpleGestureListener {
 		}
 
 		return false;
+	}
+	
+	private String[] getOrder(String top) {
+		
+		LinkedList<String> order = new LinkedList<String>();
+		String[] sdOrder = top.split(",");
+		
+		int length = sdOrder.length;
+		if (length == 0)
+			return null;
+		
+		final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
+		int eid = Integer.parseInt(mPrefs.getString("eid", "-1"));
+		if (eid == -1)
+			return null;
+		
+		dfm = new DataFieldManager(eid, rapi, mContext, f);
+		dfm.getFieldOrder();
+		
+		for (String s : dfm.order) {
+			for (int i = 0; i < sdOrder.length; i++) {
+				boolean match = dfm.match(sdOrder[i], s);
+				if (match) {
+					order.add(sdOrder[i]);
+					break;
+				}
+				if (i == (sdOrder.length - 1)) {
+					order.add(null);
+				}
+				
+			}
+		}
+		
+		String[] ret = new String[order.size()];
+		for (int i = 0; i < order.size(); i++)
+			ret[i] = order.get(i);
+		
+		return ret;
 	}
 
 }
