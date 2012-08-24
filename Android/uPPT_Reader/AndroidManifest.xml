@@ -49,6 +49,9 @@
         <activity
             android:name=".Experiment"
             android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".Options"
+            android:theme="@style/DialogTheme" />
             
     </application>
 

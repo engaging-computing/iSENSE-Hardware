@@ -30,5 +30,8 @@
 	<string name="cancel">Cancel</string>
 	<string name="back">Back</string>
     <string name="okay">Okay</string>
+    
+    <string name="options">Options</string>
+    <string name="noSwipe">Allow swiping to navigate directories</string>
 	
 </resources>
