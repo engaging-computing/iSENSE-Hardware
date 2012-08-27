@@ -33,5 +33,6 @@
     
     <string name="options">Options</string>
     <string name="noSwipe">Allow swiping to navigate directories</string>
+    <string name="usbOption">Enable search for USB devices</string>
 	
 </resources>
