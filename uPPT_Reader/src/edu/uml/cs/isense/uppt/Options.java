@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,9 +17,9 @@ public class Options extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options);
 		
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
-		final SharedPreferences mPrefs = getSharedPreferences("swipe", 0);
+		final SharedPreferences mPrefs = getSharedPreferences("options", 0);
 		
 		final CheckBox swipe = (CheckBox) findViewById(R.id.no_swipe_check);
 		swipe.setChecked(mPrefs.getBoolean("swipe", true));
@@ -30,6 +29,18 @@ public class Options extends Activity {
 					boolean isChecked) {
 				final SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putBoolean("swipe", isChecked).commit();
+				
+			}		
+		});
+		
+		final CheckBox usb = (CheckBox) findViewById(R.id.usb_check);
+		usb.setChecked(mPrefs.getBoolean("usb", true));
+		usb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				final SharedPreferences.Editor mEditor = mPrefs.edit();
+				mEditor.putBoolean("usb", isChecked).commit();
 				
 			}		
 		});
