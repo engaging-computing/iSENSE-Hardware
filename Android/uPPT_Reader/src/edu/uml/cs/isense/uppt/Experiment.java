@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -18,7 +17,7 @@ public class Experiment extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.experiment);
 		
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
 		final EditText eid = (EditText) findViewById(R.id.experimentInput);

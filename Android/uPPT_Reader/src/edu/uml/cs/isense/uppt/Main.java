@@ -84,7 +84,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private DataFieldManager dfm;
 	
 	private ProgressDialog dia;
-	private SharedPreferences swipePrefs;
+	private SharedPreferences optionPrefs;
 
 	private static boolean useMenu = true;
 	private static boolean successLogin = false;
@@ -116,7 +116,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						getApplicationContext());
 		rapi.useDev(true);
 		
-		swipePrefs = getSharedPreferences("swipe", 0);
+		optionPrefs = getSharedPreferences("options", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -228,6 +228,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	@Override
 	public void onResume() {
+		login();
 		super.onResume();
 	}
 
@@ -249,21 +250,21 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_item_login:
-			Intent iLogin = new Intent(mContext, LoginActivity.class);
-			startActivityForResult(iLogin, LOGIN_REQUESTED);
+		case R.id.menu_item_options:
+			Intent iOptions = new Intent(mContext, Options.class);
+			startActivity(iOptions);
 			return true;
-
+			
 		case R.id.menu_item_experiment:
 			Intent iExperiment = new Intent(mContext, Experiment.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 			return true;
 			
-		case R.id.menu_item_options:
-			Intent iOptions = new Intent(mContext, Options.class);
-			startActivity(iOptions);
+		case R.id.menu_item_login:
+			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
-
+		
 		default:
 			return super.onOptionsItemSelected(item);
 
@@ -384,6 +385,12 @@ public class Main extends Activity implements SimpleGestureListener {
 			return false;
 		else {
 			dataView.removeAllViews();
+			if (files.length == 0) {
+				final TextView noData = new TextView(mContext);
+				noData.setText("No files or directories.");
+				noData.setPadding(5, 10, 5, 10);
+				dataView.addView(noData);
+			}
 			for (int i = 0; i < files.length; i++) {
 				final CheckedTextView ctv = new CheckedTextView(mContext);
 				ctv.setText(getFileName(dir.getName(), files[i].toString()));
@@ -437,7 +444,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		switch (direction) {
 
 		case SimpleGestureFilter.SWIPE_RIGHT:
-			if (swipePrefs.getBoolean("swipe", true))
+			if (optionPrefs.getBoolean("swipe", true))
 				previousDirectory(currentDirectory);
 			break;
 		default:
@@ -530,6 +537,20 @@ public class Main extends Activity implements SimpleGestureListener {
 		String[] splitName = fileName.split("\\.");
 		String fileType = splitName[splitName.length - 1].toLowerCase();
 		return fileType.equals("csv");
+	}
+	
+	private boolean login() {
+		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
+				Main.mContext,
+				Main.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+
+		boolean success = false;
+		if (!(loginPrefs.getString("username", "").equals("")))
+			success = rapi.login(loginPrefs.getString("username", ""),
+					loginPrefs.getString("password", ""));
+		
+		return success;
 	}
 
 	/*private void logDirectories() {
