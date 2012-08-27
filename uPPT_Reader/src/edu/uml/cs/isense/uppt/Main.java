@@ -475,7 +475,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			fReader = new BufferedReader(new FileReader(sdFile));
 			String headerLine = fReader.readLine();
 			String[] header = headerLine.split(",");
-			Log.d("tag", "header length=" + header.length);
+			//Log.d("tag", "header length=" + header.length);
 			String[] order = getOrder(headerLine);
 			
 			//gets the order as an array of Array-indexes
