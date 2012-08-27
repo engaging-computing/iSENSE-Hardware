@@ -56,8 +56,6 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class Main extends Activity implements SimpleGestureListener {
 
-	private static String username = "";
-	private static String password = "";
 	private static String sessionName = "";
 	private static String sessionId = "";
 
@@ -168,14 +166,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			w.make(e.toString(), Waffle.IMAGE_X);
 			success = false;
 		}
-
-		if (success) {
-			noData.setVisibility(View.GONE);
-			backImage.setVisibility(View.VISIBLE);
-		} else {
-			noData.setVisibility(View.VISIBLE);
-			backImage.setVisibility(View.GONE);
-		}
+		canGetFiles(success);
 
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
@@ -185,17 +176,11 @@ public class Main extends Activity implements SimpleGestureListener {
 				boolean success;
 				try {
 					success = getFiles(new File(currentDirectory), dataView);
-
 				} catch (Exception e) {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
 				}
-
-				if (!success) {
-					Intent iSdFail = new Intent(mContext, SdCardFailure.class);
-					startActivity(iSdFail);
-				}
-
+				canGetFiles(success);
 			}
 		});
 
@@ -403,6 +388,8 @@ public class Main extends Activity implements SimpleGestureListener {
 								w.make(e.toString(), Waffle.IMAGE_X);
 								success = false;
 							}
+							canGetFiles(success);
+							
 						} else {
 							if (isCSV(ctv.getText().toString())) {
 								ctv.toggle();
@@ -423,6 +410,19 @@ public class Main extends Activity implements SimpleGestureListener {
 		}
 		currentDirectory = dir.toString();
 		return true;
+	}
+	
+	private void canGetFiles(boolean success) {
+		if (success) {
+			noData.setVisibility(View.GONE);
+			backImage.setVisibility(View.VISIBLE);
+		} else {
+			noData.setVisibility(View.VISIBLE);
+			backImage.setVisibility(View.GONE);
+			
+			Intent iSdFail = new Intent(mContext, SdCardFailure.class);
+			startActivity(iSdFail);
+		}
 	}
 
 	@Override
@@ -453,7 +453,8 @@ public class Main extends Activity implements SimpleGestureListener {
 			w.make("Cannot go back from this point", Waffle.IMAGE_X);
 		}
 		else try {
-			getFiles(new File(previousDirectory), dataView);
+			boolean success = getFiles(new File(previousDirectory), dataView);
+			canGetFiles(success);
 			currentDirectory = previousDirectory;
 			previousDirectory = getParentDir(currentDirectory);
 		} catch (Exception e) {
@@ -468,7 +469,28 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		try {
 			fReader = new BufferedReader(new FileReader(sdFile));
-			fReader.readLine();
+			String headerLine = fReader.readLine();
+			String[] header = headerLine.split(",");
+			Log.d("tag", "header length=" + header.length);
+			String[] order = getOrder(headerLine);
+			
+			//gets the order as an array of Array-indexes
+			int[] loopOrder = new int[order.length];
+			for (int i = 0; i < order.length; i++) {
+				for (int j = 0; j < header.length; j++) {
+					if (order[i] == null) break;
+					else if (order[i].equals(header[j])) {
+						loopOrder[i] = j;
+						break;
+					}
+				}
+			}
+			
+			String eid = "491";
+			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
+			int sid = rapi.createSession(eid, "name", "Automated .csv upload from Android", "Lowell", "MA", "US");
+			rapi.putSessionData(sid, eid, dataJSON);
+			
 			fReader.close();
 		} catch (IOException e) {
 			w.make(e.toString(), Waffle.IMAGE_X);
@@ -477,6 +499,27 @@ public class Main extends Activity implements SimpleGestureListener {
 		return false;
 	}
 	
+	private JSONArray makeJSONArray(BufferedReader fReader, int[] loopOrder) {
+		
+		String dataLine;
+		String[] data;
+		
+		JSONArray dataJSON = new JSONArray();
+		try {
+			while ((dataLine = fReader.readLine()) != null) {
+				JSONArray dataLineJSON = new JSONArray();
+				data = dataLine.split(",");
+				for (int i = 0; i < loopOrder.length; i++) {
+					dataLineJSON.put(data[loopOrder[i]]);
+				}
+				dataJSON.put(dataLineJSON);
+			}
+		} catch (IOException e) {
+			w.make(e.toString(), Waffle.IMAGE_X);
+		}
+		return dataJSON;
+	}
+
 	private String[] getOrder(String top) {
 		
 		LinkedList<String> order = new LinkedList<String>();
