@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,9 +73,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private TextView noData;
 	private ImageView backImage;
 
-	private static final int MENU_ITEM_LOGIN = 0;
-	private static final int MENU_ITEM_EXPERIMENT = 1;
-
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int VIEW_DATA_REQUESTED = 101;
 	private static final int EXPERIMENT_REQUESTED = 102;
@@ -84,9 +80,9 @@ public class Main extends Activity implements SimpleGestureListener {
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
-	private Fields f;
 	
 	private ProgressDialog dia;
+	private SharedPreferences optionPrefs;
 
 	private static boolean useMenu = true;
 	private static boolean successLogin = false;
@@ -118,7 +114,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						getApplicationContext());
 		rapi.useDev(true);
 		
-		f = new Fields();
+		optionPrefs = getSharedPreferences("options", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -217,6 +213,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	@Override
 	public void onResume() {
+		login();
 		super.onResume();
 	}
 
@@ -238,16 +235,21 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_item_login:
-			Intent iLogin = new Intent(mContext, LoginActivity.class);
-			startActivityForResult(iLogin, LOGIN_REQUESTED);
+		case R.id.menu_item_options:
+			Intent iOptions = new Intent(mContext, Options.class);
+			startActivity(iOptions);
 			return true;
-
+			
 		case R.id.menu_item_experiment:
 			Intent iExperiment = new Intent(mContext, Experiment.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 			return true;
-
+			
+		case R.id.menu_item_login:
+			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			startActivityForResult(iLogin, LOGIN_REQUESTED);
+			return true;
+		
 		default:
 			return super.onOptionsItemSelected(item);
 
@@ -306,7 +308,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						R.string.usingExperiment)
 						+ " " + eid);
 			}
-		}
+		} 
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -368,6 +370,12 @@ public class Main extends Activity implements SimpleGestureListener {
 			return false;
 		else {
 			dataView.removeAllViews();
+			if (files.length == 0) {
+				final TextView noData = new TextView(mContext);
+				noData.setText("No files or directories.");
+				noData.setPadding(5, 10, 5, 10);
+				dataView.addView(noData);
+			}
 			for (int i = 0; i < files.length; i++) {
 				final CheckedTextView ctv = new CheckedTextView(mContext);
 				ctv.setText(getFileName(dir.getName(), files[i].toString()));
@@ -436,15 +444,11 @@ public class Main extends Activity implements SimpleGestureListener {
 		switch (direction) {
 
 		case SimpleGestureFilter.SWIPE_RIGHT:
-			previousDirectory(currentDirectory);
+			if (optionPrefs.getBoolean("swipe", true))
+				previousDirectory(currentDirectory);
 			break;
-		case SimpleGestureFilter.SWIPE_LEFT:
+		default:
 			break;
-		case SimpleGestureFilter.SWIPE_DOWN:
-			break;
-		case SimpleGestureFilter.SWIPE_UP:
-			break;
-
 		}
 	}
 
@@ -534,7 +538,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		if (eid == -1)
 			return null;
 		
-		dfm = new DataFieldManager(eid, rapi, mContext, f);
+		dfm = new DataFieldManager(eid, rapi, mContext);
 		dfm.getFieldOrder();
 		
 		for (String s : dfm.order) {
@@ -576,6 +580,20 @@ public class Main extends Activity implements SimpleGestureListener {
 		String[] splitName = fileName.split("\\.");
 		String fileType = splitName[splitName.length - 1].toLowerCase();
 		return fileType.equals("csv");
+	}
+	
+	private boolean login() {
+		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
+				Main.mContext,
+				Main.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+
+		boolean success = false;
+		if (!(loginPrefs.getString("username", "").equals("")))
+			success = rapi.login(loginPrefs.getString("username", ""),
+					loginPrefs.getString("password", ""));
+		
+		return success;
 	}
 
 	/*private void logDirectories() {
