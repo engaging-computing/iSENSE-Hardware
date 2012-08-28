@@ -22,7 +22,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.json.JSONArray;
 
@@ -86,17 +88,18 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static final int EXPERIMENT_REQUESTED = 102;
 
 	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-	private PendingIntent mPermissionIntent;
 
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
+	private UsbManager mUsbManager;
 
 	private ProgressDialog dia;
 	private SharedPreferences optionPrefs;
 
 	private static boolean useMenu = true;
 	private static boolean successLogin = false;
+	private static boolean usbConnected = false;
 
 	private long uploadTime;
 	public JSONArray data;
@@ -106,10 +109,10 @@ public class Main extends Activity implements SimpleGestureListener {
 	private LinearLayout dataView;
 	private ArrayList<File> checkedFiles;
 	private SimpleGestureFilter detector;
-	
-	private Byte[] bytes;
-	private static int TIMEOUT = 0;
-	private boolean forceClaim = true;
+
+	//private byte[] bytes;
+	//private static int TIMEOUT = 0;
+	//private boolean forceClaim = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -127,16 +130,25 @@ public class Main extends Activity implements SimpleGestureListener {
 						getApplicationContext());
 		rapi.useDev(true);
 
+		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+
 		optionPrefs = getSharedPreferences("options", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		checkedFiles = new ArrayList<File>();
 
-		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
-				ACTION_USB_PERMISSION), 0);
-		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-		registerReceiver(mUsbReceiver, filter);
+		PendingIntent.getBroadcast(this, 0, new Intent(
+				UsbManager.ACTION_USB_DEVICE_DETACHED), 0);
+		IntentFilter detachfilter = new IntentFilter(
+				UsbManager.ACTION_USB_DEVICE_DETACHED);
+		registerReceiver(mUsbReceiver, detachfilter);
+
+		PendingIntent.getBroadcast(this, 0, new Intent(
+				UsbManager.ACTION_USB_DEVICE_ATTACHED), 0);
+		IntentFilter attachfilter = new IntentFilter(
+				UsbManager.ACTION_USB_DEVICE_ATTACHED);
+		registerReceiver(mUsbReceiver, attachfilter);
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
@@ -222,6 +234,8 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public void onStop() {
 		super.onStop();
+		unregisterReceiver(mUsbReceiver);
+		usbConnected = false;
 	}
 
 	@Override
@@ -232,6 +246,28 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public void onResume() {
 		login();
+		
+	    if (usbConnected==false ) {
+	    	UsbDevice device = null;
+	    	HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
+	    	Object[] devices = deviceList.values().toArray();
+	    	if (devices.length == 1) {
+	    		device = (UsbDevice) devices[0];
+	    		if (device != null) {
+					// call your method that cleans up and closes
+					// communication
+					// with the device
+					usbConnected = false;
+					Log.d(tag, "Device attached!");
+					Log.w(tag, "DEVICE INFO!!!\n" +
+                            device.getDeviceName() + "\n" +
+                            device.getProductId() + "\n" +
+                            device.describeContents());
+					usbConnected = true;
+				}
+	    	}
+			
+	    } 
 		super.onResume();
 	}
 
@@ -297,7 +333,8 @@ public class Main extends Activity implements SimpleGestureListener {
 							R.string.loggedInAs)
 							+ " " + loginName);
 					successLogin = true;
-					w.make("Login successful.", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					w.make("Login successful.", Waffle.LENGTH_SHORT,
+							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
 					successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
@@ -618,41 +655,21 @@ public class Main extends Activity implements SimpleGestureListener {
 		return success;
 	}
 
-	BroadcastReceiver finalUsbReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.d(tag, intent.getAction());
 			String action = intent.getAction();
-
+			
 			if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
 				UsbDevice device = (UsbDevice) intent
 						.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 				if (device != null) {
-					// call your method that cleans up and closes communication
+					// call your method that cleans up and closes
+					// communication
 					// with the device
-				}
-			}
-		}
-	};
-
-	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (ACTION_USB_PERMISSION.equals(action)) {
-				synchronized (this) {
-					UsbDevice device = (UsbDevice) intent
-							.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-
-					if (intent.getBooleanExtra(
-							UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-						if (device != null) {
-							// call method to set up device communication
-							// ALL UR USB ARE BELONG TO US
-						}
-					} else {
-						Log.d(tag, "permission denied for device " + device);
-						UsbManager mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-						mUsbManager.requestPermission(device, mPermissionIntent);
-					}
+					usbConnected = false;
+					Log.d(tag, "Device detached!");
 				}
 			}
 		}
