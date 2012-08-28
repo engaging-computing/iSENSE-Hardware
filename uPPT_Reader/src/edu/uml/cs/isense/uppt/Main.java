@@ -87,9 +87,6 @@ public class Main extends Activity implements SimpleGestureListener {
     private static final int VIEW_DATA_REQUESTED = 101;
     private static final int EXPERIMENT_REQUESTED = 102;
 
-
-    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-
     private RestAPI rapi;
     private Waffle w;
     private DataFieldManager dfm;
@@ -110,10 +107,6 @@ public class Main extends Activity implements SimpleGestureListener {
     private LinearLayout dataView;
     private ArrayList<File> checkedFiles;
     private SimpleGestureFilter detector;
-
-    //private byte[] bytes;
-    //private static int TIMEOUT = 0;
-    //private boolean forceClaim = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -669,9 +662,6 @@ public class Main extends Activity implements SimpleGestureListener {
                 UsbDevice device = (UsbDevice) intent
                         .getParcelableExtra(UsbManager.EXTRA_DEVICE);
                 if (device != null) {
-                    // call your method that cleans up and closes
-                    // communication
-                    // with the device
                     usbConnected = false;
                     Log.d(tag, "Device detached!");
                 }
