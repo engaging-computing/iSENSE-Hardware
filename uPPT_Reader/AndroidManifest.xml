@@ -42,22 +42,29 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/DialogTheme" />
+            android:theme="@style/DialogTheme"
+            android:label="Login to iSENSE" />
         <activity
-            android:name=".LoginError"
-            android:theme="@style/DialogTheme" />
+            android:name=".LoginError" 
+            android:theme="@style/DialogTheme"
+            android:label="Failed to Log in" />
         <activity
-            android:name=".SdCardFailure"
-            android:theme="@style/DialogTheme" />
+            android:name=".SdCardFailure" 
+            android:theme="@style/DialogTheme"
+            android:label="Cannot Locate SD Card" />
         <activity
             android:name=".ViewData"
-            android:theme="@style/DialogTheme" />
+            android:theme="@style/DialogTheme"
+            android:label="View Data on iSENSE" />
         <activity
             android:name=".Experiment"
-            android:theme="@style/DialogTheme" />
+            android:theme="@style/DialogTheme"
+            android:label="Experiment #" />
         <activity
             android:name=".Options"
-            android:theme="@style/DialogTheme" />
+            android:theme="@style/DialogTheme"
+            android:label="uPPT Reader Options" />
+            
     </application>
 
 </manifest>

@@ -297,7 +297,7 @@ public class Main extends Activity implements SimpleGestureListener {
 							R.string.loggedInAs)
 							+ " " + loginName);
 					successLogin = true;
-					w.make("Login successful.", Waffle.LENGTH_SHORT);
+					w.make("Login successful.", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
 					successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
