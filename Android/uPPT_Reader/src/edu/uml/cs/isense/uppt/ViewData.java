@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 
 public class ViewData extends Activity {
@@ -15,7 +14,7 @@ public class ViewData extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_data);
 		
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		final Button ok = (Button) findViewById(R.id.view_data_ok);
 		ok.setOnClickListener(new OnClickListener() {

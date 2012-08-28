@@ -38,9 +38,11 @@
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
+
 
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
@@ -48,29 +50,28 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/DialogTheme"
-            android:label="Login to iSENSE" />
+            android:label="Login to iSENSE"
+            android:theme="@style/DialogTheme" />
         <activity
-            android:name=".LoginError" 
-            android:theme="@style/DialogTheme"
-            android:label="Failed to Log in" />
+            android:name=".LoginError"
+            android:label="Failed to Log in"
+            android:theme="@style/DialogTheme" />
         <activity
-            android:name=".SdCardFailure" 
-            android:theme="@style/DialogTheme"
-            android:label="Cannot Locate SD Card" />
+            android:name=".SdCardFailure"
+            android:label="Cannot Locate SD Card"
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".ViewData"
-            android:theme="@style/DialogTheme"
-            android:label="View Data on iSENSE" />
+            android:label="View Data on iSENSE"
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".Experiment"
-            android:theme="@style/DialogTheme"
-            android:label="Experiment #" />
+            android:label="Experiment #"
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".Options"
-            android:theme="@style/DialogTheme"
-            android:label="uPPT Reader Options" />
-            
+            android:label="uPPT Reader Options"
+            android:theme="@style/DialogTheme" />
     </application>
 
 </manifest>
