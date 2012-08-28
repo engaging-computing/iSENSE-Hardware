@@ -22,6 +22,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.json.JSONArray;
@@ -85,9 +87,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static final int VIEW_DATA_REQUESTED = 101;
 	private static final int EXPERIMENT_REQUESTED = 102;
 
-	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-	private PendingIntent mPermissionIntent;
-
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
@@ -97,6 +96,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	private static boolean useMenu = true;
 	private static boolean successLogin = false;
+	private static boolean usbConnected = false;
 
 	private long uploadTime;
 	public JSONArray data;
@@ -107,9 +107,11 @@ public class Main extends Activity implements SimpleGestureListener {
 	private ArrayList<File> checkedFiles;
 	private SimpleGestureFilter detector;
 	
-	private Byte[] bytes;
-	private static int TIMEOUT = 0;
-	private boolean forceClaim = true;
+	private UsbManager manager;
+	private static final String ACTION_USB_PERMISSION =
+		    "com.android.example.USB_PERMISSION";
+	private PendingIntent mPermissionIntent;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +121,9 @@ public class Main extends Activity implements SimpleGestureListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
+		manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+		
+		
 		detector = new SimpleGestureFilter(this, this);
 
 		rapi = RestAPI
@@ -133,10 +138,23 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		checkedFiles = new ArrayList<File>();
 
-		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
-				ACTION_USB_PERMISSION), 0);
-		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+		
+		
+		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+		
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_USB_PERMISSION);
+		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
 		registerReceiver(mUsbReceiver, filter);
+
+
+		
+		
+		
+		
+		
+		
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
@@ -203,11 +221,55 @@ public class Main extends Activity implements SimpleGestureListener {
 
 			public void onClick(View v) {
 
-				new UploadTask().execute();
+				//new UploadTask().execute();
+				UsbDevice device = null;
+				HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+				Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+				while(deviceIterator.hasNext()){
+				    device = deviceIterator.next();
+
+				}
+
+				manager.requestPermission(device, mPermissionIntent);
+
 			}
 		});
 
 	}
+
+	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+
+	    public void onReceive(Context context, Intent intent) {
+	    	Log.w(tag, "received");
+	        String action = intent.getAction();
+	        if (ACTION_USB_PERMISSION.equals(action)) {
+	            synchronized (this) {
+	                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+
+	                if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+	                    if(device != null){
+	                    	Log.w(tag, "communicating");
+	                    	Log.w(tag, "DEVICE INFO!!!\n" +
+	                    			device.getDeviceName() + "\n" +
+	                    			device.getProductId() + "\n" +
+	                    			device.describeContents());
+
+	                      //call method to set up device communication
+	                   }
+	                } 
+	                else {
+	                    Log.d(tag, "permission denied for device " + device);
+	                }
+	            }
+	        } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+	        	Log.i(tag, "detached!!");
+	        } else  if (intent.getAction().equals("android.hardware.usb.action.USB_DEVICE_ATTACHED")) {
+	            //do something
+	            Log.w(tag, "Nick Connected!");
+	        }
+	    
+	    }
+	};
 
 	long getUploadTime() {
 		Calendar c = Calendar.getInstance();
@@ -231,8 +293,18 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	@Override
 	public void onResume() {
-		login();
 		super.onResume();
+		login();
+		
+		Intent intent = getIntent();
+	    Log.d(tag, "intent: " + intent);
+	    String action = intent.getAction();
+
+
+	    if (usbConnected==false ) {
+	        Log.e(tag, "weeee connected false onResume lawltoadfrognull\n" + action);
+	    } 	
+		
 	}
 
 	@Override
@@ -297,7 +369,8 @@ public class Main extends Activity implements SimpleGestureListener {
 							R.string.loggedInAs)
 							+ " " + loginName);
 					successLogin = true;
-					w.make("Login successful.", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					w.make("Login successful.", Waffle.LENGTH_SHORT,
+							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
 					successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
@@ -617,44 +690,4 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		return success;
 	}
-
-	BroadcastReceiver finalUsbReceiver = new BroadcastReceiver() {
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-
-			if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-				UsbDevice device = (UsbDevice) intent
-						.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-				if (device != null) {
-					// call your method that cleans up and closes communication
-					// with the device
-				}
-			}
-		}
-	};
-
-	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (ACTION_USB_PERMISSION.equals(action)) {
-				synchronized (this) {
-					UsbDevice device = (UsbDevice) intent
-							.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-
-					if (intent.getBooleanExtra(
-							UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-						if (device != null) {
-							// call method to set up device communication
-							// ALL UR USB ARE BELONG TO US
-						}
-					} else {
-						Log.d(tag, "permission denied for device " + device);
-						UsbManager mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-						mUsbManager.requestPermission(device, mPermissionIntent);
-					}
-				}
-			}
-		}
-	};
 }
