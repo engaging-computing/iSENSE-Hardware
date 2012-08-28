@@ -26,17 +26,24 @@ import java.util.LinkedList;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,6 +60,7 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.uppt.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.waffle.Waffle;
 
+@SuppressLint("NewApi")
 public class Main extends Activity implements SimpleGestureListener {
 
 	private static String sessionName = "";
@@ -77,10 +85,13 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static final int VIEW_DATA_REQUESTED = 101;
 	private static final int EXPERIMENT_REQUESTED = 102;
 
+	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+	private PendingIntent mPermissionIntent;
+
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
-	
+
 	private ProgressDialog dia;
 	private SharedPreferences optionPrefs;
 
@@ -93,10 +104,12 @@ public class Main extends Activity implements SimpleGestureListener {
 	public static Context mContext;
 
 	private LinearLayout dataView;
-
 	private ArrayList<File> checkedFiles;
-
 	private SimpleGestureFilter detector;
+	
+	private Byte[] bytes;
+	private static int TIMEOUT = 0;
+	private boolean forceClaim = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,12 +126,17 @@ public class Main extends Activity implements SimpleGestureListener {
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
-		
+
 		optionPrefs = getSharedPreferences("options", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		checkedFiles = new ArrayList<File>();
+
+		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+				ACTION_USB_PERMISSION), 0);
+		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+		registerReceiver(mUsbReceiver, filter);
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
@@ -239,17 +257,17 @@ public class Main extends Activity implements SimpleGestureListener {
 			Intent iOptions = new Intent(mContext, Options.class);
 			startActivity(iOptions);
 			return true;
-			
+
 		case R.id.menu_item_experiment:
 			Intent iExperiment = new Intent(mContext, Experiment.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 			return true;
-			
+
 		case R.id.menu_item_login:
 			Intent iLogin = new Intent(mContext, LoginActivity.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
-		
+
 		default:
 			return super.onOptionsItemSelected(item);
 
@@ -308,7 +326,7 @@ public class Main extends Activity implements SimpleGestureListener {
 						R.string.usingExperiment)
 						+ " " + eid);
 			}
-		} 
+		}
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -397,7 +415,7 @@ public class Main extends Activity implements SimpleGestureListener {
 								success = false;
 							}
 							canGetFiles(success);
-							
+
 						} else {
 							if (isCSV(ctv.getText().toString())) {
 								ctv.toggle();
@@ -408,7 +426,9 @@ public class Main extends Activity implements SimpleGestureListener {
 									ctv.setCheckMarkDrawable(0);
 									checkedFiles.remove(nextFile);
 								}
-							} else w.make("This file type is not supported.  Please choose a valid \".csv\".", Waffle.IMAGE_X);
+							} else
+								w.make("This file type is not supported.  Please choose a valid \".csv\".",
+										Waffle.IMAGE_X);
 						}
 					}
 
@@ -419,7 +439,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		currentDirectory = dir.toString();
 		return true;
 	}
-	
+
 	private void canGetFiles(boolean success) {
 		if (success) {
 			noData.setVisibility(View.GONE);
@@ -427,7 +447,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		} else {
 			noData.setVisibility(View.VISIBLE);
 			backImage.setVisibility(View.GONE);
-			
+
 			Intent iSdFail = new Intent(mContext, SdCardFailure.class);
 			startActivity(iSdFail);
 		}
@@ -455,15 +475,16 @@ public class Main extends Activity implements SimpleGestureListener {
 	private void previousDirectory(String curr) {
 		if (curr.equals(rootDirectory)) {
 			w.make("Cannot go back from this point", Waffle.IMAGE_X);
-		}
-		else try {
-			boolean success = getFiles(new File(previousDirectory), dataView);
-			canGetFiles(success);
-			currentDirectory = previousDirectory;
-			previousDirectory = getParentDir(currentDirectory);
-		} catch (Exception e) {
-			w.make(e.toString(), Waffle.IMAGE_X);
-		}
+		} else
+			try {
+				boolean success = getFiles(new File(previousDirectory),
+						dataView);
+				canGetFiles(success);
+				currentDirectory = previousDirectory;
+				previousDirectory = getParentDir(currentDirectory);
+			} catch (Exception e) {
+				w.make(e.toString(), Waffle.IMAGE_X);
+			}
 	}
 
 	private boolean uploadFile(File sdFile) {
@@ -475,26 +496,28 @@ public class Main extends Activity implements SimpleGestureListener {
 			fReader = new BufferedReader(new FileReader(sdFile));
 			String headerLine = fReader.readLine();
 			String[] header = headerLine.split(",");
-			//Log.d("tag", "header length=" + header.length);
+			// Log.d("tag", "header length=" + header.length);
 			String[] order = getOrder(headerLine);
-			
-			//gets the order as an array of Array-indexes
+
+			// gets the order as an array of Array-indexes
 			int[] loopOrder = new int[order.length];
 			for (int i = 0; i < order.length; i++) {
 				for (int j = 0; j < header.length; j++) {
-					if (order[i] == null) break;
+					if (order[i] == null)
+						break;
 					else if (order[i].equals(header[j])) {
 						loopOrder[i] = j;
 						break;
 					}
 				}
 			}
-			
+
 			String eid = "491";
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
-			int sid = rapi.createSession(eid, "name", "Automated .csv upload from Android", "Lowell", "MA", "US");
+			int sid = rapi.createSession(eid, "name",
+					"Automated .csv upload from Android", "Lowell", "MA", "US");
 			rapi.putSessionData(sid, eid, dataJSON);
-			
+
 			fReader.close();
 		} catch (IOException e) {
 			w.make(e.toString(), Waffle.IMAGE_X);
@@ -502,12 +525,12 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		return false;
 	}
-	
+
 	private JSONArray makeJSONArray(BufferedReader fReader, int[] loopOrder) {
-		
+
 		String dataLine;
 		String[] data;
-		
+
 		JSONArray dataJSON = new JSONArray();
 		try {
 			while ((dataLine = fReader.readLine()) != null) {
@@ -525,22 +548,22 @@ public class Main extends Activity implements SimpleGestureListener {
 	}
 
 	private String[] getOrder(String top) {
-		
+
 		LinkedList<String> order = new LinkedList<String>();
 		String[] sdOrder = top.split(",");
-		
+
 		int length = sdOrder.length;
 		if (length == 0)
 			return null;
-		
+
 		final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
 		int eid = Integer.parseInt(mPrefs.getString("eid", "-1"));
 		if (eid == -1)
 			return null;
-		
+
 		dfm = new DataFieldManager(eid, rapi, mContext);
 		dfm.getFieldOrder();
-		
+
 		for (String s : dfm.order) {
 			for (int i = 0; i < sdOrder.length; i++) {
 				boolean match = dfm.match(sdOrder[i], s);
@@ -551,14 +574,14 @@ public class Main extends Activity implements SimpleGestureListener {
 				if (i == (sdOrder.length - 1)) {
 					order.add(null);
 				}
-				
+
 			}
 		}
-		
+
 		String[] ret = new String[order.size()];
 		for (int i = 0; i < order.size(); i++)
 			ret[i] = order.get(i);
-		
+
 		return ret;
 	}
 
@@ -575,30 +598,63 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		return dir;
 	}
-	
+
 	private boolean isCSV(String fileName) {
 		String[] splitName = fileName.split("\\.");
 		String fileType = splitName[splitName.length - 1].toLowerCase();
 		return fileType.equals("csv");
 	}
-	
+
 	private boolean login() {
 		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
-				Main.mContext,
-				Main.mContext.getSharedPreferences("USER_INFO",
+				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
 		boolean success = false;
 		if (!(loginPrefs.getString("username", "").equals("")))
 			success = rapi.login(loginPrefs.getString("username", ""),
 					loginPrefs.getString("password", ""));
-		
+
 		return success;
 	}
 
-	/*private void logDirectories() {
-		Log.d(tag, rootDirectory + " - root");
-		Log.d(tag, previousDirectory + " - prev");
-		Log.d(tag, currentDirectory + "- curr");
-	}*/
+	BroadcastReceiver finalUsbReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+
+			if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+				UsbDevice device = (UsbDevice) intent
+						.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+				if (device != null) {
+					// call your method that cleans up and closes communication
+					// with the device
+				}
+			}
+		}
+	};
+
+	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (ACTION_USB_PERMISSION.equals(action)) {
+				synchronized (this) {
+					UsbDevice device = (UsbDevice) intent
+							.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+
+					if (intent.getBooleanExtra(
+							UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+						if (device != null) {
+							// call method to set up device communication
+							// ALL UR USB ARE BELONG TO US
+						}
+					} else {
+						Log.d(tag, "permission denied for device " + device);
+						UsbManager mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+						mUsbManager.requestPermission(device, mPermissionIntent);
+					}
+				}
+			}
+		}
+	};
 }
