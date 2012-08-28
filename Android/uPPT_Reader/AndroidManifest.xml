@@ -4,10 +4,12 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <uses-feature android:name="android.hardware.usb.host" />
+
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="16" />
-    
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -29,19 +31,23 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
         </activity>
-        
         <activity
             android:name=".LoginActivity"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".LoginError" 
+            android:name=".LoginError"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".SdCardFailure" 
+            android:name=".SdCardFailure"
             android:theme="@style/DialogTheme" />
         <activity
             android:name=".ViewData"
@@ -52,7 +58,6 @@
         <activity
             android:name=".Options"
             android:theme="@style/DialogTheme" />
-            
     </application>
 
 </manifest>
