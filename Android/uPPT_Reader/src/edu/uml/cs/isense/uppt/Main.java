@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 
@@ -37,6 +38,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
@@ -44,6 +46,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
@@ -52,6 +55,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
@@ -103,6 +107,9 @@ public class Main extends Activity implements SimpleGestureListener {
     public JSONArray data;
 
     public static Context mContext;
+    
+    private Timer colorChange;
+    private Handler mHandler;
 
     private LinearLayout dataView;
     private ArrayList<File> checkedFiles;
@@ -115,6 +122,8 @@ public class Main extends Activity implements SimpleGestureListener {
 
         mContext = this;
         w = new Waffle(mContext);
+        
+        mHandler = new Handler();
 
         detector = new SimpleGestureFilter(this, this);
 
@@ -174,7 +183,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
         dataView = (LinearLayout) findViewById(R.id.dataView);
 
-        rootDirectory = Environment.getExternalStorageDirectory().getPath();
+        rootDirectory = Environment.getExternalStorageDirectory().getPath(); //"/mnt";
         previousDirectory = rootDirectory;
         currentDirectory = rootDirectory;
 
@@ -228,7 +237,11 @@ public class Main extends Activity implements SimpleGestureListener {
     @Override
     public void onStop() {
         super.onStop();
-        unregisterReceiver(mUsbReceiver);
+        try {
+        	unregisterReceiver(mUsbReceiver);
+        } catch (IllegalArgumentException iae) {
+        	// Sensor not registered.  Do nothing.
+        }
         usbConnected = false;
     }
 
@@ -427,13 +440,33 @@ public class Main extends Activity implements SimpleGestureListener {
                 dataView.addView(noData);
             }
             for (int i = 0; i < files.length; i++) {
+            	
                 final CheckedTextView ctv = new CheckedTextView(mContext);
                 ctv.setText(getFileName(dir.getName(), files[i].toString()));
                 ctv.setPadding(5, 10, 5, 10);
                 ctv.setChecked(false);
+                ctv.setOnTouchListener(new OnTouchListener() {
+					public boolean onTouch(View v, MotionEvent event) {
+						ctv.setBackgroundResource(R.drawable.cyan);
+						colorChange = new Timer();
+						colorChange.schedule(new TimerTask() {
+							@Override
+							public void run() {
+								mHandler.post(new Runnable() {
+									public void run() {
+										ctv.setBackgroundColor(Color.TRANSPARENT);	
+									}
+								});
+							}
+						}, 200);
+						
+						return false;
+					}    	
+                });
                 ctv.setOnClickListener(new OnClickListener() {
 
                     public void onClick(View v) {
+                    	
                         File nextFile = new File(currentDirectory
                                 + ctv.getText().toString());
                         if (nextFile.isDirectory()) {
