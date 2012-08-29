@@ -105,10 +105,10 @@ public class Main extends Activity implements SimpleGestureListener {
 	private long uploadTime;
 	public JSONArray data;
 
-    public static Context mContext;
-    
-    private Timer colorChange;
-    private Handler mHandler;
+	public static Context mContext;
+
+	private Timer colorChange;
+	private Handler mHandler;
 
 	private LinearLayout dataView;
 	private ArrayList<File> checkedFiles;
@@ -122,10 +122,10 @@ public class Main extends Activity implements SimpleGestureListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-        mContext = this;
-        w = new Waffle(mContext);
-        
-        mHandler = new Handler();
+		mContext = this;
+		w = new Waffle(mContext);
+
+		mHandler = new Handler();
 
 		mContext = this;
 		w = new Waffle(mContext);
@@ -231,16 +231,16 @@ public class Main extends Activity implements SimpleGestureListener {
 		super.onPause();
 	}
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        try {
-        	unregisterReceiver(mUsbReceiver);
-        } catch (IllegalArgumentException iae) {
-        	// Sensor not registered.  Do nothing.
-        }
-        usbConnected = false;
-    }
+	@Override
+	public void onStop() {
+		super.onStop();
+		try {
+			unregisterReceiver(mUsbReceiver);
+		} catch (IllegalArgumentException iae) {
+			// Sensor not registered. Do nothing.
+		}
+		usbConnected = false;
+	}
 
 	@Override
 	public void onStart() {
@@ -419,66 +419,8 @@ public class Main extends Activity implements SimpleGestureListener {
 		}
 	}
 
-private boolean getFiles(File dir, final LinearLayout dataView)
-            throws Exception {
-
-        String state = Environment.getExternalStorageState();
-        if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            throw new Exception("Cannot Access External Storage.");
-        }
-
-        File[] files = dir.listFiles();
-        if (files.equals(null))
-            return false;
-        else {
-            dataView.removeAllViews();
-            if (files.length == 0) {
-                final TextView noData = new TextView(mContext);
-                noData.setText("No files or directories.");
-                noData.setPadding(5, 10, 5, 10);
-                dataView.addView(noData);
-            }
-            for (int i = 0; i < files.length; i++) {
-            	
-                final CheckedTextView ctv = new CheckedTextView(mContext);
-                ctv.setText(getFileName(dir.getName(), files[i].toString()));
-                ctv.setPadding(5, 10, 5, 10);
-                ctv.setChecked(false);
-                ctv.setOnTouchListener(new OnTouchListener() {
-					public boolean onTouch(View v, MotionEvent event) {
-						ctv.setBackgroundResource(R.drawable.cyan);
-						colorChange = new Timer();
-						colorChange.schedule(new TimerTask() {
-							@Override
-							public void run() {
-								mHandler.post(new Runnable() {
-									public void run() {
-										ctv.setBackgroundColor(Color.TRANSPARENT);	
-									}
-								});
-							}
-						}, 200);
-						
-						return false;
-					}    	
-                });
-                ctv.setOnClickListener(new OnClickListener() {
-
-                    public void onClick(View v) {
-                    	
-                        File nextFile = new File(currentDirectory
-                                + ctv.getText().toString());
-                        if (nextFile.isDirectory()) {
-                            previousDirectory = currentDirectory;
-                            boolean success;
-                            try {
-                                success = getFiles(nextFile, dataView);
-                                checkedFiles.removeAll(checkedFiles);
-                            } catch (Exception e) {
-                                w.make(e.toString(), Waffle.IMAGE_X);
-                                success = false;
-                            }
-                            canGetFiles(success);
+	private boolean getFiles(File dir, final LinearLayout dataView)
+			throws Exception {
 
 		String state = Environment.getExternalStorageState();
 		if (!Environment.MEDIA_MOUNTED.equals(state)) {
@@ -497,13 +439,33 @@ private boolean getFiles(File dir, final LinearLayout dataView)
 				dataView.addView(noData);
 			}
 			for (int i = 0; i < files.length; i++) {
+
 				final CheckedTextView ctv = new CheckedTextView(mContext);
 				ctv.setText(getFileName(dir.getName(), files[i].toString()));
 				ctv.setPadding(5, 10, 5, 10);
 				ctv.setChecked(false);
+				ctv.setOnTouchListener(new OnTouchListener() {
+					public boolean onTouch(View v, MotionEvent event) {
+						ctv.setBackgroundResource(R.drawable.cyan);
+						colorChange = new Timer();
+						colorChange.schedule(new TimerTask() {
+							@Override
+							public void run() {
+								mHandler.post(new Runnable() {
+									public void run() {
+										ctv.setBackgroundColor(Color.TRANSPARENT);
+									}
+								});
+							}
+						}, 200);
+
+						return false;
+					}
+				});
 				ctv.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
+
 						File nextFile = new File(currentDirectory
 								+ ctv.getText().toString());
 						if (nextFile.isDirectory()) {
@@ -517,7 +479,6 @@ private boolean getFiles(File dir, final LinearLayout dataView)
 								success = false;
 							}
 							canGetFiles(success);
-
 						} else {
 							if (isCSV(ctv.getText().toString())) {
 								ctv.toggle();
@@ -533,7 +494,6 @@ private boolean getFiles(File dir, final LinearLayout dataView)
 										Waffle.IMAGE_X);
 						}
 					}
-
 				});
 				dataView.addView(ctv);
 			}
@@ -617,23 +577,23 @@ private boolean getFiles(File dir, final LinearLayout dataView)
 				}
 			}
 			fReader.close();
-			
+
 			SharedPreferences sp = getSharedPreferences("eid", 0);
 			int experiment_id = sp.getInt("eid", -1);
 			String eid;
-			if (experiment_id == -1) return false;
+			if (experiment_id == -1)
+				return false;
 			else
 				eid = "" + experiment_id;
-			
+
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
 			int sid = rapi.createSession(eid, "" + getUploadTime(),
 					"Automated .csv upload from Android", "Lowell", "MA", "US");
 			if (sid <= 0)
 				return false;
-			
+
 			success = rapi.putSessionData(sid, eid, dataJSON);
 
-			
 		} catch (IOException e) {
 			w.make(e.toString(), Waffle.IMAGE_X);
 		}
