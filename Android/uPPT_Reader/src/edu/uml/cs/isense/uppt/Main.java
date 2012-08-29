@@ -576,17 +576,15 @@ public class Main extends Activity implements SimpleGestureListener {
 					}
 				}
 			}
-			fReader.close();
-
-			SharedPreferences sp = getSharedPreferences("eid", 0);
-			int experiment_id = sp.getInt("eid", -1);
-			String eid;
-			if (experiment_id == -1)
-				return false;
-			else
-				eid = "" + experiment_id;
-
+			
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
+			fReader.close();
+			
+			SharedPreferences sp = getSharedPreferences("eid", 0);
+			String eid = sp.getString("eid", "-1");
+			if (eid.equals("-1"))
+				return false;
+			
 			int sid = rapi.createSession(eid, "" + getUploadTime(),
 					"Automated .csv upload from Android", "Lowell", "MA", "US");
 			if (sid <= 0)
@@ -617,7 +615,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				dataJSON.put(dataLineJSON);
 			}
 		} catch (IOException e) {
-			w.make(e.toString(), Waffle.IMAGE_X);
+			e.printStackTrace();
 		}
 		return dataJSON;
 	}
