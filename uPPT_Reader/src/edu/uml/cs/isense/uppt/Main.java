@@ -437,6 +437,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			for (int i = 0; i < files.length; i++) {
 
 				final CheckedTextView ctv = new CheckedTextView(mContext);
+				ctv.setBackgroundResource(R.drawable.file_background);
 				ctv.setText(getFileName(dir.getName(), files[i].toString()));
 				ctv.setPadding(5, 10, 5, 10);
 				ctv.setChecked(false);
@@ -449,7 +450,7 @@ public class Main extends Activity implements SimpleGestureListener {
 							public void run() {
 								mHandler.post(new Runnable() {
 									public void run() {
-										ctv.setBackgroundColor(Color.TRANSPARENT);
+										ctv.setBackgroundResource(R.drawable.file_background);
 									}
 								});
 							}
@@ -572,15 +573,15 @@ public class Main extends Activity implements SimpleGestureListener {
 					}
 				}
 			}
-			
+
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
 			fReader.close();
-			
+
 			SharedPreferences sp = getSharedPreferences("eid", 0);
 			String eid = sp.getString("eid", "-1");
 			if (eid.equals("-1"))
 				return false;
-			
+
 			int sid = rapi.createSession(eid, "" + getUploadTime(),
 					"Automated .csv upload from Android", "Lowell", "MA", "US");
 			if (sid <= 0)
