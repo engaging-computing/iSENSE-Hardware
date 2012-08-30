@@ -114,10 +114,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private ArrayList<File> checkedFiles;
 	private SimpleGestureFilter detector;
 
-	private byte[] bytes;
-	private static int TIMEOUT = 0;
-	private boolean forceClaim = true;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
