@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,18 +26,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.waffle.Waffle;
 
 public class MainActivity extends Activity {
 	private RestAPI rapi;
-	private Waffle w;
-	// private TextView iSENSEStatus;
+	// private Waffle w;
+	private TextView iSENSEStatus;
 	private TextView LabQuestStatus;
 	private Button LabQuestConnect;
 	private Button iSENSEUpload;
-
+	private EditText SessionName;
 	private ArrayList<ArrayList<String>> LabQuestData;
 	private ArrayList<String> LabQuestType;
 
@@ -49,43 +50,64 @@ public class MainActivity extends Activity {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						this);
-		w = new Waffle(this);
+		// w = new Waffle(this);
+		// w.make("Upload to iSENSE!",Waffle.LENGTH_LONG,Waffle.IMAGE_CHECK);
+
 		LabQuestStatus = (TextView) findViewById(R.id.labquest_status_text);
-		// iSENSEStatus = (TextView) findViewById(R.id.isense_status_text);
+		iSENSEStatus = (TextView) findViewById(R.id.isense_status_text);
 		LabQuestConnect = (Button) findViewById(R.id.labquest_connect);
 		iSENSEUpload = (Button) findViewById(R.id.isense_upload);
+		SessionName = (EditText) findViewById(R.id.session_name);
 		LabQuestData = new ArrayList<ArrayList<String>>();
 		LabQuestType = new ArrayList<String>();
 
 		LabQuestConnect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ConnectToLabQuest();
+				LabQuestConnect();
 			}
 		});
 
 		iSENSEUpload.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SharedPreferences sp = getSharedPreferences("isense_settings",
-						0);
-				String iSENSEUser = sp.getString("isense_user", "");
-				String iSENSEPass = sp.getString("isense_pass", "");
-				boolean iSENSELoggedIn = rapi.login(iSENSEUser, iSENSEPass);
-				if (iSENSELoggedIn) {
-					Log.v("Tag", "Logged in");
-				} else {
-					Log.v("Tag", "Invalid User/Pass");
-				}
-
-				// w.make("Upload to iSENSE!",
-				// Waffle.LENGTH_LONG,Waffle.IMAGE_CHECK);
+				iSENSEUpload();
 
 			}
 		});
 	}
 
-	protected boolean ConnectToLabQuest() {
+	protected boolean iSENSEUpload() {
+		rapi.useDev(true);
+		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
+		String iSENSEUser = sp.getString("isense_user", "");
+		String iSENSEPass = sp.getString("isense_pass", "");
+		String iSENSEExpID = sp.getString("isense_expid", "");
+		boolean iSENSELoggedIn = rapi.login(iSENSEUser, iSENSEPass);
+		if (iSENSELoggedIn) {
+			Log.v("Tag", "Logged in");
+			iSENSEStatus.setText(getResources().getString(
+					R.string.isense_status_logged_in));
+		} else {
+			Log.v("Tag", "Invalid User/Pass");
+			iSENSEStatus.setText(getResources().getString(
+					R.string.isense_status_logged_in_error));
+			return false;
+		}
+		Log.v("TAG",SessionName.getText().toString());
+		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!","","","");
+		JSONArray temp = new JSONArray();
+		JSONArray row = new JSONArray();
+		row.put("1").put("2").put("3");
+		temp.put(row);
+		temp.put(row);
+		Log.v("A",temp.toString());
+		rapi.putSessionData(iSENSESessionID,iSENSEExpID,temp);
+		return true;
+
+	}
+
+	protected boolean LabQuestConnect() {
 		new LabQuestConnectTask().execute();
 		return true;
 	}
@@ -143,7 +165,6 @@ public class MainActivity extends Activity {
 		try {
 			result = httpGet("http://" + IP + "/status");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -154,7 +175,6 @@ public class MainActivity extends Activity {
 		try {
 			result = httpGet("http://" + IP + "/columns/" + column);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -164,10 +184,13 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			String temp = new String();
 			for (ArrayList<String> i : LabQuestData) {
+				temp = "";
 				for (String j : i) {
-					Log.v("Type", j);
+					temp = temp + "," + j;
 				}
+				Log.v("Type", temp);
 			}
 			LabQuestStatus.setText(getResources().getString(
 					R.string.labquest_status_connected));
@@ -215,7 +238,7 @@ public class MainActivity extends Activity {
 							LabQuestIP, col_id[i]));
 					col_data[i] = get_col_json.getString("values");
 				}
-
+				// TODO change this to JSON Array
 				// Rearranges data
 				// gets data from strings and puts time data in time, and each
 				// data set in data, and type in type
@@ -249,8 +272,6 @@ public class MainActivity extends Activity {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-
-			// Log.v("JSON", JSONTest);
 			return null;
 		}
 	}
