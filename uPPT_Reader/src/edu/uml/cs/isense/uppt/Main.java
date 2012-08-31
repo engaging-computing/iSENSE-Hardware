@@ -37,7 +37,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
@@ -68,9 +67,6 @@ import edu.uml.cs.isense.waffle.Waffle;
 @SuppressLint("NewApi")
 public class Main extends Activity implements SimpleGestureListener {
 
-	private static String sessionName = "";
-	private static String sessionId = "";
-
 	private static String rootDirectory;
 	private static String previousDirectory;
 	private static String currentDirectory;
@@ -98,11 +94,9 @@ public class Main extends Activity implements SimpleGestureListener {
 	private ProgressDialog dia;
 	private SharedPreferences optionPrefs;
 
-	private static boolean useMenu = true;
-	private static boolean successLogin = false;
 	private static boolean usbConnected = false;
+	private static boolean canSwipe = true;
 
-	private long uploadTime;
 	public JSONArray data;
 
 	public static Context mContext;
@@ -185,10 +179,10 @@ public class Main extends Activity implements SimpleGestureListener {
 		try {
 			success = getFiles(new File(rootDirectory), dataView);
 		} catch (Exception e) {
-			w.make(e.toString(), Waffle.IMAGE_X);
+			Log.w(tag, e.toString());
 			success = false;
 		}
-		canGetFiles(success);
+		canGetFiles(success, true);
 
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
@@ -202,7 +196,7 @@ public class Main extends Activity implements SimpleGestureListener {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
 				}
-				canGetFiles(success);
+				canGetFiles(success, true);
 			}
 		});
 
@@ -254,9 +248,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			if (devices.length == 1) {
 				device = (UsbDevice) devices[0];
 				if (device != null) {
-					// call your method that cleans up and closes
-					// communication
-					// with the device
+
 					usbConnected = false;
 					Log.d(tag, "Device attached!");
 
@@ -334,11 +326,11 @@ public class Main extends Activity implements SimpleGestureListener {
 					loginInfo.setText(getResources().getString(
 							R.string.loggedInAs)
 							+ " " + loginName);
-					successLogin = true;
+					// successLogin = true;
 					w.make("Login successful.", Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
-					successLogin = false;
+					// successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
@@ -375,7 +367,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			// Do rapi uploading stuff
 			for (File f : checkedFiles) {
 				boolean success = uploadFile(f);
-				Log.d(tag, "upload:" + success);
+				Log.d(tag, "upload: " + success);
 			}
 		}
 	};
@@ -388,7 +380,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			vibrator.vibrate(250);
 			dia = new ProgressDialog(Main.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Uploading uPPT data set to iSENSE...");
+			dia.setMessage("Uploading .csv files to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 
@@ -472,10 +464,10 @@ public class Main extends Activity implements SimpleGestureListener {
 								success = getFiles(nextFile, dataView);
 								checkedFiles.removeAll(checkedFiles);
 							} catch (Exception e) {
-								w.make(e.toString(), Waffle.IMAGE_X);
+								Log.w(tag, e.toString());
 								success = false;
 							}
-							canGetFiles(success);
+							canGetFiles(success, false);
 						} else {
 							if (isCSV(ctv.getText().toString())) {
 								ctv.toggle();
@@ -496,19 +488,45 @@ public class Main extends Activity implements SimpleGestureListener {
 			}
 		}
 		currentDirectory = dir.toString();
+		
+		if (currentDirectory.equals(rootDirectory)) {
+			backImage.setVisibility(View.GONE);
+			canSwipe = false;
+		} else {
+			backImage.setVisibility(View.VISIBLE);
+			canSwipe = true;
+		}
+		
 		return true;
 	}
 
-	private void canGetFiles(boolean success) {
+	private void canGetFiles(boolean success, boolean firstGrab) {
 		if (success) {
 			noData.setVisibility(View.GONE);
-			backImage.setVisibility(View.VISIBLE);
+			//backImage.setVisibility(View.VISIBLE);
+			
+			if (currentDirectory.equals(rootDirectory)) {
+				backImage.setVisibility(View.GONE);
+				canSwipe = false;
+			} else {
+				backImage.setVisibility(View.VISIBLE);
+				canSwipe = true;
+			}
+			
 		} else {
-			noData.setVisibility(View.VISIBLE);
-			backImage.setVisibility(View.GONE);
-
-			Intent iSdFail = new Intent(mContext, SdCardFailure.class);
-			startActivity(iSdFail);
+			// If it isn't the first time you're getting files, then the success
+			// is false because you can't enter a directory (eg "secure"). Thus,
+			// we don't update the UI
+			if (firstGrab) {
+				noData.setVisibility(View.VISIBLE);
+				backImage.setVisibility(View.GONE);
+				Intent iSdFail = new Intent(mContext, SdCardFailure.class);
+				startActivity(iSdFail);
+			} else {	
+				w.make("You do not have permission to navigate into this directory.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			}
+	
 		}
 	}
 
@@ -523,7 +541,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		switch (direction) {
 
 		case SimpleGestureFilter.SWIPE_RIGHT:
-			if (optionPrefs.getBoolean("swipe", true))
+			if (optionPrefs.getBoolean("swipe", true) && canSwipe)
 				previousDirectory(currentDirectory);
 			break;
 		default:
@@ -538,11 +556,11 @@ public class Main extends Activity implements SimpleGestureListener {
 			try {
 				boolean success = getFiles(new File(previousDirectory),
 						dataView);
-				canGetFiles(success);
+				canGetFiles(success, false);
 				currentDirectory = previousDirectory;
 				previousDirectory = getParentDir(currentDirectory);
 			} catch (Exception e) {
-				w.make(e.toString(), Waffle.IMAGE_X);
+				Log.w(tag, e.toString());
 			}
 	}
 
