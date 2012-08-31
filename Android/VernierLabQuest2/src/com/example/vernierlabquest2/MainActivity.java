@@ -28,12 +28,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class MainActivity extends Activity {
 	private RestAPI rapi;
-	// private Waffle w;
+
 	private TextView iSENSEStatus;
 	private TextView LabQuestStatus;
 	private Button LabQuestConnect;
@@ -51,8 +50,6 @@ public class MainActivity extends Activity {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						this);
-		// w = new Waffle(this);
-		// w.make("Upload to iSENSE!",Waffle.LENGTH_LONG,Waffle.IMAGE_CHECK);
 
 		LabQuestStatus = (TextView) findViewById(R.id.labquest_status_text);
 		iSENSEStatus = (TextView) findViewById(R.id.isense_status_text);

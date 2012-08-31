@@ -8,24 +8,29 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ToggleButton;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class iSENSESettings extends Activity {
 
 	private Button save;
 	private Button cancel;
+	private Button QRCode;
 	private EditText isense_user;
 	private EditText isense_pass;
 	private EditText isense_expid;
 	private ToggleButton isense_dev_mode;
+	private Waffle w;
 	SharedPreferences sp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.isense_settings);
-
+		w = new Waffle(this);
+		
 		save = (Button) findViewById(R.id.isense_save);
 		cancel = (Button) findViewById(R.id.isense_cancel);
+		QRCode = (Button) findViewById(R.id.isense_scan_QR);
 		isense_user = (EditText) findViewById(R.id.isense_user);
 		isense_pass = (EditText) findViewById(R.id.isense_pass);
 		isense_expid = (EditText) findViewById(R.id.isense_expid);
@@ -55,6 +60,14 @@ public class iSENSESettings extends Activity {
 				finish();
 			}
 
+		});
+		QRCode.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				w.make("Feature Disabled",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
+			}
+			
 		});
 		cancel.setOnClickListener(new OnClickListener() {
 
