@@ -28,6 +28,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class MainActivity extends Activity {
@@ -78,13 +79,23 @@ public class MainActivity extends Activity {
 	}
 
 	protected boolean iSENSEUpload() {
-		rapi.useDev(true);
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
 		String iSENSEUser = sp.getString("isense_user", "");
 		String iSENSEPass = sp.getString("isense_pass", "");
 		String iSENSEExpID = sp.getString("isense_expid", "");
-		boolean iSENSELoggedIn = rapi.login(iSENSEUser, iSENSEPass);
-		if (iSENSELoggedIn) {
+		Long iSENSEDevMode = sp.getLong("isense_dev_mode",0);
+		if (iSENSEDevMode == 1)
+		{
+			rapi.useDev(true);
+			Log.v("Tag","Using iSENSE Dev");
+		}		else
+		{
+			rapi.useDev(false);
+			Log.v("Tag","Using iSENSE");
+
+		}
+
+		if (rapi.login(iSENSEUser, iSENSEPass)) {
 			Log.v("Tag", "Logged in");
 			iSENSEStatus.setText(getResources().getString(
 					R.string.isense_status_logged_in));
@@ -94,6 +105,7 @@ public class MainActivity extends Activity {
 					R.string.isense_status_logged_in_error));
 			return false;
 		}
+		
 		Log.v("TAG",SessionName.getText().toString());
 		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!","","","");
 		JSONArray temp = new JSONArray();
@@ -104,7 +116,6 @@ public class MainActivity extends Activity {
 		Log.v("A",temp.toString());
 		rapi.putSessionData(iSENSESessionID,iSENSEExpID,temp);
 		return true;
-
 	}
 
 	protected boolean LabQuestConnect() {
