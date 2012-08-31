@@ -239,6 +239,9 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	@Override
 	public void onResume() {
+		
+		super.onResume();
+		
 		login();
 
 		if (usbConnected == false) {
@@ -262,7 +265,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			}
 
 		}
-		super.onResume();
+		
 	}
 
 	@Override
@@ -344,7 +347,9 @@ public class Main extends Activity implements SimpleGestureListener {
 				final SharedPreferences mPrefs = getSharedPreferences("eid", 0);
 				Intent iUrl = new Intent(Intent.ACTION_VIEW);
 				iUrl.setData(Uri.parse(baseUrl + mPrefs.getString("eid", "-1")));
-				startActivity(iUrl);
+				Intent chooser = Intent.createChooser(iUrl, "Select a browser to view your data on:");
+				startActivity(chooser);
+				//startActivity(iUrl);
 			}
 
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
