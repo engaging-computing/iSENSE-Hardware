@@ -1,0 +1,29 @@
+<resources>
+    
+    
+    <string name="main_title">LabQuest2 iSENSE App</string>
+    <string name="request_session_name">Session Name:</string>
+    <string name="connect_to_vernier">Connect to LabQuest2</string>
+    <string name="labquest_status">LabQuest2 Status:</string>
+    <string name="labquest_status_disconnect">Disconnected</string>
+    <string name="labquest_status_connected">Data Received</string>
+	<string name="labquest_settings">LabQuest2 Settings</string>
+	<string name="labquest_ip">LabQuest2 IP Address:</string>
+    <string name="upload_to_isense">Upload to iSENSE</string>
+    <string name="isense_status">iSENSE Status:</string>
+    <string name="isense_status_not_logged_in">Not Logged In</string>
+    <string name="isense_status_logged_in">Test2</string>
+    <string name="isense_settings">iSENSE Settings</string>
+    <string name="isense_user">Username:</string>
+    <string name="isense_pass">Password:</string>
+    <string name="isense_expid">Experiment ID:</string>
+    <string name="isense_dev_mode">Developer Mode:</string>
+ 	<string name="save">Save</string>
+ 	<string name="cancel">Cancel</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    
+ 	<string name="app_name">App_Name</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+
+</resources>
