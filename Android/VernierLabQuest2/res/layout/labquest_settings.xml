@@ -33,7 +33,7 @@
             android:lines="1" />
 
         <Button
-            android:id="@+id/isense_scan_QR"
+            android:id="@+id/labquest_scan_QR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
