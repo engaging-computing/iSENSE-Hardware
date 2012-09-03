@@ -73,11 +73,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".4" >
+        
+        <TextView
+            android:id="@+id/cur_dir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <ScrollView
             android:id="@+id/scrollWrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/cur_dir"
             android:layout_above="@+id/back_image" >
 
             <LinearLayout
