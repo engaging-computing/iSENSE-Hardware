@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.uppt.experiment;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import edu.uml.cs.isense.uppt.Main;
+import edu.uml.cs.isense.uppt.R;
+import edu.uml.cs.isense.uppt.fails.NoQR;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Experiment extends Activity {

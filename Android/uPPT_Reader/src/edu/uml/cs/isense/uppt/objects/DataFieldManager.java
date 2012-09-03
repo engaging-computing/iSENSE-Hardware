@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.uppt.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

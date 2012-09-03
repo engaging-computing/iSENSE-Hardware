@@ -50,15 +50,15 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:label="Login to iSENSE"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".LoginError"
+            android:name=".login.LoginError"
             android:label="Failed to Log in"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".SdCardFailure"
+            android:name=".fails.SdCardFailure"
             android:label="Cannot Locate SD Card"
             android:theme="@style/DialogTheme" />
         <activity
@@ -66,19 +66,19 @@
             android:label="View Data on iSENSE"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".Experiment"
+            android:name=".experiment.Experiment"
             android:label="Experiment #"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".Options"
+            android:name=".objects.Options"
             android:label="uPPT Reader Options"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".BrowseExperiments"
+            android:name=".experiment.BrowseExperiments"
             android:label="Browse iSENSE Experiments"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".NoQR"
+            android:name=".fails.NoQR"
             android:label="No QR Scanner Found"
             android:theme="@style/DialogTheme" />
     </application>

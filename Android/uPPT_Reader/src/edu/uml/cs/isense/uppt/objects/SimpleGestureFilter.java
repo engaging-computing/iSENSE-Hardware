@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.uppt.objects;
 
 import android.app.Activity;
 import android.view.GestureDetector;
@@ -134,7 +134,7 @@ public class SimpleGestureFilter extends SimpleOnGestureListener {
 	}
 
 
-	static interface SimpleGestureListener {
+	public static interface SimpleGestureListener {
 		void onSwipe(int direction);
 
 		//void onDoubleTap();

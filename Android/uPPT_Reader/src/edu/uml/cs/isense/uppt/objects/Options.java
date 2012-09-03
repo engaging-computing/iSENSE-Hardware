@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.uppt.objects;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import edu.uml.cs.isense.uppt.R;
 
 public class Options extends Activity {
 	
