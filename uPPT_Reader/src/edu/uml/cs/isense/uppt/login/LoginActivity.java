@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.uppt.login;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.uppt.Main;
+import edu.uml.cs.isense.uppt.R;
 
 public class LoginActivity extends Activity {
 

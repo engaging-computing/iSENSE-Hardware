@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.uppt.experiment;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
+import edu.uml.cs.isense.uppt.R;
 
 public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 	public ArrayList<Experiment> items;
