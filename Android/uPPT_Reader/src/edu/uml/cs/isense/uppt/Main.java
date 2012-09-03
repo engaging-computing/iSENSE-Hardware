@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
@@ -81,6 +82,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private Button upload;
 	private TextView noData;
 	private ImageView backImage;
+	private TextView curDir;
 
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int VIEW_DATA_REQUESTED = 101;
@@ -168,6 +170,8 @@ public class Main extends Activity implements SimpleGestureListener {
 				previousDirectory(currentDirectory);
 			}
 		});
+		
+		curDir = (TextView) findViewById(R.id.cur_dir);
 
 		dataView = (LinearLayout) findViewById(R.id.dataView);
 
@@ -271,6 +275,19 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		Log.d(tag, "lawl i was rotated");
+		if (currentDirectory != null && dataView != null) {
+			try {
+				getFiles(new File(currentDirectory), dataView);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -492,7 +509,9 @@ public class Main extends Activity implements SimpleGestureListener {
 				dataView.addView(ctv);
 			}
 		}
+		
 		currentDirectory = dir.toString();
+		curDir.setText("Current directory: " + currentDirectory);
 		
 		if (currentDirectory.equals(rootDirectory)) {
 			backImage.setVisibility(View.GONE);
@@ -508,6 +527,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private void canGetFiles(boolean success, boolean firstGrab) {
 		if (success) {
 			noData.setVisibility(View.GONE);
+			curDir.setVisibility(View.VISIBLE);
 			//backImage.setVisibility(View.VISIBLE);
 			
 			if (currentDirectory.equals(rootDirectory)) {
@@ -525,6 +545,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			if (firstGrab) {
 				noData.setVisibility(View.VISIBLE);
 				backImage.setVisibility(View.GONE);
+				curDir.setVisibility(View.GONE);
 				Intent iSdFail = new Intent(mContext, SdCardFailure.class);
 				startActivity(iSdFail);
 			} else {	

@@ -22,13 +22,38 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:imeOptions="actionDone" />
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >        
+        android:layout_marginTop="2dp" >        
+        
+    	<Button
+    	    android:id="@+id/experiment_browse"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="match_parent"
+    	    android:layout_weight="1"
+    	    android:text="@string/browse"
+    	    android:textSize="18sp"
+    	    android:layout_marginLeft="5dp" />  
+    	    
+    	<Button
+    	    android:id="@+id/experiment_qr"
+    	    android:layout_height="wrap_content"
+    	    android:layout_width="match_parent"
+    	    android:layout_weight="1"
+    	    android:text="@string/qr"
+    	    android:textSize="18sp" 
+    	    android:layout_marginRight="5dp" /> 
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >        
         
     	<Button
     	    android:id="@+id/experiment_cancel"

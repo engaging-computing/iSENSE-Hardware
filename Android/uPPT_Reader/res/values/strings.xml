@@ -34,5 +34,17 @@
     <string name="options">Options</string>
     <string name="noSwipe">Allow swiping to navigate directories</string>
     <string name="usbOption">Enable search for USB devices</string>
+    
+    <string name="experiments_no_items">No experiments were found.</string>
+    <string name="search">Search</string>
+    <string name="loading">Loading&#x2026;</string>
+    <string name="browse">Browse</string>
+    <string name="qr">Scan QR Code</string>
+    <string name="qr_prompt">	    
+        Your device does not have the proper Barcode Scanner application installed
+		to use this feature.  However, you may visit the Google Play store to download 
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
+	<string name="visit">Visit</string>
 	
 </resources>
