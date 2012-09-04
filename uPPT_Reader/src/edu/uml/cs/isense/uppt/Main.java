@@ -401,8 +401,8 @@ public class Main extends Activity implements SimpleGestureListener {
 				if (success == false)	{
 					totalSuccess = false;
 					if (errorFiles.isEmpty())
-						errorFiles += checkedFiles.remove(i).getName();
-					else errorFiles += ", " + checkedFiles.remove(i).getName();
+						errorFiles += checkedFiles.get(i).getName();
+					else errorFiles += ", " + checkedFiles.get(i).getName();
 				}
 				i++;
 			}
