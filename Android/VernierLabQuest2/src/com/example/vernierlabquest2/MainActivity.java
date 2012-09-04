@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +39,7 @@ public class MainActivity extends Activity {
 	private Button LabQuestConnect;
 	private Button iSENSEUpload;
 	private EditText SessionName;
-	private ArrayList<ArrayList<String>> LabQuestData;
+	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
 
 	@Override
@@ -55,7 +54,8 @@ public class MainActivity extends Activity {
 		LabQuestConnect = (Button) findViewById(R.id.labquest_connect);
 		iSENSEUpload = (Button) findViewById(R.id.isense_upload);
 		SessionName = (EditText) findViewById(R.id.session_name);
-		LabQuestData = new ArrayList<ArrayList<String>>();
+
+		LabQuestData = new ArrayList<JSONArray>();
 		LabQuestType = new ArrayList<String>();
 
 		LabQuestConnect.setOnClickListener(new OnClickListener() {
@@ -205,14 +205,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			String temp = new String();
-			for (ArrayList<String> i : LabQuestData) {
-				temp = "";
-				for (String j : i) {
-					temp = temp + "," + j;
-				}
-				// Log.v(tag, temp);
-			}
 			LabQuestStatus.setText(getResources().getString(R.string.labquest_status_connected));
 			super.onPostExecute(result);
 		}
@@ -222,17 +214,17 @@ public class MainActivity extends Activity {
 
 			SharedPreferences sp = getSharedPreferences("labquest_settings", 0);
 			String LabQuestIP = sp.getString("labquest_ip", "");
-
 			try {
 				// Gets data from LQ
 				JSONObject get_status_json;
 				get_status_json = new JSONObject(GetStatus(LabQuestIP));
-				int col_size = get_status_json.getJSONObject("views").length();
+				int col_size = get_status_json.getJSONObject("views").length() * 1000;
 				// start_time in unix milliseconds
 				long start_time = Long.parseLong(get_status_json.getString("columnListTimeStamp")) * 1000;
 				String col_id[] = new String[col_size];// column id
 				String col_type[] = new String[col_size];// type of date
 				String col_data[] = new String[col_size];// column data
+				JSONArray col_data2[] = new JSONArray[col_size];
 				// loop through all the columns available
 				for (int i = 0; i < col_size; i++) {
 					String views = get_status_json.getJSONObject("views").names().getString(i);
@@ -242,11 +234,30 @@ public class MainActivity extends Activity {
 						col_id[i] = get_status_json.getJSONObject("views").getJSONObject(views).getString("colID");
 					}
 					col_type[i] = get_status_json.getJSONObject("columns").getJSONObject(col_id[i]).getString("name");
+
 					JSONObject get_col_json = new JSONObject(GetColumns(LabQuestIP, col_id[i]));
+					col_data2[i] = get_col_json.getJSONArray("values");
 					col_data[i] = get_col_json.getString("values");
 				}
+				// removes duplicate time entries
+				boolean timefix = false;
 				for (int i = 0; i < col_size; i++) {
-					Log.v(tag, col_type[i] + ":" + col_data[i]);
+					if (col_type[i].compareTo("Time") == 0) {
+						if (timefix) {
+							continue;
+						} else {
+							timefix = true;
+							// TODO add start_time
+							LabQuestData.add(col_data2[i]);
+							LabQuestType.add(col_type[i]);
+						}
+					} else {
+						LabQuestData.add(col_data2[i]);
+						LabQuestType.add(col_type[i]);
+					}
+				}
+				for (int i = 0; i < LabQuestData.size(); i++) {
+					Log.v(tag, Integer.toString(i) + ":" + LabQuestType.get(i) + "," + LabQuestData.get(i).toString());
 				}
 				// TODO change this to JSON Array instead of strings
 				// Long start_time: time the experiment started
