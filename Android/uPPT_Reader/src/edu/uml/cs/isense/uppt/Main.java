@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,14 +32,10 @@ import org.json.JSONArray;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -98,12 +93,10 @@ public class Main extends Activity implements SimpleGestureListener {
 	private RestAPI rapi;
 	private Waffle w;
 	private DataFieldManager dfm;
-	private UsbManager mUsbManager;
 
 	private ProgressDialog dia;
 	private SharedPreferences optionPrefs;
 
-	private static boolean usbConnected = false;
 	private static boolean canSwipe = true;
 
 	public JSONArray data;
@@ -137,18 +130,11 @@ public class Main extends Activity implements SimpleGestureListener {
 						getApplicationContext());
 		rapi.useDev(true);
 
-		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-
 		optionPrefs = getSharedPreferences("options", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		checkedFiles = new ArrayList<File>();
-
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-		registerReceiver(mUsbReceiver, filter);
 
 		final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 				Main.mContext, Main.mContext.getSharedPreferences("USER_INFO",
@@ -237,12 +223,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public void onStop() {
 		super.onStop();
-		try {
-			unregisterReceiver(mUsbReceiver);
-		} catch (IllegalArgumentException iae) {
-			// Sensor not registered. Do nothing.
-		}
-		usbConnected = false;
 	}
 
 	@Override
@@ -251,34 +231,9 @@ public class Main extends Activity implements SimpleGestureListener {
 	}
 
 	@Override
-	public void onResume() {
-		
-		super.onResume();
-		
+	public void onResume() {	
+		super.onResume();		
 		login();
-
-		if (usbConnected == false) {
-			UsbDevice device = null;
-			HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-			Object[] devices = deviceList.values().toArray();
-			if (devices.length == 1) {
-				device = (UsbDevice) devices[0];
-				if (device != null) {
-
-					usbConnected = false;
-					Log.d(tag, "Device attached!");
-
-					Log.w(tag,
-							"DEVICE INFO!!!\n" + device.getDeviceName() + "\n"
-									+ device.getProductId() + "\n"
-									+ device.describeContents());
-					usbConnected = true;
-
-				}
-			}
-
-		}
-		
 	}
 
 	@Override
@@ -741,21 +696,4 @@ public class Main extends Activity implements SimpleGestureListener {
 		return success;
 
 	}
-
-	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d(tag, intent.getAction());
-			String action = intent.getAction();
-
-			if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-				UsbDevice device = (UsbDevice) intent
-						.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-				if (device != null) {
-					usbConnected = false;
-					Log.d(tag, "Device detached!");
-				}
-			}
-		}
-	};
 }
