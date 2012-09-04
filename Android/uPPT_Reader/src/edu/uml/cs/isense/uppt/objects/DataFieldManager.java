@@ -51,7 +51,8 @@ public class DataFieldManager extends Application {
 		if (a.contains("time") && b.contains("time")) {
 			if (a.contains("stamp") && (b.contains("stamp") || b.contains("date")))
 				return true;
-			if (a.contains("elap") && (b.contains("elap") || b.contains("pass") || b.contains("relat")))
+			if ((a.contains("elap") || a.contains("relat")) 
+					&& (b.contains("elap") || b.contains("pass") || b.contains("relat")))
 				return true;
 		}
 		
