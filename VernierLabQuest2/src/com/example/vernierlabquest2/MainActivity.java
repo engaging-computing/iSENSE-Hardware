@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.ExperimentField;
 
 public class MainActivity extends Activity {
 	private String tag = "MainActivity";
@@ -99,21 +100,30 @@ public class MainActivity extends Activity {
 			return false;
 		}
 
+		ArrayList<ExperimentField> temp2 = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
+		for (ExperimentField e : temp2) {
+			Log.v(tag, e.field_name);
+		}
+
+		// TODO Create JSONArray with ExperimentField and LQ2 Data
+
 		// Create Session
 		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(),
 				"Uploaded with the iSENSE LabQuest2 App!", "", "", "");
 
 		// Get Experiment Fields
 
-		JSONArray temp = new JSONArray();
-		JSONArray row = new JSONArray();
-		row.put("1").put("2").put("3");
-		temp.put(row);
-		temp.put(row);
-		Log.v(tag, "JSON:" + temp.toString());
+		// JSONArray temp = new JSONArray();
+		// JSONArray row = new JSONArray();
+		// row.put("1");
+		// row.put("2");
+		// row.put("3");
+		// temp.put(row);
+		// temp.put(row);
+		// Log.v(tag, "JSON:" + temp.toString());
 
 		// Put Data to Session
-		rapi.putSessionData(iSENSESessionID, iSENSEExpID, temp);
+		// rapi.putSessionData(iSENSESessionID, iSENSEExpID, temp);
 		return true;
 	}
 
@@ -201,7 +211,7 @@ public class MainActivity extends Activity {
 				for (String j : i) {
 					temp = temp + "," + j;
 				}
-				Log.v(tag, temp);
+				// Log.v(tag, temp);
 			}
 			LabQuestStatus.setText(getResources().getString(R.string.labquest_status_connected));
 			super.onPostExecute(result);
@@ -218,19 +228,13 @@ public class MainActivity extends Activity {
 				JSONObject get_status_json;
 				get_status_json = new JSONObject(GetStatus(LabQuestIP));
 				int col_size = get_status_json.getJSONObject("views").length();
-				long start_time = Long.parseLong(get_status_json.getString("columnListTimeStamp")) * 1000;// time
-																											// started
-																											// in
-																											// unix
-																											// ms
+				// start_time in unix milliseconds
+				long start_time = Long.parseLong(get_status_json.getString("columnListTimeStamp")) * 1000;
 				String col_id[] = new String[col_size];// column id
-				String col_type[] = new String[col_size];// type of date eg
-															// time, temp, ph
+				String col_type[] = new String[col_size];// type of date
 				String col_data[] = new String[col_size];// column data
-				// gets data from vernier labquest 2, in JSON format, puts into
-				// strings
-				for (int i = 0; i < col_size; i++) {// loop through all the
-													// columns available
+				// loop through all the columns available
+				for (int i = 0; i < col_size; i++) {
 					String views = get_status_json.getJSONObject("views").names().getString(i);
 					if (get_status_json.getJSONObject("views").getJSONObject(views).has("baseColID")) {
 						col_id[i] = get_status_json.getJSONObject("views").getJSONObject(views).getString("baseColID");
@@ -241,33 +245,39 @@ public class MainActivity extends Activity {
 					JSONObject get_col_json = new JSONObject(GetColumns(LabQuestIP, col_id[i]));
 					col_data[i] = get_col_json.getString("values");
 				}
-				// TODO change this to JSON Array
-				// Rearranges data
-				// gets data from strings and puts time data in time, and each
-				// data set in data, and type in type
-				ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-				ArrayList<String> type = new ArrayList<String>();
 				for (int i = 0; i < col_size; i++) {
-					ArrayList<String> temp = new ArrayList<String>();
-					if ((col_type[i].compareTo("Time") == 0) && (!type.contains("Time"))) { // time
-						StringTokenizer time_tokenized = new StringTokenizer(col_data[i], "[,]");
-						while (time_tokenized.hasMoreTokens()) {
-							temp.add(Long.toString((long) Double.parseDouble(time_tokenized.nextToken()) * 1000
-									+ start_time));
-						}
-						data.add(temp);
-						type.add(col_type[i]);
-					} else if (col_type[i].compareTo("Time") != 0) {
-						StringTokenizer data_tokenized = new StringTokenizer(col_data[i], "[,]");
-						while (data_tokenized.hasMoreTokens()) {
-							temp.add(data_tokenized.nextToken());
-						}
-						data.add(temp);
-						type.add(col_type[i]);
-					}
+					Log.v(tag, col_type[i] + ":" + col_data[i]);
 				}
-				LabQuestData = data;
-				LabQuestType = type;
+				// TODO change this to JSON Array instead of strings
+				// Long start_time: time the experiment started
+				// String col_data[]: all data
+				// String col_type[]: all types
+				// There could be multiple time types (only use one)
+
+				// probably dont need
+				// ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+				// ArrayList<String> type = new ArrayList<String>();
+				// for (int i = 0; i < col_size; i++) {
+				// ArrayList<String> temp = new ArrayList<String>();
+				// if ((col_type[i].compareTo("Time") == 0) && (!type.contains("Time"))) { // time
+				// StringTokenizer time_tokenized = new StringTokenizer(col_data[i], "[,]");
+				// while (time_tokenized.hasMoreTokens()) {
+				// temp.add(Long.toString((long) Double.parseDouble(time_tokenized.nextToken()) * 1000
+				// + start_time));
+				// }
+				// data.add(temp);
+				// type.add(col_type[i]);
+				// } else if (col_type[i].compareTo("Time") != 0) {
+				// StringTokenizer data_tokenized = new StringTokenizer(col_data[i], "[,]");
+				// while (data_tokenized.hasMoreTokens()) {
+				// temp.add(data_tokenized.nextToken());
+				// }
+				// data.add(temp);
+				// type.add(col_type[i]);
+				// }
+				// }
+				// LabQuestData = data;
+				// LabQuestType = type;
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
