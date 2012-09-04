@@ -3,6 +3,7 @@ package com.example.vernierlabquest2;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,7 +12,7 @@ import android.widget.ToggleButton;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class iSENSESettings extends Activity {
-
+	private String tag = "iSENSESettings";
 	private Button save;
 	private Button cancel;
 	private Button QRCode;
@@ -41,7 +42,14 @@ public class iSENSESettings extends Activity {
 		isense_pass.setText(sp.getString("isense_pass", ""));
 		isense_expid.setText(sp.getString("isense_expid", ""));
 		isense_dev_mode.setChecked(sp.getLong("isense_dev_mode", 0) == 1);
+		QRCode.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				w.make("Feature Disabled",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
+			}
+			
+		});
 		save.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -56,23 +64,17 @@ public class iSENSESettings extends Activity {
 					e.putLong("isense_dev_mode", 0);
 				}
 				e.commit();
+				Log.v(tag,"Saved");
 				setResult(RESULT_OK);
 				finish();
 			}
 
 		});
-		QRCode.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				w.make("Feature Disabled",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
-			}
-			
-		});
 		cancel.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				Log.v(tag, "Canceled");
 				setResult(RESULT_CANCELED);
 				finish();
 			}
