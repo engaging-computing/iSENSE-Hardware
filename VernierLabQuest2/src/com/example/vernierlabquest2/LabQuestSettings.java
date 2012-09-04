@@ -3,6 +3,7 @@ package com.example.vernierlabquest2;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -10,7 +11,7 @@ import android.widget.EditText;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class LabQuestSettings extends Activity {
-
+	private String tag = "LabQuestSettings";
 	private Button save;
 	private Button cancel;
 	private EditText labquest_ip;
@@ -23,7 +24,7 @@ public class LabQuestSettings extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.labquest_settings);
 		w = new Waffle(this);
-		
+
 		save = (Button) findViewById(R.id.labquest_save);
 		cancel = (Button) findViewById(R.id.labquest_cancel);
 		labquest_ip = (EditText) findViewById(R.id.labquest_ip);
@@ -35,9 +36,9 @@ public class LabQuestSettings extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				w.make("Feature Disabled",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
+				w.make("Feature Disabled", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			}
-			
+
 		});
 
 		save.setOnClickListener(new OnClickListener() {
@@ -47,6 +48,7 @@ public class LabQuestSettings extends Activity {
 				SharedPreferences.Editor e = sp.edit();
 				e.putString("labquest_ip", labquest_ip.getText().toString());
 				e.commit();
+				Log.v(tag, "Saved");
 				setResult(RESULT_OK);
 				finish();
 			}
@@ -56,6 +58,7 @@ public class LabQuestSettings extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				Log.v(tag, "Canceled");
 				setResult(RESULT_CANCELED);
 				finish();
 			}
