@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -62,13 +63,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
-import edu.uml.cs.isense.uppt.objects.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.uppt.experiment.Experiment;
 import edu.uml.cs.isense.uppt.fails.SdCardFailure;
 import edu.uml.cs.isense.uppt.login.LoginActivity;
 import edu.uml.cs.isense.uppt.objects.DataFieldManager;
 import edu.uml.cs.isense.uppt.objects.Options;
 import edu.uml.cs.isense.uppt.objects.SimpleGestureFilter;
+import edu.uml.cs.isense.uppt.objects.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.waffle.Waffle;
 
 @SuppressLint("NewApi")
@@ -221,9 +222,11 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	}
 
-	long getUploadTime() {
+	private String getUploadTime() {
 		Calendar c = Calendar.getInstance();
-		return (long) (c.getTimeInMillis());
+		long time = c.getTimeInMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss, MM/dd/yyyy");
+		return sdf.format(time);
 	}
 
 	@Override
@@ -632,7 +635,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			if (eid.equals("-1"))
 				return false;
 
-			int sid = rapi.createSession(eid, "" + getUploadTime(),
+			int sid = rapi.createSession(eid, getUploadTime(),
 					"Automated .csv upload from Android", "Lowell", "MA", "US");
 			if (sid <= 0)
 				return false;
