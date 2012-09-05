@@ -108,8 +108,7 @@ public class MainActivity extends Activity {
 		// TODO Create JSONArray with ExperimentField and LQ2 Data
 
 		// Create Session
-		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(),
-				"Uploaded with the iSENSE LabQuest2 App!", "", "", "");
+		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!", "", "", "");
 
 		// Get Experiment Fields
 
@@ -218,9 +217,9 @@ public class MainActivity extends Activity {
 				// Gets data from LQ
 				JSONObject get_status_json;
 				get_status_json = new JSONObject(GetStatus(LabQuestIP));
-				int col_size = get_status_json.getJSONObject("views").length() * 1000;
+				int col_size = get_status_json.getJSONObject("views").length();
 				// start_time in unix milliseconds
-				long start_time = Long.parseLong(get_status_json.getString("columnListTimeStamp")) * 1000;
+				double start_time = Double.parseDouble(get_status_json.getString("columnListTimeStamp")) * 1000;
 				String col_id[] = new String[col_size];// column id
 				String col_type[] = new String[col_size];// type of date
 				String col_data[] = new String[col_size];// column data
@@ -247,8 +246,12 @@ public class MainActivity extends Activity {
 							continue;
 						} else {
 							timefix = true;
+							JSONArray temp = new JSONArray();
+							for (int j = 0; j < col_data2[i].length(); j++) {
+								temp.put(col_data2[i].getDouble(j)*1000+start_time);
+							}
 							// TODO add start_time
-							LabQuestData.add(col_data2[i]);
+							LabQuestData.add(temp);
 							LabQuestType.add(col_type[i]);
 						}
 					} else {
