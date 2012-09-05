@@ -43,7 +43,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -75,7 +74,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
-	private static final String tag = "main.java";
+	//private static final String tag = "main.java";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -98,6 +97,8 @@ public class Main extends Activity implements SimpleGestureListener {
 	private SharedPreferences optionPrefs;
 
 	private static boolean canSwipe = true;
+	
+	private static ArrayList<Boolean> UploadSuccess;
 
 	public JSONArray data;
 
@@ -109,6 +110,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private LinearLayout dataView;
 	private ArrayList<File> checkedFiles;
 	private SimpleGestureFilter detector;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -176,7 +178,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		try {
 			success = getFiles(new File(rootDirectory), dataView);
 		} catch (Exception e) {
-			Log.w(tag, e.toString());
+			e.printStackTrace();
 			success = false;
 		}
 		canGetFiles(success, true);
@@ -244,7 +246,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		Log.d(tag, "lawl i was rotated");
 		if (currentDirectory != null && dataView != null) {
 			try {
 				getFiles(new File(currentDirectory), dataView);
@@ -350,10 +351,13 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		public void run() {
 
+			// saves boolean results for which uploads succeed
+			UploadSuccess = new ArrayList<Boolean>();
+			
 			// Do rapi uploading stuff
 			for (File f : checkedFiles) {
 				boolean success = uploadFile(f);
-				Log.d(tag, "upload: " + success);
+				UploadSuccess.add(success);
 			}
 		}
 	};
@@ -388,6 +392,25 @@ public class Main extends Activity implements SimpleGestureListener {
 			dia.setMessage("Done");
 			dia.cancel();
 
+			// Checks upload success
+			boolean totalSuccess = true;
+			int i = 0;
+			String error = "Failed to upload: ";
+			String errorFiles = "";
+			for (boolean success : UploadSuccess) {
+				if (success == false)	{
+					totalSuccess = false;
+					if (errorFiles.isEmpty())
+						errorFiles += checkedFiles.get(i).getName();
+					else errorFiles += ", " + checkedFiles.get(i).getName();
+				}
+				i++;
+			}
+			error += errorFiles + ".";
+			if (totalSuccess)
+				w.make("Upload Successful!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+			else w.make(error, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			
 			Intent iView = new Intent(mContext, ViewData.class);
 			startActivityForResult(iView, VIEW_DATA_REQUESTED);
 		}
@@ -450,7 +473,7 @@ public class Main extends Activity implements SimpleGestureListener {
 								success = getFiles(nextFile, dataView);
 								checkedFiles.removeAll(checkedFiles);
 							} catch (Exception e) {
-								Log.w(tag, e.toString());
+								e.printStackTrace();
 								success = false;
 							}
 							canGetFiles(success, false);
@@ -550,7 +573,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				currentDirectory = previousDirectory;
 				previousDirectory = getParentDir(currentDirectory);
 			} catch (Exception e) {
-				Log.w(tag, e.toString());
+				e.printStackTrace();
 			}
 	}
 
