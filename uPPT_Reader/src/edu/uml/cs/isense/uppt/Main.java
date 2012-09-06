@@ -203,8 +203,32 @@ public class Main extends Activity implements SimpleGestureListener {
 		upload.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-
-				new UploadTask().execute();
+				
+				boolean canUpload = true;
+				
+				final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
+						Main.mContext, Main.mContext.getSharedPreferences(
+								"USER_INFO", Context.MODE_PRIVATE));
+				String loginName = mUserPrefs.getString("username", "");
+				String loginPass = mUserPrefs.getString("password", "");
+				
+				if (!rapi.isLoggedIn()) {
+					boolean success = rapi.login(loginName, loginPass);
+					if (!success) {
+						canUpload = false;
+						w.make("Cannot upload data until logged in.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					}
+				}
+				
+				final SharedPreferences mExpPrefs = getSharedPreferences("eid", 0);
+				String eid = mExpPrefs.getString("eid", "");
+				if (eid.equals("")) {
+					canUpload = false;
+					w.make("Cannot upload data until a valid experiment is selected.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				}
+				
+				if (canUpload)
+					new UploadTask().execute();
 			}
 		});
 
@@ -581,6 +605,12 @@ public class Main extends Activity implements SimpleGestureListener {
 		boolean success = false;
 		if (!rapi.isLoggedIn())
 			login();
+		
+		if (!rapi.isLoggedIn()) {
+			// NO!
+			return false;
+		}
+		
 		if (sdFile.isDirectory() || sdFile.isHidden() || !sdFile.canRead())
 			return false;
 		BufferedReader fReader = null;
@@ -591,6 +621,11 @@ public class Main extends Activity implements SimpleGestureListener {
 			String[] header = headerLine.split(",");
 			// Log.d("tag", "header length=" + header.length);
 			String[] order = getOrder(headerLine);
+			
+			if (order == null) {
+				fReader.close();
+				return false;
+			}
 
 			// gets the order as an array of Array-indexes
 			int[] loopOrder = new int[order.length];
