@@ -4,6 +4,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +14,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.manualentry.ManualEntry;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -21,6 +23,7 @@ public class Splash extends TabActivity {
 
 	public static Context mContext;
 	public static Waffle w;
+	public static RestAPI rapi;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,12 @@ public class Splash extends TabActivity {
 		setContentView(R.layout.splash);
 
 		mContext = this;
+		
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
+		rapi.useDev(true);
 
 		w = new Waffle(mContext);
 
