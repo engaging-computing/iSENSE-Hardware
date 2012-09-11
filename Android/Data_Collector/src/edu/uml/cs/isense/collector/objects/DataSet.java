@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import edu.uml.cs.isense.collector.DataCollector;
+import edu.uml.cs.isense.collector.splash.Splash;
 
 @SuppressLint("ParserError")
 public class DataSet implements Serializable {
@@ -70,10 +71,10 @@ public class DataSet implements Serializable {
 				if (sid == -1) {
 
 					if (addr.equals("")) {
-						sid = DataCollector.rapi.createSession(eid, name, desc,
+						sid = Splash.rapi.createSession(eid, name, desc,
 								"N/A", "N/A", "United States");
 					} else {
-						sid = DataCollector.rapi.createSession(eid, name, desc,
+						sid = Splash.rapi.createSession(eid, name, desc,
 								addr, city + ", " + state, country);
 					}
 
@@ -92,7 +93,7 @@ public class DataSet implements Serializable {
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
-						success = DataCollector.rapi.putSessionData(sid, eid,
+						success = Splash.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
 							DataCollector.uploadQueue.add(this);
@@ -102,11 +103,11 @@ public class DataSet implements Serializable {
 
 			case PIC:
 				if (name.equals("")) {
-					success = DataCollector.rapi.uploadPictureToSession(
+					success = Splash.rapi.uploadPictureToSession(
 							picture, eid, sid, "*Session Name Not Provided*",
 							"N/A");
 				} else {
-					success = DataCollector.rapi.uploadPictureToSession(
+					success = Splash.rapi.uploadPictureToSession(
 							picture, eid, sid, name, "N/A");
 				}
 				if (!success)
