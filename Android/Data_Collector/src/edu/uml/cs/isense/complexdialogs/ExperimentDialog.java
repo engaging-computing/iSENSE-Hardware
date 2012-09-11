@@ -46,6 +46,8 @@ public class ExperimentDialog extends Activity {
 				} else {
 					Intent send = new Intent(ExperimentDialog.this, ManualEntry.class);
 					send.putExtra("eid", eid.getText().toString());
+					SharedPreferences.Editor mEdit = mPrefs.edit();
+					mEdit.putString("experiment_id", eid.getText().toString()).commit();
 					setResult(RESULT_OK, send);
 					finish();
 				}
@@ -68,7 +70,7 @@ public class ExperimentDialog extends Activity {
 				Intent experimentIntent = new Intent(getApplicationContext(),
 						BrowseExperiments.class);
 				experimentIntent.putExtra(
-						"edu.uml.cs.isense.amusement.experiments.propose",
+						"edu.uml.cs.isense.pictures.experiments.propose",
 						BROWSE_REQUESTED);
 
 				startActivityForResult(experimentIntent, BROWSE_REQUESTED);
@@ -104,7 +106,7 @@ public class ExperimentDialog extends Activity {
 		if (requestCode == BROWSE_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 				int expId = data.getExtras().getInt(
-						"edu.uml.cs.isense.uppt.experiments.exp_id");
+						"edu.uml.cs.isense.pictures.experiments.exp_id");
 				eid.setText("" + expId);
 
 			}
