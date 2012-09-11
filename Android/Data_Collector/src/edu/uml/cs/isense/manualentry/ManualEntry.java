@@ -35,19 +35,19 @@ public class ManualEntry extends Activity implements OnClickListener {
 
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int EXPERIMENT_REQUESTED = 101;
-	
+
 	private Waffle w;
 	private RestAPI rapi;
 
 	private Button uploadData;
 	private Button saveData;
 	private Button clearData;
-	
+
 	private static Context mContext;
-	
+
 	private TextView loginLabel;
 	private TextView experimentLabel;
-	
+
 	private SharedPreferences loginPrefs;
 	private SharedPreferences expPrefs;
 
@@ -57,32 +57,35 @@ public class ManualEntry extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.manual_entry);
-		
+
 		mContext = this;
-		
+
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		
-		loginPrefs = new ObscuredSharedPreferences(
-				Splash.mContext,
-				Splash.mContext.getSharedPreferences(
-						"USER_INFO", Context.MODE_PRIVATE));
-		
+
+		loginPrefs = new ObscuredSharedPreferences(Splash.mContext,
+				Splash.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+
 		expPrefs = getSharedPreferences("EID", 0);
-		
+
 		loginLabel = (TextView) findViewById(R.id.loginLabel);
-		loginLabel.setText(getResources().getString(R.string.loggedInAs) +
-				loginPrefs.getString("username", ""));
-		
+		loginLabel.setText(getResources().getString(R.string.loggedInAs)
+				+ loginPrefs.getString("username", ""));
+
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		experimentLabel.setText(getResources().getString(R.string.usingExperiment) +
-				expPrefs.getString("experiment_id", ""));
+		experimentLabel.setText(getResources().getString(
+				R.string.usingExperiment)
+				+ expPrefs.getString("experiment_id", ""));
 
 		uploadData = (Button) findViewById(R.id.manual_upload);
 		saveData = (Button) findViewById(R.id.manual_save);
 		clearData = (Button) findViewById(R.id.manual_clear);
+		
+		uploadData.setOnClickListener(this);
+		saveData.setOnClickListener(this);
 		clearData.setOnClickListener(this);
 
 		w = new Waffle(this);
@@ -118,12 +121,13 @@ public class ManualEntry extends Activity implements OnClickListener {
 				String returnCode = data.getStringExtra("returnCode");
 
 				if (returnCode.equals("Success")) {
-					
+
 					String loginName = loginPrefs.getString("username", "");
 					if (loginName.length() >= 18)
 						loginName = loginName.substring(0, 18) + "...";
-					loginLabel.setText(getResources()
-							.getString(R.string.loggedInAs) + loginName);
+					loginLabel.setText(getResources().getString(
+							R.string.loggedInAs)
+							+ loginName);
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
@@ -135,16 +139,19 @@ public class ManualEntry extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-							
-				int eid = data.getIntExtra("eid", -1);
-				if (eid != -1) {
-					experimentLabel.setText(getResources()
-							.getString(R.string.usingExperiment) +
-							eid);
-					fillDataFieldEntryList(eid);
-					rapi.getExperimentFields(eid);
-				} else
-					w.make("Ballz x2");
+				String eidString = data.getStringExtra("eid");
+				if (eidString != null) {
+					int eid = Integer.parseInt(eidString);
+					if (eid != -1) {
+						experimentLabel.setText(getResources().getString(
+								R.string.usingExperiment)
+								+ eid);
+						fillDataFieldEntryList(eid);
+						rapi.getExperimentFields(eid);
+					} else {
+						w.make("Ballz x2");
+					}
+				}
 			} else {
 				w.make("Ballz");
 			}
@@ -169,7 +176,8 @@ public class ManualEntry extends Activity implements OnClickListener {
 	}
 
 	private void addDataField(ExperimentField expField, int type) {
-		View dataField = View.inflate(this, R.id.manual_dataField, null);
+		LinearLayout dataField = (LinearLayout) View.inflate(this,
+				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
 				.findViewById(R.id.manual_dataFieldName);
 		fieldName.setText(expField.field_name);
@@ -183,7 +191,7 @@ public class ManualEntry extends Activity implements OnClickListener {
 	}
 
 	private void clearFields() {
-		for (int i = dataFieldEntryList.getChildCount(); i > 0; i--) {
+		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
 			if (dataFieldContents.isEnabled())
@@ -211,38 +219,38 @@ public class ManualEntry extends Activity implements OnClickListener {
 			super.onBackPressed();
 
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		super.onCreateOptionsMenu(menu);
-		
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_manual, menu);
 
 		return true;
 
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		
+
 		case R.id.menu_item_manual_experiment:
 			Intent iExperiment = new Intent(mContext, ExperimentDialog.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
-			
+
 			return true;
-			
+
 		case R.id.menu_item_manual_login:
 			Intent iLogin = new Intent(mContext, LoginActivity.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
-			
+
 			return true;
-			
+
 		}
 		return false;
-	
+
 	}
 
 }
