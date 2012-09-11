@@ -25,7 +25,7 @@ public class ManualEntry extends Activity implements OnClickListener {
 		setContentView(R.layout.manual_entry);
 		
 		Intent iGetExpId = new Intent(this, ManualEntrySetup.class);
-		startActivityForResult(iGetExpId, REQUEST_EXP_ID);
+		//startActivityForResult(iGetExpId, REQUEST_EXP_ID);
 		
 		
 	}
