@@ -206,6 +206,11 @@ public class Main extends Activity implements SimpleGestureListener {
 				
 				boolean canUpload = true;
 				
+				if (checkedFiles.size() == 0) {
+					w.make("No files checked to upload.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					canUpload = false;
+				}
+				
 				final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
 						Main.mContext, Main.mContext.getSharedPreferences(
 								"USER_INFO", Context.MODE_PRIVATE));
@@ -258,7 +263,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	@Override
 	public void onResume() {	
-		super.onResume();		
+		super.onResume();
 		login();
 	}
 
