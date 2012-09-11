@@ -259,5 +259,10 @@
     <string name="menu_sync">Sync Time</string>
     <string name="menu_upload">Upload</string>
     <string name="record_length">Test Length (sec):</string>
+    <string name="blank_desc"></string>
+    <string name="loggedInAs">Logged In As: </string>
+    <string name="usingExperiment">Uploading To Experiment #: </string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
 
 </resources>
