@@ -58,7 +58,7 @@
             android:label="Login"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".Experiments"
+            android:name=".BrowseExperiments"
             android:label="Experiments" />
         <activity
             android:name="edu.uml.cs.isense.sync.SyncTime"
@@ -127,10 +127,11 @@
             android:name="edu.uml.cs.isense.sync.TimeFailed"
             android:label="Connection Timed Out"
             android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name="edu.uml.cs.isense.manualentry.ManualEntrySetup"
-            android:label="Get Experiment Id"
-            android:theme="@style/theme_dialog_black" />
+        <activity 
+            android:name="edu.uml.cs.isense.complexdialogs.ExperimentDialog"
+            android:label="Experiment ID"
+            android:theme="@style/DialogTheme"/>
+        
     </application>
 
 </manifest>
