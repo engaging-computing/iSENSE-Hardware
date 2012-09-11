@@ -34,23 +34,23 @@
         android:paddingTop="10dp" >
 
         <Button
-            android:id="@+id/splash_exit"
+            android:id="@+id/splash_auto"
             android:layout_width="fill_parent"
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/colorless"
-            android:text="@string/exit"
+            android:text="@string/auto"
             android:textColor="@android:color/white" />
 
         <Button
-            android:id="@+id/splash_continue"
+            android:id="@+id/splash_manual"
             android:layout_width="fill_parent"
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/colorless"
-            android:text="@string/cont"
+            android:text="@string/manual"
             android:textColor="@android:color/white" />
     </LinearLayout>       
 
