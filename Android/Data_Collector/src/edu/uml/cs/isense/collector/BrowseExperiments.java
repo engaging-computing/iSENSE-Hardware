@@ -15,7 +15,7 @@ import android.widget.ListView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
 
-public class Experiments extends ListActivity {
+public class BrowseExperiments extends ListActivity {
 	private ExperimentAdapter m_adapter;
 	@SuppressWarnings("unused")
 	private RestAPI rapi;
