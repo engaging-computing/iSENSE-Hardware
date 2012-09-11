@@ -267,5 +267,6 @@
     <string name="auto">Automatic</string>
     <string name="manual">Manual</string>
     <string name="splashPrompt">Select your data collecting mode (manual or automatic).</string>
+    <string name="?">\?</string>
 
 </resources>
