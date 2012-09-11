@@ -53,6 +53,9 @@ public class ExperimentField {
 	public final int CONDUCTIVITY = 35;
 	public final int CONCENTRATION = 36;
 	public final int TEXT = 37;
+		
+	public final int UNIT_LATITUDE = 57; 
+	public final int UNIT_LONGITUDE = 58;
 }
 
 /*
