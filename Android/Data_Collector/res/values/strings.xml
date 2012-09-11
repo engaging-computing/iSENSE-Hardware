@@ -267,6 +267,6 @@
     <string name="auto">Automatic</string>
     <string name="manual">Manual</string>
     <string name="splashPrompt">Select your data collecting mode (manual or automatic).</string>
-    <string name="?">\?</string>
+    <string name="qmark">\&#64;</string>
 
 </resources>
