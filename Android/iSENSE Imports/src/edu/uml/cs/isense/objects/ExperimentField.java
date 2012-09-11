@@ -100,4 +100,90 @@ type_id as-is in the database
 |      37 | Text               |
 +---------+--------------------+
 
++---------+-------------------------------+--------------+
+| unit_id | name                          | abbreviation |
++---------+-------------------------------+--------------+
+|       1 | Kelvin                        | K            |
+|       2 | Celsius                       | C            |
+|       3 | Fahrenheit                    | F            |
+|       4 | Kilometer                     | km           |
+|       5 | Meter                         | m            |
+|       6 | Centimeter                    | cm           |
+|       7 | Millimeter                    | mm           |
+|       8 | Nanometer                     | nm           |
+|       9 | Mile                          | mi           |
+|      10 | Yard                          | yd           |
+|      11 | Foot                          | ft           |
+|      12 | Inch                          | in           |
+|      13 | Pound                         | lb           |
+|      14 | Newton                        | N            |
+|      15 | Liter                         | L            |
+|      16 | Milliliter                    | mL           |
+|      17 | Gallon                        | gal          |
+|      18 | Quart                         | qt           |
+|      19 | Kilogram                      | kg           |
+|      20 | Gram                          | g            |
+|      21 | Milligram                     | mg           |
+|      22 | UNIX Time                     | ms           |
+|      23 | Julian Year                   | a            |
+|      24 | Day                           | d            |
+|      25 | Second                        | s            |
+|      26 | Hour                          | h            |
+|      27 | Minute                        | min          |
+|      28 | Millisecond                   | ms           |
+|      29 | Nanosecond                    | ns           |
+|      30 | Lumen                         | lm           |
+|      31 | Candela                       | cd           |
+|      32 | Degree                        | deg          |
+|      33 | Radian                        | rad          |
+|      34 | Volt                          | V            |
+|      35 | Ampere                        | A            |
+|      36 | Milliamp                      | mA           |
+|      37 | Watt                          | W            |
+|      38 | Milliwatt                     | mW           |
+|      39 | Kilowatt                      | kW           |
+|      40 | Megawatt                      | MW           |
+|      41 | Gigawatt                      | GW           |
+|      42 | Coulomb                       | C            |
+|      43 | Microcoulomb                  | uC           |
+|      44 | Nanocoulomb                   | nC           |
+|      45 | Meters per Second             | m/s          |
+|      46 | Kilometers per Hour           | kph          |
+|      47 | Feet per Second               | ft/s         |
+|      48 | Miles per Hour                | mph          |
+|      49 | PicoBoard Light               | %            |
+|      50 | PicoBoard Sound               | %            |
+|      51 | PicoBoard Button              | on/off       |
+|      52 | SunSPOT Light                 | %            |
+|      53 | Toggle Switch                 | on/off       |
+|      54 | PicoBoard Slider              | %            |
+|      55 | SunSPOT Button                | on/off       |
+|      56 | Analog                        |              |
+|      57 | Latitude                      | lat          |
+|      58 | Longitude                     | lng          |
+|      59 | Per Second                    | per sec      |
+|      60 | Per Minute                    | per min      |
+|      61 | Per Hour                      | per hour     |
+|      62 | Per Day                       | per day      |
+|      63 | Per Week                      | per week     |
+|      64 | Per Month                     | per mont     |
+|      65 | Per Year                      | per year     |
+|      66 | Number                        | number       |
+|      67 | Custom                        | Custom       |
+|      68 | Lux                           | Lx           |
+|      69 | Salinity                      | ppm          |
+|      70 | pH Level                      | pH           |
+|      71 | Meters Per Second Squared     | m/s^2        |
+|      72 | UVA                           | mWs / cm     |
+|      73 | UVB                           | mWs / cm     |
+|      74 | Atmospheres                   | atms         |
+|      75 | Pascals                       | Pa           |
+|      76 | Relative Humidity             | rh           |
+|      77 | Parts Per Million             | ppm          |
+|      78 | Nephelometric Turbidity Units | NTU          |
+|      79 | Siemens                       | uS           |
+|      80 | Parts Per Million             | ppm          |
+|      81 | Text                          |              |
++---------+-------------------------------+--------------+
+
 */
