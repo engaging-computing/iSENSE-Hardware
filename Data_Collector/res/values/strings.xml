@@ -264,5 +264,6 @@
     <string name="usingExperiment">Uploading To Experiment #: </string>
     <string name="save">Save</string>
     <string name="clear">Clear</string>
+    <string name="?">\?</string>
 
 </resources>
