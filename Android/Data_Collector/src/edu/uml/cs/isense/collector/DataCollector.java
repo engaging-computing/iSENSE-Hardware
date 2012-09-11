@@ -45,8 +45,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
@@ -66,7 +64,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.FloatMath;
 import android.view.Menu;
@@ -86,7 +83,6 @@ import edu.uml.cs.isense.collector.objects.DataFieldManager;
 import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
-import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.complexdialogs.ChooseSensorDialog;
 import edu.uml.cs.isense.complexdialogs.Description;
@@ -136,7 +132,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int FORCE_STOP_REQUESTED = 8;
 	public static final int RECORDING_STOPPED_REQUESTED = 9;
 	public static final int DESCRIPTION_REQUESTED = 10;
-	public static final int SPLASH_REQUESTED = 11;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -294,8 +289,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private String sessionDescription = "";
 
-	private String eulaKey;
-
 	// Booleans
 	private static boolean useMenu = false;
 	private static boolean preLoad = false;
@@ -321,8 +314,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private File SDFile;
 	private FileWriter gpxwriter;
 	private BufferedWriter out;
-
-	private SharedPreferences eulaPrefs;
 
 	public static JSONArray dataSet;
 
@@ -849,18 +840,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				showSummary();
 			}
 
-		} else if (requestCode == SPLASH_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				setContentView(R.layout.main);
-				initMainUI();
-				assignVars();
-
-				SharedPreferences.Editor editor = eulaPrefs.edit();
-				editor.putBoolean(eulaKey, true);
-				editor.commit();
-			} else
-				((Activity) mContext).finish();
-
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				getUploadQueue();
@@ -1142,43 +1121,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			sec = "" + secInt;
 
 		time.setText("Time Elapsed: " + min + ":" + sec);
-	}
-
-	// Takes care of everything to do with Splash/EULA
-	private void displaySplash() {
-
-		PackageInfo versionInfo = getPackageInfo();
-
-		// The eulaKey changes every time you increment the version number in
-		// the AndroidManifest.xml
-		eulaKey = "eula_" + versionInfo.versionCode;
-
-		if (eulaPrefs == null)
-			eulaPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-		boolean hasBeenShown = eulaPrefs.getBoolean(eulaKey, false);
-
-		if (hasBeenShown == false) {
-			Intent iSplash = new Intent(mContext, Splash.class);
-			startActivityForResult(iSplash, SPLASH_REQUESTED);
-		} else {
-			setContentView(R.layout.main);
-			initMainUI();
-			assignVars();
-		}
-
-	}
-
-	// Get the package so we can check if EULA was checked
-	private PackageInfo getPackageInfo() {
-		PackageInfo pi = null;
-		try {
-			pi = mContext.getPackageManager().getPackageInfo(
-					mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		return pi;
 	}
 
 	// Deals with login and UI display
@@ -1830,7 +1772,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Loads the main screen
 	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
-		Runnable loadingThread, loadingScreen;
+		Runnable loadingThread;
 
 		@Override
 		protected void onPreExecute() {
@@ -1846,14 +1788,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 
 			};
-			loadingScreen = new Runnable() {
-
-				@Override
-				public void run() {
-					// Display the Splash Screen
-					displaySplash();
-				}
-			};
+			
 			super.onPreExecute();
 		}
 
@@ -1871,8 +1806,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				e.printStackTrace();
 			}
 
-			mHandler.post(loadingScreen);
-
 			return null;
 		}
 
@@ -1886,6 +1819,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 				setMenuStatus(true);
 			}
 			preLoad = false;
+			
+			setContentView(R.layout.main);
+			initMainUI();
+			assignVars();
+			
 			super.onPostExecute(result);
 		}
 

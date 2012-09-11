@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.manualentry.ManualEntry;
 import edu.uml.cs.isense.waffle.Waffle;
 
 @SuppressWarnings("deprecation")
@@ -65,26 +67,42 @@ public class Splash extends TabActivity {
 		tabHost.addTab(guideSpec);
 
 		// Set listeners for the "Continue" and "Exit" buttons
-		final Button cont = (Button) findViewById(R.id.splash_continue);
+		final Button cont = (Button) findViewById(R.id.splash_auto);
 		cont.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				setResult(RESULT_OK);
-				finish();
+				Intent iDataCollector = new Intent(Splash.this,
+						DataCollector.class);
+				startActivity(iDataCollector);
 
 			}
 		});
 
-		final Button exit = (Button) findViewById(R.id.splash_exit);
+		final Button exit = (Button) findViewById(R.id.splash_manual);
 		exit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setResult(RESULT_CANCELED);
-				finish();
+
+				Intent iManual = new Intent(Splash.this, ManualEntry.class);
+				startActivity(iManual);
+
 			}
 		});
 
+	}
+
+	// Overridden to prevent user from exiting app unless back button is pressed
+	// twice
+	@Override
+	public void onBackPressed() {
+
+		if (!w.isDisplaying)
+			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
+					Waffle.IMAGE_CHECK);
+		else if (w.canPerformTask) 
+			super.onBackPressed();
+		
 	}
 
 }

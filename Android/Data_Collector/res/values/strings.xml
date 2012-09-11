@@ -264,5 +264,8 @@
     <string name="usingExperiment">Uploading To Experiment #: </string>
     <string name="save">Save</string>
     <string name="clear">Clear</string>
+    <string name="auto">Automatic</string>
+    <string name="manual">Manual</string>
+    <string name="splashPrompt">Select your data collecting mode (manual or automatic).</string>
 
 </resources>
