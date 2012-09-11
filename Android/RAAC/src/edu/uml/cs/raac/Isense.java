@@ -85,6 +85,7 @@ import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.raac.exceptions.NoDataException;
 import edu.uml.cs.raac.pincushion.BluetoothService;
+import edu.uml.cs.raac.pincushion.PinComm;
 import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 @SuppressLint("NewApi")
@@ -696,6 +697,13 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					System.out.println(ppi.getSetting(PinComm.BTA1));
+					//ppi.setSetting(PinComm.BTA1, 24);
 					if(ppi.setRealTimeClock())
 						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 					else
