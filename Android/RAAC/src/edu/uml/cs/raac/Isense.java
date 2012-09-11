@@ -685,6 +685,12 @@ public class Isense extends Activity implements OnClickListener {
 					pinpointBtn.setEnabled(false);
 					btStatNum = 1;
 					setBtStatus();
+					//Sleep thread to allow near-future communications to succeed
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					if(connectFromSplash) {
 						showConnectOption = true;
 						showTimeOption = true;
@@ -697,17 +703,17 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					//Check PINPoint's BTA1 sensor setting
+					//and if it's not pH or temperature, set it to pH
+					if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
+						ppi.setSetting(PinComm.BTA1, 24);
 					}
-					System.out.println(ppi.getSetting(PinComm.BTA1));
-					//ppi.setSetting(PinComm.BTA1, 24);
-					if(ppi.setRealTimeClock())
+					//Set the time on the PINPoint's internal clock
+					if(ppi.setRealTimeClock()) {
 						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
-					else
+					} else {
 						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
+					}
 					if(autoRun) {
 						getRecords();
 					}
