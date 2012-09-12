@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.manualentry;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 import org.json.JSONArray;
 
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.complexdialogs.ExperimentDialog;
@@ -40,6 +42,7 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class ManualEntry extends Activity implements OnClickListener,
 		LocationListener {
 
+	public static final String activityName = "manualentry";
 	private static final int TYPE_DEFAULT = 1;
 	private static final int TYPE_LATITUDE = 2;
 	private static final int TYPE_LONGITUDE = 3;
@@ -48,9 +51,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int EXPERIMENT_REQUESTED = 101;
 	private static final int NO_GPS_REQUESTED = 102;
-	
+
 	private static final int FIRST = 1000;
-	private static final int LAST  = 1001;
+	private static final int LAST = 1001;
 
 	private static boolean showGpsDialog = true;
 
@@ -61,7 +64,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private Button saveData;
 	private Button clearData;
 
-	private static Context mContext;
+	public static Context mContext;
 
 	private TextView loginLabel;
 	private TextView experimentLabel;
@@ -75,6 +78,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private LocationManager mLocationManager;
 	private Location loc;
+	
+	public static Queue<DataSet> uploadQueue;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +114,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 		uploadData = (Button) findViewById(R.id.manual_upload);
 		saveData = (Button) findViewById(R.id.manual_save);
 		clearData = (Button) findViewById(R.id.manual_clear);
+
+		uploadData.setOnClickListener(this);
+		saveData.setOnClickListener(this);
+		clearData.setOnClickListener(this);
 
 		uploadData.setOnClickListener(this);
 		saveData.setOnClickListener(this);
@@ -237,21 +247,17 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		else
 			fieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		
-		if (type != TYPE_DEFAULT) {
-			if (type == TYPE_LATITUDE)
-				fieldContents.setText("Automatically filled for latitude");
-			else if (type == TYPE_LONGITUDE)
-				fieldContents.setText("Automatically filled for longitude");
-			else
-				fieldContents.setText("Automatically filled for time");
 
-			//fieldContents.setKeyListener(null);
+		if (type != TYPE_DEFAULT) {
+			fieldContents.setText("Auto");
+			fieldContents.setEnabled(false);
+
 			fieldContents.setClickable(false);
 			fieldContents.setCursorVisible(false);
 			fieldContents.setFocusable(false);
 			fieldContents.setFocusableInTouchMode(false);
 			fieldContents.setTextColor(Color.GRAY);
+
 		}
 		dataFieldEntryList.addView(dataField);
 	}
@@ -329,7 +335,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -344,14 +350,17 @@ public class ManualEntry extends Activity implements OnClickListener,
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
-			String text = dataFieldContents.getText().toString().toLowerCase();
-			if (text.contains("auto")) {
+			TextView dataFieldName = (EditText) dataFieldEntryList
+					.getChildAt(i).findViewById(R.id.manual_dataFieldName);
+			String contents = dataFieldContents.getText().toString().toLowerCase();
+			String name = dataFieldName.getText().toString().toLowerCase();
+			if (contents.contains("auto")) {
 				// Need to auto-fill the data
-				if (text.contains("latitude")) {
+				if (name.contains("latitude")) {
 					data.put("" + loc.getLatitude());
-				} else if (text.contains("longitude")) {
+				} else if (name.contains("longitude")) {
 					data.put("" + loc.getLongitude());
-				} else if (text.contains("time")) {
+				} else if (name.contains("time")) {
 					data.put("" + System.currentTimeMillis());
 				} else {
 					// Shouldn't have gotten here... we'll insert -1 as a
@@ -362,15 +371,15 @@ public class ManualEntry extends Activity implements OnClickListener,
 				data.put(dataFieldContents.getText().toString());
 			}
 		}
-		
+
 		Log.e("tag", data.toString());
 	}
 
 	// Allows for GPS to be recorded
 	public void initLocations() {
-		
+
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
+
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
