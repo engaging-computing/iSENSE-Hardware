@@ -42,6 +42,20 @@ public class DataSet implements Serializable {
 	private String country = "";
 	private String addr = "";
 
+	/**
+	 * Contructs an object of type DataSet
+	 * @param type DataSet.PIC or DataSet.DATA
+	 * @param name
+	 * @param desc
+	 * @param eid
+	 * @param data If type is DataSet.DATA, we look here.
+	 * @param picture If type is DataSet.PIC, we look here.
+	 * @param sid Give me -1 if you haven't called create session.
+	 * @param city
+	 * @param state
+	 * @param country
+	 * @param addr
+	 */
 	public DataSet(Type type, String name, String desc, String eid,
 			String data, File picture, int sid, String city, String state,
 			String country, String addr) {
