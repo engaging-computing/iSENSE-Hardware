@@ -2,17 +2,26 @@ package edu.uml.cs.isense.manualentry;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -23,10 +32,12 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.complexdialogs.ExperimentDialog;
 import edu.uml.cs.isense.complexdialogs.LoginActivity;
 import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class ManualEntry extends Activity implements OnClickListener {
+public class ManualEntry extends Activity implements OnClickListener,
+		LocationListener {
 
 	private static final int TYPE_DEFAULT = 1;
 	private static final int TYPE_LATITUDE = 2;
@@ -35,6 +46,12 @@ public class ManualEntry extends Activity implements OnClickListener {
 
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int EXPERIMENT_REQUESTED = 101;
+	private static final int NO_GPS_REQUESTED = 102;
+	
+	private static final int FIRST = 1000;
+	private static final int LAST  = 1001;
+
+	private static boolean showGpsDialog = true;
 
 	private Waffle w;
 	private RestAPI rapi;
@@ -53,6 +70,11 @@ public class ManualEntry extends Activity implements OnClickListener {
 
 	private LinearLayout dataFieldEntryList;
 
+	public JSONArray data;
+
+	private LocationManager mLocationManager;
+	private Location loc;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,6 +86,8 @@ public class ManualEntry extends Activity implements OnClickListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+
+		initLocations();
 
 		loginPrefs = new ObscuredSharedPreferences(Splash.mContext,
 				Splash.mContext.getSharedPreferences("USER_INFO",
@@ -84,6 +108,10 @@ public class ManualEntry extends Activity implements OnClickListener {
 		saveData = (Button) findViewById(R.id.manual_save);
 		clearData = (Button) findViewById(R.id.manual_clear);
 		
+		uploadData.setOnClickListener(this);
+		saveData.setOnClickListener(this);
+		clearData.setOnClickListener(this);
+
 		uploadData.setOnClickListener(this);
 		saveData.setOnClickListener(this);
 		clearData.setOnClickListener(this);
@@ -155,35 +183,52 @@ public class ManualEntry extends Activity implements OnClickListener {
 			} else {
 				w.make("Ballz");
 			}
+		} else if (requestCode == NO_GPS_REQUESTED) {
+			showGpsDialog = true;
+			if (resultCode == RESULT_OK) {
+				startActivity(new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			}
+
 		}
 	}
 
 	private void fillDataFieldEntryList(int eid) {
 		ArrayList<ExperimentField> fieldOrder = rapi.getExperimentFields(eid);
 		for (ExperimentField expField : fieldOrder) {
+			int firstOrLast = FIRST;
+			if (fieldOrder.indexOf(expField) == (fieldOrder.size() - 1)) {
+				firstOrLast = LAST;
+			}
 			if (expField.type_id == expField.GEOSPACIAL) {
 				if (expField.unit_id == expField.UNIT_LATITUDE) {
-					addDataField(expField, TYPE_LATITUDE);
+					addDataField(expField, TYPE_LATITUDE, firstOrLast);
 				} else {
-					addDataField(expField, TYPE_LONGITUDE);
+					addDataField(expField, TYPE_LONGITUDE, firstOrLast);
 				}
 			} else if (expField.type_id == expField.TIME) {
-				addDataField(expField, TYPE_TIME);
+				addDataField(expField, TYPE_TIME, firstOrLast);
 			} else {
-				addDataField(expField, TYPE_DEFAULT);
+				addDataField(expField, TYPE_DEFAULT, firstOrLast);
 			}
 		}
 	}
 
-	private void addDataField(ExperimentField expField, int type) {
+	private void addDataField(ExperimentField expField, int type, int fol) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
 				.findViewById(R.id.manual_dataFieldName);
 		fieldName.setText(expField.field_name);
+		EditText fieldContents = (EditText) dataField
+				.findViewById(R.id.manual_dataFieldContents);
+		// TODO - imeOptions, appropriate keyboard, appropriate accepted chars for each edittext
+		if (fol == FIRST)
+			fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		else
+			fieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		
 		if (type != TYPE_DEFAULT) {
-			EditText fieldContents = (EditText) dataField
-					.findViewById(R.id.manual_dataFieldContents);
 			fieldContents.setText("Auto");
 			fieldContents.setEnabled(false);
 		}
@@ -200,7 +245,11 @@ public class ManualEntry extends Activity implements OnClickListener {
 	}
 
 	private void saveFields() {
-		// TODO
+
+		getJSONData();
+
+		// TODO - put onto queue
+
 	}
 
 	private void uploadFields() {
@@ -250,6 +299,92 @@ public class ManualEntry extends Activity implements OnClickListener {
 
 		}
 		return false;
+
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mLocationManager != null)
+			mLocationManager.removeUpdates(ManualEntry.this);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (mLocationManager != null)
+			mLocationManager.removeUpdates(ManualEntry.this);
+	}
+
+	private void getJSONData() {
+
+		data = new JSONArray();
+
+		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
+			EditText dataFieldContents = (EditText) dataFieldEntryList
+					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
+			String text = dataFieldContents.getText().toString().toLowerCase();
+			if (text.contains("auto")) {
+				// Need to auto-fill the data
+				if (text.contains("latitude")) {
+					data.put("" + loc.getLatitude());
+				} else if (text.contains("longitude")) {
+					data.put("" + loc.getLongitude());
+				} else if (text.contains("time")) {
+					data.put("" + System.currentTimeMillis());
+				} else {
+					// Shouldn't have gotten here... we'll insert -1 as a
+					// default
+					data.put("-1");
+				}
+			} else {
+				data.put(dataFieldContents.getText().toString());
+			}
+		}
+		
+		Log.e("tag", data.toString());
+	}
+
+	// Allows for GPS to be recorded
+	public void initLocations() {
+		
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		
+		Criteria c = new Criteria();
+		c.setAccuracy(Criteria.ACCURACY_FINE);
+
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			mLocationManager.requestLocationUpdates(
+					mLocationManager.getBestProvider(c, true), 0, 0,
+					ManualEntry.this);
+		} else {
+			if (showGpsDialog) {
+				Intent iNoGps = new Intent(mContext, NoGps.class);
+				startActivityForResult(iNoGps, NO_GPS_REQUESTED);
+				showGpsDialog = false;
+			}
+		}
+
+		loc = new Location(mLocationManager.getBestProvider(c, true));
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		loc = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 
 	}
 
