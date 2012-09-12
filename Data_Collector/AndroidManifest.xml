@@ -112,7 +112,7 @@
             android:label="End User License Agreement"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.collector.QueueUploader"
+            android:name="edu.uml.cs.isense.shared.QueueUploader"
             android:label="Retry Uploading"
             android:theme="@style/theme_dialog_black" />
         <activity
