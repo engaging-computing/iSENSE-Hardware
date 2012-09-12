@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -116,8 +117,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		Intent iGetExpId = new Intent(this, ExperimentDialog.class);
-		startActivityForResult(iGetExpId, EXPERIMENT_REQUESTED);
+		String exp = expPrefs.getString("experiment_id", "");
+		if (exp.equals("")) {
+			Intent iGetExpId = new Intent(this, ExperimentDialog.class);
+			startActivityForResult(iGetExpId, EXPERIMENT_REQUESTED);
+		} else {
+			loadExperimentData(exp);
+		}
 
 	}
 
@@ -164,20 +170,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				String eidString = data.getStringExtra("eid");
-				if (eidString != null) {
-					int eid = Integer.parseInt(eidString);
-					if (eid != -1) {
-						experimentLabel.setText(getResources().getString(
-								R.string.usingExperiment)
-								+ eid);
-						fillDataFieldEntryList(eid);
-						rapi.getExperimentFields(eid);
-					} else {
-						w.make("Ballz x2");
-					}
-				}
+				loadExperimentData(eidString);
 			} else {
-				w.make("Ballz");
+				// they may not have fields on screen now
 			}
 		} else if (requestCode == NO_GPS_REQUESTED) {
 			showGpsDialog = true;
@@ -186,6 +181,24 @@ public class ManualEntry extends Activity implements OnClickListener,
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 
+		}
+	}
+	
+	private void loadExperimentData(String eidString) {	
+		if (dataFieldEntryList != null)
+			dataFieldEntryList.removeAllViews();
+		
+		if (eidString != null) {
+			int eid = Integer.parseInt(eidString);
+			if (eid != -1) {
+				experimentLabel.setText(getResources().getString(
+						R.string.usingExperiment)
+						+ eid);
+				fillDataFieldEntryList(eid);
+				rapi.getExperimentFields(eid);
+			} else {
+				w.make("CRITICAL ERROR", Waffle.IMAGE_X);
+			}
 		}
 	}
 
@@ -218,7 +231,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		fieldName.setText(expField.field_name);
 		EditText fieldContents = (EditText) dataField
 				.findViewById(R.id.manual_dataFieldContents);
-		// TODO - imeOptions, appropriate keyboard, appropriate accepted chars for each edittext
+
+		fieldContents.setSingleLine(true);
 		if (fol == FIRST)
 			fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		else
@@ -232,7 +246,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 			else
 				fieldContents.setText("Automatically filled for time");
 
-			fieldContents.setEnabled(false);
+			//fieldContents.setKeyListener(null);
+			fieldContents.setClickable(false);
+			fieldContents.setCursorVisible(false);
+			fieldContents.setFocusable(false);
+			fieldContents.setFocusableInTouchMode(false);
+			fieldContents.setTextColor(Color.GRAY);
 		}
 		dataFieldEntryList.addView(dataField);
 	}
