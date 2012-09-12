@@ -18,14 +18,8 @@ package edu.uml.cs.isense.collector;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,6 +84,7 @@ import edu.uml.cs.isense.complexdialogs.LoginActivity;
 import edu.uml.cs.isense.complexdialogs.MediaManager;
 import edu.uml.cs.isense.complexdialogs.Setup;
 import edu.uml.cs.isense.objects.Experiment;
+import edu.uml.cs.isense.shared.QueueUploader;
 import edu.uml.cs.isense.simpledialogs.ForceStop;
 import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.simpledialogs.NoIsense;
@@ -105,6 +100,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	/* Global Variables * */
 
 	/** Constants */
+	
+	public static final String activityName = "datacollector";
 
 	// Numerical constants
 	private static final int INTERVAL = 50;
@@ -455,8 +452,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = true;
 
-		// Stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
-		storeQueue();
+		// Stores uploadQueue in datacollector.ser (on SD card) and saves Q_COUNT
+		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -464,7 +461,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		super.onStart();
 
 		// Rebuilds uploadQueue from saved info
-		getUploadQueue();
+		QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -842,7 +839,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				getUploadQueue();
+				QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 			}
 		}
 
@@ -1701,73 +1698,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
-	public static void getUploadQueue() {
-
-		uploadQueue = new LinkedList<DataSet>();
-
-		// Makes sure there is an iSENSE folder
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-		if (!folder.exists())
-			folder.mkdir();
-
-		// Gets Q_COUNT back from Shared Prefs
-		final SharedPreferences mPrefs = getSharedPreferences(mContext);
-		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
-
-		try {
-			// Deserialize the file as a whole
-			File file = new File(folder.getAbsolutePath() + "/uploadqueue.ser");
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
-					file));
-			// Deserialize the objects one by one
-			for (int i = 0; i < Q_COUNT; i++) {
-				DataSet dataSet = (DataSet) in.readObject();
-				uploadQueue.add(dataSet);
-			}
-			in.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// Saves Q_COUNT and uploadQueue into memory for later use
-	public static void storeQueue() {
-
-		// Save Q_COUNT in SharedPrefs
-		final SharedPreferences mPrefs = getSharedPreferences(mContext);
-		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
-		int Q_COUNT = uploadQueue.size();
-
-		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
-		mPrefsEditor.commit();
-
-		// writes uploadqueue.ser
-		File uploadQueueFile = new File(
-				Environment.getExternalStorageDirectory() + "/iSENSE"
-						+ "/uploadqueue.ser");
-		ObjectOutput out;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
-
-			// Serializes DataSets from uploadQueue into uploadqueue.ser
-			while (Q_COUNT > 0) {
-				DataSet ds = uploadQueue.remove();
-				out.writeObject(ds);
-				Q_COUNT--;
-			}
-
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	// Loads the main screen
 	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
