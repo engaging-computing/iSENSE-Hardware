@@ -98,6 +98,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 	
 	private ProgressDialog dia;
 	private ArrayList<ExperimentField> fieldOrder;
+	
+	private EditText sessionName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		experimentLabel.setText(getResources().getString(
 				R.string.usingExperiment)
 				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
+		
+		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
 		uploadData = (Button) findViewById(R.id.manual_upload);
 		saveData = (Button) findViewById(R.id.manual_save);
@@ -164,6 +168,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
 			if (exp.equals("")) {
 				w.make("Fatal error: Invalid experiment.");
+			} else if (sessionName.getText().toString().length() == 0) {
+				sessionName.setError("Enter a session name");
 			} else {
 				saveFields(exp);
 			}
@@ -317,10 +323,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 		
 
 		String data = getJSONData();
-		DataSet ds = new DataSet(DataSet.Type.DATA, "Session Name",
-				"Description", eid, data, null, -1, city, state,
-				country, addr); // TODO
-				
+		DataSet ds = new DataSet(DataSet.Type.DATA, sessionName.getText().toString(),
+				"" + System.currentTimeMillis(), eid, data, null, -1, city, state,
+				country, addr);
+		
 		if (uploadQueue.add(ds)) {
 			w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
 		} else {

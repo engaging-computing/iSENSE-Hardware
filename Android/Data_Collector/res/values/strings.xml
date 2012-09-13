@@ -270,4 +270,5 @@
     <string name="splashPrompt">Select your data collecting mode (manual or automatic).</string>
     <string name="qmark">\&#63;</string>
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
+	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
 </resources>
