@@ -304,12 +304,19 @@ public class ManualEntry extends Activity implements OnClickListener,
 		
 		// TODO - NULL QUEUE!!!!
 		Log.e("tag", "null ds? = " + ds + ", or null queue? = " + uploadQueue);
-		uploadQueue.add(ds);
+		
+		if (uploadQueue.add(ds)) {
+			w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
+		} else {
+			w.make("Data not saved!", Waffle.IMAGE_X);
+		}
 
 	}
 
 	private void uploadFields() {
 		throughUploadButton = true;
+		if (!rapi.isLoggedIn())
+			rapi.login(loginPrefs.getString("username", ""), loginPrefs.getString("password", ""));
 		manageUploadQueue();
 	}
 
@@ -375,7 +382,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private String getJSONData() {
 
-		JSONArray data = new JSONArray();
+		JSONArray row = new JSONArray();
 
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
@@ -388,21 +395,24 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (contents.contains("auto")) {
 				// Need to auto-fill the data
 				if (name.contains("latitude")) {
-					data.put("" + loc.getLatitude());
+					row.put("" + loc.getLatitude());
 				} else if (name.contains("longitude")) {
-					data.put("" + loc.getLongitude());
+					row.put("" + loc.getLongitude());
 				} else if (name.contains("time")) {
-					data.put("" + System.currentTimeMillis());
+					row.put("" + System.currentTimeMillis());
 				} else {
 					// Shouldn't have gotten here... we'll insert -1 as a
 					// default
-					data.put("-1");
+					row.put("-1");
 				}
 			} else {
-				data.put(dataFieldContents.getText().toString());
+				row.put(dataFieldContents.getText().toString());
 			}
 		}
-
+		
+		JSONArray data = new JSONArray();
+		data.put(row);
+		
 		Log.e("tag", data.toString());
 		return data.toString();
 	}
@@ -530,7 +540,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onStart();
 		
 		// Rebuilds uploadQueue from saved info
-		QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 	}
 
 }
