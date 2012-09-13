@@ -6,6 +6,7 @@ import java.util.Queue;
 import org.json.JSONArray;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,8 +16,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +43,7 @@ import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.shared.QueueUploader;
 import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class ManualEntry extends Activity implements OnClickListener,
@@ -84,6 +90,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public static Queue<DataSet> uploadQueue;
 	private static boolean uploadSuccess = true;
 	private static boolean throughUploadButton = false;
+	
+	private ProgressDialog dia;
+	private ArrayList<ExperimentField> fieldOrder;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -207,21 +216,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dataFieldEntryList.removeAllViews();
 
 		if (eidString != null) {
-			int eid = Integer.parseInt(eidString);
-			if (eid != -1) {
-				experimentLabel.setText(getResources().getString(
-						R.string.usingExperiment)
-						+ eid);
-				fillDataFieldEntryList(eid);
-				rapi.getExperimentFields(eid);
-			} else {
-				w.make("CRITICAL ERROR", Waffle.IMAGE_X);
-			}
+			new LoadExperimentFieldsTask().execute();
 		}
 	}
 
 	private void fillDataFieldEntryList(int eid) {
-		ArrayList<ExperimentField> fieldOrder = rapi.getExperimentFields(eid);
+		//ArrayList<ExperimentField> fieldOrder = rapi.getExperimentFields(eid);
 		for (ExperimentField expField : fieldOrder) {
 			int firstOrLast = FIRST;
 			if (fieldOrder.indexOf(expField) == (fieldOrder.size() - 1)) {
@@ -265,8 +265,24 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setFocusable(false);
 			fieldContents.setFocusableInTouchMode(false);
 			fieldContents.setTextColor(Color.GRAY);
+		}
+		
+		if (expField.type_id == expField.TEXT) {
+			// keyboard to text
+			fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
+			fieldContents.setFilters(new InputFilter[] { new InputFilter.LengthFilter(60) } );
+			fieldContents.setKeyListener(DigitsKeyListener
+					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"));
+		} else {
+			// keyboard to nums
+			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
+			fieldContents.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) } );
+			fieldContents.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
 
 		}
+		
+		
+		
 		dataFieldEntryList.addView(dataField);
 	}
 
@@ -285,6 +301,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		DataSet ds = new DataSet(DataSet.Type.DATA, "Session Name",
 				"Description", eid, data, null, -1, "Lowell", "Massachusetts",
 				"USA", "1 University Ave"); // TODO
+		
+		// TODO - NULL QUEUE!!!!
+		Log.e("tag", "null ds? = " + ds + ", or null queue? = " + uploadQueue);
 		uploadQueue.add(ds);
 
 	}
@@ -361,7 +380,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
-			TextView dataFieldName = (EditText) dataFieldEntryList
+			TextView dataFieldName = (TextView) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldName);
 			String contents = dataFieldContents.getText().toString()
 					.toLowerCase();
@@ -428,6 +447,62 @@ public class ManualEntry extends Activity implements OnClickListener,
 				}
 			}
 		}
+	}
+	
+	private class LoadExperimentFieldsTask extends AsyncTask<Void, Integer, Void> {		
+
+		private boolean error = false;
+		
+		@Override
+		protected void onPreExecute() {
+			
+			OrientationManager.disableRotation(ManualEntry.this);
+
+			dia = new ProgressDialog(ManualEntry.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Loading data fields...");
+			dia.setCancelable(false);
+			dia.show();
+			
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID, "-1"));
+			if (eid != -1) {
+				//fillDataFieldEntryList(eid);
+				fieldOrder = rapi.getExperimentFields(eid);
+			} else {
+				Log.e("tag", "CRITICAL ERROR!!!!");
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			
+			if (!error) {
+				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
+				experimentLabel.setText(getResources().getString(
+						R.string.usingExperiment)
+						+ eid);
+				
+				try {
+					fillDataFieldEntryList(Integer.parseInt(eid));
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+				
+				dia.dismiss();
+				OrientationManager.enableRotation(ManualEntry.this);
+			}
+			
+			super.onPostExecute(result);
+		}
+		
 	}
 
 	@Override
