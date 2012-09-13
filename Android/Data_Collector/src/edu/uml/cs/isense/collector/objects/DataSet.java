@@ -7,8 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.splash.Splash;
+import edu.uml.cs.isense.shared.QueueUploader;
 
 @SuppressLint("ParserError")
 public class DataSet implements Serializable {
@@ -94,7 +94,7 @@ public class DataSet implements Serializable {
 
 					if (sid == -1) {
 						success = false;
-						DataCollector.uploadQueue.add(this);
+						QueueUploader.qpa.uploadQueue.add(this);
 						break;
 					}
 				}
@@ -102,7 +102,7 @@ public class DataSet implements Serializable {
 				// Experiment Closed Checker
 				if (sid == -400) {
 					success = false;
-					DataCollector.uploadQueue.add(this);
+					QueueUploader.qpa.uploadQueue.add(this);
 					break;
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
@@ -110,7 +110,7 @@ public class DataSet implements Serializable {
 						success = Splash.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
-							DataCollector.uploadQueue.add(this);
+							QueueUploader.qpa.uploadQueue.add(this);
 					}
 				}
 				break;
@@ -125,7 +125,7 @@ public class DataSet implements Serializable {
 							picture, eid, sid, name, "N/A");
 				}
 				if (!success)
-					DataCollector.uploadQueue.add(this);
+					QueueUploader.qpa.uploadQueue.add(this);
 				break;
 
 			}
