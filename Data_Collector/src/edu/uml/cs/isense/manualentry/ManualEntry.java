@@ -1,6 +1,9 @@
 package edu.uml.cs.isense.manualentry;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 
 import org.json.JSONArray;
@@ -11,7 +14,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -296,15 +301,26 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void saveFields(String eid) {
+		String city = "", state = "", country = "", addr = "";
+		try {
+			List<Address> address = new Geocoder(ManualEntry.this, Locale.getDefault()).getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+			if (address.size() > 0) {
+				city = address.get(0).getLocality();
+				state = address.get(0).getAdminArea();
+				country = address.get(0).getCountryName();
+				addr = address.get(0).getAddressLine(0);
+			}
+				
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		String data = getJSONData();
 		DataSet ds = new DataSet(DataSet.Type.DATA, "Session Name",
-				"Description", eid, data, null, -1, "Lowell", "Massachusetts",
-				"USA", "1 University Ave"); // TODO
-		
-		// TODO - NULL QUEUE!!!!
-		Log.e("tag", "null ds? = " + ds + ", or null queue? = " + uploadQueue);
-		
+				"Description", eid, data, null, -1, city, state,
+				country, addr); // TODO
+				
 		if (uploadQueue.add(ds)) {
 			w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
 		} else {
