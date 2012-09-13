@@ -35,6 +35,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	public static final int QUEUE_DATA_COLLECTOR = 1;
 	public static final int QUEUE_MANUAL_ENTRY = 2;
+	public static final String INTENT_IDENTIFIER = "intent_identifier";
 
 	private static Context mContext;
 	private static LinearLayout scrollQueue;
@@ -50,7 +51,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 		mContext = this;
 
-		int QUEUE_PARENT = getIntent().getExtras().getInt("QUEUE_PARENT");
+		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
 		switch (QUEUE_PARENT) {
 		case QUEUE_DATA_COLLECTOR:
 			qpa = new QueueParentAssets(DataCollector.uploadQueue,
