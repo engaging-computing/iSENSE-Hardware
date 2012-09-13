@@ -32,7 +32,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".DataCollector"
+            android:name=".splash.Splash"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
             <intent-filter>
@@ -41,12 +41,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".splash.SplashMain" />
+        <activity android:name=".splash.SplashGuide" />
+        <activity android:name=".splash.SplashAbout" />
+        <activity
+            android:name=".DataCollector"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="edu.uml.cs.isense.manualentry.ManualEntry"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="edu.uml.cs.isense.complexdialogs.LoginActivity"
             android:label="Login"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".Experiments"
+            android:name=".BrowseExperiments"
             android:label="Experiments" />
         <activity
             android:name="edu.uml.cs.isense.sync.SyncTime"
@@ -100,7 +112,7 @@
             android:label="End User License Agreement"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name="edu.uml.cs.isense.collector.QueueUploader"
+            android:name="edu.uml.cs.isense.shared.QueueUploader"
             android:label="Retry Uploading"
             android:theme="@style/theme_dialog_black" />
         <activity
@@ -115,19 +127,10 @@
             android:name="edu.uml.cs.isense.sync.TimeFailed"
             android:label="Connection Timed Out"
             android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name=".splash.Splash"
-            android:label=""
-            android:configChanges="orientation|keyboardHidden" />
-        <activity
-            android:name=".splash.SplashMain" />
-        <activity
-            android:name=".splash.SplashGuide" />
-        <activity
-            android:name=".splash.SplashEula" />
-        
-        <activity
-            android:name=".splash.SplashAbout" />
+        <activity 
+            android:name="edu.uml.cs.isense.complexdialogs.ExperimentDialog"
+            android:label="Experiment ID"
+            android:theme="@style/DialogTheme"/>
         
     </application>
 

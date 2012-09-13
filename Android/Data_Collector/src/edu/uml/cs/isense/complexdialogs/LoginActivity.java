@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.simpledialogs.LoginError;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -56,7 +57,7 @@ public class LoginActivity extends Activity {
 		final Button cancel = (Button) findViewById(R.id.login_cancel);
 		
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				   DataCollector.mContext, DataCollector.mContext
+				   Splash.mContext, Splash.mContext
 				   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
 		
 		username.setText(mPrefs.getString("username", ""));
@@ -69,7 +70,7 @@ public class LoginActivity extends Activity {
        			   
 				if (success) {
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-							DataCollector.mContext, DataCollector.mContext
+							Splash.mContext, Splash.mContext
  						   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
  				   	mPrefs.edit().putString("username", username.getText().toString()).commit();
  				   	mPrefs.edit().putString("password", password.getText().toString()).commit();
