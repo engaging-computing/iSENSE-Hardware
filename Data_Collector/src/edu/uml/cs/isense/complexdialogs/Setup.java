@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
-import edu.uml.cs.isense.collector.Experiments;
+import edu.uml.cs.isense.collector.BrowseExperiments;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
@@ -234,7 +234,7 @@ public class Setup extends Activity implements OnClickListener {
 		case R.id.BrowseButton:
 
 			Intent experimentIntent = new Intent(getApplicationContext(),
-					Experiments.class);
+					BrowseExperiments.class);
 			experimentIntent.putExtra(
 					"edu.uml.cs.isense.amusement.experiments.propose",
 					EXPERIMENT_CODE);

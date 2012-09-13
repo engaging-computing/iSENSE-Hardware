@@ -1,31 +1,47 @@
-package edu.uml.cs.isense.collector;
+package edu.uml.cs.isense.shared;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.uml.cs.isense.collector.DataCollector;
+import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.manualentry.ManualEntry;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class QueueUploader extends Activity implements OnClickListener {
 
+	public static final int QUEUE_DATA_COLLECTOR = 1;
+	public static final int QUEUE_MANUAL_ENTRY = 2;
+	public static final String INTENT_IDENTIFIER = "intent_identifier";
 
 	private static Context mContext;
 	private static LinearLayout scrollQueue;
 	private Runnable sdUploader;
 	private ProgressDialog dia;
-	private static Queue<DataSet> mirrorQueue;
+	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
 
 	@Override
@@ -35,6 +51,18 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 		mContext = this;
 
+		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
+		switch (QUEUE_PARENT) {
+		case QUEUE_DATA_COLLECTOR:
+			qpa = new QueueParentAssets(DataCollector.uploadQueue,
+					DataCollector.activityName, DataCollector.mContext);
+			break;
+		case QUEUE_MANUAL_ENTRY:
+			qpa = new QueueParentAssets(ManualEntry.uploadQueue,
+					ManualEntry.activityName, ManualEntry.mContext);
+			break;
+		}
+
 		Button upload = (Button) findViewById(R.id.upload);
 		upload.setOnClickListener(this);
 
@@ -42,13 +70,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 		cancel.setOnClickListener(this);
 
 		// Make sure the queue is written before we fetch it
-		if (!(DataCollector.uploadQueue.isEmpty()))
-			DataCollector.storeQueue();
-
-		DataCollector.getUploadQueue();
-
-		mirrorQueue = new LinkedList<DataSet>();
-		mirrorQueue.addAll(DataCollector.uploadQueue);
+		if (!(qpa.uploadQueue.isEmpty()))
+			storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+		
+		Context c = qpa.mContext;
+		String pn = qpa.parentName;
+		Queue<DataSet> q = getUploadQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+		qpa = new QueueParentAssets(q, pn, c);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue(scrollQueue);
@@ -58,7 +86,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private void fillScrollQueue(LinearLayout scrollQueue) {
 		String previous = "";
 
-		for (final DataSet ds : mirrorQueue) {
+		for (final DataSet ds : qpa.mirrorQueue) {
 			switch (ds.type) {
 			case DATA:
 				View data = View.inflate(mContext, R.layout.queueblock_data,
@@ -156,8 +184,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 		switch (v.getId()) {
 
 		case R.id.upload:
-			DataCollector.uploadQueue = new LinkedList<DataSet>();
 			new UploadSDTask().execute();
+			qpa.uploadQueue = new LinkedList<DataSet>();
 			break;
 
 		case R.id.cancel:
@@ -172,8 +200,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(QueueUploader.this);
-			
-			DataSet ds = mirrorQueue.remove();
+
+			DataSet ds = qpa.mirrorQueue.remove();
 			createRunnable(ds);
 			dia = new ProgressDialog(QueueUploader.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -194,15 +222,16 @@ public class QueueUploader extends Activity implements OnClickListener {
 			Waffle w = new Waffle(QueueUploader.mContext);
 
 			if (uploadSuccess)
-				w.make("Upload Success", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				w.make("Upload Success", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 			else
 				w.make("Upload failed.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			dia.dismiss();
-			
+
 			OrientationManager.enableRotation(QueueUploader.this);
 
-			if (mirrorQueue.isEmpty()) {
-				DataCollector.storeQueue();
+			if (qpa.mirrorQueue.isEmpty()) {
+				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 				setResult(RESULT_OK);
 				finish();
 				return;
@@ -220,7 +249,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 				if (ds.isUploadable()) {
 					uploadSuccess = ds.upload();
 				} else {
-					DataCollector.uploadQueue.add(ds);
+					qpa.uploadQueue.add(ds);
 				}
 			}
 
@@ -231,6 +260,80 @@ public class QueueUploader extends Activity implements OnClickListener {
 	// Calls the next upload task if there are more DataSets in the queue
 	private void continueUploading() {
 		new UploadSDTask().execute();
+	}
+
+	// Saves Q_COUNT and uploadQueue into memory for later use
+	public static void storeQueue(Queue<DataSet> queue, String sharedPrefsName,
+			Context context) {
+
+		// Save Q_COUNT in SharedPrefs
+		final SharedPreferences mPrefs = context.getSharedPreferences(
+				sharedPrefsName, Context.MODE_PRIVATE);
+		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
+		int Q_COUNT = queue.size();
+
+		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
+		mPrefsEditor.commit();
+
+		// writes uploadqueue.ser
+		File uploadQueueFile = new File(
+				Environment.getExternalStorageDirectory() + "/iSENSE/"
+						+ sharedPrefsName + ".ser");
+		ObjectOutput out;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
+
+			// Serializes DataSets from uploadQueue into uploadqueue.ser
+			while (Q_COUNT > 0) {
+				DataSet ds = queue.remove();
+				out.writeObject(ds);
+				Q_COUNT--;
+			}
+
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
+	public static Queue<DataSet> getUploadQueue(Queue<DataSet> uploadQueue,
+			String parentName, Context context) {
+
+		uploadQueue = new LinkedList<DataSet>();
+
+		// Makes sure there is an iSENSE folder
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/iSENSE");
+		if (!folder.exists())
+			folder.mkdir();
+
+		// Gets Q_COUNT back from Shared Prefs
+		final SharedPreferences mPrefs = context.getSharedPreferences(
+				parentName, Context.MODE_PRIVATE);
+		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
+
+		try {
+			// Deserialize the file as a whole
+			File file = new File(folder.getAbsolutePath() + "/" + parentName
+					+ ".ser");
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
+					file));
+			// Deserialize the objects one by one
+			for (int i = 0; i < Q_COUNT; i++) {
+				DataSet dataSet = (DataSet) in.readObject();
+				uploadQueue.add(dataSet);
+			}
+			in.close();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return uploadQueue;
 	}
 
 }

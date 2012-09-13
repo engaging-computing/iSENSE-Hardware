@@ -7,7 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import edu.uml.cs.isense.collector.DataCollector;
+import edu.uml.cs.isense.collector.splash.Splash;
+import edu.uml.cs.isense.shared.QueueUploader;
 
 @SuppressLint("ParserError")
 public class DataSet implements Serializable {
@@ -41,6 +42,20 @@ public class DataSet implements Serializable {
 	private String country = "";
 	private String addr = "";
 
+	/**
+	 * Contructs an object of type DataSet
+	 * @param type DataSet.PIC or DataSet.DATA
+	 * @param name
+	 * @param desc
+	 * @param eid
+	 * @param data If type is DataSet.DATA, we look here.
+	 * @param picture If type is DataSet.PIC, we look here.
+	 * @param sid Give me -1 if you haven't called create session.
+	 * @param city
+	 * @param state
+	 * @param country
+	 * @param addr
+	 */
 	public DataSet(Type type, String name, String desc, String eid,
 			String data, File picture, int sid, String city, String state,
 			String country, String addr) {
@@ -70,16 +85,16 @@ public class DataSet implements Serializable {
 				if (sid == -1) {
 
 					if (addr.equals("")) {
-						sid = DataCollector.rapi.createSession(eid, name, desc,
+						sid = Splash.rapi.createSession(eid, name, desc,
 								"N/A", "N/A", "United States");
 					} else {
-						sid = DataCollector.rapi.createSession(eid, name, desc,
+						sid = Splash.rapi.createSession(eid, name, desc,
 								addr, city + ", " + state, country);
 					}
 
 					if (sid == -1) {
 						success = false;
-						DataCollector.uploadQueue.add(this);
+						QueueUploader.qpa.uploadQueue.add(this);
 						break;
 					}
 				}
@@ -87,30 +102,30 @@ public class DataSet implements Serializable {
 				// Experiment Closed Checker
 				if (sid == -400) {
 					success = false;
-					DataCollector.uploadQueue.add(this);
+					QueueUploader.qpa.uploadQueue.add(this);
 					break;
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
-						success = DataCollector.rapi.putSessionData(sid, eid,
+						success = Splash.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
-							DataCollector.uploadQueue.add(this);
+							QueueUploader.qpa.uploadQueue.add(this);
 					}
 				}
 				break;
 
 			case PIC:
 				if (name.equals("")) {
-					success = DataCollector.rapi.uploadPictureToSession(
+					success = Splash.rapi.uploadPictureToSession(
 							picture, eid, sid, "*Session Name Not Provided*",
 							"N/A");
 				} else {
-					success = DataCollector.rapi.uploadPictureToSession(
+					success = Splash.rapi.uploadPictureToSession(
 							picture, eid, sid, name, "N/A");
 				}
 				if (!success)
-					DataCollector.uploadQueue.add(this);
+					QueueUploader.qpa.uploadQueue.add(this);
 				break;
 
 			}

@@ -43,7 +43,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -75,7 +74,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
-	private static final String tag = "main.java";
+	//private static final String tag = "main.java";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -98,6 +97,8 @@ public class Main extends Activity implements SimpleGestureListener {
 	private SharedPreferences optionPrefs;
 
 	private static boolean canSwipe = true;
+	
+	private static ArrayList<Boolean> UploadSuccess;
 
 	public JSONArray data;
 
@@ -109,6 +110,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private LinearLayout dataView;
 	private ArrayList<File> checkedFiles;
 	private SimpleGestureFilter detector;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -176,7 +178,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		try {
 			success = getFiles(new File(rootDirectory), dataView);
 		} catch (Exception e) {
-			Log.w(tag, e.toString());
+			e.printStackTrace();
 			success = false;
 		}
 		canGetFiles(success, true);
@@ -201,8 +203,37 @@ public class Main extends Activity implements SimpleGestureListener {
 		upload.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-
-				new UploadTask().execute();
+				
+				boolean canUpload = true;
+				
+				if (checkedFiles.size() == 0) {
+					w.make("No files checked to upload.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					canUpload = false;
+				}
+				
+				final SharedPreferences mUserPrefs = new ObscuredSharedPreferences(
+						Main.mContext, Main.mContext.getSharedPreferences(
+								"USER_INFO", Context.MODE_PRIVATE));
+				String loginName = mUserPrefs.getString("username", "");
+				String loginPass = mUserPrefs.getString("password", "");
+				
+				if (!rapi.isLoggedIn()) {
+					boolean success = rapi.login(loginName, loginPass);
+					if (!success) {
+						canUpload = false;
+						w.make("Cannot upload data until logged in.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					}
+				}
+				
+				final SharedPreferences mExpPrefs = getSharedPreferences("eid", 0);
+				String eid = mExpPrefs.getString("eid", "");
+				if (eid.equals("")) {
+					canUpload = false;
+					w.make("Cannot upload data until a valid experiment is selected.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				}
+				
+				if (canUpload)
+					new UploadTask().execute();
 			}
 		});
 
@@ -232,7 +263,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	@Override
 	public void onResume() {	
-		super.onResume();		
+		super.onResume();
 		login();
 	}
 
@@ -244,7 +275,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		Log.d(tag, "lawl i was rotated");
 		if (currentDirectory != null && dataView != null) {
 			try {
 				getFiles(new File(currentDirectory), dataView);
@@ -350,10 +380,13 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		public void run() {
 
+			// saves boolean results for which uploads succeed
+			UploadSuccess = new ArrayList<Boolean>();
+			
 			// Do rapi uploading stuff
 			for (File f : checkedFiles) {
 				boolean success = uploadFile(f);
-				Log.d(tag, "upload: " + success);
+				UploadSuccess.add(success);
 			}
 		}
 	};
@@ -388,6 +421,25 @@ public class Main extends Activity implements SimpleGestureListener {
 			dia.setMessage("Done");
 			dia.cancel();
 
+			// Checks upload success
+			boolean totalSuccess = true;
+			int i = 0;
+			String error = "Failed to upload: ";
+			String errorFiles = "";
+			for (boolean success : UploadSuccess) {
+				if (success == false)	{
+					totalSuccess = false;
+					if (errorFiles.isEmpty())
+						errorFiles += checkedFiles.get(i).getName();
+					else errorFiles += ", " + checkedFiles.get(i).getName();
+				}
+				i++;
+			}
+			error += errorFiles + ".";
+			if (totalSuccess)
+				w.make("Upload Successful!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+			else w.make(error, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			
 			Intent iView = new Intent(mContext, ViewData.class);
 			startActivityForResult(iView, VIEW_DATA_REQUESTED);
 		}
@@ -450,7 +502,7 @@ public class Main extends Activity implements SimpleGestureListener {
 								success = getFiles(nextFile, dataView);
 								checkedFiles.removeAll(checkedFiles);
 							} catch (Exception e) {
-								Log.w(tag, e.toString());
+								e.printStackTrace();
 								success = false;
 							}
 							canGetFiles(success, false);
@@ -550,7 +602,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				currentDirectory = previousDirectory;
 				previousDirectory = getParentDir(currentDirectory);
 			} catch (Exception e) {
-				Log.w(tag, e.toString());
+				e.printStackTrace();
 			}
 	}
 
@@ -558,6 +610,12 @@ public class Main extends Activity implements SimpleGestureListener {
 		boolean success = false;
 		if (!rapi.isLoggedIn())
 			login();
+		
+		if (!rapi.isLoggedIn()) {
+			// NO!
+			return false;
+		}
+		
 		if (sdFile.isDirectory() || sdFile.isHidden() || !sdFile.canRead())
 			return false;
 		BufferedReader fReader = null;
@@ -568,6 +626,11 @@ public class Main extends Activity implements SimpleGestureListener {
 			String[] header = headerLine.split(",");
 			// Log.d("tag", "header length=" + header.length);
 			String[] order = getOrder(headerLine);
+			
+			if (order == null) {
+				fReader.close();
+				return false;
+			}
 
 			// gets the order as an array of Array-indexes
 			int[] loopOrder = new int[order.length];
