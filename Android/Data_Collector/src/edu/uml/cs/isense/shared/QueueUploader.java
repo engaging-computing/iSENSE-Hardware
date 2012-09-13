@@ -181,8 +181,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 		switch (v.getId()) {
 
 		case R.id.upload:
-			qpa.uploadQueue = new LinkedList<DataSet>();
 			new UploadSDTask().execute();
+			qpa.uploadQueue = new LinkedList<DataSet>();
 			break;
 
 		case R.id.cancel:
