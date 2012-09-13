@@ -55,9 +55,6 @@ public class MainActivity extends Activity {
 		iSENSEUpload = (Button) findViewById(R.id.isense_upload);
 		SessionName = (EditText) findViewById(R.id.session_name);
 
-		LabQuestData = new ArrayList<JSONArray>();
-		LabQuestType = new ArrayList<String>();
-
 		LabQuestConnect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -100,29 +97,43 @@ public class MainActivity extends Activity {
 			return false;
 		}
 
-		ArrayList<ExperimentField> temp2 = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
-		for (ExperimentField e : temp2) {
-			Log.v(tag, e.field_name);
+		// TODO Field Matching
+
+		ArrayList<ExperimentField> iSENSEExpFields = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
+		String tempstr;
+		tempstr = new String();
+		for (ExperimentField e : iSENSEExpFields) {
+			tempstr = tempstr + ", " + e.field_name;
 		}
+		Log.v(tag, "iSENSE Fields: " + tempstr);
+		tempstr = new String();
+		for (String e : LabQuestType) {
+			tempstr = tempstr + ", " + e;
+		}
+		Log.v(tag, "LabQuest Fields: " + tempstr);
 
 		// TODO Create JSONArray with ExperimentField and LQ2 Data
-
+		JSONArray iSENSEExpData = new JSONArray();
+		try {
+			for (int i = 0; i < LabQuestData.get(0).length(); i++) {
+				JSONArray temp = new JSONArray();
+				for (int j = 0; j < LabQuestType.size(); j++) {
+					temp.put(LabQuestData.get(j).get(i));
+				}
+				Log.v(tag,temp.toString());
+				iSENSEExpData.put(temp);
+			}
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Log.v(tag,iSENSEExpData.toString());
+		
 		// Create Session
 		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!", "", "", "");
 
-		// Get Experiment Fields
-
-		// JSONArray temp = new JSONArray();
-		// JSONArray row = new JSONArray();
-		// row.put("1");
-		// row.put("2");
-		// row.put("3");
-		// temp.put(row);
-		// temp.put(row);
-		// Log.v(tag, "JSON:" + temp.toString());
-
-		// Put Data to Session
-		// rapi.putSessionData(iSENSESessionID, iSENSEExpID, temp);
+		Log.v(tag,"iSENSESessionID: "+ Integer.toString(iSENSESessionID));
+		rapi.putSessionData(iSENSESessionID, iSENSEExpID, iSENSEExpData);
 		return true;
 	}
 
@@ -210,7 +221,8 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-
+			LabQuestData = new ArrayList<JSONArray>();
+			LabQuestType = new ArrayList<String>();
 			SharedPreferences sp = getSharedPreferences("labquest_settings", 0);
 			String LabQuestIP = sp.getString("labquest_ip", "");
 			try {
@@ -248,7 +260,7 @@ public class MainActivity extends Activity {
 							timefix = true;
 							JSONArray temp = new JSONArray();
 							for (int j = 0; j < col_data2[i].length(); j++) {
-								temp.put(col_data2[i].getDouble(j)*1000+start_time);
+								temp.put(col_data2[i].getDouble(j) * 1000 + start_time);
 							}
 							// TODO add start_time
 							LabQuestData.add(temp);
@@ -262,6 +274,7 @@ public class MainActivity extends Activity {
 				for (int i = 0; i < LabQuestData.size(); i++) {
 					Log.v(tag, Integer.toString(i) + ":" + LabQuestType.get(i) + "," + LabQuestData.get(i).toString());
 				}
+
 				// TODO change this to JSON Array instead of strings
 				// Long start_time: time the experiment started
 				// String col_data[]: all data
