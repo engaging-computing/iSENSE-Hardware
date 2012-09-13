@@ -418,6 +418,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (!uploadQueue.isEmpty()) {
 				throughUploadButton = false;
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				i.putExtra(QueueUploader.INTENT_IDENTIFIER, QueueUploader.QUEUE_MANUAL_ENTRY);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			} else {
 				if (throughUploadButton) {
