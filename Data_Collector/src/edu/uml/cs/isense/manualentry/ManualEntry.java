@@ -35,6 +35,7 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.complexdialogs.ExperimentDialog;
 import edu.uml.cs.isense.complexdialogs.LoginActivity;
 import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.shared.QueueUploader;
 import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -43,6 +44,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		LocationListener {
 
 	public static final String activityName = "manualentry";
+	private static final String PREFERENCES_EXP_ID = "experiment_id";
+
 	private static final int TYPE_DEFAULT = 1;
 	private static final int TYPE_LATITUDE = 2;
 	private static final int TYPE_LONGITUDE = 3;
@@ -51,6 +54,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int EXPERIMENT_REQUESTED = 101;
 	private static final int NO_GPS_REQUESTED = 102;
+	private static final int QUEUE_UPLOAD_REQUESTED = 103;
 
 	private static final int FIRST = 1000;
 	private static final int LAST = 1001;
@@ -74,13 +78,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private LinearLayout dataFieldEntryList;
 
-	public JSONArray data;
-
 	private LocationManager mLocationManager;
 	private Location loc;
-	
+
 	public static Queue<DataSet> uploadQueue;
-	
+	private static boolean uploadSuccess = true;
+	private static boolean throughUploadButton = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
 		experimentLabel.setText(getResources().getString(
 				R.string.usingExperiment)
-				+ expPrefs.getString("experiment_id", ""));
+				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
 
 		uploadData = (Button) findViewById(R.id.manual_upload);
 		saveData = (Button) findViewById(R.id.manual_save);
@@ -127,7 +130,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		String exp = expPrefs.getString("experiment_id", "");
+		String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
 		if (exp.equals("")) {
 			Intent iGetExpId = new Intent(this, ExperimentDialog.class);
 			startActivityForResult(iGetExpId, EXPERIMENT_REQUESTED);
@@ -144,7 +147,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 			clearFields();
 			break;
 		case R.id.manual_save:
-			saveFields();
+			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
+			if (exp.equals("")) {
+				w.make("Fatal error: Invalid experiment.");
+			} else {
+				saveFields(exp);
+			}
 			break;
 		case R.id.manual_upload:
 			uploadFields();
@@ -193,11 +201,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		}
 	}
-	
-	private void loadExperimentData(String eidString) {	
+
+	private void loadExperimentData(String eidString) {
 		if (dataFieldEntryList != null)
 			dataFieldEntryList.removeAllViews();
-		
+
 		if (eidString != null) {
 			int eid = Integer.parseInt(eidString);
 			if (eid != -1) {
@@ -271,16 +279,19 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 	}
 
-	private void saveFields() {
+	private void saveFields(String eid) {
 
-		getJSONData();
-
-		// TODO - put onto queue
+		String data = getJSONData();
+		DataSet ds = new DataSet(DataSet.Type.DATA, "Session Name",
+				"Description", eid, data, null, -1, "Lowell", "Massachusetts",
+				"USA", "1 University Ave"); // TODO
+		uploadQueue.add(ds);
 
 	}
 
 	private void uploadFields() {
-		// TODO
+		throughUploadButton = true;
+		manageUploadQueue();
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -343,16 +354,17 @@ public class ManualEntry extends Activity implements OnClickListener,
 			mLocationManager.removeUpdates(ManualEntry.this);
 	}
 
-	private void getJSONData() {
+	private String getJSONData() {
 
-		data = new JSONArray();
+		JSONArray data = new JSONArray();
 
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
 			TextView dataFieldName = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldName);
-			String contents = dataFieldContents.getText().toString().toLowerCase();
+			String contents = dataFieldContents.getText().toString()
+					.toLowerCase();
 			String name = dataFieldName.getText().toString().toLowerCase();
 			if (contents.contains("auto")) {
 				// Need to auto-fill the data
@@ -373,6 +385,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 
 		Log.e("tag", data.toString());
+		return data.toString();
 	}
 
 	// Allows for GPS to be recorded
@@ -396,6 +409,24 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
+	}
+
+	// Prompts the user to upload the rest of their content
+	// upon successful upload of data
+	private void manageUploadQueue() {
+		if (uploadSuccess) {
+			if (!uploadQueue.isEmpty()) {
+				throughUploadButton = false;
+				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+			} else {
+				if (throughUploadButton) {
+					throughUploadButton = false;
+					w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+							Waffle.IMAGE_CHECK);
+				}
+			}
+		}
 	}
 
 	@Override
