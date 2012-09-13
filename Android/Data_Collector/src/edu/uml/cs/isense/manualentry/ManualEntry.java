@@ -525,4 +525,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		// Rebuilds uploadQueue from saved info
+		QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+	}
+
 }

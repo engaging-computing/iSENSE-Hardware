@@ -496,6 +496,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			login();
 
 		inPausedState = false;
+		
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
