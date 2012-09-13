@@ -461,7 +461,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		super.onStart();
 
 		// Rebuilds uploadQueue from saved info
-		QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -840,7 +840,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+				uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 			}
 		}
 

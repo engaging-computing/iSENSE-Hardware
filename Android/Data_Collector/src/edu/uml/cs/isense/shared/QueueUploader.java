@@ -41,7 +41,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private static LinearLayout scrollQueue;
 	private Runnable sdUploader;
 	private ProgressDialog dia;
-	private QueueParentAssets qpa;
+	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
 
 	@Override
@@ -58,8 +58,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 					DataCollector.activityName, DataCollector.mContext);
 			break;
 		case QUEUE_MANUAL_ENTRY:
-			qpa = new QueueParentAssets(ManualEntry.uploadQueue, ManualEntry.activityName,
-					ManualEntry.mContext);
+			qpa = new QueueParentAssets(ManualEntry.uploadQueue,
+					ManualEntry.activityName, ManualEntry.mContext);
 			break;
 		}
 
@@ -72,8 +72,11 @@ public class QueueUploader extends Activity implements OnClickListener {
 		// Make sure the queue is written before we fetch it
 		if (!(qpa.uploadQueue.isEmpty()))
 			storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
-
-		getUploadQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+		
+		Context c = qpa.mContext;
+		String pn = qpa.parentName;
+		Queue<DataSet> q = getUploadQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+		qpa = new QueueParentAssets(q, pn, c);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue(scrollQueue);
@@ -294,7 +297,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 	}
 
 	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
-	public static void getUploadQueue(Queue<DataSet> uploadQueue,
+	public static Queue<DataSet> getUploadQueue(Queue<DataSet> uploadQueue,
 			String parentName, Context context) {
 
 		uploadQueue = new LinkedList<DataSet>();
@@ -306,13 +309,14 @@ public class QueueUploader extends Activity implements OnClickListener {
 			folder.mkdir();
 
 		// Gets Q_COUNT back from Shared Prefs
-		final SharedPreferences mPrefs = context.getSharedPreferences(parentName,
-				Context.MODE_PRIVATE);
+		final SharedPreferences mPrefs = context.getSharedPreferences(
+				parentName, Context.MODE_PRIVATE);
 		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
 
 		try {
 			// Deserialize the file as a whole
-			File file = new File(folder.getAbsolutePath() + "/" + parentName + ".ser");
+			File file = new File(folder.getAbsolutePath() + "/" + parentName
+					+ ".ser");
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
 					file));
 			// Deserialize the objects one by one
@@ -329,6 +333,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return uploadQueue;
 	}
 
 }
