@@ -1334,6 +1334,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (!uploadQueue.isEmpty()) {
 				throughUploadMenuItem = false;
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
+				i.putExtra(QueueUploader.INTENT_IDENTIFIER, QueueUploader.QUEUE_DATA_COLLECTOR);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			} else {
 				if (throughUploadMenuItem) {
