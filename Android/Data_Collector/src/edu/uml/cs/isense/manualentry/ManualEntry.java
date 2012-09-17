@@ -414,6 +414,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onPause();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
+		
+		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -528,7 +530,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID,
 					"-1"));
 			if (eid != -1) {
-				// fillDataFieldEntryList(eid);
 				fieldOrder = rapi.getExperimentFields(eid);
 			} else {
 				Log.e("tag", "CRITICAL ERROR!!!!");
@@ -582,12 +583,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-
+	protected void onResume() {
 		// Rebuilds uploadQueue from saved info
 		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
 				mContext);
+
+		super.onResume();
 	}
 
 }

@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -50,8 +51,10 @@ public class QueueUploader extends Activity implements OnClickListener {
 		setContentView(R.layout.queueprompt);
 
 		mContext = this;
-
+		
+		String tag = "QUEUE_PARENT";
 		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
+		Log.d(tag, "" + QUEUE_PARENT);
 		switch (QUEUE_PARENT) {
 		case QUEUE_DATA_COLLECTOR:
 			qpa = new QueueParentAssets(DataCollector.uploadQueue,
@@ -70,8 +73,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 		cancel.setOnClickListener(this);
 
 		// Make sure the queue is written before we fetch it
-		if (!(qpa.uploadQueue.isEmpty()))
-			storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+		//if (!(qpa.uploadQueue.isEmpty()))
+		//	storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 		
 		Context c = qpa.mContext;
 		String pn = qpa.parentName;
@@ -263,22 +266,22 @@ public class QueueUploader extends Activity implements OnClickListener {
 	}
 
 	// Saves Q_COUNT and uploadQueue into memory for later use
-	public static void storeQueue(Queue<DataSet> queue, String sharedPrefsName,
+	public static void storeQueue(Queue<DataSet> queue, String parentName,
 			Context context) {
 
 		// Save Q_COUNT in SharedPrefs
 		final SharedPreferences mPrefs = context.getSharedPreferences(
-				sharedPrefsName, Context.MODE_PRIVATE);
+				parentName, Context.MODE_PRIVATE);
 		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
 		int Q_COUNT = queue.size();
 
-		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
+		mPrefsEditor.putInt(parentName + "Q_COUNT", Q_COUNT);
 		mPrefsEditor.commit();
 
 		// writes uploadqueue.ser
 		File uploadQueueFile = new File(
 				Environment.getExternalStorageDirectory() + "/iSENSE/"
-						+ sharedPrefsName + ".ser");
+						+ parentName + ".ser");
 		ObjectOutput out;
 		try {
 			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
@@ -311,7 +314,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 		// Gets Q_COUNT back from Shared Prefs
 		final SharedPreferences mPrefs = context.getSharedPreferences(
 				parentName, Context.MODE_PRIVATE);
-		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
+		int Q_COUNT = mPrefs.getInt(parentName + "Q_COUNT", 0);
 
 		try {
 			// Deserialize the file as a whole
