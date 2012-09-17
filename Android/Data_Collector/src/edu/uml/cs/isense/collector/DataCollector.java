@@ -100,7 +100,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	/* Global Variables * */
 
 	/** Constants */
-	
+
 	public static final String activityName = "datacollector";
 
 	// Numerical constants
@@ -430,6 +430,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			timeElapsedTimer.cancel();
 
 		inPausedState = true;
+
+		// Stores uploadQueue in datacollector.ser (on SD card) and saves
+		// Q_COUNT
+		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -452,16 +456,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = true;
 
-		// Stores uploadQueue in datacollector.ser (on SD card) and saves Q_COUNT
-		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -496,7 +490,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			login();
 
 		inPausedState = false;
-		
+
+		// Rebuilds uploadQueue from saved info
+		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
+				mContext); 
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -840,7 +837,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+				uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
+						activityName, mContext);
 			}
 		}
 
@@ -1335,7 +1333,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (!uploadQueue.isEmpty()) {
 				throughUploadMenuItem = false;
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				i.putExtra(QueueUploader.INTENT_IDENTIFIER, QueueUploader.QUEUE_DATA_COLLECTOR);
+				i.putExtra(QueueUploader.INTENT_IDENTIFIER,
+						QueueUploader.QUEUE_DATA_COLLECTOR);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			} else {
 				if (throughUploadMenuItem) {
@@ -1700,8 +1699,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	
-
 	// Loads the main screen
 	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
 		Runnable loadingThread;
@@ -1720,7 +1717,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 
 			};
-			
+
 			super.onPreExecute();
 		}
 
@@ -1751,11 +1748,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 				setMenuStatus(true);
 			}
 			preLoad = false;
-			
+
 			setContentView(R.layout.main);
 			initMainUI();
 			assignVars();
-			
+
 			super.onPostExecute(result);
 		}
 
