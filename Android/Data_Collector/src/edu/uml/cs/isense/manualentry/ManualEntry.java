@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.manualentry;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,9 +67,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static final int EXPERIMENT_REQUESTED = 101;
 	private static final int NO_GPS_REQUESTED = 102;
 	private static final int QUEUE_UPLOAD_REQUESTED = 103;
-
-	private static final int FIRST = 1000;
-	private static final int LAST = 1001;
 
 	private static boolean showGpsDialog = true;
 
@@ -232,28 +230,27 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int eid) {
-		// ArrayList<ExperimentField> fieldOrder =
-		// rapi.getExperimentFields(eid);
+		
 		for (ExperimentField expField : fieldOrder) {
-			int firstOrLast = FIRST;
-			if (fieldOrder.indexOf(expField) == (fieldOrder.size() - 1)) {
-				firstOrLast = LAST;
-			}
+			
 			if (expField.type_id == expField.GEOSPACIAL) {
 				if (expField.unit_id == expField.UNIT_LATITUDE) {
-					addDataField(expField, TYPE_LATITUDE, firstOrLast);
+					addDataField(expField, TYPE_LATITUDE);
 				} else {
-					addDataField(expField, TYPE_LONGITUDE, firstOrLast);
+					addDataField(expField, TYPE_LONGITUDE);
 				}
 			} else if (expField.type_id == expField.TIME) {
-				addDataField(expField, TYPE_TIME, firstOrLast);
+				addDataField(expField, TYPE_TIME);
 			} else {
-				addDataField(expField, TYPE_DEFAULT, firstOrLast);
+				addDataField(expField, TYPE_DEFAULT);
 			}
 		}
+		
+		checkLastImeOptions();
+		
 	}
 
-	private void addDataField(ExperimentField expField, int type, int fol) {
+	private void addDataField(ExperimentField expField, int type) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
@@ -263,10 +260,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.findViewById(R.id.manual_dataFieldContents);
 
 		fieldContents.setSingleLine(true);
-		if (fol == FIRST)
-			fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		else
-			fieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
 		if (type != TYPE_DEFAULT) {
 			fieldContents.setText("Auto");
@@ -301,6 +295,21 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList.addView(dataField);
 	}
+	
+	private void checkLastImeOptions() {
+		for (int i = (dataFieldEntryList.getChildCount() - 1); i >= 0; i--) {
+			
+			EditText dataFieldContents = (EditText) dataFieldEntryList
+					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
+
+			if (dataFieldContents.getText().toString().toLowerCase().contains("auto"))
+				continue;
+			else {
+				dataFieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
+				break;
+			}
+		}
+	}
 
 	private void clearFields() {
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
@@ -329,8 +338,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 
 		String data = getJSONData();
+		
+		long time = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
+		String timeString = sdf.format(time);
+		
 		DataSet ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
-				.toString(), "" + System.currentTimeMillis(), eid, data, null,
+				.toString(), timeString, eid, data, null,
 				-1, city, state, country, addr);
 
 		if (uploadQueue.add(ds)) {
