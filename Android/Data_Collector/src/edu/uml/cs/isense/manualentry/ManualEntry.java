@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.manualentry;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -67,9 +68,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static final int NO_GPS_REQUESTED = 102;
 	private static final int QUEUE_UPLOAD_REQUESTED = 103;
 
-	private static final int FIRST = 1000;
-	private static final int LAST = 1001;
-
 	private static boolean showGpsDialog = true;
 
 	private Waffle w;
@@ -95,10 +93,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public static Queue<DataSet> uploadQueue;
 	private static boolean uploadSuccess = true;
 	private static boolean throughUploadButton = false;
-	
+
 	private ProgressDialog dia;
 	private ArrayList<ExperimentField> fieldOrder;
-	
+
 	private EditText sessionName;
 
 	@Override
@@ -129,7 +127,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		experimentLabel.setText(getResources().getString(
 				R.string.usingExperiment)
 				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
-		
+
 		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
 		uploadData = (Button) findViewById(R.id.manual_upload);
@@ -232,27 +230,27 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int eid) {
-		//ArrayList<ExperimentField> fieldOrder = rapi.getExperimentFields(eid);
+		
 		for (ExperimentField expField : fieldOrder) {
-			int firstOrLast = FIRST;
-			if (fieldOrder.indexOf(expField) == (fieldOrder.size() - 1)) {
-				firstOrLast = LAST;
-			}
+			
 			if (expField.type_id == expField.GEOSPACIAL) {
 				if (expField.unit_id == expField.UNIT_LATITUDE) {
-					addDataField(expField, TYPE_LATITUDE, firstOrLast);
+					addDataField(expField, TYPE_LATITUDE);
 				} else {
-					addDataField(expField, TYPE_LONGITUDE, firstOrLast);
+					addDataField(expField, TYPE_LONGITUDE);
 				}
 			} else if (expField.type_id == expField.TIME) {
-				addDataField(expField, TYPE_TIME, firstOrLast);
+				addDataField(expField, TYPE_TIME);
 			} else {
-				addDataField(expField, TYPE_DEFAULT, firstOrLast);
+				addDataField(expField, TYPE_DEFAULT);
 			}
 		}
+		
+		checkLastImeOptions();
+		
 	}
 
-	private void addDataField(ExperimentField expField, int type, int fol) {
+	private void addDataField(ExperimentField expField, int type) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
@@ -262,10 +260,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.findViewById(R.id.manual_dataFieldContents);
 
 		fieldContents.setSingleLine(true);
-		if (fol == FIRST)
-			fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		else
-			fieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
 		if (type != TYPE_DEFAULT) {
 			fieldContents.setText("Auto");
@@ -277,24 +272,43 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setFocusableInTouchMode(false);
 			fieldContents.setTextColor(Color.GRAY);
 		}
-		
+
 		if (expField.type_id == expField.TEXT) {
 			// keyboard to text
 			fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
-			fieldContents.setFilters(new InputFilter[] { new InputFilter.LengthFilter(60) } );
-			fieldContents.setKeyListener(DigitsKeyListener
-					.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"));
+			fieldContents
+					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
+							60) });
+			fieldContents
+					.setKeyListener(DigitsKeyListener
+							.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"));
 		} else {
 			// keyboard to nums
 			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
-			fieldContents.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) } );
-			fieldContents.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
+			fieldContents
+					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
+							20) });
+			fieldContents.setKeyListener(DigitsKeyListener
+					.getInstance("0123456789."));
 
 		}
-		
-		
-		
+
 		dataFieldEntryList.addView(dataField);
+	}
+	
+	private void checkLastImeOptions() {
+		for (int i = (dataFieldEntryList.getChildCount() - 1); i >= 0; i--) {
+			
+			EditText dataFieldContents = (EditText) dataFieldEntryList
+					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
+
+			if (dataFieldContents.getText().toString().toLowerCase().contains("auto"))
+				continue;
+			else {
+				dataFieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
+				break;
+			}
+		}
 	}
 
 	private void clearFields() {
@@ -309,24 +323,30 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void saveFields(String eid) {
 		String city = "", state = "", country = "", addr = "";
 		try {
-			List<Address> address = new Geocoder(ManualEntry.this, Locale.getDefault()).getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+			List<Address> address = new Geocoder(ManualEntry.this,
+					Locale.getDefault()).getFromLocation(loc.getLatitude(),
+					loc.getLongitude(), 1);
 			if (address.size() > 0) {
 				city = address.get(0).getLocality();
 				state = address.get(0).getAdminArea();
 				country = address.get(0).getCountryName();
 				addr = address.get(0).getAddressLine(0);
 			}
-				
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 
 		String data = getJSONData();
-		DataSet ds = new DataSet(DataSet.Type.DATA, sessionName.getText().toString(),
-				"" + System.currentTimeMillis(), eid, data, null, -1, city, state,
-				country, addr);
 		
+		long time = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
+		String timeString = sdf.format(time);
+		
+		DataSet ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
+				.toString(), timeString, eid, data, null,
+				-1, city, state, country, addr);
+
 		if (uploadQueue.add(ds)) {
 			w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
 		} else {
@@ -338,7 +358,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void uploadFields() {
 		throughUploadButton = true;
 		if (!rapi.isLoggedIn())
-			rapi.login(loginPrefs.getString("username", ""), loginPrefs.getString("password", ""));
+			rapi.login(loginPrefs.getString("username", ""),
+					loginPrefs.getString("password", ""));
 		manageUploadQueue();
 	}
 
@@ -431,10 +452,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 				row.put(dataFieldContents.getText().toString());
 			}
 		}
-		
+
 		JSONArray data = new JSONArray();
 		data.put(row);
-		
+
 		Log.e("tag", data.toString());
 		return data.toString();
 	}
@@ -469,7 +490,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (!uploadQueue.isEmpty()) {
 				throughUploadButton = false;
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				i.putExtra(QueueUploader.INTENT_IDENTIFIER, QueueUploader.QUEUE_MANUAL_ENTRY);
+				i.putExtra(QueueUploader.INTENT_IDENTIFIER,
+						QueueUploader.QUEUE_MANUAL_ENTRY);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			} else {
 				if (throughUploadButton) {
@@ -480,14 +502,15 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 		}
 	}
-	
-	private class LoadExperimentFieldsTask extends AsyncTask<Void, Integer, Void> {		
+
+	private class LoadExperimentFieldsTask extends
+			AsyncTask<Void, Integer, Void> {
 
 		private boolean error = false;
-		
+
 		@Override
 		protected void onPreExecute() {
-			
+
 			OrientationManager.disableRotation(ManualEntry.this);
 
 			dia = new ProgressDialog(ManualEntry.this);
@@ -495,46 +518,47 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Loading data fields...");
 			dia.setCancelable(false);
 			dia.show();
-			
+
 			super.onPreExecute();
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID, "-1"));
+			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID,
+					"-1"));
 			if (eid != -1) {
-				//fillDataFieldEntryList(eid);
+				// fillDataFieldEntryList(eid);
 				fieldOrder = rapi.getExperimentFields(eid);
 			} else {
 				Log.e("tag", "CRITICAL ERROR!!!!");
 			}
-			
+
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
-			
+
 			if (!error) {
 				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
 				experimentLabel.setText(getResources().getString(
 						R.string.usingExperiment)
 						+ eid);
-				
+
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-				
+
 				dia.dismiss();
 				OrientationManager.enableRotation(ManualEntry.this);
 			}
-			
+
 			super.onPostExecute(result);
 		}
-		
+
 	}
 
 	@Override
@@ -560,9 +584,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
+				mContext);
 	}
 
 }
