@@ -3,7 +3,7 @@
 
     <string name="app_name">iSENSE Data Collector</string>
     <string name="experiments_no_items">No experiments were found.</string>
-    <string name="prompt">Would you like to retry uploading any of the following?</string>
+    <string name="prompt">Would you like to try uploading any of the following?</string>
     <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
 	    same time.  By default, many Android devices\' clocks will not match one
 	    another\'s, thus making recording data at similar times difficult.  However,
