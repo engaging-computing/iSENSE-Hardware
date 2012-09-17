@@ -169,7 +169,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			} else if (sessionName.getText().toString().length() == 0) {
 				sessionName.setError("Enter a session name");
 			} else {
-				saveFields(exp);
+				new SaveDataTask().execute();
+				// saveFields(exp);
 			}
 			break;
 		case R.id.manual_upload:
@@ -230,9 +231,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int eid) {
-		
+
 		for (ExperimentField expField : fieldOrder) {
-			
+
 			if (expField.type_id == expField.GEOSPACIAL) {
 				if (expField.unit_id == expField.UNIT_LATITUDE) {
 					addDataField(expField, TYPE_LATITUDE);
@@ -245,9 +246,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 				addDataField(expField, TYPE_DEFAULT);
 			}
 		}
-		
+
 		checkLastImeOptions();
-		
+
 	}
 
 	private void addDataField(ExperimentField expField, int type) {
@@ -295,14 +296,15 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList.addView(dataField);
 	}
-	
+
 	private void checkLastImeOptions() {
 		for (int i = (dataFieldEntryList.getChildCount() - 1); i >= 0; i--) {
-			
+
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
 
-			if (dataFieldContents.getText().toString().toLowerCase().contains("auto"))
+			if (dataFieldContents.getText().toString().toLowerCase()
+					.contains("auto"))
 				continue;
 			else {
 				dataFieldContents.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -318,41 +320,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (dataFieldContents.isEnabled())
 				dataFieldContents.setText("");
 		}
-	}
-
-	private void saveFields(String eid) {
-		String city = "", state = "", country = "", addr = "";
-		try {
-			List<Address> address = new Geocoder(ManualEntry.this,
-					Locale.getDefault()).getFromLocation(loc.getLatitude(),
-					loc.getLongitude(), 1);
-			if (address.size() > 0) {
-				city = address.get(0).getLocality();
-				state = address.get(0).getAdminArea();
-				country = address.get(0).getCountryName();
-				addr = address.get(0).getAddressLine(0);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		String data = getJSONData();
-		
-		long time = System.currentTimeMillis();
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
-		String timeString = sdf.format(time);
-		
-		DataSet ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
-				.toString(), timeString, eid, data, null,
-				-1, city, state, country, addr);
-
-		if (uploadQueue.add(ds)) {
-			w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
-		} else {
-			w.make("Data not saved!", Waffle.IMAGE_X);
-		}
-
 	}
 
 	private void uploadFields() {
@@ -414,7 +381,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onPause();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
-		
+
 		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
@@ -556,6 +523,79 @@ public class ManualEntry extends Activity implements OnClickListener,
 				dia.dismiss();
 				OrientationManager.enableRotation(ManualEntry.this);
 			}
+
+			super.onPostExecute(result);
+		}
+
+	}
+
+	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
+
+		String city = "", state = "", country = "", addr = "";
+		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
+		DataSet ds;
+
+		@Override
+		protected void onPreExecute() {
+
+			OrientationManager.disableRotation(ManualEntry.this);
+
+			dia = new ProgressDialog(ManualEntry.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Saving data...");
+			dia.setCancelable(false);
+			dia.show();
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			try {
+				List<Address> address = new Geocoder(ManualEntry.this,
+						Locale.getDefault()).getFromLocation(loc.getLatitude(),
+						loc.getLongitude(), 1);
+				if (address.size() > 0) {
+					city = address.get(0).getLocality();
+					state = address.get(0).getAdminArea();
+					country = address.get(0).getCountryName();
+					addr = address.get(0).getAddressLine(0);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			String data = getJSONData();
+
+			long time = System.currentTimeMillis();
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					"hh:mm:ss.SSS, MM/dd/yy");
+			String timeString = sdf.format(time);
+
+			ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
+					.toString(), timeString, eid, data, null, -1, city, state,
+					country, addr);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+
+			if (ds != null) {
+				if (uploadQueue.add(ds)) {
+					w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
+				} else {
+					w.make("Data not saved!", Waffle.IMAGE_X);
+				}
+			} else {
+				w.make("Fatal error in saving data!!!", Waffle.IMAGE_X);
+			}
+
+			dia.dismiss();
+			OrientationManager.enableRotation(ManualEntry.this);
 
 			super.onPostExecute(result);
 		}
