@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/menu_item_manual_media"
+        android:icon="@drawable/ic_menu_media"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_media"/>   
+    <item
         android:id="@+id/menu_item_manual_experiment"
         android:icon="@drawable/ic_menu_setup"
         android:showAsAction="ifRoom|withText"
