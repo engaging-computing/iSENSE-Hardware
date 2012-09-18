@@ -118,7 +118,13 @@ public class MediaManager extends Activity {
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+				if (pictures.size() > 0 || pictureArray.size() > 0) {
+					setResult(RESULT_OK);
+					finish();
+				} else {
+					setResult(RESULT_CANCELED);
+					finish();
+				}
 			}
 		});
 
@@ -350,6 +356,18 @@ public class MediaManager extends Activity {
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (pictures.size() > 0 || pictureArray.size() > 0) {
+			setResult(RESULT_OK);
+			finish();
+		} else {
+			setResult(RESULT_CANCELED);
+			finish();
+		}
+		
 	}
 
 }

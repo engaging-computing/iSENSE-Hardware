@@ -68,6 +68,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static final int EXPERIMENT_REQUESTED = 101;
 	private static final int NO_GPS_REQUESTED = 102;
 	private static final int QUEUE_UPLOAD_REQUESTED = 103;
+	private static final int MEDIA_REQUESTED = 104;
 
 	private static boolean showGpsDialog = true;
 
@@ -219,7 +220,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 
-		} 
+		} else if (requestCode == MEDIA_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				
+			} else if (resultCode == RESULT_CANCELED) {
+				
+			}
+		}
 	}
 
 	private void loadExperimentData(String eidString) {
@@ -362,7 +369,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		
 		case R.id.menu_item_manual_media:
 			Intent iMedia = new Intent(mContext, MediaManager.class);
-			startActivity(iMedia);
+			startActivityForResult(iMedia, MEDIA_REQUESTED);
 			
 			return true;
 
