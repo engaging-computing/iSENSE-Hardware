@@ -17,6 +17,8 @@ public class DataSet implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 3776465868309657210L;
+	
+	public static final int NO_SESSION_DEFINED = -1;
 
 	public enum Type {
 		DATA, PIC
@@ -50,7 +52,7 @@ public class DataSet implements Serializable {
 	 * @param eid
 	 * @param data If type is DataSet.DATA, we look here.
 	 * @param picture If type is DataSet.PIC, we look here.
-	 * @param sid Give me -1 if you haven't called create session.
+	 * @param sid Give me DataSet.NO_SESSION_DEFINED if you haven't called create session.
 	 * @param city
 	 * @param state
 	 * @param country
