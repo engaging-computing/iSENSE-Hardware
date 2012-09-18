@@ -240,7 +240,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
 				Log.d("eid", eid);
 				if (eid != null) {
-					Log.d("pictureArray size", ""+MediaManager.pictureArray.size());
+					Log.d("pictureArray size", "" + MediaManager.pictureArray.size());
 					for (File picture : MediaManager.pictureArray) {
 						DataSet picDS = new DataSet(DataSet.Type.PIC,
 								sessionName.getText().toString(),
@@ -361,10 +361,17 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private void uploadFields() {
 		throughUploadButton = true;
-		if (!rapi.isLoggedIn())
-			rapi.login(loginPrefs.getString("username", ""),
+		if (!rapi.isLoggedIn()) {
+			boolean success = rapi.login(loginPrefs.getString("username", ""),
 					loginPrefs.getString("password", ""));
-		manageUploadQueue();
+			if (success)
+				manageUploadQueue();
+			else
+				w.make("Not logged in.", Waffle.IMAGE_X);
+		} else {
+			manageUploadQueue();
+		}
+
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -637,6 +644,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			dia.dismiss();
 			OrientationManager.enableRotation(ManualEntry.this);
+			MediaManager.mediaCount = 0;
 
 			super.onPostExecute(result);
 		}
