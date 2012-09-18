@@ -45,6 +45,7 @@ import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.complexdialogs.ExperimentDialog;
 import edu.uml.cs.isense.complexdialogs.LoginActivity;
+import edu.uml.cs.isense.complexdialogs.MediaManager;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.shared.QueueUploader;
 import edu.uml.cs.isense.simpledialogs.NoGps;
@@ -218,7 +219,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 
-		}
+		} 
 	}
 
 	private void loadExperimentData(String eidString) {
@@ -358,6 +359,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		
+		case R.id.menu_item_manual_media:
+			Intent iMedia = new Intent(mContext, MediaManager.class);
+			startActivity(iMedia);
+			
+			return true;
 
 		case R.id.menu_item_manual_experiment:
 			Intent iExperiment = new Intent(mContext, ExperimentDialog.class);
@@ -569,13 +576,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			String data = getJSONData();
 
-			long time = System.currentTimeMillis();
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"hh:mm:ss.SSS, MM/dd/yy");
-			String timeString = sdf.format(time);
+			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
 			ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
-					.toString(), timeString, eid, data, null, -1, city, state,
+					.toString(), uploadTime, eid, data, null, -1, city, state,
 					country, addr);
 
 			return null;
@@ -629,6 +633,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 				mContext);
 
 		super.onResume();
+	}
+	
+	private String makeThisDatePretty(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"hh:mm:ss.SSS, MM/dd/yy");
+		return sdf.format(time);
 	}
 
 }
