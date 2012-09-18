@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.manualentry;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -172,7 +173,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 				sessionName.setError("Enter a session name");
 			} else {
 				new SaveDataTask().execute();
-				// saveFields(exp);
 			}
 			break;
 		case R.id.manual_upload:
@@ -222,9 +222,37 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		} else if (requestCode == MEDIA_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				
-			} else if (resultCode == RESULT_CANCELED) {
-				
+				String city = "", state = "", country = "", addr = "";
+				try {
+					List<Address> address = new Geocoder(ManualEntry.this,
+							Locale.getDefault()).getFromLocation(
+							loc.getLatitude(), loc.getLongitude(), 1);
+					if (address.size() > 0) {
+						city = address.get(0).getLocality();
+						state = address.get(0).getAdminArea();
+						country = address.get(0).getCountryName();
+						addr = address.get(0).getAddressLine(0);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
+				Log.d("eid", eid);
+				if (eid != null) {
+					Log.d("pictureArray size", ""+MediaManager.pictureArray.size());
+					for (File picture : MediaManager.pictureArray) {
+						DataSet picDS = new DataSet(DataSet.Type.PIC,
+								sessionName.getText().toString(),
+								"Enter description here", eid, null, picture,
+								DataSet.NO_SESSION_DEFINED, city, state,
+								country, addr);
+						uploadQueue.add(picDS);
+						Log.d("uploadQ", ""+uploadQueue.size());
+					}
+				}
+				MediaManager.pictureArray.clear();
+				QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 			}
 		}
 	}
@@ -367,11 +395,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		
+
 		case R.id.menu_item_manual_media:
 			Intent iMedia = new Intent(mContext, MediaManager.class);
 			startActivityForResult(iMedia, MEDIA_REQUESTED);
-			
+
 			return true;
 
 		case R.id.menu_item_manual_experiment:
@@ -397,6 +425,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
 
+		Log.d("uploadQ - onPause", ""+uploadQueue.size());
 		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
@@ -639,13 +668,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 		// Rebuilds uploadQueue from saved info
 		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
 				mContext);
+		Log.d("uploadQ - onResume", ""+uploadQueue.size());
 
 		super.onResume();
 	}
-	
+
 	private String makeThisDatePretty(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat(
-				"hh:mm:ss.SSS, MM/dd/yy");
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
 		return sdf.format(time);
 	}
 
