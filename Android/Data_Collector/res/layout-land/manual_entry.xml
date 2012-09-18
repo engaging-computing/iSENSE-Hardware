@@ -85,7 +85,7 @@
         <EditText
             android:id="@+id/manual_session_name"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:singleLine="true"
             android:imeOptions="actionDone"
             android:layout_width="match_parent"
@@ -94,7 +94,8 @@
             android:gravity="left"
             android:hint="@string/enterSessionName"
             android:inputType="text"
-            android:maxLength="150" />
+            android:maxLength="150"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ScrollView
             android:id="@+id/scroll_wrapper"
