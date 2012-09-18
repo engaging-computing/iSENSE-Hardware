@@ -328,6 +328,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (dataFieldContents.isEnabled())
 				dataFieldContents.setText("");
 		}
+		sessionName.setText("");
 	}
 
 	private void uploadFields() {
