@@ -218,6 +218,33 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 
 		}
+		/*} else (requestCode == PICTURE_REQUESTED) {
+		 * 
+		 * if (resultCode == RESULT_OK) {
+		 * String city = "", state = "", country = "", addr = "";
+		try {
+			List<Address> address = new Geocoder(ManualEntry.this,
+					Locale.getDefault()).getFromLocation(loc.getLatitude(),
+					loc.getLongitude(), 1);
+			if (address.size() > 0) {
+				city = address.get(0).getLocality();
+				state = address.get(0).getAdminArea();
+				country = address.get(0).getCountryName();
+				addr = address.get(0).getAddressLine(0);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 * String eid = expPrefs.getString(PREFERENCES_EXP_ID);
+		 * for (File picture : MediaManager.PictureArray) {
+		 * 		DataSet picDS = new DataSet(DataSet.TYPE.PIC, sessionName.getText().toString, "Enter description here", eid,
+		 *  	null, picture, DataSet.NO_SESSION_DEFINED, city, state,
+		 *		country, addr);
+		 * uploadQueue.add(picDS);
+		 * }
+		 * 
+		 */
 	}
 
 	private void loadExperimentData(String eidString) {
@@ -345,7 +372,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		
 		DataSet ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
 				.toString(), timeString, eid, data, null,
-				-1, city, state, country, addr);
+				DataSet.NO_SESSION_DEFINED, city, state, country, addr);
 
 		if (uploadQueue.add(ds)) {
 			w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
