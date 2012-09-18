@@ -842,7 +842,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Saves dataSet on queue when you aren't logged in
 	private void saveOnUploadQueue() {
 		// Session Id
-		int sessionId = -1;
+		int sessionId = DataSet.NO_SESSION_DEFINED;
 
 		// Location
 		List<Address> address = null;
