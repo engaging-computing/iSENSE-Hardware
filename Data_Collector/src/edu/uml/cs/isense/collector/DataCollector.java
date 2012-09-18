@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -241,10 +240,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Lists and Queues
 	public static LinkedList<String> acceptedFields;
-
-	public static ArrayList<File> pictureArray = new ArrayList<File>();
-	public static ArrayList<File> pictures = new ArrayList<File>();
-	public static ArrayList<File> videos = new ArrayList<File>();
 
 	public static Queue<DataSet> uploadQueue;
 
@@ -890,10 +885,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		uploadQueue.add(ds);
 
 		// Saves pictures for later upload
-		int pic = pictureArray.size();
+		int pic = MediaManager.pictureArray.size();
 		while (pic > 0) {
 			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession,
-					description, eid, null, pictureArray.get(pic - 1),
+					description, eid, null, MediaManager.pictureArray.get(pic - 1),
 					sessionId, city, state, country, addr);
 			uploadQueue.add(dsPic);
 			pic--;
@@ -972,25 +967,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 					uploadQueue.add(ds);
 				}
 
-				int pic = pictureArray.size();
+				int pic = MediaManager.pictureArray.size();
 
 				while (pic > 0) {
 					boolean picSuccess = rapi.uploadPictureToSession(
-							pictureArray.get(pic - 1), eid, sessionId,
+							MediaManager.pictureArray.get(pic - 1), eid, sessionId,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
 					if (!picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC,
 								nameOfSession, description, eid, null,
-								pictureArray.get(pic - 1), sessionId, city,
+								MediaManager.pictureArray.get(pic - 1), sessionId, city,
 								state, country, addr);
 						uploadQueue.add(ds);
 					}
 					pic--;
 				}
 
-				pictureArray.clear();
+				MediaManager.pictureArray.clear();
 			}
 
 		}
