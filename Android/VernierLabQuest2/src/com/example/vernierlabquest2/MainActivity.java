@@ -195,7 +195,7 @@ public class MainActivity extends Activity {
 		return sb.toString();
 	}
 
-	private static String GetStatus(String IP) {
+	private static String LabQuestGetStatus(String IP) {
 		String result = null;
 		try {
 			result = httpGet("http://" + IP + "/status");
@@ -205,7 +205,7 @@ public class MainActivity extends Activity {
 		return result;
 	}
 
-	private static String GetColumns(String IP, String column) {
+	private static String LabQuestGetColumns(String IP, String column) {
 		String result = null;
 		try {
 			result = httpGet("http://" + IP + "/columns/" + column);
@@ -232,14 +232,13 @@ public class MainActivity extends Activity {
 			try {
 				// Gets data from LQ
 				JSONObject get_status_json;
-				get_status_json = new JSONObject(GetStatus(LabQuestIP));
+				get_status_json = new JSONObject(LabQuestGetStatus(LabQuestIP));
 				int col_size = get_status_json.getJSONObject("views").length();
 				// start_time in unix milliseconds
 				double start_time = Double.parseDouble(get_status_json.getString("viewListTimeStamp")) * 1000;
 				String col_id[] = new String[col_size];// column id
 				String col_type[] = new String[col_size];// type of date
-				String col_data[] = new String[col_size];// column data
-				JSONArray col_data2[] = new JSONArray[col_size];
+				JSONArray col_data[] = new JSONArray[col_size];
 				// loop through all the columns available
 				for (int i = 0; i < col_size; i++) {
 					String views = get_status_json.getJSONObject("views").names().getString(i);
@@ -250,9 +249,8 @@ public class MainActivity extends Activity {
 					}
 					col_type[i] = get_status_json.getJSONObject("columns").getJSONObject(col_id[i]).getString("name");
 
-					JSONObject get_col_json = new JSONObject(GetColumns(LabQuestIP, col_id[i]));
-					col_data2[i] = get_col_json.getJSONArray("values");
-					col_data[i] = get_col_json.getString("values");
+					JSONObject get_col_json = new JSONObject(LabQuestGetColumns(LabQuestIP, col_id[i]));
+					col_data[i] = get_col_json.getJSONArray("values");
 				}
 				// removes duplicate time entries
 				boolean timefix = false;
@@ -263,15 +261,15 @@ public class MainActivity extends Activity {
 						} else {
 							timefix = true;
 							JSONArray temp = new JSONArray();
-							for (int j = 0; j < col_data2[i].length(); j++) {
-								temp.put(col_data2[i].getDouble(j) * 1000 + start_time);
+							for (int j = 0; j < col_data[i].length(); j++) {
+								temp.put(col_data[i].getDouble(j) * 1000 + start_time);
 							}
 							// TODO add start_time
 							LabQuestData.add(temp);
 							LabQuestType.add(col_type[i]);
 						}
 					} else {
-						LabQuestData.add(col_data2[i]);
+						LabQuestData.add(col_data[i]);
 						LabQuestType.add(col_type[i]);
 					}
 				}
