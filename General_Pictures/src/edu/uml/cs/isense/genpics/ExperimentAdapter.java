@@ -11,11 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
-import edu.uml.cs.isense.objects.ExperimentField;
 
 public class ExperimentAdapter extends ArrayAdapter<Experiment> {
-	@SuppressWarnings("unused")
-	private final int maxDimension = 50;
 	public ArrayList<Experiment> items;
 	private Context mContext;
 	private int resourceID;
@@ -30,6 +27,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 	public int page = 0;
 	public String action = "browse";
 	public String query = "";
+	private final String sort = "recent";
 
 	public ExperimentAdapter(Context context, int textViewResourceId,
 			int loadingRow, ArrayList<Experiment> items) {
@@ -113,57 +111,20 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 
 	class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<Experiment> new_items = rapi.getExperiments(page,
-					pageSize, action, query);
-			ArrayList<Experiment> selected_items = new ArrayList<Experiment>();
-
-			for (Experiment exp : new_items) {
-
-				ArrayList<ExperimentField> exp_fields = rapi
-						.getExperimentFields(exp.experiment_id);
-				int fieldNum = 1;
-				boolean pass = true;
-
-				for (ExperimentField field : exp_fields) {
-
-					switch (fieldNum) {
-					case 1:
-						if (field.field_name.compareToIgnoreCase("Time") != 0)
-							pass = false;
-						break;
-					case 2:
-						if (field.field_name.compareToIgnoreCase("Latitude") != 0)
-							pass = false;
-						break;
-					case 3:
-						if (field.field_name.compareToIgnoreCase("Longitude") != 0)
-							pass = false;
-						break;
-					default:
-						break;
-					}
-					fieldNum++;
-					
-					if (!pass)
-						break;
-				}
-				if (pass)
-					selected_items.add(exp);
-			}
-
-			if (selected_items.size() == 0) {
+			ArrayList<Experiment> new_items = rapi.getExperiments(page, pageSize, query, sort);
+			if (new_items.size() == 0) {
 				allItemsLoaded = true;
 			} else {
-				synchronized (items) {
-					items.addAll(selected_items);
+				synchronized(items) {
+					items.addAll(new_items);
 				}
-				itemsLoaded += selected_items.size();
+				itemsLoaded += new_items.size();
 			}
-
-			synchronized (loading) {
+			
+			synchronized( loading ) {
 				loading = Boolean.FALSE;
 			}
-			uiHandler.post(updateTask);
+			uiHandler.post( updateTask );
 		}
 	}
 

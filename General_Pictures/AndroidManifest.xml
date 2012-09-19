@@ -22,7 +22,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".Pictures"
+            android:name=".Main"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Experiments"
+            android:name=".BrowseExperiments"
             android:label="@string/app_name_experiments"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
