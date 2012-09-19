@@ -33,7 +33,6 @@ import edu.uml.cs.isense.objects.ExperimentField;
 public class MainActivity extends Activity {
 	private String tag = "MainActivity";
 	private RestAPI rapi;
-
 	private TextView iSENSEStatus;
 	private TextView LabQuestStatus;
 	private Button LabQuestConnect;
@@ -195,17 +194,31 @@ public class MainActivity extends Activity {
 		return sb.toString();
 	}
 
-	private static String LabQuestGetStatus(String IP) {
+	private String LabQuestGetInfo(String IP) {
+		String result = null;
+		try {
+			result = httpGet("http://" + IP + "/info");
+		} catch (IOException e) {
+			Log.v(tag, "Unable to connect to LQ");
+		//	e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
+	
+	
+	private String LabQuestGetStatus(String IP) {
 		String result = null;
 		try {
 			result = httpGet("http://" + IP + "/status");
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
 		return result;
 	}
 
-	private static String LabQuestGetColumns(String IP, String column) {
+	private String LabQuestGetColumns(String IP, String column) {
 		String result = null;
 		try {
 			result = httpGet("http://" + IP + "/columns/" + column);
@@ -219,6 +232,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			// TODO update this based on status register (data received vs not connected)
 			LabQuestStatus.setText(getResources().getString(R.string.labquest_status_connected));
 			super.onPostExecute(result);
 		}
@@ -229,6 +243,11 @@ public class MainActivity extends Activity {
 			LabQuestType = new ArrayList<String>();
 			SharedPreferences sp = getSharedPreferences("labquest_settings", 0);
 			String LabQuestIP = sp.getString("labquest_ip", "");
+			if (LabQuestGetInfo(LabQuestIP) == null)
+			{
+				// TODO create status register that will update labquest status on UI 
+				return null;
+			}
 			try {
 				// Gets data from LQ
 				JSONObject get_status_json;
