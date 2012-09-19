@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -100,7 +99,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	/* Global Variables * */
 
 	/** Constants */
-	
+
 	public static final String activityName = "datacollector";
 
 	// Numerical constants
@@ -241,10 +240,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Lists and Queues
 	public static LinkedList<String> acceptedFields;
-
-	public static ArrayList<File> pictureArray = new ArrayList<File>();
-	public static ArrayList<File> pictures = new ArrayList<File>();
-	public static ArrayList<File> videos = new ArrayList<File>();
 
 	public static Queue<DataSet> uploadQueue;
 
@@ -430,6 +425,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			timeElapsedTimer.cancel();
 
 		inPausedState = true;
+
+		// Stores uploadQueue in datacollector.ser (on SD card) and saves
+		// Q_COUNT
+		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -452,16 +451,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = true;
 
-		// Stores uploadQueue in datacollector.ser (on SD card) and saves Q_COUNT
-		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -496,7 +485,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			login();
 
 		inPausedState = false;
-		
+
+		// Rebuilds uploadQueue from saved info
+		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
+				mContext); 
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -840,7 +832,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+				uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
+						activityName, mContext);
 			}
 		}
 
@@ -849,7 +842,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Saves dataSet on queue when you aren't logged in
 	private void saveOnUploadQueue() {
 		// Session Id
-		int sessionId = -1;
+		int sessionId = DataSet.NO_SESSION_DEFINED;
 
 		// Location
 		List<Address> address = null;
@@ -892,10 +885,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		uploadQueue.add(ds);
 
 		// Saves pictures for later upload
-		int pic = pictureArray.size();
+		int pic = MediaManager.pictureArray.size();
 		while (pic > 0) {
 			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession,
-					description, eid, null, pictureArray.get(pic - 1),
+					description, eid, null, MediaManager.pictureArray.get(pic - 1),
 					sessionId, city, state, country, addr);
 			uploadQueue.add(dsPic);
 			pic--;
@@ -974,25 +967,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 					uploadQueue.add(ds);
 				}
 
-				int pic = pictureArray.size();
+				int pic = MediaManager.pictureArray.size();
 
 				while (pic > 0) {
 					boolean picSuccess = rapi.uploadPictureToSession(
-							pictureArray.get(pic - 1), eid, sessionId,
+							MediaManager.pictureArray.get(pic - 1), eid, sessionId,
 							nameOfSession, description);
 
 					// Saves pictures for later upload
 					if (!picSuccess) {
 						DataSet ds = new DataSet(DataSet.Type.PIC,
 								nameOfSession, description, eid, null,
-								pictureArray.get(pic - 1), sessionId, city,
+								MediaManager.pictureArray.get(pic - 1), sessionId, city,
 								state, country, addr);
 						uploadQueue.add(ds);
 					}
 					pic--;
 				}
 
-				pictureArray.clear();
+				MediaManager.pictureArray.clear();
 			}
 
 		}
@@ -1335,7 +1328,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (!uploadQueue.isEmpty()) {
 				throughUploadMenuItem = false;
 				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				i.putExtra(QueueUploader.INTENT_IDENTIFIER, QueueUploader.QUEUE_DATA_COLLECTOR);
+				i.putExtra(QueueUploader.INTENT_IDENTIFIER,
+						QueueUploader.QUEUE_DATA_COLLECTOR);
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			} else {
 				if (throughUploadMenuItem) {
@@ -1700,8 +1694,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	
-
 	// Loads the main screen
 	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
 		Runnable loadingThread;
@@ -1720,7 +1712,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 
 			};
-			
+
 			super.onPreExecute();
 		}
 
@@ -1751,11 +1743,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 				setMenuStatus(true);
 			}
 			preLoad = false;
-			
+
 			setContentView(R.layout.main);
 			initMainUI();
 			assignVars();
-			
+
 			super.onPostExecute(result);
 		}
 
