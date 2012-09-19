@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 	private EditText SessionName;
 	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), this);
 
+		
 		LabQuestStatus = (TextView) findViewById(R.id.labquest_status_text);
 		iSENSEStatus = (TextView) findViewById(R.id.isense_status_text);
 		LabQuestConnect = (Button) findViewById(R.id.labquest_connect);
