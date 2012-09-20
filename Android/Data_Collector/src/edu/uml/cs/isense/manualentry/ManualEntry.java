@@ -78,7 +78,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private Waffle w;
 	private RestAPI rapi;
 
-	private Button uploadData;
 	private Button saveData;
 	private Button clearData;
 	private ImageButton mediaButton;
@@ -135,12 +134,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
-		uploadData = (Button) findViewById(R.id.manual_upload);
 		saveData = (Button) findViewById(R.id.manual_save);
 		clearData = (Button) findViewById(R.id.manual_clear);
 		mediaButton = (ImageButton) findViewById(R.id.manual_media_button);
 
-		uploadData.setOnClickListener(this);
 		saveData.setOnClickListener(this);
 		clearData.setOnClickListener(this);
 		mediaButton.setOnClickListener(this);
@@ -168,6 +165,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 			break;
 		case R.id.manual_save:
 			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
+			
+			// Clear the setError if the user has finally entered a session name
+			if (sessionName.getText().toString().length() != 0)
+				sessionName.setError(null);
+			
 			if (exp.equals("")) {
 				w.make("Fatal error: Invalid experiment.");
 			} else if (sessionName.getText().toString().length() == 0) {
@@ -175,9 +177,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			} else {
 				new SaveDataTask().execute();
 			}
-			break;
-		case R.id.manual_upload:
-			uploadFields();
 			break;
 		case R.id.manual_media_button:
 			Intent iMedia = new Intent(mContext, MediaManager.class);
@@ -376,6 +375,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		
+		case R.id.menu_item_manual_upload:
+			uploadFields();
+			
+			return true;
 
 		case R.id.menu_item_manual_experiment:
 			Intent iExperiment = new Intent(mContext, ExperimentDialog.class);
@@ -692,11 +696,15 @@ public class ManualEntry extends Activity implements OnClickListener,
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
+			String name = (sessionName.getText().toString().equals("")) ? 
+					"(No name provided)" : sessionName.getText().toString();
+			
 			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
-					DataSet picDS = new DataSet(DataSet.Type.PIC, sessionName
-							.getText().toString(), "Enter description here",
+					DataSet picDS = new DataSet(DataSet.Type.PIC, name, uploadTime,
 							eid, null, picture, DataSet.NO_SESSION_DEFINED,
 							city, state, country, addr);
 					uploadQueue.add(picDS);
