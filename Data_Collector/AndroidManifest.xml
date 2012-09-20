@@ -116,6 +116,10 @@
             android:label="Upload Data"
             android:theme="@style/theme_dialog_black" />
         <activity
+            android:name="edu.uml.cs.isense.shared.DeleteDataSetFromUploadQueue"
+            android:label="DataSet Manager"
+            android:theme="@style/theme_dialog_black" />
+        <activity
             android:name="edu.uml.cs.isense.sync.TimeSent"
             android:label="Time Sent"
             android:theme="@style/theme_dialog_black" />

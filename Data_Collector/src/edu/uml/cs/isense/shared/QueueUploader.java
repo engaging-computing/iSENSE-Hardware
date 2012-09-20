@@ -10,17 +10,24 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
@@ -44,7 +51,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private ProgressDialog dia;
 	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
-
+	private Timer colorChange;
+	private Handler mHandler;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +61,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 		mContext = this;
 		
+		mHandler = new Handler();
+
 		String tag = "QUEUE_PARENT";
 		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
 		Log.d(tag, "" + QUEUE_PARENT);
@@ -73,12 +84,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 		cancel.setOnClickListener(this);
 
 		// Make sure the queue is written before we fetch it
-		//if (!(qpa.uploadQueue.isEmpty()))
-		//	storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
-		
+		// if (!(qpa.uploadQueue.isEmpty()))
+		// storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+
 		Context c = qpa.mContext;
 		String pn = qpa.parentName;
-		Queue<DataSet> q = getUploadQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+		Queue<DataSet> q = getUploadQueue(qpa.uploadQueue, qpa.parentName,
+				qpa.mContext);
 		qpa = new QueueParentAssets(q, pn, c);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
@@ -92,7 +104,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 		for (final DataSet ds : qpa.mirrorQueue) {
 			switch (ds.type) {
 			case DATA:
-				View data = View.inflate(mContext, R.layout.queueblock_data,
+				final View data = View.inflate(mContext, R.layout.queueblock_data,
 						null);
 
 				makeBlock(data, ds);
@@ -101,8 +113,91 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 				scrollQueue.addView(data);
 				ds.setUploadable(true);
+				
+				data.setOnTouchListener(new OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+                        data.setBackgroundResource(R.drawable.listelement_bkgdflash);
+                        colorChange = new Timer();
+                        colorChange.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                mHandler.post(new Runnable() {
+                                    public void run() {
+                                        data.setBackgroundResource(R.drawable.listelement_bkgd);
+                                    }
+                                });
+                            }
+                        }, 200);
+
+                        return false;
+                    }
+                });
 
 				data.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						CheckedTextView ctv = (CheckedTextView) v
+								.findViewById(R.id.name);
+						ctv.toggle();
+						//flashClick(v);
+
+						if (ctv.isChecked())
+							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+						else
+							ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+						ds.setUploadable(ctv.isChecked());
+
+					}
+
+				});
+
+				data.setOnLongClickListener(new OnLongClickListener() {
+
+					@Override
+					public boolean onLongClick(View v) {
+						Intent iDeleteDataSet = new Intent(mContext,
+								DeleteDataSetFromUploadQueue.class);
+						startActivity(iDeleteDataSet);
+						return false;
+					}
+
+				});
+				break;
+
+			case PIC:
+				final View pic = View
+						.inflate(mContext, R.layout.queueblock_pic, null);
+
+				makeBlock(pic, ds);
+				previous = checkPrevious(previous, scrollQueue,
+						(String) ds.getName());
+
+				scrollQueue.addView(pic);
+				ds.setUploadable(true);
+				
+				pic.setOnTouchListener(new OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+                        pic.setBackgroundResource(R.drawable.listelement_bkgdflash);
+                        colorChange = new Timer();
+                        colorChange.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                mHandler.post(new Runnable() {
+                                    public void run() {
+                                    	if (!pic.isPressed())
+                                    		pic.setBackgroundResource(R.drawable.listelement_bkgd);
+                                    }
+                                });
+                            }
+                        }, 200);
+
+                        return false;
+                    }
+                });
+
+				pic.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -120,34 +215,15 @@ public class QueueUploader extends Activity implements OnClickListener {
 					}
 
 				});
-				break;
 
-			case PIC:
-				View pic = View
-						.inflate(mContext, R.layout.queueblock_pic, null);
-
-				makeBlock(pic, ds);
-				previous = checkPrevious(previous, scrollQueue,
-						(String) ds.getName());
-
-				scrollQueue.addView(pic);
-				ds.setUploadable(true);
-
-				pic.setOnClickListener(new OnClickListener() {
+				pic.setOnLongClickListener(new OnLongClickListener() {
 
 					@Override
-					public void onClick(View v) {
-						CheckedTextView ctv = (CheckedTextView) v
-								.findViewById(R.id.name);
-						ctv.toggle();
-
-						if (ctv.isChecked())
-							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
-						else
-							ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-						ds.setUploadable(ctv.isChecked());
-
+					public boolean onLongClick(View v) {
+						Intent iDeleteDataSet = new Intent(mContext,
+								DeleteDataSetFromUploadQueue.class);
+						startActivity(iDeleteDataSet);
+						return false;
 					}
 
 				});
