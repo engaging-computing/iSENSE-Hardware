@@ -81,19 +81,19 @@ public class Descriptor extends Activity {
 			}      	
         });
 
-       	if(Pictures.c1) checkBox1.setChecked(true);
+       	if(Main.c1) checkBox1.setChecked(true);
        	else checkBox1.setChecked(false);
        	
-       	if(Pictures.c2) checkBox2.setChecked(true);
+       	if(Main.c2) checkBox2.setChecked(true);
        	else checkBox2.setChecked(false);
        	
-        if(Pictures.c3) checkBox3.setChecked(true);
+        if(Main.c3) checkBox3.setChecked(true);
         else checkBox3.setChecked(false);
         
-       	if(Pictures.c4) checkBox4.setChecked(true);
+       	if(Main.c4) checkBox4.setChecked(true);
        	else checkBox4.setChecked(false);
        	
-       	if(Pictures.c5) checkBox5.setChecked(true);
+       	if(Main.c5) checkBox5.setChecked(true);
        	else checkBox5.setChecked(false);
         
        
@@ -108,64 +108,64 @@ public class Descriptor extends Activity {
 				desString = "";
 				
 				if (checkBox1.isChecked()) { 
-					Pictures.c1 = true;
+					Main.c1 = true;
 					if (desString.equals("")) {
 						desString += descriptors[0];
 					} else {
 						desString += ", " + descriptors[0];
 					}
 				} else {
-					Pictures.c1 = false;
+					Main.c1 = false;
 				}
 				 
 				if (checkBox2.isChecked()) {
-					Pictures.c2 = true;
+					Main.c2 = true;
 					if (desString.equals("")) {
 						desString += descriptors[1];
 					} else {
 						desString += ", " + descriptors[1];
 					}
 				} else {
-					Pictures.c2 = false;
+					Main.c2 = false;
 				}
 				
 				if (checkBox3.isChecked()) {
-					Pictures.c3 = true;
+					Main.c3 = true;
 					if (desString.equals("")) {
 						desString += descriptors[2];
 					} else {
 						desString += ", " + descriptors[2];
 					}
 				} else {
-					Pictures.c3 = false;
+					Main.c3 = false;
 				}
 				
 				if (checkBox4.isChecked()) {
-					Pictures.c4 = true;
+					Main.c4 = true;
 					if (desString.equals("")) {
 						desString += descriptors[3];
 					} else {
 						desString += ", " + descriptors[3];
 					}
 				} else {
-					Pictures.c4 = false;
+					Main.c4 = false;
 				}
 				
 				if (checkBox5.isChecked()) {
-					Pictures.c5 = true;
+					Main.c5 = true;
 					if (desString.equals("")) {
 						desString += descriptors[4];
 					} else {
 						desString += ", " + descriptors[4];
 					}
 				} else {
-					Pictures.c5 = false;
+					Main.c5 = false;
 				}
 				
 				if (!(desString.equals(""))) { 
-					setResult(Pictures.RESULT_OK);
+					setResult(Main.RESULT_OK);
 				} else { 
-					setResult(Pictures.RESULT_CANCELED);
+					setResult(Main.RESULT_CANCELED);
 				}
 			
 				/*if (checkBox1.isChecked() || 
