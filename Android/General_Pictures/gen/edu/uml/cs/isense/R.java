@@ -28,17 +28,17 @@ public final class R {
     }
     public static final class id {
         public static final int ExperimentLabel=0x7f07001c;
+        public static final int ExperimentSearchInput=0x7f07000c;
         public static final int ImageViewLogo=0x7f070015;
         public static final int LinearLayout02=0x7f070003;
         public static final int ScrollView01=0x7f070002;
-        public static final int bottomtext=0x7f07000c;
+        public static final int bottomtext=0x7f07000b;
         public static final int cancel=0x7f070014;
         public static final int checkBox1=0x7f070004;
         public static final int checkBox2=0x7f070005;
         public static final int checkBox3=0x7f070006;
         public static final int checkBox4=0x7f070007;
         public static final int checkBox5=0x7f070008;
-        public static final int icon=0x7f07000a;
         public static final int itemContent=0x7f070009;
         public static final int layout_root=0x7f07000e;
         public static final int locationBlock=0x7f070019;
@@ -54,7 +54,7 @@ public final class R {
         public static final int takePicture=0x7f070018;
         public static final int text=0x7f07001f;
         public static final int toast_layout_root=0x7f07001d;
-        public static final int toptext=0x7f07000b;
+        public static final int toptext=0x7f07000a;
         public static final int trobber=0x7f07000d;
         public static final int usernameInput=0x7f070010;
         public static final int usernameLabel=0x7f07000f;
@@ -81,6 +81,7 @@ public final class R {
         public static final int firstName=0x7f040005;
         public static final int hello=0x7f040001;
         public static final int iSlogo=0x7f040008;
+        public static final int loading=0x7f040011;
         public static final int noLocation0=0x7f04000b;
         public static final int noLocation1=0x7f04000c;
         public static final int noLocation2=0x7f04000d;
@@ -88,6 +89,7 @@ public final class R {
         public static final int noLocation4=0x7f04000f;
         public static final int picture_prompt=0x7f04000a;
         public static final int queueCount=0x7f040009;
+        public static final int search=0x7f040012;
         public static final int takePic=0x7f040007;
     }
     public static final class style {
