@@ -271,4 +271,5 @@
     <string name="qmark">\&#63;</string>
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
+	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
 </resources>

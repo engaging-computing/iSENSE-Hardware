@@ -2052,4 +2052,6 @@ public class RestAPI {
 				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null && connectivityManager
 				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()));
 	}
+	
+	
 }
