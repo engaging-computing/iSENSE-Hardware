@@ -34,7 +34,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.logindialog);
 
-		Pictures.initialLoginStatus = false;
+		Main.initialLoginStatus = false;
 
 		mContext = this;
 		rapi = RestAPI.getInstance();
@@ -66,8 +66,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 					makeToast("Login Successful!", Toast.LENGTH_SHORT);
 
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-							Pictures.mContext,
-							Pictures.mContext.getSharedPreferences("USER_INFO",
+							Main.mContext,
+							Main.mContext.getSharedPreferences("USER_INFO",
 									Context.MODE_PRIVATE));
 
 					mPrefs.edit()
