@@ -55,7 +55,7 @@ import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.genpics.Picture;
 
-public class Pictures extends Activity implements LocationListener {
+public class Main extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;
 	private static final int LOGIN_REQUESTED = 2;
 
@@ -463,7 +463,7 @@ public class Pictures extends Activity implements LocationListener {
 		case MENU_ITEM_BROWSE:
 
 			Intent experimentIntent = new Intent(getApplicationContext(),
-					Experiments.class);
+					BrowseExperiments.class);
 			experimentIntent.putExtra(
 					"edu.uml.cs.isense.pictures.experiments.prupose",
 					EXPERIMENT_CODE);
@@ -712,7 +712,7 @@ public class Pictures extends Activity implements LocationListener {
 		@Override
 		protected void onPreExecute() {
 			finishedUploadSetup = false;
-			dia = new ProgressDialog(Pictures.this);
+			dia = new ProgressDialog(Main.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			dia.setMessage("Please wait while your picture is uploaded...");
 			dia.setCancelable(false);
@@ -749,11 +749,11 @@ public class Pictures extends Activity implements LocationListener {
 
 			uploadError = false;
 
-			Pictures.c1 = false;
-			Pictures.c2 = false;
-			Pictures.c3 = false;
-			Pictures.c4 = false;
-			Pictures.c5 = false;
+			Main.c1 = false;
+			Main.c2 = false;
+			Main.c3 = false;
+			Main.c4 = false;
+			Main.c5 = false;
 
 			if (QUEUE_COUNT > 0)
 				uploadPicture(); // callTask();
@@ -814,9 +814,6 @@ public class Pictures extends Activity implements LocationListener {
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-	}
 
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {
@@ -852,7 +849,7 @@ public class Pictures extends Activity implements LocationListener {
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
-					Pictures.this);
+					Main.this);
 			new Location(mLocationManager.getBestProvider(c, true));
 		} else
 			showDialog(DIALOG_NO_GPS);
@@ -949,7 +946,7 @@ public class Pictures extends Activity implements LocationListener {
 
 	@Override
 	protected void onStop() {
-		mLocationManager.removeUpdates(Pictures.this);
+		mLocationManager.removeUpdates(Main.this);
 		gpsWorking = false;
 		if (mTimer != null)
 			mTimer.cancel();
