@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
@@ -97,7 +98,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static boolean uploadSuccess = true;
 	private static boolean throughUploadButton = false;
 
-	private ProgressDialog dia;
 	private ArrayList<ExperimentField> fieldOrder;
 
 	private EditText sessionName;
@@ -146,6 +146,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		clearData.setOnClickListener(this);
 
 		w = new Waffle(this);
+		uploadQueue = new LinkedList<DataSet>();
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
@@ -222,37 +223,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		} else if (requestCode == MEDIA_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String city = "", state = "", country = "", addr = "";
-				try {
-					List<Address> address = new Geocoder(ManualEntry.this,
-							Locale.getDefault()).getFromLocation(
-							loc.getLatitude(), loc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
-				Log.d("eid", eid);
-				if (eid != null) {
-					Log.d("pictureArray size", "" + MediaManager.pictureArray.size());
-					for (File picture : MediaManager.pictureArray) {
-						DataSet picDS = new DataSet(DataSet.Type.PIC,
-								sessionName.getText().toString(),
-								"Enter description here", eid, null, picture,
-								DataSet.NO_SESSION_DEFINED, city, state,
-								country, addr);
-						uploadQueue.add(picDS);
-						Log.d("uploadQ", ""+uploadQueue.size());
-					}
-				}
-				MediaManager.pictureArray.clear();
-				QueueUploader.storeQueue(uploadQueue, activityName, mContext);
+				new PrepareQueue().execute();
 			}
 		}
 	}
@@ -432,7 +403,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
 
-		Log.d("uploadQ - onPause", ""+uploadQueue.size());
+		if (uploadQueue != null)
+			Log.d("uploadQ - onPause", "" + uploadQueue.size());
 		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
@@ -475,8 +447,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		JSONArray data = new JSONArray();
 		data.put(row);
-
-		Log.e("tag", data.toString());
+		
 		return data.toString();
 	}
 
@@ -525,7 +496,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private class LoadExperimentFieldsTask extends
 			AsyncTask<Void, Integer, Void> {
-
+		ProgressDialog dia;
 		private boolean error = false;
 
 		@Override
@@ -581,7 +552,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
-
+		ProgressDialog dia;
 		String city = "", state = "", country = "", addr = "";
 		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
 		DataSet ds;
@@ -674,9 +645,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
-				mContext);
-		Log.d("uploadQ - onResume", ""+uploadQueue.size());
+		uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
+				activityName, mContext);
+		if (uploadQueue != null)
+			Log.d("uploadQ - onResume", "" + uploadQueue.size());
 
 		super.onResume();
 	}
@@ -684,6 +656,68 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private String makeThisDatePretty(long time) {
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
 		return sdf.format(time);
+	}
+
+	class PrepareQueue extends AsyncTask<Void, Integer, Void> {
+		ProgressDialog dia;
+
+		@Override
+		protected void onPreExecute() {
+
+			OrientationManager.disableRotation(ManualEntry.this);
+
+			dia = new ProgressDialog(ManualEntry.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Preparing pictures...");
+			dia.setCancelable(false);
+			dia.show();
+			
+			uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
+					activityName, mContext);
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			String city = "", state = "", country = "", addr = "";
+			try {
+				List<Address> address = new Geocoder(ManualEntry.this,
+						Locale.getDefault()).getFromLocation(loc.getLatitude(),
+						loc.getLongitude(), 1);
+				if (address.size() > 0) {
+					city = address.get(0).getLocality();
+					state = address.get(0).getAdminArea();
+					country = address.get(0).getCountryName();
+					addr = address.get(0).getAddressLine(0);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
+			if (eid != null) {
+				for (File picture : MediaManager.pictureArray) {
+					DataSet picDS = new DataSet(DataSet.Type.PIC, sessionName
+							.getText().toString(), "Enter description here",
+							eid, null, picture, DataSet.NO_SESSION_DEFINED,
+							city, state, country, addr);
+					uploadQueue.add(picDS);
+					Log.d("uploadQ", "" + uploadQueue.size());
+				}
+				QueueUploader.storeQueue(uploadQueue, activityName, mContext);
+			}
+			MediaManager.pictureArray.clear();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			dia.dismiss();
+			OrientationManager.enableRotation(ManualEntry.this);
+			super.onPostExecute(result);
+			uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+		}
 	}
 
 }
