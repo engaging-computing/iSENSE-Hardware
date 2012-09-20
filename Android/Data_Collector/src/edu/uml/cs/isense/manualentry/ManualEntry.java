@@ -39,6 +39,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
@@ -80,6 +81,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private Button uploadData;
 	private Button saveData;
 	private Button clearData;
+	private ImageButton mediaButton;
 
 	public static Context mContext;
 
@@ -136,15 +138,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 		uploadData = (Button) findViewById(R.id.manual_upload);
 		saveData = (Button) findViewById(R.id.manual_save);
 		clearData = (Button) findViewById(R.id.manual_clear);
+		mediaButton = (ImageButton) findViewById(R.id.manual_media_button);
 
 		uploadData.setOnClickListener(this);
 		saveData.setOnClickListener(this);
 		clearData.setOnClickListener(this);
-
-		uploadData.setOnClickListener(this);
-		saveData.setOnClickListener(this);
-		clearData.setOnClickListener(this);
-
+		mediaButton.setOnClickListener(this);
+		
 		w = new Waffle(this);
 		uploadQueue = new LinkedList<DataSet>();
 
@@ -179,6 +179,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		case R.id.manual_upload:
 			uploadFields();
 			break;
+		case R.id.manual_media_button:
+			Intent iMedia = new Intent(mContext, MediaManager.class);
+			startActivityForResult(iMedia, MEDIA_REQUESTED);
 		}
 	}
 
@@ -373,12 +376,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-
-		case R.id.menu_item_manual_media:
-			Intent iMedia = new Intent(mContext, MediaManager.class);
-			startActivityForResult(iMedia, MEDIA_REQUESTED);
-
-			return true;
 
 		case R.id.menu_item_manual_experiment:
 			Intent iExperiment = new Intent(mContext, ExperimentDialog.class);
