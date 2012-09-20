@@ -65,28 +65,44 @@
             android:text="@string/clear"
             android:textSize="20sp" />
     </LinearLayout>
-    
-    <EditText 
-        android:id="@+id/manual_session_name"
+
+    <LinearLayout
+        android:id="@+id/session_name_wrapper"
         android:layout_width="match_parent"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="15dp"
-        android:singleLine="true"
-        android:imeOptions="actionDone"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonLayout"
-        android:inputType="text"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
-        android:hint="@string/enterSessionName"
-        android:maxLength="150"
-        android:gravity="left"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="horizontal"
+        android:layout_below="@id/buttonLayout" >
+
+        <EditText
+            android:id="@+id/manual_session_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"    
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="3dp"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+            android:gravity="left"
+            android:hint="@string/enterSessionName"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLength="150"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight=".2" />
+
+        <ImageButton
+            android:id="@+id/manual_media_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8"
+            android:src="@drawable/ic_menu_media"
+            android:contentDescription="@string/blank_desc" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scroll_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/manual_session_name" >
+        android:layout_below="@id/session_name_wrapper" >
 
         <LinearLayout
             android:id="@+id/field_view"
