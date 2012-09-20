@@ -10,8 +10,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -21,13 +19,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
@@ -51,17 +46,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private ProgressDialog dia;
 	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
-	private Timer colorChange;
-	private Handler mHandler;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.queueprompt);
 
 		mContext = this;
-		
-		mHandler = new Handler();
 
 		String tag = "QUEUE_PARENT";
 		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
@@ -99,6 +90,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	// Works through list of data to be uploaded and creates the list of blocks
 	private void fillScrollQueue(LinearLayout scrollQueue) {
+		
 		String previous = "";
 
 		for (final DataSet ds : qpa.mirrorQueue) {
@@ -106,6 +98,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 			case DATA:
 				final View data = View.inflate(mContext, R.layout.queueblock_data,
 						null);
+				
+				data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
 
 				makeBlock(data, ds);
 				previous = checkPrevious(previous, scrollQueue,
@@ -113,25 +107,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 				scrollQueue.addView(data);
 				ds.setUploadable(true);
-				
-				data.setOnTouchListener(new OnTouchListener() {
-                    public boolean onTouch(View v, MotionEvent event) {
-                        data.setBackgroundResource(R.drawable.listelement_bkgdflash);
-                        colorChange = new Timer();
-                        colorChange.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                mHandler.post(new Runnable() {
-                                    public void run() {
-                                        data.setBackgroundResource(R.drawable.listelement_bkgd);
-                                    }
-                                });
-                            }
-                        }, 200);
-
-                        return false;
-                    }
-                });
 
 				data.setOnClickListener(new OnClickListener() {
 
@@ -169,6 +144,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 			case PIC:
 				final View pic = View
 						.inflate(mContext, R.layout.queueblock_pic, null);
+				
+				pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
 
 				makeBlock(pic, ds);
 				previous = checkPrevious(previous, scrollQueue,
@@ -177,26 +154,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 				scrollQueue.addView(pic);
 				ds.setUploadable(true);
 				
-				pic.setOnTouchListener(new OnTouchListener() {
-                    public boolean onTouch(View v, MotionEvent event) {
-                        pic.setBackgroundResource(R.drawable.listelement_bkgdflash);
-                        colorChange = new Timer();
-                        colorChange.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                mHandler.post(new Runnable() {
-                                    public void run() {
-                                    	if (!pic.isPressed())
-                                    		pic.setBackgroundResource(R.drawable.listelement_bkgd);
-                                    }
-                                });
-                            }
-                        }, 200);
-
-                        return false;
-                    }
-                });
-
 				pic.setOnClickListener(new OnClickListener() {
 
 					@Override
