@@ -59,14 +59,6 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/manual_upload"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/upload"
-                android:textSize="20sp" />
-
-            <Button
                 android:id="@+id/manual_clear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
