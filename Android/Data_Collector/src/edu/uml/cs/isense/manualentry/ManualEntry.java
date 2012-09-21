@@ -171,7 +171,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				sessionName.setError(null);
 			
 			if (exp.equals("")) {
-				w.make("Fatal error: Invalid experiment.");
+				w.make("Invalid or no selected experiment.");
 			} else if (sessionName.getText().toString().length() == 0) {
 				sessionName.setError("Enter a session name");
 			} else {
