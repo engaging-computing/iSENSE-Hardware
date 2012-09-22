@@ -90,7 +90,7 @@ import edu.uml.cs.raac.pincushion.pinpointInterface;
 
 @SuppressLint("NewApi")
 public class Isense extends Activity implements OnClickListener {
-	boolean showConnectOption = false, showTimeOption = false, connectFromSplash = true, dataRdy = false;
+	boolean showConnectOption = false, showTimeOption = false, showSensorOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
 	ScrollView dataScroller;
 	ImageButton pinpointBtn;
@@ -115,7 +115,6 @@ public class Isense extends Activity implements OnClickListener {
 	boolean loggedIn = false;
 	static String sessionUrl;
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	String sensorType;
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi;
 	private ProgressDialog dia;
@@ -195,9 +194,7 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	// Set up all views from the XML layout
-	public void initializeLayout() {
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-		
+	public void initializeLayout() {		
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -217,9 +214,6 @@ public class Isense extends Activity implements OnClickListener {
 
 		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		nameField.setText(defPrefs.getString("group_name", "SoR User"));
-		
-		sensorHead.setText("BTA1: " + prefs.getString("name_bta1", "Vernier pH Sensor"));
-		sensorType = prefs.getString("name_bta1", "Vernier pH Sensor");
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
@@ -338,6 +332,16 @@ public class Isense extends Activity implements OnClickListener {
 		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
 		super.onStart();
 	}
+	
+	private String getFormula(int sensor) {
+		if(sensor == 24) {
+			return "-0.0185*x+13.769";
+		} else if(sensor == 1) {
+			return "-33.47 * ln (x) + 213.85";
+		} else {
+			return "x";
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -398,9 +402,13 @@ public class Isense extends Activity implements OnClickListener {
 	public void getRecords() {
 		//Check PINPoint's BTA1 sensor setting
 		//and if it's not pH or temperature, set it to pH
-		System.out.println(ppi.getSetting(PinComm.BTA1));
 		if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
 			ppi.setSetting(PinComm.BTA1, 24);
+		}
+		if(ppi.getSetting(PinComm.BTA1)==24) {
+			sensorHead.setText("BTA1: Vernier pH Sensor");
+		} else {
+			sensorHead.setText("BTA1: Vernier Temperature Probe");
 		}
 		
 		ppi.setContext(this);
@@ -525,7 +533,6 @@ public class Isense extends Activity implements OnClickListener {
 
 		int x = 0;
 		String label = "";
-		SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
 		Resources res = getResources();
 
 		try {
@@ -548,22 +555,12 @@ public class Isense extends Activity implements OnClickListener {
 					x++;
 					switch(x) {
 					case 1: label = "Time (GMT)"; break;
-					//case 2: label = "Latitude"; break;
-					//case 3: label = "Longitude"; break;
-					//case 4: label = "Altitude GPS (m)"; break;
-					//case 5: label = "Altitude (m)"; break;
-					//case 6: label = "Pressure (atm)"; break;
-					//case 7: label = "Air Temperature (c)"; break;
-					//case 8: label = "Humidity (%rh)"; break;
-					//case 9: label = "Light (lux)"; break;
-					//case 10: label = "X-Accel"; break;
-					//case 11: label = "Y-Accel"; break;
-					//case 12: label = "Z-Accel"; break;
-					//case 13: label = "Acceleration"; break;
-					case 14: label = prefs.getString("name_bta1", "BTA 1"); /*bta1Data.add(Double.parseDouble(str));*/ break;
-					//case 15: label = prefs.getString("name_bta2", "BTA 2"); break;
-					//case 16: label = prefs.getString("name_mini1", "Mini 1"); break;
-					//case 17: label = prefs.getString("name_mini2", "Mini 2"); break;
+					case 14: if(ppi.getSetting(PinComm.BTA1)==24) {
+						label = "BTA1: Vernier pH Sensor";
+					} else {
+						label = "BTA1: Vernier Temperature Probe";
+					} 
+					break;
 					default:
 						continue;
 					}
@@ -671,6 +668,7 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.getItem(0).setEnabled(showConnectOption);
+		menu.getItem(1).setEnabled(showSensorOption);
 		menu.getItem(2).setEnabled(showTimeOption);
 		menu.getItem(3).setEnabled(!loggedIn);
 		return true;
@@ -701,6 +699,7 @@ public class Isense extends Activity implements OnClickListener {
 					if(connectFromSplash) {
 						showConnectOption = true;
 						showTimeOption = true;
+						showSensorOption = true;
 						if(Build.VERSION.SDK_INT >= 11) {
 							invalidateOptionsMenu();
 						}
@@ -732,6 +731,10 @@ public class Isense extends Activity implements OnClickListener {
 					spinner.clearAnimation();
 					spinner.setVisibility(View.GONE);
 					pinpointBtn.setImageResource(R.drawable.nopptbtn);
+					showSensorOption = false;
+					if(Build.VERSION.SDK_INT >= 11) {
+						invalidateOptionsMenu();
+					}
 					btStatNum = 0;
 					setBtStatus();
 					break;
@@ -803,33 +806,6 @@ public class Isense extends Activity implements OnClickListener {
 			break;
 		case SENSOR_CHANGE:
 			// When the dialog for selecting sensors is closed
-			if (resultCode == Activity.RESULT_OK) {
-				// Save the selected sensors into their appropriate preferences
-				SharedPreferences prefs = getSharedPreferences("SENSORS", 0);
-				SharedPreferences.Editor editor = prefs.edit();
-
-				editor.putString("sensor_bta1",
-						data.getExtras().getString("bta1"));
-				editor.putString("sensor_bta2",
-						data.getExtras().getString("bta2"));
-				editor.putString("sensor_mini1",
-						data.getExtras().getString("mini1"));
-				editor.putString("sensor_mini2",
-						data.getExtras().getString("mini2"));
-				editor.putString("name_bta1",
-						data.getExtras().getString("btaname1"));
-				editor.putString("name_bta2",
-						data.getExtras().getString("btaname2"));
-				editor.putString("name_mini1",
-						data.getExtras().getString("mininame1"));
-				editor.putString("name_mini2",
-						data.getExtras().getString("mininame2"));
-
-				sensorHead.setText("BTA1: " + data.getExtras().getString("btaname1"));
-				sensorType = data.getExtras().getString("btaname1");
-
-				editor.commit();
-			}
 			break;
 		case REQUEST_VIEW_DATA:
 			//When the data has been uploaded
@@ -859,7 +835,7 @@ public class Isense extends Activity implements OnClickListener {
 		dataSet = new JSONArray();
 
 		JSONArray dataJSON;
-		if (sensorType.equals("Vernier Stainless Steel Temperature Probe"))
+		if (ppi.getSetting(PinComm.BTA1) == 1) //PINPoint is set to use Temperature Probe
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
@@ -867,7 +843,7 @@ public class Isense extends Activity implements OnClickListener {
 				dataJSON.put("");
 				dataSet.put(dataJSON);
 			}
-		else if (sensorType.equals("Vernier pH Sensor")) {
+		else if (ppi.getSetting(PinComm.BTA1) == 24) { //PINPoint is set to use pH Sensor
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
