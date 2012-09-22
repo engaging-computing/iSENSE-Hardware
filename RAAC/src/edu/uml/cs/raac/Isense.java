@@ -396,6 +396,13 @@ public class Isense extends Activity implements OnClickListener {
 
 	@SuppressLint("NewApi")
 	public void getRecords() {
+		//Check PINPoint's BTA1 sensor setting
+		//and if it's not pH or temperature, set it to pH
+		System.out.println(ppi.getSetting(PinComm.BTA1));
+		if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
+			ppi.setSetting(PinComm.BTA1, 24);
+		}
+		
 		ppi.setContext(this);
 		final ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -702,11 +709,6 @@ public class Isense extends Activity implements OnClickListener {
 						connectFromSplash = false;
 					} else {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
-					}
-					//Check PINPoint's BTA1 sensor setting
-					//and if it's not pH or temperature, set it to pH
-					if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
-						ppi.setSetting(PinComm.BTA1, 24);
 					}
 					//Set the time on the PINPoint's internal clock
 					if(ppi.setRealTimeClock()) {
