@@ -397,4 +397,8 @@ public class pinpointInterface {
 
         return numRecords;
     }
+    
+    public HashMap<Integer,Integer> getSettings() throws NoConnectionException {
+    	return pinpoint.GetSettings();
+    }
 }
