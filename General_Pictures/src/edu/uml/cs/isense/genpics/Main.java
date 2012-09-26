@@ -49,6 +49,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.genpics.experiments.BrowseExperiments;
+import edu.uml.cs.isense.genpics.objects.LoginActivity;
+import edu.uml.cs.isense.genpics.objects.Picture;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Main extends Activity implements LocationListener {
