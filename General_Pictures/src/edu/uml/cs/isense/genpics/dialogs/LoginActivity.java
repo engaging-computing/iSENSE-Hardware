@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.genpics.objects;
+package edu.uml.cs.isense.genpics.dialogs;
 
 import android.app.Activity;
 import android.content.Context;
