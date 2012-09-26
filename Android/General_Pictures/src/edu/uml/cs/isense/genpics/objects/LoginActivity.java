@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.genpics;
+package edu.uml.cs.isense.genpics.objects;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.genpics.Main;
+import edu.uml.cs.isense.genpics.R;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class LoginActivity extends Activity implements OnClickListener {
