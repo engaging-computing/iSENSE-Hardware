@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@android:color/white"
+    android:background="@drawable/background"
     android:orientation="vertical" >
 
     <ImageView
         android:id="@+id/ImageViewLogo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@+string/iSlogo"
         android:scaleType="center"
         android:src="@drawable/logo" />
@@ -17,13 +18,17 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical" >
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" >
 
         <TextView
             android:id="@+id/nameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:paddingTop="12dip"
             android:text="@+string/firstName"
             android:textColor="@android:color/black"
@@ -47,6 +52,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_margin="20dp"
         android:paddingTop="16dip"
         android:text="@+string/takePic"
         android:textSize="30dip"
