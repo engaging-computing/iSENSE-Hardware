@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.genpics;
+package edu.uml.cs.isense.genpics.experiments;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.genpics.R;
 import edu.uml.cs.isense.objects.Experiment;
 
 public class BrowseExperiments extends ListActivity {

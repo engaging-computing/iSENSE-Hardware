@@ -16,13 +16,14 @@
         android:id="@+id/usernameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="6dp"
         android:layout_toRightOf="@id/usernameLabel"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
         android:background="@android:drawable/editbox_background"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+        android:imeOptions="actionNext"
         android:inputType="textEmailAddress"
-        android:paddingLeft="6dip" />
+        android:paddingLeft="6dip"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/passwordLabel"
@@ -38,13 +39,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameInput"
-        android:singleLine="true"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
-        android:imeOptions="actionDone"
+        android:layout_marginRight="6dp"
         android:layout_toRightOf="@id/passwordLabel"
         android:background="@android:drawable/editbox_background"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
         android:paddingLeft="6dip"
-        android:inputType="textPassword" />
+        android:singleLine="true" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -60,7 +62,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="@string/cancel" />
-        
+
         <Button
             android:id="@+id/okay"
             android:layout_width="wrap_content"
@@ -68,7 +70,6 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="@string/okay" />
-        
     </LinearLayout>
 
 </RelativeLayout>

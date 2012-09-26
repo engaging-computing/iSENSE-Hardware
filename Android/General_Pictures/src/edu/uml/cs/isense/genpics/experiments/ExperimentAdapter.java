@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.genpics;
+package edu.uml.cs.isense.genpics.experiments;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.genpics.R;
 import edu.uml.cs.isense.objects.Experiment;
 
 public class ExperimentAdapter extends ArrayAdapter<Experiment> {
