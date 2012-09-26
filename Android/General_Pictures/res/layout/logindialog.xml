@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="5dip"
-        android:text="Username : " />
+        android:text="@string/username" />
 
     <EditText
         android:id="@+id/usernameInput"
@@ -31,7 +31,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/usernameInput"
         android:layout_marginTop="5dip"
-        android:text="Password  : " />
+        android:text="@string/password" />
 
     <EditText
         android:id="@+id/passwordInput"
@@ -44,33 +44,14 @@
         android:layout_toRightOf="@id/passwordLabel"
         android:background="@android:drawable/editbox_background"
         android:paddingLeft="6dip"
-        android:password="true" />
-
-    <!--
-     <CheckedTextView android:text="Remember me" 
-		android:id="@+id/rememberme" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:layout_below="@id/passwordLabel"
-		android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-		android:layout_alignParentRight="true"
-		android:layout_marginTop="20dip"/>
-    -->
+        android:inputType="textPassword" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/passwordInput"
+        android:layout_below="@id/passwordInput"
         android:orientation="horizontal"
         android:weightSum="2" >
-
-        <Button
-            android:id="@+id/okay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="Okay" />
 
         <Button
             android:id="@+id/cancel"
@@ -78,7 +59,16 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/cancel" />
+        
+        <Button
+            android:id="@+id/okay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="@string/okay" />
+        
     </LinearLayout>
 
 </RelativeLayout>
