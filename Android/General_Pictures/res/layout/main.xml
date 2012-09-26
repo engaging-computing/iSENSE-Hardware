@@ -36,18 +36,21 @@
             android:layout_toRightOf="@+id/nameLabel"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
             android:imeOptions="actionDone"
+            android:singleLine="true"
             android:inputType="text"
             android:maxLength="50" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/takePicture"
+        android:background="@drawable/colorless"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingTop="16dip"
         android:text="@+string/takePic"
-        android:textSize="30dip" />
+        android:textSize="30dip"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:id="@+id/locationBlock"
