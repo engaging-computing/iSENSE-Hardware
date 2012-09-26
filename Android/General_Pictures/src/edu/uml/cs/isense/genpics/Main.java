@@ -1,8 +1,5 @@
 package edu.uml.cs.isense.genpics;
 
-/* Experiment 347 on Dev, 419 on real iSENSE, 424 day 2 */
-/*name string colon description bug with invalid characters in names */
-
 import java.io.File;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -51,15 +48,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.genpics.Picture;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class Main extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 1;
 	private static final int LOGIN_REQUESTED = 2;
 
-	private static final int DIALOG_REJECT = 0;
 	private static final int DIALOG_NO_GPS = 1;
 	private static final int DIALOG_DIFFICULTY = 2;
 	private static final int DIALOG_NO_CONNECT = 3;
@@ -76,10 +71,6 @@ public class Main extends Activity implements LocationListener {
 	private LocationManager mLocationManager;
 	private PowerManager pm;
 	private PowerManager.WakeLock wl;
-	//private KeyguardManager keyguardManager;
-	//private KeyguardLock lock;
-
-	private static boolean dontToastMeTwice = false;
 
 	private Uri imageUri;
 
@@ -115,15 +106,11 @@ public class Main extends Activity implements LocationListener {
 
 	public static Context mContext;
 
+	private Waffle w;
+
 	private File picture;
 
 	public static Button takePicture;
-
-	static boolean c1 = false;
-	static boolean c2 = false;
-	static boolean c3 = false;
-	static boolean c4 = false;
-	static boolean c5 = false;
 
 	static boolean useMenu = true;
 
@@ -134,12 +121,6 @@ public class Main extends Activity implements LocationListener {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		Dialog dialog;
 		switch (id) {
-
-		case DIALOG_REJECT:
-			builder.setMessage("Please enter a name.");
-			builder.setPositiveButton("Ok", null);
-			dialog = builder.create();
-			break;
 
 		case DIALOG_NO_GPS:
 			builder.setTitle("No GPS Provider Found")
@@ -212,8 +193,9 @@ public class Main extends Activity implements LocationListener {
 												mPrefs.getString("username", ""),
 												mPrefs.getString("password", ""));
 										if (success) {
-											makeToast("Connectivity found!",
-													Toast.LENGTH_SHORT);
+											w.make("Connectivity found!",
+													Waffle.LENGTH_SHORT,
+													Waffle.IMAGE_CHECK);
 											userLoggedIn = true;
 										}
 									} else {
@@ -337,6 +319,8 @@ public class Main extends Activity implements LocationListener {
 
 		mContext = this;
 
+		w = new Waffle(mContext);
+
 		mQ = new LinkedList<Picture>();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -357,8 +341,9 @@ public class Main extends Activity implements LocationListener {
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
 
-		//keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-		//lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
+		// keyguardManager = (KeyguardManager)
+		// getSystemService(KEYGUARD_SERVICE);
+		// lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -383,8 +368,10 @@ public class Main extends Activity implements LocationListener {
 			@Override
 			public void onClick(View v) {
 				if (name.getText().length() == 0) {
-					showDialog(DIALOG_REJECT);
+					name.setError("Enter a name");
 					return;
+				} else {
+					name.setError(null);
 				}
 
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
@@ -392,8 +379,8 @@ public class Main extends Activity implements LocationListener {
 						"Error");
 
 				if (experimentNum.equals("Error")) {
-					makeToast("Please select an experiment first.",
-							Toast.LENGTH_LONG);
+					w.make("Please select an experiment first.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
 
@@ -412,9 +399,8 @@ public class Main extends Activity implements LocationListener {
 
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 				} else {
-					makeToast(
-							"Permission isn't granted to write to external storage.  Please check to see if there is an SD card.",
-							Toast.LENGTH_LONG);
+					w.make("Cannot write to external storage.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				}
 
@@ -422,22 +408,15 @@ public class Main extends Activity implements LocationListener {
 
 		});
 
-		/*
-		 * Button browseButton = (Button) findViewById(R.id.BrowseButton);
-		 * browseButton.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) {
-		 * 
-		 * Intent experimentIntent = new Intent(getApplicationContext(),
-		 * Experiments.class);
-		 * 
-		 * experimentIntent.putExtra(
-		 * "edu.uml.cs.isense.pictures.experiments.prupose", EXPERIMENT_CODE);
-		 * 
-		 * startActivityForResult(experimentIntent, EXPERIMENT_CODE); }
-		 * 
-		 * });
-		 */
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!w.isDisplaying) {
+			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
+					Waffle.IMAGE_CHECK);
+		} else if (w.canPerformTask) 
+			super.onBackPressed();	
 	}
 
 	@Override
@@ -490,7 +469,7 @@ public class Main extends Activity implements LocationListener {
 			if (smartUploading && (QUEUE_COUNT > 0))
 				showDialog(DIALOG_READY_TO_UPLOAD);
 		}
-		//lock.reenableKeyguard();
+		// lock.reenableKeyguard();
 		super.onResume();
 	}
 
@@ -500,7 +479,7 @@ public class Main extends Activity implements LocationListener {
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-		//lock.reenableKeyguard();
+		// lock.reenableKeyguard();
 		super.onStart();
 	}
 
@@ -566,8 +545,8 @@ public class Main extends Activity implements LocationListener {
 				}
 
 				int sessionId = rapi.createSession(experimentNum, name
-						.getText().toString(), "No description provided.",
-						"n/a", "Lowell, MA", "");
+						.getText().toString(), "" + curTime, "", "Lowell, MA",
+						"");
 
 				if (sessionId == -1) {
 					uploadError = true;
@@ -626,13 +605,13 @@ public class Main extends Activity implements LocationListener {
 				if (smartUploading) {
 					if (userLoggedIn) {
 						calledBySmartUp = false;
-						new Task().execute();
+						new UploadTask().execute();
 					} else
 						qsave(picture);
 				} else {
 					if (userLoggedIn) {
 						calledBySmartUp = false;
-						new Task().execute();
+						new UploadTask().execute();
 					} else
 						showDialog(DIALOG_NOT_LOGGED_IN);
 				}
@@ -702,12 +681,7 @@ public class Main extends Activity implements LocationListener {
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	/*
-	 * private void callTask() { try { Thread.sleep(1); new Task().execute(); }
-	 * catch (InterruptedException e) { e.printStackTrace(); } }
-	 */
-
-	private class Task extends AsyncTask<Void, Integer, Void> {
+	private class UploadTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
 		protected void onPreExecute() {
@@ -741,22 +715,19 @@ public class Main extends Activity implements LocationListener {
 			dia.cancel();
 
 			if (status400)
-	        	makeToast("Your data cannot be uploaded to this experiment.  It has been closed.", Toast.LENGTH_LONG);
-	        else if (uploadError) 
-	        	makeToast("An error occured during upload.", Toast.LENGTH_LONG);
-	        else 
-	        	makeToast("Your picture has uploaded successfully.", Toast.LENGTH_LONG);
+				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			else if (uploadError)
+				w.make("An error occured during upload.", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_X);
+			else
+				w.make("Your picture has uploaded successfully.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 
 			uploadError = false;
 
-			Main.c1 = false;
-			Main.c2 = false;
-			Main.c3 = false;
-			Main.c4 = false;
-			Main.c5 = false;
-
 			if (QUEUE_COUNT > 0)
-				uploadPicture(); // callTask();
+				uploadPicture();
 		}
 	}
 
@@ -805,7 +776,8 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		protected void onPostExecute(Void voids) {
 			if (rapi.isConnectedToInternet())
-				makeToast("Connectivity found!", Toast.LENGTH_SHORT);
+				w.make("Connectivity found!", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 			else {
 				userLoggedIn = false;
 				if (!smartUploading)
@@ -813,7 +785,6 @@ public class Main extends Activity implements LocationListener {
 			}
 		}
 	}
-
 
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {
@@ -848,8 +819,7 @@ public class Main extends Activity implements LocationListener {
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
-					mLocationManager.getBestProvider(c, true), 0, 0,
-					Main.this);
+					mLocationManager.getBestProvider(c, true), 0, 0, Main.this);
 			new Location(mLocationManager.getBestProvider(c, true));
 		} else
 			showDialog(DIALOG_NO_GPS);
@@ -918,8 +888,8 @@ public class Main extends Activity implements LocationListener {
 			}
 			dia.setProgress(99);
 
-			success = rapi.uploadPictureToSession(f, experimentNum, sessionId, n,
-					"No description provided.");
+			success = rapi.uploadPictureToSession(f, experimentNum, sessionId,
+					n, "No description provided.");
 			if (!success)
 				uploadError = true;
 		}
@@ -934,7 +904,7 @@ public class Main extends Activity implements LocationListener {
 				QUEUE_COUNT--;
 				queueCount.setText("Queue Count: " + QUEUE_COUNT);
 				calledBySmartUp = true;
-				new Task().execute();
+				new UploadTask().execute();
 			}
 		} else {
 			smartUploading = false;
@@ -953,7 +923,7 @@ public class Main extends Activity implements LocationListener {
 		if (wl.isHeld())
 			wl.release();
 		mTimer = null;
-		//lock.disableKeyguard();
+		// lock.disableKeyguard();
 		super.onStop();
 	}
 
@@ -986,7 +956,8 @@ public class Main extends Activity implements LocationListener {
 				boolean success = rapi.login(mPrefs.getString("username", ""),
 						mPrefs.getString("password", ""));
 				if (success) {
-					makeToast("Connectivity found!", Toast.LENGTH_SHORT);
+					w.make("Connectivity found!", Waffle.LENGTH_SHORT,
+							Waffle.IMAGE_CHECK);
 					userLoggedIn = true;
 					if (QUEUE_COUNT > 0)
 						showDialog(DIALOG_READY_TO_UPLOAD);
@@ -1046,41 +1017,4 @@ public class Main extends Activity implements LocationListener {
 		}, 0, TIMER_LOOP);
 	}
 
-	// Easy method to create and show Toast messages, using the NoToastTwiceTask
-	public void makeToast(String message, int length) {
-		if (length == Toast.LENGTH_SHORT) {
-			if (!dontToastMeTwice) {
-				Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-				new NoToastTwiceTask().execute();
-			}
-		} else if (length == Toast.LENGTH_LONG) {
-			if (!dontToastMeTwice) {
-				Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
-				new NoToastTwiceTask().execute();
-			}
-		}
-	}
-
-	// Prevents toasts from being queued infinitesimally
-	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
-		@Override
-		protected void onPreExecute() {
-			dontToastMeTwice = true;
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			try {
-				Thread.sleep(3500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			dontToastMeTwice = false;
-		}
-	}
 }
