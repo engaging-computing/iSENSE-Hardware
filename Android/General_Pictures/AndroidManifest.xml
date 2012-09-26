@@ -37,11 +37,14 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Descriptor"
+            android:name=".dialogs.LoginActivity"
+            android:label="Login"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".objects.LoginActivity"
+            android:name=".dialogs.NoGps"
+            android:label="No GPS Found"
             android:theme="@android:style/Theme.Dialog" />
+        
     </application>
 
 </manifest>

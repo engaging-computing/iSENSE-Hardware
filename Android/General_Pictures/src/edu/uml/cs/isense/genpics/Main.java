@@ -49,15 +49,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
+import edu.uml.cs.isense.genpics.dialogs.NoGps;
 import edu.uml.cs.isense.genpics.experiments.BrowseExperiments;
-import edu.uml.cs.isense.genpics.objects.LoginActivity;
 import edu.uml.cs.isense.genpics.objects.Picture;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Main extends Activity implements LocationListener {
-	private static final int CAMERA_PIC_REQUESTED = 1;
-	private static final int LOGIN_REQUESTED = 2;
+	private static final int CAMERA_PIC_REQUESTED = 101;
+	private static final int LOGIN_REQUESTED = 102;
+	private static final int NO_GPS_REQUESTED = 103;
 
 	private static final int DIALOG_NO_GPS = 1;
 	private static final int DIALOG_DIFFICULTY = 2;
@@ -90,7 +92,8 @@ public class Main extends Activity implements LocationListener {
 	private static boolean finishedUploadSetup = false;
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
-	public static boolean initialLoginStatus = true;
+	public  static boolean initialLoginStatus = true;
+	private static boolean showGpsDialog = true;
 
 	private Picture uploaderPic = null;
 
@@ -638,23 +641,22 @@ public class Main extends Activity implements LocationListener {
 						R.string.experiment)
 						+ mPrefs.getString("experiment_number", "None Set"));
 			}
-		}
-
-		else if (requestCode == LOGIN_REQUESTED) {
+		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("LOGIN", 0);
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putBoolean("logged_in", true);
 				mEditor.commit();
 			}
+		} else if (requestCode == NO_GPS_REQUESTED) {
+			showGpsDialog = true;
+			if (resultCode == RESULT_OK) {
+				startActivity(new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			}
+
 		}
 
-		/*
-		 * else if (requestCode == EXPERIMENT_CODE) { if (resultCode ==
-		 * Activity.RESULT_OK) { experimentInput.setText("" +
-		 * data.getExtras().getInt
-		 * ("edu.uml.cs.isense.pictures.experiments.exp_id")); } }
-		 */
 	}
 
 	@Override
@@ -825,8 +827,14 @@ public class Main extends Activity implements LocationListener {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0, Main.this);
 			new Location(mLocationManager.getBestProvider(c, true));
-		} else
-			showDialog(DIALOG_NO_GPS);
+		} else {
+			if (showGpsDialog) {
+				Intent iNoGps = new Intent(mContext, NoGps.class);
+				startActivityForResult(iNoGps, NO_GPS_REQUESTED);
+				showGpsDialog = false;
+			}
+		}
+			
 	}
 
 	// save picture data in a queue for later upload
