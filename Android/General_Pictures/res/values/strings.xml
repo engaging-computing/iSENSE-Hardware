@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, pictures!</string>
-    <string name="app_name">Pictures</string>
+    <string name="app_name">iSENSE Pictures</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="app_name_experiments">Experiments</string>
     
     <string name="firstName">Name: \0</string>
     <string name="descPic">Step 1: Choose a category for the picture you will take.</string>
-    <string name="takePic">Take the picture and upload to iSENSE.</string>
+    <string name="takePic">Press Here to Take a Picture</string>
     <string name="iSlogo">iSENSE Logo</string>
     <string name="queueCount">Queue Count: </string>
     
@@ -30,9 +29,9 @@
     
     <string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
 	<string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
-	<string name="noLocation2">Lat: waiting for GPS ..\nLong: waiting for GPS ..</string>
-	<string name="noLocation3">Lat: waiting for GPS &#8230;\nLong: waiting for GPS  &#8230;</string>
-	<string name="noLocation4">Lat: waiting for GPS ....\nLong: waiting for GPS ....</string>
+	<string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
+	<string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
+	<string name="noLocation4">Lat: waiting for GPS . . . .\nLong: waiting for GPS . . . .</string>
 	
 	<string name="experiment">Experiment: \0</string>
 	
@@ -43,6 +42,8 @@
     <string name="password">Password  : \0</string>
 	<string name="cancel">Cancel</string>
     <string name="okay">Okay</string>
-	
+    <string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
 	
 </resources>

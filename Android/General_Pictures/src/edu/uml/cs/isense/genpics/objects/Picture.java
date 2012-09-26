@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.genpics;
+package edu.uml.cs.isense.genpics.objects;
 
 import java.io.File;
 
