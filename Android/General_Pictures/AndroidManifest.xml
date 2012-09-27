@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="8" />
+        android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -43,6 +43,14 @@
         <activity
             android:name=".dialogs.NoGps"
             android:label="No GPS Found"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity 
+            android:name=".dialogs.NoConnectivity"
+            android:label="No Connectivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".dialogs.ReadyUpload"
+            android:label="Ready To Upload"
             android:theme="@android:style/Theme.Dialog" />
         
     </application>
