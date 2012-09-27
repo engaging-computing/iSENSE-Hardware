@@ -10,12 +10,15 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -35,22 +38,21 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
+import edu.uml.cs.isense.genpics.dialogs.NoConnectivity;
 import edu.uml.cs.isense.genpics.dialogs.NoGps;
+import edu.uml.cs.isense.genpics.dialogs.ReadyUpload;
 import edu.uml.cs.isense.genpics.experiments.BrowseExperiments;
 import edu.uml.cs.isense.genpics.objects.Picture;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -60,17 +62,15 @@ public class Main extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 101;
 	private static final int LOGIN_REQUESTED = 102;
 	private static final int NO_GPS_REQUESTED = 103;
+	private static final int NO_CONNECTIVITY_REQUESTED = 104;
+	private static final int EXPERIMENT_REQUESTED = 105;
+	private static final int READY_UPLOAD_REQUESTED = 106;
 
-	private static final int DIALOG_NO_GPS = 1;
 	private static final int DIALOG_DIFFICULTY = 2;
-	private static final int DIALOG_NO_CONNECT = 3;
 	private static final int DIALOG_NOT_LOGGED_IN = 4;
-	private static final int DIALOG_READY_TO_UPLOAD = 5;
 
 	private static final int MENU_ITEM_BROWSE = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
-
-	private static final int EXPERIMENT_CODE = 101;
 
 	private static final int TIMER_LOOP = 1000;
 
@@ -129,102 +129,6 @@ public class Main extends Activity implements LocationListener {
 		Dialog dialog;
 		switch (id) {
 
-		case DIALOG_NO_GPS:
-			builder.setTitle("No GPS Provider Found")
-					.setMessage(
-							"Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?")
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-								}
-							});
-
-			dialog = builder.create();
-			break;
-
-		case DIALOG_NO_CONNECT:
-
-			builder.setTitle("No Connectivity")
-					.setMessage(
-							"Could not connect to the internet through either wifi or mobile service. "
-									+ "You will not be able to use this app until either is enabled.")
-					.setPositiveButton("Turn on Smart-Uploading",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									smartUploading = true;
-									waitingForConnectivity();
-									if (wl.isHeld())
-										wl.acquire();
-									dialoginterface.dismiss();
-								}
-							})
-					.setNegativeButton("Try Again",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									try {
-										Thread.sleep(100);
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
-
-									ObscuredSharedPreferences mPrefs = new ObscuredSharedPreferences(
-											mContext, getSharedPreferences(
-													"USER_INFO",
-													Context.MODE_PRIVATE));
-
-									if (rapi.isConnectedToInternet()) {
-										dialoginterface.dismiss();
-										boolean success = rapi.login(
-												mPrefs.getString("username", ""),
-												mPrefs.getString("password", ""));
-										if (success) {
-											w.make("Connectivity found!",
-													Waffle.LENGTH_SHORT,
-													Waffle.IMAGE_CHECK);
-											userLoggedIn = true;
-										}
-									} else {
-										userLoggedIn = false;
-										dialoginterface.dismiss();
-										new NotConnectedTask().execute();
-									}
-								}
-							})
-					.setOnCancelListener(
-							new DialogInterface.OnCancelListener() {
-								@Override
-								public void onCancel(
-										DialogInterface dialoginterface) {
-									dialoginterface.dismiss();
-									((Activity) mContext).finish();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-			break;
-
 		case DIALOG_DIFFICULTY:
 
 			builder.setTitle("Difficulties")
@@ -267,26 +171,6 @@ public class Main extends Activity implements LocationListener {
 			dialog = builder.create();
 			break;
 
-		case DIALOG_READY_TO_UPLOAD:
-
-			builder.setTitle("Ready to Upload Pictures")
-					.setMessage(
-							"Now that there is a connection to iSENSE, would you like to upload your pictures?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									if (QUEUE_COUNT > 0) {
-										uploadPicture();
-									}
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-			break;
 
 		default:
 			dialog = null;
@@ -304,11 +188,11 @@ public class Main extends Activity implements LocationListener {
 		return dialog;
 	}
 
-	@Override
+	/*@Override
 	public void onAttachedToWindow() {
 		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 		super.onAttachedToWindow();
-	}
+	}*/
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -450,10 +334,7 @@ public class Main extends Activity implements LocationListener {
 
 			Intent experimentIntent = new Intent(getApplicationContext(),
 					BrowseExperiments.class);
-			experimentIntent.putExtra(
-					"edu.uml.cs.isense.pictures.experiments.prupose",
-					EXPERIMENT_CODE);
-			startActivityForResult(experimentIntent, EXPERIMENT_CODE);
+			startActivityForResult(experimentIntent, EXPERIMENT_REQUESTED);
 
 			return true;
 
@@ -468,13 +349,17 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	protected void onResume() {
-		if (!smartUploading && !rapi.isConnectedToInternet())
-			showDialog(DIALOG_NO_CONNECT);
+		if (!smartUploading && !rapi.isConnectedToInternet()) {
+			Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
+			startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
+		}
 		if (!userLoggedIn && !initialLoginStatus)
 			attemptLogin();
 		if (userLoggedIn) {
-			if (smartUploading && (QUEUE_COUNT > 0))
-				showDialog(DIALOG_READY_TO_UPLOAD);
+			if (smartUploading && (QUEUE_COUNT > 0)) {
+				Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
+				startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
+			}
 		}
 		// lock.reenableKeyguard();
 		super.onResume();
@@ -489,19 +374,31 @@ public class Main extends Activity implements LocationListener {
 		// lock.reenableKeyguard();
 		super.onStart();
 	}
+	
+	private static int getApiLevel() {
+		return android.os.Build.VERSION.SDK_INT;
+	}
 
-	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
-		Cursor cursor = null;
-		try {
-			String[] proj = { MediaColumns.DATA, BaseColumns._ID,
+	@SuppressLint("NewApi")
+	public static File convertImageUriToFile(Uri imageUri) {
+
+		int apiLevel = getApiLevel();
+		if (apiLevel >= 11) {
+
+			String[] proj = { MediaStore.Images.Media.DATA,
+					MediaStore.Images.Media._ID,
 					MediaStore.Images.ImageColumns.ORIENTATION };
-			cursor = activity.managedQuery(imageUri, proj, // Which columns to
-															// return
-					null, // WHERE clause; which rows to return (all rows)
-					null, // WHERE clause selection arguments (none)
-					null); // Order-by clause (ascending by name)
+			String selection = null;
+			String[] selectionArgs = null;
+			String sortOrder = null;
+
+			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
+					proj, selection, selectionArgs, sortOrder);
+
+			Cursor cursor = cursorLoader.loadInBackground();
+
 			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaColumns.DATA);
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			int orientation_ColumnIndex = cursor
 					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
 			if (cursor.moveToFirst()) {
@@ -510,24 +407,38 @@ public class Main extends Activity implements LocationListener {
 				return new File(cursor.getString(file_ColumnIndex));
 			}
 			return null;
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-	}
 
-	public String getPath(Uri uri) {
-		String[] projection = { MediaColumns.DATA };
-		Cursor cursor = managedQuery(uri, projection, null, null, null);
-		if (cursor != null) {
-			// HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-			// THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-			int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
-			cursor.moveToFirst();
-			return cursor.getString(column_index);
-		} else
-			return null;
+		} else {
+
+			Cursor cursor = null;
+			try {
+				String[] proj = { MediaStore.Images.Media.DATA,
+						MediaStore.Images.Media._ID,
+						MediaStore.Images.ImageColumns.ORIENTATION };
+				ContentResolver cr = mContext.getContentResolver();
+				cursor = cr.query(imageUri, proj,  // Which columns
+																// to return
+						null,  // WHERE clause; which rows to return (all rows)
+						null,  // WHERE clause selection arguments (none)
+						null); // Order-by clause (ascending by name)
+				int file_ColumnIndex = cursor
+						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				int orientation_ColumnIndex = cursor
+						.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+				if (cursor.moveToFirst()) {
+					@SuppressWarnings("unused")
+					String orientation = cursor
+							.getString(orientation_ColumnIndex);
+					return new File(cursor.getString(file_ColumnIndex));
+				}
+				return null;
+			} finally {
+				if (cursor != null) {
+					cursor.close();
+				}
+			} 
+			//return new File(imageUri.getPath());
+		}
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -606,7 +517,7 @@ public class Main extends Activity implements LocationListener {
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
-				picture = convertImageUriToFile(imageUri, this);
+				picture = convertImageUriToFile(imageUri);
 
 				takePicture.setEnabled(true);
 				if (smartUploading) {
@@ -625,7 +536,7 @@ public class Main extends Activity implements LocationListener {
 
 			}
 
-		} else if (requestCode == EXPERIMENT_CODE) {
+		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
@@ -655,6 +566,45 @@ public class Main extends Activity implements LocationListener {
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 
+		} else if (requestCode == NO_CONNECTIVITY_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				smartUploading = true;
+				waitingForConnectivity();
+				if (wl.isHeld())
+					wl.acquire();
+			} else if (resultCode == RESULT_CANCELED) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						mContext, getSharedPreferences(
+								"USER_INFO",
+								Context.MODE_PRIVATE));
+
+				if (rapi.isConnectedToInternet()) {
+					boolean success = rapi.login(
+							mPrefs.getString("username", ""),
+							mPrefs.getString("password", ""));
+					if (success) {
+						w.make("Connectivity found!",
+								Waffle.LENGTH_SHORT,
+								Waffle.IMAGE_CHECK);
+						userLoggedIn = true;
+					}
+				} else {
+					userLoggedIn = false;
+					new NotConnectedTask().execute();
+				}
+			}
+		} else if (requestCode == READY_UPLOAD_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (QUEUE_COUNT > 0) {
+					uploadPicture();
+				}
+			}
 		}
 
 	}
@@ -786,8 +736,10 @@ public class Main extends Activity implements LocationListener {
 						Waffle.IMAGE_CHECK);
 			else {
 				userLoggedIn = false;
-				if (!smartUploading)
-					showDialog(DIALOG_NO_CONNECT);
+				if (!smartUploading) {
+					Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
+					startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
+				}
 			}
 		}
 	}
@@ -795,7 +747,7 @@ public class Main extends Activity implements LocationListener {
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {
 
-		ObscuredSharedPreferences mPrefs = new ObscuredSharedPreferences(
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				mContext, getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
@@ -806,14 +758,18 @@ public class Main extends Activity implements LocationListener {
 				showDialog(DIALOG_DIFFICULTY);
 			} else {
 				userLoggedIn = true;
-				if (smartUploading && (QUEUE_COUNT > 0))
-					showDialog(DIALOG_READY_TO_UPLOAD);
+				if (smartUploading && (QUEUE_COUNT > 0)) {
+					Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
+					startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
+				}
 			}
 
 		} else {
 			userLoggedIn = false;
-			if (!smartUploading)
-				showDialog(DIALOG_NO_CONNECT);
+			if (!smartUploading) {
+				Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
+				startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
+			}
 		}
 	}
 
@@ -957,12 +913,13 @@ public class Main extends Activity implements LocationListener {
 			if (rapi.isConnectedToInternet()) {
 				if (userLoggedIn) {
 					if (QUEUE_COUNT > 0) {
-						showDialog(DIALOG_READY_TO_UPLOAD);
+						Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
+						startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
 						waitingForConnectivity();
 					}
 				}
 
-				ObscuredSharedPreferences mPrefs = new ObscuredSharedPreferences(
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						mContext, getSharedPreferences("USER_INFO",
 								Context.MODE_PRIVATE));
 				boolean success = rapi.login(mPrefs.getString("username", ""),
@@ -971,9 +928,10 @@ public class Main extends Activity implements LocationListener {
 					w.make("Connectivity found!", Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_CHECK);
 					userLoggedIn = true;
-					if (QUEUE_COUNT > 0)
-						showDialog(DIALOG_READY_TO_UPLOAD);
-
+					if (QUEUE_COUNT > 0) {
+						Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
+						startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
+					}
 				}
 
 			} else {
