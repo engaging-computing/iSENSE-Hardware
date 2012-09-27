@@ -43,7 +43,9 @@
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:inputType="text"
-            android:maxLength="50" />
+            android:maxLength="50"
+            android:textColor="@android:color/black"
+            android:textCursorDrawable="@null" />
     </RelativeLayout>
 
     <Button

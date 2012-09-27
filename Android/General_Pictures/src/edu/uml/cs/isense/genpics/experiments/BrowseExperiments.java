@@ -22,8 +22,6 @@ public class BrowseExperiments extends ListActivity {
 	private RestAPI rapi;
 	@SuppressWarnings("unused")
 	private Context mContext;
-	@SuppressWarnings("unused")
-	private boolean finish = false;
 	private ArrayList<Experiment> m_experiments;
 
 	@Override
@@ -49,13 +47,9 @@ public class BrowseExperiments extends ListActivity {
 		rapi = RestAPI.getInstance();
 		mContext = this;
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			finish = true;
-		}
-
 		setResult(Activity.RESULT_CANCELED);
 		
+		@SuppressWarnings("deprecation")
 		final Object data = getLastNonConfigurationInstance();
 		final Object[] dataList = (Object[]) data;
 		// The activity is starting for the first time, load the data from the

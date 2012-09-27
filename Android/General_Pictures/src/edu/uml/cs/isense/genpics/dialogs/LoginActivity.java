@@ -38,6 +38,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		Main.initialLoginStatus = false;
 		
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				Main.mContext,
+				Main.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+		
 		mContext = this;
 		rapi = RestAPI.getInstance();
 		
@@ -51,6 +56,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		usernameInput = (EditText) findViewById(R.id.usernameInput);
 		passwordInput = (EditText) findViewById(R.id.passwordInput);
+		
+		usernameInput.setText(mPrefs.getString("username", ""));
+		passwordInput.setText(mPrefs.getString("password", ""));
 
 	}
 
