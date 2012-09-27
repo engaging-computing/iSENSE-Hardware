@@ -12,15 +12,11 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -40,7 +36,6 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,9 +60,6 @@ public class Main extends Activity implements LocationListener {
 	private static final int NO_CONNECTIVITY_REQUESTED = 104;
 	private static final int EXPERIMENT_REQUESTED = 105;
 	private static final int READY_UPLOAD_REQUESTED = 106;
-
-	private static final int DIALOG_DIFFICULTY = 2;
-	private static final int DIALOG_NOT_LOGGED_IN = 4;
 
 	private static final int MENU_ITEM_BROWSE = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
@@ -123,86 +115,7 @@ public class Main extends Activity implements LocationListener {
 
 	private ProgressDialog dia;
 
-	@Override
-	protected Dialog onCreateDialog(final int id) {
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog;
-		switch (id) {
 
-		case DIALOG_DIFFICULTY:
-
-			builder.setTitle("Difficulties")
-					.setMessage(
-							"This application has experienced WiFi connection difficulties.  Try to reconfigure your WiFi "
-									+ "settings or turn it off and on, then hit \"Try Again\".")
-					.setPositiveButton("Try Again",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									if (!userLoggedIn)
-										attemptLogin();
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-			break;
-
-		case DIALOG_NOT_LOGGED_IN:
-
-			builder.setTitle("Upload Failed")
-					.setMessage(
-							"This application is having trouble logging into iSENSE, and therefore cannot upload data at this time.  "
-									+ "Press try again to reattempt login.")
-					.setPositiveButton("Try Again",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									if (!userLoggedIn)
-										attemptLogin();
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-			break;
-
-
-		default:
-			dialog = null;
-		}
-
-		if (dialog != null) {
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-		}
-
-		return dialog;
-	}
-
-	/*@Override
-	public void onAttachedToWindow() {
-		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
-		super.onAttachedToWindow();
-	}*/
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_CALL) {
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -361,7 +274,7 @@ public class Main extends Activity implements LocationListener {
 				startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
 			}
 		}
-		// lock.reenableKeyguard();
+
 		super.onResume();
 	}
 
@@ -371,7 +284,7 @@ public class Main extends Activity implements LocationListener {
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-		// lock.reenableKeyguard();
+	
 		super.onStart();
 	}
 	
@@ -531,7 +444,7 @@ public class Main extends Activity implements LocationListener {
 						calledBySmartUp = false;
 						new UploadTask().execute();
 					} else
-						showDialog(DIALOG_NOT_LOGGED_IN);
+						w.make("Must be logged in to upload data.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
 			}
@@ -573,31 +486,7 @@ public class Main extends Activity implements LocationListener {
 				if (wl.isHeld())
 					wl.acquire();
 			} else if (resultCode == RESULT_CANCELED) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						mContext, getSharedPreferences(
-								"USER_INFO",
-								Context.MODE_PRIVATE));
-
-				if (rapi.isConnectedToInternet()) {
-					boolean success = rapi.login(
-							mPrefs.getString("username", ""),
-							mPrefs.getString("password", ""));
-					if (success) {
-						w.make("Connectivity found!",
-								Waffle.LENGTH_SHORT,
-								Waffle.IMAGE_CHECK);
-						userLoggedIn = true;
-					}
-				} else {
-					userLoggedIn = false;
-					new NotConnectedTask().execute();
-				}
+				new ReattemptConnectTask().execute();
 			}
 		} else if (requestCode == READY_UPLOAD_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -715,6 +604,67 @@ public class Main extends Activity implements LocationListener {
 			dia.setMessage("Finalizing...");
 		}
 	}
+	
+	// attempt to re-find internet connection
+	private class ReattemptConnectTask extends AsyncTask<Void, Integer, Void> {
+
+		private ProgressDialog dia;
+		
+		@Override
+		protected void onPreExecute() {
+			dia = new ProgressDialog(Main.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dia.setMessage("Re-attempting connection...");
+			dia.setCancelable(false);
+			dia.show();
+		}
+		
+		@Override
+		protected Void doInBackground(Void... voids) {
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					mContext, getSharedPreferences(
+							"USER_INFO",
+							Context.MODE_PRIVATE));
+
+			if (rapi.isConnectedToInternet()) {
+				boolean success = rapi.login(
+						mPrefs.getString("username", ""),
+						mPrefs.getString("password", ""));
+				if (success) {
+					userLoggedIn = true;
+				}
+			} else {
+				userLoggedIn = false;
+				//new NotConnectedTask().execute();
+			}
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			
+			dia.dismiss();
+			
+			if (rapi.isConnectedToInternet())
+				w.make("Connectivity found!", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
+			else {
+				userLoggedIn = false;
+				if (!smartUploading) {
+					Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
+					startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
+				}
+			}
+		}
+	}
 
 	// repeatedly tries to connect
 	private class NotConnectedTask extends AsyncTask<Void, Integer, Void> {
@@ -755,7 +705,7 @@ public class Main extends Activity implements LocationListener {
 			boolean success = rapi.login(mPrefs.getString("username", ""),
 					mPrefs.getString("password", ""));
 			if (!success) {
-				showDialog(DIALOG_DIFFICULTY);
+				w.make("Experiencing wifi difficulties - check your wifi signal.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
 				userLoggedIn = true;
 				if (smartUploading && (QUEUE_COUNT > 0)) {
