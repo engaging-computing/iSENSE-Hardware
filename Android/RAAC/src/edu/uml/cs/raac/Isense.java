@@ -333,13 +333,13 @@ public class Isense extends Activity implements OnClickListener {
 		super.onStart();
 	}
 	
-	private String getFormula(int sensor) {
+	private double applyFormula(int sensor, double x) {
 		if(sensor == 24) {
-			return "-0.0185*x+13.769";
+			return (-0.0185*x)+13.769;
 		} else if(sensor == 1) {
-			return "-33.47 * ln (x) + 213.85";
+			return (-33.47 * Math.log(x)) + 213.85;
 		} else {
-			return "x";
+			return x;
 		}
 	}
 
@@ -499,15 +499,17 @@ public class Isense extends Activity implements OnClickListener {
 
 	public void prepDataForUpload() {
 		int x = 0;
+		int sensorsetting = ppi.getSetting(PinComm.BTA1);
 		for (int i = 0; i < data.size(); i++) {
 			String[] strray = data.get(i);
 
 			for (String str : strray) {
 				x++;
 				switch(x) {
-				case 1:  timeData.add(fmtData(str));           									break;
-				case 14: bta1Data.add(Double.parseDouble(str));									break;
-				default:                                        								break;
+				case 1:  timeData.add(fmtData(str));           																break;
+				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
+						 data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 						break;
+				default:                                        															break;
 				}
 			}
 			x = 0;
