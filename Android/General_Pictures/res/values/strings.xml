@@ -44,6 +44,16 @@
     <string name="okay">Okay</string>
     <string name="yes">Yes</string>
 	<string name="no">No</string>
-	<string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
+	<string name="gpsString">
+	    Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?
+	</string>
+	<string name="smart_uploading">Turn on Smart-Uploading</string>
+	<string name="try_again">Try Again</string>
+	<string name="no_connectivity_prompt">
+	    Could not connect to the internet through either wifi or mobile service.
+	</string>
+	<string name="ready_upload_prompt">
+	    Now that there is a connection to iSENSE, would you like to upload your pictures?
+	</string>
 	
 </resources>
