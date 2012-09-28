@@ -94,7 +94,7 @@
             android:gravity="left"
             android:text="@string/queueCount"
             android:textColor="@android:color/white"
-            android:textSize="10dip" />
+            android:textSize="14dip" />
 
         <TextView
             android:id="@+id/ExperimentLabel"
@@ -104,7 +104,7 @@
             android:layout_weight="1"
             android:text="@string/experiment"
             android:textColor="@android:color/white"
-            android:textSize="10dip" />
+            android:textSize="14dip" />
     </LinearLayout>
 
 </LinearLayout>
