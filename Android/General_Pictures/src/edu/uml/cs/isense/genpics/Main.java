@@ -81,10 +81,9 @@ public class Main extends Activity implements LocationListener {
 	private static boolean userLoggedIn = false;
 	private static boolean smartUploading = false;
 	private static boolean calledBySmartUp = false;
-	private static boolean finishedUploadSetup = false;
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
-	public  static boolean initialLoginStatus = true;
+	public static boolean initialLoginStatus = true;
 	private static boolean showGpsDialog = true;
 
 	private Picture uploaderPic = null;
@@ -115,7 +114,6 @@ public class Main extends Activity implements LocationListener {
 
 	private ProgressDialog dia;
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -145,10 +143,6 @@ public class Main extends Activity implements LocationListener {
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
 
-		// keyguardManager = (KeyguardManager)
-		// getSystemService(KEYGUARD_SERVICE);
-		// lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
-
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mHandler = new Handler();
@@ -157,6 +151,7 @@ public class Main extends Activity implements LocationListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		rapi.useDev(true);
 
 		name = (EditText) findViewById(R.id.name);
 
@@ -219,8 +214,8 @@ public class Main extends Activity implements LocationListener {
 		if (!w.isDisplaying) {
 			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_CHECK);
-		} else if (w.canPerformTask) 
-			super.onBackPressed();	
+		} else if (w.canPerformTask)
+			super.onBackPressed();
 	}
 
 	@Override
@@ -284,10 +279,10 @@ public class Main extends Activity implements LocationListener {
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-	
+
 		super.onStart();
 	}
-	
+
 	private static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
@@ -329,10 +324,10 @@ public class Main extends Activity implements LocationListener {
 						MediaStore.Images.Media._ID,
 						MediaStore.Images.ImageColumns.ORIENTATION };
 				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(imageUri, proj,  // Which columns
-																// to return
-						null,  // WHERE clause; which rows to return (all rows)
-						null,  // WHERE clause selection arguments (none)
+				cursor = cr.query(imageUri, proj, // Which columns
+													// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -349,15 +344,37 @@ public class Main extends Activity implements LocationListener {
 				if (cursor != null) {
 					cursor.close();
 				}
-			} 
-			//return new File(imageUri.getPath());
+			}
+			// return new File(imageUri.getPath());
 		}
+	}
+	
+	private void postRunnableWaffleError(final String message) {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				w.make(message, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			}
+		});
 	}
 
 	private Runnable uploader = new Runnable() {
 		@Override
 		public void run() {
-			new TaskWait().execute();
+
+			// TODO - queue the picture any time there is an error
+			
+			final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
+					mContext, getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+
+			boolean success = rapi.login(loginPrefs.getString("username", ""),
+					loginPrefs.getString("password", ""));
+			if (!success) {
+				uploadError = true;
+				postRunnableWaffleError("Must be logged in to upload pictures");
+				return;
+			}
 
 			if ((Lat == 0) || (Long == 0)) {
 				Lat = DEFAULT_LAT;
@@ -372,6 +389,7 @@ public class Main extends Activity implements LocationListener {
 
 				if (experimentNum.equals("Error")) {
 					uploadError = true;
+					postRunnableWaffleError("No experiment selected to upload pictures to");
 					return;
 				}
 
@@ -381,6 +399,7 @@ public class Main extends Activity implements LocationListener {
 
 				if (sessionId == -1) {
 					uploadError = true;
+					postRunnableWaffleError("Encountered upload problem: could not create session");
 					return;
 				}
 
@@ -393,9 +412,6 @@ public class Main extends Activity implements LocationListener {
 					e.printStackTrace();
 				}
 
-				finishedUploadSetup = true;
-				dia.setProgress(95);
-
 				// Experiment Closed Checker
 				if (sessionId == -400) {
 					status400 = true;
@@ -405,9 +421,9 @@ public class Main extends Activity implements LocationListener {
 					if (!rapi.updateSessionData(sessionId, experimentNum,
 							dataJSON)) {
 						uploadError = true;
+						postRunnableWaffleError("Encountered upload problem: could not add picture");
 						return;
 					}
-					dia.setProgress(99);
 
 					if (!rapi.uploadPictureToSession(picture, experimentNum,
 							sessionId, name.getText().toString(),
@@ -444,7 +460,8 @@ public class Main extends Activity implements LocationListener {
 						calledBySmartUp = false;
 						new UploadTask().execute();
 					} else
-						w.make("Must be logged in to upload data.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						w.make("Must be logged in to upload pictures",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
 			}
@@ -530,10 +547,9 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
-			finishedUploadSetup = false;
 			dia = new ProgressDialog(Main.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			dia.setMessage("Please wait while your picture is uploaded...");
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Uploading Picture...");
 			dia.setCancelable(false);
 			dia.show();
 		}
@@ -548,26 +564,21 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		@Override
-		public void onProgressUpdate(Integer... prog) {
-			if (prog == null)
-				return;
-			dia.setProgress(prog[0]);
-		}
-
-		@Override
 		protected void onPostExecute(Void voids) {
-			dia.setMessage("Done");
+
 			dia.cancel();
 
-			if (status400)
+			if (status400) {
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-			else if (uploadError)
-				w.make("An error occured during upload.", Waffle.LENGTH_LONG,
-						Waffle.IMAGE_X);
-			else
-				w.make("Your picture has uploaded successfully.",
+			} else if (uploadError) {
+				// Do nothing - postRunnableWaffleError takes care of this Waffle
+				//w.make("An error occured during upload.", Waffle.LENGTH_LONG,
+					//	Waffle.IMAGE_X);
+			} else {
+				w.make("Upload successful",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+			}
 
 			uploadError = false;
 
@@ -576,40 +587,11 @@ public class Main extends Activity implements LocationListener {
 		}
 	}
 
-	private class TaskWait extends AsyncTask<Void, Integer, Void> {
-		@Override
-		protected Void doInBackground(Void... voids) {
-			for (int i = 1; i <= 85; i++) {
-				if (!finishedUploadSetup) {
-					try {
-						publishProgress(i);
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public void onProgressUpdate(Integer... prog) {
-			if (prog == null)
-				return;
-			dia.setProgress(prog[0]);
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			dia.setMessage("Finalizing...");
-		}
-	}
-	
 	// attempt to re-find internet connection
 	private class ReattemptConnectTask extends AsyncTask<Void, Integer, Void> {
 
 		private ProgressDialog dia;
-		
+
 		@Override
 		protected void onPreExecute() {
 			dia = new ProgressDialog(Main.this);
@@ -618,10 +600,10 @@ public class Main extends Activity implements LocationListener {
 			dia.setCancelable(false);
 			dia.show();
 		}
-		
+
 		@Override
 		protected Void doInBackground(Void... voids) {
-			
+
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -629,38 +611,38 @@ public class Main extends Activity implements LocationListener {
 			}
 
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences(
-							"USER_INFO",
+					mContext, getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
 
 			if (rapi.isConnectedToInternet()) {
-				boolean success = rapi.login(
-						mPrefs.getString("username", ""),
+				boolean success = rapi.login(mPrefs.getString("username", ""),
 						mPrefs.getString("password", ""));
 				if (success) {
 					userLoggedIn = true;
 				}
 			} else {
 				userLoggedIn = false;
-				//new NotConnectedTask().execute();
+				// new NotConnectedTask().execute();
 			}
-			
+
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			
+
 			dia.dismiss();
-			
+
 			if (rapi.isConnectedToInternet())
 				w.make("Connectivity found!", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
 				userLoggedIn = false;
 				if (!smartUploading) {
-					Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
-					startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
+					Intent iNoConnect = new Intent(Main.this,
+							NoConnectivity.class);
+					startActivityForResult(iNoConnect,
+							NO_CONNECTIVITY_REQUESTED);
 				}
 			}
 		}
@@ -687,8 +669,10 @@ public class Main extends Activity implements LocationListener {
 			else {
 				userLoggedIn = false;
 				if (!smartUploading) {
-					Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
-					startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
+					Intent iNoConnect = new Intent(Main.this,
+							NoConnectivity.class);
+					startActivityForResult(iNoConnect,
+							NO_CONNECTIVITY_REQUESTED);
 				}
 			}
 		}
@@ -700,16 +684,22 @@ public class Main extends Activity implements LocationListener {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				mContext, getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
+		
+		if (mPrefs.getString("username", "").equals("") && mPrefs.getString("password", "").equals("")) {
+			return;
+		}
 
 		if (rapi.isConnectedToInternet()) {
 			boolean success = rapi.login(mPrefs.getString("username", ""),
 					mPrefs.getString("password", ""));
 			if (!success) {
-				w.make("Experiencing wifi difficulties - check your wifi signal.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Experiencing wifi difficulties - check your wifi signal.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
 				userLoggedIn = true;
 				if (smartUploading && (QUEUE_COUNT > 0)) {
-					Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
+					Intent iReadyUpload = new Intent(Main.this,
+							ReadyUpload.class);
 					startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
 				}
 			}
@@ -740,7 +730,7 @@ public class Main extends Activity implements LocationListener {
 				showGpsDialog = false;
 			}
 		}
-			
+
 	}
 
 	// save picture data in a queue for later upload
@@ -789,9 +779,6 @@ public class Main extends Activity implements LocationListener {
 			e.printStackTrace();
 		}
 
-		finishedUploadSetup = true;
-		dia.setProgress(90);
-
 		// Experiment Closed Checker
 		if (sessionId == -400) {
 			status400 = true;
@@ -804,7 +791,6 @@ public class Main extends Activity implements LocationListener {
 				uploadError = true;
 				return;
 			}
-			dia.setProgress(99);
 
 			success = rapi.uploadPictureToSession(f, experimentNum, sessionId,
 					n, "No description provided.");
@@ -841,7 +827,7 @@ public class Main extends Activity implements LocationListener {
 		if (wl.isHeld())
 			wl.release();
 		mTimer = null;
-		// lock.disableKeyguard();
+
 		super.onStop();
 	}
 
@@ -863,8 +849,10 @@ public class Main extends Activity implements LocationListener {
 			if (rapi.isConnectedToInternet()) {
 				if (userLoggedIn) {
 					if (QUEUE_COUNT > 0) {
-						Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
-						startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
+						Intent iReadyUpload = new Intent(Main.this,
+								ReadyUpload.class);
+						startActivityForResult(iReadyUpload,
+								READY_UPLOAD_REQUESTED);
 						waitingForConnectivity();
 					}
 				}
@@ -879,8 +867,10 @@ public class Main extends Activity implements LocationListener {
 							Waffle.IMAGE_CHECK);
 					userLoggedIn = true;
 					if (QUEUE_COUNT > 0) {
-						Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
-						startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
+						Intent iReadyUpload = new Intent(Main.this,
+								ReadyUpload.class);
+						startActivityForResult(iReadyUpload,
+								READY_UPLOAD_REQUESTED);
 					}
 				}
 
