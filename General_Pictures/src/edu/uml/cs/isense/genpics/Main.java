@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.location.Criteria;
@@ -51,6 +50,7 @@ import edu.uml.cs.isense.genpics.dialogs.ReadyUpload;
 import edu.uml.cs.isense.genpics.experiments.BrowseExperiments;
 import edu.uml.cs.isense.genpics.objects.Picture;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Main extends Activity implements LocationListener {
@@ -143,7 +143,7 @@ public class Main extends Activity implements LocationListener {
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
 
-		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mHandler = new Handler();
 
@@ -547,6 +547,8 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
+			OrientationManager.disableRotation(Main.this);
+			
 			dia = new ProgressDialog(Main.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Uploading Picture...");
@@ -567,6 +569,8 @@ public class Main extends Activity implements LocationListener {
 		protected void onPostExecute(Void voids) {
 
 			dia.cancel();
+			
+			OrientationManager.enableRotation(Main.this);
 
 			if (status400) {
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
@@ -584,6 +588,7 @@ public class Main extends Activity implements LocationListener {
 
 			if (QUEUE_COUNT > 0)
 				uploadPicture();
+			
 		}
 	}
 
@@ -594,6 +599,8 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
+			OrientationManager.disableRotation(Main.this);
+			
 			dia = new ProgressDialog(Main.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			dia.setMessage("Re-attempting connection...");
@@ -632,6 +639,8 @@ public class Main extends Activity implements LocationListener {
 		protected void onPostExecute(Void voids) {
 
 			dia.dismiss();
+			
+			OrientationManager.enableRotation(Main.this);
 
 			if (rapi.isConnectedToInternet())
 				w.make("Connectivity found!", Waffle.LENGTH_SHORT,
