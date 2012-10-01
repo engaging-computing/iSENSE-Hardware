@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.location.Criteria;
@@ -47,7 +48,7 @@ import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
 import edu.uml.cs.isense.genpics.dialogs.NoConnectivity;
 import edu.uml.cs.isense.genpics.dialogs.NoGps;
 import edu.uml.cs.isense.genpics.dialogs.ReadyUpload;
-import edu.uml.cs.isense.genpics.experiments.BrowseExperiments;
+import edu.uml.cs.isense.genpics.experiments.ExperimentDialog;
 import edu.uml.cs.isense.genpics.objects.Picture;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -128,22 +129,23 @@ public class Main extends Activity implements LocationListener {
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		SharedPreferences mPrefs2 = getSharedPreferences("LOGIN", 0);
-
-		boolean isLoggedIn = mPrefs2.getBoolean("logged_in", false);
-		if (!isLoggedIn) {
+		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
+				mContext, getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+		
+		if (loginPrefs.getString("username", "").equals("")) {
 			startActivityForResult(new Intent(getApplicationContext(),
 					LoginActivity.class), LOGIN_REQUESTED);
 		}
 
 		experimentLabel = (TextView) findViewById(R.id.ExperimentLabel);
 		experimentLabel.setText(getResources().getString(R.string.experiment)
-				+ mPrefs.getString("experiment_number", "None Set"));
+				+ mPrefs.getString("experiment_id", "None Set"));
 
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Full Wake Lock");
 
-		//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mHandler = new Handler();
 
@@ -174,7 +176,7 @@ public class Main extends Activity implements LocationListener {
 				}
 
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				String experimentNum = mPrefs.getString("experiment_number",
+				String experimentNum = mPrefs.getString("experiment_id",
 						"Error");
 
 				if (experimentNum.equals("Error")) {
@@ -240,9 +242,9 @@ public class Main extends Activity implements LocationListener {
 		switch (item.getItemId()) {
 		case MENU_ITEM_BROWSE:
 
-			Intent experimentIntent = new Intent(getApplicationContext(),
-					BrowseExperiments.class);
-			startActivityForResult(experimentIntent, EXPERIMENT_REQUESTED);
+			Intent iExperiment = new Intent(getApplicationContext(),
+					ExperimentDialog.class);
+			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 
 			return true;
 
@@ -370,6 +372,7 @@ public class Main extends Activity implements LocationListener {
 
 			boolean success = rapi.login(loginPrefs.getString("username", ""),
 					loginPrefs.getString("password", ""));
+			
 			if (!success) {
 				uploadError = true;
 				postRunnableWaffleError("Must be logged in to upload pictures");
@@ -384,7 +387,7 @@ public class Main extends Activity implements LocationListener {
 			if (!smartUploading || (smartUploading && !calledBySmartUp)) {
 
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				String experimentNum = mPrefs.getString("experiment_number",
+				String experimentNum = mPrefs.getString("experiment_id",
 						"Error");
 
 				if (experimentNum.equals("Error")) {
@@ -468,19 +471,11 @@ public class Main extends Activity implements LocationListener {
 
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
-
-				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putString(
-						"experiment_number",
-						""
-								+ data.getExtras()
-										.getInt("edu.uml.cs.isense.pictures.experiments.exp_id"));
-				mEditor.commit();
+				String eidString = data.getStringExtra("eid");
 
 				experimentLabel.setText(getResources().getString(
 						R.string.experiment)
-						+ mPrefs.getString("experiment_number", "None Set"));
+						+ eidString);
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -765,7 +760,7 @@ public class Main extends Activity implements LocationListener {
 	private void smartUploader(File f, double lat, double lon, String n, long t) {
 
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String experimentNum = mPrefs.getString("experiment_number", "Error");
+		String experimentNum = mPrefs.getString("experiment_id", "Error");
 
 		if (experimentNum.equals("Error")) {
 			uploadError = true;
