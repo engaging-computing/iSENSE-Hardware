@@ -50,6 +50,14 @@
             android:name=".dialogs.ReadyUpload"
             android:label="Ready To Upload"
             android:theme="@android:style/Theme.Dialog" />
+        <activity 
+            android:name=".experiments.ExperimentDialog"
+            android:label="Experiment ID"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity
+            android:name=".dialogs.NoQR"
+            android:label="No Barcode Scanner Found"
+            android:theme="@android:style/Theme.Dialog" />
         
     </application>
 

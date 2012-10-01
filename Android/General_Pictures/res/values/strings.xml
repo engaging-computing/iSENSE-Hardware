@@ -55,5 +55,14 @@
 	<string name="ready_upload_prompt">
 	    Now that there is a connection to iSENSE, would you like to upload your pictures?
 	</string>
+	<string name="qr_prompt">	    
+	    Your device does not have the proper Barcode Scanner application installed
+		to use this feature.  However, you may visit the Google Play store to download 
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
+	<string name="visit">Visit</string>
+	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
+	<string name="browse">Browse &#8230;</string>
+	<string name="scan_qr">Scan QR Code</string>
 	
 </resources>
