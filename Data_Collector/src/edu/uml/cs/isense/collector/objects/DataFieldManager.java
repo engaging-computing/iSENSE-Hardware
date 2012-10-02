@@ -387,9 +387,9 @@ public class DataFieldManager extends Application {
 					b.append(", ").append(f.pressure);
 				continue;
 			}
-			if (!start)
-				b.append(", ");
-
+			if (start)		
+				start = false;
+			
 		}
 
 		b.append("\n");
@@ -417,6 +417,24 @@ public class DataFieldManager extends Application {
 		}
 
 		return sc;
+	}
+	
+	public String writeHeaderLine() {
+		StringBuilder b = new StringBuilder();
+		boolean start = true;
+		
+		for (String unitName : this.order) {
+			if (start)
+				b.append(unitName);			
+			else 
+				b.append(", ").append(unitName);
+			
+			start = false;
+		}
+		
+		b.append("\n");
+		
+		return b.toString();
 	}
 
 }

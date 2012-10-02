@@ -98,7 +98,7 @@ public class DataSet implements Serializable {
 						success = false;
 						QueueUploader.qpa.uploadQueue.add(this);
 						break;
-					}
+					} else QueueUploader.lastSID = sid;
 				}
 
 				// Experiment Closed Checker
@@ -118,6 +118,7 @@ public class DataSet implements Serializable {
 				break;
 
 			case PIC:
+				if (sid == -1) sid = QueueUploader.lastSID;
 				if (name.equals("")) {
 					success = Splash.rapi.uploadPictureToSession(
 							picture, eid, sid, "*Session Name Not Provided*",
@@ -147,6 +148,23 @@ public class DataSet implements Serializable {
 		return dataJSON;
 	}
 
+	public void setUploadable(boolean uploadable) {
+		this.rdyForUpload = uploadable;
+	}
+
+	public boolean isUploadable() {
+		return this.rdyForUpload;
+	}
+
+	//Getters and Setters
+	public int getSid() {
+		return sid;
+	}
+
+	public void setSid(int sid) {
+		this.sid = sid;
+	}
+	
 	public String getEID() {
 		return this.eid;
 	}
@@ -167,12 +185,5 @@ public class DataSet implements Serializable {
 		else
 			return "Unsupported Type";
 	}
-
-	public void setUploadable(boolean uploadable) {
-		this.rdyForUpload = uploadable;
-	}
-
-	public boolean isUploadable() {
-		return this.rdyForUpload;
-	}
+	
 }
