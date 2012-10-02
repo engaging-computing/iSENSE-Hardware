@@ -1836,6 +1836,7 @@ public class RestAPI {
 		String url = "method=putSessionData&session_key=" + session_key
 				+ "&sid=" + sid + "&eid=" + eid + "&data="
 				+ dataJSON.toString();
+		//Log.d(TAG, url);
 		boolean ret = false;
 		
 		if (isConnected()) {

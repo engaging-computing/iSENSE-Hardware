@@ -54,6 +54,8 @@ public class DataFieldManager extends Application {
 			if ((a.contains("elap") || a.contains("relat")) 
 					&& (b.contains("elap") || b.contains("pass") || b.contains("relat")))
 				return true;
+			if (a.equals(b))
+				return true;
 		}
 		
 		// Temperature

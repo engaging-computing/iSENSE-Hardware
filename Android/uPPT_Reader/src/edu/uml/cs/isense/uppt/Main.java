@@ -340,11 +340,9 @@ public class Main extends Activity implements SimpleGestureListener {
 					loginInfo.setText(getResources().getString(
 							R.string.loggedInAs)
 							+ " " + loginName);
-					// successLogin = true;
 					w.make("Login successful.", Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
-					// successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
@@ -360,7 +358,6 @@ public class Main extends Activity implements SimpleGestureListener {
 				iUrl.setData(Uri.parse(baseUrl + mPrefs.getString("eid", "-1")));
 				Intent chooser = Intent.createChooser(iUrl, "Select a browser to view your data on:");
 				startActivity(chooser);
-				//startActivity(iUrl);
 			}
 
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
@@ -624,9 +621,9 @@ public class Main extends Activity implements SimpleGestureListener {
 			fReader = new BufferedReader(new FileReader(sdFile));
 			String headerLine = fReader.readLine();
 			String[] header = headerLine.split(",");
-			// Log.d("tag", "header length=" + header.length);
+
+			// find out how to organize data
 			String[] order = getOrder(headerLine);
-			
 			if (order == null) {
 				fReader.close();
 				return false;
@@ -712,10 +709,9 @@ public class Main extends Activity implements SimpleGestureListener {
 					order.add(sdOrder[i]);
 					break;
 				}
-				if (i == (sdOrder.length - 1)) {
+				else if (i == (sdOrder.length - 1)) {
 					order.add(null);
 				}
-
 			}
 		}
 
