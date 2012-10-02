@@ -38,7 +38,12 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	public static final int QUEUE_DATA_COLLECTOR = 1;
 	public static final int QUEUE_MANUAL_ENTRY = 2;
+	
+	private static final int DELETE_DATASET_REQUESTED = 101;
+	
 	public static final String INTENT_IDENTIFIER = "intent_identifier";
+	
+	public static int lastSID = -1;
 
 	private static Context mContext;
 	private static LinearLayout scrollQueue;
@@ -46,6 +51,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private ProgressDialog dia;
 	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
+	
+	private DataSet lastDataSetLongClicked;
+	private View lastViewLongClicked;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +81,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 		Button cancel = (Button) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
-
-		// Make sure the queue is written before we fetch it
-		// if (!(qpa.uploadQueue.isEmpty()))
-		// storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 
 		Context c = qpa.mContext;
 		String pn = qpa.parentName;
@@ -132,9 +136,11 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 					@Override
 					public boolean onLongClick(View v) {
+						lastDataSetLongClicked = ds;
+						lastViewLongClicked = data;
 						Intent iDeleteDataSet = new Intent(mContext,
 								DeleteDataSetFromUploadQueue.class);
-						startActivity(iDeleteDataSet);
+						startActivityForResult(iDeleteDataSet, DELETE_DATASET_REQUESTED);
 						return false;
 					}
 
@@ -177,9 +183,11 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 					@Override
 					public boolean onLongClick(View v) {
+						lastDataSetLongClicked = ds;
+						lastViewLongClicked = pic;
 						Intent iDeleteDataSet = new Intent(mContext,
 								DeleteDataSetFromUploadQueue.class);
-						startActivity(iDeleteDataSet);
+						startActivityForResult(iDeleteDataSet, DELETE_DATASET_REQUESTED);
 						return false;
 					}
 
@@ -220,7 +228,14 @@ public class QueueUploader extends Activity implements OnClickListener {
 		switch (v.getId()) {
 
 		case R.id.upload:
-			new UploadSDTask().execute();
+			lastSID = -1;
+			if (qpa.mirrorQueue.isEmpty()) {
+				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+				setResult(RESULT_OK);
+				finish();
+				return;
+			}
+			else new UploadSDTask().execute();
 			qpa.uploadQueue = new LinkedList<DataSet>();
 			break;
 
@@ -371,5 +386,22 @@ public class QueueUploader extends Activity implements OnClickListener {
 		}
 		return uploadQueue;
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (requestCode == DELETE_DATASET_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				qpa.uploadQueue.remove(lastDataSetLongClicked);
+				qpa.mirrorQueue.remove(lastDataSetLongClicked);
+				scrollQueue.removeView(lastViewLongClicked);
+				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+			}
+		}
+		
+	}
+	
+	
 
 }
