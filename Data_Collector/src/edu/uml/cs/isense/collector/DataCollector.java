@@ -456,7 +456,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		setContentView(R.layout.main);
+		setContentView(R.layout.data_collector);
 
 		// Initialize everything you're going to need
 		initVars();
@@ -1385,21 +1385,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 				DataCollector.mContext,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		String loginName = mPrefs.getString("username", "");
-		if (loginName.equals(""))
-			loginInfo.setText(R.string.notLoggedIn);
-		else {
-			loginInfo.setText("Username: " + loginName);
-		}
 
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
 		// Set session name
-		if (nameOfSession.equals(""))
+		/*if (nameOfSession.equals(""))
 			session.setText(getString(R.string.session));
 		else
-			session.setText("Session Name: " + nameOfSession);
+			session.setText("Session Name: " + nameOfSession);*/
 
 		// Colorize the startStop button and add the huge listener
 		startStop.getBackground().setColorFilter(0xFFFF0000,
@@ -1746,7 +1740,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 			preLoad = false;
 
-			setContentView(R.layout.main);
+			setContentView(R.layout.data_collector);
 			initMainUI();
 			assignVars();
 
