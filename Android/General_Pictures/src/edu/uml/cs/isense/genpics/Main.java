@@ -1,7 +1,10 @@
 package edu.uml.cs.isense.genpics;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Timer;
@@ -22,7 +25,9 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -79,7 +84,6 @@ public class Main extends Activity implements LocationListener {
 	RestAPI rapi;
 
 	private static boolean gpsWorking = false;
-	private static boolean userLoggedIn = false;
 	private static boolean smartUploading = false;
 	private static boolean calledBySmartUp = false;
 	private static boolean uploadError = false;
@@ -98,8 +102,6 @@ public class Main extends Activity implements LocationListener {
 	private TextView queueCount;
 	private static final double DEFAULT_LAT = 42.6404;
 	private static final double DEFAULT_LONG = -71.3533;
-	private double Lat = 0;
-	private double Long = 0;
 	private long curTime;
 	private static int waitingCounter = 0;
 
@@ -114,6 +116,8 @@ public class Main extends Activity implements LocationListener {
 	static boolean useMenu = true;
 
 	private ProgressDialog dia;
+	
+	private Location loc; 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -263,9 +267,9 @@ public class Main extends Activity implements LocationListener {
 			Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
 			startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
 		}
-		if (!userLoggedIn && !initialLoginStatus)
+		if (!rapi.isLoggedIn() && !initialLoginStatus)
 			attemptLogin();
-		if (userLoggedIn) {
+		if (rapi.isLoggedIn()) {
 			if (smartUploading && (QUEUE_COUNT > 0)) {
 				Intent iReadyUpload = new Intent(Main.this, ReadyUpload.class);
 				startActivityForResult(iReadyUpload, READY_UPLOAD_REQUESTED);
@@ -366,12 +370,19 @@ public class Main extends Activity implements LocationListener {
 
 			// TODO - queue the picture any time there is an error
 			
+			boolean useDefaultLocation = false;
+			
 			final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
 					mContext, getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
 
-			boolean success = rapi.login(loginPrefs.getString("username", ""),
-					loginPrefs.getString("password", ""));
+			boolean success = false;
+			if (rapi.isLoggedIn()) {
+				success = true;
+			} else {
+				success = rapi.login(loginPrefs.getString("username", ""),
+						loginPrefs.getString("password", ""));
+			}
 			
 			if (!success) {
 				uploadError = true;
@@ -379,9 +390,32 @@ public class Main extends Activity implements LocationListener {
 				return;
 			}
 
-			if ((Lat == 0) || (Long == 0)) {
-				Lat = DEFAULT_LAT;
-				Long = DEFAULT_LONG;
+			if ((loc.getLatitude() == 0) || (loc.getLongitude() == 0))
+				useDefaultLocation = true;
+			else
+				useDefaultLocation = false;
+			
+			// Location
+			List<Address> address = null;
+			String city = "", state = "", country = "", addr = "";
+
+			try {
+				if (loc != null) {
+
+					address = new Geocoder(Main.this, Locale.getDefault())
+							.getFromLocation(loc.getLatitude(),
+									loc.getLongitude(), 1);
+
+					if (address.size() > 0) {
+						city = address.get(0).getLocality();
+						state = address.get(0).getAdminArea();
+						country = address.get(0).getCountryName();
+						addr = address.get(0).getAddressLine(0);
+
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 
 			if (!smartUploading || (smartUploading && !calledBySmartUp)) {
@@ -396,9 +430,16 @@ public class Main extends Activity implements LocationListener {
 					return;
 				}
 
-				int sessionId = rapi.createSession(experimentNum, name
-						.getText().toString(), "" + curTime, "", "Lowell, MA",
-						"");
+				int sessionId = -1;
+				if (address == null || address.size() <= 0) {
+					sessionId = rapi.createSession(experimentNum, 
+							name.getText().toString(), "" + curTime,
+							"", "", "");
+				} else {
+					sessionId = rapi.createSession(experimentNum, 
+							name.getText().toString(), "" + curTime,
+							addr, city + ", " + state, country);
+				}
 
 				if (sessionId == -1) {
 					uploadError = true;
@@ -407,13 +448,21 @@ public class Main extends Activity implements LocationListener {
 				}
 
 				JSONArray dataJSON = new JSONArray();
+				JSONArray dataRow  = new JSONArray();
 				try {
-					dataJSON.put(curTime);
-					dataJSON.put(Lat);
-					dataJSON.put(Long);
+					if (useDefaultLocation) {
+						dataRow.put(curTime);
+						dataRow.put(DEFAULT_LAT);
+						dataRow.put(DEFAULT_LONG);
+					} else {
+						dataRow.put(curTime);
+						dataRow.put(loc.getLatitude());
+						dataRow.put(loc.getLongitude());
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+				dataJSON.put(dataRow);
 
 				// Experiment Closed Checker
 				if (sessionId == -400) {
@@ -453,18 +502,14 @@ public class Main extends Activity implements LocationListener {
 
 				takePicture.setEnabled(true);
 				if (smartUploading) {
-					if (userLoggedIn) {
+					if (rapi.isLoggedIn()) {
 						calledBySmartUp = false;
 						new UploadTask().execute();
 					} else
 						qsave(picture);
 				} else {
-					if (userLoggedIn) {
-						calledBySmartUp = false;
-						new UploadTask().execute();
-					} else
-						w.make("Must be logged in to upload pictures",
-								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					calledBySmartUp = false;
+					new UploadTask().execute();	
 				}
 
 			}
@@ -512,15 +557,14 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		if (((Lat = location.getLatitude()) != 0)
-				&& ((Long = location.getLongitude()) != 0)) {
+		loc = location;
+		if ((location.getLatitude() != 0)
+				&& (location.getLongitude() != 0)) {
 			if (gpsWorking == false) {
 				vibrator.vibrate(100);
 			}
 			gpsWorking = true;
 		} else {
-			Lat = DEFAULT_LAT;
-			Long = DEFAULT_LONG;
 			gpsWorking = false;
 		}
 	}
@@ -616,17 +660,10 @@ public class Main extends Activity implements LocationListener {
 					mContext, getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
 
-			if (rapi.isConnectedToInternet()) {
-				boolean success = rapi.login(mPrefs.getString("username", ""),
+			if (rapi.isConnectedToInternet())
+				rapi.login(mPrefs.getString("username", ""),
 						mPrefs.getString("password", ""));
-				if (success) {
-					userLoggedIn = true;
-				}
-			} else {
-				userLoggedIn = false;
-				// new NotConnectedTask().execute();
-			}
-
+				
 			return null;
 		}
 
@@ -641,7 +678,6 @@ public class Main extends Activity implements LocationListener {
 				w.make("Connectivity found!", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
-				userLoggedIn = false;
 				if (!smartUploading) {
 					Intent iNoConnect = new Intent(Main.this,
 							NoConnectivity.class);
@@ -671,7 +707,6 @@ public class Main extends Activity implements LocationListener {
 				w.make("Connectivity found!", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
-				userLoggedIn = false;
 				if (!smartUploading) {
 					Intent iNoConnect = new Intent(Main.this,
 							NoConnectivity.class);
@@ -700,7 +735,6 @@ public class Main extends Activity implements LocationListener {
 				w.make("Experiencing wifi difficulties - check your wifi signal.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				userLoggedIn = true;
 				if (smartUploading && (QUEUE_COUNT > 0)) {
 					Intent iReadyUpload = new Intent(Main.this,
 							ReadyUpload.class);
@@ -709,7 +743,6 @@ public class Main extends Activity implements LocationListener {
 			}
 
 		} else {
-			userLoggedIn = false;
 			if (!smartUploading) {
 				Intent iNoConnect = new Intent(Main.this, NoConnectivity.class);
 				startActivityForResult(iNoConnect, NO_CONNECTIVITY_REQUESTED);
@@ -723,6 +756,7 @@ public class Main extends Activity implements LocationListener {
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		loc = new Location(mLocationManager.getBestProvider(c, true));
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0, Main.this);
@@ -739,7 +773,7 @@ public class Main extends Activity implements LocationListener {
 
 	// save picture data in a queue for later upload
 	private void qsave(File pictureFile) {
-		Picture mPic = new Picture(pictureFile, Lat, Long, name.getText()
+		Picture mPic = new Picture(pictureFile, loc.getLatitude(), loc.getLongitude(), name.getText()
 				.toString(), System.currentTimeMillis());
 		mQ.add(mPic);
 		QUEUE_COUNT++;
@@ -851,7 +885,7 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		protected void onPostExecute(Void result) {
 			if (rapi.isConnectedToInternet()) {
-				if (userLoggedIn) {
+				if (rapi.isLoggedIn()) {
 					if (QUEUE_COUNT > 0) {
 						Intent iReadyUpload = new Intent(Main.this,
 								ReadyUpload.class);
@@ -869,7 +903,6 @@ public class Main extends Activity implements LocationListener {
 				if (success) {
 					w.make("Connectivity found!", Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_CHECK);
-					userLoggedIn = true;
 					if (QUEUE_COUNT > 0) {
 						Intent iReadyUpload = new Intent(Main.this,
 								ReadyUpload.class);
@@ -879,7 +912,6 @@ public class Main extends Activity implements LocationListener {
 				}
 
 			} else {
-				userLoggedIn = false;
 				if (smartUploading)
 					waitingForConnectivity();
 				else
@@ -904,7 +936,8 @@ public class Main extends Activity implements LocationListener {
 					public void run() {
 
 						if (gpsWorking)
-							latLong.setText("Lat: " + Lat + "\nLong: " + Long);
+							latLong.setText("Lat: " + loc.getLatitude() +
+									"\nLong: " + loc.getLongitude());
 						else {
 							switch (waitingCounter % 5) {
 							case (0):
