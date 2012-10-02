@@ -36,7 +36,7 @@ public class Splash extends TabActivity {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(false);
+		rapi.useDev(true);
 
 		w = new Waffle(mContext);
 

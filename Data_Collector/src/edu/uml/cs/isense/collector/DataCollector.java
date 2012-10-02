@@ -1595,10 +1595,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 									f.lux = light;
 
 								dataSet.put(dfm.putData());
+								String header = dfm.writeHeaderLine();
 								data = dfm.writeSdCardLine();
 
 								if (beginWrite) {
-									writeToSDCard(data, 's');
+									writeToSDCard(header, 's');
+									writeToSDCard(data, 'u');
 								} else {
 									writeToSDCard(data, 'u');
 								}
