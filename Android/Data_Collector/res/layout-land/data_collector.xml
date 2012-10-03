@@ -40,53 +40,77 @@
             android:layout_weight=".25"
             android:gravity="center" >
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerInParent="true" >
+
+                <EditText
+                    android:id="@+id/sessionName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_holo"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:hint="@string/session_name"
+                    android:imeOptions="actionNext"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#999999"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/sampleInterval"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/edit_text_holo"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:hint="@string/sample_rate"
+                    android:imeOptions="actionNext"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#999999" />
+
+                <EditText
+                    android:id="@+id/testLength"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/edit_text_holo"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:hint="@string/record_length"
+                    android:imeOptions="actionDone"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#999999" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/time"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_alignParentBottom="true"
                 android:background="@android:color/transparent"
                 android:gravity="center_horizontal"
                 android:text="@+string/timeElapsed"
                 android:textColor="@android:color/white"
                 android:textSize="14dip"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/loginInfo"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/time"
-                android:background="@android:color/transparent"
-                android:gravity="center_horizontal"
-                android:text="@+string/notLoggedIn"
-                android:textColor="#FFFFFF"
-                android:textSize="12dip" />
-
-            <TextView
-                android:id="@+id/sessionName"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/loginInfo"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/transparent"
-                android:gravity="center_horizontal"
-                android:text="@+string/session"
-                android:textColor="@android:color/white"
-                android:textSize="18dip" />
-
-            <TextView
-                android:id="@+id/menuPrompt"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/sessionName"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:text="@+string/menuDirections"
-                android:textColor="@android:color/white"
-                android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>
 
