@@ -284,7 +284,6 @@ public class MainActivity extends Activity {
 							for (int j = 0; j < col_data[i].length(); j++) {
 								temp.put(col_data[i].getDouble(j) * 1000 + start_time);
 							}
-							// TODO add start_time
 							LabQuestData.add(temp);
 							LabQuestType.add(col_type[i]);
 						}
