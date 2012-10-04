@@ -27,23 +27,13 @@
         android:lines="1" />
 
     <Button
-        android:id="@+id/labquest_connect"
+        android:id="@+id/connect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:text="@string/connect_to_vernier"
-        android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/isense_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:text="@string/upload_to_isense"
+        android:text="@string/connect"
         android:textSize="20sp" />
 
     <LinearLayout
