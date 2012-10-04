@@ -218,6 +218,8 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		}
 		
 		String prefString = sb.toString();
+		if(prefString.length() == 0)
+			return;
 		prefString = prefString.substring(0, prefString.length() - 1);
 		Log.e("tag", "string: " + prefString);
 		

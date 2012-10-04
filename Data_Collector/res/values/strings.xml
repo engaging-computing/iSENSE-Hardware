@@ -255,7 +255,6 @@
 		isenseproject.org.  You must also accept our End User License Agreement.</string>
     <string name="menu_login">Login</string>
     <string name="menu_media">Media</string>
-    <string name="menu_setup">Setup</string>
     <string name="menu_sync">Sync Time</string>
     <string name="menu_upload">Upload</string>
     <string name="menu_experiment">Experiment</string>
