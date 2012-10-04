@@ -3,7 +3,7 @@
     
     <string name="main_title">LabQuest2 iSENSE App</string>
     <string name="request_session_name">Session Name:</string>
-    <string name="connect_to_vernier">Connect to LabQuest2</string>
+    <string name="connect">Connect to LabQuest\nUpload to iSENSE</string>
     <string name="labquest_status">LabQuest2 Status:</string>
     <string name="labquest_status_disconnect">Disconnected</string>
     <string name="labquest_status_connected">Data Received</string>

@@ -35,8 +35,7 @@ public class MainActivity extends Activity {
 	private RestAPI rapi;
 	private TextView iSENSEStatus;
 	private TextView LabQuestStatus;
-	private Button LabQuestConnect;
-	private Button iSENSEUpload;
+	private Button Connect;
 	private EditText SessionName;
 	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
@@ -51,25 +50,19 @@ public class MainActivity extends Activity {
 		
 		LabQuestStatus = (TextView) findViewById(R.id.labquest_status_text);
 		iSENSEStatus = (TextView) findViewById(R.id.isense_status_text);
-		LabQuestConnect = (Button) findViewById(R.id.labquest_connect);
-		iSENSEUpload = (Button) findViewById(R.id.isense_upload);
+		Connect = (Button) findViewById(R.id.connect);
 		SessionName = (EditText) findViewById(R.id.session_name);
 
-		LabQuestConnect.setOnClickListener(new OnClickListener() {
+		Connect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.v(tag, "Connect to LabQuest2");
 				LabQuestConnect();
-			}
-		});
-
-		iSENSEUpload.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.v(tag, "Connect to LabQuest2");
+				Log.v(tag, "Upload to iSENSE");
 				iSENSEUpload();
 			}
 		});
+
 	}
 
 	protected boolean iSENSEUpload() {
