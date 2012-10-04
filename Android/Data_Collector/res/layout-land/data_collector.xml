@@ -48,6 +48,7 @@
 
                 <EditText
                     android:id="@+id/sessionName"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -59,6 +60,7 @@
                     android:gravity="center_horizontal"
                     android:hint="@string/session_name"
                     android:imeOptions="actionNext"
+                    android:maxLength="50"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textColor="#FFFFFF"
@@ -67,6 +69,7 @@
 
                 <EditText
                     android:id="@+id/sampleInterval"
+                    android:digits=".1234567890"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -76,7 +79,9 @@
                     android:ellipsize="end"
                     android:gravity="center_horizontal"
                     android:hint="@string/sample_rate"
+                    android:inputType="phone"
                     android:imeOptions="actionNext"
+                    android:maxLength="8"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textColor="#FFFFFF"
@@ -84,6 +89,7 @@
 
                 <EditText
                     android:id="@+id/testLength"
+                    android:digits=".1234567890"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -93,7 +99,9 @@
                     android:ellipsize="end"
                     android:gravity="center_horizontal"
                     android:hint="@string/record_length"
+                    android:inputType="phone"
                     android:imeOptions="actionDone"
+                    android:maxLength="7"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textColor="#FFFFFF"

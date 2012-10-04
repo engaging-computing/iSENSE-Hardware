@@ -59,6 +59,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -1163,13 +1164,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return (((long) c.getTimeInMillis()) + timeOffset);
 	}
 
-	// Registers Sensors
+	// Registers Sensors // TODO - remove loads of logs everywhere
 	private void registerSensors() {
-		if (mSensorManager != null /*&& setupDone*/ && dfm != null) {
 
+		if (mSensorManager != null /*&& setupDone && dfm != null*/) {
+
+			if (dfm == null)
+				initDfm();
+			
 			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
 					|| dfm.enabledFields[ACCEL_Z]
 					|| dfm.enabledFields[ACCEL_TOTAL]) {
+				Log.w("tag", "Registering: accelerometer");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -1180,6 +1186,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
 					|| dfm.enabledFields[HEADING_DEG]
 					|| dfm.enabledFields[HEADING_RAD]) {
+				Log.w("tag", "Registering: magnetic");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
@@ -1190,6 +1197,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[TEMPERATURE_F]
 					|| dfm.enabledFields[TEMPERATURE_K]
 					|| dfm.enabledFields[ALTITUDE]) {
+				Log.w("tag", "Registering: temperature");
 				mSensorManager
 						.registerListener(
 								DataCollector.this,
@@ -1199,12 +1207,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
+				Log.w("tag", "Registering: pressure");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
 			if (dfm.enabledFields[LIGHT]) {
+				Log.w("tag", "Registering: light");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 						SensorManager.SENSOR_DELAY_FASTEST);
@@ -1259,7 +1269,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
 					mContext, f);
 			dfm.getOrder();
-
+			//initDfm();
+			// TODO ^  v      keep? or no?
 			sc = dfm.checkCompatibility();
 
 			publishProgress(100);
@@ -1278,6 +1289,41 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
 
 		}
+	}
+	
+	private void initDfm() {
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		String experimentInput = mPrefs.getString("experiment_id", "");
+
+		dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+				mContext, f);
+		dfm.getOrder();
+		
+		sc = dfm.checkCompatibility(); // Maybe need this?
+		
+		String fields = mPrefs.getString("accepted_fields", "");
+		if (fields.equals("")) {
+			// launch intent to setup fields
+			w.make("Please re-select fields");
+			Intent iChooseSensor = new Intent(DataCollector.this, ChooseSensorDialog.class);
+			startActivityForResult(iChooseSensor, CHOOSE_SENSORS_REQUESTED);
+		} else {
+			/*acceptedFields = */getFieldsFromPrefsString(fields);
+		}
+		//acceptedFields = ChooseSensorDialog.acceptedFields; // TODO - figure a way to get accepted fields
+		getEnabledFields();
+		
+	}
+	
+	private void getFieldsFromPrefsString(String fieldList) {
+		
+		String[] fields = fieldList.split(",");
+		acceptedFields = new LinkedList<String>();
+		
+		for (String f : fields) {
+			acceptedFields.add(f);
+		}
+		
 	}
 
 	private void getEnabledFields() {
@@ -1466,7 +1512,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 
 				}*/
-				// TODO - all error checks -- apply all fields when uploading data
+				// TODO - all error checks -- (ie sample interval and test length must be realistic)
 				
 				SharedPreferences expPrefs = getSharedPreferences("EID", 0);
 				
@@ -1501,6 +1547,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					if (running) {
 						OrientationManager.enableRotation((Activity) mContext);
+						
+						sessionName.setEnabled(true);
+						recordingLength.setEnabled(true);
+						sampleInterval.setEnabled(true);
 
 						writeToSDCard(null, 'f');
 						//setupDone = false;
@@ -1540,8 +1590,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					} else {
 
-						registerSensors();
+						//if (dfm == null) <--- no more if you null! always init
+							initDfm();
+						
+						registerSensors();  // TODO -  ensure these will always register now
+						
+						//getEnabledFields(); // <---- will you crash?
+						
 						OrientationManager.disableRotation((Activity) mContext);
+						
+						sessionName.setEnabled(false);
+						recordingLength.setEnabled(false);
+						sampleInterval.setEnabled(false);
 
 						rotation = getRotation(mContext);
 						dataSet = new JSONArray();
@@ -1596,6 +1656,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
 
+								// TODO - stop getting dfm force closes!!
+								
 								if (dfm.enabledFields[ACCEL_X])
 									f.accel_x = toThou.format(accel[0]);
 								if (dfm.enabledFields[ACCEL_Y])
