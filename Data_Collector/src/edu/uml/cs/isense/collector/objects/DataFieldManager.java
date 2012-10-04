@@ -8,7 +8,6 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
@@ -255,7 +254,7 @@ public class DataFieldManager extends Application {
 
 		for (String s : this.order) {
 			
-			Log.w("tag", "String s = " + s);
+			//Log.w("tag", "String s = " + s);
 
 			if (s.equals(mContext.getString(R.string.accel_x))) {
 				if (start)
