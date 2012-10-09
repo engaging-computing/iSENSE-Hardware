@@ -304,7 +304,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			//TODO: Make this get called
 			Log.v(tag,"onPostExecute");
 		}
 
