@@ -59,7 +59,6 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -256,7 +255,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static String sdFileName = "";
 
 	public static String nameOfSession = "";
-	// public static String partialSessionName = "";
 
 	/** \Publicized Variables */
 
@@ -289,7 +287,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean useMenu = false;
 	private static boolean preLoad = false;
 	private static boolean beginWrite = true;
-	// private static boolean setupDone = false;
 	private static boolean choiceViaMenu = false;
 	private static boolean successLogin = false;
 	private static boolean status400 = false;
@@ -332,7 +329,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setContentView(R.layout.loading);
 
 		OrientationManager.disableRotation(DataCollector.this);
-		// setMenuStatus(false);
 
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
@@ -509,7 +505,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						Waffle.IMAGE_CHECK);
 
 		} else if (w.canPerformTask && !running) {
-			// setupDone = false;
 			super.onBackPressed();
 		}
 	}
@@ -745,28 +740,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				// setupDone = true;
-
-				// nameOfSession = data
-				// .getStringExtra("sessionName");
-
-				// srate = data.getIntExtra("srate", INTERVAL);
-				// recLength = data.getIntExtra("recLength", TEST_LENGTH);
-
-				// TODO - session name, srate, recLength when recording only
-
-				/*
-				 * String showSessionName; if (partialSessionName.length() > 15)
-				 * { showSessionName = partialSessionName.substring(0, 15) +
-				 * "..."; } else { showSessionName = partialSessionName; }
-				 * 
-				 * session.setText("Session Name: " + showSessionName);
-				 */
-
 				new SensorCheckTask().execute();
-
 			} else if (resultCode == RESULT_CANCELED) {
-				// setupDone = false;
+
 				startStop.setEnabled(true);
 			}
 
@@ -775,15 +751,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				String returnCode = data.getStringExtra("returnCode");
 
 				if (returnCode.equals("Success")) {
-					/*
-					 * final SharedPreferences mPrefs = new
-					 * ObscuredSharedPreferences( DataCollector.mContext,
-					 * DataCollector.mContext.getSharedPreferences( "USER_INFO",
-					 * Context.MODE_PRIVATE)); String loginName =
-					 * mPrefs.getString("username", ""); if (loginName.length()
-					 * >= 18) loginName = loginName.substring(0, 18) + "...";
-					 * loginInfo.setText("Username: " + loginName);
-					 */
+					
 					successLogin = true;
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
@@ -912,14 +880,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Calls the rapi primitives for actual uploading
 	private Runnable uploader = new Runnable() {
 
-		// TODO - use correct data (on main UI) when uploading via rapi
-
 		@Override
 		public void run() {
 			status400 = false;
 			int sessionId = -1;
-
-			// nameOfSession = sessionName.getText().toString();
 
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
@@ -1042,8 +1006,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			MediaManager.mediaCount = 0;
 
-			// TODO - reset sessionName, sampleInterval, recordingLength
-			// session.setText(getString(R.string.session));
 			sessionName.setText("");
 			recordingLength.setText("");
 			sampleInterval.setText("");
@@ -1068,53 +1030,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
-	// Control task for uploading data
-	/*
-	 * private class SetupTask extends AsyncTask<Void, Integer, Void> {
-	 * 
-	 * Intent iSetup;
-	 * 
-	 * @Override protected void onPreExecute() {
-	 * 
-	 * OrientationManager.disableRotation(DataCollector.this); dia = new
-	 * ProgressDialog(DataCollector.this);
-	 * dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	 * dia.setMessage("Loading experiment data..."); dia.setCancelable(false);
-	 * dia.show();
-	 * 
-	 * }
-	 * 
-	 * @Override protected Void doInBackground(Void... voids) {
-	 * 
-	 * SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-	 * 
-	 * String eid = mPrefs.getString("experiment_id", "-1"); Experiment e =
-	 * rapi.getExperiment(Integer.parseInt(eid));
-	 * 
-	 * iSetup = new Intent(DataCollector.this, Setup.class);
-	 * 
-	 * if (e != null) { iSetup.putExtra("experiment_id", "" + e.experiment_id);
-	 * iSetup.putExtra("srate", "" + e.srate); } else {
-	 * iSetup.putExtra("experiment_id", ""); iSetup.putExtra("srate", ""); }
-	 * iSetup.putExtra("recLength", recLength); publishProgress(100); return
-	 * null;
-	 * 
-	 * }
-	 * 
-	 * @Override protected void onPostExecute(Void voids) {
-	 * 
-	 * dia.setMessage("Done"); dia.cancel();
-	 * 
-	 * OrientationManager.enableRotation(DataCollector.this);
-	 * 
-	 * startActivityForResult(iSetup, SETUP_REQUESTED);
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-
-	// updates time on main UI
+	// Updates time on main UI
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -1138,11 +1054,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		boolean success = rapi.login(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 		if (success) {
-			/*
-			 * String loginName = mPrefs.getString("username", ""); if
-			 * (loginName.length() >= 18) loginName = loginName.substring(0, 18)
-			 * + "..."; loginInfo.setText("Username: " + loginName);
-			 */
 
 			successLogin = true;
 		}
@@ -1157,10 +1068,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return (((long) c.getTimeInMillis()) + timeOffset);
 	}
 
-	// Registers Sensors // TODO - remove loads of logs everywhere
+	// Registers Sensors
 	private void registerSensors() {
 
-		if (mSensorManager != null /* && setupDone && dfm != null */) {
+		if (mSensorManager != null) {
 
 			if (dfm == null)
 				initDfm();
@@ -1168,7 +1079,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
 					|| dfm.enabledFields[ACCEL_Z]
 					|| dfm.enabledFields[ACCEL_TOTAL]) {
-				Log.w("tag", "Registering: accelerometer");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -1179,7 +1089,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
 					|| dfm.enabledFields[HEADING_DEG]
 					|| dfm.enabledFields[HEADING_RAD]) {
-				Log.w("tag", "Registering: magnetic");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
@@ -1190,7 +1099,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[TEMPERATURE_F]
 					|| dfm.enabledFields[TEMPERATURE_K]
 					|| dfm.enabledFields[ALTITUDE]) {
-				Log.w("tag", "Registering: temperature");
 				mSensorManager
 						.registerListener(
 								DataCollector.this,
@@ -1200,14 +1108,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
-				Log.w("tag", "Registering: pressure");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
 			if (dfm.enabledFields[LIGHT]) {
-				Log.w("tag", "Registering: light");
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 						SensorManager.SENSOR_DELAY_FASTEST);
@@ -1262,8 +1168,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
 					mContext, f);
 			dfm.getOrder();
-			// initDfm();
-			// TODO ^ v keep? or no?
+
 			sc = dfm.checkCompatibility();
 
 			publishProgress(100);
@@ -1292,7 +1197,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				mContext, f);
 		dfm.getOrder();
 
-		sc = dfm.checkCompatibility(); // Maybe need this?
+		sc = dfm.checkCompatibility();
 
 		String fields = mPrefs.getString("accepted_fields", "");
 		if (fields.equals("")) {
@@ -1302,10 +1207,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					ChooseSensorDialog.class);
 			startActivityForResult(iChooseSensor, CHOOSE_SENSORS_REQUESTED);
 		} else {
-			/* acceptedFields = */getFieldsFromPrefsString(fields);
+			getFieldsFromPrefsString(fields);
 		}
-		// acceptedFields = ChooseSensorDialog.acceptedFields; // TODO - figure
-		// a way to get accepted fields
+
 		getEnabledFields();
 
 	}
@@ -1408,9 +1312,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
 		isenseLogo = (ImageView) findViewById(R.id.ImageViewLogo);
 		startStop = (Button) findViewById(R.id.startStop);
-		// session = (TextView) findViewById(R.id.sessionName);
 		time = (TextView) findViewById(R.id.time);
-		// loginInfo = (TextView) findViewById(R.id.loginInfo);
 		sessionName = (EditText) findViewById(R.id.sessionName);
 		sampleInterval = (EditText) findViewById(R.id.sampleInterval);
 		recordingLength = (EditText) findViewById(R.id.testLength);
@@ -1454,13 +1356,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
-		// Set session name
-		/*
-		 * if (nameOfSession.equals(""))
-		 * session.setText(getString(R.string.session)); else
-		 * session.setText("Session Name: " + nameOfSession);
-		 */
-
 		// Colorize the startStop button and add the huge listener
 		startStop.getBackground().setColorFilter(0xFFFF0000,
 				PorterDuff.Mode.MULTIPLY);
@@ -1497,21 +1392,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
-
-				/*
-				 * if (!setupDone) {
-				 * 
-				 * w.make("You must setup before recording data.",
-				 * Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-				 * 
-				 * startStop.setEnabled(false); Intent iSetup = new
-				 * Intent(DataCollector.this, Setup.class);
-				 * startActivityForResult(iSetup, SETUP_REQUESTED);
-				 * 
-				 * }
-				 */
-				// TODO - all error checks -- (ie sample interval and test
-				// length must be realistic)
 
 				boolean numbersReady = true;
 				if (!sampleInterval.getText().toString().equals("")) {
@@ -1631,14 +1511,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					} else {
 
-						// if (dfm == null) <--- no more if you null! always
-						// init
 						initDfm();
-
-						registerSensors(); // TODO - ensure these will always
-											// register now
-
-						// getEnabledFields(); // <---- will you crash?
+						registerSensors(); 
 
 						OrientationManager.disableRotation((Activity) mContext);
 
@@ -1698,8 +1572,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 								dataPointCount++;
 								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
-
-								// TODO - stop getting dfm force closes!!
 
 								if (dfm.enabledFields[ACCEL_X])
 									f.accel_x = toThou.format(accel[0]);
@@ -1773,12 +1645,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		});
 	}
-
-	// get shared Q_COUNT
-	/*
-	 * public static SharedPreferences getQueuePreferences(Context ctxt) {
-	 * return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE); }
-	 */
 
 	// Used to adjust for sensor data
 	public int getRotation(Context context) {

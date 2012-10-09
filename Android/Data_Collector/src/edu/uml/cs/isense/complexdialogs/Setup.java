@@ -19,10 +19,7 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class Setup extends Activity implements OnClickListener {
 
-	//private EditText sessionName;
 	private EditText eidInput;
-	//private EditText srate;
-	//private EditText recordingLength;
 
 	private Button okay;
 	private Button cancel;
@@ -31,7 +28,6 @@ public class Setup extends Activity implements OnClickListener {
 
 	private Context mContext;
 	private Waffle w;
-	//private RestAPI rapi;
 
 	private SharedPreferences mPrefs;
 
@@ -39,10 +35,7 @@ public class Setup extends Activity implements OnClickListener {
 	private static final int EXPERIMENT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
 
-	//private static final long MIN_SAMPLE_INTERVAL = 50;
-
-	//private static boolean hasChanged = false;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,82 +45,10 @@ public class Setup extends Activity implements OnClickListener {
 
 		w = new Waffle(mContext);
 
-		/*rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());*/
-
-		//Bundle extras = getIntent().getExtras();
-		//final String eid = extras.getString("experiment_id");
-		//final String sample = extras.getString("srate");
-		//final int recLength = extras.getInt("recLength");
-
 		mPrefs = getSharedPreferences("EID", 0);
-
-		/*sessionName = (EditText) findViewById(R.id.sessionName);
-		sessionName.setText(DataCollector.partialSessionName);*/
 
 		eidInput = (EditText) findViewById(R.id.experimentInput);
 		eidInput.setText(mPrefs.getString("experiment_id", ""));
-
-		/*eidInput.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!(eidInput.isFocused())) {
-					if ((!(eidInput.getText().toString().equals(eid)))
-							|| hasChanged) {
-						hasChanged = true;
-						Experiment e = rapi.getExperiment(Integer
-								.parseInt(eidInput.getText().toString()));
-						if (e != null) {
-							if (e.srate < MIN_SAMPLE_INTERVAL) {
-								srate.setText("" + MIN_SAMPLE_INTERVAL);
-							} else {
-								srate.setText("" + e.srate);
-							}
-						} else {
-							srate.setText("" + MIN_SAMPLE_INTERVAL);
-						}
-					}
-				}
-			}
-		});*/
-
-		/*TextView.OnEditorActionListener tval = new TextView.OnEditorActionListener() {
-			public boolean onEditorAction(TextView exampleView, int actionId,
-					KeyEvent event) {
-				
-				if (event == null) {
-					if ((!(eidInput.getText().toString().equals(eid)))
-							|| hasChanged) {
-						hasChanged = true;
-						try {
-							Experiment e = rapi.getExperiment(Integer
-									.parseInt(eidInput.getText().toString()));
-							if (e != null) {
-								if (e.srate < MIN_SAMPLE_INTERVAL) {
-									srate.setText("" + MIN_SAMPLE_INTERVAL);
-								} else {
-									srate.setText("" + e.srate);
-								}
-							} else {
-								srate.setText("" + MIN_SAMPLE_INTERVAL);
-							}
-						} catch (NumberFormatException nfe) {
-							srate.setText("" + MIN_SAMPLE_INTERVAL);
-						}
-
-					}
-				}
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(eidInput.getWindowToken(), 0);
-
-				return true;
-			}
-		};
-		eidInput.setOnEditorActionListener(tval);
-		*/
 
 		okay = (Button) findViewById(R.id.experiment_ok);
 		okay.setOnClickListener(this);
@@ -141,19 +62,6 @@ public class Setup extends Activity implements OnClickListener {
 		browse = (Button) findViewById(R.id.experiment_browse);
 		browse.setOnClickListener(this);
 
-		/*srate = (EditText) findViewById(R.id.srate);
-		try {
-			if (Long.parseLong(sample) < MIN_SAMPLE_INTERVAL)
-				srate.setText("" + MIN_SAMPLE_INTERVAL);
-			else
-				srate.setText(sample);
-		} catch (NumberFormatException nfe) {
-			srate.setText("" + MIN_SAMPLE_INTERVAL);
-		}
-
-		recordingLength = (EditText) findViewById(R.id.recLength);
-		recordingLength.setText(""+recLength);*/
-
 	}
 
 	@Override
@@ -164,36 +72,15 @@ public class Setup extends Activity implements OnClickListener {
 		case R.id.experiment_ok:
 			boolean pass = true;
 
-			/*if (sessionName.getText().length() == 0) {
-				sessionName.setError("Enter a Name");
-				pass = false;
-			}*/
 			if (eidInput.getText().length() == 0) {
 				eidInput.setError("Enter an Experiment");
 				pass = false;
 			}
-			/*if (srate.getText().length() == 0) {
-				srate.setError("Enter a Sample Interval");
-				pass = false;
-			} else if (Long.parseLong(srate.getText().toString()) < MIN_SAMPLE_INTERVAL) {
-				srate.setError("Interval Must be >= " + MIN_SAMPLE_INTERVAL);
-				pass = false;
-			}
-			if (recordingLength.getText().length() == 0) {
-				recordingLength.setText("600");
-			} else if (Long.parseLong(recordingLength.getText().toString()) < 1
-					|| Long.parseLong(recordingLength.getText().toString()) > 600)
-				recordingLength
-						.setError("Recording time must be between 1 and 600.");
-			*/
+			
 			if (pass) {
 
 				Intent i = new Intent(mContext, DataCollector.class);
-				/*i.putExtra("sessionName", sessionName.getText().toString());
-				i.putExtra("srate",
-						Integer.parseInt(srate.getText().toString()));
-				i.putExtra("recLength",
-						Integer.parseInt(recordingLength.getText().toString()));*/
+				
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putString("experiment_id",
 						eidInput.getText().toString()).commit();
@@ -255,16 +142,6 @@ public class Setup extends Activity implements OnClickListener {
 				try {
 					eidInput.setText(split[1]);
 					Integer.parseInt(split[1]);
-					/*Experiment e = rapi.getExperiment(Integer
-							.parseInt(split[1]));
-					try {
-						if (e.srate < MIN_SAMPLE_INTERVAL)
-							srate.setText("" + MIN_SAMPLE_INTERVAL);
-						else
-							srate.setText("" + e.srate);
-					} catch (NumberFormatException nfe) {
-						srate.setText("" + MIN_SAMPLE_INTERVAL);
-					}*/
 				} catch (ArrayIndexOutOfBoundsException e) {
 					w.make("Invalid QR Code!", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
@@ -279,17 +156,6 @@ public class Setup extends Activity implements OnClickListener {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.pictures.experiments.exp_id");
 				eidInput.setText("" + eid);
-
-				/*try {
-					long sr = data.getExtras().getLong(
-							"edu.uml.cs.isense.pictures.experiments.srate");
-					if (sr < MIN_SAMPLE_INTERVAL)
-						srate.setText("" + MIN_SAMPLE_INTERVAL);
-					else
-						srate.setText("" + sr);
-				} catch (NumberFormatException nfe) {
-					srate.setText("" + MIN_SAMPLE_INTERVAL);
-				}*/
 
 			}
 		} else if (requestCode == NO_QR_REQUESTED) {
