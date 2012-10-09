@@ -253,8 +253,6 @@ public class DataFieldManager extends Application {
 		boolean start = true;
 
 		for (String s : this.order) {
-			
-			//Log.w("tag", "String s = " + s);
 
 			if (s.equals(mContext.getString(R.string.accel_x))) {
 				if (start)
