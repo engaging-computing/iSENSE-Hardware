@@ -23,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -44,6 +43,8 @@ public class MediaManager extends Activity {
 
 	public static int mediaCount;
 	
+	private static String nameOfSession = "";
+	
 	public static ArrayList<File> pictureArray = new ArrayList<File>();
 	public static ArrayList<File> pictures = new ArrayList<File>();
 	public static ArrayList<File> videos = new ArrayList<File>();
@@ -57,6 +58,11 @@ public class MediaManager extends Activity {
 		
 		mContext = this;
 		w = new Waffle(mContext);
+		
+		Bundle extras = getIntent().getExtras();
+		nameOfSession = extras.getString("sessionName");
+		if (nameOfSession == null)
+			nameOfSession = "";
 
 		mediaCountLabel = (TextView) findViewById(R.id.mediaCounter);
 		mediaCountLabel.setText(mContext.getString(R.string.picAndVidCount)
@@ -285,10 +291,10 @@ public class MediaManager extends Activity {
 
 		String dateString = sdf.format(dt);
 
-		if (DataCollector.partialSessionName.equals(""))
+		if (nameOfSession.equals(""))
 			uploadSessionString = "Session Name Not Provided";
 		else
-			uploadSessionString = DataCollector.partialSessionName;
+			uploadSessionString = nameOfSession;
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -315,10 +321,10 @@ public class MediaManager extends Activity {
 
 		String dateString = sdf.format(dt);
 
-		if (DataCollector.partialSessionName.equals(""))
+		if (nameOfSession.equals(""))
 			uploadSessionString = "Session Name Not Provided";
 		else
-			uploadSessionString = DataCollector.partialSessionName;
+			uploadSessionString = nameOfSession;
 			
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");

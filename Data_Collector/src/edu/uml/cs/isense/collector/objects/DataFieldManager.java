@@ -387,8 +387,8 @@ public class DataFieldManager extends Application {
 					b.append(", ").append(f.pressure);
 				continue;
 			}
-			if (start)		
-				start = false;
+				
+			start = false;
 			
 		}
 
