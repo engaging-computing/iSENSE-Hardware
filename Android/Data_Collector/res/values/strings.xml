@@ -77,154 +77,148 @@
     <string name="guide_text">	    
         This is a guide designed to help explain to you how to use our iSENSE Data 
 	    Collector application.
-
-		\n\nYou may have already noticed the initial splash screen (the previous 
-		window you were viewing before coming here).  This screen will allow you 
-		to navigate to, in addition to this guide, information regarding what this 
-		application is useful for along with the End User License Agreement (EULA).  
-		The EULA must be accepted in order to use this application. You can view the 
-		accepted status of the EULA by looking for the check-mark next to the EULA 
-		prompt: checked means accepted, unchecked means declined.  From here, you may 
-		continue into the application itself via the “Continue” button, or exit 
-		anytime by using the “Exit” button or hitting the “back” key on your Android device.
-
-		\n\nYou’ll know when you’re in the main application when you see a lot of 
-		red - a red iSENSE logo, button colors, borders, and more.  We’ll get more 
-		into what this red means later.  The initial screen displays our logo, two 
-		textboxes that state your current username and session name, a label for time 
-		elapsed, a large button that states “START”, and a prompt informing you to use
-		 the menu key to access app configurations.
-
-		\n\nLet’s start with the in-app menu, and namely, the username.  If you navigate to 
-		our in-app menu, you’ll see 5 options.  These include “Setup”, “Login”, “Upload”, 
-		“Sync Time”, and “Media”.  By selecting Login, you’ll be shown a dialog box that 
-		prompts you for a username and password.  You do have an iSENSE account, right?  
-		Here’s the place to enter those credentials.  If you do not have an iSENSE account, 
-		visit our website, isenseproject.org, and create an account through the login-screen.  
-		If your credentials are validated, our application will log you in and be allowed 
-		to post data/media to the iSENSE website as your account.
-
-		\n\nThe menu’s “Media” option is great for those who want to take pictures and/or 
-		videos to upload to their iSENSE session.  The layout is relatively simple - you 
-		may take a picture, a video, go back, and view the amount of media taken/recorded 
-		for the current session.  These pictures and videos will be saved to your SD Card, 
-		and the pictures only (iSENSE does not currently support videos) will be uploaded 
-		and appended to your session on iSENSE after you record data.
-
-		\n\nAnother particularly useful menu option is “Sync Time”.  Clocks between multiple
-		Android devices will all vary, at least by a few seconds.  This makes simultaneous
-		data recording relatively difficult.  As a result, we have implemented our 
-		“Sync Time” feature for you.  Selecting this feature will bring you to a whole 
-		new yellow-themed layout which will further explain how to use this incredibly
-		useful feature.
+	    
+	    \n\nYou may notice the two buttons at the bottom of this screen labeled
+		\"Automatic\" and \"Manual\".  Let\'s first talk about the Automatic portion
+		of this application.
+	      
+		\n\n<b>AUTOMATIC ENTRY:</b>
 		
-		\n\nBefore recording any data with this application, you must “setup.”  This can be 
-		done through the menu or by holding the “START” button prior to setting up the current 
-		session.  After experiment data has been loaded, you will see a dialog labeled “Step 
-		1: Identify Session”.  Here, you will enter the name you want to give the session you 
-		are going to record, the experiment you want to upload the data to, the interval (in milliseconds) 
-		between each recorded data point, and how long the recording should last (in seconds).  
-		You may enter an experiment number manually, should you know your experiment’s ID number off 
-		the top of your head, or you could use one of two additional features.  “Scan QR Code” will 
-		allow you to scan the QR Code that was generated on the associated experiment’s homepage and 
-		grab its experiment number and sample interval for you.  Of course, you are still welcome 
-		to change any of those credentials at any point.  Don’t have a QR Code scanner 
-		application?  No problem!  Our application will re-direct to the Google Play Store 
-		where you can download the latest version of the recommended QR Code scanning application.  
-		“Browse&#8230;” will allow you to scroll through a list of all existing experiments on 
-		the iSENSE website and select the one you’d like to use.  For experiments that have an 
-		optimal test length, we\'ve provided the option to set a session length.  The maximum time 
-		we support support is 600 seconds, or 10 minutes.  It should be noted, however, that the recording 
-		can be stopped short of the specified test length.
+		\n\nYou\’ll know when you’re in the automatic application when you see a lot of 
+		red: a red iSENSE logo, button colors, borders, and more.  We\’ll get more 
+		into what this red means later.  The initial screen displays our logo, three
+		textboxes where you can enter a session name, sample interval, and recording length,
+		a large button that states “Start”, and a label for time elapsed. 
+
+		\n\nWhere do we begin?  Take a look at the automatic application\'s menu bar.
+		There are 5 options, which include \"Experiment\", \"Upload\", \"Login\", \"Media\",
+		and \"Sync Time\".  I will talk to you about each of these menu options
+		individually.
 		
-		\n\nWhen you’re done setting up we will gather the associated fields from that 
-		experiment and display another dialog, labeled “Step 2: Select Fields”,
-		where you may see every field that this experiment can accept data for.  
-		Each listed item in this dialog box will tell you the name of the field, 
-		whether or not your phone is compatible (able to record this type of data), 
-		and whether or not you want our application to record that type of data.  If 
-		you do not want a particular field recorded, here’s your chance to de-select 
-		it.  WARNING:  There is a chance that our application will tell you that your 
-		phone is compatible to record particular data fields, but some phone releases 
-		do include the sensors included with other devices of the same release.  
-		Therefore, we may still not be able to record that type of data, even if you 
-		do check off that list item.  Additionally, our application may tell you that 
-		you do not have an appropriate sensor to record a field when in fact you do.  
-		Again, this is due to a minor inconsistency between devices built on the same 
-		Android version, so you may still choose to attempt to record this field if you 
-		think you have the appropriate sensors.  There is no harm in checking/un-checking 
-		fields to record.  If you attempt to record a field you cannot, iSENSE will fill 
-		each data point with a “0” by default.  In other words, our application should 
-		not melt, explode, die, or force close should you attempt to record an 
-		incompatible field.  Note the keyword “should”.
-
-		\n\nIf Step 2 doesn’t bring you back to Step 1 to choose another experiment 
-		(which will only occur if you chose a broken, non-existent, or absolutely 
-		incompatible experiment), then you will find yourself back on the main screen.  
-		What now?  You may begin recording data!  Press and hold the “START” button, 
-		and your device will vibrate, beep, and turn green.  While the application is 
-		green, it means that data is currently being recorded.  Additionally, the 
-		“Time Elapsed” label will begin incrementing, showing you how much time has 
-		passed since you’ve begun to record data.  That means that while the application 
-		is red, data is not recording.  You may stop recording data at any time you’d 
-		like by holding down the same button you pressed to begin recording (which 
-		will now be labeled “STOP”).
-
-		\n\nYou are at this point brought to the last step, Step 3, where you may 
-		enter a description for the session you are about to upload your data and 
-		media to.  As stated by the prompt in this dialog, this step is optional.  
-		You may choose to leave the description blank and upload (in which the session 
-		description will become “Automated Submission Through Android Data Collector App”), 
-		or you may choose to describe the data you had just recorded.
-
-		\n\nAfter hitting upload, our application performs magic, and, should no 
+		\n\n<i>Experiment:</i> Selecting an experiment using this menu option is necessary to record
+		data.  Without a proper experiment, your data has no where to go on iSENSE!  To
+		select an experiment, you may manually enter the experiment\'s number, browse
+		experiments and select an experiment from there, or scan the experiment\'s QR code.
+		After selecting a valid experiment to upload your data to, you will be brought to
+		a Sensor Selection screen where you can see the experiment\'s fields that can be
+		recorded by your device.  If your device cannot record any of the experiment\'s
+		fields or if the experiment is invalid, you will be brought back to the experiment
+		selection dialog where you must choose another experiment to record and upload data
+		to.
+		
+		\n\n<i>Upload:</i> Upload is not the generic \"upload my data\" button.  This feature is
+		useful for any data sets that you have recorded that fail to upload to iSENSE.
+		After you have finished recording data, you will be prompted to upload the data.
+		If the upload succeeds, nothing will show up in the Upload menu option and you
+		will be informed that there is no additional data that needs to be uploaded.
+		However, if an upload fails for whatever reason, it will be added to this menu
+		option which will then allow you to try uploading the data or media again later.
+		
+		\n\n<i>Login:</i> Another essential step in uploading data to iSENSE is logging in.
+		This menu option is the stereotypical dialog that prompts for your username and
+		password to the iSENSE website and attempts to log you in.  You will be
+		informed if your login information was or cannot be validated.
+		
+		\n\n<i>Media:</i> Want to associate some pictures with your data?  You can!  With this
+		menu option, you will be able to take pictures and videos that will all save to
+		your SD Card.  Since iSENSE supports pictures, these pictures will also be
+		uploaded with you newly recorded data set.
+		
+		\n\n<i>Sync Time:</i> This menu option is relatively complex and thus has
+		instructions built-in to it upon being clicked.
+		
+		\n\nNow back to the main screen. There are three text
+		boxes that you can fill out prior to recording data.  Only one of them is necessary:
+		Session Name.  We will explain which each of these three mean.
+		
+		\n\n<i>Session Name:</i> This is the place to enter the name you would like to
+		associate with the data set you are about to record.  For example, if you were about
+		to record the accelerometer data of a roller coaster, you may choose \"Roller 
+		Coast Accelerometer Readings\" as a session name.  This field is required before
+		recording each data set.
+		
+		\n\n<i>Interval:</i> Data points are recorded at a particular rate, separated by
+		an interval of time between each successive data point.  You can modify this
+		interval and record data practically as fast or as slow as you want.  Leaving
+		this field blank will default the data recording to the fastest current recording
+		rate (currently 50ms).
+		
+		\n\n<i>Test Length:</i> This feature allows you specify to a time-out feature
+		for the data set.  In other words, the number you enter here, in seconds,
+		determines how long this app will record data for you for.  It will automatically
+		time out once it has reached the value you have entered here in seconds.  If this
+		field is left blank, the app will never stop recording data for you, and you
+		must manually hold the button to stop it.  Note: if you choose to specify a
+		test length, you may still stop the data recording at any point you would like
+		manually.
+		
+		\n\nNow we are all set to record data!  Once an experiment is selected, you are
+		logged in, and a session name has been specified (at minimum), you can hold the
+		big red \"Start\" button to begin recording data.  The app will turn from red-
+		themed to green-themed to indicate that it is currently collecting data.  The
+		\"Time Elapsed\" label at the bottom of the screen will increment by 1 second
+		for each second that elapses as you can record data.  The \"Start\" button will
+		also now become a \"Stop\" button for you to hold once you are done 
+		recording data.
+		
+		\n\nAfter you are finished recording a data set, you will be prompted to enter a
+		session description.  This is an optional place to enter more information about
+		the data you just recorded.  Following the same roller coaster example, you may
+		choose to enter a description such as \"Acceleration data recorded from the 
+		Yankee Cannonball at Canobie Lake Park.  Device was kept in pocket throughout
+		the duration of the ride.\"  You may also choose to upload your data without
+		a session description associated with it.
+		
+		\n\nOnce you hit upload, our application performs magic, and, should no 
 		error messages pop-up, presto!  Your session data and media will now be hosted 
 		live on the iSENSE website under the experiment you chose to upload data to.
-
+			
 		\n\nFollowing the upload (or even if you cancel the upload), you will be displayed 
 		a summary of the data you have recorded, including the elapsed time, the amount 
 		of data points recorded, the end date and time, and the name of the .csv file 
 		that has been saved to your SD Card that includes all of your data.
 
-		\n\nThat is our application in a nutshell!  However, there are still many other 
-		features and errors that you may encounter.
+		\n\nThat is the automatic portion of the application in a nutshell.
+		However, there are still many other features that you may encounter. We will
+		discuss some of these.
 
 		\n\nWhen you initially reach the home screen, a dialog box may pop-up telling you 
 		to enable GPS satellites.  This is required if you would like to allow our 
-		application to record Latitude and Longitude data (otherwise, you may close this dialog).
+		application to record Latitude and Longitude data (otherwise, you may close 
+		this dialog).
 
 		\n\nIn order to upload data to iSENSE, you must have both an internet connection 
 		(via WiFi or mobile connectivity [e.g. 3G or 4G]) and you must be logged in.  
 		If neither of these cases are satisfied, an error message will tell you to 
 		check internet connectivity and to remember to login.  After both of these 
 		issues are resolved on your behalf, you may access the “Upload” feature from 
-		the in-app menu to attempt to upload that data set and media again.  WARNING: 
-		If you record another data set before uploading the previous one, the previous 
-		data set WILL be lost.  
+		the in-app menu to attempt to upload that data set and media again.
 
-		\n\nMiscommunications with the iSENSE server may happen and cause your data/media 
+		\n\nMiscommunications with the iSENSE server may occur and cause your data/media 
 		to fail to upload.  Don’t worry though - we have already stored a file in your 
-		SD Card, called uploadqueue.ser (DO NOT TOUCH, unless you want to potentially 
-		break this feature), that will store all of your failed-to-upload data.  
+		SD Card, called uploadqueue.ser that will store all of your failed-to-upload data.  
 		Upon finally receiving a successful upload, should there be any existing 
 		failure-data, a new window will display a list of all failed uploads from 
-		the past that you may now try to upload yet again.  Once all of them have been 
+		the past that you may now try to upload yet again.  Once all of these have been 
 		uploaded, this list will no longer appear.
 
 		\n\nCRITICAL: Permission to write to the SD Card is absolutely crucial to this 
 		application.  Be sure to enable us to do so.  Otherwise, we may not save any 
 		of your pictures, videos, or data on the SD Card, we will be unable to upload 
 		any pictures to your session, and you will disable the feature that allows you 
-		to re-try uploading previously failed-to-upload sessions.
+		to retry uploading previously failed-to-upload sessions.
+		
+		\n\nOther features of this application should be self-explanatory as they occur.  
 
-		\n\nOther features of this application should be self-explanatory as they happen.  
-		However, if you have any questions or comments regarding this application, our 
-		contact info may be found in the EULA (so be sure to read it!)
+		\n\n<b>MANUAL ENTRY:</b>
+		
+		\n\n
 
-		\n\nThank you for choosing to use our application - we hope you enjoy it!
+		\n\nThank you for choosing to use our application - we hope you enjoy it!\n\n
 
 	</string>
-    <string name="about_text">	    Welcome to the iSENSE Data Collector Android Application, developed by 
+    <string name="about_text">	    
+        Welcome to the iSENSE Data Collector Android Application, developed by 
 	    UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE 
 	    team under Fred Martin.
 
@@ -250,6 +244,10 @@
 		all ages to take advantage of the hardware sensors Android offers and use 
 		them to take real, personalized data and visualize it using a variety of 
 		visualization tools offered by the iSENSE website.
+		
+		\n\nThis application will also enable a user to manually key in data live
+		using the manual-entry portion of this app.  All the user needs to know is
+		his or her experiment and login information and he or she is ready to go.
 
 		\n\nIn order to use this application, you must have an account on 
 		isenseproject.org.  You must also accept our End User License Agreement.</string>

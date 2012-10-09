@@ -10,7 +10,7 @@ import android.view.Surface;
 /**
  * Class that enables/disables the ability to rotate the Android device's orientation.
  * 
- * @author User "roboshed" of stackoverflow.com
+ * @author Mike Stowell + Jeremy Poulin, based upon code from user "roboshed" of stackoverflow.com
  *
  */
 public class OrientationManager {
@@ -20,11 +20,13 @@ public class OrientationManager {
 	 * 
 	 * @param activity Activity whose orientation will be locked.
 	 */
+	
 	@SuppressLint("NewApi")
 	public static void disableRotation(Activity activity) {       
 	    final int orientation = activity.getResources().getConfiguration().orientation;
 	    final int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
 	    final int build = Build.VERSION.SDK_INT;
+	    final String model = Build.MODEL;
 
 	    // Copied from Android docs, since we don't have these values in Froyo 2.2
 	    int SCREEN_ORIENTATION_REVERSE_LANDSCAPE = 8;
@@ -39,10 +41,14 @@ public class OrientationManager {
 	    	
 	        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 	        	
-	        	if (build < Build.VERSION_CODES.JELLY_BEAN && build >= Build.VERSION_CODES.HONEYCOMB)
+	        	if (model.equals("Xoom")) {
 	        		activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
-	        	else
-	        		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	        	} else { 	
+	        		if (build < Build.VERSION_CODES.JELLY_BEAN && build >= Build.VERSION_CODES.HONEYCOMB)
+	        			activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+	        		else
+	        			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	        	}
 	        	
 	        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 	            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -52,10 +58,14 @@ public class OrientationManager {
 	    	
 	        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 	        	
-	        	if (build < Build.VERSION_CODES.JELLY_BEAN && build >= Build.VERSION_CODES.HONEYCOMB)
+	        	if (model.equals("Xoom")) {
 	        		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-	        	else
-	        		activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+	        	} else {
+	        		if (build < Build.VERSION_CODES.JELLY_BEAN && build >= Build.VERSION_CODES.HONEYCOMB)
+	        			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	        		else
+	        			activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+	        	}
 	        	
 	        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE)  {
 	        	activity.setRequestedOrientation(SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
