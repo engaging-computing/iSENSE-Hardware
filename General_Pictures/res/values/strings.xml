@@ -3,6 +3,8 @@
     <string name="app_name">iSENSE Pictures</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="app_name_experiments">Experiments</string>
+    <string name="prompt">Would you like to try uploading any of the following?</string>
+    <string name="upload">Upload</string>
     
     <string name="firstName">Name: \0</string>
     <string name="descPic">Step 1: Choose a category for the picture you will take.</string>
@@ -64,5 +66,6 @@
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="browse">Browse &#8230;</string>
 	<string name="scan_qr">Scan QR Code</string>
+	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
 	
 </resources>
