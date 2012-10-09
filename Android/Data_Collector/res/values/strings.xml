@@ -81,6 +81,8 @@
 	    \n\nYou may notice the two buttons at the bottom of this screen labeled
 		\"Automatic\" and \"Manual\".  Let\'s first talk about the Automatic portion
 		of this application.
+		
+		\n\n--------
 	      
 		\n\n<b>AUTOMATIC ENTRY:</b>
 		
@@ -210,11 +212,81 @@
 		
 		\n\nOther features of this application should be self-explanatory as they occur.  
 
+		\n\n--------
+
 		\n\n<b>MANUAL ENTRY:</b>
 		
-		\n\n
+		\n\nPerhaps you do not want to record data using Android\'s built-in sensors.
+		With the manual application, you will be able to fetch an experiment\'s fields,
+		manually enter data you recorded, and upload the data set to iSENSE.
+		
+		\n\nThe manual application will first ask you to select an experiment.  Just
+		as in the automatic application, you can either manually enter your experiment\'s
+		number, browse experiments and locate yours, or scan a QR code.  Upon
+		selecting an experiment, the device will list off all of the experiment\'s data
+		fields for you to manually enter data.  Note: time, latitude, and longitude
+		will all be automatically filled in for you when you choose to save a data set.
+		
+		\n\nLet\'s start with the menu options.
+		
+		\n\n<i>Upload:</i> Unlike the automatic application, no data sets are
+		automatically uploaded.  Instead, you will be saving data sets in the manual
+		application and uploading them all via this menu option.  Upload will list off
+		every data set and media captured that you may attempt to upload to iSENSE.
+		Any upload-failures will remain on this list.  However, you can choose to
+		press and hold a data set or picture and remove it from the list permanently.
+		
+		\n\n<i>Experiment:</i> This option lets you select a new experiment to
+		enter data into.  Again, once you select an experiment, the manual
+		application will list off the experiment\'s fields and give you text boxes
+		to enter data into.
+		
+		\n\n<i>Login:</i> An essential step in uploading data to iSENSE is logging in.
+		This menu option is the stereotypical dialog that prompts for your username and
+		password to the iSENSE website and attempts to log you in.  You will be
+		informed if your login information was or cannot be validated.
+		
+		\n\nYou will notice a few additional features on the main screen.
+		Underneath the main iSENSE logo are two text fields that will let you know
+		who you are currently logged in as and what experiment you are currently
+		entering data for.  There are also 3 buttons and an additional text box
+		right above the list of experiment fields.  I will explain these.
+		
+		\n\n<i>Save:</i> This button is used to save your data set once you
+		enter data into your experiment\'s fields.  Every time you hit Save, a
+		new data set will be saved and added to the list of data to upload with
+		the Upload menu option.
+		
+		\n\n<i>Clear:</i> This button is optional to using this application, but
+		it is generally helpful.  Upon saving data, all fields and session name
+		will remain on the main screen.  However, the Clear button will erase all
+		of your data fields and clear your session name, giving you a blank
+		list of experiment fields to again enter data into and save a new data set.
+		
+		\n\n<i>Session Name:</i> This text box is the place for you to enter a
+		session name, which is the name you want associated with your data set.
+		
+		\n\n<i>Media:</i> This is the button with the camera on it, to the right
+		of the session name text box. With this
+		button, you will be able to take pictures and videos that will all save to
+		your SD Card.  Since iSENSE supports pictures, these pictures will also be
+		uploaded and associated with the next data set you hit Save for.
+		
+		\n\nIf you choosen a valid experiment with fields, you will see a
+		scrollable list of fields and text boxes for you to begin entering data
+		into.  This is where your data is entered.  Once all the fields you want
+		to fill out are filled in, you may hit Save, and these values will be
+		stored as a data set.  If a text field is labeled \"Auto\", you cannot
+		modify its value - we will fill in that value for you when you hit Save.
+		
+		\n\nAll other features and error messages will be self-explanatory
+		as they appear in the application.
+		
+		\n\n--------
 
-		\n\nThank you for choosing to use our application - we hope you enjoy it!\n\n
+		\n\nThank you for choosing to use our application - we hope you enjoy it!
+		
+		\n\n--------\n\n
 
 	</string>
     <string name="about_text">	    

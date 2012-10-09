@@ -107,6 +107,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 
 		if (nullViewCount == scrollViewLayout.getChildCount()) {
 			errorTV = new TextView(mContext);
+			errorTV.setBackgroundColor(Color.TRANSPARENT);
 			if (isEmpty) errorTV.setText(getString(R.string.invalidExperiment));
 			else {
 				errorTV.setText(getString(R.string.noCompatibleFields));
