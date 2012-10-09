@@ -20,6 +20,8 @@
     <string name="isense_expid">Experiment ID:</string>
     <string name="isense_dev_mode">Developer Mode:</string>
 
+    <string name="error_no_session_name">Please Enter a Session Name!</string>
+    
     
     <string name="save">Save</string>
  	<string name="cancel">Cancel</string>
