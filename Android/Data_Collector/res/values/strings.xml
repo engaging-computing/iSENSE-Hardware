@@ -70,7 +70,7 @@
     <string name="done">Done</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
-    <string name="sample_rate">Sample Interval (ms): </string>
+    <string name="sample_rate">Interval (ms)</string>
     <string name="cont">Continue</string>
     <string name="exit">Exit</string>
     <string name="login">Login</string>
@@ -255,11 +255,10 @@
 		isenseproject.org.  You must also accept our End User License Agreement.</string>
     <string name="menu_login">Login</string>
     <string name="menu_media">Media</string>
-    <string name="menu_setup">Setup</string>
     <string name="menu_sync">Sync Time</string>
     <string name="menu_upload">Upload</string>
     <string name="menu_experiment">Experiment</string>
-    <string name="record_length">Test Length (sec):</string>
+    <string name="record_length">Test Length (s)</string>
     <string name="blank_desc"></string>
     <string name="loggedInAs">Logged In As: \0</string>
     <string name="usingExperiment">Uploading To Experiment #: \0</string>
@@ -272,4 +271,6 @@
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
 	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
+	<string name="session_name">Session Name</string>
+	
 </resources>

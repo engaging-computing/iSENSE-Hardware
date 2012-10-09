@@ -26,11 +26,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomLayout"
-        android:scrollbarThumbVertical="@drawable/yellow_scroll"
         android:layout_below="@+id/topLayout"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="10dp"
+        android:scrollbarThumbVertical="@drawable/yellow_scroll" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -67,6 +67,7 @@
                 android:id="@+id/sendButton"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/buttons_sync_time"
                 android:text="@string/send"
@@ -76,6 +77,7 @@
                 android:id="@+id/receiveButton"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/buttons_sync_time"
                 android:text="@string/receive"
@@ -86,6 +88,7 @@
             android:id="@+id/buttonGoBack"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
+            android:layout_margin="8dp"
             android:background="@drawable/buttons_sync_time"
             android:text="@string/cancel"
             android:textColor="#FFFFFF" />

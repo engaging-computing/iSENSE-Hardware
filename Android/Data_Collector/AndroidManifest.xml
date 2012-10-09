@@ -65,7 +65,7 @@
             android:label="SyncTime" />
         <activity
             android:name="edu.uml.cs.isense.complexdialogs.ChooseSensorDialog"
-            android:label="Step 2: Select Fields"
+            android:label="Select Fields"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name="edu.uml.cs.isense.complexdialogs.MediaManager"
@@ -73,7 +73,7 @@
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name="edu.uml.cs.isense.complexdialogs.Setup"
-            android:label="Step 1: Identify Session"
+            android:label="Select an Experiment"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name="edu.uml.cs.isense.simpledialogs.LoginError"
