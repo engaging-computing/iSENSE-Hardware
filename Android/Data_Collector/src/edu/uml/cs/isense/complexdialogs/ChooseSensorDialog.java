@@ -4,8 +4,10 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -200,7 +202,29 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			else
 				acceptedFields.add(getString(R.string.null_string));
 		}
+		
+		buildPrefsString();
 
+	}
+	
+	private void buildPrefsString() {
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for (String s : acceptedFields) {
+			sb.append(s).append(",");
+		}
+		
+		String prefString = sb.toString();
+		if(prefString.length() == 0)
+			return;
+		prefString = prefString.substring(0, prefString.length() - 1);
+		Log.e("tag", "string: " + prefString);
+		
+		mEdit.putString("accepted_fields", prefString).commit();
+		
 	}
 	
 	@Override
