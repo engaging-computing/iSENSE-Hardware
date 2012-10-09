@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class MainActivity extends Activity {
 	private String tag = "MainActivity";
@@ -39,13 +40,16 @@ public class MainActivity extends Activity {
 	private EditText SessionName;
 	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
-	
+	private Waffle w;
+	private int Status;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), this);
+		w = new Waffle(this);
 
 		
 		LabQuestStatus = (TextView) findViewById(R.id.labquest_status_text);
@@ -56,19 +60,55 @@ public class MainActivity extends Activity {
 		Connect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.v(tag, "Connect to LabQuest2");
-				LabQuestConnect();
-				Log.v(tag, "Upload to iSENSE");
-				iSENSEUpload();
+				Log.v(tag, "Attempting to Upload...");
+				Status = 0;
+				new ConnectAndUpload().execute();
 			}
 		});
 
 	}
-
+	protected boolean CheckForErrors() {
+		SharedPreferences sp;
+		//Null session name
+		if (SessionName.getText().length() == 0)
+		{
+			Log.v(tag, "No Session Name");
+			Status = -1;
+			return false;
+		}
+		//no laquest
+		sp = getSharedPreferences("labquest_settings", 0);
+		String LabQuestIP = sp.getString("labquest_ip", "");
+		if (LabQuestGetInfo(LabQuestIP) == null)
+		{
+			Log.v(tag, "Unable to Connect to LabQuest");
+			Status = -2;
+			return false;
+		} 
+		//online?
+		if (!rapi.isConnectedToInternet())
+		{
+			Log.v(tag, "Not Connected to the Internet");
+			Status = -3;
+			return false;
+		}
+		//isense login?
+		if (!iSENESLogin()) {
+			Log.v(tag, "Invalid User/Pass");
+			Status = -4;
+			return false;
+		}
+		return true;
+	}
+	protected boolean iSENESLogin() {
+		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
+		if (rapi.login(sp.getString("isense_user", ""), sp.getString("isense_pass", ""))) {
+			return true;
+		}
+		return false;
+	}
 	protected boolean iSENSEUpload() {
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
-		String iSENSEUser = sp.getString("isense_user", "");
-		String iSENSEPass = sp.getString("isense_pass", "");
 		String iSENSEExpID = sp.getString("isense_expid", "");
 
 		// Set iSENSEDev/iSENSE
@@ -78,16 +118,6 @@ public class MainActivity extends Activity {
 		} else {
 			rapi.useDev(false);
 			Log.v(tag, "Using iSENSE");
-		}
-
-		// Log in to iSENSE
-		if (rapi.login(iSENSEUser, iSENSEPass)) {
-			Log.v(tag, "Logged in");
-			iSENSEStatus.setText(getResources().getString(R.string.isense_status_logged_in));
-		} else {
-			Log.v(tag, "Invalid User/Pass");
-			iSENSEStatus.setText(getResources().getString(R.string.isense_status_logged_in_error));
-			return false;
 		}
 
 		// TODO Field Matching
@@ -171,11 +201,11 @@ public class MainActivity extends Activity {
 	private static String httpGet(String urlStr) throws IOException {
 		URL url = new URL(urlStr);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
+		conn.setConnectTimeout(1000);
 		if (conn.getResponseCode() != 200) {
+			conn.disconnect();
 			throw new IOException(conn.getResponseMessage());
 		}
-
 		// Buffer the result into a string
 		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		StringBuilder sb = new StringBuilder();
@@ -193,16 +223,14 @@ public class MainActivity extends Activity {
 		try {
 			result = httpGet("http://" + IP + "/info");
 		} catch (IOException e) {
-			Log.v(tag, "Unable to connect to LQ");
-		//	e.printStackTrace();
 			return null;
-		}
+		} 
 		return result;
 	}
 	
-	
 	private String LabQuestGetStatus(String IP) {
 		String result = null;
+
 		try {
 			result = httpGet("http://" + IP + "/status");
 		} catch (IOException e) {
@@ -221,7 +249,30 @@ public class MainActivity extends Activity {
 		}
 		return result;
 	}
+	
+	private class ConnectAndUpload extends AsyncTask<Void, Integer, Void> {
 
+		@Override
+		protected void onPostExecute(Void voids) {
+			//TODO: Make this get called
+			Log.v(tag,"onPostExecute");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Log.v(tag,"ConnectAndUpload doInBackground");
+			if (CheckForErrors() == true)
+			{
+//				Log.v(tag, "Connect to LabQuest2");
+//				LabQuestConnect();
+//				Log.v(tag, "Upload to iSENSE");
+//				iSENSEUpload();
+			}
+			return null;
+		}
+
+	}
+	
 	private class LabQuestConnectTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
@@ -237,11 +288,6 @@ public class MainActivity extends Activity {
 			LabQuestType = new ArrayList<String>();
 			SharedPreferences sp = getSharedPreferences("labquest_settings", 0);
 			String LabQuestIP = sp.getString("labquest_ip", "");
-			if (LabQuestGetInfo(LabQuestIP) == null)
-			{
-				// TODO create status register that will update labquest status on UI 
-				return null;
-			}
 			try {
 				// Gets data from LQ
 				JSONObject get_status_json;
