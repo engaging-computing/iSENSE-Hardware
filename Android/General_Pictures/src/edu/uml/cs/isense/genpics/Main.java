@@ -254,15 +254,20 @@ public class Main extends Activity implements LocationListener {
 		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
 				mContext);
 		queueCount.setText("Queue Count: " + uploadQueue.size());
+		
+		// Check to see if now is the right time to try to upload information.
+		manageUploadQueue();
 
 		super.onResume();
 	}
 
 	private void manageUploadQueue() {
+		if (rapi.isLoggedIn() && (uploadQueue.size() > 0) && rapi.isConnectedToInternet()) {
 			Intent i = new Intent().setClass(mContext, QueueUploader.class);
 			i.putExtra(QueueUploader.INTENT_IDENTIFIER,
 					QueueUploader.QUEUE_MAIN);
 			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		}
 	}
 
 	@Override
@@ -271,8 +276,7 @@ public class Main extends Activity implements LocationListener {
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-
-		manageUploadQueue();
+		
 		super.onStart();
 	}
 
@@ -491,6 +495,11 @@ public class Main extends Activity implements LocationListener {
 				picture = convertImageUriToFile(imageUri);
 
 				takePicture.setEnabled(true);
+				
+				// Rebuilds uploadQueue from saved info
+				uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
+						mContext);
+				queueCount.setText("Queue Count: " + uploadQueue.size());
 
 				new UploadTask().execute();
 
@@ -586,6 +595,10 @@ public class Main extends Activity implements LocationListener {
 				w.make("Upload successful", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
+			
+			queueCount.setText("" + uploadQueue.size());
+			QueueUploader.storeQueue(uploadQueue, activityName, mContext);
+			uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 
 			uploadError = false;
 		}
