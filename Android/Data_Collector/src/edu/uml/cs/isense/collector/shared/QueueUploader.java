@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.shared;
+package edu.uml.cs.isense.collector.shared;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,9 +28,9 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
+import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.objects.DataSet;
-import edu.uml.cs.isense.manualentry.ManualEntry;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 

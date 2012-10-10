@@ -13,9 +13,9 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
+import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.manualentry.ManualEntry;
 import edu.uml.cs.isense.waffle.Waffle;
 
 @SuppressWarnings("deprecation")

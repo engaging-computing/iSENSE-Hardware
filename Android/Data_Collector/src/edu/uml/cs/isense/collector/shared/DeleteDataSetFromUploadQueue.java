@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.shared;
+package edu.uml.cs.isense.collector.shared;
 
 import android.app.Activity;
 import android.os.Bundle;

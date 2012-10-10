@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.sync;
+package edu.uml.cs.isense.collector.sync;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.simpledialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
