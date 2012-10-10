@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.sync;
+package edu.uml.cs.isense.collector.sync;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,20 +9,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
 
-public class TimeSent extends Activity {
+public class TimeReceived extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.time_sent);
+		setContentView(R.layout.time_received);
 		
 		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		Bundle extras = getIntent().getExtras();
-		String timeSent = extras.getString("timeSent");
+		String timeRec = extras.getString("timeReceived");
 		long timeOffset = extras.getLong("timeOffset");
 		
-		final Button done = (Button) findViewById(R.id.time_sent_done);
+		final Button done = (Button) findViewById(R.id.time_received_done);
 		done.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -31,10 +31,10 @@ public class TimeSent extends Activity {
 			}
 		});
 		
-		final TextView text = (TextView) findViewById(R.id.time_sent_text);
-		text.setText("You have sent the time "
-				+ timeSent
-				+ " to other devices, which is an offset of "
+		final TextView text = (TextView) findViewById(R.id.time_received_text);
+		text.setText("You have received the time "
+				+ timeRec
+				+ " from the host device, which is an offset of "
 				+ timeOffset
 				+ " milliseconds from your local clock.");
 		

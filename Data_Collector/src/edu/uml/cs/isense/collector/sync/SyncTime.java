@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.sync;
+package edu.uml.cs.isense.collector.sync;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

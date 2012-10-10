@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.complexdialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import edu.uml.cs.isense.collector.BrowseExperiments;
+import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.manualentry.ManualEntry;
-import edu.uml.cs.isense.simpledialogs.NoQR;
+import edu.uml.cs.isense.collector.experiment.BrowseExperiments;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class ExperimentDialog extends Activity {
