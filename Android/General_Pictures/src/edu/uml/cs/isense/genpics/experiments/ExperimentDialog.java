@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import edu.uml.cs.isense.genpics.experiments.BrowseExperiments;
 import edu.uml.cs.isense.genpics.Main;
 import edu.uml.cs.isense.genpics.R;
 import edu.uml.cs.isense.genpics.dialogs.NoQR;
