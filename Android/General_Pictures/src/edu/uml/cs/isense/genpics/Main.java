@@ -186,6 +186,7 @@ public class Main extends Activity implements LocationListener {
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
+					OrientationManager.disableRotation(Main.this);
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 				} else {
 					w.make("Cannot write to external storage.",
