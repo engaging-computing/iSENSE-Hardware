@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.simpledialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.complexdialogs.LoginActivity;
 
 public class LoginError extends Activity {
 

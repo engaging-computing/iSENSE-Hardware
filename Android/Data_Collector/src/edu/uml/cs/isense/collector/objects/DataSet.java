@@ -7,8 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import edu.uml.cs.isense.collector.shared.QueueUploader;
 import edu.uml.cs.isense.collector.splash.Splash;
-import edu.uml.cs.isense.shared.QueueUploader;
 
 @SuppressLint("ParserError")
 public class DataSet implements Serializable {

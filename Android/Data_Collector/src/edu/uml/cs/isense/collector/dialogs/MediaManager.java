@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.complexdialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -60,7 +60,11 @@ public class MediaManager extends Activity {
 		w = new Waffle(mContext);
 		
 		Bundle extras = getIntent().getExtras();
-		nameOfSession = extras.getString("sessionName");
+		nameOfSession = null;
+		
+		if (extras != null)
+			nameOfSession = extras.getString("sessionName");
+		
 		if (nameOfSession == null)
 			nameOfSession = "";
 

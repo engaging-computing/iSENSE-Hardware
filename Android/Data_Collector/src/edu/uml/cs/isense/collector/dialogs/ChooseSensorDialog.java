@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.complexdialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import java.util.LinkedList;
 
