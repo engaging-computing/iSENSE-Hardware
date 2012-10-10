@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.manualentry;
+package edu.uml.cs.isense.collector;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,15 +43,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.collector.dialogs.ExperimentDialog;
+import edu.uml.cs.isense.collector.dialogs.LoginActivity;
+import edu.uml.cs.isense.collector.dialogs.MediaManager;
+import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.objects.DataSet;
+import edu.uml.cs.isense.collector.shared.QueueUploader;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.complexdialogs.ExperimentDialog;
-import edu.uml.cs.isense.complexdialogs.LoginActivity;
-import edu.uml.cs.isense.complexdialogs.MediaManager;
 import edu.uml.cs.isense.objects.ExperimentField;
-import edu.uml.cs.isense.shared.QueueUploader;
-import edu.uml.cs.isense.simpledialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -179,8 +179,14 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 			break;
 		case R.id.manual_media_button:
-			Intent iMedia = new Intent(mContext, MediaManager.class);
-			startActivityForResult(iMedia, MEDIA_REQUESTED);
+			if (sessionName.getText().toString().length() != 0) {
+				sessionName.setError(null);
+				Intent iMedia = new Intent(mContext, MediaManager.class);
+				iMedia.putExtra("sessionName", sessionName.getText().toString());
+				startActivityForResult(iMedia, MEDIA_REQUESTED);
+			} else {
+				sessionName.setError("Enter a session name first");
+			}
 		}
 	}
 
@@ -335,8 +341,14 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void uploadFields() {
 		throughUploadButton = true;
 		if (!rapi.isLoggedIn()) {
-			boolean success = rapi.login(loginPrefs.getString("username", ""),
-					loginPrefs.getString("password", ""));
+			
+			boolean success = false;
+			if (loginPrefs.getString("username", "").equals(""))
+				success = false;
+			else
+				success = rapi.login(loginPrefs.getString("username", ""),
+						loginPrefs.getString("password", ""));
+			
 			if (success)
 				manageUploadQueue();
 			else

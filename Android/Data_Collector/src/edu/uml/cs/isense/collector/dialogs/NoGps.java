@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.simpledialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,17 +8,17 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import edu.uml.cs.isense.collector.R;
 
-public class NoQR extends Activity {
+public class NoGps extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.no_qr);
+		setContentView(R.layout.no_gps);
 		
 		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
-		final Button visit = (Button) findViewById(R.id.no_qr_visit);
-		visit.setOnClickListener(new OnClickListener() {
+		final Button yes = (Button) findViewById(R.id.no_gps_yes);
+		yes.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_OK);
@@ -26,8 +26,8 @@ public class NoQR extends Activity {
 			}
 		});
 		
-		final Button cancel = (Button) findViewById(R.id.no_qr_cancel);
-		cancel.setOnClickListener(new OnClickListener() {
+		final Button no = (Button) findViewById(R.id.no_gps_no);
+		no.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);

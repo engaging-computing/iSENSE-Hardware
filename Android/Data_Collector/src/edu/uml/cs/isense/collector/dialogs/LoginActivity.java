@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.complexdialogs;
+package edu.uml.cs.isense.collector.dialogs;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,6 @@ import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.simpledialogs.LoginError;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class LoginActivity extends Activity {

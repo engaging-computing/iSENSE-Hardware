@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.shared;
+package edu.uml.cs.isense.collector.shared;
 
 import java.util.LinkedList;
 import java.util.Queue;
