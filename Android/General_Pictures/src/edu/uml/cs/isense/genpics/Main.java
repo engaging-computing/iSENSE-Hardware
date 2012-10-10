@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.location.Address;
@@ -202,6 +201,7 @@ public class Main extends Activity implements LocationListener {
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
+					OrientationManager.disableRotation(Main.this);
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 				} else {
 					w.make("Cannot write to external storage.",
@@ -505,8 +505,10 @@ public class Main extends Activity implements LocationListener {
 					if (rapi.isLoggedIn()) {
 						calledBySmartUp = false;
 						new UploadTask().execute();
-					} else
+					} else {
 						qsave(picture);
+						OrientationManager.enableRotation(Main.this);
+					}
 				} else {
 					calledBySmartUp = false;
 					new UploadTask().execute();	
