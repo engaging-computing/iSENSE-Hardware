@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.gcollector.R;
-import edu.uml.cs.isense.gcollector.ManualEntry;
+import edu.uml.cs.isense.gcollector.GroupEntry;
 import edu.uml.cs.isense.gcollector.experiment.BrowseExperiments;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -43,7 +43,7 @@ public class ExperimentDialog extends Activity {
 					setResult(RESULT_CANCELED);
 					finish();
 				} else {
-					Intent send = new Intent(ExperimentDialog.this, ManualEntry.class);
+					Intent send = new Intent(ExperimentDialog.this, GroupEntry.class);
 					send.putExtra("eid", eid.getText().toString());
 					SharedPreferences.Editor mEdit = mPrefs.edit();
 					mEdit.putString("experiment_id", eid.getText().toString()).commit();
