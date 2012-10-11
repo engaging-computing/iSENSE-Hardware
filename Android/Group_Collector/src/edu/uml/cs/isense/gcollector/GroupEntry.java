@@ -55,10 +55,10 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class ManualEntry extends Activity implements OnClickListener,
+public class GroupEntry extends Activity implements OnClickListener,
 		LocationListener {
 
-	public static final String activityName = "manualentry";
+	public static final String activityName = "groupentry";
 	private static final String PREFERENCES_EXP_ID = "experiment_id";
 
 	private static final int TYPE_DEFAULT = 1;
@@ -413,7 +413,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public void onPause() {
 		super.onPause();
 		if (mLocationManager != null)
-			mLocationManager.removeUpdates(ManualEntry.this);
+			mLocationManager.removeUpdates(GroupEntry.this);
 
 		if (uploadQueue != null)
 			Log.d("uploadQ - onPause", "" + uploadQueue.size());
@@ -424,7 +424,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public void onStop() {
 		super.onStop();
 		if (mLocationManager != null)
-			mLocationManager.removeUpdates(ManualEntry.this);
+			mLocationManager.removeUpdates(GroupEntry.this);
 	}
 
 	private String getJSONData() {
@@ -474,7 +474,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
-					ManualEntry.this);
+					GroupEntry.this);
 		} else {
 			if (showGpsDialog) {
 				Intent iNoGps = new Intent(mContext, NoGps.class);
@@ -512,9 +512,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected void onPreExecute() {
 
-			OrientationManager.disableRotation(ManualEntry.this);
+			OrientationManager.disableRotation(GroupEntry.this);
 
-			dia = new ProgressDialog(ManualEntry.this);
+			dia = new ProgressDialog(GroupEntry.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Loading data fields...");
 			dia.setCancelable(false);
@@ -553,7 +553,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				}
 
 				dia.dismiss();
-				OrientationManager.enableRotation(ManualEntry.this);
+				OrientationManager.enableRotation(GroupEntry.this);
 			}
 
 			super.onPostExecute(result);
@@ -570,9 +570,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected void onPreExecute() {
 
-			OrientationManager.disableRotation(ManualEntry.this);
+			OrientationManager.disableRotation(GroupEntry.this);
 
-			dia = new ProgressDialog(ManualEntry.this);
+			dia = new ProgressDialog(GroupEntry.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Saving data...");
 			dia.setCancelable(false);
@@ -585,7 +585,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected Void doInBackground(Void... params) {
 
 			try {
-				List<Address> address = new Geocoder(ManualEntry.this,
+				List<Address> address = new Geocoder(GroupEntry.this,
 						Locale.getDefault()).getFromLocation(loc.getLatitude(),
 						loc.getLongitude(), 1);
 				if (address.size() > 0) {
@@ -624,7 +624,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 
 			dia.dismiss();
-			OrientationManager.enableRotation(ManualEntry.this);
+			OrientationManager.enableRotation(GroupEntry.this);
 			MediaManager.mediaCount = 0;
 
 			super.onPostExecute(result);
@@ -674,9 +674,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected void onPreExecute() {
 
-			OrientationManager.disableRotation(ManualEntry.this);
+			OrientationManager.disableRotation(GroupEntry.this);
 
-			dia = new ProgressDialog(ManualEntry.this);
+			dia = new ProgressDialog(GroupEntry.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Preparing pictures...");
 			dia.setCancelable(false);
@@ -692,7 +692,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected Void doInBackground(Void... params) {
 			String city = "", state = "", country = "", addr = "";
 			try {
-				List<Address> address = new Geocoder(ManualEntry.this,
+				List<Address> address = new Geocoder(GroupEntry.this,
 						Locale.getDefault()).getFromLocation(loc.getLatitude(),
 						loc.getLongitude(), 1);
 				if (address.size() > 0) {
@@ -728,7 +728,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected void onPostExecute(Void result) {
 			dia.dismiss();
-			OrientationManager.enableRotation(ManualEntry.this);
+			OrientationManager.enableRotation(GroupEntry.this);
 			super.onPostExecute(result);
 			uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 		}

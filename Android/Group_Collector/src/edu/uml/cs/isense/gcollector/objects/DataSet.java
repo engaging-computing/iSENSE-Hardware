@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import edu.uml.cs.isense.gcollector.ManualEntry;
+import edu.uml.cs.isense.gcollector.GroupEntry;
 import edu.uml.cs.isense.gcollector.shared.QueueUploader;
 
 @SuppressLint("ParserError")
@@ -87,10 +87,10 @@ public class DataSet implements Serializable {
 				if (sid == -1) {
 
 					if (addr.equals("")) {
-						sid = ManualEntry.rapi.createSession(eid, name, desc,
+						sid = GroupEntry.rapi.createSession(eid, name, desc,
 								"N/A", "N/A", "United States");
 					} else {
-						sid = ManualEntry.rapi.createSession(eid, name, desc,
+						sid = GroupEntry.rapi.createSession(eid, name, desc,
 								addr, city + ", " + state, country);
 					}
 
@@ -109,7 +109,7 @@ public class DataSet implements Serializable {
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
-						success = ManualEntry.rapi.putSessionData(sid, eid,
+						success = GroupEntry.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
 							QueueUploader.qpa.uploadQueue.add(this);
@@ -120,11 +120,11 @@ public class DataSet implements Serializable {
 			case PIC:
 				if (sid == -1) sid = QueueUploader.lastSID;
 				if (name.equals("")) {
-					success = ManualEntry.rapi.uploadPictureToSession(
+					success = GroupEntry.rapi.uploadPictureToSession(
 							picture, eid, sid, "*Session Name Not Provided*",
 							"N/A");
 				} else {
-					success = ManualEntry.rapi.uploadPictureToSession(
+					success = GroupEntry.rapi.uploadPictureToSession(
 							picture, eid, sid, name, "N/A");
 				}
 				if (!success)

@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.gcollector.ManualEntry;
+import edu.uml.cs.isense.gcollector.GroupEntry;
 import edu.uml.cs.isense.gcollector.R;
 import edu.uml.cs.isense.gcollector.objects.DataSet;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -55,8 +55,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 		mContext = this;
 	
-		qpa = new QueueParentAssets(ManualEntry.uploadQueue,
-				ManualEntry.activityName, ManualEntry.mContext);
+		qpa = new QueueParentAssets(GroupEntry.uploadQueue,
+				GroupEntry.activityName, GroupEntry.mContext);
 		
 		Button upload = (Button) findViewById(R.id.upload);
 		upload.setOnClickListener(this);
