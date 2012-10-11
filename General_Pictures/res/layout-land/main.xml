@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="@+string/iSlogo"
+                android:contentDescription="@string/iSlogo"
                 android:scaleType="fitCenter"
                 android:src="@drawable/logo" />
 
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:paddingTop="12dip"
-                    android:text="@+string/firstName"
+                    android:text="@string/firstName"
                     android:textColor="@android:color/black"
                     android:textSize="18dip" />
 
@@ -131,7 +131,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:background="@drawable/colorless"
-                android:text="@+string/takePic"
+                android:text="@string/takePic"
                 android:textColor="@android:color/white"
                 android:textSize="30dip" />
         </LinearLayout>
