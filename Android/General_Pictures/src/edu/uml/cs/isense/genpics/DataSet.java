@@ -17,7 +17,7 @@ public class DataSet implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 3776465868309657210L;
-	
+
 	public static final int NO_SESSION_DEFINED = -1;
 
 	public enum Type {
@@ -46,13 +46,19 @@ public class DataSet implements Serializable {
 
 	/**
 	 * Contructs an object of type DataSet
-	 * @param type DataSet.PIC or DataSet.DATA
+	 * 
+	 * @param type
+	 *            DataSet.PIC or DataSet.DATA
 	 * @param name
 	 * @param desc
 	 * @param eid
-	 * @param data If type is DataSet.DATA, we look here.
-	 * @param picture If type is DataSet.PIC, we look here.
-	 * @param sid Give me DataSet.NO_SESSION_DEFINED if you haven't called create session.
+	 * @param data
+	 *            If type is DataSet.DATA, we look here.
+	 * @param picture
+	 *            If type is DataSet.PIC, we look here.
+	 * @param sid
+	 *            Give me DataSet.NO_SESSION_DEFINED if you haven't called
+	 *            create session.
 	 * @param city
 	 * @param state
 	 * @param country
@@ -87,18 +93,19 @@ public class DataSet implements Serializable {
 				if (sid == -1) {
 
 					if (addr.equals("")) {
-						sid = Main.rapi.createSession(eid, name, desc,
-								"N/A", "N/A", "United States");
+						sid = Main.rapi.createSession(eid, name, desc, "N/A",
+								"N/A", "United States");
 					} else {
-						sid = Main.rapi.createSession(eid, name, desc,
-								addr, city + ", " + state, country);
+						sid = Main.rapi.createSession(eid, name, desc, addr,
+								city + ", " + state, country);
 					}
 
 					if (sid == -1) {
 						success = false;
 						QueueUploader.qpa.uploadQueue.add(this);
 						break;
-					} else QueueUploader.lastSID = sid;
+					} else
+						QueueUploader.lastSID = sid;
 				}
 
 				// Experiment Closed Checker
@@ -109,8 +116,7 @@ public class DataSet implements Serializable {
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
-						success = Main.rapi.putSessionData(sid, eid,
-								dataJSON);
+						success = Main.rapi.putSessionData(sid, eid, dataJSON);
 						if (!success)
 							QueueUploader.qpa.uploadQueue.add(this);
 					}
@@ -118,17 +124,43 @@ public class DataSet implements Serializable {
 				break;
 
 			case PIC:
-				if (sid == -1) sid = QueueUploader.lastSID;
-				if (name.equals("")) {
-					success = Main.rapi.uploadPictureToSession(
-							picture, eid, sid, "*Session Name Not Provided*",
-							"N/A");
-				} else {
-					success = Main.rapi.uploadPictureToSession(
-							picture, eid, sid, name, "N/A");
+				if (sid == -1)
+					sid = QueueUploader.lastSID;
+				if (sid == -1) {
+
+					if (addr.equals("")) {
+						sid = Main.rapi.createSession(eid, name, desc, "N/A",
+								"N/A", "United States");
+					} else {
+						sid = Main.rapi.createSession(eid, name, desc, addr,
+								city + ", " + state, country);
+					}
+
+					if (sid == -1) {
+						success = false;
+						QueueUploader.qpa.uploadQueue.add(this);
+						break;
+					} else
+						QueueUploader.lastSID = sid;
 				}
-				if (!success)
+
+				// Experiment Closed Checker
+				if (sid == -400) {
+					success = false;
 					QueueUploader.qpa.uploadQueue.add(this);
+					break;
+				} else {
+					if (name.equals("")) {
+
+						success = Main.rapi.uploadPictureToSession(picture,
+								eid, sid, "*Session Name Not Provided*", "N/A");
+					} else {
+						success = Main.rapi.uploadPictureToSession(picture,
+								eid, sid, name, "N/A");
+					}
+					if (!success)
+						QueueUploader.qpa.uploadQueue.add(this);
+				}
 				break;
 
 			}
@@ -156,7 +188,7 @@ public class DataSet implements Serializable {
 		return this.rdyForUpload;
 	}
 
-	//Getters and Setters
+	// Getters and Setters
 	public int getSid() {
 		return sid;
 	}
@@ -164,7 +196,7 @@ public class DataSet implements Serializable {
 	public void setSid(int sid) {
 		this.sid = sid;
 	}
-	
+
 	public String getEID() {
 		return this.eid;
 	}
@@ -185,5 +217,5 @@ public class DataSet implements Serializable {
 		else
 			return "Unsupported Type";
 	}
-	
+
 }
