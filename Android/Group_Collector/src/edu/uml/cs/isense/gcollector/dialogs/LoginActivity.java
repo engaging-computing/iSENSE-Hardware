@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.gcollector.ManualEntry;
+import edu.uml.cs.isense.gcollector.GroupEntry;
 import edu.uml.cs.isense.gcollector.R;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
@@ -55,7 +55,7 @@ public class LoginActivity extends Activity {
 		final Button cancel = (Button) findViewById(R.id.login_cancel);
 		
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				   ManualEntry.mContext, ManualEntry.mContext
+				   GroupEntry.mContext, GroupEntry.mContext
 				   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
 		
 		username.setText(mPrefs.getString("username", ""));
@@ -68,13 +68,13 @@ public class LoginActivity extends Activity {
        			   
 				if (success) {
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-							ManualEntry.mContext, ManualEntry.mContext
+							GroupEntry.mContext, GroupEntry.mContext
  						   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
  				   	mPrefs.edit().putString("username", username.getText().toString()).commit();
  				   	mPrefs.edit().putString("password", password.getText().toString()).commit();
  				   	
  				   	returnCode = "Success";
- 				   	Intent ret = new Intent(LoginActivity.this, ManualEntry.class);
+ 				   	Intent ret = new Intent(LoginActivity.this, GroupEntry.class);
  				   	ret.putExtra("returnCode", returnCode);
  				   	setResult(RESULT_OK, ret);
  				   	finish();
@@ -124,7 +124,7 @@ public class LoginActivity extends Activity {
 
 		if (requestCode == ERROR_REQUESTED) {
 			String codeFromError = data.getStringExtra("returnCode");
-			Intent ret = new Intent(LoginActivity.this, ManualEntry.class);
+			Intent ret = new Intent(LoginActivity.this, GroupEntry.class);
 			ret.putExtra("returnCode", codeFromError);
 			setResult(RESULT_OK, ret);
 			finish();
