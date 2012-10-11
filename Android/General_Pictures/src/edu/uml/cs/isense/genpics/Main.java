@@ -2,6 +2,7 @@ package edu.uml.cs.isense.genpics;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -21,7 +22,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.location.Address;
@@ -134,7 +134,7 @@ public class Main extends Activity implements LocationListener {
 		experimentLabel.setText(getResources().getString(R.string.experiment)
 				+ mPrefs.getString("experiment_id", "None Set"));
 
-		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mHandler = new Handler();
 
@@ -248,14 +248,14 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	protected void onResume() {
 
-		if (!rapi.isLoggedIn() && !initialLoginStatus)
+		if (!rapi.isLoggedIn())
 			attemptLogin();
 
 		// Rebuilds uploadQueue from saved info
 		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
 				mContext);
 		queueCount.setText("Queue Count: " + uploadQueue.size());
-		
+
 		// Check to see if now is the right time to try to upload information.
 		manageUploadQueue();
 
@@ -263,7 +263,9 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	private void manageUploadQueue() {
-		if (rapi.isLoggedIn() && (uploadQueue.size() > 0) && rapi.isConnectedToInternet()) {
+		
+		if (rapi.isLoggedIn() && (uploadQueue.size() > 0)
+				&& rapi.isConnectedToInternet()) {
 			Intent i = new Intent().setClass(mContext, QueueUploader.class);
 			i.putExtra(QueueUploader.INTENT_IDENTIFIER,
 					QueueUploader.QUEUE_MAIN);
@@ -277,7 +279,7 @@ public class Main extends Activity implements LocationListener {
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-		
+
 		super.onStart();
 	}
 
@@ -366,11 +368,15 @@ public class Main extends Activity implements LocationListener {
 							Context.MODE_PRIVATE));
 
 			boolean success = false;
-			if (rapi.isLoggedIn()) {
-				success = true;
+			if (rapi.isConnectedToInternet()) {
+				if (rapi.isLoggedIn()) {
+					success = true;
+				} else {
+					success = rapi.login(loginPrefs.getString("username", ""),
+							loginPrefs.getString("password", ""));
+				}
 			} else {
-				success = rapi.login(loginPrefs.getString("username", ""),
-						loginPrefs.getString("password", ""));
+				success = true;
 			}
 
 			if (!success) {
@@ -419,11 +425,11 @@ public class Main extends Activity implements LocationListener {
 			int sessionId = -1;
 			if (address == null || address.size() <= 0) {
 				sessionId = rapi.createSession(experimentNum, name.getText()
-						.toString(), "" + curTime, "", "", "");
+						.toString(), makeThisDatePretty(curTime), "", "", "");
 			} else {
 				sessionId = rapi.createSession(experimentNum, name.getText()
-						.toString(), "" + curTime, addr, city + ", " + state,
-						country);
+						.toString(), makeThisDatePretty(curTime), addr, city
+						+ ", " + state, country);
 			}
 
 			if (sessionId == -1) {
@@ -431,8 +437,9 @@ public class Main extends Activity implements LocationListener {
 				postRunnableWaffleError("Encountered upload problem: could not create session");
 				// Add new DataSet to Queue
 				DataSet d = new DataSet(DataSet.Type.PIC, name.getText()
-						.toString(), "" + curTime, experimentNum, null,
-						picture, sessionId, city, state, country, addr);
+						.toString(), makeThisDatePretty(curTime),
+						experimentNum, null, picture, sessionId, city, state,
+						country, addr);
 				uploadQueue.add(d);
 				return;
 			}
@@ -465,9 +472,9 @@ public class Main extends Activity implements LocationListener {
 					postRunnableWaffleError("Encountered upload problem: could not add picture");
 					// Add new DataSet to Queue
 					DataSet d = new DataSet(DataSet.Type.DATA, name.getText()
-							.toString(), "" + curTime, experimentNum,
-							dataJSON.toString(), null, sessionId, city, state,
-							country, addr);
+							.toString(), makeThisDatePretty(curTime),
+							experimentNum, dataJSON.toString(), null,
+							sessionId, city, state, country, addr);
 					uploadQueue.add(d);
 					return;
 				}
@@ -478,8 +485,9 @@ public class Main extends Activity implements LocationListener {
 					uploadError = true;
 					// Add new DataSet to Queue
 					DataSet d = new DataSet(DataSet.Type.PIC, name.getText()
-							.toString(), "" + curTime, experimentNum, null,
-							picture, sessionId, city, state, country, addr);
+							.toString(), makeThisDatePretty(curTime),
+							experimentNum, null, picture, sessionId, city,
+							state, country, addr);
 					uploadQueue.add(d);
 				}
 			}
@@ -496,10 +504,10 @@ public class Main extends Activity implements LocationListener {
 				picture = convertImageUriToFile(imageUri);
 
 				takePicture.setEnabled(true);
-				
+
 				// Rebuilds uploadQueue from saved info
-				uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
-						mContext);
+				uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
+						activityName, mContext);
 				queueCount.setText("Queue Count: " + uploadQueue.size());
 
 				new UploadTask().execute();
@@ -596,10 +604,11 @@ public class Main extends Activity implements LocationListener {
 				w.make("Upload successful", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
-			
-			queueCount.setText("" + uploadQueue.size());
+
+			queueCount.setText("Queue Count: " + uploadQueue.size());
 			QueueUploader.storeQueue(uploadQueue, activityName, mContext);
-			uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
+			uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
+					activityName, mContext);
 
 			uploadError = false;
 		}
@@ -704,6 +713,11 @@ public class Main extends Activity implements LocationListener {
 		// Q_COUNT
 		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 		super.onPause();
+	}
+
+	private String makeThisDatePretty(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
+		return sdf.format(time);
 	}
 
 }
