@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent"
+    android:scrollbarThumbVertical="@drawable/grey_scroll" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/transparent" >
+
+        <TextView
+            android:id="@+id/mediaManagerInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/media_desc"
+            android:textSize="16dp"
+            android:background="@android:color/transparent" />
+
+        <LinearLayout
+            android:id="@+id/picAndVidLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal"
+            android:background="@android:color/transparent" >
+
+            <Button
+                android:id="@+id/mediaPicture"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/colorless"
+                android:text="@string/takePic"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/mediaVideo"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/colorless"
+                android:text="@string/takeVid"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/mediaBack"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/colorless"
+            android:text="@string/back"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/mediaCounter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/picAndVidCount"
+            android:textSize="15sp"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+</ScrollView>
