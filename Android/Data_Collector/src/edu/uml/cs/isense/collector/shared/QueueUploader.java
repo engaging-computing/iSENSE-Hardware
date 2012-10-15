@@ -39,7 +39,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 	public static final int QUEUE_DATA_COLLECTOR = 1;
 	public static final int QUEUE_MANUAL_ENTRY = 2;
 	
-	private static final int DELETE_DATASET_REQUESTED = 101;
+	private static final int ALTER_DATASET_REQUESTED = 9001;
 	
 	public static final String INTENT_IDENTIFIER = "intent_identifier";
 	
@@ -54,6 +54,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 	
 	private DataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
+	private Waffle w;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 		setContentView(R.layout.queueprompt);
 
 		mContext = this;
+		w = new Waffle(mContext);
 
 		String tag = "QUEUE_PARENT";
 		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
@@ -139,8 +141,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 						lastDataSetLongClicked = ds;
 						lastViewLongClicked = data;
 						Intent iDeleteDataSet = new Intent(mContext,
-								DeleteDataSetFromUploadQueue.class);
-						startActivityForResult(iDeleteDataSet, DELETE_DATASET_REQUESTED);
+								QueueAlter.class);
+						startActivityForResult(iDeleteDataSet, ALTER_DATASET_REQUESTED);
 						return false;
 					}
 
@@ -186,8 +188,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 						lastDataSetLongClicked = ds;
 						lastViewLongClicked = pic;
 						Intent iDeleteDataSet = new Intent(mContext,
-								DeleteDataSetFromUploadQueue.class);
-						startActivityForResult(iDeleteDataSet, DELETE_DATASET_REQUESTED);
+								QueueAlter.class);
+						startActivityForResult(iDeleteDataSet, ALTER_DATASET_REQUESTED);
 						return false;
 					}
 
@@ -391,12 +393,33 @@ public class QueueUploader extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if (requestCode == DELETE_DATASET_REQUESTED) {
+		if (requestCode == ALTER_DATASET_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				qpa.uploadQueue.remove(lastDataSetLongClicked);
-				qpa.mirrorQueue.remove(lastDataSetLongClicked);
-				scrollQueue.removeView(lastViewLongClicked);
-				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+				
+				int returnCode = data.getIntExtra(QueueAlter.RETURN_CODE, -1);
+				
+				switch (returnCode) {
+				
+				case QueueAlter.RENAME:
+					
+					break;
+					
+				case QueueAlter.CHANGE_DATA:
+					
+					break;
+					
+				case QueueAlter.DELETE:
+					qpa.uploadQueue.remove(lastDataSetLongClicked);
+					qpa.mirrorQueue.remove(lastDataSetLongClicked);
+					scrollQueue.removeView(lastViewLongClicked);
+					storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+					
+					break;
+					
+				default:
+					w.make("Could not process request.", Waffle.IMAGE_X);
+					break;	
+				}	
 			}
 		}
 		

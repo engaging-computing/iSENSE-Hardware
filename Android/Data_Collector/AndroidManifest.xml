@@ -115,7 +115,7 @@
             android:label="Upload Data"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".shared.DeleteDataSetFromUploadQueue"
+            android:name=".shared.QueueAlter"
             android:label="DataSet Manager"
             android:theme="@style/theme_dialog_black" />
         <activity
