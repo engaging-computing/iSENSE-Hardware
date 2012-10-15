@@ -153,6 +153,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	// Control task for uploading data from SD card
 	class UploadSDTask extends AsyncTask<Void, Integer, Void> {
+		
+		boolean dialogShow = true;
+		
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(QueueUploader.this);
@@ -163,7 +166,13 @@ public class QueueUploader extends Activity implements OnClickListener {
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
-			dia.show();
+			try {
+				dia.show();
+			} catch (IllegalArgumentException e) {
+				Log.w("tag", "WARNING: dialog not showing\n\n" + e);
+				e.printStackTrace();
+				dialogShow = false;
+			}
 		}
 
 		@Override
@@ -182,7 +191,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 						Waffle.IMAGE_CHECK);
 			else
 				w.make("Upload failed.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-			dia.dismiss();
+			
+			if (dialogShow)
+				dia.dismiss();
 
 			OrientationManager.enableRotation(QueueUploader.this);
 
