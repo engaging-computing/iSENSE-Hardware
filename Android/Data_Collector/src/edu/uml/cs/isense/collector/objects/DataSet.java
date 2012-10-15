@@ -173,10 +173,6 @@ public class DataSet implements Serializable {
 		return this.desc;
 	}
 
-	public CharSequence getName() {
-		return this.name;
-	}
-
 	public CharSequence getType() {
 		if (this.type == Type.PIC)
 			return "Picture";
@@ -184,6 +180,14 @@ public class DataSet implements Serializable {
 			return "Data";
 		else
 			return "Unsupported Type";
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public CharSequence getName() {
+		return this.name;
 	}
 	
 }
