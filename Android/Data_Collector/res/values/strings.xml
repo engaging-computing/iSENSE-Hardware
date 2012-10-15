@@ -341,11 +341,13 @@
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
 	<string name="session_name">Session Name</string>
-	
 	<string name="queue_alter">What would you like to do with this data set?</string>
 	<string name="rename">Rename</string>
 	<string name="change_data">Change Data</string>
 	<string name="delete">Delete</string>
-	
+	<string name="queue_rename">Enter a new name for your data set:</string>
+	<string name="digits_restriction">
+	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()
+	</string>
 	
 </resources>
