@@ -37,12 +37,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.isense.gcollector.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.gcollector.dialogs.ExperimentDialog;
 import edu.uml.cs.isense.gcollector.dialogs.LoginActivity;
@@ -60,6 +60,9 @@ public class GroupEntry extends Activity implements OnClickListener,
 
 	public static final String activityName = "groupentry";
 	private static final String PREFERENCES_EXP_ID = "experiment_id";
+	
+	private static final String PREFERENCES_GROUPS = "groups";
+	private static final String GROUP_STRING = "group_string";
 
 	private static final int TYPE_DEFAULT = 1;
 	private static final int TYPE_LATITUDE = 2;
@@ -77,14 +80,12 @@ public class GroupEntry extends Activity implements OnClickListener,
 	private Waffle w;
 	public static RestAPI rapi;
 
-	private Button saveData;
-	private Button clearData;
+	private ImageButton saveData;
+	private ImageButton geoLocate;
 	private ImageButton mediaButton;
+	private Spinner groupName;
 
 	public static Context mContext;
-
-	private TextView loginLabel;
-	private TextView experimentLabel;
 
 	private SharedPreferences loginPrefs;
 	private SharedPreferences expPrefs;
@@ -99,8 +100,6 @@ public class GroupEntry extends Activity implements OnClickListener,
 	private static boolean throughUploadButton = false;
 
 	private ArrayList<ExperimentField> fieldOrder;
-
-	private EditText sessionName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -122,24 +121,22 @@ public class GroupEntry extends Activity implements OnClickListener,
 
 		expPrefs = getSharedPreferences("EID", 0);
 
-		loginLabel = (TextView) findViewById(R.id.loginLabel);
-		loginLabel.setText(getResources().getString(R.string.loggedInAs)
-				+ loginPrefs.getString("username", ""));
-
-		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		experimentLabel.setText(getResources().getString(
-				R.string.usingExperiment)
-				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
-
-		sessionName = (EditText) findViewById(R.id.manual_session_name);
-
-		saveData = (Button) findViewById(R.id.manual_save);
-		clearData = (Button) findViewById(R.id.manual_clear);
+		saveData = (ImageButton) findViewById(R.id.manual_save);
+		geoLocate = (ImageButton) findViewById(R.id.manual_geolocate);
 		mediaButton = (ImageButton) findViewById(R.id.manual_media_button);
 
 		saveData.setOnClickListener(this);
-		clearData.setOnClickListener(this);
+		geoLocate.setOnClickListener(this);
 		mediaButton.setOnClickListener(this);
+		
+		// TODO - remove this test when actually filling the spinner
+		SharedPreferences groupPrefs = getSharedPreferences(PREFERENCES_GROUPS, 0);
+		SharedPreferences.Editor groupEdit = groupPrefs.edit();
+		groupEdit.putString(GROUP_STRING, "A,B,C,D").commit();
+		// -------------
+		
+		groupName = (Spinner) findViewById(R.id.group_name);
+		fillSpinner();
 		
 		w = new Waffle(this);
 		uploadQueue = new LinkedList<DataSet>();
@@ -155,36 +152,49 @@ public class GroupEntry extends Activity implements OnClickListener,
 		}
 
 	}
+	
+	private void fillSpinner() { // TODO - complete this function!
+		
+		SharedPreferences groupPrefs = getSharedPreferences(PREFERENCES_GROUPS, 0);	
+		String groupList = groupPrefs.getString(GROUP_STRING, "");
+		
+		if (!groupList.equals("")) {
+		
+			String[] groups = groupList.split(",");
+			if (groups.length != 0) {
+		
+				final ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(
+						mContext, android.R.layout.simple_spinner_dropdown_item, groups);
+		
+				groupName.setAdapter(groupAdapter);
+			}	
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.manual_clear:
-			clearFields();
+		case R.id.manual_geolocate:
+			// TODO - automatic geolocation 
 			break;
 		case R.id.manual_save:
 			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
 			
-			// Clear the setError if the user has finally entered a session name
-			if (sessionName.getText().toString().length() != 0)
-				sessionName.setError(null);
-			
 			if (exp.equals("")) {
-				w.make("Invalid or no selected experiment.");
-			} else if (sessionName.getText().toString().length() == 0) {
-				sessionName.setError("Enter a session name");
+				w.make("Invalid or no selected experiment.", Waffle.IMAGE_X);
+			} else if (groupName.getSelectedItem().toString().equals("")) {
+				w.make("Please select a group first.", Waffle.IMAGE_X);
 			} else {
 				new SaveDataTask().execute();
 			}
 			break;
 		case R.id.manual_media_button:
-			if (sessionName.getText().toString().length() != 0) {
-				sessionName.setError(null);
+			if (!groupName.getSelectedItem().toString().equals("")) {
 				Intent iMedia = new Intent(mContext, MediaManager.class);
-				iMedia.putExtra("sessionName", sessionName.getText().toString());
+				iMedia.putExtra("sessionName", groupName.getSelectedItem().toString());
 				startActivityForResult(iMedia, MEDIA_REQUESTED);
 			} else {
-				sessionName.setError("Enter a session name first");
+				w.make("Enter a group name first.", Waffle.IMAGE_X);
 			}
 		}
 	}
@@ -199,12 +209,6 @@ public class GroupEntry extends Activity implements OnClickListener,
 
 				if (returnCode.equals("Success")) {
 
-					String loginName = loginPrefs.getString("username", "");
-					if (loginName.length() >= 18)
-						loginName = loginName.substring(0, 18) + "...";
-					loginLabel.setText(getResources().getString(
-							R.string.loggedInAs)
-							+ loginName);
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
@@ -327,7 +331,7 @@ public class GroupEntry extends Activity implements OnClickListener,
 		}
 	}
 
-	private void clearFields() {
+	/*private void clearFields() {
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
@@ -335,7 +339,7 @@ public class GroupEntry extends Activity implements OnClickListener,
 				dataFieldContents.setText("");
 		}
 		sessionName.setText("");
-	}
+	}*/
 
 	private void uploadFields() {
 		throughUploadButton = true;
@@ -542,10 +546,7 @@ public class GroupEntry extends Activity implements OnClickListener,
 
 			if (!error) {
 				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
-				experimentLabel.setText(getResources().getString(
-						R.string.usingExperiment)
-						+ eid);
-
+				
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
 				} catch (NumberFormatException nfe) {
@@ -603,8 +604,9 @@ public class GroupEntry extends Activity implements OnClickListener,
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
-			ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
-					.toString(), uploadTime, eid, data, null, -1, city, state,
+			String name = groupName.getSelectedItem().toString();
+			ds = new DataSet(DataSet.Type.DATA, name, 
+					uploadTime, eid, data, null, -1, city, state,
 					country, addr);
 
 			return null;
@@ -707,12 +709,14 @@ public class GroupEntry extends Activity implements OnClickListener,
 			}
 			
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
-			String name = (sessionName.getText().toString().equals("")) ? 
-					"(No name provided)" : sessionName.getText().toString();
 			
 			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
 			if (eid != null) {
+				
+				String name = groupName.getSelectedItem().toString();
+				
 				for (File picture : MediaManager.pictureArray) {
+					
 					DataSet picDS = new DataSet(DataSet.Type.PIC, name, uploadTime,
 							eid, null, picture, DataSet.NO_SESSION_DEFINED,
 							city, state, country, addr);
