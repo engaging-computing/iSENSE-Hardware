@@ -138,6 +138,10 @@
             android:name=".shared.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".shared.QueueEditData"
+            android:label="Change Data"
+            android:theme="@style/DialogTheme" />
         
     </application>
 
