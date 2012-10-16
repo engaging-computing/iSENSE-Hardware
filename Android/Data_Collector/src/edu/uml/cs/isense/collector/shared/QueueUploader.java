@@ -41,6 +41,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	private static final int ALTER_DATASET_REQUESTED = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
+	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
 
 	public static final String INTENT_IDENTIFIER = "intent_identifier";
 
@@ -53,7 +54,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
 
-	private DataSet lastDataSetLongClicked;
+	public static DataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
 	private Waffle w;
 
@@ -92,11 +93,11 @@ public class QueueUploader extends Activity implements OnClickListener {
 		qpa = new QueueParentAssets(q, pn, c);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
-		fillScrollQueue(scrollQueue);
+		fillScrollQueue();
 	}
 
 	// Works through list of data to be uploaded and creates the list of blocks
-	private void fillScrollQueue(LinearLayout scrollQueue) {
+	private void fillScrollQueue() {
 
 		for (final DataSet ds : qpa.mirrorQueue)
 			addViewToScrollQueue(ds);
@@ -321,7 +322,10 @@ public class QueueUploader extends Activity implements OnClickListener {
 					break;
 
 				case QueueAlter.CHANGE_DATA:
-
+					
+					Intent iData = new Intent(mContext, QueueEditData.class);
+					startActivityForResult(iData, ALTER_DATA_DATA_REQUESTED);
+					
 					break;
 
 				case QueueAlter.DELETE:
@@ -355,6 +359,22 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 					storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 				}
+			}
+		} else if (requestCode == ALTER_DATA_DATA_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				DataSet alter = QueueEditData.alter;
+
+				qpa.uploadQueue.remove(lastDataSetLongClicked);
+				qpa.mirrorQueue.remove(lastDataSetLongClicked);
+				scrollQueue.removeView(lastViewLongClicked);
+
+				qpa.uploadQueue.add(alter);
+				qpa.mirrorQueue.add(alter);
+				addViewToScrollQueue(alter);
+				
+				Log.e("rofl", alter.getData());
+
+				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 			}
 		}
 
@@ -405,9 +425,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = data;
-					Intent iDeleteDataSet = new Intent(mContext,
+					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
-					startActivityForResult(iDeleteDataSet,
+					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
 				}

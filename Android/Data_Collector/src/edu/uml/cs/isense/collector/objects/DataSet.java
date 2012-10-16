@@ -190,4 +190,12 @@ public class DataSet implements Serializable {
 		return this.name;
 	}
 	
+	public void setData(String data) {
+		this.data = data;
+	}
+	
+	public String getData() {
+		return this.data;
+	}
+	
 }

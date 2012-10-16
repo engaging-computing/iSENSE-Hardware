@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp" >
+
+    <TextView
+        android:id="@+id/edit_row_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/edit_row_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:inputType="phone"
+        android:digits="1234567890."
+        android:maxLength="12"
+        android:singleLine="true"
+        android:imeOptions="actionDone" >
+
+    </EditText>
+
+</LinearLayout>
