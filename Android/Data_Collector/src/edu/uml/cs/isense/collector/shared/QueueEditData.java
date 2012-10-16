@@ -10,7 +10,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -84,13 +83,9 @@ public class QueueEditData extends Activity {
 		
 		for (ExperimentField ef : fieldOrder) {
 			
-			Log.e("tag", "i     = " + i);
-			Log.e("tag", "label = " + ef.field_name);
-			Log.e("tag", "data  = " + fieldData[i]);
-			
 			final View dataRow = View.inflate(mContext, R.layout.edit_row, null);
-			dataRow.setBackgroundResource(R.drawable.listelement_bkgd_changer);
-			dataRow.setVisibility(View.VISIBLE);
+			//dataRow.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+			//dataRow.setVisibility(View.VISIBLE);
 			
 			TextView label = (TextView) dataRow.findViewById(R.id.edit_row_label);
 			label.setText(ef.field_name);
@@ -150,7 +145,7 @@ public class QueueEditData extends Activity {
 			if (eid != -1) {
 				fieldOrder = rapi.getExperimentFields(eid);
 			} else {
-				Log.e("tag", "CRITICAL ERROR!!!!");
+				// Log.e("tag", "CRITICAL ERROR!!!!");
 			}
 
 			return null;

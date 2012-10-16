@@ -19,7 +19,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -42,6 +41,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private static final int ALTER_DATASET_REQUESTED = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
+	
+	private static int QUEUE_PARENT = -1;
 
 	public static final String INTENT_IDENTIFIER = "intent_identifier";
 
@@ -66,9 +67,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		String tag = "QUEUE_PARENT";
-		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
-		Log.d(tag, "" + QUEUE_PARENT);
+		QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
+		
 		switch (QUEUE_PARENT) {
 		case QUEUE_DATA_COLLECTOR:
 			qpa = new QueueParentAssets(DataCollector.uploadQueue,
@@ -170,7 +170,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 			try {
 				dia.show();
 			} catch (IllegalArgumentException e) {
-				Log.w("tag", "WARNING: dialog not showing\n\n" + e);
 				e.printStackTrace();
 				dialogShow = false;
 			}
@@ -371,8 +370,6 @@ public class QueueUploader extends Activity implements OnClickListener {
 				qpa.uploadQueue.add(alter);
 				qpa.mirrorQueue.add(alter);
 				addViewToScrollQueue(alter);
-				
-				Log.e("rofl", alter.getData());
 
 				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 			}
@@ -427,6 +424,7 @@ public class QueueUploader extends Activity implements OnClickListener {
 					lastViewLongClicked = data;
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
+					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
@@ -475,9 +473,10 @@ public class QueueUploader extends Activity implements OnClickListener {
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = pic;
-					Intent iDeleteDataSet = new Intent(mContext,
+					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
-					startActivityForResult(iDeleteDataSet,
+					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
+					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
 				}
