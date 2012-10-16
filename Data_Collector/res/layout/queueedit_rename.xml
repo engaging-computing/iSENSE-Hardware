@@ -23,7 +23,9 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:maxLength="60"
-        android:singleLine="true" >
+        android:singleLine="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
 
         <requestFocus />
     </EditText>
