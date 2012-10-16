@@ -19,11 +19,11 @@
         android:id="@+id/edit_row_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:digits="1234567890."
+        android:digits="@string/numbers_restriction"
         android:ems="12"
         android:imeOptions="actionDone"
         android:inputType="phone"
-        android:maxLength="12"
+        android:maxLength="25"
         android:singleLine="true" >
     </EditText>
 
