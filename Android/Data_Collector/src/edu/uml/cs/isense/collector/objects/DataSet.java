@@ -14,7 +14,7 @@ import edu.uml.cs.isense.collector.splash.Splash;
 public class DataSet implements Serializable {
 
 	/**
-	 * 
+	 * DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
 	 */
 	private static final long serialVersionUID = 3776465868309657210L;
 	
@@ -109,6 +109,7 @@ public class DataSet implements Serializable {
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
+						
 						success = Splash.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
