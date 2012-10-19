@@ -115,7 +115,7 @@
             android:label="Upload Data"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".shared.DeleteDataSetFromUploadQueue"
+            android:name=".shared.QueueAlter"
             android:label="DataSet Manager"
             android:theme="@style/theme_dialog_black" />
         <activity
@@ -133,6 +133,14 @@
         <activity 
             android:name=".dialogs.ExperimentDialog"
             android:label="Experiment ID"
+            android:theme="@style/DialogTheme" />
+        <activity 
+            android:name=".shared.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".shared.QueueEditData"
+            android:label="Change Data"
             android:theme="@style/DialogTheme" />
         
     </application>

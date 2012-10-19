@@ -4,7 +4,8 @@
     <string name="app_name">iSENSE Data Collector</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
-    <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
+    <string name="syncTime">
+        Synchronizing time is useful when using multiple devices on a ride at the
 	    same time.  By default, many Android devices\' clocks will not match one
 	    another\'s, thus making recording data at similar times difficult.  However,
 	    you have a choice to fix this issue by setting a device as a \"host\".
@@ -48,10 +49,12 @@
     <string name="username">Username:&#160;&#160;</string>
     <string name="password">Password:&#160;&#160;&#160;</string>
     <string name="loading">Loading&#x2026;</string>
-    <string name="no_isense">	    You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
+    <string name="no_isense">
+        You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
 		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in
 		to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if
-		you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.</string>
+		you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.
+	</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
@@ -59,9 +62,11 @@
     <string name="description_hint">Enter Description Here&#8230;</string>
     <string name="description_prompt">	    Enter a session description (or leave blank if you\'d like an automatically generated description).</string>
     <string name="visit">Visit</string>
-    <string name="qr_prompt">	    Your device does not have the proper Barcode Scanner application installed
+    <string name="qr_prompt">
+        Your device does not have the proper Barcode Scanner application installed
 		to use this feature.  However, you may visit the Google Play store to download 
-		this application (\"Barcode Scanner\" by the Zxing Team).</string>
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
     <string name="done">Done</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
@@ -333,7 +338,17 @@
     <string name="qmark">\&#63;</string>
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
-	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
 	<string name="session_name">Session Name</string>
+	<string name="queue_alter">What would you like to do with this data set?</string>
+	<string name="rename">Rename</string>
+	<string name="change_data">Change Data</string>
+	<string name="delete">Delete</string>
+	<string name="queue_rename">Enter a new name for your data set:</string>
+	<string name="digits_restriction">
+	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
+	</string>
+	<string name="numbers_restriction">
+	    1234567890.-
+	</string>
 	
 </resources>
