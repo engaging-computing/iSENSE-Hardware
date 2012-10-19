@@ -1,3 +1,19 @@
+/***************************************************************************************************/
+/***************************************************************************************************/
+/**                                                                                               **/
+/**      IIIIIIIIIIIII            General Purpose Manual Data Entry App          SSSSSSSSS        **/
+/**           III                                                               SSS               **/
+/**           III                                                              SSS                **/
+/**           III                    By:               Michael Stowell,         SSS               **/
+/**           III                                      Jeremy Poulin,            SSSSSSSSS        **/
+/**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
+/**           III                                                                        SSS      **/
+/**           III                    Group:            ECG / iSENSE                     SSS       **/
+/**      IIIIIIIIIIIII               Property:         UMass Lowell             SSSSSSSSSS        **/
+/**                                                                                               **/
+/***************************************************************************************************/
+/***************************************************************************************************/
+
 package edu.uml.cs.isense.collector;
 
 import java.io.File;
@@ -30,7 +46,6 @@ import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -297,7 +312,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 							60) });
 			fieldContents
 					.setKeyListener(DigitsKeyListener
-							.getInstance("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"));
+							.getInstance(getResources().getString(R.string.digits_restriction)));
 		} else {
 			// keyboard to nums
 			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -305,7 +320,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
 							20) });
 			fieldContents.setKeyListener(DigitsKeyListener
-					.getInstance("0123456789."));
+					.getInstance(getResources().getString(R.string.numbers_restriction)));
 
 		}
 
@@ -416,8 +431,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
 
-		if (uploadQueue != null)
-			Log.d("uploadQ - onPause", "" + uploadQueue.size());
+		//if (uploadQueue != null)
+			//Log.d("uploadQ - onPause", "" + uploadQueue.size());
 		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
@@ -534,7 +549,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (eid != -1) {
 				fieldOrder = rapi.getExperimentFields(eid);
 			} else {
-				Log.e("tag", "CRITICAL ERROR!!!!");
+				//Log.e("tag", "CRITICAL ERROR!!!!");
 			}
 
 			return null;
@@ -660,8 +675,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		// Rebuilds uploadQueue from saved info
 		uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
 				activityName, mContext);
-		if (uploadQueue != null)
-			Log.d("uploadQ - onResume", "" + uploadQueue.size());
+		//if (uploadQueue != null)
+			//Log.d("uploadQ - onResume", "" + uploadQueue.size());
 
 		super.onResume();
 	}
@@ -720,7 +735,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 							eid, null, picture, DataSet.NO_SESSION_DEFINED,
 							city, state, country, addr);
 					uploadQueue.add(picDS);
-					Log.d("uploadQ", "" + uploadQueue.size());
+					//Log.d("uploadQ", "" + uploadQueue.size());
 				}
 				QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 			}

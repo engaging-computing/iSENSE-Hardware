@@ -14,7 +14,7 @@ import edu.uml.cs.isense.collector.splash.Splash;
 public class DataSet implements Serializable {
 
 	/**
-	 * 
+	 * DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
 	 */
 	private static final long serialVersionUID = 3776465868309657210L;
 	
@@ -109,6 +109,7 @@ public class DataSet implements Serializable {
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
 					if (!(dataJSON.isNull(0))) {
+						
 						success = Splash.rapi.putSessionData(sid, eid,
 								dataJSON);
 						if (!success)
@@ -173,10 +174,6 @@ public class DataSet implements Serializable {
 		return this.desc;
 	}
 
-	public CharSequence getName() {
-		return this.name;
-	}
-
 	public CharSequence getType() {
 		if (this.type == Type.PIC)
 			return "Picture";
@@ -184,6 +181,22 @@ public class DataSet implements Serializable {
 			return "Data";
 		else
 			return "Unsupported Type";
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public CharSequence getName() {
+		return this.name;
+	}
+	
+	public void setData(String data) {
+		this.data = data;
+	}
+	
+	public String getData() {
+		return this.data;
 	}
 	
 }

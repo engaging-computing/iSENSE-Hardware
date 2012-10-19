@@ -19,7 +19,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -38,11 +37,15 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	public static final int QUEUE_DATA_COLLECTOR = 1;
 	public static final int QUEUE_MANUAL_ENTRY = 2;
+
+	private static final int ALTER_DATASET_REQUESTED = 9001;
+	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
+	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
 	
-	private static final int DELETE_DATASET_REQUESTED = 101;
-	
+	private static int QUEUE_PARENT = -1;
+
 	public static final String INTENT_IDENTIFIER = "intent_identifier";
-	
+
 	public static int lastSID = -1;
 
 	private static Context mContext;
@@ -51,9 +54,10 @@ public class QueueUploader extends Activity implements OnClickListener {
 	private ProgressDialog dia;
 	public static QueueParentAssets qpa;
 	private boolean uploadSuccess = true;
-	
-	private DataSet lastDataSetLongClicked;
+
+	public static DataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
+	private Waffle w;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +65,10 @@ public class QueueUploader extends Activity implements OnClickListener {
 		setContentView(R.layout.queueprompt);
 
 		mContext = this;
+		w = new Waffle(mContext);
 
-		String tag = "QUEUE_PARENT";
-		int QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
-		Log.d(tag, "" + QUEUE_PARENT);
+		QUEUE_PARENT = getIntent().getExtras().getInt(INTENT_IDENTIFIER);
+		
 		switch (QUEUE_PARENT) {
 		case QUEUE_DATA_COLLECTOR:
 			qpa = new QueueParentAssets(DataCollector.uploadQueue,
@@ -89,112 +93,14 @@ public class QueueUploader extends Activity implements OnClickListener {
 		qpa = new QueueParentAssets(q, pn, c);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
-		fillScrollQueue(scrollQueue);
+		fillScrollQueue();
 	}
 
 	// Works through list of data to be uploaded and creates the list of blocks
-	private void fillScrollQueue(LinearLayout scrollQueue) {
-		
-		String previous = "";
+	private void fillScrollQueue() {
 
-		for (final DataSet ds : qpa.mirrorQueue) {
-			switch (ds.type) {
-			case DATA:
-				final View data = View.inflate(mContext, R.layout.queueblock_data,
-						null);
-				
-				data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
-
-				makeBlock(data, ds);
-				previous = checkPrevious(previous, scrollQueue,
-						(String) ds.getName());
-
-				scrollQueue.addView(data);
-				ds.setUploadable(true);
-
-				data.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						CheckedTextView ctv = (CheckedTextView) v
-								.findViewById(R.id.name);
-						ctv.toggle();
-						//flashClick(v);
-
-						if (ctv.isChecked())
-							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
-						else
-							ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-						ds.setUploadable(ctv.isChecked());
-
-					}
-
-				});
-
-				data.setOnLongClickListener(new OnLongClickListener() {
-
-					@Override
-					public boolean onLongClick(View v) {
-						lastDataSetLongClicked = ds;
-						lastViewLongClicked = data;
-						Intent iDeleteDataSet = new Intent(mContext,
-								DeleteDataSetFromUploadQueue.class);
-						startActivityForResult(iDeleteDataSet, DELETE_DATASET_REQUESTED);
-						return false;
-					}
-
-				});
-				break;
-
-			case PIC:
-				final View pic = View
-						.inflate(mContext, R.layout.queueblock_pic, null);
-				
-				pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
-
-				makeBlock(pic, ds);
-				previous = checkPrevious(previous, scrollQueue,
-						(String) ds.getName());
-
-				scrollQueue.addView(pic);
-				ds.setUploadable(true);
-				
-				pic.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						CheckedTextView ctv = (CheckedTextView) v
-								.findViewById(R.id.name);
-						ctv.toggle();
-
-						if (ctv.isChecked())
-							ctv.setCheckMarkDrawable(R.drawable.bluecheck);
-						else
-							ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-						ds.setUploadable(ctv.isChecked());
-
-					}
-
-				});
-
-				pic.setOnLongClickListener(new OnLongClickListener() {
-
-					@Override
-					public boolean onLongClick(View v) {
-						lastDataSetLongClicked = ds;
-						lastViewLongClicked = pic;
-						Intent iDeleteDataSet = new Intent(mContext,
-								DeleteDataSetFromUploadQueue.class);
-						startActivityForResult(iDeleteDataSet, DELETE_DATASET_REQUESTED);
-						return false;
-					}
-
-				});
-				break;
-			}
-		}
+		for (final DataSet ds : qpa.mirrorQueue)
+			addViewToScrollQueue(ds);
 
 	}
 
@@ -234,8 +140,8 @@ public class QueueUploader extends Activity implements OnClickListener {
 				setResult(RESULT_OK);
 				finish();
 				return;
-			}
-			else new UploadSDTask().execute();
+			} else
+				new UploadSDTask().execute();
 			qpa.uploadQueue = new LinkedList<DataSet>();
 			break;
 
@@ -248,6 +154,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 
 	// Control task for uploading data from SD card
 	class UploadSDTask extends AsyncTask<Void, Integer, Void> {
+		
+		boolean dialogShow = true;
+		
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(QueueUploader.this);
@@ -258,7 +167,12 @@ public class QueueUploader extends Activity implements OnClickListener {
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
-			dia.show();
+			try {
+				dia.show();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+				dialogShow = false;
+			}
 		}
 
 		@Override
@@ -277,7 +191,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 						Waffle.IMAGE_CHECK);
 			else
 				w.make("Upload failed.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-			dia.dismiss();
+			
+			if (dialogShow)
+				dia.dismiss();
 
 			OrientationManager.enableRotation(QueueUploader.this);
 
@@ -390,18 +306,186 @@ public class QueueUploader extends Activity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (requestCode == DELETE_DATASET_REQUESTED) {
+
+		if (requestCode == ALTER_DATASET_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+
+				int returnCode = data.getIntExtra(QueueAlter.RETURN_CODE, -1);
+
+				switch (returnCode) {
+
+				case QueueAlter.RENAME:
+					Intent iRename = new Intent(mContext, QueueEditRename.class);
+					startActivityForResult(iRename, ALTER_DATA_NAME_REQUESTED);
+
+					break;
+
+				case QueueAlter.CHANGE_DATA:
+					
+					Intent iData = new Intent(mContext, QueueEditData.class);
+					startActivityForResult(iData, ALTER_DATA_DATA_REQUESTED);
+					
+					break;
+
+				case QueueAlter.DELETE:
+					qpa.uploadQueue.remove(lastDataSetLongClicked);
+					qpa.mirrorQueue.remove(lastDataSetLongClicked);
+					scrollQueue.removeView(lastViewLongClicked);
+					storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+
+					break;
+
+				default:
+					w.make("Could not process request.", Waffle.IMAGE_X);
+					break;
+				}
+			}
+		} else if (requestCode == ALTER_DATA_NAME_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+
+				String newName = data.getStringExtra("new_name");
+				if (!newName.equals("")) {
+					DataSet alter = lastDataSetLongClicked;
+					alter.setName(newName);
+
+					qpa.uploadQueue.remove(lastDataSetLongClicked);
+					qpa.mirrorQueue.remove(lastDataSetLongClicked);
+					scrollQueue.removeView(lastViewLongClicked);
+
+					qpa.uploadQueue.add(alter);
+					qpa.mirrorQueue.add(alter);
+					addViewToScrollQueue(alter);
+
+					storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
+				}
+			}
+		} else if (requestCode == ALTER_DATA_DATA_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				DataSet alter = QueueEditData.alter;
+
 				qpa.uploadQueue.remove(lastDataSetLongClicked);
 				qpa.mirrorQueue.remove(lastDataSetLongClicked);
 				scrollQueue.removeView(lastViewLongClicked);
+
+				qpa.uploadQueue.add(alter);
+				qpa.mirrorQueue.add(alter);
+				addViewToScrollQueue(alter);
+
 				storeQueue(qpa.uploadQueue, qpa.parentName, qpa.mContext);
 			}
 		}
-		
+
 	}
-	
-	
+
+	private void addViewToScrollQueue(final DataSet ds) {
+
+		String previous = "";
+
+		switch (ds.type) {
+		case DATA:
+
+			final View data = View.inflate(mContext, R.layout.queueblock_data,
+					null);
+
+			data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+
+			makeBlock(data, ds);
+			previous = checkPrevious(previous, scrollQueue,
+					(String) ds.getName());
+
+			scrollQueue.addView(data);
+			ds.setUploadable(true);
+
+			data.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					CheckedTextView ctv = (CheckedTextView) v
+							.findViewById(R.id.name);
+					ctv.toggle();
+					// flashClick(v);
+
+					if (ctv.isChecked())
+						ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+					else
+						ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+					ds.setUploadable(ctv.isChecked());
+
+				}
+
+			});
+
+			data.setOnLongClickListener(new OnLongClickListener() {
+
+				@Override
+				public boolean onLongClick(View v) {
+					lastDataSetLongClicked = ds;
+					lastViewLongClicked = data;
+					Intent iAlterDataSet = new Intent(mContext,
+							QueueAlter.class);
+					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
+					startActivityForResult(iAlterDataSet,
+							ALTER_DATASET_REQUESTED);
+					return false;
+				}
+
+			});
+
+			break;
+
+		case PIC:
+
+			final View pic = View.inflate(mContext, R.layout.queueblock_pic,
+					null);
+
+			pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+
+			makeBlock(pic, ds);
+			previous = checkPrevious(previous, scrollQueue,
+					(String) ds.getName());
+
+			scrollQueue.addView(pic);
+			ds.setUploadable(true);
+
+			pic.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					CheckedTextView ctv = (CheckedTextView) v
+							.findViewById(R.id.name);
+					ctv.toggle();
+
+					if (ctv.isChecked())
+						ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+					else
+						ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+					ds.setUploadable(ctv.isChecked());
+
+				}
+
+			});
+
+			pic.setOnLongClickListener(new OnLongClickListener() {
+
+				@Override
+				public boolean onLongClick(View v) {
+					lastDataSetLongClicked = ds;
+					lastViewLongClicked = pic;
+					Intent iAlterDataSet = new Intent(mContext,
+							QueueAlter.class);
+					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
+					startActivityForResult(iAlterDataSet,
+							ALTER_DATASET_REQUESTED);
+					return false;
+				}
+
+			});
+
+			break;
+		}
+
+	}
 
 }
