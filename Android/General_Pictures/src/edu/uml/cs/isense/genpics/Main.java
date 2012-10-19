@@ -142,7 +142,7 @@ public class Main extends Activity implements LocationListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		name = (EditText) findViewById(R.id.name);
 

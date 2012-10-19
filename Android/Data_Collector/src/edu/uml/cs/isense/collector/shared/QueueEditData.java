@@ -84,8 +84,6 @@ public class QueueEditData extends Activity {
 		for (ExperimentField ef : fieldOrder) {
 			
 			final View dataRow = View.inflate(mContext, R.layout.edit_row, null);
-			//dataRow.setBackgroundResource(R.drawable.listelement_bkgd_changer);
-			//dataRow.setVisibility(View.VISIBLE);
 			
 			TextView label = (TextView) dataRow.findViewById(R.id.edit_row_label);
 			label.setText(ef.field_name);
