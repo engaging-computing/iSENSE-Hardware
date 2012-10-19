@@ -30,14 +30,9 @@
     <string name="search">Search</string>
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
-    <string name="notLoggedIn">Username: NOT LOGGED IN</string>
-    <string name="session">Session Name: NOT SET</string>
     <string name="iSENSELogo">iSENSE Logo</string>
     <string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
-    <string name="menuDirections">Use Menu to Access Configurations</string>
     <string name="timeElapsed">Time Elapsed: 0:00</string>
-    <string name="sessionName">Session Name: </string>
-    <string name="experimentNum">Experiment #: </string>
     <string name="browse">  Browse&#8230;  </string>
     <string name="takePic">Take Picture</string>
     <string name="takeVid">Take Video"</string>
@@ -71,8 +66,6 @@
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
     <string name="sample_rate">Interval (ms)</string>
-    <string name="cont">Continue</string>
-    <string name="exit">Exit</string>
     <string name="login">Login</string>
     <string name="guide_text">	    
         This is a guide designed to help explain to you how to use our iSENSE Data 
