@@ -37,18 +37,18 @@
         android:weightSum="2" >
 
         <Button
-            android:id="@+id/queueedit_okay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/okay" />
-
-        <Button
             android:id="@+id/queueedit_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel" />
+        
+         <Button
+            android:id="@+id/queueedit_okay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/okay" />
     </LinearLayout>
 
 </LinearLayout>
