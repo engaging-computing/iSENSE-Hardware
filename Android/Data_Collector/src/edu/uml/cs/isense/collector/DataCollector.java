@@ -73,7 +73,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.dialogs.ChooseSensorDialog;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
@@ -289,12 +288,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean preLoad = false;
 	private static boolean beginWrite = true;
 	private static boolean choiceViaMenu = false;
-	private static boolean successLogin = false;
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
 	private static boolean showGpsDialog = true;
-	private static boolean alreadySaved = false;
 	private static boolean throughUploadMenuItem = false;
 
 	/** \Additional Private Variables */
@@ -752,12 +749,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 				String returnCode = data.getStringExtra("returnCode");
 
 				if (returnCode.equals("Success")) {
-					
-					successLogin = true;
+
+					// successLogin = true;
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
-					successLogin = false;
+					// successLogin = false;
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
@@ -791,14 +788,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 				String experimentInput = mPrefs.getString("experiment_id", "");
 
-				if ((experimentInput.length() >= 0) && successLogin) {
+				if ((experimentInput.length() >= 0) && rapi.isLoggedIn()) {
 					nameOfSession = sessionName.getText().toString();
 					new UploadTask().execute();
-				} else if ((experimentInput.length() >= 0) && !successLogin) {
-					Intent iNoIsense = new Intent(mContext, NoIsense.class);
-					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
-					if (!alreadySaved)
-						saveOnUploadQueue();
+				} else if ((experimentInput.length() >= 0)
+						&& !rapi.isLoggedIn()) {
+
+					w.make("Could not upload data - saving instead.",
+							Waffle.IMAGE_X);
+					new UploadTask().execute();
 				} else {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
@@ -817,65 +815,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		}
 
-	}
-
-	// Saves dataSet on queue when you aren't logged in
-	private void saveOnUploadQueue() {
-		// Session Id
-		int sessionId = DataSet.NO_SESSION_DEFINED;
-
-		// Location
-		List<Address> address = null;
-		String city = "", state = "", country = "", addr = "";
-
-		try {
-			if (roughLoc != null) {
-
-				address = new Geocoder(DataCollector.this, Locale.getDefault())
-						.getFromLocation(roughLoc.getLatitude(),
-								roughLoc.getLongitude(), 1);
-
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Session Description
-		String description;
-		if (sessionDescription.equals(""))
-			description = "Automated Submission Through Android Data Collection App";
-		else
-			description = sessionDescription;
-
-		// Experiment Id
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String eid = mPrefs.getString("experiment_id", "");
-
-		// Chucks all the info into the queue
-		DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession, description,
-				eid, dataSet.toString(), null, sessionId, city, state, country,
-				addr);
-		uploadQueue.add(ds);
-
-		// Saves pictures for later upload
-		int pic = MediaManager.pictureArray.size();
-		while (pic > 0) {
-			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession,
-					description, eid, null,
-					MediaManager.pictureArray.get(pic - 1), sessionId, city,
-					state, country, addr);
-			uploadQueue.add(dsPic);
-			pic--;
-		}
-
-		alreadySaved = true;
 	}
 
 	// Calls the rapi primitives for actual uploading
@@ -1054,9 +993,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		boolean success = rapi.login(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
-		if (success) {
-
-			successLogin = true;
+		if (!success) {
+			// This is crazy, so Waffle me maybe?
 		}
 	}
 
@@ -1475,9 +1413,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						sampleInterval.setEnabled(true);
 
 						writeToSDCard(null, 'f');
-						// setupDone = false;
 						setMenuStatus(true);
-						alreadySaved = false;
 
 						mSensorManager.unregisterListener(DataCollector.this);
 						running = false;
@@ -1513,7 +1449,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						initDfm();
-						registerSensors(); 
+						registerSensors();
 
 						OrientationManager.disableRotation((Activity) mContext);
 
