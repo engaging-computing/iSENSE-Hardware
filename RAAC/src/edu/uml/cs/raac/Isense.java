@@ -114,7 +114,7 @@ public class Isense extends Activity implements OnClickListener {
 	String password = "sor";
 	boolean loggedIn = false;
 	static String sessionUrl;
-	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi;
 	private ProgressDialog dia;
