@@ -536,6 +536,7 @@ public class Isense extends Activity implements OnClickListener {
 		int x = 0;
 		String label = "";
 		Resources res = getResources();
+		int currSensor = ppi.getSetting(PinComm.BTA1);
 
 		try {
 			for (; i<data.size(); i++) {
@@ -557,7 +558,7 @@ public class Isense extends Activity implements OnClickListener {
 					x++;
 					switch(x) {
 					case 1: label = "Time (GMT)"; break;
-					case 14: if(ppi.getSetting(PinComm.BTA1)==24) {
+					case 14: if(currSensor==24) {
 						label = "BTA1: Vernier pH Sensor";
 					} else {
 						label = "BTA1: Vernier Temperature Probe";
@@ -577,7 +578,7 @@ public class Isense extends Activity implements OnClickListener {
 					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
 					TextView tvRight2 = new TextView(getBaseContext());
 					if(x==14) {
-						tvRight2.setText(df.format(Double.parseDouble(str)));
+						tvRight2.setText(df.format(applyFormula(currSensor, Double.parseDouble(str))));
 					} else {
 						tvRight2.setText(str);
 					}
