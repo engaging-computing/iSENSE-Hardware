@@ -1,6 +1,7 @@
 package edu.uml.cs.raac;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,14 +30,11 @@ public class SetName extends Activity implements OnClickListener {
 			if (namefield.getText().toString().equals(""))
 				;
 			else {
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putString("group_name", namefield.getText().toString());
-				editor.putBoolean("firstrun", false);
-				editor.commit();
+				Intent result = new Intent();
+				result.putExtra("groupname",namefield.getText().toString());
+				setResult(RESULT_OK, result);
+				finish();
 			}
 		}
-
-		finish();
 	}	
 }
