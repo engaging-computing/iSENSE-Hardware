@@ -11,12 +11,14 @@
     <string name="select_device">Select a device to connect</string>
     <string name="none_found">No devices found</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
-    <string name="menu_setsensors">Select Sensors</string>
+    <string name="menu_setsensors">Select Sensor</string>
     <string name="menu_login">Retry Login</string>
     <string name="menu_experiment">Set Experiment</string>
     <string name="menu_prefs">Preferences</string>
+    
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
     <string name="aveval">Average/Mean</string>
@@ -43,7 +45,7 @@
     <string name="prefs_cleardef_title">Clear Default PINPoint</string>
     <string name="prefs_cleardef_desc">Removes default PINPoint from settings.</string>
     
-    <string name="namediag_label">Please enter a group name (you can change this later in settings)</string>
+    <string name="namediag_label">Please enter a group name</string>
     
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

@@ -47,7 +47,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -63,7 +62,6 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,7 +112,7 @@ public class Isense extends Activity implements OnClickListener {
 	String password = "sor";
 	boolean loggedIn = false;
 	static String sessionUrl;
-	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
 	String datMed, datAve, datMax, datMin;
 	private RestAPI rapi;
 	private ProgressDialog dia;
@@ -123,6 +121,7 @@ public class Isense extends Activity implements OnClickListener {
 	boolean autoRun = false;
 	boolean autoConn = true;
 	String defaultMac = "";
+	String groupName = "";
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
@@ -137,6 +136,7 @@ public class Isense extends Activity implements OnClickListener {
 	private static final int REQUEST_ENABLE_BT = 4;
 	private static final int REQUEST_VIEW_DATA = 5;
 	private static final int CHANGE_EXPERIMENT = 6;
+	private static final int GROUP_NAME_BOX = 7;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -155,12 +155,11 @@ public class Isense extends Activity implements OnClickListener {
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 		rapi.useDev(false);
 
-		//Show name selection dialog on first run
+		//Show name selection dialog		
+		Intent i =  new Intent(this, SetName.class);
+		startActivityForResult(i, GROUP_NAME_BOX);
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("firstrun", true) == true) {
-			Intent i =  new Intent(this, SetName.class);
-			startActivity(i);
-		}
 		//Get the MAC address of the default PINPoint
 		defaultMac = prefs.getString("defaultPpt", "");
 		
@@ -212,8 +211,7 @@ public class Isense extends Activity implements OnClickListener {
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
 		nameField = (EditText) findViewById(R.id.nameField);	
 
-		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		nameField.setText(defPrefs.getString("group_name", "SoR User"));
+		nameField.setText(groupName);
 
 		pinpointBtn.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
@@ -275,7 +273,6 @@ public class Isense extends Activity implements OnClickListener {
 		//Update preferences set in PreferenceActivity
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		autoRun = prefs.getBoolean("auto_upload", false);
-		nameField.setText(prefs.getString("group_name", "SoR User"));
 		experimentId = prefs.getString("experiment_number", "421");
 		autoConn = prefs.getBoolean("auto_connect", true);
 		defaultMac = prefs.getString("defaultPpt", "");
@@ -333,13 +330,13 @@ public class Isense extends Activity implements OnClickListener {
 		super.onStart();
 	}
 	
-	private String getFormula(int sensor) {
+	private double applyFormula(int sensor, double x) {
 		if(sensor == 24) {
-			return "-0.0185*x+13.769";
+			return (-0.0185*x)+13.769;
 		} else if(sensor == 1) {
-			return "-33.47 * ln (x) + 213.85";
+			return (-33.47 * Math.log(x)) + 213.85;
 		} else {
-			return "x";
+			return x;
 		}
 	}
 
@@ -499,15 +496,17 @@ public class Isense extends Activity implements OnClickListener {
 
 	public void prepDataForUpload() {
 		int x = 0;
+		int sensorsetting = ppi.getSetting(PinComm.BTA1);
 		for (int i = 0; i < data.size(); i++) {
 			String[] strray = data.get(i);
 
 			for (String str : strray) {
 				x++;
 				switch(x) {
-				case 1:  timeData.add(fmtData(str));           									break;
-				case 14: bta1Data.add(Double.parseDouble(str));									break;
-				default:                                        								break;
+				case 1:  timeData.add(fmtData(str));           																break;
+				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
+						 data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 						break;
+				default:                                        															break;
 				}
 			}
 			x = 0;
@@ -534,6 +533,7 @@ public class Isense extends Activity implements OnClickListener {
 		int x = 0;
 		String label = "";
 		Resources res = getResources();
+		int currSensor = ppi.getSetting(PinComm.BTA1);
 
 		try {
 			for (; i<data.size(); i++) {
@@ -555,7 +555,7 @@ public class Isense extends Activity implements OnClickListener {
 					x++;
 					switch(x) {
 					case 1: label = "Time (GMT)"; break;
-					case 14: if(ppi.getSetting(PinComm.BTA1)==24) {
+					case 14: if(currSensor==24) {
 						label = "BTA1: Vernier pH Sensor";
 					} else {
 						label = "BTA1: Vernier Temperature Probe";
@@ -575,7 +575,7 @@ public class Isense extends Activity implements OnClickListener {
 					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
 					TextView tvRight2 = new TextView(getBaseContext());
 					if(x==14) {
-						tvRight2.setText(df.format(Double.parseDouble(str)));
+						tvRight2.setText(df.format(applyFormula(currSensor, Double.parseDouble(str))));
 					} else {
 						tvRight2.setText(str);
 					}
@@ -812,14 +812,19 @@ public class Isense extends Activity implements OnClickListener {
 			break;
 		case CHANGE_EXPERIMENT:
 			break;
+		case GROUP_NAME_BOX:
+			if (resultCode == Activity.RESULT_OK) {
+				groupName = data.getStringExtra("groupname");
+				nameField.setText(groupName);
+			}
+			break;
 		}
 	}
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() {
 		if (nameField.length() == 0) {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			nameField.setText(prefs.getString("group_name", "SoR User"));
+			nameField.setText("SoR Group");
 		}
 		if (!dataRdy) {
 			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
