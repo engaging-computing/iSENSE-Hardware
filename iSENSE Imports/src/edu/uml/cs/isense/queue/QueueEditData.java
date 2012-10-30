@@ -52,7 +52,6 @@ public class QueueEditData extends Activity {
 		cancel = (Button) findViewById(R.id.queueedit_data_cancel);
 
 		okay.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				getNewFields();
 				setResult(RESULT_OK);
@@ -61,7 +60,6 @@ public class QueueEditData extends Activity {
 		});
 
 		cancel.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
@@ -141,8 +139,6 @@ public class QueueEditData extends Activity {
 			int eid = Integer.parseInt(alter.getEID());
 			if (eid != -1) {
 				fieldOrder = rapi.getExperimentFields(eid);
-			} else {
-				// Log.e("tag", "CRITICAL ERROR!!!!");
 			}
 
 			return null;
