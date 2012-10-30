@@ -23,9 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import edu.uml.cs.isense.amusement.AmusementPark;
-import edu.uml.cs.isense.amusement.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
@@ -79,7 +76,7 @@ public class MediaManager extends Activity {
 
 				} else {
 					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
-							Toast.LENGTH_LONG, "x");
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
 			}
@@ -106,7 +103,7 @@ public class MediaManager extends Activity {
 
 				} else {
 					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
-							Toast.LENGTH_LONG, "x");
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 			}
 		});

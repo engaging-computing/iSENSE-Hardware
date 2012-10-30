@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.amusement.objects.DataSet;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -195,9 +194,9 @@ public class QueueUploader extends Activity implements OnClickListener {
 			Waffle w = new Waffle(QueueUploader.mContext);
 
 			if (uploadSuccess)
-				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+				w.make("Upload Success", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
 			else
-				w.make("Upload failed.", Toast.LENGTH_SHORT, "x");
+				w.make("Upload failed.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			dia.dismiss();
 			
 			OrientationManager.enableRotation(QueueUploader.this);
