@@ -1793,7 +1793,7 @@ public class RestAPI {
 				+ "&eid=" + eid + "&name=" + name + "&description="
 				+ description + "&street=" + street + "&city=" + city
 				+ "&country=" + country;
-
+		
 		if (isConnected()) {
 			try {
 				String data = makeRequest(url);
