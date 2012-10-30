@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -83,12 +82,13 @@ import edu.uml.cs.isense.collector.dialogs.NoIsense;
 import edu.uml.cs.isense.collector.dialogs.Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
-import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
-import edu.uml.cs.isense.collector.shared.QueueUploader;
 import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -243,8 +243,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Lists and Queues
 	public static LinkedList<String> acceptedFields;
+	public static UploadQueue uq;
 
-	public static Queue<DataSet> uploadQueue;
+	//public static Queue<DataSet> uploadQueue;
 
 	// Booleans
 	public static boolean inPausedState = false;
@@ -424,9 +425,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = true;
 
-		// Stores uploadQueue in datacollector.ser (on SD card) and saves
-		// Q_COUNT
-		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -484,9 +482,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = false;
 
-		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
-				mContext);
+		if (uq != null)
+			uq.buildQueueFromFile();
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -809,10 +806,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
-						activityName, mContext);
-			}
+			//if (resultCode == RESULT_OK) {
+				// get back the updated queue
+				boolean success = uq.buildQueueFromFile();
+				if (!success) {
+					w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+				}
+			//}
 		}
 
 	}
@@ -884,7 +884,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
 							description, eid, dataSet.toString(), null,
 							sessionId, city, state, country, addr);
-					uploadQueue.add(ds);
+					uq.addDataSetToQueue(ds);
 				}
 
 				int pic = MediaManager.pictureArray.size();
@@ -900,7 +900,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								nameOfSession, description, eid, null,
 								MediaManager.pictureArray.get(pic - 1),
 								sessionId, city, state, country, addr);
-						uploadQueue.add(ds);
+						uq.addDataSetToQueue(ds);
 					}
 					pic--;
 				}
@@ -1229,12 +1229,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) {
-			if (!uploadQueue.isEmpty()) {
+		// TODO - do we need an uploadSuccess check here? isn't emptyQueue() enough?
+		//if (uploadSuccess) {
+			if (!uq.emptyQueue()) {
 				throughUploadMenuItem = false;
-				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				i.putExtra(QueueUploader.INTENT_IDENTIFIER,
-						QueueUploader.QUEUE_DATA_COLLECTOR);
+				Intent i = new Intent().setClass(mContext, QueueLayout.class);
+				i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 			} else {
 				if (throughUploadMenuItem) {
@@ -1243,7 +1243,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							Waffle.IMAGE_CHECK);
 				}
 			}
-		}
+		//}
 	}
 
 	// UI variables initialized for onCreate
@@ -1263,6 +1263,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		
+		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
