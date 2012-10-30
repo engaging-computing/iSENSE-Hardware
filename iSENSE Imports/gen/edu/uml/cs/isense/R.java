@@ -11,26 +11,73 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static int checkmark=0x7f020000;
-        public static int red_x=0x7f020001;
-        public static int toast_background_check=0x7f020002;
-        public static int toast_background_default=0x7f020003;
-        public static int toast_background_x=0x7f020004;
+        public static int background_no_stroke=0x7f020000;
+        public static int bluecheck=0x7f020001;
+        public static int checkmark=0x7f020002;
+        public static int colorless=0x7f020003;
+        public static int grey_scroll=0x7f020004;
+        public static int listelement_bkgd=0x7f020005;
+        public static int listelement_bkgd_changer=0x7f020006;
+        public static int listelement_bkgdflash=0x7f020007;
+        public static int red_x=0x7f020008;
+        public static int toast_background_check=0x7f020009;
+        public static int toast_background_default=0x7f02000a;
+        public static int toast_background_x=0x7f02000b;
     }
     public static final class id {
-        public static int text=0x7f060002;
-        public static int toast_layout_root=0x7f060000;
-        public static int waffle_check=0x7f060001;
-        public static int waffle_x=0x7f060003;
+        public static int buttons=0x7f06000a;
+        public static int cancel=0x7f060013;
+        public static int check_layout=0x7f060006;
+        public static int description=0x7f060009;
+        public static int edit_row_label=0x7f060000;
+        public static int edit_row_text=0x7f060001;
+        public static int experimentid=0x7f060008;
+        public static int name=0x7f060007;
+        public static int prompt=0x7f060011;
+        public static int queuealter_cancel=0x7f060005;
+        public static int queuealter_change_data=0x7f060003;
+        public static int queuealter_delete=0x7f060004;
+        public static int queuealter_rename=0x7f060002;
+        public static int queueedit_cancel=0x7f06000f;
+        public static int queueedit_data_cancel=0x7f06000c;
+        public static int queueedit_data_layout=0x7f06000b;
+        public static int queueedit_data_okay=0x7f06000d;
+        public static int queueedit_edit=0x7f06000e;
+        public static int queueedit_okay=0x7f060010;
+        public static int scrollqueue=0x7f060012;
+        public static int text=0x7f060017;
+        public static int toast_layout_root=0x7f060015;
+        public static int upload=0x7f060014;
+        public static int waffle_check=0x7f060016;
+        public static int waffle_x=0x7f060018;
     }
     public static final class layout {
-        public static int toast_layout_check=0x7f030000;
-        public static int toast_layout_x=0x7f030001;
+        public static int edit_row=0x7f030000;
+        public static int queueblock_alter=0x7f030001;
+        public static int queueblock_data=0x7f030002;
+        public static int queueblock_pic=0x7f030003;
+        public static int queueedit_data=0x7f030004;
+        public static int queueedit_rename=0x7f030005;
+        public static int queueprompt=0x7f030006;
+        public static int toast_layout_check=0x7f030007;
+        public static int toast_layout_x=0x7f030008;
     }
     public static final class string {
+        public static int cancel=0x7f040002;
+        public static int change_data=0x7f040009;
         public static int contentDesc=0x7f040000;
+        public static int delete=0x7f04000a;
+        public static int digits_restriction=0x7f040004;
+        public static int numbers_restriction=0x7f04000b;
+        public static int okay=0x7f040005;
+        public static int prompt=0x7f040001;
+        public static int queue_alter=0x7f040007;
+        public static int queue_rename=0x7f040006;
+        public static int rename=0x7f040008;
+        public static int upload=0x7f040003;
     }
     public static final class style {
         public static int AppTheme=0x7f050000;
+        public static int theme_dialog_black=0x7f050001;
     }
 }
