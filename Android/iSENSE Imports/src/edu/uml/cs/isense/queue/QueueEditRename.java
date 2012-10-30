@@ -25,7 +25,6 @@ public class QueueEditRename extends Activity {
 		cancel = (Button) findViewById(R.id.queueedit_cancel);
 
 		okay.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				String newName = rename.getText().toString();
 				if (!newName.equals("")) {
@@ -42,7 +41,6 @@ public class QueueEditRename extends Activity {
 		});
 
 		cancel.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();

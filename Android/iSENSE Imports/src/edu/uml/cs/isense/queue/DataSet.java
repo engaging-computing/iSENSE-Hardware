@@ -11,7 +11,7 @@ import android.annotation.SuppressLint;
 @SuppressLint("ParserError")
 public class DataSet implements Serializable {
 
-	/**
+	/*
 	 * DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
 	 */
 	private static final long serialVersionUID = 3776465868309657210L;
@@ -28,7 +28,6 @@ public class DataSet implements Serializable {
 	private String desc;
 	private String eid;
 	private boolean rdyForUpload = true;
-	//private RestAPI rapi;
 
 	// Data Only
 	private String data;
@@ -74,7 +73,6 @@ public class DataSet implements Serializable {
 		this.state = state;
 		this.country = country;
 		this.addr = addr;
-		/*this.rapi = rapi;*/
 	}
 
 	// Attempts to upload data with given information
@@ -96,7 +94,6 @@ public class DataSet implements Serializable {
 
 					if (sid == -1) {
 						success = false;
-						//UploadQueue.addDataSetToQueue(this);
 						break;
 					} else QueueLayout.lastSID = sid;
 				}
@@ -104,7 +101,6 @@ public class DataSet implements Serializable {
 				// Experiment Closed Checker
 				if (sid == -400) {
 					success = false;
-					//UploadQueue.addDataSetToQueue(this);
 					break;
 				} else {
 					JSONArray dataJSON = prepDataForUpload();
@@ -112,8 +108,7 @@ public class DataSet implements Serializable {
 						
 						success = UploadQueue.getRapi().putSessionData(sid, eid,
 								dataJSON);
-						//if (!success)
-							//UploadQueue.addDataSetToQueue(this);
+					
 					}
 				}
 				break;
@@ -128,8 +123,7 @@ public class DataSet implements Serializable {
 					success = UploadQueue.getRapi().uploadPictureToSession(
 							picture, eid, sid, name, "N/A");
 				}
-				//if (!success)
-					//UploadQueue.addDataSetToQueue(this);
+				
 				break;
 
 			}

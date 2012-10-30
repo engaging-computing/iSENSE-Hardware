@@ -245,7 +245,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static LinkedList<String> acceptedFields;
 	public static UploadQueue uq;
 
-	//public static Queue<DataSet> uploadQueue;
+	// public static Queue<DataSet> uploadQueue;
 
 	// Booleans
 	public static boolean inPausedState = false;
@@ -567,8 +567,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			choiceViaMenu = true;
 			uploadSuccess = true;
 			throughUploadMenuItem = true;
-
-			// Gets the previous unuploaded sessions
 			manageUploadQueue();
 			return true;
 		case R.id.menu_item_sync:
@@ -728,8 +726,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					acceptedFields = ChooseSensorDialog.acceptedFields;
 					getEnabledFields();
 				}
-			} else if (resultCode == RESULT_CANCELED) {
-				// setupDone = false;
 			}
 
 		} else if (requestCode == SETUP_REQUESTED) {
@@ -747,11 +743,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				if (returnCode.equals("Success")) {
 
-					// successLogin = true;
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
-					// successLogin = false;
+
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
@@ -806,13 +801,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
-			//if (resultCode == RESULT_OK) {
-				// get back the updated queue
-				boolean success = uq.buildQueueFromFile();
-				if (!success) {
-					w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
-				}
-			//}
+
+			boolean success = uq.buildQueueFromFile();
+			if (!success) {
+				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+			}
+
 		}
 
 	}
@@ -1229,21 +1223,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		// TODO - do we need an uploadSuccess check here? isn't emptyQueue() enough?
-		//if (uploadSuccess) {
-			if (!uq.emptyQueue()) {
+
+		if (!uq.emptyQueue()) {
+			throughUploadMenuItem = false;
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		} else {
+			if (throughUploadMenuItem) {
 				throughUploadMenuItem = false;
-				Intent i = new Intent().setClass(mContext, QueueLayout.class);
-				i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
-				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			} else {
-				if (throughUploadMenuItem) {
-					throughUploadMenuItem = false;
-					w.make("There is no data to upload.", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
-				}
+				w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 			}
-		//}
+		}
+
 	}
 
 	// UI variables initialized for onCreate
@@ -1263,7 +1256,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		
+
 		uq = new UploadQueue("datacollector", mContext, rapi);
 		uq.buildQueueFromFile();
 

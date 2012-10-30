@@ -62,7 +62,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		Bundle extras = getIntent().getExtras();
 		String parentName = extras.getString(PARENT_NAME);
 		if (parentName == null || parentName.equals("")) {
-			// we have a problem :(
+			w.make("Parent name not passed!", Waffle.IMAGE_X);
 		}
 
 		uq = new UploadQueue(parentName, mContext, rapi);
@@ -115,7 +115,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 		desc.setText(ds.getDesc());
 	}
 
-	// @Override
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
@@ -211,7 +210,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private void createRunnable(final DataSet ds) {
 		sdUploader = new Runnable() {
 
-			// @Override
 			public void run() {
 				if (ds.isUploadable()) {
 					uploadSuccess = ds.upload();
@@ -296,7 +294,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 				uq.addDataSetToQueue(alter);
 				addViewToScrollQueue(alter);
 				
-				//uq.storeAndReRetrieveQueue(true);
 			}
 		}
 
@@ -323,7 +320,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			data.setOnClickListener(new OnClickListener() {
 
-				// @Override
 				public void onClick(View v) {
 					CheckedTextView ctv = (CheckedTextView) v
 							.findViewById(R.id.name);
@@ -342,13 +338,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			data.setOnLongClickListener(new OnLongClickListener() {
 
-				// @Override
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = data;
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
-					//iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
@@ -374,7 +368,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			pic.setOnClickListener(new OnClickListener() {
 
-				// @Override
 				public void onClick(View v) {
 					CheckedTextView ctv = (CheckedTextView) v
 							.findViewById(R.id.name);
@@ -393,7 +386,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			pic.setOnLongClickListener(new OnLongClickListener() {
 
-				// @Override
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = pic;

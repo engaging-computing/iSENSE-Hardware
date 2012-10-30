@@ -18,7 +18,7 @@ import android.os.Environment;
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class UploadQueue implements Serializable {
-	/**
+	/*
 	 * Serializable key for UploadQueue class - DO NOT CHANGE
 	 */
 	private static final long serialVersionUID = -3036173866992721309L;
@@ -34,7 +34,6 @@ public class UploadQueue implements Serializable {
 			RestAPI rapi) {
 		this.queue = new LinkedList<DataSet>();
 		this.mirrorQueue = new LinkedList<DataSet>();
-		//mirrorQueue.addAll(queue);
 		
 		UploadQueue.parentName = parentName;
 		UploadQueue.mContext = context;
@@ -100,7 +99,6 @@ public class UploadQueue implements Serializable {
 		}
 
 		// re-retrieve the queue
-		
 		queue = new LinkedList<DataSet>();
 		Q_COUNT = Q_COUNT_BACKUP;
 		
@@ -127,47 +125,6 @@ public class UploadQueue implements Serializable {
 		if (rebuildMirrorQueue) {
 			mirrorQueue.clear();
 			mirrorQueue.addAll(queue);
-		}
-	}
-	
-	public void storeQueueOnPause() {
-		Queue<DataSet> backupQueue = new LinkedList<DataSet>();
-		backupQueue.addAll(queue);
-		
-		// save Q_COUNT in SharedPrefs
-		final SharedPreferences mPrefs = mContext.getSharedPreferences(
-				parentName, Context.MODE_PRIVATE);
-		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
-		int Q_COUNT = backupQueue.size();
-		mPrefsEditor.putInt(parentName + "Q_COUNT", Q_COUNT);
-		mPrefsEditor.commit();
-		
-		// obtain storage directory and file for the uploadqueue
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-		
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		File uploadQueueFile = new File(folder.getAbsolutePath() + "/"
-				+ parentName + ".ser");
-
-		// writes the queue to a serializable file
-		ObjectOutput out;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
-			
-			// serializes DataSets
-			while (Q_COUNT > 0) {
-				DataSet ds = backupQueue.remove();
-				out.writeObject(ds);
-				Q_COUNT--;
-			}
-
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
