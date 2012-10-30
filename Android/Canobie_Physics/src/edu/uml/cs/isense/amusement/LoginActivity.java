@@ -9,11 +9,11 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class LoginActivity {	
 	private RestAPI rapi;
