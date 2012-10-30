@@ -8,11 +8,6 @@
             android:key="experiment_number"
             android:summary="@string/prefs_expid_desc"
             android:title="@string/prefs_expid_title" />
-        <EditTextPreference
-            android:key="group_name"
-            android:summary="@string/prefs_gname_desc"
-            android:title="@string/prefs_gname_title" />
-
         <CheckBoxPreference
             android:key="auto_upload"
             android:summary="@string/prefs_auto_desc"

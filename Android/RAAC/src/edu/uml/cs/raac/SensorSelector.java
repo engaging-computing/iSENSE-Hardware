@@ -46,7 +46,7 @@ public class SensorSelector extends Activity implements OnClickListener {
 			Intent result = new Intent();
 			setResult(RESULT_CANCELED,result);
 			finish();
-		} else {
+		} else if(view==btnOk) {
 			if(tempBtn.isChecked()) {
 				Isense.ppi.setSetting(PinComm.BTA1, 1);
 			} else {
