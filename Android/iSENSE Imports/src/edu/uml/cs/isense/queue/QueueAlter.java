@@ -22,12 +22,6 @@ public class QueueAlter extends Activity {
 		setContentView(R.layout.queueblock_alter);
 		super.onCreate(savedInstanceState);
 		
-		/*int QUEUE_PARENT = -1;
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			QUEUE_PARENT = extras.getInt("parent");
-		}*/
-		
 		rename     = (Button) findViewById(R.id.queuealter_rename     );
 		changeData = (Button) findViewById(R.id.queuealter_change_data);
 		delete     = (Button) findViewById(R.id.queuealter_delete     );
@@ -41,7 +35,6 @@ public class QueueAlter extends Activity {
 		//}
 		
 		rename.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				Intent iRet = new Intent(QueueAlter.this, QueueLayout.class);
 				iRet.putExtra(RETURN_CODE, RENAME);
@@ -51,7 +44,6 @@ public class QueueAlter extends Activity {
 		});
 		
 		changeData.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				Intent iRet = new Intent(QueueAlter.this, QueueLayout.class);
 				iRet.putExtra(RETURN_CODE, CHANGE_DATA);
@@ -61,7 +53,6 @@ public class QueueAlter extends Activity {
 		});
 		
 		delete.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				Intent iRet = new Intent(QueueAlter.this, QueueLayout.class);
 				iRet.putExtra(RETURN_CODE, DELETE);
@@ -71,7 +62,6 @@ public class QueueAlter extends Activity {
 		});
 		
 		cancel.setOnClickListener(new OnClickListener() {
-			//@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
