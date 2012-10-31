@@ -153,8 +153,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 		delegate.unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
 	}
 
-	@SuppressWarnings("deprecation")
-	protected String encrypt(String value) {
+	protected String encrypt(String value) throws RuntimeException {
 
 		try {
 			final byte[] bytes = value != null ? value.getBytes(UTF8)
@@ -168,7 +167,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 					key,
 					new PBEParameterSpec(Settings.Secure.getString(
 							context.getContentResolver(),
-							Settings.System.ANDROID_ID).getBytes(UTF8), 20));
+							Settings.Secure.ANDROID_ID).getBytes(UTF8), 20));
 			return new String(Base64.encode(pbeCipher.doFinal(bytes),
 					Base64.NO_WRAP), UTF8);
 
@@ -178,8 +177,13 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 
 	}
 
-	@SuppressWarnings("deprecation")
-	protected String decrypt(String value) {
+/**
+ * 
+ * @param value
+ * @return
+ * @throws RuntimeException
+ */
+	protected String decrypt(String value) throws RuntimeException{
 		try {
 			final byte[] bytes = value != null ? Base64.decode(value,
 					Base64.DEFAULT) : new byte[0];
@@ -192,7 +196,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 					key,
 					new PBEParameterSpec(Settings.Secure.getString(
 							context.getContentResolver(),
-							Settings.System.ANDROID_ID).getBytes(UTF8), 20));
+							Settings.Secure.ANDROID_ID).getBytes(UTF8), 20));
 			return new String(pbeCipher.doFinal(bytes), UTF8);
 
 		} catch (Exception e) {
