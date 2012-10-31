@@ -177,6 +177,12 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 
 	}
 
+/**
+ * 
+ * @param value
+ * @return
+ * @throws RuntimeException
+ */
 	protected String decrypt(String value) throws RuntimeException{
 		try {
 			final byte[] bytes = value != null ? Base64.decode(value,
