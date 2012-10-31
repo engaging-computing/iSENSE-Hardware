@@ -21,6 +21,15 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.supplements.OrientationManager;
 
+/**
+ * Activity that allows the data-alteration of a data set.  
+ * NOTE: Media objects have no "data" and thus cannot be altered.
+ * Also, multiple-line data sets will only allow the first line of
+ * data to be altered.
+ * 
+ * @author Mike Stowell and Jeremy Poulin of the iSENSE team.
+ *
+ */
 public class QueueEditData extends Activity {
 
 	private Button okay, cancel;

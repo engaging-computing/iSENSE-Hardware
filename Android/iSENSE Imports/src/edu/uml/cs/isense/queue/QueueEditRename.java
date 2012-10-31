@@ -9,6 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.R;
 
+/**
+ * Activity that allows the renaming of a data set.
+ * 
+ * @author Mike Stowell and Jeremy Poulin of the iSENSE team.
+ *
+ */
 public class QueueEditRename extends Activity {
 
 	private EditText rename;
