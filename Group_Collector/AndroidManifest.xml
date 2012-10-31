@@ -76,6 +76,10 @@
             android:name=".dialogs.ExperimentDialog"
             android:label="Experiment ID"
             android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".Setup"
+            android:label="Setup Experiment"
+            android:theme="@style/theme_dialog_black" />
         
     </application>
 
