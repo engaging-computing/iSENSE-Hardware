@@ -200,7 +200,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 			return new String(pbeCipher.doFinal(bytes), UTF8);
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			return "";//throw new RuntimeException(e);
 		}
 	}
 

@@ -20,10 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 
 import org.json.JSONArray;
 
@@ -57,16 +55,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.dialogs.ExperimentDialog;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
-import edu.uml.cs.isense.collector.objects.DataSet;
-import edu.uml.cs.isense.collector.shared.QueueUploader;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -110,8 +108,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private LocationManager mLocationManager;
 	private Location loc;
 
-	public static Queue<DataSet> uploadQueue;
-	private static boolean uploadSuccess = true;
+	public static UploadQueue uq;
 	private static boolean throughUploadButton = false;
 
 	private ArrayList<ExperimentField> fieldOrder;
@@ -156,9 +153,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		saveData.setOnClickListener(this);
 		clearData.setOnClickListener(this);
 		mediaButton.setOnClickListener(this);
-		
+
 		w = new Waffle(this);
-		uploadQueue = new LinkedList<DataSet>();
+		uq = new UploadQueue("manualentry", mContext, rapi);
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
@@ -180,11 +177,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 			break;
 		case R.id.manual_save:
 			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
-			
+
 			// Clear the setError if the user has finally entered a session name
 			if (sessionName.getText().toString().length() != 0)
 				sessionName.setError(null);
-			
+
 			if (exp.equals("")) {
 				w.make("Invalid or no selected experiment.");
 			} else if (sessionName.getText().toString().length() == 0) {
@@ -248,6 +245,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (resultCode == RESULT_OK) {
 				new PrepareQueue().execute();
 			}
+		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
+
+			boolean success = uq.buildQueueFromFile();
+			if (!success) {
+				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+			}
+
 		}
 	}
 
@@ -310,9 +314,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents
 					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
 							60) });
-			fieldContents
-					.setKeyListener(DigitsKeyListener
-							.getInstance(getResources().getString(R.string.digits_restriction)));
+			fieldContents.setKeyListener(DigitsKeyListener
+					.getInstance(getResources().getString(
+							R.string.digits_restriction)));
 		} else {
 			// keyboard to nums
 			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -320,7 +324,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
 							20) });
 			fieldContents.setKeyListener(DigitsKeyListener
-					.getInstance(getResources().getString(R.string.numbers_restriction)));
+					.getInstance(getResources().getString(
+							R.string.numbers_restriction)));
 
 		}
 
@@ -356,14 +361,14 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void uploadFields() {
 		throughUploadButton = true;
 		if (!rapi.isLoggedIn()) {
-			
+
 			boolean success = false;
 			if (loginPrefs.getString("username", "").equals(""))
 				success = false;
 			else
 				success = rapi.login(loginPrefs.getString("username", ""),
 						loginPrefs.getString("password", ""));
-			
+
 			if (success)
 				manageUploadQueue();
 			else
@@ -402,10 +407,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		
+
 		case R.id.menu_item_manual_upload:
 			uploadFields();
-			
+
 			return true;
 
 		case R.id.menu_item_manual_experiment:
@@ -431,9 +436,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
 
-		//if (uploadQueue != null)
-			//Log.d("uploadQ - onPause", "" + uploadQueue.size());
-		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -475,7 +477,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		JSONArray data = new JSONArray();
 		data.put(row);
-		
+
 		return data.toString();
 	}
 
@@ -505,21 +507,20 @@ public class ManualEntry extends Activity implements OnClickListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) {
-			if (!uploadQueue.isEmpty()) {
+
+		if (!uq.emptyQueue()) {
+			throughUploadButton = false;
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		} else {
+			if (throughUploadButton) {
 				throughUploadButton = false;
-				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				i.putExtra(QueueUploader.INTENT_IDENTIFIER,
-						QueueUploader.QUEUE_MANUAL_ENTRY);
-				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			} else {
-				if (throughUploadButton) {
-					throughUploadButton = false;
-					w.make("There is no data to upload.", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
-				}
+				w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 			}
 		}
+
 	}
 
 	private class LoadExperimentFieldsTask extends
@@ -549,7 +550,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (eid != -1) {
 				fieldOrder = rapi.getExperimentFields(eid);
 			} else {
-				//Log.e("tag", "CRITICAL ERROR!!!!");
+				// problem!
 			}
 
 			return null;
@@ -580,6 +581,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
+
 		ProgressDialog dia;
 		String city = "", state = "", country = "", addr = "";
 		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
@@ -632,11 +634,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected void onPostExecute(Void result) {
 
 			if (ds != null) {
-				if (uploadQueue.add(ds)) {
-					w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
-				} else {
-					w.make("Data not saved!", Waffle.IMAGE_X);
-				}
+				uq.addDataSetToQueue(ds);
+				w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
+
 			} else {
 				w.make("Fatal error in saving data!!!", Waffle.IMAGE_X);
 			}
@@ -672,13 +672,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	@Override
 	protected void onResume() {
-		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
-				activityName, mContext);
-		//if (uploadQueue != null)
-			//Log.d("uploadQ - onResume", "" + uploadQueue.size());
-
 		super.onResume();
+
+		if (uq != null)
+			uq.buildQueueFromFile();
 	}
 
 	private String makeThisDatePretty(long time) {
@@ -699,9 +696,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Preparing pictures...");
 			dia.setCancelable(false);
 			dia.show();
-			
-			uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
-					activityName, mContext);
 
 			super.onPreExecute();
 		}
@@ -723,21 +717,22 @@ public class ManualEntry extends Activity implements OnClickListener,
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
-			String name = (sessionName.getText().toString().equals("")) ? 
-					"(No name provided)" : sessionName.getText().toString();
-			
+			String name = (sessionName.getText().toString().equals("")) ? "(No name provided)"
+					: sessionName.getText().toString();
+
 			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
-					DataSet picDS = new DataSet(DataSet.Type.PIC, name, uploadTime,
-							eid, null, picture, DataSet.NO_SESSION_DEFINED,
-							city, state, country, addr);
-					uploadQueue.add(picDS);
-					//Log.d("uploadQ", "" + uploadQueue.size());
+					DataSet picDS = new DataSet(DataSet.Type.PIC, name,
+							uploadTime, eid, null, picture,
+							DataSet.NO_SESSION_DEFINED, city, state, country,
+							addr);
+					uq.addDataSetToQueue(picDS);
+
 				}
-				QueueUploader.storeQueue(uploadQueue, activityName, mContext);
+
 			}
 			MediaManager.pictureArray.clear();
 			return null;
@@ -748,7 +743,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.dismiss();
 			OrientationManager.enableRotation(ManualEntry.this);
 			super.onPostExecute(result);
-			uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName, mContext);
 		}
 	}
 
