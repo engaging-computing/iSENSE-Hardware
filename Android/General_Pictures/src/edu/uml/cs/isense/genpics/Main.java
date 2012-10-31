@@ -3,10 +3,8 @@ package edu.uml.cs.isense.genpics;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,7 +48,9 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
 import edu.uml.cs.isense.genpics.dialogs.NoGps;
 import edu.uml.cs.isense.genpics.experiments.ExperimentDialog;
-import edu.uml.cs.isense.shared.QueueUploader;
+import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -72,7 +72,7 @@ public class Main extends Activity implements LocationListener {
 	private Uri imageUri;
 
 	public static RestAPI rapi;
-	public static Queue<DataSet> uploadQueue;
+	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
 
 	private static boolean gpsWorking = false;
@@ -115,8 +115,14 @@ public class Main extends Activity implements LocationListener {
 		mContext = this;
 
 		w = new Waffle(mContext);
+		
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
+		rapi.useDev(true);
 
-		uploadQueue = new LinkedList<DataSet>();
+		uq = new UploadQueue("generalpictures", mContext, rapi);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -137,12 +143,6 @@ public class Main extends Activity implements LocationListener {
 		// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mHandler = new Handler();
-
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
 
 		name = (EditText) findViewById(R.id.name);
 
@@ -247,40 +247,37 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 
 		if (!rapi.isLoggedIn())
 			attemptLogin();
 
 		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
-				mContext);
-		queueCount.setText("Queue Count: " + uploadQueue.size());
+		uq.buildQueueFromFile();
+		queueCount.setText("Queue Count: " + uq.queueSize());
 
 		// Check to see if now is the right time to try to upload information.
 		manageUploadQueue();
-
-		super.onResume();
 	}
 
 	private void manageUploadQueue() {
 		
-		if (rapi.isLoggedIn() && (uploadQueue.size() > 0)
+		if (rapi.isLoggedIn() && (!uq.emptyQueue())
 				&& rapi.isConnectedToInternet()) {
-			Intent i = new Intent().setClass(mContext, QueueUploader.class);
-			i.putExtra(QueueUploader.INTENT_IDENTIFIER,
-					QueueUploader.QUEUE_MAIN);
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
 		}
 	}
 
 	@Override
 	protected void onStart() {
+		super.onStart();
+		
 		if (!gpsWorking)
 			initLocManager();
 		if (mTimer == null)
 			waitingForGPS();
-
-		super.onStart();
 	}
 
 	private static int getApiLevel() {
@@ -436,11 +433,11 @@ public class Main extends Activity implements LocationListener {
 				uploadError = true;
 				postRunnableWaffleError("Encountered upload problem: could not create session");
 				// Add new DataSet to Queue
-				DataSet d = new DataSet(DataSet.Type.PIC, name.getText()
+				DataSet ds = new DataSet(DataSet.Type.PIC, name.getText()
 						.toString(), makeThisDatePretty(curTime),
 						experimentNum, null, picture, sessionId, city, state,
 						country, addr);
-				uploadQueue.add(d);
+				uq.addDataSetToQueue(ds);
 				return;
 			}
 
@@ -471,11 +468,11 @@ public class Main extends Activity implements LocationListener {
 					uploadError = true;
 					postRunnableWaffleError("Encountered upload problem: could not add picture");
 					// Add new DataSet to Queue
-					DataSet d = new DataSet(DataSet.Type.DATA, name.getText()
+					DataSet ds = new DataSet(DataSet.Type.DATA, name.getText()
 							.toString(), makeThisDatePretty(curTime),
 							experimentNum, dataJSON.toString(), null,
 							sessionId, city, state, country, addr);
-					uploadQueue.add(d);
+					uq.addDataSetToQueue(ds);
 					return;
 				}
 
@@ -484,11 +481,11 @@ public class Main extends Activity implements LocationListener {
 						"No description provided.")) {
 					uploadError = true;
 					// Add new DataSet to Queue
-					DataSet d = new DataSet(DataSet.Type.PIC, name.getText()
+					DataSet ds = new DataSet(DataSet.Type.PIC, name.getText()
 							.toString(), makeThisDatePretty(curTime),
 							experimentNum, null, picture, sessionId, city,
 							state, country, addr);
-					uploadQueue.add(d);
+					uq.addDataSetToQueue(ds);
 				}
 			}
 		}
@@ -506,9 +503,8 @@ public class Main extends Activity implements LocationListener {
 				takePicture.setEnabled(true);
 
 				// Rebuilds uploadQueue from saved info
-				uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
-						activityName, mContext);
-				queueCount.setText("Queue Count: " + uploadQueue.size());
+				uq.buildQueueFromFile(); // TODO ??
+				queueCount.setText("Queue Count: " + uq.queueSize());
 
 				new UploadTask().execute();
 
@@ -605,10 +601,8 @@ public class Main extends Activity implements LocationListener {
 						Waffle.IMAGE_CHECK);
 			}
 
-			queueCount.setText("Queue Count: " + uploadQueue.size());
-			QueueUploader.storeQueue(uploadQueue, activityName, mContext);
-			uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
-					activityName, mContext);
+			queueCount.setText("Queue Count: " + uq.queueSize());
+			uq.buildQueueFromFile(); // TODO ??
 
 			uploadError = false;
 		}
@@ -709,9 +703,6 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	protected void onPause() {
-		// Stores uploadQueue in datacollector.ser (on SD card) and saves
-		// Q_COUNT
-		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 		super.onPause();
 	}
 
