@@ -43,7 +43,7 @@
             android:name=".dialogs.NoGps"
             android:label="No GPS Found"
             android:theme="@style/DialogTheme" />
-        <activity 
+        <activity
             android:name=".dialogs.NoConnectivity"
             android:label="No Connectivity"
             android:theme="@style/DialogTheme" />
@@ -51,7 +51,7 @@
             android:name=".dialogs.ReadyUpload"
             android:label="Ready To Upload"
             android:theme="@style/DialogTheme" />
-        <activity 
+        <activity
             android:name=".experiments.ExperimentDialog"
             android:label="Experiment ID"
             android:theme="@style/DialogTheme" />
@@ -59,15 +59,24 @@
             android:name=".dialogs.NoQR"
             android:label="No Barcode Scanner Found"
             android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.shared.QueueUploader"
-            android:label="Upload Data"
-            android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.shared.DeleteDataSetFromUploadQueue"
-            android:label="DataSet Manager"
-            android:theme="@style/DialogTheme" />
         
+        
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueLayout"
+            android:label="Upload Data"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueAlter"
+            android:label="Alter Data Set"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditData"
+            android:label="Edit Data"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/theme_dialog_black" />
     </application>
 
 </manifest>
