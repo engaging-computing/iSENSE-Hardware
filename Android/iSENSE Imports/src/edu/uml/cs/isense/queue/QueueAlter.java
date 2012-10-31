@@ -8,14 +8,23 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.R;
 
+/**
+ * Activity that allows the alteration of data sets in the queue.
+ * Data sets can be renamed, data-altered, or deleted.
+ * 
+ * @author Mike Stowell and Jeremy Poulin of the iSENSE team.
+ * 
+ */
 public class QueueAlter extends Activity {
 	
 	private Button rename, changeData, delete, cancel;
 	
-	public final static String RETURN_CODE = "return_code";
-	public final static int RENAME = 100;
-	public final static int CHANGE_DATA = 101;
-	public final static int DELETE = 102;
+	protected final static String RETURN_CODE = "return_code";
+	protected final static String IS_ALTERABLE = "is_alterable";
+	
+	protected final static int RENAME = 100;
+	protected final static int CHANGE_DATA = 101;
+	protected final static int DELETE = 102;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,12 +36,14 @@ public class QueueAlter extends Activity {
 		delete     = (Button) findViewById(R.id.queuealter_delete     );
 		cancel     = (Button) findViewById(R.id.queuealter_cancel     );
 		
-		// TODO - write a function that sets the visibility of changeData to gone
-		//        if we have more than 1 line of data saved  ---v
+		Bundle extras = getIntent().getExtras();
 		
-		//if (QUEUE_PARENT == QueueLayout.QUEUE_DATA_COLLECTOR) {
-		//	changeData.setVisibility(View.GONE);
-		//}
+		if (extras != null) {
+			boolean isAlterable = extras.getBoolean(IS_ALTERABLE);
+			if (!isAlterable) {
+				changeData.setVisibility(View.GONE);
+			}
+		}
 		
 		rename.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

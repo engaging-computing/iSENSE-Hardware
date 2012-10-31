@@ -343,6 +343,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					lastViewLongClicked = data;
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
+					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, true);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
@@ -391,6 +392,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					lastViewLongClicked = pic;
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
+					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);

@@ -9,6 +9,14 @@ import org.json.JSONException;
 import android.annotation.SuppressLint;
 
 @SuppressLint("ParserError")
+/**
+ * Class that contains all elements of an iSENSE data set and
+ * the functions necessary to upload the data or media to the
+ * iSENSE website.
+ * 
+ * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
+ *
+ */
 public class DataSet implements Serializable {
 
 	/*
@@ -23,23 +31,59 @@ public class DataSet implements Serializable {
 	};
 
 	// Both
+	/**
+	 * Type of data (DATA or PIC)
+	 */
 	public Type type;
+	/**
+	 * Name of the session associated with the data.
+	 */
 	private String name;
+	/**
+	 * Description of the data set.
+	 */
 	private String desc;
+	/**
+	 * Experiment ID# to upload the data set to.
+	 */
 	private String eid;
+	
 	private boolean rdyForUpload = true;
 
 	// Data Only
+	/**
+	 * String in JSONArray.toString() format containing all the
+	 * data to upload to iSENSE.
+	 */
 	private String data;
 
 	// Picture Only
+	/**
+	 * File containing the media in the data set.
+	 */
 	private File picture;
 
 	// Optional
+	/**
+	 * Optional: session ID to associate the data set with.  
+	 * One will be created if none is specified.
+	 */
 	private int sid = -1;
+	/**
+	 * Optional: city of where the data were recorded.
+	 */
 	private String city = "";
+	/**
+	 * Optional: state of where the data were recorded.
+	 */
 	private String state = "";
+	/**
+	 * Optional: country of where the data were recorded.
+	 */
 	private String country = "";
+	/**
+	 * Optional: address of where the data were recorded.
+	 */
 	private String addr = "";
 
 	/**
@@ -58,7 +102,7 @@ public class DataSet implements Serializable {
 	 */
 	public DataSet(Type type, String name, String desc, String eid,
 			String data, File picture, int sid, String city, String state,
-			String country, String addr/*, RestAPI rapi*/) {
+			String country, String addr) {
 		this.type = type;
 		this.name = name;
 		this.desc = desc;
@@ -75,7 +119,11 @@ public class DataSet implements Serializable {
 		this.addr = addr;
 	}
 
-	// Attempts to upload data with given information
+	/** 
+	 * Attempts to upload data with given information
+	 * 
+	 * @return if the upload was successful
+	 */
 	public boolean upload() {
 		boolean success = true;
 		if (this.rdyForUpload) {
@@ -143,31 +191,57 @@ public class DataSet implements Serializable {
 		return dataJSON;
 	}
 
-	public void setUploadable(boolean uploadable) {
+	
+	protected void setUploadable(boolean uploadable) {
 		this.rdyForUpload = uploadable;
 	}
 
-	public boolean isUploadable() {
+	protected boolean isUploadable() {
 		return this.rdyForUpload;
 	}
 
-	//Getters and Setters
+	/**
+	 * Getter for session ID.
+	 * 
+	 * @return The session ID associated with this data set.
+	 */
 	public int getSid() {
 		return sid;
 	}
 
+	/**
+	 * Setter for session ID.
+	 * 
+	 * @param sid
+	 */
 	public void setSid(int sid) {
 		this.sid = sid;
 	}
 	
+	/**
+	 * Getter for experiment ID.
+	 * 
+	 * @return The experiment ID associated with this data set.
+	 */
 	public String getEID() {
 		return this.eid;
 	}
 
+	/**
+	 * Getter for description.
+	 * 
+	 * @return The description associated with this data set.
+	 */
 	public String getDesc() {
 		return this.desc;
 	}
 
+	/**
+	 * Getter for the type of data set.
+	 * 
+	 * @return "Picture" for a media file, "Data" for a JSONArray formatted 
+	 * String, or "Unsupported Type" otherwise.
+	 */
 	public CharSequence getType() {
 		if (this.type == Type.PIC)
 			return "Picture";
@@ -177,18 +251,38 @@ public class DataSet implements Serializable {
 			return "Unsupported Type";
 	}
 	
+	/**
+	 * Setter for session name.
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * Getter for session name.
+	 * 
+	 * @return The name of the session associated with the data set.
+	 */
 	public CharSequence getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Setter for the data.
+	 * 
+	 * @param data
+	 */
 	public void setData(String data) {
 		this.data = data;
 	}
 	
+	/**
+	 * Getter for the data
+	 * 
+	 * @return The data associated with this data set.
+	 */
 	public String getData() {
 		return this.data;
 	}
