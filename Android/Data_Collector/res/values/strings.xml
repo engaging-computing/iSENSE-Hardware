@@ -50,10 +50,9 @@
     <string name="password">Password:&#160;&#160;&#160;</string>
     <string name="loading">Loading&#x2026;</string>
     <string name="no_isense">
-        You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to.
-		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in
-		to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if
-		you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.
+        You have not provided a valid Experiment ID to upload your data to.
+		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set 
+		once you are logged in to iSENSE and provide a valid Experiment ID. 
 	</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
