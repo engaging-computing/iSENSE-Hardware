@@ -8,7 +8,6 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 
-@SuppressLint("ParserError")
 /**
  * Class that contains all elements of an iSENSE data set and
  * the functions necessary to upload the data or media to the
@@ -17,17 +16,37 @@ import android.annotation.SuppressLint;
  * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
  *
  */
+@SuppressLint("ParserError")
 public class DataSet implements Serializable {
 
-	/*
-	 * DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
-	 */
+
+	// DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
 	private static final long serialVersionUID = 3776465868309657210L;
 	
+	/**
+	 * Constant that indicates that you have not yet created a session.
+	 * This can be passed in the constructor of the DataSet object to
+	 * indicate this.
+	 * 
+	 */
 	public static final int NO_SESSION_DEFINED = -1;
 
+	/**
+	 * Enum that indicates whether a data set is of type data
+	 * or media.
+	 * 
+	 * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
+	 *
+	 */
 	public enum Type {
-		DATA, PIC
+		/**
+		 * Indicates the data set is data.
+		 */
+		DATA, 
+		/**
+		 * Indicates the data set is media.
+		 */
+		PIC
 	};
 
 	// Both
@@ -94,7 +113,7 @@ public class DataSet implements Serializable {
 	 * @param eid
 	 * @param data If type is DataSet.DATA, we look here.
 	 * @param picture If type is DataSet.PIC, we look here.
-	 * @param sid Give me DataSet.NO_SESSION_DEFINED if you haven't called create session.
+	 * @param sid Pass DataSet.NO_SESSION_DEFINED if you have not created a session.
 	 * @param city
 	 * @param state
 	 * @param country
@@ -213,6 +232,7 @@ public class DataSet implements Serializable {
 	 * Setter for session ID.
 	 * 
 	 * @param sid
+	 * 		The session ID the data should be uploaded to in the future.
 	 */
 	public void setSid(int sid) {
 		this.sid = sid;
@@ -255,6 +275,7 @@ public class DataSet implements Serializable {
 	 * Setter for session name.
 	 * 
 	 * @param name
+	 * 			The session name the data set should be associated with.
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -273,6 +294,7 @@ public class DataSet implements Serializable {
 	 * Setter for the data.
 	 * 
 	 * @param data
+	 * 			The data (or media) to upload in the future.
 	 */
 	public void setData(String data) {
 		this.data = data;
