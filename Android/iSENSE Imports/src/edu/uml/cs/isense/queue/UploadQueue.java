@@ -17,6 +17,16 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import edu.uml.cs.isense.comm.RestAPI;
 
+/**
+ * Class that represents the queue of data sets.  This object
+ * can be instantiated, have data sets added to it, and be rebuilt
+ * at any time from the serializable file it is stored on.  In order
+ * to use the iSENSE-Imports-Queue-Saving technology, an UploadQueue
+ * object is necessary.
+ * 
+ * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
+ *
+ */
 public class UploadQueue implements Serializable {
 	/*
 	 * Serializable key for UploadQueue class - DO NOT CHANGE
@@ -30,6 +40,25 @@ public class UploadQueue implements Serializable {
 	private static Context mContext;
 	private static RestAPI rapi;
 
+	/**
+	 * This is the default/only constructor for an UploadQueue object.
+	 * All parameters are necessary and essential to ensuring that
+	 * this object works properly.
+	 * 
+	 * 
+	 * @param parentName
+	 * 			Name of the parent activity the UploadQueue is being made 
+	 * 			in.  This name is also used in making the serializable file
+	 * 			where this UploadQueue will be stored
+	 * 
+	 * @param context
+	 * 			Context of the activity instantiating this object.
+	 * 
+	 * @param rapi
+	 * 			A RestAPI object that this UploadQueue object may utilize
+	 * 			to upload data.
+	 * 
+	 */
 	public UploadQueue(String parentName, Context context,
 			RestAPI rapi) {
 		this.queue = new LinkedList<DataSet>();
@@ -41,14 +70,31 @@ public class UploadQueue implements Serializable {
 		UploadQueue.rapi = rapi;
 	}
 	
+	/**
+	 * Getter for the parent name of the object.
+	 * 
+	 * @return The parent name of the object
+	 */
 	public String getParentName() {
 		return parentName;
 	}
 	
+	/**
+	 * Getter for the context passed to the object.
+	 * 
+	 * @return The context this object was instantiated with.
+	 */
 	public Context getContext() {
 		return mContext;
 	}
 
+	/**
+	 * Adds a data set to the queue and updates the serializable file
+	 * the queue is stored on.
+	 * 
+	 * @param ds
+	 * 			The DataSet object to be added to the UploadQueue.
+	 */
 	public void addDataSetToQueue(DataSet ds) {
 		queue.add(ds);
 		mirrorQueue.add(ds);
@@ -128,6 +174,14 @@ public class UploadQueue implements Serializable {
 		}
 	}
 	
+	/**
+	 * Rebuilds the UploadQueue from the serializable file it
+	 * is saved on.
+	 * 
+	 * @return 
+	 * 			@true if the UploadQueue is rebuilt successfully
+	 * 			@false if the rebuilding fails 
+	 */
 	public boolean buildQueueFromFile() {
 		
 		// reset the queues but save a backup
@@ -191,14 +245,31 @@ public class UploadQueue implements Serializable {
 		return true;
 	}
 
+	/**
+	 * Getter for the RestAPI object.
+	 * 
+	 * @return The RestAPI object the UploadQueue was instantiated with.
+	 */
 	public static RestAPI getRapi() {
 		return rapi;
 	}
 	
+	/**
+	 * Determines if the queue of data sets is empty.
+	 * 
+	 * @return
+	 * 			@true if the queue is empty
+	 * 			@false if the queue has data sets
+	 */
 	public boolean emptyQueue() {
 		return (queue.size() == 0);
 	}
 
+	/**
+	 * Determines the amount of data sets in the queue.
+	 * 
+	 * @return	The amount of data sets stored in the queue.
+	 */
 	public int queueSize() {
 		return (queue.size());
 	}
