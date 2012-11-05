@@ -21,8 +21,24 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class QueueLayout extends Activity implements OnClickListener {
+/**
+ * Activity that displays the list of data sets stored in the
+ * data saving queue.  From here, the user can check and uncheck data
+ * sets to upload, rename them, change their data, delete them,
+ * or attempt to upload them to iSENSE.
+ * 
+ * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
+ *
+ */
+public abstract class QueueLayout extends Activity implements OnClickListener {
 
+	/**
+	 * Global string constant that the user should use to pass in the 
+	 * parent name of their activity when using an intent to launch
+	 * QueueLayout.  QueueLayout will not display if a parent name is
+	 * not passed into it.  This parent name is used to create a 
+	 * serializable file with the same name as the string passed to it.
+	 */
 	public static final String PARENT_NAME = "parentName";
 
 	private static final int ALTER_DATASET_REQUESTED = 9001;
@@ -31,9 +47,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	private static int QUEUE_PARENT = -1;
 
-	public static final String INTENT_IDENTIFIER = "intent_identifier";
-
-	public static int lastSID = -1;
+	protected static int lastSID = -1;
 
 	private static Context mContext;
 	private static LinearLayout scrollQueue;
@@ -41,11 +55,14 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static UploadQueue uq;
 	private boolean uploadSuccess = true;
 
-	public static DataSet lastDataSetLongClicked;
+	protected static DataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
 	private Waffle w;
 	private RestAPI rapi;
-
+	
+	// Overriden constructor to prevent class from being instantiated.
+	private QueueLayout(){}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -115,6 +132,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 		desc.setText(ds.getDesc());
 	}
 
+	/**
+	 * This method was made public by Android.  Don't worry about it.
+	 */
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
