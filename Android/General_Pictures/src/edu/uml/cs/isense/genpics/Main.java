@@ -9,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -37,7 +36,6 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +47,8 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
 import edu.uml.cs.isense.genpics.dialogs.NoGps;
 import edu.uml.cs.isense.genpics.experiments.ExperimentDialog;
+import edu.uml.cs.isense.genpics.objects.DataFieldManager;
+import edu.uml.cs.isense.genpics.objects.Fields;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -98,16 +98,14 @@ public class Main extends Activity implements LocationListener {
 	public static Context mContext;
 
 	private Waffle w;
-
 	private File picture;
-
 	public static Button takePicture;
-
 	static boolean useMenu = true;
-
+	
 	private ProgressDialog dia;
-
 	private Location loc;
+	private DataFieldManager dfm;
+	private Fields f;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +115,8 @@ public class Main extends Activity implements LocationListener {
 		mContext = this;
 
 		w = new Waffle(mContext);
+		
+		f = new Fields();
 
 		rapi = RestAPI
 				.getInstance(
@@ -125,10 +125,19 @@ public class Main extends Activity implements LocationListener {
 		rapi.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, rapi);
+		
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		if (mPrefs.getString("experiment_id", "").equals("")) {
+			if (dfm == null) {
+				dfm = new DataFieldManager(
+						Integer.parseInt(mPrefs.getString("experiment_id", "-1")),
+						rapi, mContext, f);
+				dfm.getOrder();
+			}
+		}
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
 				mContext, getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
@@ -389,6 +398,7 @@ public class Main extends Activity implements LocationListener {
 							Context.MODE_PRIVATE));
 
 			boolean success = false;
+			
 			if (rapi.isConnectedToInternet()) {
 				if (rapi.isLoggedIn()) {
 					success = true;
@@ -445,18 +455,22 @@ public class Main extends Activity implements LocationListener {
 
 			JSONArray dataJSON = new JSONArray();
 			JSONArray dataRow = new JSONArray();
-			try {
-				if (useDefaultLocation) {
-					dataRow.put(curTime);
-					dataRow.put(DEFAULT_LAT);
-					dataRow.put(DEFAULT_LONG);
-				} else {
-					dataRow.put(curTime);
-					dataRow.put(loc.getLatitude());
-					dataRow.put(loc.getLongitude());
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
+			if (useDefaultLocation) {
+				f.time = curTime;
+				f.lat = DEFAULT_LAT;
+				f.lon = DEFAULT_LONG;
+				dataRow = dfm.putData();
+				//dataRow.put(curTime);
+				//dataRow.put(DEFAULT_LAT);
+				//dataRow.put(DEFAULT_LONG);
+			} else {
+				f.time = curTime;
+				f.lat = loc.getLatitude();
+				f.lon = loc.getLongitude();
+				dataRow = dfm.putData();
+				//dataRow.put(curTime);
+				//dataRow.put(loc.getLatitude());
+				//dataRow.put(loc.getLongitude());
 			}
 			dataJSON.put(dataRow);
 
@@ -474,7 +488,6 @@ public class Main extends Activity implements LocationListener {
 				uploadError = true;
 				postRunnableWaffleError("Encountered upload problem: could not create session");
 				// Add new DataSet to Queue
-				Log.e("wtf", "picture = " + picture);
 				DataSet ds = new DataSet(DataSet.Type.BOTH, name.getText()
 						.toString(), makeThisDatePretty(curTime),
 						experimentNum, dataJSON.toString(), picture, sessionId,
@@ -527,8 +540,7 @@ public class Main extends Activity implements LocationListener {
 
 				takePicture.setEnabled(true);
 
-				// Rebuilds uploadQueue from saved info
-				uq.buildQueueFromFile(); // TODO ??
+				uq.buildQueueFromFile();
 				queueCount.setText("Queue Count: " + uq.queueSize());
 
 				new UploadTask().execute();
@@ -542,6 +554,13 @@ public class Main extends Activity implements LocationListener {
 				experimentLabel.setText(getResources().getString(
 						R.string.experiment)
 						+ eidString);
+				
+				//SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+				//SharedPreferences.Editor mEdit = mPrefs.edit();
+				//mEdit.putInt("experiment_id", Integer.parseInt(eidString)).commit();
+				
+				dfm = new DataFieldManager(Integer.parseInt(eidString), rapi, mContext, f);
+				dfm.getOrder();
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -627,7 +646,7 @@ public class Main extends Activity implements LocationListener {
 			}
 
 			queueCount.setText("Queue Count: " + uq.queueSize());
-			uq.buildQueueFromFile(); // TODO ??
+			uq.buildQueueFromFile();
 
 			uploadError = false;
 		}

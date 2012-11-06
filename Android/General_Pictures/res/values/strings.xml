@@ -44,5 +44,9 @@
 	<string name="browse">Browse &#8230;</string>
 	<string name="scan_qr">Scan QR Code</string>
 	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
+	<string name="time">field_time</string>
+	<string name="latitude">field_latitude</string>
+	<string name="longitude">field_longitude</string>
+	<string name="null_string">field_null</string>
 	
 </resources>
