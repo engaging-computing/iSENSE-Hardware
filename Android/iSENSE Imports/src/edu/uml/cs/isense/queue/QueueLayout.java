@@ -30,7 +30,7 @@ import edu.uml.cs.isense.waffle.Waffle;
  * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
  *
  */
-public abstract class QueueLayout extends Activity implements OnClickListener {
+public class QueueLayout extends Activity implements OnClickListener {
 
 	/**
 	 * Global string constant that the user should use to pass in the 
@@ -59,9 +59,6 @@ public abstract class QueueLayout extends Activity implements OnClickListener {
 	private View lastViewLongClicked;
 	private Waffle w;
 	private RestAPI rapi;
-	
-	// Overriden constructor to prevent class from being instantiated.
-	private QueueLayout(){}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -421,6 +418,56 @@ public abstract class QueueLayout extends Activity implements OnClickListener {
 
 			});
 
+			break;
+			
+		case BOTH:
+			
+			final View both = View.inflate(mContext, R.layout.queueblock_pic,
+					null);
+
+			both.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+
+			makeBlock(both, ds);
+			previous = checkPrevious(previous, scrollQueue,
+					(String) ds.getName());
+
+			scrollQueue.addView(both);
+			ds.setUploadable(true);
+
+			both.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View v) {
+					CheckedTextView ctv = (CheckedTextView) v
+							.findViewById(R.id.name);
+					ctv.toggle();
+
+					if (ctv.isChecked())
+						ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+					else
+						ctv.setCheckMarkDrawable(R.drawable.red_x);
+
+					ds.setUploadable(ctv.isChecked());
+
+				}
+
+			});
+
+			both.setOnLongClickListener(new OnLongClickListener() {
+
+				public boolean onLongClick(View v) {
+					lastDataSetLongClicked = ds;
+					lastViewLongClicked = both;
+					Intent iAlterDataSet = new Intent(mContext,
+							QueueAlter.class);
+					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
+					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
+					startActivityForResult(iAlterDataSet,
+							ALTER_DATASET_REQUESTED);
+					return false;
+				}
+
+			});
+			
 			break;
 		}
 
