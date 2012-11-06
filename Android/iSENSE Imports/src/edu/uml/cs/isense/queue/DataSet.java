@@ -46,12 +46,16 @@ public class DataSet implements Serializable {
 		/**
 		 * Indicates the data set is media.
 		 */
-		PIC
+		PIC,
+		/**
+		 * Indicates the data is a session with both data and a single media object
+		 */
+		BOTH
 	};
 
 	// Both
 	/**
-	 * Type of data (DATA or PIC)
+	 * Type of data (DATA, PIC, or BOTH)
 	 */
 	public Type type;
 	/**
@@ -126,7 +130,7 @@ public class DataSet implements Serializable {
 		this.name = name;
 		this.desc = desc;
 		this.eid = eid;
-		if (!(data == null))
+		if (data != null)
 			this.data = data;
 		else
 			this.data = null;
@@ -192,7 +196,41 @@ public class DataSet implements Serializable {
 				}
 				
 				break;
+				
+			case BOTH:
+				if (sid == -1) {
 
+					if (addr.equals("")) {
+						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+								"N/A", "N/A", "United States");
+					} else {
+						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+								addr, city + ", " + state, country);
+					}
+
+					if (sid == -1) {
+						success = false;
+						break;
+					} else QueueLayout.lastSID = sid;
+				}
+
+				// Experiment Closed Checker
+				if (sid == -400) {
+					success = false;
+					break;
+				} else {
+					JSONArray dataJSON = prepDataForUpload();
+					if (!(dataJSON.isNull(0))) {
+						
+						success = UploadQueue.getRapi().putSessionData(sid, eid,
+								dataJSON);
+						success = UploadQueue.getRapi().uploadPictureToSession(
+								picture, eid, sid, name, "N/A");
+					
+					}
+				}
+				
+				break;
 			}
 		}
 
@@ -267,6 +305,8 @@ public class DataSet implements Serializable {
 			return "Picture";
 		else if (this.type == Type.DATA)
 			return "Data";
+		else if (this.type == Type.BOTH)
+			return "Data and Picture";
 		else
 			return "Unsupported Type";
 	}

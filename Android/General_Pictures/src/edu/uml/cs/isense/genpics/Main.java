@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +65,7 @@ public class Main extends Activity implements LocationListener {
 
 	private static final int MENU_ITEM_BROWSE = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
+	private static final int MENU_ITEM_UPLOAD = 2;
 
 	private static final int TIMER_LOOP = 1000;
 
@@ -115,7 +117,7 @@ public class Main extends Activity implements LocationListener {
 		mContext = this;
 
 		w = new Waffle(mContext);
-		
+
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
@@ -210,8 +212,9 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Pick Experiment");
+		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Experiment");
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
+		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		return true;
 	}
 
@@ -219,8 +222,12 @@ public class Main extends Activity implements LocationListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (!useMenu) {
 			menu.getItem(0).setEnabled(false);
+			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
 		} else {
 			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
 		}
 		return true;
 	}
@@ -240,6 +247,10 @@ public class Main extends Activity implements LocationListener {
 			startActivityForResult(new Intent(getApplicationContext(),
 					LoginActivity.class), LOGIN_REQUESTED);
 			return true;
+
+		case MENU_ITEM_UPLOAD:
+			manageUploadQueue();
+			return true;
 		}
 
 		return false;
@@ -257,23 +268,36 @@ public class Main extends Activity implements LocationListener {
 		queueCount.setText("Queue Count: " + uq.queueSize());
 
 		// Check to see if now is the right time to try to upload information.
-		manageUploadQueue();
+		// manageUploadQueue();
 	}
 
 	private void manageUploadQueue() {
-		
-		if (rapi.isLoggedIn() && (!uq.emptyQueue())
-				&& rapi.isConnectedToInternet()) {
-			Intent i = new Intent().setClass(mContext, QueueLayout.class);
-			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
-			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+
+		if (!(rapi.isConnectedToInternet())) {
+			w.make("Must be connected to the internet to upload.", Waffle.IMAGE_X);
+			return;
 		}
+
+		if (!(rapi.isLoggedIn())) {
+			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
+			return;
+		}
+
+		if (uq.emptyQueue()) {
+			w.make("No data to upload.", Waffle.IMAGE_CHECK);
+			return;
+		}
+
+		Intent i = new Intent().setClass(mContext, QueueLayout.class);
+		i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+		startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		if (!gpsWorking)
 			initLocManager();
 		if (mTimer == null)
@@ -419,28 +443,6 @@ public class Main extends Activity implements LocationListener {
 				return;
 			}
 
-			int sessionId = -1;
-			if (address == null || address.size() <= 0) {
-				sessionId = rapi.createSession(experimentNum, name.getText()
-						.toString(), makeThisDatePretty(curTime), "", "", "");
-			} else {
-				sessionId = rapi.createSession(experimentNum, name.getText()
-						.toString(), makeThisDatePretty(curTime), addr, city
-						+ ", " + state, country);
-			}
-
-			if (sessionId == -1) {
-				uploadError = true;
-				postRunnableWaffleError("Encountered upload problem: could not create session");
-				// Add new DataSet to Queue
-				DataSet ds = new DataSet(DataSet.Type.PIC, name.getText()
-						.toString(), makeThisDatePretty(curTime),
-						experimentNum, null, picture, sessionId, city, state,
-						country, addr);
-				uq.addDataSetToQueue(ds);
-				return;
-			}
-
 			JSONArray dataJSON = new JSONArray();
 			JSONArray dataRow = new JSONArray();
 			try {
@@ -457,6 +459,29 @@ public class Main extends Activity implements LocationListener {
 				e.printStackTrace();
 			}
 			dataJSON.put(dataRow);
+
+			int sessionId = -1;
+			if (address == null || address.size() <= 0) {
+				sessionId = rapi.createSession(experimentNum, name.getText()
+						.toString(), makeThisDatePretty(curTime), "", "", "");
+			} else {
+				sessionId = rapi.createSession(experimentNum, name.getText()
+						.toString(), makeThisDatePretty(curTime), addr, city
+						+ ", " + state, country);
+			}
+
+			if (sessionId == -1) {
+				uploadError = true;
+				postRunnableWaffleError("Encountered upload problem: could not create session");
+				// Add new DataSet to Queue
+				Log.e("wtf", "picture = " + picture);
+				DataSet ds = new DataSet(DataSet.Type.BOTH, name.getText()
+						.toString(), makeThisDatePretty(curTime),
+						experimentNum, dataJSON.toString(), picture, sessionId,
+						city, state, country, addr);
+				uq.addDataSetToQueue(ds);
+				return;
+			}
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
