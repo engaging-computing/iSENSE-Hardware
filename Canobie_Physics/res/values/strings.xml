@@ -303,5 +303,6 @@
 	<string name="password">Password:    </string>
 	<string name="loading">Loading&#x2026;</string>
 	<string name="contentDesc"></string>
+	<string name="search">Search</string>
 
 </resources>
