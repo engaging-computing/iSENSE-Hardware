@@ -68,7 +68,6 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -1082,9 +1081,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 					Intent experimentIntent = new Intent(
 							getApplicationContext(), BrowseExperiments.class);
-					experimentIntent.putExtra(
-							"edu.uml.cs.isense.amusement.experiments.propose",
-							EXPERIMENT_CODE);
 
 					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 				}
@@ -1229,10 +1225,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.experiments.exp_id");
-				int sr = data.getExtras().getInt(
-						"edu.uml.cs.isense.experiments.srate");
 				experimentInput.setText("" + eid);
-				sampleRate.setText("" + sr);
 			}
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1242,10 +1235,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
-				Log.e("intent", "timeOffset set to: " + timeOffset);
-			} else if (resultCode == RESULT_CANCELED) {
-				// oh no they canceled!
-			}
+			} 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			boolean success = uq.buildQueueFromFile();
 			if (!success) {
