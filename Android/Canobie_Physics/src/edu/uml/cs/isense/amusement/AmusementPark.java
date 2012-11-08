@@ -40,6 +40,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -67,7 +68,6 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -86,6 +86,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import edu.uml.cs.isense.amusement.experiment.BrowseExperiments;
 import edu.uml.cs.isense.amusement.objects.DataFieldManager;
 import edu.uml.cs.isense.amusement.objects.Fields;
 import edu.uml.cs.isense.amusement.objects.SensorCompatibility;
@@ -141,7 +142,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private String pressure = "";
 	private String light = "";
 
-	private static final int INTERVAL = 200;
+	private static final int INTERVAL = 50;
 	private static long srate = INTERVAL;
 
 	private static final int MENU_ITEM_SETUP = 0;
@@ -202,7 +203,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 	private int totalMillis = 0;
 	private int dataPointCount = 0;
-	private int i = 0;
+	private int countToStop = 0;
 	private int len = 0;
 	private int len2 = 0;
 	private int secondsElapsed = 0;
@@ -335,7 +336,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						len = 0;
 						len2 = 0;
 						dataPointCount = 0;
-						i = 0;
+						countToStop = 0;
 						beginWrite = true;
 						sdCardError = false;
 
@@ -378,6 +379,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									@Override
 									public void run() {
 										setTime(secondsElapsed++);
+										countToStop++;
+
+										if (countToStop >= 600) {
+
+											timeTimer.cancel();
+											timeElapsedTimer.cancel();
+
+											mHandler.post(new Runnable() {
+												@Override
+												public void run() {
+													throughHandler = true;
+													startStop
+															.performLongClick();
+												}
+											});
+
+										}
 									}
 								});
 							}
@@ -392,84 +410,61 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
 
-								if (i >= 3000) {
+								len++;
+								len2++;
 
-									timeTimer.cancel();
-									timeElapsedTimer.cancel();
+								if (dfm.enabledFields[ACCEL_X])
+									f.accel_x = toThou.format(accel[0]);
+								if (dfm.enabledFields[ACCEL_Y])
+									f.accel_y = toThou.format(accel[1]);
+								if (dfm.enabledFields[ACCEL_Z])
+									f.accel_z = toThou.format(accel[2]);
+								if (dfm.enabledFields[ACCEL_TOTAL])
+									f.accel_total = toThou.format(accel[3]);
+								if (dfm.enabledFields[LATITUDE])
+									f.latitude = loc.getLatitude();
+								if (dfm.enabledFields[LONGITUDE])
+									f.longitude = loc.getLongitude();
+								if (dfm.enabledFields[HEADING_DEG])
+									f.angle_deg = toThou.format(orientation[0]);
+								if (dfm.enabledFields[HEADING_RAD])
+									f.angle_rad = ""
+											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+								if (dfm.enabledFields[MAG_X])
+									f.mag_x = mag[0];
+								if (dfm.enabledFields[MAG_Y])
+									f.mag_y = mag[1];
+								if (dfm.enabledFields[MAG_Z])
+									f.mag_z = mag[2];
+								if (dfm.enabledFields[MAG_TOTAL])
+									f.mag_total = Math.sqrt(Math
+											.pow(f.mag_x, 2)
+											+ Math.pow(f.mag_y, 2)
+											+ Math.pow(f.mag_z, 2));
+								if (dfm.enabledFields[TIME])
+									f.timeMillis = currentTime + elapsedMillis;
+								if (dfm.enabledFields[TEMPERATURE_C])
+									f.temperature_c = temperature;
+								if (dfm.enabledFields[TEMPERATURE_F])
+									f.temperature_f = ""
+											+ ((Double.parseDouble(temperature) * 1.8) + 32);
+								if (dfm.enabledFields[TEMPERATURE_K])
+									f.temperature_k = ""
+											+ (Double.parseDouble(temperature) + 273.15);
+								if (dfm.enabledFields[PRESSURE])
+									f.pressure = pressure;
+								if (dfm.enabledFields[ALTITUDE])
+									f.altitude = calcAltitude();
+								if (dfm.enabledFields[LIGHT])
+									f.lux = light;
 
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											throughHandler = true;
-											startStop.performLongClick();
-										}
-									});
+								dataSet.put(dfm.putData());
+								data = dfm.writeSdCardLine();
 
+								if (beginWrite) {
+									writeToSDCard(data, 's');
 								} else {
-
-									i++;
-									len++;
-									len2++;
-
-									if (dfm.enabledFields[ACCEL_X])
-										f.accel_x = toThou.format(accel[0]);
-									if (dfm.enabledFields[ACCEL_Y])
-										f.accel_y = toThou.format(accel[1]);
-									if (dfm.enabledFields[ACCEL_Z])
-										f.accel_z = toThou.format(accel[2]);
-									if (dfm.enabledFields[ACCEL_TOTAL])
-										f.accel_total = toThou.format(accel[3]);
-									if (dfm.enabledFields[LATITUDE])
-										f.latitude = loc.getLatitude();
-									if (dfm.enabledFields[LONGITUDE])
-										f.longitude = loc.getLongitude();
-									if (dfm.enabledFields[HEADING_DEG])
-										f.angle_deg = toThou
-												.format(orientation[0]);
-									if (dfm.enabledFields[HEADING_RAD])
-										f.angle_rad = ""
-												+ (Double
-														.parseDouble(f.angle_deg) * (Math.PI / 180));
-									if (dfm.enabledFields[MAG_X])
-										f.mag_x = mag[0];
-									if (dfm.enabledFields[MAG_Y])
-										f.mag_y = mag[1];
-									if (dfm.enabledFields[MAG_Z])
-										f.mag_z = mag[2];
-									if (dfm.enabledFields[MAG_TOTAL])
-										f.mag_total = Math.sqrt(Math.pow(
-												f.mag_x, 2)
-												+ Math.pow(f.mag_y, 2)
-												+ Math.pow(f.mag_z, 2));
-									if (dfm.enabledFields[TIME])
-										f.timeMillis = currentTime
-												+ elapsedMillis;
-									if (dfm.enabledFields[TEMPERATURE_C])
-										f.temperature_c = temperature;
-									if (dfm.enabledFields[TEMPERATURE_F])
-										f.temperature_f = ""
-												+ ((Double
-														.parseDouble(temperature) * 1.8) + 32);
-									if (dfm.enabledFields[TEMPERATURE_K])
-										f.temperature_k = ""
-												+ (Double
-														.parseDouble(temperature) + 273.15);
-									if (dfm.enabledFields[PRESSURE])
-										f.pressure = pressure;
-									if (dfm.enabledFields[ALTITUDE])
-										f.altitude = calcAltitude();
-									if (dfm.enabledFields[LIGHT])
-										f.lux = light;
-
-									dataSet.put(dfm.putData());
-									data = dfm.writeSdCardLine();
-
-									if (beginWrite) {
-										writeToSDCard(data, 's');
-									} else {
-										writeToSDCard(data, 'u');
-									}
-
+									writeToSDCard(data, 'u');
 								}
 
 							}
@@ -806,6 +801,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 			}, "Configure Options");
 			dialog.setCancelable(true);
+			dialog.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					canobieIsChecked = canobieBackup;
+					startStop.setEnabled(true);	
+				}
+			});
 
 			sessionName.setText(partialSessionName);
 			break;
@@ -1078,10 +1080,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				} else {
 
 					Intent experimentIntent = new Intent(
-							getApplicationContext(), Experiments.class);
-					experimentIntent.putExtra(
-							"edu.uml.cs.isense.amusement.experiments.propose",
-							EXPERIMENT_CODE);
+							getApplicationContext(), BrowseExperiments.class);
 
 					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 				}
@@ -1157,8 +1156,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							pass = false;
 						}
 						try {
-							if (Long.parseLong(sampleRate.getText().toString()) < 200) {
-								sampleRate.setError("Interval Must be >= 200");
+							if (Long.parseLong(sampleRate.getText().toString()) < INTERVAL) {
+								sampleRate.setError("Interval Must be >= "
+										+ INTERVAL);
 								pass = false;
 							}
 						} catch (NumberFormatException e) {
@@ -1225,10 +1225,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.experiments.exp_id");
-				int sr = data.getExtras().getInt(
-						"edu.uml.cs.isense.experiments.srate");
 				experimentInput.setText("" + eid);
-				sampleRate.setText("" + sr);
 			}
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1238,10 +1235,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
-				Log.e("intent", "timeOffset set to: " + timeOffset);
-			} else if (resultCode == RESULT_CANCELED) {
-				// oh no they canceled!
-			}
+			} 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			boolean success = uq.buildQueueFromFile();
 			if (!success) {
@@ -1262,6 +1256,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
+				showDialog(MENU_ITEM_SETUP);
 			}
 		}
 

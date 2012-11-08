@@ -9,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -48,6 +47,8 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
 import edu.uml.cs.isense.genpics.dialogs.NoGps;
 import edu.uml.cs.isense.genpics.experiments.ExperimentDialog;
+import edu.uml.cs.isense.genpics.objects.DataFieldManager;
+import edu.uml.cs.isense.genpics.objects.Fields;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -64,6 +65,7 @@ public class Main extends Activity implements LocationListener {
 
 	private static final int MENU_ITEM_BROWSE = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
+	private static final int MENU_ITEM_UPLOAD = 2;
 
 	private static final int TIMER_LOOP = 1000;
 
@@ -96,16 +98,14 @@ public class Main extends Activity implements LocationListener {
 	public static Context mContext;
 
 	private Waffle w;
-
 	private File picture;
-
 	public static Button takePicture;
-
 	static boolean useMenu = true;
-
+	
 	private ProgressDialog dia;
-
 	private Location loc;
+	private DataFieldManager dfm;
+	private Fields f;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +116,8 @@ public class Main extends Activity implements LocationListener {
 
 		w = new Waffle(mContext);
 		
+		f = new Fields();
+
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
@@ -123,10 +125,19 @@ public class Main extends Activity implements LocationListener {
 		rapi.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, rapi);
+		
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		if (mPrefs.getString("experiment_id", "").equals("")) {
+			if (dfm == null) {
+				dfm = new DataFieldManager(
+						Integer.parseInt(mPrefs.getString("experiment_id", "-1")),
+						rapi, mContext, f);
+				dfm.getOrder();
+			}
+		}
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
 				mContext, getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
@@ -210,8 +221,9 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Pick Experiment");
+		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Experiment");
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
+		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		return true;
 	}
 
@@ -219,8 +231,12 @@ public class Main extends Activity implements LocationListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (!useMenu) {
 			menu.getItem(0).setEnabled(false);
+			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
 		} else {
 			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
 		}
 		return true;
 	}
@@ -240,6 +256,10 @@ public class Main extends Activity implements LocationListener {
 			startActivityForResult(new Intent(getApplicationContext(),
 					LoginActivity.class), LOGIN_REQUESTED);
 			return true;
+
+		case MENU_ITEM_UPLOAD:
+			manageUploadQueue();
+			return true;
 		}
 
 		return false;
@@ -257,23 +277,36 @@ public class Main extends Activity implements LocationListener {
 		queueCount.setText("Queue Count: " + uq.queueSize());
 
 		// Check to see if now is the right time to try to upload information.
-		manageUploadQueue();
+		// manageUploadQueue();
 	}
 
 	private void manageUploadQueue() {
-		
-		if (rapi.isLoggedIn() && (!uq.emptyQueue())
-				&& rapi.isConnectedToInternet()) {
-			Intent i = new Intent().setClass(mContext, QueueLayout.class);
-			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
-			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+
+		if (!(rapi.isConnectedToInternet())) {
+			w.make("Must be connected to the internet to upload.", Waffle.IMAGE_X);
+			return;
 		}
+
+		if (!(rapi.isLoggedIn())) {
+			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
+			return;
+		}
+
+		if (uq.emptyQueue()) {
+			w.make("No data to upload.", Waffle.IMAGE_CHECK);
+			return;
+		}
+
+		Intent i = new Intent().setClass(mContext, QueueLayout.class);
+		i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+		startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		if (!gpsWorking)
 			initLocManager();
 		if (mTimer == null)
@@ -365,6 +398,7 @@ public class Main extends Activity implements LocationListener {
 							Context.MODE_PRIVATE));
 
 			boolean success = false;
+			
 			if (rapi.isConnectedToInternet()) {
 				if (rapi.isLoggedIn()) {
 					success = true;
@@ -419,6 +453,27 @@ public class Main extends Activity implements LocationListener {
 				return;
 			}
 
+			JSONArray dataJSON = new JSONArray();
+			JSONArray dataRow = new JSONArray();
+			if (useDefaultLocation) {
+				f.time = curTime;
+				f.lat = DEFAULT_LAT;
+				f.lon = DEFAULT_LONG;
+				dataRow = dfm.putData();
+				//dataRow.put(curTime);
+				//dataRow.put(DEFAULT_LAT);
+				//dataRow.put(DEFAULT_LONG);
+			} else {
+				f.time = curTime;
+				f.lat = loc.getLatitude();
+				f.lon = loc.getLongitude();
+				dataRow = dfm.putData();
+				//dataRow.put(curTime);
+				//dataRow.put(loc.getLatitude());
+				//dataRow.put(loc.getLongitude());
+			}
+			dataJSON.put(dataRow);
+
 			int sessionId = -1;
 			if (address == null || address.size() <= 0) {
 				sessionId = rapi.createSession(experimentNum, name.getText()
@@ -433,30 +488,13 @@ public class Main extends Activity implements LocationListener {
 				uploadError = true;
 				postRunnableWaffleError("Encountered upload problem: could not create session");
 				// Add new DataSet to Queue
-				DataSet ds = new DataSet(DataSet.Type.PIC, name.getText()
+				DataSet ds = new DataSet(DataSet.Type.BOTH, name.getText()
 						.toString(), makeThisDatePretty(curTime),
-						experimentNum, null, picture, sessionId, city, state,
-						country, addr);
+						experimentNum, dataJSON.toString(), picture, sessionId,
+						city, state, country, addr);
 				uq.addDataSetToQueue(ds);
 				return;
 			}
-
-			JSONArray dataJSON = new JSONArray();
-			JSONArray dataRow = new JSONArray();
-			try {
-				if (useDefaultLocation) {
-					dataRow.put(curTime);
-					dataRow.put(DEFAULT_LAT);
-					dataRow.put(DEFAULT_LONG);
-				} else {
-					dataRow.put(curTime);
-					dataRow.put(loc.getLatitude());
-					dataRow.put(loc.getLongitude());
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			dataJSON.put(dataRow);
 
 			// Experiment Closed Checker
 			if (sessionId == -400) {
@@ -502,8 +540,7 @@ public class Main extends Activity implements LocationListener {
 
 				takePicture.setEnabled(true);
 
-				// Rebuilds uploadQueue from saved info
-				uq.buildQueueFromFile(); // TODO ??
+				uq.buildQueueFromFile();
 				queueCount.setText("Queue Count: " + uq.queueSize());
 
 				new UploadTask().execute();
@@ -517,6 +554,13 @@ public class Main extends Activity implements LocationListener {
 				experimentLabel.setText(getResources().getString(
 						R.string.experiment)
 						+ eidString);
+				
+				//SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+				//SharedPreferences.Editor mEdit = mPrefs.edit();
+				//mEdit.putInt("experiment_id", Integer.parseInt(eidString)).commit();
+				
+				dfm = new DataFieldManager(Integer.parseInt(eidString), rapi, mContext, f);
+				dfm.getOrder();
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -602,7 +646,7 @@ public class Main extends Activity implements LocationListener {
 			}
 
 			queueCount.setText("Queue Count: " + uq.queueSize());
-			uq.buildQueueFromFile(); // TODO ??
+			uq.buildQueueFromFile();
 
 			uploadError = false;
 		}
