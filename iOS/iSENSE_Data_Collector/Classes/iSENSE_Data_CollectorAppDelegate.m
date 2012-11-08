@@ -8,6 +8,7 @@
 
 #import "iSENSE_Data_CollectorAppDelegate.h"
 #import "iSENSE_Data_CollectorViewController.h"
+#import	"iSENSE_Data_CollectorViewController_iPad.h"
 
 @implementation iSENSE_Data_CollectorAppDelegate
 
@@ -18,7 +19,7 @@
 - (void)applicationDidFinishLaunching:(UIApplication *)application {    
 	
 	//allocate the view controller
-	self.viewController = [iSENSE_Data_CollectorViewController alloc];
+	self.viewController = [[iSENSE_Data_CollectorViewController_iPad alloc] initWithNibName:nil bundle:nil];
 	
 	//add the view controller's view to the window
 	[window addSubview:self.viewController.view];
