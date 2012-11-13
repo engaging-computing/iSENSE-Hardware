@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement.objects;
+package edu.uml.cs.isense.canobie.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,7 +8,7 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import edu.uml.cs.isense.amusement.R;
+import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 
