@@ -22,16 +22,18 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
-	<key>UIRequiresPersistentWiFi</key>
+	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSMainNibFile~iphone</key>
-	<string>MainWindow_iPhone</string>
+	<key>NSMainNibFile</key>
+	<string>MainWindow</string>
 	<key>NSMainNibFile~ipad</key>
-	<string>MainWindow_iPad</string>
+	<string>MainWindow-iPad</string>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
 	<key>UIInterfaceOrientation~ipad</key>
 	<string>UIInterfaceOrientationLandscapeLeft</string>
+	<key>UIRequiresPersistentWiFi</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -7,7 +7,6 @@
 //
 
 #import "iSENSE_Data_CollectorAppDelegate.h"
-#import "iSENSE_Data_CollectorViewController.h"
 #import	"iSENSE_Data_CollectorViewController_iPad.h"
 
 @implementation iSENSE_Data_CollectorAppDelegate
@@ -16,15 +15,14 @@
 @synthesize viewController;
 
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {    
+- (void)applicationDidFinishLaunching:(UIApplication *)application { 
+	// Set Background to Black
+	[self.window setBackgroundColor:[UIColor blackColor]];
 	
-	//allocate the view controller
+	// Allocate the view controller
 	self.viewController = [[iSENSE_Data_CollectorViewController_iPad alloc] initWithNibName:nil bundle:nil];
 	
-	//add the view controller's view to the window
-	[window addSubview:self.viewController.view];
-	
-	//display view controller's view
+	// Display view controller's view
 	[window makeKeyAndVisible];
 }
 	

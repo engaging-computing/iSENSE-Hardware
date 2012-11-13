@@ -68,7 +68,7 @@
 - (void)loadView {
 	
 	//create a frame that sets the bounds of the view
-	CGRect frame = CGRectMake(0, 0, 748,1024);
+	CGRect frame = CGRectMake(0, 0, 768, 1024);
 	
 	//allocate the view
 	self.view = [[UIView alloc] initWithFrame:frame];
@@ -80,15 +80,15 @@
 	self.view.backgroundColor = [UIColor blackColor];
 	
 	// Attempt to add custom background image at the top
-	frame = CGRectMake(0, 10, 300, 100);
+	frame = CGRectMake(10, 0, 748, 150);
 	mainLogo = [[UIImageView alloc] initWithFrame:frame];
 	mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
 	
 	// Allocate space and initialize the main button
 	UIImage *redButton = [UIImage imageNamed:@"red_button.png"];
-	frame = CGRectMake(0, 120, 300, 300);
+	frame = CGRectMake(174, 300, 400, 400);
 	container = [[UIPicButton alloc] initWithFrame:frame];
-	frame = CGRectMake(0, 0, 300, 300);
+	frame = CGRectMake(0, 0, 400, 400);
 	startStopButton = [[UIImageView alloc] initWithFrame:frame];
 	
 	// Make the main button label
@@ -116,10 +116,12 @@
 	// Adding Subviews
 	[self.view addSubview:mainLogo];
 	[self.view addSubview:container];
-	
-	
+		
 	[longPressGesture release];
 	[redButton release];
+	[mainLogo release];
+	[container release];
+	[startStopLabel release];
 	
 }
 
@@ -130,77 +132,21 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	CGRect frame;
-	[container removeFromSuperview];
 	NSLog(@"Rotate Initiated!");
-	if (toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight) {
-		// Remake the parent view
-		 frame = CGRectMake(0, 0, 1024, 748);
-		//allocate the view
-		self.view = [[UIView alloc] initWithFrame:frame];
-		
-		// Move the button the the right
-		frame = CGRectMake(724, 200, 300, 300);
-		container = [[UIPicButton alloc] initWithFrame:frame];
+	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+		self.view.frame = CGRectMake(0, 0, 1024, 768);
+		mainLogo.frame = CGRectMake(10, 0, 502, 125 );	
+		container.frame = CGRectMake(568, 150, 400, 400);
 	} else {
-		// Remake the parent view
-		CGRect frame = CGRectMake(0, 0, 748, 1024);
-		//allocate the view
-		self.view = [[UIView alloc] initWithFrame:frame];
-		
-		frame = CGRectMake(0, 120, 300, 300);
-		container = [[UIPicButton alloc] initWithFrame:frame];
-	}	
-			
-
-	// Attempt to make background black
-	self.view.backgroundColor = [UIColor blackColor];
-	
-	// Attempt to add custom background image at the top
-	frame = CGRectMake(0, 10, 300, 100);
-	mainLogo = [[UIImageView alloc] initWithFrame:frame];
-	mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-	
-	// Allocate space and initialize the main button
-	UIImage *redButton = [UIImage imageNamed:@"red_button.png"];
-	frame = CGRectMake(0, 120, 300, 300);
-	container = [[UIPicButton alloc] initWithFrame:frame];
-	frame = CGRectMake(0, 0, 300, 300);
-	startStopButton = [[UIImageView alloc] initWithFrame:frame];
-	
-	// Make the main button label
-	frame = CGRectMake(0, 0, container.bounds.size.width, container.bounds.size.height);
-	startStopLabel = [[UILabel alloc] initWithFrame:frame];
-	startStopLabel.text = @"START\n(Press and Hold)";
-	startStopLabel.textAlignment = UITextAlignmentCenter;
-	startStopLabel.textColor = [UIColor whiteColor];
-	startStopLabel.font = [startStopLabel.font fontWithSize:25];
-	startStopLabel.numberOfLines = 2;
-	[startStopLabel setBackgroundColor:[UIColor clearColor]];
-	startStopButton.image = redButton;
-	
-	// Add subviews to the UIView called container
-	[container addSubview:startStopButton];
-	[container addSubview:startStopLabel];
-	
-	
-	// Long Press Listener
-	UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onStartStopLongClick:)];
-	[longPressGesture setMinimumPressDuration:1];
-	longPressGesture.allowableMovement = 5;
-	[container addGestureRecognizer:longPressGesture];
-	
-	// Adding Subviews
-	[self.view addSubview:mainLogo];	
-	[self.view addSubview:container];
-	[self didRotateFromInterfaceOrientation:toInterfaceOrientation];
-	
+		self.view.frame = CGRectMake(0, 0, 768, 1024);
+		mainLogo.frame = CGRectMake(10, 0, 748, 150);
+		container.frame = CGRectMake(174, 300, 400, 400);	
+	}
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
 	NSLog(@"Rotation? Returns yes");
-	[self willRotateToInterfaceOrientation:interfaceOrientation duration:2];
     return YES;
 }
 
@@ -229,9 +175,7 @@
 
 - (void)dealloc {
     [super dealloc];
-	[mainLogo release];
-	[container release];
-	[startStopLabel release];
+	
 }
 
 
