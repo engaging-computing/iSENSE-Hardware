@@ -3,29 +3,13 @@
     <string name="app_name">iSENSE Pictures</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="app_name_experiments">Experiments</string>
+    <string name="prompt">Would you like to try uploading any of the following?</string>
+    <string name="upload">Upload</string>
     
     <string name="firstName">Name: \0</string>
-    <string name="descPic">Step 1: Choose a category for the picture you will take.</string>
     <string name="takePic">Press Here to Take a Picture</string>
     <string name="iSlogo">iSENSE Logo</string>
     <string name="queueCount">Queue Count: </string>
-    
-    <string name="picture_prompt">Choose a descriptor for the picture:</string>
-    <string-array name="descriptor_array">
-        <item>Ecosystem Changes</item>
-        <item>Foodweb Elements</item>
-        <item>Habitat</item>
-        <item>Invasive Species</item>
-        <item>Other</item>        
-    </string-array>
-    
-    <string-array name="descriptor_array_long">
-        <item>Ecosystem Changes\n-automobile chemicals\n-point source pollution\n-storm water runoff</item>
-        <item>Foodweb Elements\n-aquatic plants\n-insect larvae\n-larger animals\n-waterfowl</item>
-        <item>Habitat\n-habitat disruption\n-natural habitat</item>
-        <item>Invasive Species\n-pigeons\n-norway maple\n-turfgrass</item>
-        <item>Other</item>        
-    </string-array>
     
     <string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
 	<string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
@@ -47,11 +31,6 @@
 	<string name="gpsString">
 	    Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?
 	</string>
-	<string name="smart_uploading">Turn on Smart-Uploading</string>
-	<string name="try_again">Try Again</string>
-	<string name="no_connectivity_prompt">
-	    Could not connect to the internet through either wifi or mobile service.
-	</string>
 	<string name="ready_upload_prompt">
 	    Now that there is a connection to iSENSE, would you like to upload your pictures?
 	</string>
@@ -64,5 +43,10 @@
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="browse">Browse &#8230;</string>
 	<string name="scan_qr">Scan QR Code</string>
+	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
+	<string name="time">field_time</string>
+	<string name="latitude">field_latitude</string>
+	<string name="longitude">field_longitude</string>
+	<string name="null_string">field_null</string>
 	
 </resources>

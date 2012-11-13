@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,24 +72,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.uml.cs.isense.collector.dialogs.ChooseSensorDialog;
+import edu.uml.cs.isense.collector.dialogs.Description;
+import edu.uml.cs.isense.collector.dialogs.ForceStop;
+import edu.uml.cs.isense.collector.dialogs.LoginActivity;
+import edu.uml.cs.isense.collector.dialogs.MediaManager;
+import edu.uml.cs.isense.collector.dialogs.NoGps;
+import edu.uml.cs.isense.collector.dialogs.NoIsense;
+import edu.uml.cs.isense.collector.dialogs.Setup;
+import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
-import edu.uml.cs.isense.collector.objects.DataSet;
 import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
+import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.complexdialogs.ChooseSensorDialog;
-import edu.uml.cs.isense.complexdialogs.Description;
-import edu.uml.cs.isense.complexdialogs.LoginActivity;
-import edu.uml.cs.isense.complexdialogs.MediaManager;
-import edu.uml.cs.isense.complexdialogs.Setup;
-import edu.uml.cs.isense.shared.QueueUploader;
-import edu.uml.cs.isense.simpledialogs.ForceStop;
-import edu.uml.cs.isense.simpledialogs.NoGps;
-import edu.uml.cs.isense.simpledialogs.NoIsense;
-import edu.uml.cs.isense.simpledialogs.Summary;
+import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
-import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataCollector extends Activity implements SensorEventListener,
@@ -243,8 +243,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Lists and Queues
 	public static LinkedList<String> acceptedFields;
+	public static UploadQueue uq;
 
-	public static Queue<DataSet> uploadQueue;
+	// public static Queue<DataSet> uploadQueue;
 
 	// Booleans
 	public static boolean inPausedState = false;
@@ -288,12 +289,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean preLoad = false;
 	private static boolean beginWrite = true;
 	private static boolean choiceViaMenu = false;
-	private static boolean successLogin = false;
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
 	private static boolean showGpsDialog = true;
-	private static boolean alreadySaved = false;
 	private static boolean throughUploadMenuItem = false;
 
 	/** \Additional Private Variables */
@@ -426,9 +425,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = true;
 
-		// Stores uploadQueue in datacollector.ser (on SD card) and saves
-		// Q_COUNT
-		QueueUploader.storeQueue(uploadQueue, activityName, mContext);
 	}
 
 	@Override
@@ -486,9 +482,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = false;
 
-		// Rebuilds uploadQueue from saved info
-		uploadQueue = QueueUploader.getUploadQueue(uploadQueue, activityName,
-				mContext);
+		if (uq != null)
+			uq.buildQueueFromFile();
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -572,8 +567,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			choiceViaMenu = true;
 			uploadSuccess = true;
 			throughUploadMenuItem = true;
-
-			// Gets the previous unuploaded sessions
 			manageUploadQueue();
 			return true;
 		case R.id.menu_item_sync:
@@ -733,8 +726,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					acceptedFields = ChooseSensorDialog.acceptedFields;
 					getEnabledFields();
 				}
-			} else if (resultCode == RESULT_CANCELED) {
-				// setupDone = false;
 			}
 
 		} else if (requestCode == SETUP_REQUESTED) {
@@ -751,12 +742,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 				String returnCode = data.getStringExtra("returnCode");
 
 				if (returnCode.equals("Success")) {
-					
-					successLogin = true;
+
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
 				} else if (returnCode.equals("Failed")) {
-					successLogin = false;
+
 					Intent i = new Intent(mContext, LoginActivity.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
@@ -790,14 +780,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 				String experimentInput = mPrefs.getString("experiment_id", "");
 
-				if ((experimentInput.length() >= 0) && successLogin) {
+				if ((experimentInput.length() >= 0) && rapi.isLoggedIn()) {
 					nameOfSession = sessionName.getText().toString();
 					new UploadTask().execute();
-				} else if ((experimentInput.length() >= 0) && !successLogin) {
-					Intent iNoIsense = new Intent(mContext, NoIsense.class);
-					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
-					if (!alreadySaved)
-						saveOnUploadQueue();
+				} else if ((experimentInput.length() >= 0)
+						&& !rapi.isLoggedIn()) {
+
+					w.make("Could not upload data - saving instead.",
+							Waffle.IMAGE_X);
+					new UploadTask().execute();
 				} else {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
 					startActivityForResult(iNoIsense, NO_ISENSE_REQUESTED);
@@ -810,71 +801,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				uploadQueue = QueueUploader.getUploadQueue(uploadQueue,
-						activityName, mContext);
+
+			boolean success = uq.buildQueueFromFile();
+			if (!success) {
+				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
 			}
+
 		}
 
-	}
-
-	// Saves dataSet on queue when you aren't logged in
-	private void saveOnUploadQueue() {
-		// Session Id
-		int sessionId = DataSet.NO_SESSION_DEFINED;
-
-		// Location
-		List<Address> address = null;
-		String city = "", state = "", country = "", addr = "";
-
-		try {
-			if (roughLoc != null) {
-
-				address = new Geocoder(DataCollector.this, Locale.getDefault())
-						.getFromLocation(roughLoc.getLatitude(),
-								roughLoc.getLongitude(), 1);
-
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Session Description
-		String description;
-		if (sessionDescription.equals(""))
-			description = "Automated Submission Through Android Data Collection App";
-		else
-			description = sessionDescription;
-
-		// Experiment Id
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String eid = mPrefs.getString("experiment_id", "");
-
-		// Chucks all the info into the queue
-		DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession, description,
-				eid, dataSet.toString(), null, sessionId, city, state, country,
-				addr);
-		uploadQueue.add(ds);
-
-		// Saves pictures for later upload
-		int pic = MediaManager.pictureArray.size();
-		while (pic > 0) {
-			DataSet dsPic = new DataSet(DataSet.Type.PIC, nameOfSession,
-					description, eid, null,
-					MediaManager.pictureArray.get(pic - 1), sessionId, city,
-					state, country, addr);
-			uploadQueue.add(dsPic);
-			pic--;
-		}
-
-		alreadySaved = true;
 	}
 
 	// Calls the rapi primitives for actual uploading
@@ -944,7 +878,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
 							description, eid, dataSet.toString(), null,
 							sessionId, city, state, country, addr);
-					uploadQueue.add(ds);
+					uq.addDataSetToQueue(ds);
 				}
 
 				int pic = MediaManager.pictureArray.size();
@@ -960,7 +894,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								nameOfSession, description, eid, null,
 								MediaManager.pictureArray.get(pic - 1),
 								sessionId, city, state, country, addr);
-						uploadQueue.add(ds);
+						uq.addDataSetToQueue(ds);
 					}
 					pic--;
 				}
@@ -1053,9 +987,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		boolean success = rapi.login(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
-		if (success) {
-
-			successLogin = true;
+		if (!success) {
+			// This is crazy, so Waffle me maybe?
 		}
 	}
 
@@ -1290,21 +1223,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) {
-			if (!uploadQueue.isEmpty()) {
+
+		if (!uq.emptyQueue()) {
+			throughUploadMenuItem = false;
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		} else {
+			if (throughUploadMenuItem) {
 				throughUploadMenuItem = false;
-				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				i.putExtra(QueueUploader.INTENT_IDENTIFIER,
-						QueueUploader.QUEUE_DATA_COLLECTOR);
-				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			} else {
-				if (throughUploadMenuItem) {
-					throughUploadMenuItem = false;
-					w.make("There is no data to upload.", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
-				}
+				w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 			}
 		}
+
 	}
 
 	// UI variables initialized for onCreate
@@ -1324,6 +1256,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+
+		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -1474,9 +1409,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						sampleInterval.setEnabled(true);
 
 						writeToSDCard(null, 'f');
-						// setupDone = false;
 						setMenuStatus(true);
-						alreadySaved = false;
 
 						mSensorManager.unregisterListener(DataCollector.this);
 						running = false;
@@ -1512,7 +1445,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						initDfm();
-						registerSensors(); 
+						registerSensors();
 
 						OrientationManager.disableRotation((Activity) mContext);
 

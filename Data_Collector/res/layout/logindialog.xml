@@ -22,7 +22,7 @@
         android:layout_margin="5dp"
         android:layout_toRightOf="@id/usernameLabel"
         android:background="@drawable/edit_text_background"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:digits="@string/digits_restriction"
         android:inputType="textEmailAddress"
         android:singleLine="true" />
 
@@ -46,7 +46,7 @@
         android:layout_margin="5dp"
         android:layout_toRightOf="@id/passwordLabel"
         android:background="@drawable/edit_text_background"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+        android:digits="@string/digits_restriction"
         android:inputType="textPassword"
         android:paddingLeft="6dip"
         android:singleLine="true" />
