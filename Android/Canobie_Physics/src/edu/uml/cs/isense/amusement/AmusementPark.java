@@ -18,14 +18,8 @@ package edu.uml.cs.isense.amusement;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +28,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,6 +40,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -74,7 +68,6 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -93,12 +86,16 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+import edu.uml.cs.isense.amusement.experiment.BrowseExperiments;
 import edu.uml.cs.isense.amusement.objects.DataFieldManager;
-import edu.uml.cs.isense.amusement.objects.DataSet;
 import edu.uml.cs.isense.amusement.objects.Fields;
 import edu.uml.cs.isense.amusement.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.waffle.Waffle;
 
 /* Experiment 422 on iSENSE and 491/277 on Dev */
 
@@ -106,7 +103,8 @@ import edu.uml.cs.isense.comm.RestAPI;
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
-	public static Queue<DataSet> uploadQueue;
+	// public static Queue<DataSet> uploadQueue;
+	public static UploadQueue uq;
 	public static DataFieldManager dfm;
 	public static SensorCompatibility sc;
 	LinkedList<String> acceptedFields;
@@ -144,7 +142,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private String pressure = "";
 	private String light = "";
 
-	private static final int INTERVAL = 200;
+	private static final int INTERVAL = 50;
 	private static long srate = INTERVAL;
 
 	private static final int MENU_ITEM_SETUP = 0;
@@ -205,7 +203,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 	private int totalMillis = 0;
 	private int dataPointCount = 0;
-	private int i = 0;
+	private int countToStop = 0;
 	private int len = 0;
 	private int len2 = 0;
 	private int secondsElapsed = 0;
@@ -273,9 +271,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Initialize everything you're going to need
 		initVars();
 
-		// Display the End User Agreement
-		displayEula();
-
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
 		if (running)
@@ -294,7 +289,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					startStop.setEnabled(false);
 					showDialog(MENU_ITEM_SETUP);
 					w.make("You must setup before recording data.",
-							Toast.LENGTH_LONG, "x");
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				} else {
 
@@ -323,7 +318,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						if (sdCardError)
 							w.make("Could not write file to SD Card.",
-									Toast.LENGTH_SHORT, "x");
+									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
 						if (throughHandler)
 							showDialog(RECORDING_STOPPED);
@@ -341,7 +336,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						len = 0;
 						len2 = 0;
 						dataPointCount = 0;
-						i = 0;
+						countToStop = 0;
 						beginWrite = true;
 						sdCardError = false;
 
@@ -351,7 +346,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							w.make("Data recording interrupted! Time values may be inconsistent.",
-									Toast.LENGTH_SHORT, "x");
+									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 							e.printStackTrace();
 						}
 
@@ -384,6 +379,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									@Override
 									public void run() {
 										setTime(secondsElapsed++);
+										countToStop++;
+
+										if (countToStop >= 600) {
+
+											timeTimer.cancel();
+											timeElapsedTimer.cancel();
+
+											mHandler.post(new Runnable() {
+												@Override
+												public void run() {
+													throughHandler = true;
+													startStop
+															.performLongClick();
+												}
+											});
+
+										}
 									}
 								});
 							}
@@ -398,84 +410,61 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								elapsedMillis += srate;
 								totalMillis = elapsedMillis;
 
-								if (i >= 3000) {
+								len++;
+								len2++;
 
-									timeTimer.cancel();
-									timeElapsedTimer.cancel();
+								if (dfm.enabledFields[ACCEL_X])
+									f.accel_x = toThou.format(accel[0]);
+								if (dfm.enabledFields[ACCEL_Y])
+									f.accel_y = toThou.format(accel[1]);
+								if (dfm.enabledFields[ACCEL_Z])
+									f.accel_z = toThou.format(accel[2]);
+								if (dfm.enabledFields[ACCEL_TOTAL])
+									f.accel_total = toThou.format(accel[3]);
+								if (dfm.enabledFields[LATITUDE])
+									f.latitude = loc.getLatitude();
+								if (dfm.enabledFields[LONGITUDE])
+									f.longitude = loc.getLongitude();
+								if (dfm.enabledFields[HEADING_DEG])
+									f.angle_deg = toThou.format(orientation[0]);
+								if (dfm.enabledFields[HEADING_RAD])
+									f.angle_rad = ""
+											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+								if (dfm.enabledFields[MAG_X])
+									f.mag_x = mag[0];
+								if (dfm.enabledFields[MAG_Y])
+									f.mag_y = mag[1];
+								if (dfm.enabledFields[MAG_Z])
+									f.mag_z = mag[2];
+								if (dfm.enabledFields[MAG_TOTAL])
+									f.mag_total = Math.sqrt(Math
+											.pow(f.mag_x, 2)
+											+ Math.pow(f.mag_y, 2)
+											+ Math.pow(f.mag_z, 2));
+								if (dfm.enabledFields[TIME])
+									f.timeMillis = currentTime + elapsedMillis;
+								if (dfm.enabledFields[TEMPERATURE_C])
+									f.temperature_c = temperature;
+								if (dfm.enabledFields[TEMPERATURE_F])
+									f.temperature_f = ""
+											+ ((Double.parseDouble(temperature) * 1.8) + 32);
+								if (dfm.enabledFields[TEMPERATURE_K])
+									f.temperature_k = ""
+											+ (Double.parseDouble(temperature) + 273.15);
+								if (dfm.enabledFields[PRESSURE])
+									f.pressure = pressure;
+								if (dfm.enabledFields[ALTITUDE])
+									f.altitude = calcAltitude();
+								if (dfm.enabledFields[LIGHT])
+									f.lux = light;
 
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											throughHandler = true;
-											startStop.performLongClick();
-										}
-									});
+								dataSet.put(dfm.putData());
+								data = dfm.writeSdCardLine();
 
+								if (beginWrite) {
+									writeToSDCard(data, 's');
 								} else {
-
-									i++;
-									len++;
-									len2++;
-
-									if (dfm.enabledFields[ACCEL_X])
-										f.accel_x = toThou.format(accel[0]);
-									if (dfm.enabledFields[ACCEL_Y])
-										f.accel_y = toThou.format(accel[1]);
-									if (dfm.enabledFields[ACCEL_Z])
-										f.accel_z = toThou.format(accel[2]);
-									if (dfm.enabledFields[ACCEL_TOTAL])
-										f.accel_total = toThou.format(accel[3]);
-									if (dfm.enabledFields[LATITUDE])
-										f.latitude = loc.getLatitude();
-									if (dfm.enabledFields[LONGITUDE])
-										f.longitude = loc.getLongitude();
-									if (dfm.enabledFields[HEADING_DEG])
-										f.angle_deg = toThou
-												.format(orientation[0]);
-									if (dfm.enabledFields[HEADING_RAD])
-										f.angle_rad = ""
-												+ (Double
-														.parseDouble(f.angle_deg) * (Math.PI / 180));
-									if (dfm.enabledFields[MAG_X])
-										f.mag_x = mag[0];
-									if (dfm.enabledFields[MAG_Y])
-										f.mag_y = mag[1];
-									if (dfm.enabledFields[MAG_Z])
-										f.mag_z = mag[2];
-									if (dfm.enabledFields[MAG_TOTAL])
-										f.mag_total = Math.sqrt(Math.pow(
-												f.mag_x, 2)
-												+ Math.pow(f.mag_y, 2)
-												+ Math.pow(f.mag_z, 2));
-									if (dfm.enabledFields[TIME])
-										f.timeMillis = currentTime
-												+ elapsedMillis;
-									if (dfm.enabledFields[TEMPERATURE_C])
-										f.temperature_c = temperature;
-									if (dfm.enabledFields[TEMPERATURE_F])
-										f.temperature_f = ""
-												+ ((Double
-														.parseDouble(temperature) * 1.8) + 32);
-									if (dfm.enabledFields[TEMPERATURE_K])
-										f.temperature_k = ""
-												+ (Double
-														.parseDouble(temperature) + 273.15);
-									if (dfm.enabledFields[PRESSURE])
-										f.pressure = pressure;
-									if (dfm.enabledFields[ALTITUDE])
-										f.altitude = calcAltitude();
-									if (dfm.enabledFields[LIGHT])
-										f.lux = light;
-
-									dataSet.put(dfm.putData());
-									data = dfm.writeSdCardLine();
-
-									if (beginWrite) {
-										writeToSDCard(data, 's');
-									} else {
-										writeToSDCard(data, 'u');
-									}
-
+									writeToSDCard(data, 'u');
 								}
 
 							}
@@ -582,8 +571,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			timeElapsedTimer.cancel();
 		inPausedState = true;
 
-		// stores uploadQueue in uploadqueue.ser (on SD card) and saves Q_COUNT
-		storeQueue();
 	}
 
 	@Override
@@ -591,8 +578,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		super.onStart();
 		inPausedState = false;
 
-		// rebuilds uploadQueue from saved info
-		getUploadQueue();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -611,22 +596,25 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (!(mPrefs.getString("username", "").equals("")))
 			login();
 
+		if (uq != null)
+			uq.buildQueueFromFile();
+
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
 	// twice
 	@Override
 	public void onBackPressed() {
-		if (!w.dontToastMeTwice) {
+
+		if (!w.isDisplaying) {
 			if (running)
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make("Press back again to exit.", Toast.LENGTH_SHORT, "check");
+				w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 
-			// new NoToastTwiceTask().execute();
-		} else if (w.exitAppViaBack && !running) {
-			setupDone = false;
+		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
 		}
 	}
@@ -677,7 +665,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			return true;
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
-			showDialog(DIALOG_CHOICE);
+			manageUploadQueue();
+			// showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
@@ -812,6 +801,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 			}, "Configure Options");
 			dialog.setCancelable(true);
+			dialog.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					canobieIsChecked = canobieBackup;
+					startStop.setEnabled(true);	
+				}
+			});
 
 			sessionName.setText(partialSessionName);
 			break;
@@ -830,7 +826,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								+ mPrefs.getString("username", ""));
 						loginInfo.setTextColor(Color.GREEN);
 						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG, "check");
+						w.make("Login successful", Waffle.LENGTH_LONG,
+								Waffle.IMAGE_CHECK);
 						break;
 					case LoginActivity.LOGIN_CANCELED:
 						break;
@@ -851,7 +848,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					case DIALOG_OK:
 						if (len == 0 || len2 == 0)
 							w.make("There is no data to upload!",
-									Toast.LENGTH_LONG, "x");
+									Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 						showDialog(DIALOG_CHOICE);
 						partialSessionName = sessionName.getText().toString();
 						break;
@@ -880,7 +877,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 									if (len == 0 || len2 == 0)
 										w.make("There is no data to upload!",
-												Toast.LENGTH_LONG, "x");
+												Waffle.LENGTH_LONG,
+												Waffle.IMAGE_X);
 									else {
 
 										String isValid = experimentInput
@@ -1078,14 +1076,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 				if (!rapi.isConnectedToInternet()) {
 					w.make("You must enable wifi or mobile connectivity to do this.",
-							Toast.LENGTH_SHORT, "x");
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 				} else {
 
 					Intent experimentIntent = new Intent(
-							getApplicationContext(), Experiments.class);
-					experimentIntent.putExtra(
-							"edu.uml.cs.isense.amusement.experiments.propose",
-							EXPERIMENT_CODE);
+							getApplicationContext(), BrowseExperiments.class);
 
 					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 				}
@@ -1161,8 +1156,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							pass = false;
 						}
 						try {
-							if (Long.parseLong(sampleRate.getText().toString()) < 200) {
-								sampleRate.setError("Interval Must be >= 200");
+							if (Long.parseLong(sampleRate.getText().toString()) < INTERVAL) {
+								sampleRate.setError("Interval Must be >= "
+										+ INTERVAL);
 								pass = false;
 							}
 						} catch (NumberFormatException e) {
@@ -1229,10 +1225,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (resultCode == Activity.RESULT_OK) {
 				int eid = data.getExtras().getInt(
 						"edu.uml.cs.isense.experiments.exp_id");
-				int sr = data.getExtras().getInt(
-						"edu.uml.cs.isense.experiments.srate");
 				experimentInput.setText("" + eid);
-				sampleRate.setText("" + sr);
 			}
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1242,13 +1235,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
-				Log.e("intent", "timeOffset set to: " + timeOffset);
-			} else if (resultCode == RESULT_CANCELED) {
-				// oh no they canceled!
-			}
+			} 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				getUploadQueue();
+			boolean success = uq.buildQueueFromFile();
+			if (!success) {
+				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			startStop.setEnabled(true);
@@ -1265,6 +1256,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				setupDone = false;
+				showDialog(MENU_ITEM_SETUP);
 			}
 		}
 
@@ -1341,7 +1333,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							+ " - " + dateString, description, eid,
 							dataSet.toString(), null, sessionId, city, state,
 							country, addr);
-					uploadQueue.add(ds);
+					uq.addDataSetToQueue(ds);
 				}
 
 				int pic = pictureArray.size();
@@ -1358,7 +1350,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								description, eid, null,
 								pictureArray.get(pic - 1), sessionId, city,
 								state, country, addr);
-						uploadQueue.add(ds);
+						uq.addDataSetToQueue(ds);
 					}
 					pic--;
 				}
@@ -1405,12 +1397,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			if (status400)
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
 				w.make("An error occured during upload.  Please check internet connectivity.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+				w.make("Upload Success", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 				manageUploadQueue();
 			}
 
@@ -1445,6 +1438,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		rapi.useDev(true);
+
+		uq = new UploadQueue("canobielake", mContext, rapi);
 
 		pictures = new ArrayList<File>();
 		videos = new ArrayList<File>();
@@ -1495,18 +1491,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
-	}
-
-	// Takes care of everything to do with EULA
-	private void displayEula() {
-
-		AlertDialog.Builder adb = new SimpleEula(this).show();
-		if (adb != null) {
-			Dialog dialog = adb.create();
-			dialog.show();
-
-			apiTabletDisplay(dialog);
-		}
 	}
 
 	// apiTabletDisplay for Dialog Building on Tablets
@@ -1671,86 +1655,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Rebuilds uploadQueue from Q_COUNT and uploadqueue.ser
-	public static void getUploadQueue() {
-
-		uploadQueue = new LinkedList<DataSet>();
-
-		// Makes sure there is an iSENSE folder
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-		if (!folder.exists())
-			folder.mkdir();
-
-		// Gets Q_COUNT back from Shared Prefs
-		final SharedPreferences mPrefs = getSharedPreferences(mContext);
-		int Q_COUNT = mPrefs.getInt("Q_COUNT", 0);
-
-		try {
-			// Deserialize the file as a whole
-			File file = new File(folder.getAbsolutePath() + "/uploadqueue.ser");
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
-					file));
-			// Deserialize the objects one by one
-			for (int i = 0; i < Q_COUNT; i++) {
-				DataSet dataSet = (DataSet) in.readObject();
-				uploadQueue.add(dataSet);
-			}
-			in.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			w.make(e.toString(), Toast.LENGTH_SHORT, "x");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-		if (uploadSuccess) {
-			if (!uploadQueue.isEmpty()) {
-				Intent i = new Intent().setClass(mContext, QueueUploader.class);
-				startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-			}
+		if (!uq.emptyQueue()) {
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		} else {
+			w.make("No data to upload.", Waffle.IMAGE_CHECK);
 		}
-	}
-
-	// Saves Q_COUNT and uploadQueue into memory for later use
-	public static void storeQueue() {
-
-		// Save Q_COUNT in SharedPrefs
-		final SharedPreferences mPrefs = getSharedPreferences(mContext);
-		final SharedPreferences.Editor mPrefsEditor = mPrefs.edit();
-		int Q_COUNT = uploadQueue.size();
-		mPrefsEditor.putInt("Q_COUNT", Q_COUNT);
-		mPrefsEditor.commit();
-
-		// writes uploadqueue.ser
-		File uploadQueueFile = new File(
-				Environment.getExternalStorageDirectory() + "/iSENSE"
-						+ "/uploadqueue.ser");
-		ObjectOutput out;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
-
-			// Serializes DataSets from uploadQueue into uploadqueue.ser
-			while (Q_COUNT > 0) {
-				DataSet ds = uploadQueue.remove();
-				out.writeObject(ds);
-				Q_COUNT--;
-			}
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// get shared Q_COUNT
-	public static SharedPreferences getSharedPreferences(Context ctxt) {
-		return ctxt.getSharedPreferences("Q_COUNT", MODE_PRIVATE);
 	}
 
 	private void showSummary() {

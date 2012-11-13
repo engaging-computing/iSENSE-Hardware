@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_no_stroke" >
+
+    <ImageView
+        android:id="@+id/manual_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="2dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/blank_desc"
+        android:scaleType="center"
+        android:src="@drawable/logo_white" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/manual_logo" >
+
+        <ImageButton
+            android:id="@+id/manual_save"
+            android:src="@drawable/floppy_disk"
+            android:contentDescription="@string/blank_desc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/save"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/manual_geolocate"
+            android:src="@drawable/globe"
+            android:contentDescription="@string/blank_desc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/clear"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/session_name_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/buttonLayout" >
+
+        <Spinner
+            android:id="@+id/group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/groupNamePrompt"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="15dp"
+            android:layout_weight=".2" />
+
+        <ImageButton
+            android:id="@+id/manual_media_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8"
+            android:src="@drawable/camera_icon"
+            android:contentDescription="@string/blank_desc" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/session_name_wrapper" >
+
+        <LinearLayout
+            android:id="@+id/field_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</RelativeLayout>
