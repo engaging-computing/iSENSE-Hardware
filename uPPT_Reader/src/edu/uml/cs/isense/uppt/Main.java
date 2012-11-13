@@ -674,6 +674,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			while ((dataLine = fReader.readLine()) != null) {
 				JSONArray dataLineJSON = new JSONArray();
 				data = dataLine.split(",");
+				
 				for (int i = 0; i < loopOrder.length; i++) {
 					dataLineJSON.put(data[loopOrder[i]]);
 				}

@@ -1439,7 +1439,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		uq = new UploadQueue("canobielake", mContext, rapi);
 
