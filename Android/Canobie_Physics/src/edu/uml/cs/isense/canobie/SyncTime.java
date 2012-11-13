@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.canobie;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+
+import edu.uml.cs.isense.canobie.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

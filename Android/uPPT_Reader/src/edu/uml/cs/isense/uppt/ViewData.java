@@ -1,6 +1,5 @@
 package edu.uml.cs.isense.uppt;
 
-import edu.uml.cs.isense.uppt.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;

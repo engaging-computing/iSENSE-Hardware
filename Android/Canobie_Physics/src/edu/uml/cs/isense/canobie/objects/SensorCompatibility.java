@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement.objects;
+package edu.uml.cs.isense.canobie.objects;
 
 public class SensorCompatibility {
 
