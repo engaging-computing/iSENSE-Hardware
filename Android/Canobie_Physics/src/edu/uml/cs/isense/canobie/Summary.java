@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.canobie;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.amusement.R;
+import edu.uml.cs.isense.canobie.R;
 
 public class Summary extends Activity {
 

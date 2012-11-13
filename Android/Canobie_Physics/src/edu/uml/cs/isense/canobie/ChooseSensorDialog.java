@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.canobie;
 
 import java.util.LinkedList;
 
@@ -12,9 +12,10 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.amusement.AmusementPark;
-import edu.uml.cs.isense.amusement.objects.SensorCompatibility;
-import edu.uml.cs.isense.amusement.objects.SensorCompatibility.SensorTypes;
+import edu.uml.cs.isense.canobie.R;
+import edu.uml.cs.isense.canobie.AmusementPark;
+import edu.uml.cs.isense.canobie.objects.SensorCompatibility;
+import edu.uml.cs.isense.canobie.objects.SensorCompatibility.SensorTypes;
 
 public class ChooseSensorDialog extends Activity implements OnClickListener {
 
