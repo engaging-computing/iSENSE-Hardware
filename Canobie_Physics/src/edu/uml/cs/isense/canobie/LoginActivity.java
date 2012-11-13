@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.canobie;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 

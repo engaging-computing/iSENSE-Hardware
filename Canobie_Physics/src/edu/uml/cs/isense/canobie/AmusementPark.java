@@ -14,7 +14,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.canobie;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -86,10 +86,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.isense.amusement.experiment.BrowseExperiments;
-import edu.uml.cs.isense.amusement.objects.DataFieldManager;
-import edu.uml.cs.isense.amusement.objects.Fields;
-import edu.uml.cs.isense.amusement.objects.SensorCompatibility;
+import edu.uml.cs.isense.canobie.R;
+import edu.uml.cs.isense.canobie.experiment.BrowseExperiments;
+import edu.uml.cs.isense.canobie.objects.DataFieldManager;
+import edu.uml.cs.isense.canobie.objects.Fields;
+import edu.uml.cs.isense.canobie.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
