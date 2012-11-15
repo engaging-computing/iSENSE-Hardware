@@ -74,7 +74,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
-	//private static final String tag = "main.java";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -98,7 +97,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	private static boolean canSwipe = true;
 	
-	private static ArrayList<Boolean> UploadSuccess;
+	private static ArrayList<Boolean> uploadSuccessArray;
 
 	public JSONArray data;
 
@@ -378,12 +377,12 @@ public class Main extends Activity implements SimpleGestureListener {
 		public void run() {
 
 			// saves boolean results for which uploads succeed
-			UploadSuccess = new ArrayList<Boolean>();
+			uploadSuccessArray = new ArrayList<Boolean>();
 			
 			// Do rapi uploading stuff
 			for (File f : checkedFiles) {
 				boolean success = uploadFile(f);
-				UploadSuccess.add(success);
+				uploadSuccessArray.add(success);
 			}
 		}
 	};
@@ -423,7 +422,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			int i = 0;
 			String error = "Failed to upload: ";
 			String errorFiles = "";
-			for (boolean success : UploadSuccess) {
+			for (boolean success : uploadSuccessArray) {
 				if (success == false)	{
 					totalSuccess = false;
 					if (errorFiles.isEmpty())
@@ -434,11 +433,13 @@ public class Main extends Activity implements SimpleGestureListener {
 			}
 			error += errorFiles + ".";
 			if (totalSuccess)
-				w.make("Upload Successful!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+				w.make("Upload successful!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 			else w.make(error, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			
-			Intent iView = new Intent(mContext, ViewData.class);
-			startActivityForResult(iView, VIEW_DATA_REQUESTED);
+			if (!(uploadSuccessArray.size() <= 1 && totalSuccess == false)) {
+				Intent iView = new Intent(mContext, ViewData.class);
+				startActivityForResult(iView, VIEW_DATA_REQUESTED);
+			}
 		}
 	}
 
@@ -644,6 +645,9 @@ public class Main extends Activity implements SimpleGestureListener {
 
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
 			fReader.close();
+			if (dataJSON == null) {
+				return false;
+			}
 
 			SharedPreferences sp = getSharedPreferences("eid", 0);
 			String eid = sp.getString("eid", "-1");
@@ -658,7 +662,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			success = rapi.putSessionData(sid, eid, dataJSON);
 
 		} catch (IOException e) {
-			w.make(e.toString(), Waffle.IMAGE_X);
+			e.printStackTrace();
 		}
 
 		return success;
@@ -682,6 +686,9 @@ public class Main extends Activity implements SimpleGestureListener {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			return null;
 		}
 		return dataJSON;
 	}

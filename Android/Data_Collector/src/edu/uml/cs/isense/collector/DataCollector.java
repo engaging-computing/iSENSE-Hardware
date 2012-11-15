@@ -1551,6 +1551,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								if (dfm.enabledFields[LIGHT])
 									f.lux = light;
 
+								// TODO - more efficient to only write header once, data otherwise
 								dataSet.put(dfm.putData());
 								String header = dfm.writeHeaderLine();
 								data = dfm.writeSdCardLine();
