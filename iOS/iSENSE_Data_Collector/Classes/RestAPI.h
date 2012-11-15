@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-
-@interface RestAPI : UIView {
-	int login_key;
+@interface RestAPI :NSObject {
+	int loginKey;
 
 }
 
 -(BOOL)login:(NSString*) username:(NSString*) password;
+-(NSString*)makeRequest:(NSString*)target;
++(RestAPI *)getInstance;
 
 @end

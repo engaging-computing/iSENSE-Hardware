@@ -17,6 +17,8 @@
 @synthesize longClickTimer;
 @synthesize container;
 @synthesize startStopLabel;
+@synthesize loginStatus;
+@synthesize rapi;
 
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
 	
@@ -79,10 +81,21 @@
 	// Attempt to make background black
 	self.view.backgroundColor = [UIColor blackColor];
 	
-	// Attempt to add custom background image at the top
-	frame = CGRectMake(10, 0, 748, 150);
+	// Attempt to add iSENSE LOGO background image at the top
+	frame = CGRectMake(40, 0, 688, 150);
 	mainLogo = [[UIImageView alloc] initWithFrame:frame];
 	mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
+	
+	// Create a label for login status
+	frame = CGRectMake(234, 160, 300, 20);
+	loginStatus = [[UILabel alloc] initWithFrame:frame];
+	loginStatus.text = @"Login Status: NOT LOGGED IN";
+	loginStatus.textAlignment = UITextAlignmentCenter;
+	loginStatus.textColor = [UIColor whiteColor];
+	loginStatus.font = [startStopLabel.font fontWithSize:18];
+	loginStatus.numberOfLines = 1;
+	[loginStatus setBackgroundColor:[UIColor clearColor]];
+	[self.view addSubview:loginStatus];
 	
 	// Allocate space and initialize the main button
 	UIImage *redButton = [UIImage imageNamed:@"red_button.png"];
@@ -116,11 +129,16 @@
 	// Adding Subviews
 	[self.view addSubview:mainLogo];
 	[self.view addSubview:container];
+	
+	// Attempt Login
+	rapi = [RestAPI getInstance];
+	[rapi login:@"sor":@"sor"];
 		
 	[longPressGesture release];
 	[redButton release];
 	[mainLogo release];
 	[container release];
+	[loginStatus release];
 	[startStopLabel release];
 	
 }
