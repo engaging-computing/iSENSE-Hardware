@@ -44,8 +44,9 @@ public class DataFieldManager extends Application {
 	 */
 	public boolean match(String a, String b) {
 		
-		a = a.toLowerCase();
-		b = b.toLowerCase();
+		String aO = a, bO = b;
+		a = a.toLowerCase(); // SD Card string
+		b = b.toLowerCase(); // Experiment field string
 		
 		// Timestamp and Elapsed Time
 		/*if (a.contains("time") && b.contains("time")) {
@@ -92,29 +93,50 @@ public class DataFieldManager extends Application {
 		
 		// ---- Non-uPPT specific fields:
 		
-		// Temperature
-		
 		// Length
+		if ((a.contains("length") && b.contains("length")) || 
+				(a.contains("height") && b.contains("height")))
+			return true;
 		
 		// Distance
+		if (a.contains("distan") && b.contains("distan"))
+			return true;
 		
 		// Force
+		if (a.contains("force") && b.contains("force"))
+			return true;
 		
 		// Volume
+		if (a.contains("volume") && b.contains("volume"))
+			return true;
 		
 		// Mass
+		if (a.contains("mass") && b.contains("mass"))
+			return true;
 		
 		// Angle
+		if (a.contains("angle") && b.contains("angle"))
+			return true;
 		
 		// E. Potential
+		if (a.contains("potential") && b.contains("potential"))
+			return true;
 		
 		// E. Current
+		if (a.contains("curren") && b.contains("curren"))
+			return true;
 		
 		// Power
+		if (a.contains("power") && b.contains("power"))
+			return true;
 		
 		// E. Charge
+		if (a.contains("charg") && b.contains("charg"))
+			return true;
 		
 		// Speed
+		if ((a.contains("speed") || a.contains("veloc")) && (b.contains("speed") || b.contains("veloc")))
+			return true;
 		
 		// Latitude
 		if (a.contains("lat") && b.contains("lat"))
@@ -125,18 +147,33 @@ public class DataFieldManager extends Application {
 			return true;
 		
 		// Humidity
+		if (a.contains("humid") && b.contains("humid"))
+			return true;
 		
 		// pH
+		if (aO.contains("pH") && bO.contains("pH"))
+			return true;
 		
 		// Dissolved Oxygen
+		if (((a.contains("dis") && a.contains("oxy")) && (b.contains("") && b.contains("oxy"))) || 
+				(a.contains("d.o.") && b.contains("d.o.")))
+			return true;
 		
 		// Turbidity
+		if (a.contains("turbid") && b.contains("turbid"))
+			return true;
 		
 		// Flow Rate
+		if ((a.contains("flow") && a.contains("rate")) && (b.contains("flow") && b.contains("rate")))
+			return true;
 		
 		// Conductivity
+		if (a.contains("conduct") && b.contains("conduct"))
+			return true;
 		
 		// Concentration
+		if (a.contains("concent") && b.contains("concent"))
+			return true;
 		
 		return false;
 	}
