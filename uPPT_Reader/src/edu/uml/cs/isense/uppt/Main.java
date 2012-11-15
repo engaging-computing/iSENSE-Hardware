@@ -74,7 +74,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
-	//private static final String tag = "main.java";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
