@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement.experiment;
+package edu.uml.cs.isense.canobie.experiment;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import edu.uml.cs.isense.amusement.R;
+import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.Experiment;
 

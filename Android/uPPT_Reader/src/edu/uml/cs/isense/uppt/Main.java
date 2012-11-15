@@ -43,6 +43,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,7 +75,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String currentDirectory;
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
-	//private static final String tag = "main.java";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -98,7 +98,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	private static boolean canSwipe = true;
 	
-	private static ArrayList<Boolean> UploadSuccess;
+	private static ArrayList<Boolean> uploadSuccessArray;
 
 	public JSONArray data;
 
@@ -378,12 +378,12 @@ public class Main extends Activity implements SimpleGestureListener {
 		public void run() {
 
 			// saves boolean results for which uploads succeed
-			UploadSuccess = new ArrayList<Boolean>();
+			uploadSuccessArray = new ArrayList<Boolean>();
 			
 			// Do rapi uploading stuff
 			for (File f : checkedFiles) {
 				boolean success = uploadFile(f);
-				UploadSuccess.add(success);
+				uploadSuccessArray.add(success);
 			}
 		}
 	};
@@ -423,7 +423,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			int i = 0;
 			String error = "Failed to upload: ";
 			String errorFiles = "";
-			for (boolean success : UploadSuccess) {
+			for (boolean success : uploadSuccessArray) {
 				if (success == false)	{
 					totalSuccess = false;
 					if (errorFiles.isEmpty())
@@ -434,11 +434,13 @@ public class Main extends Activity implements SimpleGestureListener {
 			}
 			error += errorFiles + ".";
 			if (totalSuccess)
-				w.make("Upload Successful!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+				w.make("Upload successful!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 			else w.make(error, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			
-			Intent iView = new Intent(mContext, ViewData.class);
-			startActivityForResult(iView, VIEW_DATA_REQUESTED);
+			if (!(uploadSuccessArray.size() <= 1 && totalSuccess == false)) {
+				Intent iView = new Intent(mContext, ViewData.class);
+				startActivityForResult(iView, VIEW_DATA_REQUESTED);
+			}
 		}
 	}
 
@@ -633,17 +635,29 @@ public class Main extends Activity implements SimpleGestureListener {
 			int[] loopOrder = new int[order.length];
 			for (int i = 0; i < order.length; i++) {
 				for (int j = 0; j < header.length; j++) {
-					if (order[i] == null)
+					if (order[i] == null) {
+						loopOrder[i] = -1;
 						break;
+					}
 					else if (order[i].equals(header[j])) {
 						loopOrder[i] = j;
 						break;
 					}
 				}
 			}
+			
+			// TODO - die
+			
+			for (int i = 0; i < loopOrder.length; i++)
+				Log.e("LOOPZ", "" + loopOrder[i]);
+			
+			// ----------
 
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
 			fReader.close();
+			if (dataJSON == null) {
+				return false;
+			}
 
 			SharedPreferences sp = getSharedPreferences("eid", 0);
 			String eid = sp.getString("eid", "-1");
@@ -658,7 +672,7 @@ public class Main extends Activity implements SimpleGestureListener {
 			success = rapi.putSessionData(sid, eid, dataJSON);
 
 		} catch (IOException e) {
-			w.make(e.toString(), Waffle.IMAGE_X);
+			e.printStackTrace();
 		}
 
 		return success;
@@ -674,13 +688,20 @@ public class Main extends Activity implements SimpleGestureListener {
 			while ((dataLine = fReader.readLine()) != null) {
 				JSONArray dataLineJSON = new JSONArray();
 				data = dataLine.split(",");
+				
 				for (int i = 0; i < loopOrder.length; i++) {
-					dataLineJSON.put(data[loopOrder[i]]);
+					if (loopOrder[i] == -1)
+						dataLineJSON.put(0);
+					else
+						dataLineJSON.put(data[loopOrder[i]]);
 				}
 				dataJSON.put(dataLineJSON);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			return null;
 		}
 		return dataJSON;
 	}

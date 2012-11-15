@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.amusement;
+package edu.uml.cs.isense.canobie;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
