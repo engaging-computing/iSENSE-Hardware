@@ -48,7 +48,7 @@ public class DataFieldManager extends Application {
 		b = b.toLowerCase();
 		
 		// Timestamp and Elapsed Time
-		if (a.contains("time") && b.contains("time")) {
+		/*if (a.contains("time") && b.contains("time")) {
 			if (a.contains("stamp") && (b.contains("stamp") || b.contains("date")))
 				return true;
 			if ((a.contains("elap") || a.contains("relat")) 
@@ -56,7 +56,9 @@ public class DataFieldManager extends Application {
 				return true;
 			if (a.equals(b))
 				return true;
-		}
+		}*/
+		if (a.contains("time") && b.contains("time"))
+			return true;
 		
 		// Temperature
 		if (a.contains("temp") && b.contains("temp"))
@@ -87,6 +89,54 @@ public class DataFieldManager extends Application {
 		// Light
 		if (a.contains("light") && (b.contains("light") || b.contains("lumin")))
 			return true;
+		
+		// ---- Non-uPPT specific fields:
+		
+		// Temperature
+		
+		// Length
+		
+		// Distance
+		
+		// Force
+		
+		// Volume
+		
+		// Mass
+		
+		// Angle
+		
+		// E. Potential
+		
+		// E. Current
+		
+		// Power
+		
+		// E. Charge
+		
+		// Speed
+		
+		// Latitude
+		if (a.contains("lat") && b.contains("lat"))
+			return true;
+		
+		// Longitude
+		if (a.contains("long") && b.contains("long"))
+			return true;
+		
+		// Humidity
+		
+		// pH
+		
+		// Dissolved Oxygen
+		
+		// Turbidity
+		
+		// Flow Rate
+		
+		// Conductivity
+		
+		// Concentration
 		
 		return false;
 	}

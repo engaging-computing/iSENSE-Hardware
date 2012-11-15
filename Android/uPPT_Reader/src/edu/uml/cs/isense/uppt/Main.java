@@ -43,6 +43,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -634,14 +635,23 @@ public class Main extends Activity implements SimpleGestureListener {
 			int[] loopOrder = new int[order.length];
 			for (int i = 0; i < order.length; i++) {
 				for (int j = 0; j < header.length; j++) {
-					if (order[i] == null)
+					if (order[i] == null) {
+						loopOrder[i] = -1;
 						break;
+					}
 					else if (order[i].equals(header[j])) {
 						loopOrder[i] = j;
 						break;
 					}
 				}
 			}
+			
+			// TODO - die
+			
+			for (int i = 0; i < loopOrder.length; i++)
+				Log.e("LOOPZ", "" + loopOrder[i]);
+			
+			// ----------
 
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
 			fReader.close();
@@ -680,7 +690,10 @@ public class Main extends Activity implements SimpleGestureListener {
 				data = dataLine.split(",");
 				
 				for (int i = 0; i < loopOrder.length; i++) {
-					dataLineJSON.put(data[loopOrder[i]]);
+					if (loopOrder[i] == -1)
+						dataLineJSON.put(0);
+					else
+						dataLineJSON.put(data[loopOrder[i]]);
 				}
 				dataJSON.put(dataLineJSON);
 			}
