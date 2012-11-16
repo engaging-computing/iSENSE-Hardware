@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">uPPT Reader</string>
+    <string name="app_name">CSV Uploader</string>
     <string name="isense_logo_desc">iSENSE Logo</string>
     
     <string name="loggedInAs">Logged In As: </string>
