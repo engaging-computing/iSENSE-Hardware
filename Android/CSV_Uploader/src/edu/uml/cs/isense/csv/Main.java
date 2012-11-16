@@ -14,7 +14,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 
-package edu.uml.cs.isense.uppt;
+package edu.uml.cs.isense.csv;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,14 +57,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.csv.experiment.Experiment;
+import edu.uml.cs.isense.csv.fails.SdCardFailure;
+import edu.uml.cs.isense.csv.login.LoginActivity;
+import edu.uml.cs.isense.csv.objects.DataFieldManager;
+import edu.uml.cs.isense.csv.objects.Options;
+import edu.uml.cs.isense.csv.objects.SimpleGestureFilter;
+import edu.uml.cs.isense.csv.objects.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
-import edu.uml.cs.isense.uppt.experiment.Experiment;
-import edu.uml.cs.isense.uppt.fails.SdCardFailure;
-import edu.uml.cs.isense.uppt.login.LoginActivity;
-import edu.uml.cs.isense.uppt.objects.DataFieldManager;
-import edu.uml.cs.isense.uppt.objects.Options;
-import edu.uml.cs.isense.uppt.objects.SimpleGestureFilter;
-import edu.uml.cs.isense.uppt.objects.SimpleGestureFilter.SimpleGestureListener;
+import edu.uml.cs.isense.csv.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 @SuppressLint("NewApi")

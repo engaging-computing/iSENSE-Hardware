@@ -1,11 +1,11 @@
-package edu.uml.cs.isense.uppt.fails;
+package edu.uml.cs.isense.csv.fails;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import edu.uml.cs.isense.uppt.R;
+import edu.uml.cs.isense.csv.R;
 
 public class SdCardFailure extends Activity {
 

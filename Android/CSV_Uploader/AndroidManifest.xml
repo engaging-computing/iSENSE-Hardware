@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.uml.cs.isense.uppt"
+    package="edu.uml.cs.isense.csv"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -59,7 +59,7 @@
             android:theme="@style/DialogTheme" />
         <activity
             android:name=".objects.Options"
-            android:label="uPPT Reader Options"
+            android:label="CSV Uploader Options"
             android:theme="@style/DialogTheme" />
         <activity
             android:name=".experiment.BrowseExperiments"
