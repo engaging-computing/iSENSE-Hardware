@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.uppt.login;
+package edu.uml.cs.isense.csv.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.uppt.R;
+import edu.uml.cs.isense.csv.R;
 
 public class LoginError extends Activity {
 
