@@ -2,6 +2,7 @@ package edu.uml.cs.isense.csv.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 
@@ -45,8 +46,10 @@ public class DataFieldManager extends Application {
 	public boolean match(String a, String b) {
 		
 		String aO = a, bO = b;
-		a = a.toLowerCase(); // SD Card string
-		b = b.toLowerCase(); // Experiment field string
+		a = a.toLowerCase(Locale.US); // SD Card string
+		b = b.toLowerCase(Locale.US); // Experiment field string
+		
+		// -- Old time code for uPPT-specific application.
 		
 		// Timestamp and Elapsed Time
 		/*if (a.contains("time") && b.contains("time")) {
@@ -58,6 +61,9 @@ public class DataFieldManager extends Application {
 			if (a.equals(b))
 				return true;
 		}*/
+		
+		// -- End old time code.  New time code below.
+		
 		if (a.contains("time") && b.contains("time"))
 			return true;
 		

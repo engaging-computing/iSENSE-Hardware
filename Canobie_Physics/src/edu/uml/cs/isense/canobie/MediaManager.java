@@ -3,6 +3,7 @@ package edu.uml.cs.isense.canobie;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,13 +18,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
@@ -48,8 +47,9 @@ public class MediaManager extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.media_manager);
 
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+		getWindow().setLayout(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
+
 		mContext = this;
 		w = new Waffle(mContext);
 
@@ -125,7 +125,6 @@ public class MediaManager extends Activity {
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				File f = convertImageUriToFile(imageUri);
-				Log.d("pic file", f.toString());
 				AmusementPark.pictures.add(f);
 				mediaCount++;
 				mediaCountLabel.setText(getString(R.string.picAndVidCount)
@@ -183,10 +182,10 @@ public class MediaManager extends Activity {
 						MediaStore.Images.Media._ID,
 						MediaStore.Images.ImageColumns.ORIENTATION };
 				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(imageUri, proj,  // Which columns
-																// to return
-						null,  // WHERE clause; which rows to return (all rows)
-						null,  // WHERE clause selection arguments (none)
+				cursor = cr.query(imageUri, proj, // Which columns
+													// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -203,8 +202,8 @@ public class MediaManager extends Activity {
 				if (cursor != null) {
 					cursor.close();
 				}
-			} 
-			//return new File(imageUri.getPath());
+			}
+			// return new File(imageUri.getPath());
 		}
 	}
 
@@ -241,10 +240,10 @@ public class MediaManager extends Activity {
 				String[] proj = { MediaStore.Video.Media.DATA,
 						MediaStore.Video.Media._ID };
 				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(videoUri, proj,  // Which columns
-																// to return
-						null,  // WHERE clause; which rows to return (all rows)
-						null,  // WHERE clause selection arguments (none)
+				cursor = cr.query(videoUri, proj, // Which columns
+													// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
@@ -269,7 +268,7 @@ public class MediaManager extends Activity {
 
 	// Adds pictures to the SD Card
 	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
 		String uploadSessionString;
 
@@ -299,7 +298,7 @@ public class MediaManager extends Activity {
 
 	// Adds videos to the SD Card
 	public void pushVideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
 		String uploadSessionString;
 
@@ -309,7 +308,7 @@ public class MediaManager extends Activity {
 			uploadSessionString = "Session Name Not Provided";
 		else
 			uploadSessionString = AmusementPark.partialSessionName;
-			
+
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
 
@@ -325,7 +324,7 @@ public class MediaManager extends Activity {
 		}
 		AmusementPark.videos.clear();
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -343,7 +342,7 @@ public class MediaManager extends Activity {
 		if (AmusementPark.videos.size() > 0)
 			pushVideo();
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 	}
