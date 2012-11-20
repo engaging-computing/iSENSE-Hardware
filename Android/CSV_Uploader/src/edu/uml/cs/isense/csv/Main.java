@@ -555,7 +555,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		} else {
 			// If it isn't the first time you're getting files, then the success
 			// is false because you can't enter a directory (eg "secure"). Thus,
-			// we don't update the UI
+			// we don't update the UI.
 			if (firstGrab) {
 				noData.setVisibility(View.VISIBLE);
 				backImage.setVisibility(View.GONE);
