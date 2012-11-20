@@ -123,7 +123,11 @@ public class LoginActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == ERROR_REQUESTED) {
-			String codeFromError = data.getStringExtra("returnCode");
+			String codeFromError = "";
+			if (data != null)
+				codeFromError = data.getStringExtra("returnCode");
+			else
+				codeFromError = "";
 			Intent ret = new Intent(LoginActivity.this, Main.class);
 			ret.putExtra("returnCode", codeFromError);
 			setResult(RESULT_OK, ret);

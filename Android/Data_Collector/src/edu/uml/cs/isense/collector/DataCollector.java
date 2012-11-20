@@ -57,7 +57,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.util.FloatMath;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -352,7 +351,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void writeToSDCard(String data, char code) {
 		switch (code) {
 		case 's':
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 			Date dt = new Date();
 			String csvDateString = sdf.format(dt);
 
@@ -619,7 +618,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 
 				accel[2] = event.values[2];
-				accel[3] = FloatMath.sqrt((float) (Math.pow(accel[0], 2)
+				accel[3] = (float) Math.sqrt((float) (Math.pow(accel[0], 2)
 						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 			}
 
@@ -1418,7 +1417,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						// Date
 						SimpleDateFormat sdf = new SimpleDateFormat(
-								"MM-dd-yyyy, HH:mm:ss");
+								"MM-dd-yyyy, HH:mm:ss", Locale.US);
 						Date dt = new Date();
 						dateString = sdf.format(dt);
 						nameOfSession += " - " + dateString;
@@ -1551,7 +1550,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 								if (dfm.enabledFields[LIGHT])
 									f.lux = light;
 
-								// TODO - more efficient to only write header once, data otherwise
+								// would be more efficient to only write header once (during "beginWrite")
 								dataSet.put(dfm.putData());
 								String header = dfm.writeHeaderLine();
 								data = dfm.writeSdCardLine();

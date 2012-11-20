@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -95,7 +94,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 					LoginActivity.this.finish();
 
 				} else {
-					Log.e("tag", "Login Failed");
 					w.make("Login failed.  Check internet connectivity and your username/password.", 
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}

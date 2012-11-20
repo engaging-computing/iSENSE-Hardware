@@ -1,11 +1,11 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /**                                                                                               **/
-/**      IIIIIIIIIIIII               iSENSE uPPT Reader App                      SSSSSSSSS        **/
+/**      IIIIIIIIIIIII               iSENSE CSV Uploader App                     SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                    By: Michael Stowell,                      SSS                **/
-/**           III                        Jeremy Poulin,                         SSS               **/
-/**           III                        Nick Ver Voort                          SSSSSSSSS        **/
+/**           III                        Jeremy Poulin                          SSS               **/
+/**           III                                                                SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
 /**           III                    Group:            ECG,                              SSS      **/
 /**           III                                      iSENSE                           SSS       **/
@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +44,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,7 +65,6 @@ import edu.uml.cs.isense.csv.objects.Options;
 import edu.uml.cs.isense.csv.objects.SimpleGestureFilter;
 import edu.uml.cs.isense.csv.objects.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
-import edu.uml.cs.isense.csv.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 @SuppressLint("NewApi")
@@ -131,7 +130,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		optionPrefs = getSharedPreferences("options", 0);
 
@@ -243,7 +242,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private String getUploadTime() {
 		Calendar c = Calendar.getInstance();
 		long time = c.getTimeInMillis();
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss, MM/dd/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss, MM/dd/yyyy", Locale.US);
 		return sdf.format(time);
 	}
 
@@ -544,7 +543,6 @@ public class Main extends Activity implements SimpleGestureListener {
 		if (success) {
 			noData.setVisibility(View.GONE);
 			curDir.setVisibility(View.VISIBLE);
-			//backImage.setVisibility(View.VISIBLE);
 			
 			if (currentDirectory.equals(rootDirectory)) {
 				backImage.setVisibility(View.GONE);
@@ -557,7 +555,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		} else {
 			// If it isn't the first time you're getting files, then the success
 			// is false because you can't enter a directory (eg "secure"). Thus,
-			// we don't update the UI
+			// we don't update the UI.
 			if (firstGrab) {
 				noData.setVisibility(View.VISIBLE);
 				backImage.setVisibility(View.GONE);
@@ -646,13 +644,6 @@ public class Main extends Activity implements SimpleGestureListener {
 					}
 				}
 			}
-			
-			// TODO - die
-			
-			for (int i = 0; i < loopOrder.length; i++)
-				Log.e("LOOPZ", "" + loopOrder[i]);
-			
-			// ----------
 
 			JSONArray dataJSON = makeJSONArray(fReader, loopOrder);
 			fReader.close();
@@ -760,7 +751,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 	private boolean isCSV(String fileName) {
 		String[] splitName = fileName.split("\\.");
-		String fileType = splitName[splitName.length - 1].toLowerCase();
+		String fileType = splitName[splitName.length - 1].toLowerCase(Locale.US);
 		return fileType.equals("csv");
 	}
 
