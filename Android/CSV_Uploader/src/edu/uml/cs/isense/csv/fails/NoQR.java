@@ -13,9 +13,7 @@ public class NoQR extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_qr);
-		
-		// getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+
 		final Button visit = (Button) findViewById(R.id.no_qr_visit);
 		visit.setOnClickListener(new OnClickListener() {
 			@Override

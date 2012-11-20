@@ -8,8 +8,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 
-import edu.uml.cs.isense.canobie.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,7 +19,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -80,10 +77,8 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Log.d(tag, "Sent pack successfully: " + sendPack());
-				Log.d(tag, "Sent pack: " + mPack);
-
-				Log.d(tag, "Received message: " + receivePack());
+				sendPack();
+				receivePack();
 
 				showDialog(DIALOG_SENT);
 
@@ -214,7 +209,6 @@ public class SyncTime extends Activity {
 
 		try {
 			sendAddress = InetAddress.getByName(host);
-			Log.d(tag, "Send address is: " + sendAddress);
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -257,7 +251,7 @@ public class SyncTime extends Activity {
 		initSocket();
 		preInit = true;
 		
-		Log.d(tag, "Broadcast prepared: " + prepForBroadcast());
+		prepForBroadcast();
 
 		try {
 			currentTime = "" + System.currentTimeMillis();
@@ -266,7 +260,6 @@ public class SyncTime extends Activity {
 					sendAddress, mPort);
 			mSocket.send(mPack);
 		} catch (IOException e) {
-			Log.d(tag, "" + e);
 			e.printStackTrace();
 			return false;
 		}
@@ -334,7 +327,7 @@ public class SyncTime extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			Log.d(tag, "Received message: " + receivePack());
+			receivePack();
 			publishProgress(100);
 			return null;
 		}

@@ -763,7 +763,7 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	private String makeThisDatePretty(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy", Locale.US);
 		return sdf.format(time);
 	}
 

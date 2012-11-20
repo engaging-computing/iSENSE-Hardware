@@ -28,9 +28,7 @@ public class Experiment extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.experiment);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+
 		w = new Waffle(this);
 		
 		final SharedPreferences mPrefs = getSharedPreferences("eid", 0);

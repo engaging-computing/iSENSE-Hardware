@@ -14,9 +14,7 @@ public class SdCardFailure extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sd_card_failure);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+
 		final Button back = (Button) findViewById(R.id.sd_card_failure_back);
 		back.setOnClickListener(new OnClickListener() {
 

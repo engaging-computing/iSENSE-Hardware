@@ -338,7 +338,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			EditText dataFieldContents = (EditText) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldContents);
 
-			if (dataFieldContents.getText().toString().toLowerCase()
+			if (dataFieldContents.getText().toString().toLowerCase(Locale.US)
 					.contains("auto"))
 				continue;
 			else {
@@ -455,8 +455,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			TextView dataFieldName = (TextView) dataFieldEntryList
 					.getChildAt(i).findViewById(R.id.manual_dataFieldName);
 			String contents = dataFieldContents.getText().toString()
-					.toLowerCase();
-			String name = dataFieldName.getText().toString().toLowerCase();
+					.toLowerCase(Locale.US);
+			String name = dataFieldName.getText().toString().toLowerCase(Locale.US);
 			if (contents.contains("auto")) {
 				// Need to auto-fill the data
 				if (name.contains("latitude")) {
@@ -679,7 +679,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private String makeThisDatePretty(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy", Locale.US);
 		return sdf.format(time);
 	}
 

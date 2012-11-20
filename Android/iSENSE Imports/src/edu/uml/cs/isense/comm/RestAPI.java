@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,10 +27,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.util.Log;
-import edu.uml.cs.isense.objects.LoadedExperiment;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.objects.Item;
+import edu.uml.cs.isense.objects.LoadedExperiment;
 import edu.uml.cs.isense.objects.Person;
 import edu.uml.cs.isense.objects.Session;
 import edu.uml.cs.isense.objects.SessionData;
@@ -797,7 +798,7 @@ public class RestAPI {
 
 				int length = a.length();
 
-				if (action.toLowerCase().compareTo("browse") == 0)
+				if (action.toLowerCase(Locale.US).compareTo("browse") == 0)
 					mDbHelper.open();
 
 				for (int i = 0; i < length; i++) {
@@ -812,7 +813,7 @@ public class RestAPI {
 						p.experiment_count = obj.getInt("experiment_count");
 
 						pList.add(p);
-						if (action.toLowerCase().compareTo("browse") == 0) {
+						if (action.toLowerCase(Locale.US).compareTo("browse") == 0) {
 							mDbHelper.deletePerson(p);
 							mDbHelper.insertPerson(p);
 						}
@@ -822,7 +823,7 @@ public class RestAPI {
 						continue;
 					}
 				}
-				if (action.toLowerCase().compareTo("browse") == 0)
+				if (action.toLowerCase(Locale.US).compareTo("browse") == 0)
 					mDbHelper.close();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -831,7 +832,7 @@ public class RestAPI {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (action.toLowerCase().compareTo("browse") == 0) {
+		} else if (action.toLowerCase(Locale.US).compareTo("browse") == 0) {
 			mDbHelper.open();
 			Cursor c = mDbHelper.getPeople(page, limit);
 			mDbHelper.close();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -289,7 +290,7 @@ public class MediaManager extends Activity {
 
 	// Adds pictures to the SD Card
 	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
 		String uploadSessionString;
 
@@ -319,7 +320,7 @@ public class MediaManager extends Activity {
 
 	// Adds videos to the SD Card
 	public void pushVideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
 		String uploadSessionString;
 

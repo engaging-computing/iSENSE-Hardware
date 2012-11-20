@@ -18,8 +18,6 @@ public class Options extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options);
 		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
 		final SharedPreferences mPrefs = getSharedPreferences("options", 0);
 		
 		final CheckBox swipe = (CheckBox) findViewById(R.id.no_swipe_check);
@@ -45,6 +43,7 @@ public class Options extends Activity {
 				
 			}		
 		});
+		usb.setEnabled(false);
 		
 		final Button back = (Button) findViewById(R.id.options_back);
 		back.setOnClickListener(new OnClickListener() {

@@ -2,6 +2,7 @@ package edu.uml.cs.isense.canobie.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,11 +45,11 @@ public class DataFieldManager extends Application {
 
 			// Temperature
 			case 1:
-				if (field.unit_name.toLowerCase().contains("f"))
+				if (field.unit_name.toLowerCase(Locale.US).contains("f"))
 					order.add(mContext.getString(R.string.temperature_f));
-				else if (field.unit_name.toLowerCase().contains("c")) {
+				else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
 					order.add(mContext.getString(R.string.temperature_c));
-				} else if (field.unit_name.toLowerCase().contains("k")) {
+				} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
 					order.add(mContext.getString(R.string.temperature_k));
 				} else {
 					order.add(mContext.getString(R.string.null_string));
@@ -58,7 +59,7 @@ public class DataFieldManager extends Application {
 			// Potential Altitude
 			case 2:
 			case 3:
-				if (field.field_name.toLowerCase().contains("altitude")) {
+				if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
 					order.add(mContext.getString(R.string.altitude));
 				} else {
 					order.add(mContext.getString(R.string.null_string));
@@ -79,9 +80,9 @@ public class DataFieldManager extends Application {
 
 			// Angle
 			case 10:
-				if (field.unit_name.toLowerCase().contains("deg")) {
+				if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
 					order.add(mContext.getString(R.string.heading_deg));
-				} else if (field.unit_name.toLowerCase().contains("rad")) {
+				} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
 					order.add(mContext.getString(R.string.heading_rad));
 				} else {
 					order.add(mContext.getString(R.string.null_string));
@@ -90,9 +91,9 @@ public class DataFieldManager extends Application {
 
 			// Geospacial
 			case 19:
-				if (field.field_name.toLowerCase().contains("lat")) {
+				if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
 					order.add(mContext.getString(R.string.latitude));
-				} else if (field.field_name.toLowerCase().contains("lon")) {
+				} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
 					order.add(mContext.getString(R.string.longitude));
 				} else {
 					order.add(mContext.getString(R.string.null_string));
@@ -102,21 +103,21 @@ public class DataFieldManager extends Application {
 			// Numeric/Custom
 			case 21:
 			case 22:
-				if (field.field_name.toLowerCase().contains("mag")) {
-					if (field.field_name.toLowerCase().contains("x")) {
+				if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
+					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
 						order.add(mContext.getString(R.string.magnetic_x));
-					} else if (field.field_name.toLowerCase().contains("y")) {
+					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
 						order.add(mContext.getString(R.string.magnetic_y));
-					} else if (field.field_name.toLowerCase().contains("z")) {
+					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
 						order.add(mContext.getString(R.string.magnetic_z));
-					} else if ((field.field_name.toLowerCase()
+					} else if ((field.field_name.toLowerCase(Locale.US)
 							.contains("total"))
-							|| (field.field_name.toLowerCase()
+							|| (field.field_name.toLowerCase(Locale.US)
 									.contains("average"))
-							|| (field.field_name.toLowerCase().contains("mean"))) {
+							|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
 						order.add(mContext.getString(R.string.magnetic_total));
 					}
-				} else if (field.field_name.toLowerCase().contains("altitude")) {
+				} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
 					order.add(mContext.getString(R.string.altitude));
 				} else
 					order.add(mContext.getString(R.string.null_string));
@@ -124,15 +125,15 @@ public class DataFieldManager extends Application {
 
 			// Acceleration
 			case 25:
-				if (field.field_name.toLowerCase().contains("x")) {
+				if (field.field_name.toLowerCase(Locale.US).contains("x")) {
 					order.add(mContext.getString(R.string.accel_x));
-				} else if (field.field_name.toLowerCase().contains("y")) {
+				} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
 					order.add(mContext.getString(R.string.accel_y));
-				} else if (field.field_name.toLowerCase().contains("z")) {
+				} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
 					order.add(mContext.getString(R.string.accel_z));
-				} else if ((field.field_name.toLowerCase().contains("total"))
-						|| (field.field_name.toLowerCase().contains("average"))
-						|| (field.field_name.toLowerCase().contains("mean"))) {
+				} else if ((field.field_name.toLowerCase(Locale.US).contains("total"))
+						|| (field.field_name.toLowerCase(Locale.US).contains("average"))
+						|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
 					order.add(mContext.getString(R.string.accel_total));
 				} else {
 					order.add(mContext.getString(R.string.null_string));

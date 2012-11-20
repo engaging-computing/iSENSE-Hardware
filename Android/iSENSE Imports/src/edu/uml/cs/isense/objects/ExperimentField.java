@@ -135,7 +135,7 @@ public class ExperimentField {
 	public final int UNIT_PARTS_PER_MILLION = 77;
 	public final int UNIT_NEPHELOMETRIC_TURBIDITY_UNITS = 78;
 	public final int UNIT_SIEMENS = 79;
-	//public final int UNIT_PARTS_PER_MILLION = 80;
+	public final int UNIT_PARTS_PER_MILLION2 = 80;
 	public final int UNIT_TEXT = 81;
 }
 

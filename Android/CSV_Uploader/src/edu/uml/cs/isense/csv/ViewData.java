@@ -15,8 +15,6 @@ public class ViewData extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_data);
 		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
 		final Button ok = (Button) findViewById(R.id.view_data_ok);
 		ok.setOnClickListener(new OnClickListener() {
 
