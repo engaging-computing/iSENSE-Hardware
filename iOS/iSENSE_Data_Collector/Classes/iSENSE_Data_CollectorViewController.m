@@ -7,13 +7,13 @@
 //
 
 #import "iSENSE_Data_CollectorViewController.h"
-#import "UIPicButton.h"
 
 @implementation iSENSE_Data_CollectorViewController
 @synthesize startStopButton;
 @synthesize mainLogo;
 @synthesize longClickTimer;
 @synthesize container;
+@synthesize startStopLabel;
 
  - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
 	 
@@ -115,7 +115,9 @@
 	[self.view addSubview:mainLogo];
 	[self.view addSubview:container];
 	
+	[mainLogo release];
 	[container release];
+	[startStopLabel release];
 	[longPressGesture release];
 	[redButton release];
 	
