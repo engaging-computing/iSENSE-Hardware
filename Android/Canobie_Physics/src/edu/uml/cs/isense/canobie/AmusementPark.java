@@ -67,7 +67,6 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
-import android.util.FloatMath;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -86,7 +85,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.canobie.experiment.BrowseExperiments;
 import edu.uml.cs.isense.canobie.objects.DataFieldManager;
 import edu.uml.cs.isense.canobie.objects.Fields;
@@ -98,13 +96,10 @@ import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
-/* Experiment 422 on iSENSE and 491/277 on Dev */
-
 @SuppressLint("NewApi")
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
-	// public static Queue<DataSet> uploadQueue;
 	public static UploadQueue uq;
 	public static DataFieldManager dfm;
 	public static SensorCompatibility sc;
@@ -489,9 +484,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void writeToSDCard(String data, char code) {
 		switch (code) {
 		case 's':
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 			SimpleDateFormat niceFormat = new SimpleDateFormat(
-					"MM/dd/yyyy, HH:mm:ss");
+					"MM/dd/yyyy, HH:mm:ss", Locale.US);
 
 			Date dt = new Date();
 
@@ -667,7 +662,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		case MENU_ITEM_UPLOAD:
 			choiceViaMenu = true;
 			manageUploadQueue();
-			// showDialog(DIALOG_CHOICE);
 			return true;
 		case MENU_ITEM_TIME:
 			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
@@ -708,7 +702,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							+ ", Z: " + zPrepend + oneDigit.format(accel[2]));
 				}
 
-				accel[3] = (float) FloatMath.sqrt((float) ((Math.pow(accel[0],
+				// was: FloatMath.sqrt... -- now: Math.sqrt...
+				accel[3] = (float) Math.sqrt((float) ((Math.pow(accel[0],
 						2) + Math.pow(accel[1], 2) + Math.pow(accel[2], 2))));
 
 			}
@@ -771,9 +766,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	protected Dialog onCreateDialog(final int id) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog;// = builder.setView(new View(this)).create();
-
-		// dialog.show();
+		Dialog dialog;
 
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
@@ -1279,7 +1272,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss", Locale.US);
 			Date dt = new Date();
 			String dateString = sdf.format(dt);
 
