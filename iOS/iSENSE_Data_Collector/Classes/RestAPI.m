@@ -8,21 +8,11 @@
 
 #import "RestAPI.h"
 
-static NSString *baseURL = @"http://isensedev.cs.uml.edu/ws/api.php";
+static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php";
 static RestAPI *instance = nil;
 
 @implementation RestAPI
 
-
-/*- (id)initWithFrame:(CGRect)frame {
-    
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code.
-		login_key = -1;
-    }
-    return self;
-}*/
 
 - (BOOL) login:(NSString*)username:(NSString*)password {
 	NSString *url = nil;
@@ -37,7 +27,7 @@ static RestAPI *instance = nil;
 	url = [[url stringByAppendingString:password] retain];
 	
 	NSString *response = [self makeRequest:url];
-	NSLog(@"%@", url);
+	NSLog(@"Response: %@", response);
 	
 	if (url == nil) return FALSE;
 	
@@ -98,10 +88,20 @@ static RestAPI *instance = nil;
 
 -(NSString *)makeRequest:(NSString*) target {
 	target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-	NSLog(@"%@", target);
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:baseURL]];
+	[request setHTTPMethod:@"POST"];
+	[request setValue:[NSString stringWithFormat:@"%d",[target length]] forHTTPHeaderField:@"Content-Length"];
 	
-	return @"null";
+	[request setHTTPBody:[target dataUsingEncoding:NSUTF8StringEncoding]];
+	RestAPIConnectionDelegate *connectionDelegate = [RestAPIConnectionDelegate alloc];
+	NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:connectionDelegate];
+	[connection start];
+	
+	NSString *response = [[NSString alloc] initWithData:connectionDelegate.data encoding:NSUTF8StringEncoding];	
+	return response;
 }
+
+
 
 /*
  public String makeRequest(String target) throws Exception {
@@ -173,6 +173,14 @@ static RestAPI *instance = nil;
     }
 	
     return instance;
+}
+
+- (void) useDev:(BOOL)toggle {
+	if (toggle) {
+		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php";
+	} else {	
+		baseURL = @"http://isense.cs.uml.edu/ws/api.php";
+	}
 }
 
 - (void)dealloc {

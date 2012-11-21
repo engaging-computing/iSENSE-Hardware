@@ -24,6 +24,7 @@
 		39862A311641667F0035E040 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 39862A301641667F0035E040 /* button-37.wav */; };
 		39862A33164166D60035E040 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A32164166D60035E040 /* logo_green.png */; };
 		39B1890C162C5054002058DA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1890B162C5054002058DA /* AudioToolbox.framework */; };
+		39E3053516567CB50085D3B8 /* RestAPIConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E3053416567CB50085D3B8 /* RestAPIConnectionDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,8 @@
 		39862A301641667F0035E040 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "button-37.wav"; path = "Resources/button-37.wav"; sourceTree = "<group>"; };
 		39862A32164166D60035E040 /* logo_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_green.png; path = Resources/logo_green.png; sourceTree = "<group>"; };
 		39B1890B162C5054002058DA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		39E3053316567CB50085D3B8 /* RestAPIConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestAPIConnectionDelegate.h; sourceTree = "<group>"; };
+		39E3053416567CB50085D3B8 /* RestAPIConnectionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestAPIConnectionDelegate.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* iSENSE_Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "iSENSE_Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +146,8 @@
 			children = (
 				392F745116494D710059692D /* RestAPI.h */,
 				392F745216494D710059692D /* RestAPI.m */,
+				39E3053316567CB50085D3B8 /* RestAPIConnectionDelegate.h */,
+				39E3053416567CB50085D3B8 /* RestAPIConnectionDelegate.m */,
 			);
 			name = RestAPI;
 			sourceTree = "<group>";
@@ -227,6 +232,7 @@
 				39737AB516402955003E02BA /* UIPicButton.m in Sources */,
 				390B18391642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
 				392F745316494D710059692D /* RestAPI.m in Sources */,
+				39E3053516567CB50085D3B8 /* RestAPIConnectionDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

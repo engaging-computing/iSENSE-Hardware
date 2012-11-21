@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RestAPIConnectionDelegate.h"
 
 @interface RestAPI :NSObject {
 	int loginKey;
@@ -15,6 +16,7 @@
 
 -(BOOL)login:(NSString*) username:(NSString*) password;
 -(NSString*)makeRequest:(NSString*)target;
+-(void)useDev:(BOOL)toggle;
 +(RestAPI *)getInstance;
 
 @end

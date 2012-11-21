@@ -132,7 +132,8 @@
 	
 	// Attempt Login
 	rapi = [RestAPI getInstance];
-	[rapi login:@"sor":@"sor"];
+	[rapi useDev:TRUE];
+	[rapi login:@"sor":@"sor"];	
 		
 	[longPressGesture release];
 	[redButton release];
