@@ -22,7 +22,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)d {
-    [self.data appendData:d];
+    self.data = [[NSData alloc] initWithData:d];
 	NSString *responseText = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
 	NSLog(@"Receieved: %@", responseText);
 }
@@ -37,14 +37,16 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSString *responseText = [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
+	NSLog(@"Response: %@", responseText);
 	
-    NSLog(@"Response: %@", responseText);
+	//JSONParsing
 	
+	[error release];
     [responseText release];
 }
 
 // Handle basic authentication challenge if needed
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+/*- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     NSString *username = @"sor";
     NSString *password = @"sor";
 	
@@ -52,6 +54,6 @@
                                                              password:password
                                                           persistence:NSURLCredentialPersistenceForSession];
     [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
-}
+}*/
 
 @end
