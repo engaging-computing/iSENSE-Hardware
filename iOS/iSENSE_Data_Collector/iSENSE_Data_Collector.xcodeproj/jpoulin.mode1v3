@@ -202,6 +202,46 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
+				<string>390D2D80166D012C00A0B06C</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>iSENSE_Data_CollectorViewController_iPad.h</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>390D2D81166D012C00A0B06C</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>iSENSE_Data_CollectorViewController_iPad.h</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>390D2D82166D012C00A0B06C</string>
+						<key>history</key>
+						<array>
+							<string>390D2D7B166CF51700A0B06C</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1280, 927}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>-1280 82 1280 968 -1280 26 1280 1024 </string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
 				<string>390D62E0165D22910079C4AE</string>
 				<key>PBXProjectModuleLabel</key>
 				<string>RestAPI.m</string>
@@ -216,10 +256,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>390D2D5F166CDD9600A0B06C</string>
+						<string>390D2D84166D012C00A0B06C</string>
 						<key>history</key>
 						<array>
-							<string>390D6312165D2F930079C4AE</string>
+							<string>390D2D83166D012C00A0B06C</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -270,6 +310,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -306,15 +348,12 @@
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>080E96DDFE201D6D7F000001</string>
-								<string>392F744E16494D480059692D</string>
 								<string>1C37FBAC04509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>4</integer>
-									<integer>2</integer>
-									<integer>1</integer>
+									<integer>14</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -349,14 +388,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>RestAPI.m</string>
+								<string>iSENSE_Data_CollectorAppDelegate.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -364,11 +401,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>RestAPI.m</string>
+										<string>iSENSE_Data_CollectorAppDelegate.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>390D2D5C166CDD9600A0B06C</string>
+										<string>390D2D7F166D012C00A0B06C</string>
 										<key>history</key>
 										<array>
 											<string>396CC7C9161DCFB7006C5F3A</string>
@@ -382,15 +419,15 @@
 											<string>3968C3D016529BC900BE9DAD</string>
 											<string>3968C3D116529BC900BE9DAD</string>
 											<string>391D0D8B165559FB00F444B5</string>
-											<string>390D62D7165D22910079C4AE</string>
-											<string>390D62D8165D22910079C4AE</string>
 											<string>390D62D9165D22910079C4AE</string>
 											<string>390D62E5165D27780079C4AE</string>
 											<string>390D62E6165D27780079C4AE</string>
 											<string>390D62E7165D27780079C4AE</string>
 											<string>390D630A165D2C640079C4AE</string>
 											<string>390D630B165D2C640079C4AE</string>
-											<string>390D6311165D2F930079C4AE</string>
+											<string>390D2D7D166D012C00A0B06C</string>
+											<string>390D2D7E166D012C00A0B06C</string>
+											<string>390D62D8165D22910079C4AE</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -588,8 +625,11 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>390D2D85166D012C00A0B06C</string>
+		<string>1C78EAAD065D492600B07095</string>
+		<string>1CD10A99069EF8BA00B06720</string>
 		<string>39043851161C803400DAC057</string>
-		<string>390D62E0165D22910079C4AE</string>
+		<string>390D2D80166D012C00A0B06C</string>
 		<string>/Users/jpoulin/iSENSE-Hardware/iOS/iSENSE_Data_Collector/iSENSE_Data_Collector.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -792,13 +832,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>390D62CE165D22360079C4AE</string>
+				<string>390D2D6E166CE21200A0B06C</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>390D62CF165D22360079C4AE</string>
-				<string>390D62D0165D22360079C4AE</string>
-				<string>390D62D1165D22360079C4AE</string>
-				<string>390D62D2165D22360079C4AE</string>
-				<string>390D62D3165D22360079C4AE</string>
+				<string>390D2D6F166CE21200A0B06C</string>
+				<string>390D2D70166CE21200A0B06C</string>
+				<string>390D2D71166CE21200A0B06C</string>
+				<string>390D2D72166CE21200A0B06C</string>
+				<string>390D2D73166CE21200A0B06C</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -954,7 +994,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>390D62D4165D22360079C4AE</string>
+				<string>390D2D74166CE21200A0B06C</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>
