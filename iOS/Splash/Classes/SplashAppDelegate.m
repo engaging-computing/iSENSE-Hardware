@@ -2,17 +2,18 @@
 //  SplashAppDelegate.m
 //  Splash
 //
-//  Created by CS Admin on 11/21/12.
+//  Created by CS Admin on 12/4/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "SplashAppDelegate.h"
-#import "SplashViewController.h"
+#import "Math.h"
+
+#define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
 @implementation SplashAppDelegate
 
-@synthesize window;
-@synthesize viewController;
+@synthesize window, tbc, orb, aboutText, guideText, automatic, manual;
 
 
 #pragma mark -
@@ -20,12 +21,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-    // Override point for customization after application launch.
-
-    // Add the view controller's view to the window and display.
-    [self.window addSubview:viewController.view];
+    [window addSubview:[tbc view]];
+	
+	aboutText.text = [self getString:@"about_text"];
+	guideText.text = [self getString:@"guide_text"];
+	
     [self.window makeKeyAndVisible];
-
+	
     return YES;
 }
 
@@ -46,42 +48,64 @@
 }
 
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    /*
-     Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
-     */
-}
+- (void)applicationWillEnterForeground:(UIApplication *)application {}
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
+
+	[self rotateImage:orb duration:1.5
+				curve:UIViewAnimationCurveEaseIn degrees:180];
+	
 }
 
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-    /*
-     Called when the application is about to terminate.
-     See also applicationDidEnterBackground:.
-     */
-}
+- (void)applicationWillTerminate:(UIApplication *)application {}
 
 
 #pragma mark -
 #pragma mark Memory management
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-    /*
-     Free up as much memory as possible by purging cached data objects that can be recreated (or reloaded from disk) later.
-     */
-}
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {}
 
 
 - (void)dealloc {
-    [viewController release];
+	
     [window release];
+	[tbc release];
+	[orb release];
+	[aboutText release];
+	[guideText release];
+	[automatic release];
+	[manual release];
     [super dealloc];
+}
+
+
+- (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
+			  curve:(int)curve degrees:(CGFloat)degrees {
+	
+	// Setup the animation
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:duration];
+	[UIView setAnimationCurve:curve];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+	[UIView setAnimationRepeatCount:1e100f];
+	
+	// The transform matrix
+	CGAffineTransform transform = 
+	CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
+	image.transform = transform;
+	
+	// Commit the changes
+	[UIView commitAnimations];
+}
+
+- (NSString *) getString:(NSString *)label {
+	
+	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
+	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
+	NSString *loc = [d objectForKey:label];
+	return loc;
 }
 
 
