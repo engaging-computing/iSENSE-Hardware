@@ -11,17 +11,15 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
-		2899E5220DE3E06400AC0155 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* SplashViewController.xib */; };
+		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
-		28D7ACF80DDB3853001CB0EB /* SplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* SplashViewController.m */; };
-		525B4D95166CF30800FD07D0 /* SplashMain.xib in Resources */ = {isa = PBXBuildFile; fileRef = 525B4D94166CF30800FD07D0 /* SplashMain.xib */; };
-		52B088BA165D548400092345 /* spinner_orb.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B088B9165D548400092345 /* spinner_orb.png */; };
-		52B088BC165D56C500092345 /* data_collector_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B088BB165D56C500092345 /* data_collector_logo.png */; };
-		52B088D6165D5AB600092345 /* ic_tab_about.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B088D3165D5AB600092345 /* ic_tab_about.png */; };
-		52B088D7165D5AB600092345 /* ic_tab_guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B088D4165D5AB600092345 /* ic_tab_guide.png */; };
-		52B088D8165D5AB600092345 /* ic_tab_main.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B088D5165D5AB600092345 /* ic_tab_main.png */; };
-		52B088DC165D5B6A00092345 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B088DB165D5B6A00092345 /* icon.png */; };
+		525555C8166E81C700E7A6E5 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 525555C7166E81C700E7A6E5 /* Strings.strings */; };
+		5272ED16166E44A20035678D /* data_collector_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED10166E44A20035678D /* data_collector_logo.png */; };
+		5272ED17166E44A20035678D /* ic_tab_about.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED11166E44A20035678D /* ic_tab_about.png */; };
+		5272ED18166E44A20035678D /* ic_tab_guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED12166E44A20035678D /* ic_tab_guide.png */; };
+		5272ED19166E44A20035678D /* ic_tab_main.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED13166E44A20035678D /* ic_tab_main.png */; };
+		5272ED1A166E44A20035678D /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED14166E44A20035678D /* icon.png */; };
+		5272ED1B166E44A20035678D /* spinner_orb.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED15166E44A20035678D /* spinner_orb.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,20 +28,17 @@
 		1D3623250D0F684500981E51 /* SplashAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Splash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Splash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		2899E5210DE3E06400AC0155 /* SplashViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SplashViewController.xib; sourceTree = "<group>"; };
+		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
-		28D7ACF60DDB3853001CB0EB /* SplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashViewController.h; sourceTree = "<group>"; };
-		28D7ACF70DDB3853001CB0EB /* SplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Splash_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Splash_Prefix.pch; sourceTree = "<group>"; };
-		525B4D94166CF30800FD07D0 /* SplashMain.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SplashMain.xib; sourceTree = "<group>"; };
-		52B088B9165D548400092345 /* spinner_orb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spinner_orb.png; sourceTree = "<group>"; };
-		52B088BB165D56C500092345 /* data_collector_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = data_collector_logo.png; sourceTree = "<group>"; };
-		52B088D3165D5AB600092345 /* ic_tab_about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_about.png; sourceTree = "<group>"; };
-		52B088D4165D5AB600092345 /* ic_tab_guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_guide.png; sourceTree = "<group>"; };
-		52B088D5165D5AB600092345 /* ic_tab_main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_main.png; sourceTree = "<group>"; };
-		52B088DB165D5B6A00092345 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		525555C7166E81C700E7A6E5 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
+		5272ED10166E44A20035678D /* data_collector_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = data_collector_logo.png; sourceTree = "<group>"; };
+		5272ED11166E44A20035678D /* ic_tab_about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_about.png; sourceTree = "<group>"; };
+		5272ED12166E44A20035678D /* ic_tab_guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_guide.png; sourceTree = "<group>"; };
+		5272ED13166E44A20035678D /* ic_tab_main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_main.png; sourceTree = "<group>"; };
+		5272ED14166E44A20035678D /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		5272ED15166E44A20035678D /* spinner_orb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spinner_orb.png; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Splash-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Splash-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,7 +49,7 @@
 			files = (
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
+				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,8 +61,6 @@
 			children = (
 				1D3623240D0F684500981E51 /* SplashAppDelegate.h */,
 				1D3623250D0F684500981E51 /* SplashAppDelegate.m */,
-				28D7ACF60DDB3853001CB0EB /* SplashViewController.h */,
-				28D7ACF70DDB3853001CB0EB /* SplashViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -104,16 +97,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				52B088DB165D5B6A00092345 /* icon.png */,
-				52B088D3165D5AB600092345 /* ic_tab_about.png */,
-				52B088D4165D5AB600092345 /* ic_tab_guide.png */,
-				52B088D5165D5AB600092345 /* ic_tab_main.png */,
-				52B088BB165D56C500092345 /* data_collector_logo.png */,
-				52B088B9165D548400092345 /* spinner_orb.png */,
-				2899E5210DE3E06400AC0155 /* SplashViewController.xib */,
-				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+				525555C4166E819700E7A6E5 /* Values */,
+				5272ED0D166E44730035678D /* Layout */,
+				5272ED0C166E44670035678D /* Drawable */,
 				8D1107310486CEB800E47090 /* Splash-Info.plist */,
-				525B4D94166CF30800FD07D0 /* SplashMain.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -123,9 +110,38 @@
 			children = (
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
+				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		525555C4166E819700E7A6E5 /* Values */ = {
+			isa = PBXGroup;
+			children = (
+				525555C7166E81C700E7A6E5 /* Strings.strings */,
+			);
+			name = Values;
+			sourceTree = "<group>";
+		};
+		5272ED0C166E44670035678D /* Drawable */ = {
+			isa = PBXGroup;
+			children = (
+				5272ED10166E44A20035678D /* data_collector_logo.png */,
+				5272ED11166E44A20035678D /* ic_tab_about.png */,
+				5272ED12166E44A20035678D /* ic_tab_guide.png */,
+				5272ED13166E44A20035678D /* ic_tab_main.png */,
+				5272ED14166E44A20035678D /* icon.png */,
+				5272ED15166E44A20035678D /* spinner_orb.png */,
+			);
+			name = Drawable;
+			sourceTree = "<group>";
+		};
+		5272ED0D166E44730035678D /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+			);
+			name = Layout;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,14 +194,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
-				2899E5220DE3E06400AC0155 /* SplashViewController.xib in Resources */,
-				52B088BA165D548400092345 /* spinner_orb.png in Resources */,
-				52B088BC165D56C500092345 /* data_collector_logo.png in Resources */,
-				52B088D6165D5AB600092345 /* ic_tab_about.png in Resources */,
-				52B088D7165D5AB600092345 /* ic_tab_guide.png in Resources */,
-				52B088D8165D5AB600092345 /* ic_tab_main.png in Resources */,
-				52B088DC165D5B6A00092345 /* icon.png in Resources */,
-				525B4D95166CF30800FD07D0 /* SplashMain.xib in Resources */,
+				5272ED16166E44A20035678D /* data_collector_logo.png in Resources */,
+				5272ED17166E44A20035678D /* ic_tab_about.png in Resources */,
+				5272ED18166E44A20035678D /* ic_tab_guide.png in Resources */,
+				5272ED19166E44A20035678D /* ic_tab_main.png in Resources */,
+				5272ED1A166E44A20035678D /* icon.png in Resources */,
+				5272ED1B166E44A20035678D /* spinner_orb.png in Resources */,
+				525555C8166E81C700E7A6E5 /* Strings.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,7 +213,6 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* SplashAppDelegate.m in Sources */,
-				28D7ACF80DDB3853001CB0EB /* SplashViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
