@@ -3,6 +3,7 @@
 //  isenseAPI
 //
 //  Created by John Fertitta on 2/23/11.
+//  Updated by Jeremy Poulin on 12/05/12.
 //  Copyright 2011 UMass Lowell. All rights reserved.
 //
 
@@ -45,6 +46,7 @@
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id;
 - (bool) putSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id;
 - (bool) updateSessionData:(NSString *)dataJSON forSession:(NSNumber *)sessioN_id inExperiment:(NSNumber *)exp_id;
+- (void) useDev:(BOOL)toggle;
 
 @end
 

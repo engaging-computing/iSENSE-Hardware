@@ -3,22 +3,27 @@
 //  isenseAPI
 //
 //  Created by John Fertitta on 2/23/11.
+//  Updated by Jeremy Poulin on 12/05/12.
 //  Copyright 2011 UMass Lowell. All rights reserved.
 //
 
 #import "iSENSE.h"
 
+static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 static iSENSE* _iSENSE = nil;
 
 @implementation iSENSE
 
 -(NSDictionary *)isenseQuery:(NSString*)target
 {
-	NSMutableString *base_url = [NSMutableString stringWithString:@"http://isense.cs.uml.edu/ws/api.php?"];
+	NSLog(@"Reached isenseQuery");
+	NSMutableString *base_url = [NSMutableString stringWithString:baseURL];
+	NSLog(@"%@", base_url);
 	[base_url appendString:target];
 	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 	NSLog(@"Sent to iSENSE: %@", final);
-	return [[NSString stringWithContentsOfURL:[NSURL URLWithString:final] encoding:NSUTF8StringEncoding error:nil] JSONValue];
+	NSError *requestError;
+	return [[NSString stringWithContentsOfURL:[NSURL URLWithString:final] encoding:NSUTF8StringEncoding error:&requestError] JSONValue];
 }
 
 +(iSENSE*)instance
@@ -27,6 +32,7 @@ static iSENSE* _iSENSE = nil;
 	{
 		if (!_iSENSE)
 			[[self alloc] init];
+		NSLog(@"Initialized iSENSE object.");
 		
 		return _iSENSE;
 	}
@@ -110,8 +116,11 @@ static iSENSE* _iSENSE = nil;
 }
 
 - (bool) login:(NSString *)User with:(NSString *)Password {
+	NSLog(@"Login starts.");
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", User, Password]];
+	NSLog(@"Result Obtained");
 	session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
+	NSLog(@"session_key = %d.", session_key);
 	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
 	if ([self isLoggedIn]) {
 		username = User;
@@ -475,6 +484,18 @@ static iSENSE* _iSENSE = nil;
 	
 	return false;
 }
+
+- (void) useDev:(BOOL)toggle {
+	if (toggle) {
+		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
+		NSLog(@"Switched to dev.");
+	} else {	
+		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
+		NSLog(@"Switched to iSENSE.");
+
+	}
+}
+
 
 
 @end

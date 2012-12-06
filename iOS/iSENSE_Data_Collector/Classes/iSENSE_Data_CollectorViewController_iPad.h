@@ -9,7 +9,7 @@
 #import "UIPicButton.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <UIKit/UIKit.h>
-#import "RestAPI.h"
+#import "iSENSE.h"
 
 
 @interface iSENSE_Data_CollectorViewController_iPad : UIViewController {
@@ -20,7 +20,7 @@
 	UILabel *loginStatus;
 	bool	isRecording;
 	NSTimer *longClickTimer;
-	RestAPI *rapi;
+	iSENSE *iSENSEAPI;
 }
 
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
@@ -31,6 +31,6 @@
 @property (nonatomic, retain) UIPicButton *container;
 @property (nonatomic, retain) UILabel *startStopLabel;
 @property (nonatomic, retain) UILabel *loginStatus;
-@property (nonatomic, retain) RestAPI *rapi;
+@property (nonatomic, retain) iSENSE *iSENSEAPI;
 
 @end

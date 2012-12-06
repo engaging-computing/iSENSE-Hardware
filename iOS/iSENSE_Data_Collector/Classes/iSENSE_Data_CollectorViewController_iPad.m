@@ -1,4 +1,4 @@
-    //
+//
 //  iSENSE_Data_CollectorViewController_iPad.m
 //  iSENSE_Data_Collector
 //
@@ -18,7 +18,7 @@
 @synthesize container;
 @synthesize startStopLabel;
 @synthesize loginStatus;
-@synthesize rapi;
+@synthesize iSENSEAPI;
 
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
 	
@@ -131,9 +131,13 @@
 	[self.view addSubview:container];
 	
 	// Attempt Login
-	rapi = [RestAPI getInstance];
-	[rapi useDev:TRUE];
-	[rapi login:@"sor":@"sor"];	
+	iSENSEAPI = [iSENSE instance];
+	[iSENSEAPI useDev:TRUE];
+	bool boolsRforFools;
+	boolsRforFools = [iSENSEAPI login:@"sor" with:@"sor"];
+	NSLog(@"Logged in: ");
+	if (boolsRforFools) NSLog(@"True");
+	else NSLog(@"False");
 		
 	[longPressGesture release];
 	[redButton release];
