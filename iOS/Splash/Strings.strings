@@ -1,10 +1,11 @@
-/* 
-   Strings.strings
-   Splash
-
-   Created by CS Admin on 12/4/12.
-   Copyright 2012 __MyCompanyName__. All rights reserved.
- */
+//
+// Strings.strings
+// Splash
+//
+//  Created by Mike S. on 12/4/12.
+//  Advisor - Fred Martin
+//  Copyright 2012 ECG. All rights reserved.
+//
 
 "about_text" = 
 	"Welcome to the iSENSE Data Collector iOS Application, developed by UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE team under Fred Martin.
@@ -20,6 +21,8 @@ The purpose of the Data Collector application is to enable people of all ages to
 This application will also enable a user to manually key in data liveusing the manual-entry portion of this app.  All the user needs to know ishis or her experiment and login information and he or she is ready to go.
 
 In order to use this application, you must have an account on isenseproject.org.";
+
+// ---------------
 
 "guide_text" =
 	"This is a guide designed to help explain to you how to use our iSENSE Data Collector application.
@@ -76,7 +79,7 @@ Other features of this application should be self-explanatory as they occur.
 
 MANUAL ENTRY:
 		
-Perhaps you do not want to record data using Android\'s built-in sensors.  With the manual application, you will be able to fetch an experiment\'s fields, manually enter data you recorded, and upload the data set to iSENSE.
+Perhaps you do not want to record data using iOS\'s built-in sensors.  With the manual application, you will be able to fetch an experiment\'s fields, manually enter data you recorded, and upload the data set to iSENSE.
 		
 The manual application will first ask you to select an experiment.  Just as in the automatic application, you can either manually enter your experiment\'s number, browse experiments and locate yours, or scan a QR code.  Upon selecting an experiment, the device will list off all of the experiment\'s data fields for you to manually enter data.  Note: time, latitude, and longitude will all be automatically filled in for you when you choose to save a data set.
 		
