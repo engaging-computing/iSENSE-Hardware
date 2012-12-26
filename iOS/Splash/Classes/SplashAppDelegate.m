@@ -9,6 +9,7 @@
 
 #import "SplashAppDelegate.h"
 #import "Math.h"
+#import "AutomaticViewController.h"
 
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
@@ -116,14 +117,21 @@
 }
 
 - (void) autoClicked:(id)sender {
-	UIViewController *autoController = [[UIViewController alloc] initWithNibName:@"Automatic" bundle:nil];
-	[window addSubview:autoController.view];
-	[tbc release];
+
+	NSLog(@"rootButtonClick");
+	AutomaticViewController *secondView;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController" bundle:nil];
+	} else {
+		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController-iPad" bundle:nil];
+    }
+	
+	[window addSubview:secondView.view];
+	[tbc.view release];
 }
 
 - (void) manualClicked:(id)sender {
 	
 }
-
 
 @end
