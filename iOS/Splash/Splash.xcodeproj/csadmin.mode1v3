@@ -252,7 +252,7 @@
 						<dict>
 							<key>PBXSmartGroupTreeModuleColumnWidthsKey</key>
 							<array>
-								<real>186</real>
+								<real>276</real>
 							</array>
 							<key>PBXSmartGroupTreeModuleColumnsKey_v4</key>
 							<array>
@@ -269,10 +269,8 @@
 								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>525555C4166E819700E7A6E5</string>
 								<string>5272ED0D166E44730035678D</string>
-								<string>5272ED0C166E44670035678D</string>
 								<string>523000DE167784F0002FCF96</string>
-								<string>29B97323FDCFA39411CA2CEA</string>
-								<string>19C28FACFE9D520D11CA2CBB</string>
+								<string>5272ED0C166E44670035678D</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C37FAAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
@@ -280,14 +278,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>13</integer>
-									<integer>12</integer>
-									<integer>9</integer>
+									<integer>3</integer>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {186, 769}}</string>
+							<string>{{0, 0}, {276, 769}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -299,11 +296,11 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {203, 787}}</string>
+						<string>{{0, 0}, {293, 787}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
-							<real>186</real>
+							<real>276</real>
 						</array>
 						<key>RubberWindowFrame</key>
 						<string>24 149 1243 828 0 0 1680 1028 </string>
@@ -311,7 +308,7 @@
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
 					<key>Proportion</key>
-					<string>203pt</string>
+					<string>293pt</string>
 				</dict>
 				<dict>
 					<key>Dock</key>
@@ -336,12 +333,11 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>522D4464168B62BF00FB3667</string>
+										<string>522D447D168B67D600FB3667</string>
 										<key>history</key>
 										<array>
 											<string>521001731688A6F50090F850</string>
 											<string>521001741688A6F50090F850</string>
-											<string>521001751688A6F50090F850</string>
 											<string>521001761688A6F50090F850</string>
 											<string>521001771688A6F50090F850</string>
 											<string>521001781688A6F50090F850</string>
@@ -355,10 +351,12 @@
 											<string>522D4422168B5C7700FB3667</string>
 											<string>522D442D168B5CB100FB3667</string>
 											<string>522D443F168B5DD400FB3667</string>
-											<string>522D4440168B5DD400FB3667</string>
 											<string>522D4450168B5EA100FB3667</string>
 											<string>522D4451168B5EA100FB3667</string>
-											<string>522D443D168B5DD400FB3667</string>
+											<string>522D447A168B67D600FB3667</string>
+											<string>522D447B168B67D600FB3667</string>
+											<string>522D447C168B67D600FB3667</string>
+											<string>522D4474168B65CF00FB3667</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -370,7 +368,7 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1035, 545}}</string>
+								<string>{{0, 0}, {945, 545}}</string>
 								<key>RubberWindowFrame</key>
 								<string>24 149 1243 828 0 0 1680 1028 </string>
 							</dict>
@@ -390,7 +388,7 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 550}, {1035, 237}}</string>
+								<string>{{0, 550}, {945, 237}}</string>
 								<key>RubberWindowFrame</key>
 								<string>24 149 1243 828 0 0 1680 1028 </string>
 							</dict>
@@ -401,7 +399,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>1035pt</string>
+					<string>945pt</string>
 				</dict>
 			</array>
 			<key>Name</key>

@@ -15,6 +15,7 @@
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		522D43F1168B5A2B00FB3667 /* AutomaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 522D43EF168B5A2B00FB3667 /* AutomaticViewController.m */; };
 		522D43F2168B5A2B00FB3667 /* AutomaticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 522D43F0168B5A2B00FB3667 /* AutomaticViewController.xib */; };
+		522D4467168B645F00FB3667 /* AutomaticViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 522D4466168B645F00FB3667 /* AutomaticViewController-iPad.xib */; };
 		523000E0167784F1002FCF96 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 523000DF167784F1002FCF96 /* MainWindow-iPad.xib */; };
 		525555C8166E81C700E7A6E5 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 525555C7166E81C700E7A6E5 /* Strings.strings */; };
 		5272ED16166E44A20035678D /* data_collector_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5272ED10166E44A20035678D /* data_collector_logo.png */; };
@@ -38,6 +39,7 @@
 		522D43EE168B5A2B00FB3667 /* AutomaticViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutomaticViewController.h; sourceTree = "<group>"; };
 		522D43EF168B5A2B00FB3667 /* AutomaticViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutomaticViewController.m; sourceTree = "<group>"; };
 		522D43F0168B5A2B00FB3667 /* AutomaticViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AutomaticViewController.xib; path = Classes/AutomaticViewController.xib; sourceTree = "<group>"; };
+		522D4466168B645F00FB3667 /* AutomaticViewController-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "AutomaticViewController-iPad.xib"; sourceTree = "<group>"; };
 		523000DF167784F1002FCF96 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources-iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		525555C7166E81C700E7A6E5 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		5272ED10166E44A20035678D /* data_collector_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = data_collector_logo.png; sourceTree = "<group>"; };
@@ -88,7 +90,6 @@
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
-				523000DE167784F0002FCF96 /* Resources-iPad */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -109,6 +110,7 @@
 			children = (
 				525555C4166E819700E7A6E5 /* Values */,
 				5272ED0D166E44730035678D /* Layout */,
+				523000DE167784F0002FCF96 /* Layout-iPad */,
 				5272ED0C166E44670035678D /* Drawable */,
 				8D1107310486CEB800E47090 /* Splash-Info.plist */,
 			);
@@ -125,12 +127,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		523000DE167784F0002FCF96 /* Resources-iPad */ = {
+		523000DE167784F0002FCF96 /* Layout-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				522D4466168B645F00FB3667 /* AutomaticViewController-iPad.xib */,
 				523000DF167784F1002FCF96 /* MainWindow-iPad.xib */,
 			);
-			name = "Resources-iPad";
+			name = "Layout-iPad";
 			sourceTree = "<group>";
 		};
 		525555C4166E819700E7A6E5 /* Values */ = {
@@ -222,6 +225,7 @@
 				525555C8166E81C700E7A6E5 /* Strings.strings in Resources */,
 				523000E0167784F1002FCF96 /* MainWindow-iPad.xib in Resources */,
 				522D43F2168B5A2B00FB3667 /* AutomaticViewController.xib in Resources */,
+				522D4467168B645F00FB3667 /* AutomaticViewController-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

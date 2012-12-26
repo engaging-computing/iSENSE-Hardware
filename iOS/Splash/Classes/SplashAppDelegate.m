@@ -119,7 +119,13 @@
 - (void) autoClicked:(id)sender {
 
 	NSLog(@"rootButtonClick");
-	AutomaticViewController *secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController" bundle:nil];
+	AutomaticViewController *secondView;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController" bundle:nil];
+	} else {
+		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController-iPad" bundle:nil];
+    }
+	
 	[window addSubview:secondView.view];
 }
 
