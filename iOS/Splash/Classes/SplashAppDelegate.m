@@ -127,6 +127,7 @@
     }
 	
 	[window addSubview:secondView.view];
+	[tbc.view release];
 }
 
 - (void) manualClicked:(id)sender {
