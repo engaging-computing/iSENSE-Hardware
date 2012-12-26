@@ -8,6 +8,7 @@
 //
 
 #import <UIKit/UIKit.h>
+@class AutomaticViewController;
 
 @interface SplashAppDelegate : NSObject <UIApplicationDelegate> {
     IBOutlet UIWindow *window;
