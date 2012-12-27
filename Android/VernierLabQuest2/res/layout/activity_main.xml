@@ -22,7 +22,8 @@
         android:id="@+id/session_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
+        android:hint="@string/your_name_here"
         android:inputType="textNoSuggestions"
         android:lines="1" />
 
@@ -35,49 +36,5 @@
         android:layout_marginRight="40dp"
         android:text="@string/connect"
         android:textSize="20sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/labquest_status"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labquest_status_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="right"
-            android:text="@string/labquest_status_disconnect"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/isense_status"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/isense_status_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="right"
-            android:text="@string/isense_status_not_logged_in"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
 
 </LinearLayout>
