@@ -12,7 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -26,34 +29,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
-import edu.uml.cs.isense.waffle.Waffle;
 
 public class MainActivity extends Activity {
 	private String tag = "MainActivity";
 	private RestAPI rapi;
-	private TextView iSENSEStatus;
-	private TextView LabQuestStatus;
 	private Button Connect;
 	private EditText SessionName;
 	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
-	private Waffle w;
-	private int Status;
-
+	private ProgressDialog PD;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), this);
-		w = new Waffle(this);
-
 		
-		LabQuestStatus = (TextView) findViewById(R.id.labquest_status_text);
-		iSENSEStatus = (TextView) findViewById(R.id.isense_status_text);
 		Connect = (Button) findViewById(R.id.connect);
 		SessionName = (EditText) findViewById(R.id.session_name);
 
@@ -61,45 +54,52 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.v(tag, "Attempting to Upload...");
-				Status = 0;
+				PD = new ProgressDialog(MainActivity.this);
+				PD.setCancelable(false);
+				PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				PD.setCancelable(true);
+				PD.setMessage("");
+				PD.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+				    @Override
+				    public void onClick(DialogInterface dialog, int which) {
+				        dialog.dismiss();
+				    }
+				});
+				PD.show();
 				new ConnectAndUpload().execute();
 			}
 		});
-
 	}
-	protected boolean CheckForErrors() {
+	protected int CheckLabQuestErrors() {
 		SharedPreferences sp;
-		//Null session name
-		if (SessionName.getText().length() == 0)
-		{
-			Log.v(tag, "No Session Name");
-			Status = -1;
-			return false;
-		}
-		//no laquest
+		//no LabQuest
 		sp = getSharedPreferences("labquest_settings", 0);
 		String LabQuestIP = sp.getString("labquest_ip", "");
 		if (LabQuestGetInfo(LabQuestIP) == null)
 		{
-			Log.v(tag, "Unable to Connect to LabQuest");
-			Status = -2;
-			return false;
-		} 
+			return -1;
+		}
 		//online?
 		if (!rapi.isConnectedToInternet())
 		{
-			Log.v(tag, "Not Connected to the Internet");
-			Status = -3;
-			return false;
+			return -2;
 		}
-		//isense login?
-		if (!iSENESLogin()) {
-			Log.v(tag, "Invalid User/Pass");
-			Status = -4;
-			return false;
-		}
-		return true;
+		return 0;
 	}
+	
+	protected int CheckiSENSEErrors() {
+		//Null session name
+		if (SessionName.getText().length() == 0)
+		{
+			return -3;
+		}
+		//iSENSE login?
+		if (!iSENESLogin()) {
+			return -4;
+		}
+		return 0;
+	}
+	
 	protected boolean iSENESLogin() {
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
 		// Set iSENSEDev/iSENSE
@@ -108,35 +108,35 @@ public class MainActivity extends Activity {
 			Log.v(tag, "Using iSENSE Dev");
 		} else {
 			rapi.useDev(false);
-			Log.v(tag, "Using iSENSE");
+			Log.v(tag, "Using iSENSE Live");
 		}
 		if (rapi.login(sp.getString("isense_user", ""), sp.getString("isense_pass", ""))) {
 			return true;
 		}
 		return false;
 	}
-	protected boolean iSENSEUpload() {
+	
+	protected int iSENSEUpload() {
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
 		String iSENSEExpID = sp.getString("isense_expid", "");
 
 		// TODO Field Matching
 		ArrayList<Integer> FieldMatch = new ArrayList<Integer>();
-		FieldMatch.add(0);
-		FieldMatch.add(2);
 		FieldMatch.add(1);
+		FieldMatch.add(0);
 		
 		ArrayList<ExperimentField> iSENSEExpFields = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
 		String tempstr;
-		tempstr = new String();
-		for (ExperimentField e : iSENSEExpFields) {
-			tempstr = tempstr + ", " + e.field_name;
-		}
-		Log.v(tag, "iSENSE Fields: " + tempstr);
-		tempstr = new String();
-		for (String e : LabQuestType) {
-			tempstr = tempstr + ", " + e;
+		tempstr = new String();		
+		for (int i = 0;i < LabQuestType.size();i++) {
+			tempstr = tempstr + LabQuestType.get(FieldMatch.get(i)) + ", " ;
 		}
 		Log.v(tag, "LabQuest Fields: " + tempstr);
+		tempstr = new String();
+		for (ExperimentField e : iSENSEExpFields) {
+			tempstr = tempstr + e.field_name + ", ";
+		}		
+		Log.v(tag, "iSENSE Fields  : " + tempstr);
 
 		// TODO Create JSONArray with ExperimentField and LQ2 Data
 		JSONArray iSENSEExpData = new JSONArray();
@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
 		
 		// Put Session
 		rapi.putSessionData(iSENSESessionID, iSENSEExpID, iSENSEExpData);
-		return true;
+		return iSENSESessionID;
 	}
 
 	protected boolean LabQuestConnect() {
@@ -300,25 +300,129 @@ public class MainActivity extends Activity {
 		return result;
 	}
 	
-	private class ConnectAndUpload extends AsyncTask<Void, Integer, Void> {
+	private class ConnectAndUpload extends AsyncTask<Void, Integer, Integer> {
 
 		@Override
-		protected void onPostExecute(Void voids) {
-			//TODO: Make this get called
-			Log.v(tag,"onPostExecute");
+		protected void onProgressUpdate(Integer... values) {
+			switch (values[0]) {
+				default:
+					break;
+				case 0:
+					PD.setMessage("Starting...");
+					break;
+				case 10:
+					PD.setMessage("Connecting to the LabQuest2...");
+					break;
+				case 20:
+					PD.setMessage("Retrieving Data from LabQuest2...");
+					break;
+				case 30:
+					PD.setMessage("Connecting to iSENSE...");
+					break;
+				case 40:
+					PD.setMessage("Uploading Data to iSENSE...");
+					break;
+			}
+			super.onProgressUpdate(values);
 		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
-			Log.v(tag,"ConnectAndUpload doInBackground");
-			if (CheckForErrors() == true)
+		protected void onPreExecute() {
+			publishProgress(0);
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onPostExecute(final Integer e) {
+			PD.dismiss();
+			if (e > 0)
 			{
-				Log.v(tag, "Connect to LabQuest2");
-				LabQuestConnect();
-				Log.v(tag, "Upload to iSENSE");
-				iSENSEUpload();
+				//success
+				AlertDialog AD = new AlertDialog.Builder(MainActivity.this).create();
+				AD.setButton(DialogInterface.BUTTON_NEGATIVE,"No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				AD.setButton(DialogInterface.BUTTON_POSITIVE,"Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//TODO: launch website url
+						Log.v(tag, "Session ID: " + e);
+						dialog.dismiss();
+					}
+				});
+				AD.setTitle("Successfully Uploaded!");
+				AD.setMessage("Would you like to visualize your data on iSENSE?");
+				AD.show();
 			}
-			return null;
+			else
+			{
+				AlertDialog AD = new AlertDialog.Builder(MainActivity.this).create();
+				AD.setButton(DialogInterface.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				switch (e){
+					default:
+						AD.dismiss();
+						break;
+					case -1:
+						AD.setTitle("Error");
+						AD.setMessage("Unable to Connect to LabQuest2");
+						AD.show();
+						break;
+					case -2:
+						AD.setTitle("Error");
+						AD.setMessage("Not Connected to the Internet");
+						AD.show();
+						break;
+					case -3:
+						AD.setTitle("Error");
+						AD.setMessage("Please enter a Session Name");
+						AD.show();
+						break;
+					case -4:
+						AD.setTitle("Error");
+						AD.setMessage("Invalid Username/Password on iSENSE");
+						AD.show();
+						break;		
+				}
+			}
+		}
+
+		@Override
+		protected Integer doInBackground(Void... params) {
+			Log.v(tag,"ConnectAndUpload doInBackground");
+			publishProgress(10);
+			int LabQuestError = CheckLabQuestErrors();
+			if (LabQuestError == 0)
+			{
+				Log.v(tag, "No LabQuest Errors");
+				publishProgress(20);
+				LabQuestConnect();
+			}
+			else
+			{
+				return LabQuestError;
+			}
+			publishProgress(30);
+
+			int iSENSEError = CheckiSENSEErrors();
+			if (iSENSEError == 0)
+			{
+				Log.v(tag, "No iSENSE Errors");
+				publishProgress(40);
+
+				return iSENSEUpload();
+			}
+			else
+			{
+				return iSENSEError;
+			}
 		}
 
 	}
