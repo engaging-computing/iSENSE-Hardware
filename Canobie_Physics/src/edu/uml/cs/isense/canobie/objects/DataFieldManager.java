@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.objects;
+package edu.uml.cs.isense.canobie.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,8 +9,7 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
-import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.canobie.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 
@@ -253,177 +252,148 @@ public class DataFieldManager extends Application {
 
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
-		boolean firstLineWritten = false;
 
 		for (String s : this.order) {
-			
+
 			if (s.equals(mContext.getString(R.string.accel_x))) {
-				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_x);
 				else
 					b.append(", ").append(f.accel_x);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.accel_y))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.accel_y))) {
 				if (start)
 					b.append(f.accel_y);
 				else
 					b.append(", ").append(f.accel_y);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.accel_z))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.accel_z))) {
 				if (start)
 					b.append(f.accel_z);
 				else
 					b.append(", ").append(f.accel_z);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.accel_total))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.accel_total))) {
 				if (start)
 					b.append(f.accel_total);
 				else
 					b.append(", ").append(f.accel_total);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.temperature_c))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.temperature_c))) {
 				if (start)
 					b.append(f.temperature_c);
 				else
 					b.append(", ").append(f.temperature_c);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.temperature_f))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.temperature_f))) {
 				if (start)
 					b.append(f.temperature_f);
 				else
 					b.append(", ").append(f.temperature_f);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.temperature_k))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.temperature_k))) {
 				if (start)
 					b.append(f.temperature_k);
 				else
 					b.append(", ").append(f.temperature_k);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.time))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.time))) {
 				if (start)
 					b.append(f.timeMillis);
 				else
 					b.append(", ").append(f.timeMillis);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.luminous_flux))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.luminous_flux))) {
 				if (start)
 					b.append(f.lux);
 				else
 					b.append(", ").append(f.lux);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.heading_deg))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.heading_deg))) {
 				if (start)
 					b.append(f.angle_deg);
 				else
 					b.append(", ").append(f.angle_deg);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.heading_rad))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.heading_rad))) {
 				if (start)
 					b.append(f.angle_rad);
 				else
 					b.append(", ").append(f.angle_rad);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.latitude))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.latitude))) {
 				if (start)
 					b.append(f.latitude);
 				else
 					b.append(", ").append(f.latitude);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.longitude))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.longitude))) {
 				if (start)
 					b.append(f.longitude);
 				else
 					b.append(", ").append(f.longitude);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.magnetic_x))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.magnetic_x))) {
 				if (start)
 					b.append(f.mag_x);
 				else
 					b.append(", ").append(f.mag_x);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.magnetic_y))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.magnetic_y))) {
 				if (start)
 					b.append(f.mag_y);
 				else
 					b.append(", ").append(f.mag_y);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.magnetic_z))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.magnetic_z))) {
 				if (start)
 					b.append(f.mag_z);
 				else
 					b.append(", ").append(f.mag_z);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.magnetic_total))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.magnetic_total))) {
 				if (start)
 					b.append(f.mag_total);
 				else
 					b.append(", ").append(f.mag_total);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.altitude))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.altitude))) {
 				if (start)
 					b.append(f.altitude);
 				else
 					b.append(", ").append(f.altitude);
-
+				continue;
 			}
-			else if (s.equals(mContext.getString(R.string.pressure))) {
-				firstLineWritten = true;
+			if (s.equals(mContext.getString(R.string.pressure))) {
 				if (start)
 					b.append(f.pressure);
 				else
 					b.append(", ").append(f.pressure);
-
-			} else {
-				firstLineWritten = true;
-				if (start)
-					b.append("");
-				else
-					b.append(", ").append("");
+				continue;
 			}
-			
-			if (firstLineWritten)
-				start = false;
-			
+			if (!start)
+				b.append(", ");
+
 		}
 
 		b.append("\n");
-		
-		Log.e("wtf", b.toString());
 
 		return b.toString();
 	}
@@ -448,24 +418,6 @@ public class DataFieldManager extends Application {
 		}
 
 		return sc;
-	}
-	
-	public String writeHeaderLine() {
-		StringBuilder b = new StringBuilder();
-		boolean start = true;
-		
-		for (String unitName : this.order) {
-			if (start)
-				b.append(unitName);			
-			else 
-				b.append(", ").append(unitName);
-			
-			start = false;
-		}
-		
-		b.append("\n");
-		
-		return b.toString();
 	}
 
 }

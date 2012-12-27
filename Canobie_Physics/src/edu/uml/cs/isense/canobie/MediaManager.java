@@ -1,8 +1,7 @@
-package edu.uml.cs.isense.collector.dialogs;
+package edu.uml.cs.isense.canobie;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -24,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
@@ -43,31 +41,17 @@ public class MediaManager extends Activity {
 	private static Button back;
 
 	public static int mediaCount;
-	
-	private static String nameOfSession = "";
-	
-	public static ArrayList<File> pictureArray = new ArrayList<File>();
-	public static ArrayList<File> pictures = new ArrayList<File>();
-	public static ArrayList<File> videos = new ArrayList<File>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.media_manager);
 
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+		getWindow().setLayout(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
+
 		mContext = this;
 		w = new Waffle(mContext);
-		
-		Bundle extras = getIntent().getExtras();
-		nameOfSession = null;
-		
-		if (extras != null)
-			nameOfSession = extras.getString("sessionName");
-		
-		if (nameOfSession == null)
-			nameOfSession = "";
 
 		mediaCountLabel = (TextView) findViewById(R.id.mediaCounter);
 		mediaCountLabel.setText(mContext.getString(R.string.picAndVidCount)
@@ -129,13 +113,7 @@ public class MediaManager extends Activity {
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (pictures.size() > 0 || pictureArray.size() > 0) {
-					setResult(RESULT_OK);
-					finish();
-				} else {
-					setResult(RESULT_CANCELED);
-					finish();
-				}
+				finish();
 			}
 		});
 
@@ -147,7 +125,7 @@ public class MediaManager extends Activity {
 		if (requestCode == CAMERA_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				File f = convertImageUriToFile(imageUri);
-				pictures.add(f);
+				AmusementPark.pictures.add(f);
 				mediaCount++;
 				mediaCountLabel.setText(getString(R.string.picAndVidCount)
 						+ mediaCount);
@@ -156,7 +134,7 @@ public class MediaManager extends Activity {
 		} else if (requestCode == CAMERA_VID_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				File f = convertVideoUriToFile(videoUri, this);
-				videos.add(f);
+				AmusementPark.videos.add(f);
 				mediaCount++;
 				mediaCountLabel.setText("" + getString(R.string.picAndVidCount)
 						+ mediaCount);
@@ -204,10 +182,10 @@ public class MediaManager extends Activity {
 						MediaStore.Images.Media._ID,
 						MediaStore.Images.ImageColumns.ORIENTATION };
 				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(imageUri, proj,  // Which columns
-																// to return
-						null,  // WHERE clause; which rows to return (all rows)
-						null,  // WHERE clause selection arguments (none)
+				cursor = cr.query(imageUri, proj, // Which columns
+													// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -224,8 +202,8 @@ public class MediaManager extends Activity {
 				if (cursor != null) {
 					cursor.close();
 				}
-			} 
-			//return new File(imageUri.getPath());
+			}
+			// return new File(imageUri.getPath());
 		}
 	}
 
@@ -262,10 +240,10 @@ public class MediaManager extends Activity {
 				String[] proj = { MediaStore.Video.Media.DATA,
 						MediaStore.Video.Media._ID };
 				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(videoUri, proj,  // Which columns
-																// to return
-						null,  // WHERE clause; which rows to return (all rows)
-						null,  // WHERE clause selection arguments (none)
+				cursor = cr.query(videoUri, proj, // Which columns
+													// to return
+						null, // WHERE clause; which rows to return (all rows)
+						null, // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
 				int file_ColumnIndex = cursor
 						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
@@ -296,10 +274,10 @@ public class MediaManager extends Activity {
 
 		String dateString = sdf.format(dt);
 
-		if (nameOfSession.equals(""))
+		if (AmusementPark.partialSessionName.equals(""))
 			uploadSessionString = "Session Name Not Provided";
 		else
-			uploadSessionString = nameOfSession;
+			uploadSessionString = AmusementPark.partialSessionName;
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -308,14 +286,14 @@ public class MediaManager extends Activity {
 			folder.mkdir();
 		}
 
-		for (int i = 0; i < pictures.size(); i++) {
-			File f = pictures.get(i);
+		for (int i = 0; i < AmusementPark.pictures.size(); i++) {
+			File f = AmusementPark.pictures.get(i);
 			File newFile = new File(folder, uploadSessionString + "-"
 					+ dateString + ".jpeg");
 			f.renameTo(newFile);
-			pictureArray.add(newFile);
+			AmusementPark.pictureArray.add(newFile);
 		}
-		pictures.clear();
+		AmusementPark.pictures.clear();
 	}
 
 	// Adds videos to the SD Card
@@ -326,11 +304,11 @@ public class MediaManager extends Activity {
 
 		String dateString = sdf.format(dt);
 
-		if (nameOfSession.equals(""))
+		if (AmusementPark.partialSessionName.equals(""))
 			uploadSessionString = "Session Name Not Provided";
 		else
-			uploadSessionString = nameOfSession;
-			
+			uploadSessionString = AmusementPark.partialSessionName;
+
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
 
@@ -338,47 +316,35 @@ public class MediaManager extends Activity {
 			folder.mkdir();
 		}
 
-		for (int i = 0; i < videos.size(); i++) {
-			File f = videos.get(i);
+		for (int i = 0; i < AmusementPark.videos.size(); i++) {
+			File f = AmusementPark.videos.get(i);
 			File newFile = new File(folder, uploadSessionString + " - "
 					+ dateString + ".3gp");
 			f.renameTo(newFile);
 		}
-		videos.clear();
+		AmusementPark.videos.clear();
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (pictures.size() > 0)
+		if (AmusementPark.pictures.size() > 0)
 			pushPicture();
-		if (videos.size() > 0)
+		if (AmusementPark.videos.size() > 0)
 			pushVideo();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (pictures.size() > 0)
+		if (AmusementPark.pictures.size() > 0)
 			pushPicture();
-		if (videos.size() > 0)
+		if (AmusementPark.videos.size() > 0)
 			pushVideo();
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-	}
-	
-	@Override
-	public void onBackPressed() {
-		if (pictures.size() > 0 || pictureArray.size() > 0) {
-			setResult(RESULT_OK);
-			finish();
-		} else {
-			setResult(RESULT_CANCELED);
-			finish();
-		}
-		
 	}
 
 }
