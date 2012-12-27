@@ -2,14 +2,15 @@ package edu.uml.cs.isense.genpics.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import edu.uml.cs.isense.genpics.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.genpics.R;
 import edu.uml.cs.isense.objects.ExperimentField;
 
 public class DataFieldManager extends Application {
@@ -45,9 +46,9 @@ public class DataFieldManager extends Application {
 
 			// Geospacial
 			case 19:
-				if (field.field_name.toLowerCase().contains("lat")) {
+				if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
 					order.add(mContext.getString(R.string.latitude));
-				} else if (field.field_name.toLowerCase().contains("lon")) {
+				} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
 					order.add(mContext.getString(R.string.longitude));
 				} else {
 					order.add(mContext.getString(R.string.null_string));

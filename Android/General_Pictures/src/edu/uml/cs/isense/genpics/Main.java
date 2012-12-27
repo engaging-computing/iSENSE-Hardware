@@ -122,7 +122,7 @@ public class Main extends Activity implements LocationListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		uq = new UploadQueue("generalpictures", mContext, rapi);
 		
@@ -452,6 +452,9 @@ public class Main extends Activity implements LocationListener {
 				postRunnableWaffleError("No experiment selected to upload pictures to");
 				return;
 			}
+			
+			if (dfm == null)
+				initDfm();
 
 			JSONArray dataJSON = new JSONArray();
 			JSONArray dataRow = new JSONArray();
@@ -528,6 +531,15 @@ public class Main extends Activity implements LocationListener {
 			}
 		}
 	};
+	
+	private void initDfm() {
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		String experimentInput = mPrefs.getString("experiment_id", "");
+
+		dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+				mContext, f);
+		dfm.getOrder();
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -751,7 +763,7 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	private String makeThisDatePretty(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy");
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy", Locale.US);
 		return sdf.format(time);
 	}
 
