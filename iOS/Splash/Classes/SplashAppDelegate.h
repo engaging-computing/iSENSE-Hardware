@@ -2,39 +2,28 @@
 //  SplashAppDelegate.h
 //  Splash
 //
-//  Created by Mike S. on 12/4/12.
-//  Advisor - Fred Martin
-//  Copyright 2012 ECG. All rights reserved.
+//  Created by CS Admin on 12/28/12.
+//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-@class AutomaticViewController;
+#import "AboutView.h"
+#import "GuideView.h"
 
 @interface SplashAppDelegate : NSObject <UIApplicationDelegate> {
-    IBOutlet UIWindow *window;
-	IBOutlet UITabBarController *tbc;
-	IBOutlet UIImageView *orb;
-	IBOutlet UITextView *aboutText;
-	IBOutlet UITextView *guideText;
-	IBOutlet UIButton *automatic;
-	IBOutlet UIButton *manual;
+    UIWindow *window;
+	UINavigationController *navControl;
+	UIBarButtonItem *about;
+	UIBarButtonItem *guide;
 }
 
--(void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
-			 curve:(int)curve degrees:(CGFloat)degrees;
-
--(NSString *) getString:(NSString *)label;
-
--(void) autoClicked:(id)sender;
--(void) manualClicked:(id)sender;
+- (IBAction) showAbout:(id)sender;
+- (IBAction) showGuide:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UITabBarController *tbc;
-@property (nonatomic, retain) IBOutlet UIImageView *orb;
-@property (nonatomic, retain) IBOutlet UITextView *aboutText;
-@property (nonatomic, retain) IBOutlet UITextView *guideText;
-@property (nonatomic, retain) IBOutlet UIButton *automatic;
-@property (nonatomic, retain) IBOutlet UIButton *manual;
+@property (nonatomic, retain) IBOutlet UINavigationController *navControl;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *about;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *guide;
 
 @end
 
