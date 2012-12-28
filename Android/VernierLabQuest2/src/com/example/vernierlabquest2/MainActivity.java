@@ -39,7 +39,6 @@ public class MainActivity extends Activity {
 	private EditText SessionName;
 	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
-	private ProgressDialog PD;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,18 +53,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.v(tag, "Attempting to Upload...");
-				PD = new ProgressDialog(MainActivity.this);
-				PD.setCancelable(false);
-				PD.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				PD.setCancelable(true);
-				PD.setMessage("");
-				PD.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-				    @Override
-				    public void onClick(DialogInterface dialog, int which) {
-				        dialog.dismiss();
-				    }
-				});
-				PD.show();
 				new ConnectAndUpload().execute();
 			}
 		});
@@ -303,30 +290,6 @@ public class MainActivity extends Activity {
 	private class ConnectAndUpload extends AsyncTask<Void, Integer, Integer> {
 
 		@Override
-		protected void onProgressUpdate(Integer... values) {
-			switch (values[0]) {
-				default:
-					break;
-				case 0:
-					PD.setMessage("Starting...");
-					break;
-				case 10:
-					PD.setMessage("Connecting to the LabQuest2...");
-					break;
-				case 20:
-					PD.setMessage("Retrieving Data from LabQuest2...");
-					break;
-				case 30:
-					PD.setMessage("Connecting to iSENSE...");
-					break;
-				case 40:
-					PD.setMessage("Uploading Data to iSENSE...");
-					break;
-			}
-			super.onProgressUpdate(values);
-		}
-
-		@Override
 		protected void onPreExecute() {
 			publishProgress(0);
 			super.onPreExecute();
@@ -334,7 +297,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(final Integer e) {
-			PD.dismiss();
 			if (e > 0)
 			{
 				//success
