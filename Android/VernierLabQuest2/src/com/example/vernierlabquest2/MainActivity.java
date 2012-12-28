@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 
 public class MainActivity extends Activity {
@@ -334,6 +335,16 @@ public class MainActivity extends Activity {
 					AD.setMessage("Unable to add a Session to iSENSE");
 					AD.show();
 					break;
+				case -9:
+					AD.setTitle("Error");
+					AD.setMessage("Experiment does not exist");
+					AD.show();
+					break;
+				case -10:
+					AD.setTitle("Error");
+					AD.setMessage("Experiment is closed");
+					AD.show();
+					break;
 				}
 			}
 		}
@@ -365,7 +376,6 @@ public class MainActivity extends Activity {
 			if (LabQuestGetInfo(sp_lq.getString("labquest_ip", "")) == null) {
 				return -1;
 			}
-			Log.v(tag, "test?");
 			// online?
 			if (!rapi.isConnectedToInternet()) {
 				return -2;
@@ -375,7 +385,16 @@ public class MainActivity extends Activity {
 			if (!iSENESLogin()) {
 				return -4;
 			}
-
+			//does the experiment exist?
+			Experiment iSENSEExp = rapi.getExperiment(Integer.parseInt(sp_is.getString("isense_expid", "")));
+			if (iSENSEExp == null) {
+				return -9;
+			}
+			//is the experiment closed?
+			Log.v(tag,"closed" + iSENSEExp.closed);
+			if (iSENSEExp.closed == 1) {
+				return -10;
+			}
 			LabQuestConnect();
 
 			int iSENSESessionID = iSENSEUpload();
