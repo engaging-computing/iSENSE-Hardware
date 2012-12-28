@@ -277,6 +277,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -300,7 +301,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>0 134 1680 894 0 0 1680 1028 </string>
+						<string>-1 134 1680 894 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -316,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>SplashView.m</string>
+								<string>SplashAppDelegate.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -324,28 +325,30 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>SplashView.m</string>
+										<string>SplashAppDelegate.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>52D0D7A3168E1A3B008F092C</string>
+										<string>52D0D7C9168E1E66008F092C</string>
 										<key>history</key>
 										<array>
-											<string>52A0969A168E094300DA6AF6</string>
-											<string>52A096B0168E0C3600DA6AF6</string>
-											<string>52D0D6E5168E0E53008F092C</string>
-											<string>52D0D700168E0F89008F092C</string>
 											<string>52D0D73C168E1309008F092C</string>
 											<string>52D0D73D168E1309008F092C</string>
 											<string>52D0D73E168E1309008F092C</string>
-											<string>52D0D740168E1309008F092C</string>
 											<string>52D0D75C168E149F008F092C</string>
-											<string>52D0D78A168E1944008F092C</string>
-											<string>52D0D792168E196D008F092C</string>
-											<string>52D0D79F168E1A3B008F092C</string>
-											<string>52D0D7A0168E1A3B008F092C</string>
-											<string>52D0D7A1168E1A3B008F092C</string>
-											<string>52D0D7A2168E1A3B008F092C</string>
+											<string>52D0D7AB168E1D04008F092C</string>
+											<string>52D0D7B2168E1D04008F092C</string>
+											<string>52D0D7B3168E1D04008F092C</string>
+											<string>52D0D7B4168E1D04008F092C</string>
+											<string>52D0D7BB168E1DEA008F092C</string>
+											<string>52D0D7BC168E1DEA008F092C</string>
+											<string>52D0D7BD168E1DEA008F092C</string>
+											<string>52D0D7BE168E1DEA008F092C</string>
+											<string>52D0D7C4168E1E66008F092C</string>
+											<string>52D0D7C5168E1E66008F092C</string>
+											<string>52D0D7C6168E1E66008F092C</string>
+											<string>52D0D7C7168E1E66008F092C</string>
+											<string>52D0D7C8168E1E66008F092C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -359,7 +362,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1472, 638}}</string>
 								<key>RubberWindowFrame</key>
-								<string>0 134 1680 894 0 0 1680 1028 </string>
+								<string>-1 134 1680 894 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -379,7 +382,7 @@
 								<key>Frame</key>
 								<string>{{0, 643}, {1472, 210}}</string>
 								<key>RubberWindowFrame</key>
-								<string>0 134 1680 894 0 0 1680 1028 </string>
+								<string>-1 134 1680 894 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -549,7 +552,7 @@
 		<string>/Users/csadmin/Documents/iSENSE-Hardware/iOS/Splash/Splash.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>0 134 1680 894 0 0 1680 1028 </string>
+	<string>-1 134 1680 894 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
