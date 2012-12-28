@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 
 public class MainActivity extends Activity {
@@ -39,13 +40,14 @@ public class MainActivity extends Activity {
 	private EditText SessionName;
 	private ArrayList<JSONArray> LabQuestData;
 	private ArrayList<String> LabQuestType;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), this);
-		
+
 		Connect = (Button) findViewById(R.id.connect);
 		SessionName = (EditText) findViewById(R.id.session_name);
 
@@ -57,36 +59,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	protected int CheckLabQuestErrors() {
-		SharedPreferences sp;
-		//no LabQuest
-		sp = getSharedPreferences("labquest_settings", 0);
-		String LabQuestIP = sp.getString("labquest_ip", "");
-		if (LabQuestGetInfo(LabQuestIP) == null)
-		{
-			return -1;
-		}
-		//online?
-		if (!rapi.isConnectedToInternet())
-		{
-			return -2;
-		}
-		return 0;
-	}
-	
-	protected int CheckiSENSEErrors() {
-		//Null session name
-		if (SessionName.getText().length() == 0)
-		{
-			return -3;
-		}
-		//iSENSE login?
-		if (!iSENESLogin()) {
-			return -4;
-		}
-		return 0;
-	}
-	
+
 	protected boolean iSENESLogin() {
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
 		// Set iSENSEDev/iSENSE
@@ -102,7 +75,7 @@ public class MainActivity extends Activity {
 		}
 		return false;
 	}
-	
+
 	protected int iSENSEUpload() {
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
 		String iSENSEExpID = sp.getString("isense_expid", "");
@@ -111,18 +84,18 @@ public class MainActivity extends Activity {
 		ArrayList<Integer> FieldMatch = new ArrayList<Integer>();
 		FieldMatch.add(1);
 		FieldMatch.add(0);
-		
+
 		ArrayList<ExperimentField> iSENSEExpFields = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
 		String tempstr;
-		tempstr = new String();		
-		for (int i = 0;i < LabQuestType.size();i++) {
-			tempstr = tempstr + LabQuestType.get(FieldMatch.get(i)) + ", " ;
+		tempstr = new String();
+		for (int i = 0; i < LabQuestType.size(); i++) {
+			tempstr = tempstr + LabQuestType.get(FieldMatch.get(i)) + ", ";
 		}
 		Log.v(tag, "LabQuest Fields: " + tempstr);
 		tempstr = new String();
 		for (ExperimentField e : iSENSEExpFields) {
 			tempstr = tempstr + e.field_name + ", ";
-		}		
+		}
 		Log.v(tag, "iSENSE Fields  : " + tempstr);
 
 		// TODO Create JSONArray with ExperimentField and LQ2 Data
@@ -138,18 +111,18 @@ public class MainActivity extends Activity {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		//Log.v(tag,iSENSEExpData.toString());
-		
+		// Log.v(tag,iSENSEExpData.toString());
+
 		// Create Session
 		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!", "", "", "");
-		Log.v(tag,"iSENSESessionID: "+ Integer.toString(iSENSESessionID));
-		
+		Log.v(tag, "iSENSESessionID: " + Integer.toString(iSENSESessionID));
+
 		// Put Session
 		rapi.putSessionData(iSENSESessionID, iSENSEExpID, iSENSEExpData);
 		return iSENSESessionID;
 	}
 
-	protected boolean LabQuestConnect() {
+	protected void LabQuestConnect() {
 		LabQuestData = new ArrayList<JSONArray>();
 		LabQuestType = new ArrayList<String>();
 		SharedPreferences sp = getSharedPreferences("labquest_settings", 0);
@@ -203,7 +176,6 @@ public class MainActivity extends Activity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return true;
 	}
 
 	@Override
@@ -261,10 +233,10 @@ public class MainActivity extends Activity {
 			result = httpGet("http://" + IP + "/info");
 		} catch (IOException e) {
 			return null;
-		} 
+		}
 		return result;
 	}
-	
+
 	private String LabQuestGetStatus(String IP) {
 		String result = null;
 
@@ -286,31 +258,24 @@ public class MainActivity extends Activity {
 		}
 		return result;
 	}
-	
+
 	private class ConnectAndUpload extends AsyncTask<Void, Integer, Integer> {
 
 		@Override
-		protected void onPreExecute() {
-			publishProgress(0);
-			super.onPreExecute();
-		}
-
-		@Override
 		protected void onPostExecute(final Integer e) {
-			if (e > 0)
-			{
-				//success
+			if (e > 0) {
+				// success
 				AlertDialog AD = new AlertDialog.Builder(MainActivity.this).create();
-				AD.setButton(DialogInterface.BUTTON_NEGATIVE,"No", new DialogInterface.OnClickListener() {
+				AD.setButton(DialogInterface.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
 				});
-				AD.setButton(DialogInterface.BUTTON_POSITIVE,"Yes", new DialogInterface.OnClickListener() {
+				AD.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						//TODO: launch website url
+						// TODO: launch website url
 						Log.v(tag, "Session ID: " + e);
 						dialog.dismiss();
 					}
@@ -318,73 +283,126 @@ public class MainActivity extends Activity {
 				AD.setTitle("Successfully Uploaded!");
 				AD.setMessage("Would you like to visualize your data on iSENSE?");
 				AD.show();
-			}
-			else
-			{
+			} else {
 				AlertDialog AD = new AlertDialog.Builder(MainActivity.this).create();
-				AD.setButton(DialogInterface.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
+				AD.setButton(DialogInterface.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
 				});
-				switch (e){
-					default:
-						AD.dismiss();
-						break;
-					case -1:
-						AD.setTitle("Error");
-						AD.setMessage("Unable to Connect to LabQuest2");
-						AD.show();
-						break;
-					case -2:
-						AD.setTitle("Error");
-						AD.setMessage("Not Connected to the Internet");
-						AD.show();
-						break;
-					case -3:
-						AD.setTitle("Error");
-						AD.setMessage("Please enter a Session Name");
-						AD.show();
-						break;
-					case -4:
-						AD.setTitle("Error");
-						AD.setMessage("Invalid Username/Password on iSENSE");
-						AD.show();
-						break;		
+				switch (e) {
+				default:
+					AD.dismiss();
+					break;
+				case -1:
+					AD.setTitle("Error");
+					AD.setMessage("Unable to Connect to LabQuest2");
+					AD.show();
+					break;
+				case -2:
+					AD.setTitle("Error");
+					AD.setMessage("Not Connected to the Internet");
+					AD.show();
+					break;
+				case -3:
+					AD.setTitle("Error");
+					AD.setMessage("Please enter a Session Name");
+					AD.show();
+					break;
+				case -4:
+					AD.setTitle("Error");
+					AD.setMessage("Invalid Username/Password on iSENSE");
+					AD.show();
+					break;
+				case -5:
+					AD.setTitle("Error");
+					AD.setMessage("Please enter a username for iSENSE");
+					AD.show();
+					break;
+				case -6:
+					AD.setTitle("Error");
+					AD.setMessage("Please enter a password for iSENSE");
+					AD.show();
+					break;
+				case -7:
+					AD.setTitle("Error");
+					AD.setMessage("Please enter an Experiment ID for iSENSE");
+					AD.show();
+					break;
+				case -8:
+					AD.setTitle("Error");
+					AD.setMessage("Unable to add a Session to iSENSE");
+					AD.show();
+					break;
+				case -9:
+					AD.setTitle("Error");
+					AD.setMessage("Experiment does not exist");
+					AD.show();
+					break;
+				case -10:
+					AD.setTitle("Error");
+					AD.setMessage("Experiment is closed");
+					AD.show();
+					break;
 				}
 			}
 		}
 
 		@Override
 		protected Integer doInBackground(Void... params) {
-			Log.v(tag,"ConnectAndUpload doInBackground");
-			publishProgress(10);
-			int LabQuestError = CheckLabQuestErrors();
-			if (LabQuestError == 0)
-			{
-				Log.v(tag, "No LabQuest Errors");
-				publishProgress(20);
-				LabQuestConnect();
-			}
-			else
-			{
-				return LabQuestError;
-			}
-			publishProgress(30);
+			Log.v(tag, "ConnectAndUpload doInBackground");
+			SharedPreferences sp_lq = getSharedPreferences("labquest_settings", 0);
+			SharedPreferences sp_is = getSharedPreferences("isense_settings", 0);
 
-			int iSENSEError = CheckiSENSEErrors();
-			if (iSENSEError == 0)
-			{
-				Log.v(tag, "No iSENSE Errors");
-				publishProgress(40);
+			// Null session name
+			if (SessionName.getText().length() == 0) {
+				return -3;
+			}
+			// Null iSENSE username
+			if (sp_is.getString("isense_user", "").length() == 0) {
+				return -5;
+			}
+			// Null iSENSE password
+			if (sp_is.getString("isense_pass", "").length() == 0) {
+				return -6;
+			}
+			// Null iSENSE Experiment ID
+			if (sp_is.getString("isense_expid", "").length() == 0) {
+				return -7;
+			}
 
-				return iSENSEUpload();
+			// no LabQuest
+			if (LabQuestGetInfo(sp_lq.getString("labquest_ip", "")) == null) {
+				return -1;
 			}
-			else
-			{
-				return iSENSEError;
+			// online?
+			if (!rapi.isConnectedToInternet()) {
+				return -2;
 			}
+
+			// iSENSE login?
+			if (!iSENESLogin()) {
+				return -4;
+			}
+			//does the experiment exist?
+			Experiment iSENSEExp = rapi.getExperiment(Integer.parseInt(sp_is.getString("isense_expid", "")));
+			if (iSENSEExp == null) {
+				return -9;
+			}
+			//is the experiment closed?
+			Log.v(tag,"closed" + iSENSEExp.closed);
+			if (iSENSEExp.closed == 1) {
+				return -10;
+			}
+			LabQuestConnect();
+
+			int iSENSESessionID = iSENSEUpload();
+			if (iSENSESessionID == -1) {
+				return -8;
+			}
+
+			return iSENSESessionID;
 		}
 
 	}
