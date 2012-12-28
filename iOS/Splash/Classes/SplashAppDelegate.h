@@ -11,6 +11,7 @@
 #import "AboutView.h"
 #import "GuideView.h"
 
+
 @interface SplashAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
 	UINavigationController *navControl;
@@ -20,7 +21,6 @@
 
 - (IBAction) showAbout:(id)sender;
 - (IBAction) showGuide:(id)sender;
-- (UIView *) viewFromNib:(NSString *)nibName;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UINavigationController *navControl;
