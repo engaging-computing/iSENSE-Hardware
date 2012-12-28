@@ -2,12 +2,14 @@
 //  SplashAppDelegate.m
 //  Splash
 //
-//  Created by CS Admin on 12/4/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by Mike S. on 12/4/12.
+//  Advisor - Fred Martin
+//  Copyright 2012 ECG. All rights reserved.
 //
 
 #import "SplashAppDelegate.h"
 #import "Math.h"
+#import "AutomaticViewController.h"
 
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
@@ -33,10 +35,7 @@
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
+    //[view.layer removeAllAnimations];
 }
 
 
@@ -47,14 +46,23 @@
      */
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:
+	(UIInterfaceOrientation)interfaceOrientation {
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {}
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+	
+	//[self rotateImage:orb duration:1.5
+	//			curve:UIViewAnimationCurveLinear degrees:180];
+
+}
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 
 	[self rotateImage:orb duration:1.5
-				curve:UIViewAnimationCurveEaseIn degrees:180];
+				curve:UIViewAnimationCurveLinear degrees:180];
 	
 }
 
@@ -108,5 +116,22 @@
 	return loc;
 }
 
+- (void) autoClicked:(id)sender {
+
+	NSLog(@"rootButtonClick");
+	AutomaticViewController *secondView;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController" bundle:nil];
+	} else {
+		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController-iPad" bundle:nil];
+    }
+	
+	[window addSubview:secondView.view];
+	[tbc.view release];
+}
+
+- (void) manualClicked:(id)sender {
+	
+}
 
 @end
