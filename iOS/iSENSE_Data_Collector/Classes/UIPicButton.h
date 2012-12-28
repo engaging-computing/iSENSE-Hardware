@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 
 
+
 @interface UIPicButton : UIView {
 	BOOL clickEnabled;
 }
 
-- (BOOL) getClickEnabled;
-- (void) setClickEnabled:(BOOL)enableClick;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
+
+@property BOOL clickEnabled;
 
 @end
