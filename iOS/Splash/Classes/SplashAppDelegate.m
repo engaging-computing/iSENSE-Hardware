@@ -2,20 +2,15 @@
 //  SplashAppDelegate.m
 //  Splash
 //
-//  Created by Mike S. on 12/4/12.
-//  Advisor - Fred Martin
-//  Copyright 2012 ECG. All rights reserved.
+//  Created by CS Admin on 12/28/12.
+//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "SplashAppDelegate.h"
-#import "Math.h"
-#import "AutomaticViewController.h"
-
-#define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
 @implementation SplashAppDelegate
 
-@synthesize window, tbc, orb, aboutText, guideText, automatic, manual;
+@synthesize window, navControl, about, guide;
 
 
 #pragma mark -
@@ -23,19 +18,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-    [window addSubview:[tbc view]];
-	
-	aboutText.text = [self getString:@"about_text"];
-	guideText.text = [self getString:@"guide_text"];
+    // Override point for customization after application launch.
+    self.window.rootViewController = self.navControl;
 	
     [self.window makeKeyAndVisible];
-	
+    
     return YES;
 }
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    //[view.layer removeAllAnimations];
+    /*
+     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+     */
 }
 
 
@@ -46,92 +42,61 @@
      */
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:
-	(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-	
-	//[self rotateImage:orb duration:1.5
-	//			curve:UIViewAnimationCurveLinear degrees:180];
-
+    /*
+     Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
+     */
 }
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-
-	[self rotateImage:orb duration:1.5
-				curve:UIViewAnimationCurveLinear degrees:180];
-	
+    /*
+     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+     */
 }
 
 
-- (void)applicationWillTerminate:(UIApplication *)application {}
+- (void)applicationWillTerminate:(UIApplication *)application {
+    /*
+     Called when the application is about to terminate.
+     See also applicationDidEnterBackground:.
+     */
+}
 
 
 #pragma mark -
 #pragma mark Memory management
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {}
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    /*
+     Free up as much memory as possible by purging cached data objects that can be recreated (or reloaded from disk) later.
+     */
+}
 
 
 - (void)dealloc {
-	
     [window release];
-	[tbc release];
-	[orb release];
-	[aboutText release];
-	[guideText release];
-	[automatic release];
-	[manual release];
+	[navControl release];
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark Custom Functions
 
-- (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
-			  curve:(int)curve degrees:(CGFloat)degrees {
-	
-	// Setup the animation
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:duration];
-	[UIView setAnimationCurve:curve];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationRepeatCount:1e100f];
-	
-	// The transform matrix
-	CGAffineTransform transform = 
-	CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
-	image.transform = transform;
-	
-	// Commit the changes
-	[UIView commitAnimations];
+- (IBAction) showAbout:(id)sender {
+	AboutView *aboutView = [[AboutView alloc] init];
+	aboutView.title = @"About";
+	[self.navControl pushViewController:aboutView animated:YES];
+	[aboutView release];
 }
 
-- (NSString *) getString:(NSString *)label {
-	
-	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
-	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
-	NSString *loc = [d objectForKey:label];
-	return loc;
+- (IBAction) showGuide:(id)sender {
+	GuideView *guideView = [[GuideView alloc] init];
+	guideView.title = @"About";
+	[self.navControl pushViewController:guideView animated:YES];
+	[guideView release];
 }
 
-- (void) autoClicked:(id)sender {
-
-	NSLog(@"rootButtonClick");
-	AutomaticViewController *secondView;
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController" bundle:nil];
-	} else {
-		secondView = [[AutomaticViewController alloc] initWithNibName:@"AutomaticViewController-iPad" bundle:nil];
-    }
-	
-	[window addSubview:secondView.view];
-	[tbc.view release];
-}
-
-- (void) manualClicked:(id)sender {
-	
-}
 
 @end

@@ -1,27 +1,23 @@
 //
-//  AutomaticViewController.m
+//  AboutView.m
 //  Splash
 //
-//  Created by Mike S. on 12/4/12.
-//  Advisor - Fred Martin
-//  Copyright 2012 ECG. All rights reserved.
+//  Created by CS Admin on 12/28/12.
+//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "AutomaticViewController.h"
+#import "AboutView.h"
+#import "SplashAppDelegate.h"
 
+@implementation AboutView
 
-@implementation AutomaticViewController
-
-@synthesize window, secondView;
+@synthesize aboutText;
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-	NSLog(@"second view viewDidLoad");
-	
-	[self.window makeKeyAndVisible];
-	[self.window addSubview:[secondView view]];
-	
     [super viewDidLoad];
+	aboutText.text = [self getString:@"about_text"];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -39,9 +35,15 @@
 
 
 - (void)dealloc {
-	[window	release];
-	[secondView release];
     [super dealloc];
+}
+
+- (NSString *) getString:(NSString *)label {
+	
+	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
+	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
+	NSString *loc = [d objectForKey:label];
+	return loc;
 }
 
 
