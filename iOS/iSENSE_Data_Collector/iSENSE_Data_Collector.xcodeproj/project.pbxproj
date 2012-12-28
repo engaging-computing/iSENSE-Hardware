@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,7 +15,6 @@
 		390B182E1642C1C900E8D0D2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 390B182D1642C1C900E8D0D2 /* MainWindow.xib */; };
 		390B18391642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 390B18381642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m */; };
 		3968C3EC16529EEF00BE9DAD /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3968C3EB16529EEF00BE9DAD /* MainWindow-iPad.xib */; };
-		3971826C1670ED38007D9979 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3971826B1670ED38007D9979 /* libiSENSE_API.a */; };
 		39737AB516402955003E02BA /* UIPicButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 39737AB416402955003E02BA /* UIPicButton.m */; };
 		39862A29164166240035E040 /* green_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A28164166240035E040 /* green_button.png */; };
 		39862A2B164166460035E040 /* icon_ios.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A2A164166460035E040 /* icon_ios.png */; };
@@ -23,6 +22,8 @@
 		39862A2F1641665F0035E040 /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A2E1641665F0035E040 /* red_button.png */; };
 		39862A311641667F0035E040 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 39862A301641667F0035E040 /* button-37.wav */; };
 		39862A33164166D60035E040 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A32164166D60035E040 /* logo_green.png */; };
+		398CB6E2168E107F00AA7612 /* RestAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 398CB6DF168E107F00AA7612 /* RestAPI.m */; };
+		398CB6E3168E107F00AA7612 /* RestAPIConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 398CB6E1168E107F00AA7612 /* RestAPIConnectionDelegate.m */; };
 		39B1890C162C5054002058DA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1890B162C5054002058DA /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,22 +39,7 @@
 		390B182D1642C1C900E8D0D2 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../MainWindow.xib; sourceTree = "<group>"; };
 		390B18371642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_Data_CollectorViewController_iPad.h; sourceTree = "<group>"; };
 		390B18381642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE_Data_CollectorViewController_iPad.m; sourceTree = "<group>"; };
-		3932E47E166FD07D004E96BC /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentField.h; path = ../iSenseAPI/Objects/ExperimentField.h; sourceTree = SOURCE_ROOT; };
-		3932E47F166FD07D004E96BC /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../iSenseAPI/Objects/Image.h; sourceTree = SOURCE_ROOT; };
-		3932E480166FD07D004E96BC /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Item.h; path = ../iSenseAPI/Objects/Item.h; sourceTree = SOURCE_ROOT; };
-		3932E481166FD07D004E96BC /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Person.h; path = ../iSenseAPI/Objects/Person.h; sourceTree = SOURCE_ROOT; };
-		3932E482166FD07D004E96BC /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Session.h; path = ../iSenseAPI/Objects/Session.h; sourceTree = SOURCE_ROOT; };
-		3932E483166FD07D004E96BC /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionData.h; path = ../iSenseAPI/Objects/SessionData.h; sourceTree = SOURCE_ROOT; };
-		3932E484166FD07D004E96BC /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Experiment.h; path = ../iSenseAPI/Objects/Experiment.h; sourceTree = SOURCE_ROOT; };
-		3932E485166FD07D004E96BC /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJSON.h"; path = "../iSenseAPI/JSON/NSObject+SBJSON.h"; sourceTree = SOURCE_ROOT; };
-		3932E486166FD07D004E96BC /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+SBJSON.h"; path = "../iSenseAPI/JSON/NSString+SBJSON.h"; sourceTree = SOURCE_ROOT; };
-		3932E487166FD07D004E96BC /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = ../iSenseAPI/JSON/SBJsonParser.h; sourceTree = SOURCE_ROOT; };
-		3932E488166FD07D004E96BC /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonWriter.h; path = ../iSenseAPI/JSON/SBJsonWriter.h; sourceTree = SOURCE_ROOT; };
-		3932E489166FD07D004E96BC /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonBase.h; path = ../iSenseAPI/JSON/SBJsonBase.h; sourceTree = SOURCE_ROOT; };
-		3932E48A166FD07D004E96BC /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSON.h; path = ../iSenseAPI/JSON/JSON.h; sourceTree = SOURCE_ROOT; };
-		3932E48B166FD07D004E96BC /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iSENSE.h; path = ../iSenseAPI/iSENSE.h; sourceTree = SOURCE_ROOT; };
 		3968C3EB16529EEF00BE9DAD /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources-iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
-		3971826B1670ED38007D9979 /* libiSENSE_API.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libiSENSE_API.a; path = "../iSENSE_API/build/Debug-iphonesimulator/libiSENSE_API.a"; sourceTree = SOURCE_ROOT; };
 		39737AB316402955003E02BA /* UIPicButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPicButton.h; sourceTree = "<group>"; };
 		39737AB416402955003E02BA /* UIPicButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPicButton.m; sourceTree = "<group>"; };
 		39862A28164166240035E040 /* green_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = green_button.png; path = Resources/green_button.png; sourceTree = "<group>"; };
@@ -62,6 +48,10 @@
 		39862A2E1641665F0035E040 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_button.png; path = Resources/red_button.png; sourceTree = "<group>"; };
 		39862A301641667F0035E040 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "button-37.wav"; path = "Resources/button-37.wav"; sourceTree = "<group>"; };
 		39862A32164166D60035E040 /* logo_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_green.png; path = Resources/logo_green.png; sourceTree = "<group>"; };
+		398CB6DE168E107F00AA7612 /* RestAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestAPI.h; sourceTree = "<group>"; };
+		398CB6DF168E107F00AA7612 /* RestAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestAPI.m; sourceTree = "<group>"; };
+		398CB6E0168E107F00AA7612 /* RestAPIConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestAPIConnectionDelegate.h; sourceTree = "<group>"; };
+		398CB6E1168E107F00AA7612 /* RestAPIConnectionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestAPIConnectionDelegate.m; sourceTree = "<group>"; };
 		39B1890B162C5054002058DA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* iSENSE_Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "iSENSE_Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,7 +65,6 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
 				39B1890C162C5054002058DA /* AudioToolbox.framework in Frameworks */,
-				3971826C1670ED38007D9979 /* libiSENSE_API.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,19 +74,10 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
-				1D3623240D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.h */,
-				1D3623250D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.m */,
-				39737AB316402955003E02BA /* UIPicButton.h */,
-				390B18371642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.h */,
-				390B18381642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m */,
-				39737AB416402955003E02BA /* UIPicButton.m */,
-=======
+				398CB6DD168E104D00AA7612 /* RestAPI */,
 				398CB6D9168E059800AA7612 /* MainActivity_Automatic */,
 				398CB6D2168DF7E400AA7612 /* AppDelegate */,
 				3924923E168DF5AC00AFFB2E /* HandyObjects */,
-				392F744E16494D480059692D /* RestAPI */,
->>>>>>> master
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -113,7 +93,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				3932E47C166FD07D004E96BC /* iSENSERestApiLib */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources-Shared */,
@@ -155,9 +134,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-<<<<<<< HEAD
-		3932E47C166FD07D004E96BC /* iSENSERestApiLib */ = {
-=======
 		3924923D168DF4C200AFFB2E /* UIPicButton */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,37 +180,6 @@
 			name = Audio;
 			sourceTree = "<group>";
 		};
-		392F744E16494D480059692D /* RestAPI */ = {
->>>>>>> master
-			isa = PBXGroup;
-			children = (
-				3971826B1670ED38007D9979 /* libiSENSE_API.a */,
-				3932E47D166FD07D004E96BC /* Headers */,
-			);
-			name = iSENSERestApiLib;
-			sourceTree = "<group>";
-		};
-		3932E47D166FD07D004E96BC /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-				3932E47E166FD07D004E96BC /* ExperimentField.h */,
-				3932E47F166FD07D004E96BC /* Image.h */,
-				3932E480166FD07D004E96BC /* Item.h */,
-				3932E481166FD07D004E96BC /* Person.h */,
-				3932E482166FD07D004E96BC /* Session.h */,
-				3932E483166FD07D004E96BC /* SessionData.h */,
-				3932E484166FD07D004E96BC /* Experiment.h */,
-				3932E485166FD07D004E96BC /* NSObject+SBJSON.h */,
-				3932E486166FD07D004E96BC /* NSString+SBJSON.h */,
-				3932E487166FD07D004E96BC /* SBJsonParser.h */,
-				3932E488166FD07D004E96BC /* SBJsonWriter.h */,
-				3932E489166FD07D004E96BC /* SBJsonBase.h */,
-				3932E48A166FD07D004E96BC /* JSON.h */,
-				3932E48B166FD07D004E96BC /* iSENSE.h */,
-			);
-			name = Headers;
-			sourceTree = "<group>";
-		};
 		3968C3EA16529EEE00BE9DAD /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +204,17 @@
 				390B18371642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.h */,
 			);
 			name = MainActivity_Automatic;
+			sourceTree = "<group>";
+		};
+		398CB6DD168E104D00AA7612 /* RestAPI */ = {
+			isa = PBXGroup;
+			children = (
+				398CB6DE168E107F00AA7612 /* RestAPI.h */,
+				398CB6DF168E107F00AA7612 /* RestAPI.m */,
+				398CB6E0168E107F00AA7612 /* RestAPIConnectionDelegate.h */,
+				398CB6E1168E107F00AA7612 /* RestAPIConnectionDelegate.m */,
+			);
+			name = RestAPI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,8 +242,11 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iSENSE_Data_Collector" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -332,6 +291,8 @@
 				1D3623260D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.m in Sources */,
 				39737AB516402955003E02BA /* UIPicButton.m in Sources */,
 				390B18391642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
+				398CB6E2168E107F00AA7612 /* RestAPI.m in Sources */,
+				398CB6E3168E107F00AA7612 /* RestAPIConnectionDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,7 +348,6 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -401,7 +361,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Release;
