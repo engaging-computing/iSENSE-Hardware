@@ -11,8 +11,7 @@
 
 @implementation iSENSE_Data_CollectorAppDelegate
 
-@synthesize window;
-@synthesize viewController;
+@synthesize window, viewController;
 
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application { 
