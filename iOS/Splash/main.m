@@ -2,9 +2,8 @@
 //  main.m
 //  Splash
 //
-//  Created by Mike S. on 12/4/12.
-//  Advisor - Fred Martin
-//  Copyright 2012 ECG. All rights reserved.
+//  Created by CS Admin on 12/28/12.
+//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
