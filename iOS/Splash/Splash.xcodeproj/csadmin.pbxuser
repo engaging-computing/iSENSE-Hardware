@@ -2,9 +2,9 @@
 {
 	1D3623240D0F684500981E51 /* SplashAppDelegate.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1411, 606}}";
-			sepNavSelRange = "{223, 0}";
-			sepNavVisRange = "{0, 829}";
+			sepNavIntBoundsRect = "{{0, 0}, {1411, 583}}";
+			sepNavSelRange = "{516, 0}";
+			sepNavVisRange = "{0, 783}";
 		};
 	};
 	1D3623250D0F684500981E51 /* SplashAppDelegate.m */ = {
@@ -160,6 +160,11 @@
 			52D0D7C7168E1E66008F092C /* PBXTextBookmark */ = 52D0D7C7168E1E66008F092C /* PBXTextBookmark */;
 			52D0D7C8168E1E66008F092C /* PBXTextBookmark */ = 52D0D7C8168E1E66008F092C /* PBXTextBookmark */;
 			52D0D7C9168E1E66008F092C /* PBXTextBookmark */ = 52D0D7C9168E1E66008F092C /* PBXTextBookmark */;
+			52D0D7CA168E1F05008F092C /* XCBuildMessageTextBookmark */ = 52D0D7CA168E1F05008F092C /* XCBuildMessageTextBookmark */;
+			52D0D7CB168E1F05008F092C /* PBXTextBookmark */ = 52D0D7CB168E1F05008F092C /* PBXTextBookmark */;
+			52D0D7CE168E1F12008F092C /* PBXTextBookmark */ = 52D0D7CE168E1F12008F092C /* PBXTextBookmark */;
+			52D0D7CF168E1F12008F092C /* PBXTextBookmark */ = 52D0D7CF168E1F12008F092C /* PBXTextBookmark */;
+			52D0D7D0168E1F12008F092C /* PBXTextBookmark */ = 52D0D7D0168E1F12008F092C /* PBXTextBookmark */;
 			52EF8341168E00700006DFA1 = 52EF8341168E00700006DFA1 /* PBXBookmark */;
 			52EF8358168E034A0006DFA1 = 52EF8358168E034A0006DFA1 /* PBXTextBookmark */;
 			52EF835B168E034A0006DFA1 = 52EF835B168E034A0006DFA1 /* PBXBookmark */;
@@ -296,7 +301,7 @@
 		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
 		name = "SplashAppDelegate.h: 19";
 		rLen = 0;
-		rLoc = 446;
+		rLoc = 447;
 		rType = 0;
 		vrLen = 724;
 		vrLoc = 0;
@@ -493,7 +498,7 @@
 		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
 		name = "SplashAppDelegate.h: 22";
 		rLen = 0;
-		rLoc = 562;
+		rLoc = 517;
 		rType = 0;
 		vrLen = 770;
 		vrLoc = 0;
@@ -583,7 +588,7 @@
 		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
 		name = "SplashAppDelegate.h: 22";
 		rLen = 0;
-		rLoc = 562;
+		rLoc = 517;
 		rType = 0;
 		vrLen = 770;
 		vrLoc = 0;
@@ -1004,6 +1009,55 @@
 		vrLen = 829;
 		vrLoc = 0;
 	};
+	52D0D7CA168E1F05008F092C /* XCBuildMessageTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "Incomplete implementation of class 'SplashAppDelegate'";
+		fRef = 52EF834D168E00700006DFA1 /* SplashAppDelegate.m */;
+		fallbackIsa = XCBuildMessageTextBookmark;
+		rLen = 1;
+		rLoc = 101;
+		rType = 1;
+	};
+	52D0D7CB168E1F05008F092C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 52EF834D168E00700006DFA1 /* SplashAppDelegate.m */;
+		name = "SplashAppDelegate.m: 102";
+		rLen = 0;
+		rLoc = 3106;
+		rType = 0;
+		vrLen = 807;
+		vrLoc = 2304;
+	};
+	52D0D7CE168E1F12008F092C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 52EF834D168E00700006DFA1 /* SplashAppDelegate.m */;
+		name = "SplashAppDelegate.m: 102";
+		rLen = 0;
+		rLoc = 3106;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 2108;
+	};
+	52D0D7CF168E1F12008F092C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
+		name = "SplashAppDelegate.h: 10";
+		rLen = 0;
+		rLoc = 223;
+		rType = 0;
+		vrLen = 829;
+		vrLoc = 0;
+	};
+	52D0D7D0168E1F12008F092C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
+		name = "SplashAppDelegate.h: 22";
+		rLen = 0;
+		rLoc = 517;
+		rType = 0;
+		vrLen = 783;
+		vrLoc = 0;
+	};
 	52EF82EB168DFC000006DFA1 /* Splash */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -1114,9 +1168,9 @@
 		path = "/Users/csadmin/Documents/iSENSE-Hardware/iOS/Splash/Classes/SplashAppDelegate.m";
 		sourceTree = "<absolute>";
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1965, 1326}}";
-			sepNavSelRange = "{198, 0}";
-			sepNavVisRange = "{0, 1678}";
+			sepNavIntBoundsRect = "{{0, 0}, {1965, 1339}}";
+			sepNavSelRange = "{3106, 0}";
+			sepNavVisRange = "{2108, 1003}";
 		};
 	};
 	52EF8358168E034A0006DFA1 /* PBXTextBookmark */ = {
