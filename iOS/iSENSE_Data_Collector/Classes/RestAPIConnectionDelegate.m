@@ -22,7 +22,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)d {
-    self.data = [[NSData alloc] initWithData:d];
+    self.data = [[NSMutableData alloc] initWithData:d];
 	NSString *responseText = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
 	NSLog(@"Receieved: %@", responseText);
 }
@@ -41,7 +41,7 @@
 	
 	//JSONParsing
 	
-	[error release];
+	//[error release];
     [responseText release];
 }
 

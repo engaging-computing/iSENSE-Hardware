@@ -35,7 +35,7 @@
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* iSENSE_Data_Collector_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_Data_Collector_Prefix.pch; sourceTree = "<group>"; };
-		390B182D1642C1C900E8D0D2 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		390B182D1642C1C900E8D0D2 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../MainWindow.xib; sourceTree = "<group>"; };
 		390B18371642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_Data_CollectorViewController_iPad.h; sourceTree = "<group>"; };
 		390B18381642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE_Data_CollectorViewController_iPad.m; sourceTree = "<group>"; };
 		3932E47E166FD07D004E96BC /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentField.h; path = ../iSenseAPI/Objects/ExperimentField.h; sourceTree = SOURCE_ROOT; };
@@ -85,12 +85,19 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				1D3623240D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.h */,
 				1D3623250D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.m */,
 				39737AB316402955003E02BA /* UIPicButton.h */,
 				390B18371642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.h */,
 				390B18381642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m */,
 				39737AB416402955003E02BA /* UIPicButton.m */,
+=======
+				398CB6D9168E059800AA7612 /* MainActivity_Automatic */,
+				398CB6D2168DF7E400AA7612 /* AppDelegate */,
+				3924923E168DF5AC00AFFB2E /* HandyObjects */,
+				392F744E16494D480059692D /* RestAPI */,
+>>>>>>> master
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -109,11 +116,11 @@
 				3932E47C166FD07D004E96BC /* iSENSERestApiLib */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
-				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97317FDCFA39411CA2CEA /* Resources-Shared */,
 				3968C3EA16529EEE00BE9DAD /* Resources-iPad */,
+				3924923F168DF60100AFFB2E /* Resources-iPhone */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				390B182D1642C1C900E8D0D2 /* MainWindow.xib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -127,18 +134,14 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		29B97317FDCFA39411CA2CEA /* Resources */ = {
+		29B97317FDCFA39411CA2CEA /* Resources-Shared */ = {
 			isa = PBXGroup;
 			children = (
-				39862A32164166D60035E040 /* logo_green.png */,
-				39862A301641667F0035E040 /* button-37.wav */,
-				39862A2E1641665F0035E040 /* red_button.png */,
-				39862A2C164166530035E040 /* logo_red.png */,
-				39862A2A164166460035E040 /* icon_ios.png */,
-				39862A28164166240035E040 /* green_button.png */,
+				39249241168DF74300AFFB2E /* Audio */,
+				39249240168DF71900AFFB2E /* Images */,
 				8D1107310486CEB800E47090 /* iSENSE_Data_Collector-Info.plist */,
 			);
-			name = Resources;
+			name = "Resources-Shared";
 			sourceTree = "<group>";
 		};
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
@@ -152,7 +155,57 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+<<<<<<< HEAD
 		3932E47C166FD07D004E96BC /* iSENSERestApiLib */ = {
+=======
+		3924923D168DF4C200AFFB2E /* UIPicButton */ = {
+			isa = PBXGroup;
+			children = (
+				39737AB316402955003E02BA /* UIPicButton.h */,
+				39737AB416402955003E02BA /* UIPicButton.m */,
+			);
+			name = UIPicButton;
+			sourceTree = "<group>";
+		};
+		3924923E168DF5AC00AFFB2E /* HandyObjects */ = {
+			isa = PBXGroup;
+			children = (
+				3924923D168DF4C200AFFB2E /* UIPicButton */,
+			);
+			name = HandyObjects;
+			sourceTree = "<group>";
+		};
+		3924923F168DF60100AFFB2E /* Resources-iPhone */ = {
+			isa = PBXGroup;
+			children = (
+				390B182D1642C1C900E8D0D2 /* MainWindow.xib */,
+			);
+			name = "Resources-iPhone";
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		39249240168DF71900AFFB2E /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				39862A28164166240035E040 /* green_button.png */,
+				39862A2A164166460035E040 /* icon_ios.png */,
+				39862A2C164166530035E040 /* logo_red.png */,
+				39862A2E1641665F0035E040 /* red_button.png */,
+				39862A32164166D60035E040 /* logo_green.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		39249241168DF74300AFFB2E /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				39862A301641667F0035E040 /* button-37.wav */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
+		392F744E16494D480059692D /* RestAPI */ = {
+>>>>>>> master
 			isa = PBXGroup;
 			children = (
 				3971826B1670ED38007D9979 /* libiSENSE_API.a */,
@@ -188,6 +241,24 @@
 				3968C3EB16529EEF00BE9DAD /* MainWindow-iPad.xib */,
 			);
 			name = "Resources-iPad";
+			sourceTree = "<group>";
+		};
+		398CB6D2168DF7E400AA7612 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				1D3623240D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.h */,
+				1D3623250D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.m */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
+		398CB6D9168E059800AA7612 /* MainActivity_Automatic */ = {
+			isa = PBXGroup;
+			children = (
+				390B18381642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m */,
+				390B18371642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.h */,
+			);
+			name = MainActivity_Automatic;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
