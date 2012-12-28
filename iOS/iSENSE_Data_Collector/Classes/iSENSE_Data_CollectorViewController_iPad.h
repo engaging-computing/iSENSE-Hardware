@@ -13,24 +13,19 @@
 
 
 @interface iSENSE_Data_CollectorViewController_iPad : UIViewController {
-	UIImageView *startStopButton;
-	UIImageView *mainLogo;
-	UIPicButton *container;
-	UILabel *startStopLabel;
-	UILabel *loginStatus;
-	bool	isRecording;
-	NSTimer *longClickTimer;
-	RestAPI *rapi;
+	// Fuctionality
+    UIPicButton *containerForMainButton;
+    RestAPI *rapi;
+    // GUI
+    UIImageView *startStopButton;
+    UIImageView *mainLogo;
+    UILabel *startStopLabel;
+    UILabel *loginStatus;
+	
 }
 
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
 
-@property (nonatomic, retain) UIImageView *startStopButton;
-@property (nonatomic, retain) NSTimer	*longClickTimer;
-@property (nonatomic, retain) UIImageView *mainLogo;
-@property (nonatomic, retain) UIPicButton *container;
-@property (nonatomic, retain) UILabel *startStopLabel;
-@property (nonatomic, retain) UILabel *loginStatus;
-@property (nonatomic, retain) RestAPI *rapi;
+@property BOOL isRecording;
 
 @end

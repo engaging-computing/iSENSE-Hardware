@@ -9,8 +9,10 @@
 #import "UIPicButton.h"
 
 
+
 @implementation UIPicButton
 
+@synthesize clickEnabled;
 
 - (id)initWithFrame:(CGRect)frame {
     
@@ -32,15 +34,6 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	clickEnabled = TRUE;
-	NSLog(@"Begin ClickEnabled = %s", clickEnabled ? "true" : "false");
-}
-
-- (void) setClickEnabled:(BOOL)enableClick {
-	clickEnabled = enableClick;
-}
-
-- (BOOL)getClickEnabled {
-	return clickEnabled;
 }
 
 - (void)dealloc {
