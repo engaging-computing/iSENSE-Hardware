@@ -2,8 +2,9 @@
 //  SplashView.m
 //  Splash
 //
-//  Created by CS Admin on 12/28/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by Mike Stowell on 12/28/12.
+//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "SplashView.h"
@@ -44,6 +45,13 @@
 	autoView.title = @"Automatic";
 	[self.navigationController pushViewController:autoView animated:YES];
 	[autoView release];
+}
+
+- (IBAction) loadManual:(id)sender {
+	ManualView *manualView = [[ManualView alloc] init];
+	manualView.title = @"Manual";
+	[self.navigationController pushViewController:manualView animated:YES];
+	[manualView release];
 }
 
 - (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 

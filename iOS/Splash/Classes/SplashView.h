@@ -2,12 +2,14 @@
 //  SplashView.h
 //  Splash
 //
-//  Created by CS Admin on 12/28/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by Mike Stowell on 12/28/12.
+//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import <UIKit/UIKit.h>
 #import "AutomaticView.h"
+#import "ManualView.h"
 
 @interface SplashView : UIViewController {
 	UIImageView *dataCollectorLogo;
@@ -17,6 +19,7 @@
 }
 
 - (IBAction) loadAutomatic:(id)sender;
+- (IBAction) loadManual:(id)sender;
 - (void) rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
 			  curve:(int)curve degrees:(CGFloat)degrees;
 
