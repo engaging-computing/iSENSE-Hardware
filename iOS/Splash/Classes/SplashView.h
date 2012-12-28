@@ -17,7 +17,7 @@
 }
 
 - (IBAction) loadAutomatic:(id)sender;
-- (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
+- (void) rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
 			  curve:(int)curve degrees:(CGFloat)degrees;
 
 @property (nonatomic, retain) IBOutlet UIImageView *dataCollectorLogo;
