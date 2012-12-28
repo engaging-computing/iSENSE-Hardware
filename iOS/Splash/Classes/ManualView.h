@@ -1,5 +1,5 @@
 //
-//  GuideView.h
+//  ManualView.h
 //  Splash
 //
 //  Created by Mike Stowell on 12/28/12.
@@ -10,12 +10,6 @@
 #import <UIKit/UIKit.h>
 
 
-@interface GuideView : UIViewController {
-	UITextView *guideText;
-}
-
-- (NSString *) getString:(NSString *)label;
-
-@property (nonatomic, retain) IBOutlet UITextView *guideText;
+@interface ManualView : UIViewController {}
 
 @end

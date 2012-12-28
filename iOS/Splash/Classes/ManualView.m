@@ -1,5 +1,5 @@
 //
-//  AboutView.m
+//  ManualView.m
 //  Splash
 //
 //  Created by Mike Stowell on 12/28/12.
@@ -7,19 +7,18 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-#import "AboutView.h"
-#import "SplashAppDelegate.h"
+#import "ManualView.h"
 
-@implementation AboutView
 
-@synthesize aboutText;
+@implementation ManualView
 
+
+/*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	aboutText.text = [self getString:@"about_text"];
-
 }
+*/
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
@@ -37,14 +36,6 @@
 
 - (void)dealloc {
     [super dealloc];
-}
-
-- (NSString *) getString:(NSString *)label {
-	
-	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
-	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
-	NSString *loc = [d objectForKey:label];
-	return loc;
 }
 
 
