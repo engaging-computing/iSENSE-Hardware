@@ -17,14 +17,13 @@
 		52A09677168E089E00DA6AF6 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A09675168E089E00DA6AF6 /* AboutView.xib */; };
 		52A09690168E08D500DA6AF6 /* GuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A0968E168E08D500DA6AF6 /* GuideView.m */; };
 		52A09691168E08D500DA6AF6 /* GuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A0968F168E08D500DA6AF6 /* GuideView.xib */; };
+		52D0D755168E13AD008F092C /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D0D754168E13AD008F092C /* MainWindow-iPad.xib */; };
+		52D0D760168E14CB008F092C /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D0D75F168E14CB008F092C /* SplashView-iPad.xib */; };
 		52EF82F7168DFCA60006DFA1 /* SplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EF82F5168DFCA60006DFA1 /* SplashView.m */; };
 		52EF82F8168DFCA60006DFA1 /* SplashView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52EF82F6168DFCA60006DFA1 /* SplashView.xib */; };
 		52EF8301168DFD7D0006DFA1 /* AutomaticView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52EF82FF168DFD7D0006DFA1 /* AutomaticView.m */; };
 		52EF8302168DFD7D0006DFA1 /* AutomaticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52EF8300168DFD7D0006DFA1 /* AutomaticView.xib */; };
 		52EF8337168E00110006DFA1 /* data_collector_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EF8332168E00110006DFA1 /* data_collector_logo.png */; };
-		52EF8338168E00110006DFA1 /* ic_tab_about.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EF8333168E00110006DFA1 /* ic_tab_about.png */; };
-		52EF8339168E00110006DFA1 /* ic_tab_guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EF8334168E00110006DFA1 /* ic_tab_guide.png */; };
-		52EF833A168E00110006DFA1 /* ic_tab_main.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EF8335168E00110006DFA1 /* ic_tab_main.png */; };
 		52EF833B168E00110006DFA1 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EF8336168E00110006DFA1 /* icon.png */; };
 		52EF833D168E001D0006DFA1 /* spinner_orb.png in Resources */ = {isa = PBXBuildFile; fileRef = 52EF833C168E001D0006DFA1 /* spinner_orb.png */; };
 		52EF833F168E00440006DFA1 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52EF833E168E00440006DFA1 /* Strings.strings */; };
@@ -46,6 +45,8 @@
 		52A0968D168E08D500DA6AF6 /* GuideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuideView.h; sourceTree = "<group>"; };
 		52A0968E168E08D500DA6AF6 /* GuideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuideView.m; sourceTree = "<group>"; };
 		52A0968F168E08D500DA6AF6 /* GuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = GuideView.xib; path = Classes/GuideView.xib; sourceTree = "<group>"; };
+		52D0D754168E13AD008F092C /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources-iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		52D0D75F168E14CB008F092C /* SplashView-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SplashView-iPad.xib"; sourceTree = "<group>"; };
 		52EF82F4168DFCA60006DFA1 /* SplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashView.h; sourceTree = "<group>"; };
 		52EF82F5168DFCA60006DFA1 /* SplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashView.m; sourceTree = "<group>"; };
 		52EF82F6168DFCA60006DFA1 /* SplashView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SplashView.xib; path = Classes/SplashView.xib; sourceTree = "<group>"; };
@@ -53,9 +54,6 @@
 		52EF82FF168DFD7D0006DFA1 /* AutomaticView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutomaticView.m; sourceTree = "<group>"; };
 		52EF8300168DFD7D0006DFA1 /* AutomaticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AutomaticView.xib; path = Classes/AutomaticView.xib; sourceTree = "<group>"; };
 		52EF8332168E00110006DFA1 /* data_collector_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = data_collector_logo.png; sourceTree = "<group>"; };
-		52EF8333168E00110006DFA1 /* ic_tab_about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_about.png; sourceTree = "<group>"; };
-		52EF8334168E00110006DFA1 /* ic_tab_guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_guide.png; sourceTree = "<group>"; };
-		52EF8335168E00110006DFA1 /* ic_tab_main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_tab_main.png; sourceTree = "<group>"; };
 		52EF8336168E00110006DFA1 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		52EF833C168E001D0006DFA1 /* spinner_orb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spinner_orb.png; sourceTree = "<group>"; };
 		52EF833E168E00440006DFA1 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 				52EF82FA168DFCDD0006DFA1 /* Layout-iPhone */,
 				52EF82FB168DFCE40006DFA1 /* Layout-iPad */,
 				52EF82FC168DFCEF0006DFA1 /* Strings */,
-				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Splash-Info.plist */,
 			);
 			name = Resources;
@@ -152,9 +149,6 @@
 			children = (
 				52EF833C168E001D0006DFA1 /* spinner_orb.png */,
 				52EF8332168E00110006DFA1 /* data_collector_logo.png */,
-				52EF8333168E00110006DFA1 /* ic_tab_about.png */,
-				52EF8334168E00110006DFA1 /* ic_tab_guide.png */,
-				52EF8335168E00110006DFA1 /* ic_tab_main.png */,
 				52EF8336168E00110006DFA1 /* icon.png */,
 			);
 			name = Drawable;
@@ -164,9 +158,10 @@
 			isa = PBXGroup;
 			children = (
 				52A09675168E089E00DA6AF6 /* AboutView.xib */,
-				52A0968F168E08D500DA6AF6 /* GuideView.xib */,
-				52EF82F6168DFCA60006DFA1 /* SplashView.xib */,
 				52EF8300168DFD7D0006DFA1 /* AutomaticView.xib */,
+				52A0968F168E08D500DA6AF6 /* GuideView.xib */,
+				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+				52EF82F6168DFCA60006DFA1 /* SplashView.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -174,6 +169,8 @@
 		52EF82FB168DFCE40006DFA1 /* Layout-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				52D0D754168E13AD008F092C /* MainWindow-iPad.xib */,
+				52D0D75F168E14CB008F092C /* SplashView-iPad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -246,14 +243,13 @@
 				52EF82F8168DFCA60006DFA1 /* SplashView.xib in Resources */,
 				52EF8302168DFD7D0006DFA1 /* AutomaticView.xib in Resources */,
 				52EF8337168E00110006DFA1 /* data_collector_logo.png in Resources */,
-				52EF8338168E00110006DFA1 /* ic_tab_about.png in Resources */,
-				52EF8339168E00110006DFA1 /* ic_tab_guide.png in Resources */,
-				52EF833A168E00110006DFA1 /* ic_tab_main.png in Resources */,
 				52EF833B168E00110006DFA1 /* icon.png in Resources */,
 				52EF833D168E001D0006DFA1 /* spinner_orb.png in Resources */,
 				52EF833F168E00440006DFA1 /* Strings.strings in Resources */,
 				52A09677168E089E00DA6AF6 /* AboutView.xib in Resources */,
 				52A09691168E08D500DA6AF6 /* GuideView.xib in Resources */,
+				52D0D755168E13AD008F092C /* MainWindow-iPad.xib in Resources */,
+				52D0D760168E14CB008F092C /* SplashView-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +276,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -287,6 +284,8 @@
 				GCC_PREFIX_HEADER = Splash_Prefix.pch;
 				INFOPLIST_FILE = "Splash-Info.plist";
 				PRODUCT_NAME = Splash;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -294,11 +293,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Splash_Prefix.pch;
 				INFOPLIST_FILE = "Splash-Info.plist";
 				PRODUCT_NAME = Splash;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

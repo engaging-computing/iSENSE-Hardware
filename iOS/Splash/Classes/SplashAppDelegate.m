@@ -98,5 +98,4 @@
 	[guideView release];
 }
 
-
 @end
