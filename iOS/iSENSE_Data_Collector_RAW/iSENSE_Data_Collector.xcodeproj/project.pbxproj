@@ -22,8 +22,6 @@
 		39862A2F1641665F0035E040 /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A2E1641665F0035E040 /* red_button.png */; };
 		39862A311641667F0035E040 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 39862A301641667F0035E040 /* button-37.wav */; };
 		39862A33164166D60035E040 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 39862A32164166D60035E040 /* logo_green.png */; };
-		398CB6E2168E107F00AA7612 /* RestAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 398CB6DF168E107F00AA7612 /* RestAPI.m */; };
-		398CB6E3168E107F00AA7612 /* RestAPIConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 398CB6E1168E107F00AA7612 /* RestAPIConnectionDelegate.m */; };
 		39B1890C162C5054002058DA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1890B162C5054002058DA /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,10 +46,6 @@
 		39862A2E1641665F0035E040 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_button.png; path = Resources/red_button.png; sourceTree = "<group>"; };
 		39862A301641667F0035E040 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "button-37.wav"; path = "Resources/button-37.wav"; sourceTree = "<group>"; };
 		39862A32164166D60035E040 /* logo_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_green.png; path = Resources/logo_green.png; sourceTree = "<group>"; };
-		398CB6DE168E107F00AA7612 /* RestAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestAPI.h; sourceTree = "<group>"; };
-		398CB6DF168E107F00AA7612 /* RestAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestAPI.m; sourceTree = "<group>"; };
-		398CB6E0168E107F00AA7612 /* RestAPIConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestAPIConnectionDelegate.h; sourceTree = "<group>"; };
-		398CB6E1168E107F00AA7612 /* RestAPIConnectionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestAPIConnectionDelegate.m; sourceTree = "<group>"; };
 		39B1890B162C5054002058DA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* iSENSE_Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "iSENSE_Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,7 +68,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				398CB6DD168E104D00AA7612 /* RestAPI */,
 				398CB6D9168E059800AA7612 /* MainActivity_Automatic */,
 				398CB6D2168DF7E400AA7612 /* AppDelegate */,
 				3924923E168DF5AC00AFFB2E /* HandyObjects */,
@@ -206,17 +199,6 @@
 			name = MainActivity_Automatic;
 			sourceTree = "<group>";
 		};
-		398CB6DD168E104D00AA7612 /* RestAPI */ = {
-			isa = PBXGroup;
-			children = (
-				398CB6DE168E107F00AA7612 /* RestAPI.h */,
-				398CB6DF168E107F00AA7612 /* RestAPI.m */,
-				398CB6E0168E107F00AA7612 /* RestAPIConnectionDelegate.h */,
-				398CB6E1168E107F00AA7612 /* RestAPIConnectionDelegate.m */,
-			);
-			name = RestAPI;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -291,8 +273,6 @@
 				1D3623260D0F684500981E51 /* iSENSE_Data_CollectorAppDelegate.m in Sources */,
 				39737AB516402955003E02BA /* UIPicButton.m in Sources */,
 				390B18391642C42B00E8D0D2 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
-				398CB6E2168E107F00AA7612 /* RestAPI.m in Sources */,
-				398CB6E3168E107F00AA7612 /* RestAPIConnectionDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

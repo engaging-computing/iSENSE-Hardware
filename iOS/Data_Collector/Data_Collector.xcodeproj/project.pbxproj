@@ -102,7 +102,6 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				52572BEC1691FD28009037A7 /* HandyObjects */,
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
 				52572B6F1691F6E9009037A7 /* Manual */,
@@ -262,6 +261,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				52572BED1691FD33009037A7 /* UIPicButton */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -273,14 +273,6 @@
 				1D3623250D0F684500981E51 /* Data_CollectorAppDelegate.m */,
 			);
 			name = "Delegate Files";
-			sourceTree = "<group>";
-		};
-		52572BEC1691FD28009037A7 /* HandyObjects */ = {
-			isa = PBXGroup;
-			children = (
-				52572BED1691FD33009037A7 /* UIPicButton */,
-			);
-			name = HandyObjects;
 			sourceTree = "<group>";
 		};
 		52572BED1691FD33009037A7 /* UIPicButton */ = {
