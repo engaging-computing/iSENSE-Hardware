@@ -3,8 +3,7 @@
 //  iSENSE_Data_Collector
 //
 //  Created by Jeremy Poulin on 11/1/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
-//  Engaging Computing Lab, Advisor: Fred Martin
+//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "iSENSE_Data_CollectorViewController_iPad.h"
@@ -26,8 +25,8 @@
 			startStopLabel.text = @"STOP\n(Press and Hold)";
 			
 			[self setIsRecording:TRUE];
-        
-        // Stop Recording
+			
+			// Stop Recording
 		} else {
 			// Back to red mode
 			startStopButton.image = [UIImage imageNamed:@"red_button.png"];
@@ -104,10 +103,10 @@
 	[self.view addSubview:containerForMainButton];
 	
 	// Attempt Login
-	rapi = [RestAPI getInstance];
+	/*rapi = [RestAPI getInstance];
 	[rapi useDev:TRUE];
 	[rapi login:@"sor":@"sor"];	
-	
+	*/
 }
 
 
@@ -157,7 +156,7 @@
 	[loginStatus release];
 	[startStopLabel release];
     [startStopButton release];
-    [rapi release];
+    //[rapi release];
     [super dealloc];
 	
 }

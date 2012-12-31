@@ -1,6 +1,6 @@
 //
-//  SplashAppDelegate.h
-//  Splash
+//  Data_CollectorAppDelegate.h
+//  Data_Collector
 //
 //  Created by Mike Stowell on 12/28/12.
 //  Copyright 2012 iSENSE Development Team. All rights reserved.
@@ -12,7 +12,7 @@
 #import "GuideView.h"
 
 
-@interface SplashAppDelegate : NSObject <UIApplicationDelegate> {
+@interface Data_CollectorAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
 	UINavigationController *navControl;
 	UIBarButtonItem *about;

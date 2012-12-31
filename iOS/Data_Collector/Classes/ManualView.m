@@ -12,13 +12,14 @@
 
 @implementation ManualView
 
+@synthesize logo, loggedInAs, expNum, save, clear, sessionName, media, scrollView;
 
 /*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-*/
+ // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+ - (void)viewDidLoad {
+ [super viewDidLoad];
+ }
+ */
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
@@ -38,5 +39,16 @@
     [super dealloc];
 }
 
+- (IBAction) saveOnClick:(id)sender {
+	
+}
+
+- (IBAction) clearOnClick:(id)sender {
+	
+}
+
+- (IBAction) mediaOnClick:(id)sender {
+	
+}
 
 @end
