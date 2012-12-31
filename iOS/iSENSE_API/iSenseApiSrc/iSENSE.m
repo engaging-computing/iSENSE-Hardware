@@ -3,22 +3,34 @@
 //  isenseAPI
 //
 //  Created by John Fertitta on 2/23/11.
+//  Updated by Jeremy Poulin on 12/05/12.
 //  Copyright 2011 UMass Lowell. All rights reserved.
 //
 
 #import "iSENSE.h"
 
+static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 static iSENSE* _iSENSE = nil;
 
 @implementation iSENSE
 
 -(NSDictionary *)isenseQuery:(NSString*)target
 {
-	NSMutableString *base_url = [NSMutableString stringWithString:@"http://isense.cs.uml.edu/ws/api.php?"];
+	NSLog(@"Reached isenseQuery");
+	NSMutableString *base_url = [NSMutableString stringWithString:baseURL];
+	NSLog(@"%@", base_url);
 	[base_url appendString:target];
 	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 	NSLog(@"Sent to iSENSE: %@", final);
-	return [[NSString stringWithContentsOfURL:[NSURL URLWithString:final] encoding:NSUTF8StringEncoding error:nil] JSONValue];
+	NSError *requestError;
+	NSData *dataToBeJSONED = [NSData dataWithContentsOfURL:[NSURL URLWithString:final] options:NSDataReadingMappedIfSafe error:&requestError];
+    NSLog(@"Error Communication: %@", requestError);
+    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:dataToBeJSONED options:NSJSONWritingPrettyPrinted error:&requestError];
+    NSLog(@"Error Making JSON: %@", requestError);
+    NSDictionary *jsonDictionary = [[NSDictionary alloc] init];
+    [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
+    NSLog(@"Error Returning Dictionary: %@", requestError);
+    return [jsonDictionary autorelease];
 }
 
 +(iSENSE*)instance
@@ -27,6 +39,7 @@ static iSENSE* _iSENSE = nil;
 	{
 		if (!_iSENSE)
 			[[self alloc] init];
+		NSLog(@"Initialized iSENSE object.");
 		
 		return _iSENSE;
 	}
@@ -56,28 +69,36 @@ static iSENSE* _iSENSE = nil;
 	
 	return self;
 }
-
-- (id)retain {
-    return self;
-}
-- (unsigned)retainCount {
-    return UINT_MAX; //denotes an object that cannot be released
-}
-- (void)release {
-    // never release
-}
-- (id)autorelease {
-    return self;
-}
-
-- (void)dealloc {
-    // Should never be called, but just here for clarity really.
-    [username release];
-	[session_key release];
-	[uid release];
-	[_iSENSE release];
-    [super dealloc];
-}
+/* All of the following methods are obsolete */
+/*- (id)retain {
+ return self;
+ }
+ 
+ - (unsigned)retainCount {
+ return UINT_MAX; //denotes an object that cannot be released
+ }
+ 
+ - (id)autorelease {
+ return self;
+ }
+ 
+ -(oneway void)release {
+ }
+ 
+ - (void)dealloc {
+ // Should never be called, but just here for clarity really.
+ [username release];
+ [session_key release];
+ [uid release];
+ [_iSENSE release];
+ [super dealloc];
+ }
+ 
+ - (NSZone *)zone {
+ return zoneWhereAllocated ;
+ }
+ */
+/* End of obsolete methods. */
 
 - (NSString *) getSessionKey {
 	return session_key;
@@ -109,12 +130,15 @@ static iSENSE* _iSENSE = nil;
 	uid = [NSNumber numberWithInt:-1];
 }
 
-- (bool) login:(NSString *)User with:(NSString *)Password {
-	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", User, Password]];
+- (bool) login:(NSString *)user with:(NSString *)password {
+	NSLog(@"Login starts.");
+	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
+	NSLog(@"Result Obtained");
 	session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
+	NSLog(@"session_key = %@.", session_key);
 	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
 	if ([self isLoggedIn]) {
-		username = User;
+		username = user;
 		return TRUE;
 	}
 	
@@ -147,7 +171,7 @@ static iSENSE* _iSENSE = nil;
 	}
 	
 	return e;
-		
+    
 }
 
 - (NSMutableArray *) sessionData:(NSString *)sessions {
@@ -178,7 +202,7 @@ static iSENSE* _iSENSE = nil;
 				}
 				[[s fieldData] addObject:temp];
 			}
-			 
+            
 			[sessiondata addObject:s];
 		}
 	}
@@ -303,7 +327,7 @@ static iSENSE* _iSENSE = nil;
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *experiments = [[NSMutableArray new] autorelease];
-		
+    
 	if(data) {
 		NSEnumerator *e = [data objectEnumerator];
 		id object;
@@ -440,7 +464,7 @@ static iSENSE* _iSENSE = nil;
 			[sessions addObject:ses];
 		}
 	}
-
+    
 	return sessions;
 }
 
@@ -475,6 +499,18 @@ static iSENSE* _iSENSE = nil;
 	
 	return false;
 }
+
+- (void) toggleUseDev:(BOOL)toggle {
+	if (toggle) {
+		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
+		NSLog(@"Switched to dev.");
+	} else {	
+		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
+		NSLog(@"Switched to iSENSE.");
+        
+	}
+}
+
 
 
 @end
