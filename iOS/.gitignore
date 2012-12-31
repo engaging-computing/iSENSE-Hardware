@@ -1,3 +1,5 @@
 # Build files
 
 */build
+
+*.xcodeproj/*

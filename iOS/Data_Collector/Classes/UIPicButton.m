@@ -3,8 +3,7 @@
 //  iSENSE_Data_Collector
 //
 //  Created by Jeremy Poulin on 10/30/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
-//  Engaging Computing Lab, Advisor: Fred Martin
+//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "UIPicButton.h"
@@ -26,12 +25,12 @@
 }
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code.
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code.
+ }
+ */
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	clickEnabled = TRUE;

@@ -8,7 +8,7 @@
 //
 
 #import "AboutView.h"
-#import "SplashAppDelegate.h"
+//#import "SplashAppDelegate.h"
 
 @implementation AboutView
 
@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	aboutText.text = [self getString:@"about_text"];
-
+	
 }
 
 - (void)didReceiveMemoryWarning {

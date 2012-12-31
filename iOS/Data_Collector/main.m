@@ -1,8 +1,8 @@
 //
 //  main.m
-//  Splash
+//  Data_Collector
 //
-//  Created by CS Admin on 12/28/12.
+//  Created by CS Admin on 12/31/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
