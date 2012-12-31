@@ -229,6 +229,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -275,7 +277,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
+									<integer>13</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -300,7 +302,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>-1 134 1680 894 0 0 1680 1028 </string>
+						<string>0 134 1680 894 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -311,14 +313,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>SplashAppDelegate.h</string>
+								<string>ManualView.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -326,11 +326,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>SplashAppDelegate.h</string>
+										<string>ManualView.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>52D0D7D0168E1F12008F092C</string>
+										<string>52D0D7E5168E2183008F092C</string>
 										<key>history</key>
 										<array>
 											<string>52D0D73C168E1309008F092C</string>
@@ -338,18 +338,18 @@
 											<string>52D0D73E168E1309008F092C</string>
 											<string>52D0D75C168E149F008F092C</string>
 											<string>52D0D7AB168E1D04008F092C</string>
-											<string>52D0D7B2168E1D04008F092C</string>
-											<string>52D0D7B3168E1D04008F092C</string>
-											<string>52D0D7B4168E1D04008F092C</string>
-											<string>52D0D7BB168E1DEA008F092C</string>
-											<string>52D0D7BC168E1DEA008F092C</string>
-											<string>52D0D7BE168E1DEA008F092C</string>
-											<string>52D0D7C4168E1E66008F092C</string>
-											<string>52D0D7C5168E1E66008F092C</string>
-											<string>52D0D7C6168E1E66008F092C</string>
-											<string>52D0D7C7168E1E66008F092C</string>
-											<string>52D0D7CE168E1F12008F092C</string>
-											<string>52D0D7CF168E1F12008F092C</string>
+											<string>52D0D7D9168E2183008F092C</string>
+											<string>52D0D7DA168E2183008F092C</string>
+											<string>52D0D7DB168E2183008F092C</string>
+											<string>52D0D7DC168E2183008F092C</string>
+											<string>52D0D7DD168E2183008F092C</string>
+											<string>52D0D7DE168E2183008F092C</string>
+											<string>52D0D7DF168E2183008F092C</string>
+											<string>52D0D7E0168E2183008F092C</string>
+											<string>52D0D7E1168E2183008F092C</string>
+											<string>52D0D7E2168E2183008F092C</string>
+											<string>52D0D7E3168E2183008F092C</string>
+											<string>52D0D7E4168E2183008F092C</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -361,14 +361,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1472, 638}}</string>
+								<string>{{0, 0}, {1472, 633}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-1 134 1680 894 0 0 1680 1028 </string>
+								<string>0 134 1680 894 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>638pt</string>
+							<string>633pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -381,14 +381,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 643}, {1472, 210}}</string>
+								<string>{{0, 638}, {1472, 215}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-1 134 1680 894 0 0 1680 1028 </string>
+								<string>0 134 1680 894 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>210pt</string>
+							<string>215pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -407,9 +407,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>52D0D734168E11CB008F092C</string>
+				<string>52D0D7E6168E2183008F092C</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>52D0D735168E11CB008F092C</string>
+				<string>52D0D7E7168E2183008F092C</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -547,13 +547,11 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>52EF830D168DFD8E0006DFA1</string>
 		<string>/Users/csadmin/Documents/iSENSE-Hardware/iOS/Splash/Splash.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>-1 134 1680 894 0 0 1680 1028 </string>
+	<string>0 134 1680 894 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -574,7 +572,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>SplashAppDelegate.m</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -591,8 +589,6 @@
 							<string>496pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -632,7 +628,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>52EF830D168DFD8E0006DFA1</string>
-				<string>52D0D736168E11CB008F092C</string>
+				<string>52D0D7E8168E2183008F092C</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
