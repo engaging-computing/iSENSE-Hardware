@@ -1,30 +1,33 @@
 //
-//  iSENSE_Data_CollectorAppDelegate.m
-//  iSENSE_Data_Collector
+//  Data_CollectorAppDelegate.m
+//  Data_Collector
 //
-//  Created by Jeremy Poulin on 10/3/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by Mike Stowell on 12/28/12.
+//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-#import "iSENSE_Data_CollectorAppDelegate.h"
-#import	"iSENSE_Data_CollectorViewController_iPad.h"
+#import "Data_CollectorAppDelegate.h"
 
-@implementation iSENSE_Data_CollectorAppDelegate
+@implementation Data_CollectorAppDelegate
 
-@synthesize window, viewController;
+@synthesize window, navControl, about, guide;
 
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application { 
-	// Set Background to Black
-	[self.window setBackgroundColor:[UIColor blackColor]];
+#pragma mark -
+#pragma mark Application lifecycle
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
+    
+    // Override point for customization after application launch.
+    self.window.rootViewController = self.navControl;
 	
-	// Allocate the view controller
-	self.viewController = [[iSENSE_Data_CollectorViewController_iPad alloc] initWithNibName:nil bundle:nil];
-	
-	// Display view controller's view
-	[window makeKeyAndVisible];
+    [self.window makeKeyAndVisible];
+    
+    return YES;
 }
-	
+
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     /*
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -74,10 +77,26 @@
 
 
 - (void)dealloc {
-    [viewController release];
     [window release];
+	[navControl release];
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark Custom Functions
+
+- (IBAction) showAbout:(id)sender {
+	AboutView *aboutView = [[AboutView alloc] init];
+	aboutView.title = @"About";
+	[self.navControl pushViewController:aboutView animated:YES];
+	[aboutView release];
+}
+
+- (IBAction) showGuide:(id)sender {
+	GuideView *guideView = [[GuideView alloc] init];
+	guideView.title = @"Guide";
+	[self.navControl pushViewController:guideView animated:YES];
+	[guideView release];
+}
 
 @end

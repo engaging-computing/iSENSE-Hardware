@@ -1,0 +1,8 @@
+//
+// Prefix header for all source files of the 'Data_Collector' target in the 'Data_Collector' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+#endif
