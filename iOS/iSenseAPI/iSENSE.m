@@ -23,7 +23,14 @@ static iSENSE* _iSENSE = nil;
 	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 	NSLog(@"Sent to iSENSE: %@", final);
 	NSError *requestError;
-	return [[NSString stringWithContentsOfURL:[NSURL URLWithString:final] encoding:NSUTF8StringEncoding error:&requestError] JSONValue];
+	NSData *dataToBeJSONED = [NSData dataWithContentsOfURL:[NSURL URLWithString:final] options:NSDataReadingMappedIfSafe error:&requestError];
+    NSLog(@"Error Communication: %@", requestError);
+    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:dataToBeJSONED options:NSJSONWritingPrettyPrinted error:&requestError];
+    NSLog(@"Error Making JSON: %@", requestError);
+    NSDictionary *jsonDictionary = [[NSDictionary alloc] init];
+    [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
+    NSLog(@"Error Returning Dictionary: %@", requestError);
+    return [jsonDictionary autorelease];
 }
 
 +(iSENSE*)instance
@@ -62,18 +69,20 @@ static iSENSE* _iSENSE = nil;
 	
 	return self;
 }
-
-- (id)retain {
+/* All of the following methods are obsolete */
+/*- (id)retain {
     return self;
 }
+
 - (unsigned)retainCount {
     return UINT_MAX; //denotes an object that cannot be released
 }
-- (void)release {
-    // never release
-}
+
 - (id)autorelease {
     return self;
+}
+
+-(oneway void)release {
 }
 
 - (void)dealloc {
@@ -84,6 +93,12 @@ static iSENSE* _iSENSE = nil;
 	[_iSENSE release];
     [super dealloc];
 }
+
+- (NSZone *)zone {
+    return zoneWhereAllocated ;
+}
+*/
+/* End of obsolete methods. */
 
 - (NSString *) getSessionKey {
 	return session_key;
@@ -115,15 +130,15 @@ static iSENSE* _iSENSE = nil;
 	uid = [NSNumber numberWithInt:-1];
 }
 
-- (bool) login:(NSString *)User with:(NSString *)Password {
+- (bool) login:(NSString *)user with:(NSString *)password {
 	NSLog(@"Login starts.");
-	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", User, Password]];
+	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
 	NSLog(@"Result Obtained");
 	session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
-	NSLog(@"session_key = %d.", session_key);
+	NSLog(@"session_key = %@.", session_key);
 	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
 	if ([self isLoggedIn]) {
-		username = User;
+		username = user;
 		return TRUE;
 	}
 	
@@ -485,7 +500,7 @@ static iSENSE* _iSENSE = nil;
 	return false;
 }
 
-- (void) useDev:(BOOL)toggle {
+- (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
 		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
 		NSLog(@"Switched to dev.");

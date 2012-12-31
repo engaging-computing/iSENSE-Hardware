@@ -15,7 +15,6 @@
 #import "Person.h"
 #import "Session.h"
 #import "SessionData.h"
-#import "JSON.h"
 
 @interface iSENSE : NSObject {
 	NSString *username;
@@ -44,9 +43,9 @@
 - (NSMutableArray *) getExperimentFields:(NSNumber *)exp_id;
 - (NSMutableArray *) getSessions:(NSNumber *)exp_id;
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id;
-- (bool) putSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id;
-- (bool) updateSessionData:(NSString *)dataJSON forSession:(NSNumber *)sessioN_id inExperiment:(NSNumber *)exp_id;
-- (void) useDev:(BOOL)toggle;
+- (bool) putSessionData:(NSData *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id;
+- (bool) updateSessionData:(NSData *)dataJSON forSession:(NSNumber *)sessioN_id inExperiment:(NSNumber *)exp_id;
+- (void) toggleUseDev:(BOOL)toggle;
 
 @end
 
