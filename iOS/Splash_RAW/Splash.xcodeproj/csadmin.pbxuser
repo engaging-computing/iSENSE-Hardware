@@ -2,16 +2,16 @@
 {
 	1D3623240D0F684500981E51 /* SplashAppDelegate.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1411, 601}}";
-			sepNavSelRange = "{516, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {755, 927}}";
+			sepNavSelRange = "{41, 741}";
 			sepNavVisRange = "{0, 784}";
 		};
 	};
 	1D3623250D0F684500981E51 /* SplashAppDelegate.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1965, 1339}}";
-			sepNavSelRange = "{3045, 0}";
-			sepNavVisRange = "{2057, 996}";
+			sepNavSelRange = "{1941, 0}";
+			sepNavVisRange = "{736, 2375}";
 		};
 	};
 	1D6058900D05DD3D006BFB54 /* Splash */ = {
@@ -37,7 +37,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					1233,
+					577,
 					20,
 					48,
 					43,
@@ -76,17 +76,19 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 378413388;
-			PBXWorkspaceStateSaveDate = 378413388;
+			PBXPerProjectTemplateStateSaveDate = 378666748;
+			PBXWorkspaceStateSaveDate = 378666748;
 		};
 		perUserProjectItems = {
+			52572C5616920232009037A7 /* PBXTextBookmark */ = 52572C5616920232009037A7 /* PBXTextBookmark */;
+			52572C5716920232009037A7 /* PBXTextBookmark */ = 52572C5716920232009037A7 /* PBXTextBookmark */;
+			52572C5816920232009037A7 /* PBXBookmark */ = 52572C5816920232009037A7 /* PBXBookmark */;
+			52572C5916920232009037A7 /* PBXTextBookmark */ = 52572C5916920232009037A7 /* PBXTextBookmark */;
 			52D0D73C168E1309008F092C /* PBXBookmark */ = 52D0D73C168E1309008F092C /* PBXBookmark */;
 			52D0D73D168E1309008F092C /* PBXBookmark */ = 52D0D73D168E1309008F092C /* PBXBookmark */;
 			52D0D73E168E1309008F092C /* PBXBookmark */ = 52D0D73E168E1309008F092C /* PBXBookmark */;
 			52D0D75C168E149F008F092C /* PBXTextBookmark */ = 52D0D75C168E149F008F092C /* PBXTextBookmark */;
 			52D0D7AB168E1D04008F092C /* PlistBookmark */ = 52D0D7AB168E1D04008F092C /* PlistBookmark */;
-			52D0D7D9168E2183008F092C /* PBXTextBookmark */ = 52D0D7D9168E2183008F092C /* PBXTextBookmark */;
-			52D0D7DA168E2183008F092C /* PBXTextBookmark */ = 52D0D7DA168E2183008F092C /* PBXTextBookmark */;
 			52D0D7DB168E2183008F092C /* PBXTextBookmark */ = 52D0D7DB168E2183008F092C /* PBXTextBookmark */;
 			52D0D7DC168E2183008F092C /* PBXTextBookmark */ = 52D0D7DC168E2183008F092C /* PBXTextBookmark */;
 			52D0D7DD168E2183008F092C /* PBXTextBookmark */ = 52D0D7DD168E2183008F092C /* PBXTextBookmark */;
@@ -96,12 +98,44 @@
 			52D0D7E1168E2183008F092C /* PBXTextBookmark */ = 52D0D7E1168E2183008F092C /* PBXTextBookmark */;
 			52D0D7E2168E2183008F092C /* PBXTextBookmark */ = 52D0D7E2168E2183008F092C /* PBXTextBookmark */;
 			52D0D7E3168E2183008F092C /* PBXTextBookmark */ = 52D0D7E3168E2183008F092C /* PBXTextBookmark */;
-			52D0D7E4168E2183008F092C /* PBXTextBookmark */ = 52D0D7E4168E2183008F092C /* PBXTextBookmark */;
-			52D0D7E5168E2183008F092C /* PBXTextBookmark */ = 52D0D7E5168E2183008F092C /* PBXTextBookmark */;
 		};
 		sourceControlManager = 52EF82EF168DFC1F0006DFA1 /* Source Control */;
 		userBuildSettings = {
 		};
+	};
+	52572C5616920232009037A7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 52D0D7A6168E1CFB008F092C /* ManualView.m */;
+		name = "ManualView.m: 9";
+		rLen = 0;
+		rLoc = 192;
+		rType = 0;
+		vrLen = 789;
+		vrLoc = 0;
+	};
+	52572C5716920232009037A7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
+		name = "SplashAppDelegate.h: 5";
+		rLen = 741;
+		rLoc = 41;
+		rType = 0;
+		vrLen = 784;
+		vrLoc = 0;
+	};
+	52572C5816920232009037A7 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 1D3623250D0F684500981E51 /* SplashAppDelegate.m */;
+	};
+	52572C5916920232009037A7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* SplashAppDelegate.m */;
+		name = "SplashAppDelegate.m: 56";
+		rLen = 0;
+		rLoc = 1941;
+		rType = 0;
+		vrLen = 2375;
+		vrLoc = 736;
 	};
 	52A09673168E089E00DA6AF6 /* AboutView.h */ = {
 		uiCtxt = {
@@ -162,7 +196,7 @@
 	};
 	52D0D7A6168E1CFB008F092C /* ManualView.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1411, 601}}";
+			sepNavIntBoundsRect = "{{0, 0}, {755, 927}}";
 			sepNavSelRange = "{192, 0}";
 			sepNavVisRange = "{0, 789}";
 		};
@@ -177,26 +211,6 @@
 		name = "/Users/csadmin/Documents/iSENSE-Hardware/iOS/Splash/Splash-Info.plist";
 		rLen = 0;
 		rLoc = 9223372036854775808;
-	};
-	52D0D7D9168E2183008F092C /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 52EF834D168E00700006DFA1 /* SplashAppDelegate.m */;
-		name = "SplashAppDelegate.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1678;
-		vrLoc = 0;
-	};
-	52D0D7DA168E2183008F092C /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 1D3623240D0F684500981E51 /* SplashAppDelegate.h */;
-		name = "SplashAppDelegate.h: 23";
-		rLen = 0;
-		rLoc = 516;
-		rType = 0;
-		vrLen = 784;
-		vrLoc = 0;
 	};
 	52D0D7DB168E2183008F092C /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -288,26 +302,6 @@
 		vrLen = 269;
 		vrLoc = 0;
 	};
-	52D0D7E4168E2183008F092C /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 52D0D7A6168E1CFB008F092C /* ManualView.m */;
-		name = "ManualView.m: 9";
-		rLen = 0;
-		rLoc = 192;
-		rType = 0;
-		vrLen = 789;
-		vrLoc = 0;
-	};
-	52D0D7E5168E2183008F092C /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 52D0D7A6168E1CFB008F092C /* ManualView.m */;
-		name = "ManualView.m: 9";
-		rLen = 0;
-		rLoc = 192;
-		rType = 0;
-		vrLen = 789;
-		vrLoc = 0;
-	};
 	52EF82EB168DFC000006DFA1 /* Splash */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -384,18 +378,6 @@
 			sepNavSelRange = "{192, 0}";
 			sepNavVisRange = "{0, 7460}";
 			sepNavWindowFrame = "{{15, 79}, {1191, 945}}";
-		};
-	};
-	52EF834D168E00700006DFA1 /* SplashAppDelegate.m */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.objc;
-		name = SplashAppDelegate.m;
-		path = "/Users/csadmin/Documents/iSENSE-Hardware/iOS/Splash/Classes/SplashAppDelegate.m";
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1965, 1339}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 1678}";
 		};
 	};
 	8D1107310486CEB800E47090 /* Splash-Info.plist */ = {
