@@ -268,9 +268,7 @@
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>080E96DDFE201D6D7F000001</string>
 								<string>52572B6D1691F6DD009037A7</string>
-								<string>52572B6E1691F6E2009037A7</string>
 								<string>52572B6F1691F6E9009037A7</string>
-								<string>52572B721691F703009037A7</string>
 								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>52572B681691F678009037A7</string>
 								<string>52572B6A1691F684009037A7</string>
@@ -320,7 +318,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Data_CollectorAppDelegate.m</string>
+								<string>Data_Collector-Info.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -328,29 +326,16 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Data_CollectorAppDelegate.m</string>
-										<key>_historyCapacity</key>
-										<integer>0</integer>
-										<key>bookmark</key>
-										<string>52572C5516920221009037A7</string>
+										<string>Data_Collector-Info.plist</string>
 										<key>history</key>
 										<array>
 											<string>52572BA91691FA13009037A7</string>
-											<string>52572BAE1691FA13009037A7</string>
-											<string>52572BAF1691FA13009037A7</string>
-											<string>52572BB01691FA13009037A7</string>
-											<string>52572BC91691FBD6009037A7</string>
 											<string>52572C021691FEC4009037A7</string>
 											<string>52572C031691FEC4009037A7</string>
 											<string>52572C051691FEC4009037A7</string>
-											<string>52572C061691FEC4009037A7</string>
-											<string>52572C071691FEC4009037A7</string>
 											<string>52572C2A1691FF30009037A7</string>
-											<string>52572C3B1692000E009037A7</string>
-											<string>52572C5116920221009037A7</string>
-											<string>52572C5216920221009037A7</string>
 											<string>52572C5316920221009037A7</string>
-											<string>52572C5416920221009037A7</string>
+											<string>52572C3B1692000E009037A7</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -362,14 +347,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1472, 667}}</string>
+								<string>{{0, 0}, {1472, 658}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 134 1680 894 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>667pt</string>
+							<string>658pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -382,14 +367,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 672}, {1472, 181}}</string>
+								<string>{{0, 663}, {1472, 190}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 134 1680 894 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>181pt</string>
+							<string>190pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -408,9 +393,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>52572BB31691FA13009037A7</string>
+				<string>52E84B04169214F20093550F</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>52572BB41691FA13009037A7</string>
+				<string>52E84B05169214F20093550F</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -548,10 +533,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>52572BB61691FA13009037A7</string>
-		<string>/Users/csadmin/Desktop/Data_Collector/Data_Collector.xcodeproj</string>
+		<string>/Users/csadmin/Documents/iSENSE-Hardware/iOS/Data_Collector/Data_Collector.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>0 134 1680 894 0 0 1680 1028 </string>
@@ -575,7 +558,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>iSENSE_Data_CollectorViewController_iPad.h</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -592,8 +575,6 @@
 							<string>582pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -633,7 +614,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>52572BB61691FA13009037A7</string>
-				<string>52572BB71691FA13009037A7</string>
+				<string>52E84B06169214F20093550F</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -677,8 +658,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {316, 185}}</string>
-											<string>{{316, 0}, {378, 185}}</string>
+											<string>{{0, 0}, {316, 194}}</string>
+											<string>{{316, 0}, {378, 194}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -693,8 +674,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {694, 185}}</string>
-											<string>{{0, 185}, {694, 196}}</string>
+											<string>{{0, 0}, {694, 194}}</string>
+											<string>{{0, 194}, {694, 187}}</string>
 										</array>
 									</dict>
 								</dict>
@@ -727,7 +708,7 @@
 										<real>148</real>
 									</array>
 									<key>Frame</key>
-									<string>{{316, 0}, {378, 185}}</string>
+									<string>{{316, 0}, {378, 194}}</string>
 									<key>RubberWindowFrame</key>
 									<string>21 583 694 422 0 0 1680 1028 </string>
 								</dict>
@@ -755,13 +736,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>52572C0A1691FEC4009037A7</string>
+				<string>52E84AF6169214E80093550F</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>52572C0B1691FEC4009037A7</string>
-				<string>52572C0C1691FEC4009037A7</string>
-				<string>52572C0D1691FEC4009037A7</string>
-				<string>52572C0E1691FEC4009037A7</string>
-				<string>52572C0F1691FEC4009037A7</string>
+				<string>52E84AF7169214E80093550F</string>
+				<string>52E84AF8169214E80093550F</string>
+				<string>52E84AF9169214E80093550F</string>
+				<string>52E84AFA169214E80093550F</string>
+				<string>52E84AFB169214E80093550F</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -923,7 +904,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>52572C101691FEC4009037A7</string>
+				<string>52E84AFC169214E80093550F</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>
