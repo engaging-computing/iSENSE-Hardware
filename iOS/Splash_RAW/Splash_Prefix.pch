@@ -1,8 +1,0 @@
-//
-// Prefix header for all source files of the 'Splash' target in the 'Splash' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-#endif

@@ -103,10 +103,10 @@
 	[self.view addSubview:containerForMainButton];
 	
 	// Attempt Login
-	/*rapi = [RestAPI getInstance];
-	[rapi useDev:TRUE];
-	[rapi login:@"sor":@"sor"];	
-	*/
+	//isenseAPI = [iSENSE instance];
+	//[isenseAPI toggleUseDev:YES];
+	//[isenseAPI login:@"sor" with:@"sor"];	
+	
 }
 
 

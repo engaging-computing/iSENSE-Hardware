@@ -26,9 +26,7 @@
 	 
  }
 
-- (IBAction)textFieldFinished:(id)sender {
-    // [sender resignFirstResponder];
-}
+- (IBAction)textFieldFinished:(id)sender {}
  
 
 - (void)didReceiveMemoryWarning {

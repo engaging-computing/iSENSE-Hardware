@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,7 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
+		39CEE19116947D0B00AC6B82 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39CEE19016947D0B00AC6B82 /* libiSENSE_API.a */; };
 		52572B651691F671009037A7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52572B641691F671009037A7 /* AudioToolbox.framework */; };
 		52572B7D1691F742009037A7 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		52572B7E1691F742009037A7 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
@@ -38,6 +39,7 @@
 		52572BC71691FBC6009037A7 /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC61691FBC6009037A7 /* SplashView-iPad.xib */; };
 		52572BF01691FD71009037A7 /* UIPicButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UIPicButton.m */; };
 		52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BF41691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m */; };
+		52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C49BCB16948AC5007DD082 /* StringGrabber.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,15 @@
 		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Data_Collector_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data_Collector_Prefix.pch; sourceTree = "<group>"; };
+		39A9E9F816921EFA003D2EBB /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		39A9E9F916921EFA003D2EBB /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		39A9E9FA16921EFA003D2EBB /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		39A9E9FB16921EFA003D2EBB /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		39A9E9FC16921EFA003D2EBB /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		39A9E9FD16921EFA003D2EBB /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		39A9E9FE16921EFA003D2EBB /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		39A9E9FF16921EFA003D2EBB /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		39CEE19016947D0B00AC6B82 /* libiSENSE_API.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libiSENSE_API.a; sourceTree = "<group>"; };
 		52572B641691F671009037A7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		52572B741691F742009037A7 /* media_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_icon.png; sourceTree = "<group>"; };
 		52572B751691F742009037A7 /* logo_manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_manual.png; sourceTree = "<group>"; };
@@ -81,6 +92,8 @@
 		52572BEF1691FD71009037A7 /* UIPicButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPicButton.m; sourceTree = "<group>"; };
 		52572BF31691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_Data_CollectorViewController_iPad.h; sourceTree = "<group>"; };
 		52572BF41691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE_Data_CollectorViewController_iPad.m; sourceTree = "<group>"; };
+		52C49BCA16948AC5007DD082 /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
+		52C49BCB16948AC5007DD082 /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,6 +106,7 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				52572B651691F671009037A7 /* AudioToolbox.framework in Frameworks */,
+				39CEE19116947D0B00AC6B82 /* libiSENSE_API.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,9 +119,9 @@
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
 				52572B6F1691F6E9009037A7 /* Manual */,
-				52572B701691F6EE009037A7 /* RestAPI */,
 				52572B711691F6F5009037A7 /* Objects */,
 				52572B721691F703009037A7 /* Delegate Files */,
+				39A9E9F616921EFA003D2EBB /* iSenseApiLib */,
 			);
 			name = Source;
 			path = Classes;
@@ -164,6 +178,31 @@
 				52572B641691F671009037A7 /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		39A9E9F616921EFA003D2EBB /* iSenseApiLib */ = {
+			isa = PBXGroup;
+			children = (
+				39CEE19016947D0B00AC6B82 /* libiSENSE_API.a */,
+				39A9E9F716921EFA003D2EBB /* Headers */,
+			);
+			name = iSenseApiLib;
+			path = ../../iSENSE_API/iSenseApiLib;
+			sourceTree = "<group>";
+		};
+		39A9E9F716921EFA003D2EBB /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				39A9E9F816921EFA003D2EBB /* Experiment.h */,
+				39A9E9F916921EFA003D2EBB /* ExperimentField.h */,
+				39A9E9FA16921EFA003D2EBB /* Image.h */,
+				39A9E9FB16921EFA003D2EBB /* iSENSE.h */,
+				39A9E9FC16921EFA003D2EBB /* Item.h */,
+				39A9E9FD16921EFA003D2EBB /* Person.h */,
+				39A9E9FE16921EFA003D2EBB /* Session.h */,
+				39A9E9FF16921EFA003D2EBB /* SessionData.h */,
+			);
+			path = Headers;
 			sourceTree = "<group>";
 		};
 		52572B681691F678009037A7 /* Drawable */ = {
@@ -251,16 +290,10 @@
 			name = Manual;
 			sourceTree = "<group>";
 		};
-		52572B701691F6EE009037A7 /* RestAPI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = RestAPI;
-			sourceTree = "<group>";
-		};
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				52C49BC916948AB6007DD082 /* StringGrabber */,
 				52572BED1691FD33009037A7 /* UIPicButton */,
 			);
 			name = Objects;
@@ -282,6 +315,15 @@
 				52572BEF1691FD71009037A7 /* UIPicButton.m */,
 			);
 			name = UIPicButton;
+			sourceTree = "<group>";
+		};
+		52C49BC916948AB6007DD082 /* StringGrabber */ = {
+			isa = PBXGroup;
+			children = (
+				52C49BCA16948AC5007DD082 /* StringGrabber.h */,
+				52C49BCB16948AC5007DD082 /* StringGrabber.m */,
+			);
+			name = StringGrabber;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -309,8 +351,11 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Data_Collector" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -370,6 +415,7 @@
 				52572B9A1691F7B1009037A7 /* ManualView.m in Sources */,
 				52572BF01691FD71009037A7 /* UIPicButton.m in Sources */,
 				52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
+				52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,6 +433,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Data_Collector_Prefix.pch;
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -402,6 +453,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Data_Collector_Prefix.pch;
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -417,7 +473,6 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -431,7 +486,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Release;
