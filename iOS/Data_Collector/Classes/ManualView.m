@@ -61,7 +61,7 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
-	
+	[CameraUsage useCamera];
 }
 
 @end

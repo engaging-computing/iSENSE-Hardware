@@ -6,4 +6,5 @@
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
 	#import "StringGrabber.h"
+	#import "CameraUsage.h"
 #endif
