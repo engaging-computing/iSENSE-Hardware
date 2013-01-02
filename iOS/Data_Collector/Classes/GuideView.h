@@ -14,8 +14,6 @@
 	UITextView *guideText;
 }
 
-- (NSString *) getString:(NSString *)label;
-
 @property (nonatomic, retain) IBOutlet UITextView *guideText;
 
 @end

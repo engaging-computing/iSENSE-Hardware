@@ -103,9 +103,9 @@
 	[self.view addSubview:containerForMainButton];
 	
 	// Attempt Login
-	isenseAPI = [iSENSE instance];
-	[isenseAPI toggleUseDev:YES];
-	[isenseAPI login:@"sor" with:@"sor"];	
+	//isenseAPI = [iSENSE instance];
+	//[isenseAPI toggleUseDev:YES];
+	//[isenseAPI login:@"sor" with:@"sor"];	
 	
 }
 
