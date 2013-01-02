@@ -17,7 +17,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	guideText.text = [self getString:@"guide_text"];
+	guideText.text = [StringGrabber getString:@"guide_text"];
 	
 }
 
@@ -38,14 +38,5 @@
 - (void)dealloc {
     [super dealloc];
 }
-
-- (NSString *) getString:(NSString *)label {
-	
-	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
-	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
-	NSString *loc = [d objectForKey:label];
-	return loc;
-}
-
 
 @end
