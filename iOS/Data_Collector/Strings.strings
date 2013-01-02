@@ -8,8 +8,11 @@
 //
 
 "logged_in_as" = "Logged in as: ";
-
 "exp_num" = "Experiment #: ";
+
+"stop_button_text" = "STOP\n(Press and Hold)";
+"start_button_text" = "START\n(Press and Hold)";
+"login_status_not_logged_in" = "Login Status: NOT LOGGED IN";
 
 
 // ---------------

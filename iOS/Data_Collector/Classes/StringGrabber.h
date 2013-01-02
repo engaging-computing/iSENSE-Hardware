@@ -12,6 +12,7 @@
 
 @interface StringGrabber : NSObject {}    
 
-+ (NSString *) getString:(NSString *)label;   
++ (NSString *) getString:(NSString *)label;
++ (NSString *) concatenateWithHardcodedString:(NSString *)label:(NSString *)string;
 
 @end
