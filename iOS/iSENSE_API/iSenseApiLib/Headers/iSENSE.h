@@ -24,14 +24,14 @@
 }
 
 -(NSDictionary *)isenseQuery:(NSString*)target;
-+ (iSENSE *) instance;
++ (iSENSE *) getInstance;
 - (NSString *) getSessionKey;
 - (NSNumber *) getUID;
 - (bool) isLoggedIn;
 - (NSString *) getLoggedInUsername;
 - (void) logout;
 //- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name andDescirption:(NSString *)description;
-- (bool) login:(NSString *)User with:(NSString *)Password;
+- (bool) login:(NSString *)user with:(NSString *)password;
 - (Experiment *) getExperiment:(NSNumber *)exp_id;
 - (NSMutableArray *) sessionData:(NSString *)sessions;
 - (NSMutableArray *) getPeople:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query;

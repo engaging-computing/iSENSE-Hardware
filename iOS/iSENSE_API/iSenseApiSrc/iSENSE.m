@@ -33,7 +33,7 @@ static iSENSE* _iSENSE = nil;
     return [jsonDictionary autorelease];
 }
 
-+(iSENSE*)instance
++(iSENSE*)getInstance
 {
 	@synchronized([iSENSE class])
 	{
