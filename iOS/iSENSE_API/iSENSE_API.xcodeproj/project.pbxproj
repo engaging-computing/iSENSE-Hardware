@@ -3,76 +3,50 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		394325B7166F9DBE006C32AA /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39432595166F9DBE006C32AA /* iSENSE.h */; };
-		394325B8166F9DBE006C32AA /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39432596166F9DBE006C32AA /* iSENSE.m */; };
-		394325B9166F9DBE006C32AA /* JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 39432598166F9DBE006C32AA /* JSON.h */; };
-		394325BA166F9DBE006C32AA /* NSObject+SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 39432599166F9DBE006C32AA /* NSObject+SBJSON.h */; };
-		394325BB166F9DBE006C32AA /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3943259A166F9DBE006C32AA /* NSObject+SBJSON.m */; };
-		394325BC166F9DBE006C32AA /* NSString+SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 3943259B166F9DBE006C32AA /* NSString+SBJSON.h */; };
-		394325BD166F9DBE006C32AA /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3943259C166F9DBE006C32AA /* NSString+SBJSON.m */; };
-		394325BE166F9DBE006C32AA /* SBJsonBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 3943259D166F9DBE006C32AA /* SBJsonBase.h */; };
-		394325BF166F9DBE006C32AA /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3943259E166F9DBE006C32AA /* SBJsonBase.m */; };
-		394325C0166F9DBE006C32AA /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 3943259F166F9DBE006C32AA /* SBJsonParser.h */; };
-		394325C1166F9DBE006C32AA /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325A0166F9DBE006C32AA /* SBJsonParser.m */; };
-		394325C2166F9DBE006C32AA /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325A1166F9DBE006C32AA /* SBJsonWriter.h */; };
-		394325C3166F9DBE006C32AA /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325A2166F9DBE006C32AA /* SBJsonWriter.m */; };
-		394325C4166F9DBE006C32AA /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325A4166F9DBE006C32AA /* Experiment.h */; };
-		394325C5166F9DBE006C32AA /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325A5166F9DBE006C32AA /* Experiment.m */; };
-		394325C6166F9DBE006C32AA /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325A6166F9DBE006C32AA /* ExperimentField.h */; };
-		394325C7166F9DBE006C32AA /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325A7166F9DBE006C32AA /* ExperimentField.m */; };
-		394325C8166F9DBE006C32AA /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325A8166F9DBE006C32AA /* Image.h */; };
-		394325C9166F9DBE006C32AA /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325A9166F9DBE006C32AA /* Image.m */; };
-		394325CA166F9DBE006C32AA /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325AA166F9DBE006C32AA /* Item.h */; };
-		394325CB166F9DBE006C32AA /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325AB166F9DBE006C32AA /* Item.m */; };
-		394325CC166F9DBE006C32AA /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325AC166F9DBE006C32AA /* Person.h */; };
-		394325CD166F9DBE006C32AA /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325AD166F9DBE006C32AA /* Person.m */; };
-		394325CE166F9DBE006C32AA /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325AE166F9DBE006C32AA /* Session.h */; };
-		394325CF166F9DBE006C32AA /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325AF166F9DBE006C32AA /* Session.m */; };
-		394325D0166F9DBE006C32AA /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 394325B0166F9DBE006C32AA /* SessionData.h */; };
-		394325D1166F9DBE006C32AA /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 394325B1166F9DBE006C32AA /* SessionData.m */; };
-		394325D2166F9DBE006C32AA /* libiSenseAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 394325B4166F9DBE006C32AA /* libiSenseAPI.a */; };
-		394325D3166F9DBE006C32AA /* libiSenseAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 394325B6166F9DBE006C32AA /* libiSenseAPI.a */; };
+		398D33EC16921A45001133D7 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E416921A45001133D7 /* Experiment.h */; };
+		398D33ED16921A45001133D7 /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E516921A45001133D7 /* ExperimentField.h */; };
+		398D33EE16921A45001133D7 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E616921A45001133D7 /* Image.h */; };
+		398D33EF16921A45001133D7 /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E716921A45001133D7 /* iSENSE.h */; };
+		398D33F016921A45001133D7 /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E816921A45001133D7 /* Item.h */; };
+		398D33F116921A45001133D7 /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E916921A45001133D7 /* Person.h */; };
+		398D33F216921A45001133D7 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33EA16921A45001133D7 /* Session.h */; };
+		398D33F316921A45001133D7 /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33EB16921A45001133D7 /* SessionData.h */; };
+		398D33FE16921A4A001133D7 /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F516921A4A001133D7 /* iSENSE.m */; };
+		398D33FF16921A4A001133D7 /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F716921A4A001133D7 /* Experiment.m */; };
+		398D340016921A4A001133D7 /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F816921A4A001133D7 /* ExperimentField.m */; };
+		398D340116921A4A001133D7 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F916921A4A001133D7 /* Image.m */; };
+		398D340216921A4A001133D7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FA16921A4A001133D7 /* Item.m */; };
+		398D340316921A4A001133D7 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FB16921A4A001133D7 /* Person.m */; };
+		398D340416921A4A001133D7 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FC16921A4A001133D7 /* Session.m */; };
+		398D340516921A4A001133D7 /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FD16921A4A001133D7 /* SessionData.m */; };
 		AA747D9F0F9514B9006C5449 /* iSENSE_API_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		39432595166F9DBE006C32AA /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iSENSE.h; path = ../iSenseAPI/iSENSE.h; sourceTree = "<group>"; };
-		39432596166F9DBE006C32AA /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
-		39432598166F9DBE006C32AA /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSON.h; path = ../iSenseAPI/JSON/JSON.h; sourceTree = "<group>"; };
-		39432599166F9DBE006C32AA /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJSON.h"; path = "../iSenseAPI/JSON/NSObject+SBJSON.h"; sourceTree = "<group>"; };
-		3943259A166F9DBE006C32AA /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
-		3943259B166F9DBE006C32AA /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+SBJSON.h"; path = "../iSenseAPI/JSON/NSString+SBJSON.h"; sourceTree = "<group>"; };
-		3943259C166F9DBE006C32AA /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
-		3943259D166F9DBE006C32AA /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonBase.h; path = ../iSenseAPI/JSON/SBJsonBase.h; sourceTree = "<group>"; };
-		3943259E166F9DBE006C32AA /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
-		3943259F166F9DBE006C32AA /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = ../iSenseAPI/JSON/SBJsonParser.h; sourceTree = "<group>"; };
-		394325A0166F9DBE006C32AA /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
-		394325A1166F9DBE006C32AA /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonWriter.h; path = ../iSenseAPI/JSON/SBJsonWriter.h; sourceTree = "<group>"; };
-		394325A2166F9DBE006C32AA /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
-		394325A4166F9DBE006C32AA /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Experiment.h; path = ../iSenseAPI/Objects/Experiment.h; sourceTree = "<group>"; };
-		394325A5166F9DBE006C32AA /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
-		394325A6166F9DBE006C32AA /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentField.h; path = ../iSenseAPI/Objects/ExperimentField.h; sourceTree = "<group>"; };
-		394325A7166F9DBE006C32AA /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
-		394325A8166F9DBE006C32AA /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../iSenseAPI/Objects/Image.h; sourceTree = "<group>"; };
-		394325A9166F9DBE006C32AA /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
-		394325AA166F9DBE006C32AA /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Item.h; path = ../iSenseAPI/Objects/Item.h; sourceTree = "<group>"; };
-		394325AB166F9DBE006C32AA /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
-		394325AC166F9DBE006C32AA /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Person.h; path = ../iSenseAPI/Objects/Person.h; sourceTree = "<group>"; };
-		394325AD166F9DBE006C32AA /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
-		394325AE166F9DBE006C32AA /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Session.h; path = ../iSenseAPI/Objects/Session.h; sourceTree = "<group>"; };
-		394325AF166F9DBE006C32AA /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
-		394325B0166F9DBE006C32AA /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionData.h; path = ../iSenseAPI/Objects/SessionData.h; sourceTree = "<group>"; };
-		394325B1166F9DBE006C32AA /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
-		394325B4166F9DBE006C32AA /* libiSenseAPI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libiSenseAPI.a; sourceTree = "<group>"; };
-		394325B6166F9DBE006C32AA /* libiSenseAPI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libiSenseAPI.a; sourceTree = "<group>"; };
+		398D33E416921A45001133D7 /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		398D33E516921A45001133D7 /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		398D33E616921A45001133D7 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		398D33E716921A45001133D7 /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		398D33E816921A45001133D7 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		398D33E916921A45001133D7 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		398D33EA16921A45001133D7 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		398D33EB16921A45001133D7 /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		398D33F516921A4A001133D7 /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
+		398D33F716921A4A001133D7 /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
+		398D33F816921A4A001133D7 /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
+		398D33F916921A4A001133D7 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		398D33FA16921A4A001133D7 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		398D33FB16921A4A001133D7 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		398D33FC16921A4A001133D7 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		398D33FD16921A4A001133D7 /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+		398D340616921B29001133D7 /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_API_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,30 +55,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
-				394325D2166F9DBE006C32AA /* libiSenseAPI.a in Frameworks */,
-				394325D3166F9DBE006C32AA /* libiSenseAPI.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		034768DFFF38A50411DB9C8B /* iSENSERestApiLib */ = {
-			isa = PBXGroup;
-			children = (
-				3932E423166FC517004E96BC /* Headers */,
-				D2AAC07E0554694100DB518D /* libiSENSE_API.a */,
-			);
-			name = iSENSERestApiLib;
-			sourceTree = "<group>";
-		};
 		0867D691FE84028FC02AAC07 /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
-				034768DFFF38A50411DB9C8B /* iSENSERestApiLib */,
+				398D340616921B29001133D7 /* libiSENSE_API.a */,
 			);
 			name = iSENSE_API;
 			sourceTree = "<group>";
@@ -120,7 +83,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				39432594166F9DBE006C32AA /* iSenseAPI */,
+				398D33F416921A4A001133D7 /* iSenseApiSrc */,
+				398D33E216921A45001133D7 /* iSenseApiLib */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -133,88 +97,50 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		3932E423166FC517004E96BC /* Headers */ = {
+		398D33E216921A45001133D7 /* iSenseApiLib */ = {
 			isa = PBXGroup;
 			children = (
-				394325A6166F9DBE006C32AA /* ExperimentField.h */,
-				394325A8166F9DBE006C32AA /* Image.h */,
-				394325AA166F9DBE006C32AA /* Item.h */,
-				394325AC166F9DBE006C32AA /* Person.h */,
-				394325AE166F9DBE006C32AA /* Session.h */,
-				394325B0166F9DBE006C32AA /* SessionData.h */,
-				394325A4166F9DBE006C32AA /* Experiment.h */,
-				39432599166F9DBE006C32AA /* NSObject+SBJSON.h */,
-				3943259B166F9DBE006C32AA /* NSString+SBJSON.h */,
-				3943259F166F9DBE006C32AA /* SBJsonParser.h */,
-				394325A1166F9DBE006C32AA /* SBJsonWriter.h */,
-				3943259D166F9DBE006C32AA /* SBJsonBase.h */,
-				39432598166F9DBE006C32AA /* JSON.h */,
-				39432595166F9DBE006C32AA /* iSENSE.h */,
+				398D33E316921A45001133D7 /* Headers */,
 			);
-			name = Headers;
+			path = iSenseApiLib;
 			sourceTree = "<group>";
 		};
-		39432594166F9DBE006C32AA /* iSenseAPI */ = {
+		398D33E316921A45001133D7 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				39432596166F9DBE006C32AA /* iSENSE.m */,
-				39432597166F9DBE006C32AA /* JSON */,
-				394325A3166F9DBE006C32AA /* Objects */,
-				394325B2166F9DBE006C32AA /* Static Libraries */,
+				398D33E416921A45001133D7 /* Experiment.h */,
+				398D33E516921A45001133D7 /* ExperimentField.h */,
+				398D33E616921A45001133D7 /* Image.h */,
+				398D33E716921A45001133D7 /* iSENSE.h */,
+				398D33E816921A45001133D7 /* Item.h */,
+				398D33E916921A45001133D7 /* Person.h */,
+				398D33EA16921A45001133D7 /* Session.h */,
+				398D33EB16921A45001133D7 /* SessionData.h */,
 			);
-			name = iSenseAPI;
-			path = ../iSenseAPI;
-			sourceTree = SOURCE_ROOT;
-		};
-		39432597166F9DBE006C32AA /* JSON */ = {
-			isa = PBXGroup;
-			children = (
-				3943259A166F9DBE006C32AA /* NSObject+SBJSON.m */,
-				3943259C166F9DBE006C32AA /* NSString+SBJSON.m */,
-				3943259E166F9DBE006C32AA /* SBJsonBase.m */,
-				394325A0166F9DBE006C32AA /* SBJsonParser.m */,
-				394325A2166F9DBE006C32AA /* SBJsonWriter.m */,
-			);
-			path = JSON;
+			path = Headers;
 			sourceTree = "<group>";
 		};
-		394325A3166F9DBE006C32AA /* Objects */ = {
+		398D33F416921A4A001133D7 /* iSenseApiSrc */ = {
 			isa = PBXGroup;
 			children = (
-				394325A5166F9DBE006C32AA /* Experiment.m */,
-				394325A7166F9DBE006C32AA /* ExperimentField.m */,
-				394325A9166F9DBE006C32AA /* Image.m */,
-				394325AB166F9DBE006C32AA /* Item.m */,
-				394325AD166F9DBE006C32AA /* Person.m */,
-				394325AF166F9DBE006C32AA /* Session.m */,
-				394325B1166F9DBE006C32AA /* SessionData.m */,
+				398D33F516921A4A001133D7 /* iSENSE.m */,
+				398D33F616921A4A001133D7 /* Objects */,
+			);
+			path = iSenseApiSrc;
+			sourceTree = "<group>";
+		};
+		398D33F616921A4A001133D7 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				398D33F716921A4A001133D7 /* Experiment.m */,
+				398D33F816921A4A001133D7 /* ExperimentField.m */,
+				398D33F916921A4A001133D7 /* Image.m */,
+				398D33FA16921A4A001133D7 /* Item.m */,
+				398D33FB16921A4A001133D7 /* Person.m */,
+				398D33FC16921A4A001133D7 /* Session.m */,
+				398D33FD16921A4A001133D7 /* SessionData.m */,
 			);
 			path = Objects;
-			sourceTree = "<group>";
-		};
-		394325B2166F9DBE006C32AA /* Static Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				394325B3166F9DBE006C32AA /* 4.2 Release-iphoneos */,
-				394325B5166F9DBE006C32AA /* 4.2 Release-iphonesimulator */,
-			);
-			path = "Static Libraries";
-			sourceTree = "<group>";
-		};
-		394325B3166F9DBE006C32AA /* 4.2 Release-iphoneos */ = {
-			isa = PBXGroup;
-			children = (
-				394325B4166F9DBE006C32AA /* libiSenseAPI.a */,
-			);
-			path = "4.2 Release-iphoneos";
-			sourceTree = "<group>";
-		};
-		394325B5166F9DBE006C32AA /* 4.2 Release-iphonesimulator */ = {
-			isa = PBXGroup;
-			children = (
-				394325B6166F9DBE006C32AA /* libiSenseAPI.a */,
-			);
-			path = "4.2 Release-iphonesimulator";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,20 +151,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA747D9F0F9514B9006C5449 /* iSENSE_API_Prefix.pch in Headers */,
-				394325B7166F9DBE006C32AA /* iSENSE.h in Headers */,
-				394325B9166F9DBE006C32AA /* JSON.h in Headers */,
-				394325BA166F9DBE006C32AA /* NSObject+SBJSON.h in Headers */,
-				394325BC166F9DBE006C32AA /* NSString+SBJSON.h in Headers */,
-				394325BE166F9DBE006C32AA /* SBJsonBase.h in Headers */,
-				394325C0166F9DBE006C32AA /* SBJsonParser.h in Headers */,
-				394325C2166F9DBE006C32AA /* SBJsonWriter.h in Headers */,
-				394325C4166F9DBE006C32AA /* Experiment.h in Headers */,
-				394325C6166F9DBE006C32AA /* ExperimentField.h in Headers */,
-				394325C8166F9DBE006C32AA /* Image.h in Headers */,
-				394325CA166F9DBE006C32AA /* Item.h in Headers */,
-				394325CC166F9DBE006C32AA /* Person.h in Headers */,
-				394325CE166F9DBE006C32AA /* Session.h in Headers */,
-				394325D0166F9DBE006C32AA /* SessionData.h in Headers */,
+				398D33EC16921A45001133D7 /* Experiment.h in Headers */,
+				398D33ED16921A45001133D7 /* ExperimentField.h in Headers */,
+				398D33EE16921A45001133D7 /* Image.h in Headers */,
+				398D33EF16921A45001133D7 /* iSENSE.h in Headers */,
+				398D33F016921A45001133D7 /* Item.h in Headers */,
+				398D33F116921A45001133D7 /* Person.h in Headers */,
+				398D33F216921A45001133D7 /* Session.h in Headers */,
+				398D33F316921A45001133D7 /* SessionData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +179,7 @@
 			);
 			name = iSENSE_API;
 			productName = iSENSE_API;
-			productReference = D2AAC07E0554694100DB518D /* libiSENSE_API.a */;
+			productReference = 398D340616921B29001133D7 /* libiSENSE_API.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -267,8 +187,11 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "iSENSE_API" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -278,7 +201,7 @@
 				German,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* iSENSE_API */;
-			productRefGroup = 034768DFFF38A50411DB9C8B /* iSENSERestApiLib */;
+			productRefGroup = 0867D691FE84028FC02AAC07 /* iSENSE_API */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -292,19 +215,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				394325B8166F9DBE006C32AA /* iSENSE.m in Sources */,
-				394325BB166F9DBE006C32AA /* NSObject+SBJSON.m in Sources */,
-				394325BD166F9DBE006C32AA /* NSString+SBJSON.m in Sources */,
-				394325BF166F9DBE006C32AA /* SBJsonBase.m in Sources */,
-				394325C1166F9DBE006C32AA /* SBJsonParser.m in Sources */,
-				394325C3166F9DBE006C32AA /* SBJsonWriter.m in Sources */,
-				394325C5166F9DBE006C32AA /* Experiment.m in Sources */,
-				394325C7166F9DBE006C32AA /* ExperimentField.m in Sources */,
-				394325C9166F9DBE006C32AA /* Image.m in Sources */,
-				394325CB166F9DBE006C32AA /* Item.m in Sources */,
-				394325CD166F9DBE006C32AA /* Person.m in Sources */,
-				394325CF166F9DBE006C32AA /* Session.m in Sources */,
-				394325D1166F9DBE006C32AA /* SessionData.m in Sources */,
+				398D33FE16921A4A001133D7 /* iSENSE.m in Sources */,
+				398D33FF16921A4A001133D7 /* Experiment.m in Sources */,
+				398D340016921A4A001133D7 /* ExperimentField.m in Sources */,
+				398D340116921A4A001133D7 /* Image.m in Sources */,
+				398D340216921A4A001133D7 /* Item.m in Sources */,
+				398D340316921A4A001133D7 /* Person.m in Sources */,
+				398D340416921A4A001133D7 /* Session.m in Sources */,
+				398D340516921A4A001133D7 /* SessionData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,22 +232,16 @@
 		1DEB921F08733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/iSENSE_API.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iSENSE_API_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../iSenseAPI/Static Libraries/4.2 Release-iphoneos\"",
-					"\"$(SRCROOT)/../iSenseAPI/Static Libraries/4.2 Release-iphonesimulator\"",
-				);
 				PRODUCT_NAME = iSENSE_API;
 			};
 			name = Debug;
@@ -337,18 +249,13 @@
 		1DEB922008733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DSTROOT = /tmp/iSENSE_API.dst;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iSENSE_API_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../iSenseAPI/Static Libraries/4.2 Release-iphoneos\"",
-					"\"$(SRCROOT)/../iSenseAPI/Static Libraries/4.2 Release-iphonesimulator\"",
-				);
 				PRODUCT_NAME = iSENSE_API;
 			};
 			name = Release;
@@ -362,8 +269,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -375,8 +282,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
