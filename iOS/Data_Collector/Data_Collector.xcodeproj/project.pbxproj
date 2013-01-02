@@ -13,14 +13,6 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
-		39521F2916949AA60076A9CA /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2016949AA60076A9CA /* iSENSE.m */; };
-		39521F2A16949AA60076A9CA /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2216949AA60076A9CA /* Experiment.m */; };
-		39521F2B16949AA60076A9CA /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2316949AA60076A9CA /* ExperimentField.m */; };
-		39521F2C16949AA60076A9CA /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2416949AA60076A9CA /* Image.m */; };
-		39521F2D16949AA60076A9CA /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2516949AA60076A9CA /* Item.m */; };
-		39521F2E16949AA60076A9CA /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2616949AA60076A9CA /* Person.m */; };
-		39521F2F16949AA60076A9CA /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2716949AA60076A9CA /* Session.m */; };
-		39521F3016949AA60076A9CA /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2816949AA60076A9CA /* SessionData.m */; };
 		52572B651691F671009037A7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52572B641691F671009037A7 /* AudioToolbox.framework */; };
 		52572B7D1691F742009037A7 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		52572B7E1691F742009037A7 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
@@ -464,19 +456,8 @@
 				52572B9A1691F7B1009037A7 /* ManualView.m in Sources */,
 				52572BF01691FD71009037A7 /* UIPicButton.m in Sources */,
 				52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
-<<<<<<< HEAD
-				39521F2916949AA60076A9CA /* iSENSE.m in Sources */,
-				39521F2A16949AA60076A9CA /* Experiment.m in Sources */,
-				39521F2B16949AA60076A9CA /* ExperimentField.m in Sources */,
-				39521F2C16949AA60076A9CA /* Image.m in Sources */,
-				39521F2D16949AA60076A9CA /* Item.m in Sources */,
-				39521F2E16949AA60076A9CA /* Person.m in Sources */,
-				39521F2F16949AA60076A9CA /* Session.m in Sources */,
-				39521F3016949AA60076A9CA /* SessionData.m in Sources */,
-=======
 				52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */,
 				52C49C1C16949671007DD082 /* CameraUsage.m in Sources */,
->>>>>>> upstream/master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
