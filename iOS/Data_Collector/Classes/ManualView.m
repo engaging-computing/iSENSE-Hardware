@@ -8,6 +8,7 @@
 //
 
 #import "ManualView.h"
+#import "Data_CollectorAppDelegate.h"
 
 
 @implementation ManualView
@@ -28,6 +29,10 @@
 	 
 	 loggedInAs.text = [StringGrabber getString:@"logged_in_as"];
 	 expNum.text = [StringGrabber getString:@"exp_num"];
+	 
+	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(useMenu:)];          
+	 self.navigationItem.rightBarButtonItem = menuButton;
+	 [menuButton release];
 	 
  }
 
@@ -62,6 +67,10 @@
 
 - (IBAction) mediaOnClick:(id)sender {
 	[CameraUsage useCamera];
+}
+
+- (IBAction) useMenu:(id)sender {
+	
 }
 
 @end
