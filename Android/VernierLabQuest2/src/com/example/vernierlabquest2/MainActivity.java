@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -82,37 +81,53 @@ public class MainActivity extends Activity {
 
 		// TODO Field Matching
 		ArrayList<Integer> FieldMatch = new ArrayList<Integer>();
-		FieldMatch.add(1);
-		FieldMatch.add(0);
 
 		ArrayList<ExperimentField> iSENSEExpFields = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
+
 		String tempstr;
+
+		//unordered LQ
 		tempstr = new String();
-		for (int i = 0; i < LabQuestType.size(); i++) {
-			tempstr = tempstr + LabQuestType.get(FieldMatch.get(i)) + ", ";
+		for (String e : LabQuestType) {
+			tempstr = tempstr + e + ", ";
 		}
 		Log.v(tag, "LabQuest Fields: " + tempstr);
+
+		//isense fields
 		tempstr = new String();
 		for (ExperimentField e : iSENSEExpFields) {
 			tempstr = tempstr + e.field_name + ", ";
 		}
 		Log.v(tag, "iSENSE Fields  : " + tempstr);
 
-		// TODO Create JSONArray with ExperimentField and LQ2 Data
+		for (ExperimentField isense_field : iSENSEExpFields)
+		{
+			for (int i = 0; i < LabQuestType.size(); i++)
+			{
+				if (isense_field.field_name.equals(LabQuestType.get(i)))
+				{
+					FieldMatch.add(i);
+					break;
+				}
+			}
+		}
+
+		//creating JSON Array
 		JSONArray iSENSEExpData = new JSONArray();
 		try {
 			for (int i = 0; i < LabQuestData.get(0).length(); i++) {
 				JSONArray temp = new JSONArray();
 				for (int j = 0; j < LabQuestType.size(); j++) {
+					//put each data point into a json array
 					temp.put(LabQuestData.get(FieldMatch.get(j)).get(i));
 				}
+				//put the json array into a json array
 				iSENSEExpData.put(temp);
 			}
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		// Log.v(tag,iSENSEExpData.toString());
-
+		Log.v(tag,"B" +iSENSEExpData.toString());
 		// Create Session
 		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!", "", "", "");
 		Log.v(tag, "iSENSESessionID: " + Integer.toString(iSENSESessionID));
