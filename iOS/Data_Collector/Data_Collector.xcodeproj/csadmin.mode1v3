@@ -271,7 +271,6 @@
 								<string>52572B6E1691F6E2009037A7</string>
 								<string>52572B6F1691F6E9009037A7</string>
 								<string>52572B711691F6F5009037A7</string>
-								<string>52C49BC916948AB6007DD082</string>
 								<string>52572B721691F703009037A7</string>
 								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>52572B681691F678009037A7</string>
@@ -323,7 +322,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>GuideView.m</string>
+								<string>ManualView.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -331,11 +330,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>GuideView.m</string>
+										<string>ManualView.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>52C49C0F16948E0D007DD082</string>
+										<string>52C49C1616948FE2007DD082</string>
 										<key>history</key>
 										<array>
 											<string>52572C021691FEC4009037A7</string>
@@ -352,10 +351,7 @@
 											<string>52C49BE716948CAD007DD082</string>
 											<string>52C49BE816948CAD007DD082</string>
 											<string>52C49BE916948CAD007DD082</string>
-											<string>52C49BEA16948CAD007DD082</string>
 											<string>52C49BEC16948CAD007DD082</string>
-											<string>52C49BED16948CAD007DD082</string>
-											<string>52C49BF016948CAD007DD082</string>
 											<string>52C49BFD16948D80007DD082</string>
 											<string>52C49C0816948E0D007DD082</string>
 											<string>52C49C0916948E0D007DD082</string>
@@ -363,7 +359,10 @@
 											<string>52C49C0B16948E0D007DD082</string>
 											<string>52C49C0C16948E0D007DD082</string>
 											<string>52C49C0D16948E0D007DD082</string>
-											<string>52C49C0E16948E0D007DD082</string>
+											<string>52C49C1216948FE2007DD082</string>
+											<string>52C49C1316948FE2007DD082</string>
+											<string>52C49C1416948FE2007DD082</string>
+											<string>52C49C1516948FE2007DD082</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>

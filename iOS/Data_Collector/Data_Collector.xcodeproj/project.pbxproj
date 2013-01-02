@@ -40,6 +40,7 @@
 		52572BF01691FD71009037A7 /* UIPicButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UIPicButton.m */; };
 		52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BF41691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m */; };
 		52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C49BCB16948AC5007DD082 /* StringGrabber.m */; };
+		52C49C1C16949671007DD082 /* CameraUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C49C1B16949671007DD082 /* CameraUsage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +95,8 @@
 		52572BF41691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE_Data_CollectorViewController_iPad.m; sourceTree = "<group>"; };
 		52C49BCA16948AC5007DD082 /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
 		52C49BCB16948AC5007DD082 /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
+		52C49C1A16949671007DD082 /* CameraUsage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraUsage.h; sourceTree = "<group>"; };
+		52C49C1B16949671007DD082 /* CameraUsage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraUsage.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -293,6 +296,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				52C49C191694965D007DD082 /* CameraUsage */,
 				52C49BC916948AB6007DD082 /* StringGrabber */,
 				52572BED1691FD33009037A7 /* UIPicButton */,
 			);
@@ -324,6 +328,15 @@
 				52C49BCB16948AC5007DD082 /* StringGrabber.m */,
 			);
 			name = StringGrabber;
+			sourceTree = "<group>";
+		};
+		52C49C191694965D007DD082 /* CameraUsage */ = {
+			isa = PBXGroup;
+			children = (
+				52C49C1A16949671007DD082 /* CameraUsage.h */,
+				52C49C1B16949671007DD082 /* CameraUsage.m */,
+			);
+			name = CameraUsage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -416,6 +429,7 @@
 				52572BF01691FD71009037A7 /* UIPicButton.m in Sources */,
 				52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
 				52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */,
+				52C49C1C16949671007DD082 /* CameraUsage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

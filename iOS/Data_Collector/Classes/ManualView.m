@@ -18,11 +18,16 @@
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
  - (void)viewDidLoad {
 	 [super viewDidLoad];
+	 
 	 [self.view sendSubviewToBack:scrollView];
+	 
 	 [self.sessionName addTarget:self
 						  action:@selector(textFieldFinished:)
 				forControlEvents:UIControlEventEditingDidEndOnExit];
 	 sessionName.enablesReturnKeyAutomatically = NO;
+	 
+	 loggedInAs.text = [StringGrabber getString:@"logged_in_as"];
+	 expNum.text = [StringGrabber getString:@"exp_num"];
 	 
  }
 
