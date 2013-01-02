@@ -7,11 +7,16 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
+
 #import <Foundation/Foundation.h>
 
+@interface CameraUsage : UIViewController {}
 
-@interface CameraUsage : NSObject {
-
-}
++ (void) useCamera;
+- (void) imagePickerController:(UIImagePickerController *)picker
+	didFinishPickingMediaWithInfo:(NSDictionary *)info;
+- (void) image:(UIImage *)image
+	finishedSavingWithError:(NSError *)error 
+	contextInfo:(void *)contextInfo;
 
 @end

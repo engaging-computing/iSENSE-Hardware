@@ -20,4 +20,15 @@
 	return loc;
 }
 
++ (NSString *) concatenateWithHardcodedString:(NSString *)label:(NSString *)string {
+	
+	NSString *hardCodedString = [[[NSString alloc] init] autorelease]; 
+	hardCodedString = [self getString:label];
+	
+	NSMutableString *temp = [[[NSMutableString alloc] init] autorelease];
+	temp = [NSMutableString stringWithFormat:@"%@%@", hardCodedString, string]; 
+	
+	return [NSString stringWithString:temp];
+}
+
 @end
