@@ -7,8 +7,9 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
+"logged_in_as" = "Logged in as: ";
 
-
+"exp_num" = "Experiment #: ";
 
 
 // ---------------

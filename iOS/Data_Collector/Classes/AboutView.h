@@ -14,8 +14,6 @@
 	UITextView *aboutText;
 }
 
-- (NSString *) getString:(NSString *)label;
-
 @property (nonatomic, retain) IBOutlet UITextView *aboutText;
 
 @end

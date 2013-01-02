@@ -32,13 +32,15 @@
 		52572B951691F796009037A7 /* GuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B931691F796009037A7 /* GuideView.m */; };
 		52572B961691F796009037A7 /* GuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B941691F796009037A7 /* GuideView.xib */; };
 		52572B9A1691F7B1009037A7 /* ManualView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualView.m */; };
-		52572B9B1691F7B1009037A7 /* ManualView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B991691F7B1009037A7 /* ManualView.xib */; };
+		52572B9B1691F7B1009037A7 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B991691F7B1009037A7 /* ManualView~iphone.xib */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
-		52572BA51691FA09009037A7 /* ManualView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BA41691FA09009037A7 /* ManualView-iPad.xib */; };
+		52572BA51691FA09009037A7 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BA41691FA09009037A7 /* ManualView~ipad.xib */; };
 		52572BC31691FB56009037A7 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC21691FB56009037A7 /* MainWindow-iPad.xib */; };
 		52572BC71691FBC6009037A7 /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC61691FBC6009037A7 /* SplashView-iPad.xib */; };
 		52572BF01691FD71009037A7 /* UIPicButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UIPicButton.m */; };
 		52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BF41691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m */; };
+		52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C49BCB16948AC5007DD082 /* StringGrabber.m */; };
+		52C49C1C16949671007DD082 /* CameraUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C49C1B16949671007DD082 /* CameraUsage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,15 +84,19 @@
 		52572B941691F796009037A7 /* GuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = GuideView.xib; path = Classes/GuideView.xib; sourceTree = "<group>"; };
 		52572B971691F7B1009037A7 /* ManualView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualView.h; sourceTree = "<group>"; };
 		52572B981691F7B1009037A7 /* ManualView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualView.m; sourceTree = "<group>"; };
-		52572B991691F7B1009037A7 /* ManualView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ManualView.xib; path = Classes/ManualView.xib; sourceTree = "<group>"; };
+		52572B991691F7B1009037A7 /* ManualView~iphone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "ManualView~iphone.xib"; path = "Classes/ManualView~iphone.xib"; sourceTree = "<group>"; };
 		52572B9E1691F816009037A7 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
-		52572BA41691FA09009037A7 /* ManualView-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "ManualView-iPad.xib"; sourceTree = "<group>"; };
+		52572BA41691FA09009037A7 /* ManualView~ipad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "ManualView~ipad.xib"; sourceTree = "<group>"; };
 		52572BC21691FB56009037A7 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources-iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		52572BC61691FBC6009037A7 /* SplashView-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SplashView-iPad.xib"; sourceTree = "<group>"; };
 		52572BEE1691FD71009037A7 /* UIPicButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPicButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UIPicButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPicButton.m; sourceTree = "<group>"; };
 		52572BF31691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_Data_CollectorViewController_iPad.h; sourceTree = "<group>"; };
 		52572BF41691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE_Data_CollectorViewController_iPad.m; sourceTree = "<group>"; };
+		52C49BCA16948AC5007DD082 /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
+		52C49BCB16948AC5007DD082 /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
+		52C49C1A16949671007DD082 /* CameraUsage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraUsage.h; sourceTree = "<group>"; };
+		52C49C1B16949671007DD082 /* CameraUsage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraUsage.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,12 +119,12 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				39A9E9F616921EFA003D2EBB /* iSenseApiLib */,
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
 				52572B6F1691F6E9009037A7 /* Manual */,
 				52572B711691F6F5009037A7 /* Objects */,
 				52572B721691F703009037A7 /* Delegate Files */,
+				39A9E9F616921EFA003D2EBB /* iSenseApiLib */,
 			);
 			name = Source;
 			path = Classes;
@@ -230,7 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				52572B8F1691F788009037A7 /* AboutView.xib */,
-				52572B991691F7B1009037A7 /* ManualView.xib */,
+				52572B991691F7B1009037A7 /* ManualView~iphone.xib */,
 				52572B941691F796009037A7 /* GuideView.xib */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				52572B8A1691F77D009037A7 /* SplashView.xib */,
@@ -243,7 +249,7 @@
 			children = (
 				52572BC21691FB56009037A7 /* MainWindow-iPad.xib */,
 				52572BC61691FBC6009037A7 /* SplashView-iPad.xib */,
-				52572BA41691FA09009037A7 /* ManualView-iPad.xib */,
+				52572BA41691FA09009037A7 /* ManualView~ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -290,6 +296,8 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				52C49C191694965D007DD082 /* CameraUsage */,
+				52C49BC916948AB6007DD082 /* StringGrabber */,
 				52572BED1691FD33009037A7 /* UIPicButton */,
 			);
 			name = Objects;
@@ -311,6 +319,24 @@
 				52572BEF1691FD71009037A7 /* UIPicButton.m */,
 			);
 			name = UIPicButton;
+			sourceTree = "<group>";
+		};
+		52C49BC916948AB6007DD082 /* StringGrabber */ = {
+			isa = PBXGroup;
+			children = (
+				52C49BCA16948AC5007DD082 /* StringGrabber.h */,
+				52C49BCB16948AC5007DD082 /* StringGrabber.m */,
+			);
+			name = StringGrabber;
+			sourceTree = "<group>";
+		};
+		52C49C191694965D007DD082 /* CameraUsage */ = {
+			isa = PBXGroup;
+			children = (
+				52C49C1A16949671007DD082 /* CameraUsage.h */,
+				52C49C1B16949671007DD082 /* CameraUsage.m */,
+			);
+			name = CameraUsage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,9 +405,9 @@
 				52572B8C1691F77D009037A7 /* SplashView.xib in Resources */,
 				52572B911691F788009037A7 /* AboutView.xib in Resources */,
 				52572B961691F796009037A7 /* GuideView.xib in Resources */,
-				52572B9B1691F7B1009037A7 /* ManualView.xib in Resources */,
+				52572B9B1691F7B1009037A7 /* ManualView~iphone.xib in Resources */,
 				52572B9F1691F816009037A7 /* Strings.strings in Resources */,
-				52572BA51691FA09009037A7 /* ManualView-iPad.xib in Resources */,
+				52572BA51691FA09009037A7 /* ManualView~ipad.xib in Resources */,
 				52572BC31691FB56009037A7 /* MainWindow-iPad.xib in Resources */,
 				52572BC71691FBC6009037A7 /* SplashView-iPad.xib in Resources */,
 			);
@@ -402,6 +428,8 @@
 				52572B9A1691F7B1009037A7 /* ManualView.m in Sources */,
 				52572BF01691FD71009037A7 /* UIPicButton.m in Sources */,
 				52572BF51691FDD8009037A7 /* iSENSE_Data_CollectorViewController_iPad.m in Sources */,
+				52C49BCC16948AC5007DD082 /* StringGrabber.m in Sources */,
+				52C49C1C16949671007DD082 /* CameraUsage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

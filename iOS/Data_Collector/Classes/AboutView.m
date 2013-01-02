@@ -17,8 +17,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	aboutText.text = [self getString:@"about_text"];
-	
+	aboutText.text = [StringGrabber getString:@"about_text"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,14 +37,5 @@
 - (void)dealloc {
     [super dealloc];
 }
-
-- (NSString *) getString:(NSString *)label {
-	
-	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
-	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
-	NSString *loc = [d objectForKey:label];
-	return loc;
-}
-
 
 @end
