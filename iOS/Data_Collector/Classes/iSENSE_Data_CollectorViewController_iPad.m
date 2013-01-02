@@ -103,7 +103,7 @@
 	[self.view addSubview:containerForMainButton];
 	
 	// Attempt Login
-	isenseAPI = [iSENSE instance];
+	isenseAPI = [iSENSE getInstance];
 	[isenseAPI toggleUseDev:YES];
 	[isenseAPI login:@"sor" with:@"sor"];	
 	

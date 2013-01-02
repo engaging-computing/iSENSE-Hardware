@@ -13,9 +13,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D2AAC07D0554694100DB518D"
-               BuildableName = "libiSENSE_API.a"
-               BlueprintName = "iSENSE_API"
+               BlueprintIdentifier = "39D1FDB116948DA800ECD18A"
+               BuildableName = "liblibiSENSE_API.a"
+               BlueprintName = "libiSENSE_API"
                ReferencedContainer = "container:iSENSE_API.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,6 +27,16 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "39D1FDBE16948DA800ECD18A"
+               BuildableName = "libiSENSE_APITests.octest"
+               BlueprintName = "libiSENSE_APITests"
+               ReferencedContainer = "container:iSENSE_API.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -34,7 +44,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <AdditionalOptions>
