@@ -8,18 +8,36 @@
 //
 
 #import "ManualView.h"
+#import "Data_CollectorAppDelegate.h"
 
 
 @implementation ManualView
 
 @synthesize logo, loggedInAs, expNum, save, clear, sessionName, media, scrollView;
 
-/*
+
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
  - (void)viewDidLoad {
- [super viewDidLoad];
+	 [super viewDidLoad];
+	 
+	 [self.view sendSubviewToBack:scrollView];
+	 
+	 [self.sessionName addTarget:self
+						  action:@selector(textFieldFinished:)
+				forControlEvents:UIControlEventEditingDidEndOnExit];
+	 sessionName.enablesReturnKeyAutomatically = NO;
+	 
+	 loggedInAs.text = [StringGrabber getString:@"logged_in_as"];
+	 expNum.text = [StringGrabber getString:@"exp_num"];
+	 
+	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(useMenu:)];          
+	 self.navigationItem.rightBarButtonItem = menuButton;
+	 [menuButton release];
+	 
  }
- */
+
+- (IBAction)textFieldFinished:(id)sender {}
+ 
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
@@ -48,6 +66,10 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
+	[CameraUsage useCamera];
+}
+
+- (IBAction) useMenu:(id)sender {
 	
 }
 

@@ -22,7 +22,7 @@
 			// Switch to green mode
 			startStopButton.image = [UIImage imageNamed:@"green_button.png"];
 			mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
-			startStopLabel.text = @"STOP\n(Press and Hold)";
+			startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
 			
 			[self setIsRecording:TRUE];
 			
@@ -31,7 +31,7 @@
 			// Back to red mode
 			startStopButton.image = [UIImage imageNamed:@"red_button.png"];
 			mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-			startStopLabel.text = @"START\n(Press and Hold)";
+			startStopLabel.text = [StringGrabber getString:@"start_button_text"];
 			
 			[self setIsRecording:FALSE];
 		}	
@@ -67,7 +67,7 @@
 	
 	// Create a label for login status
 	loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(234, 160, 300, 20)];
-	loginStatus.text = @"Login Status: NOT LOGGED IN";
+	loginStatus.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
 	loginStatus.textAlignment = UITextAlignmentCenter;
 	loginStatus.textColor = [UIColor whiteColor];
 	loginStatus.font = [startStopLabel.font fontWithSize:18];
@@ -78,7 +78,7 @@
 	containerForMainButton = [[UIPicButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400)];
 	startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
 	startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, containerForMainButton.bounds.size.width, containerForMainButton.bounds.size.height)];
-	startStopLabel.text = @"START\n(Press and Hold)";
+	startStopLabel.text = [StringGrabber getString:@"start_button_text"];
 	startStopLabel.textAlignment = UITextAlignmentCenter;
 	startStopLabel.textColor = [UIColor whiteColor];
 	startStopLabel.font = [startStopLabel.font fontWithSize:25];
