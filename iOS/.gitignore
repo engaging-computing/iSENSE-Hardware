@@ -2,4 +2,5 @@
 
 */build
 
-*.xcodeproj/*
+Data_Collector.xcodeproj/
+iSENSE_API.xcodeproj/

@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the '_iSENSE_API' target in the '_iSENSE_API' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-#endif
