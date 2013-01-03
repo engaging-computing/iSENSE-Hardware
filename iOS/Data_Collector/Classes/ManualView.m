@@ -18,6 +18,7 @@
 @implementation ManualView
 
 @synthesize logo, loggedInAs, expNum, save, clear, sessionName, media, scrollView;
+@synthesize session, username;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -66,6 +67,10 @@
 	[sessionName release];
 	[media release];
 	[scrollView release];
+	
+	[sessionName release];
+	[username release];
+	
 	[super dealloc];
 }
 
@@ -102,7 +107,7 @@
 											otherButtonTitles:nil];
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
-			message.message = @"Upload"; //showMsg = NO; [self upload];
+			message.message = @"Upload"; showMsg = NO; [self upload];
 			break;
 		case MENU_EXPERIMENT:
 			message.message = @"Experiment"; //showMsg = NO; [self experiment];
@@ -122,11 +127,11 @@
 
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	// if (textField = sessionName, e.g.) {
-    NSUInteger newLength = [textField.text length] + [string length] - range.length;
-    return (newLength > 25) ? NO : YES;
-	// }
-	// otherwise, return YES
+	if (textField = sessionName) {
+		NSUInteger newLength = [textField.text length] + [string length] - range.length;
+		return (newLength > 25) ? NO : YES;
+	}
+	return YES;
 }
 
 - (void) login {
@@ -138,9 +143,14 @@
 }
 
 - (void) upload {
-	
+	[self.view makeToast:@"Upload!"
+				duration:2.0
+				position:@"bottom"];
 	
 }
 
+- (void) getDataFromExpNumber {
+	
+}
 
 @end

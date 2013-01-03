@@ -12,6 +12,7 @@
 
 @interface ManualView : UIViewController <UIActionSheetDelegate> {
 	
+	// UI Elements
 	UIImageView *logo;
 	UILabel *loggedInAs;
 	UILabel *expNum;
@@ -20,6 +21,11 @@
 	UITextField *sessionName;
 	UIButton *media;
 	UIScrollView *scrollView;
+	
+	// Non-UI Elements
+	NSString *session;
+	NSString *username;
+	int experimentNum;
 	
 }
 
@@ -32,6 +38,9 @@
 - (void) experiment;
 - (void) upload;
 
+- (void) getDataFromExpNumber;
+
+// UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
 @property (nonatomic, retain) IBOutlet UILabel *loggedInAs;
 @property (nonatomic, retain) IBOutlet UILabel *expNum;
@@ -40,6 +49,10 @@
 @property (nonatomic, retain) IBOutlet UITextField *sessionName;
 @property (nonatomic, retain) IBOutlet UIButton *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+
+// Non-UI Properties
+@property (nonatomic, retain) NSString *session;
+@property (nonatomic, retain) NSString *username;
 
 @end
 
