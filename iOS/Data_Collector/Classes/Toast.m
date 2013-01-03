@@ -34,6 +34,9 @@
 #define kActivityDefaultPosition @"center"
 #define kActivityTag 91325
 
+#define LENGTH_SHORT 2.0
+#define LENGTH_LONG 3.5
+
 static NSString *kDurationKey = @"CSToastDurationKey";
 
 

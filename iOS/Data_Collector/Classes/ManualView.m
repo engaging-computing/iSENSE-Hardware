@@ -110,10 +110,11 @@
 			message.message = @"Upload"; showMsg = NO; [self upload];
 			break;
 		case MENU_EXPERIMENT:
-			message.message = @"Experiment"; //showMsg = NO; [self experiment];
+			message.message = @"Experiment"; showMsg = NO; [self experiment];
 			break;
 		case MENU_LOGIN:
-			message.message = @"Login"; //showMsg = NO; [self login];
+			message.message = @"Login"; showMsg = NO; [self login];
+			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
 			break;
 		case MENU_CANCEL:
 			showMsg = NO;
@@ -135,11 +136,16 @@
 }
 
 - (void) login {
-
+	[self.view makeToast:@"Login!"
+				duration:2.0
+				position:@"bottom"];
+	
 }
 
 - (void) experiment {
-	
+	[self.view makeToast:@"Experiment!"
+				duration:2.0
+				position:@"bottom"];
 }
 
 - (void) upload {
