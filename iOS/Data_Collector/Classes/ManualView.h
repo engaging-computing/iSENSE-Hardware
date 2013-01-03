@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface ManualView : UIViewController {
+@interface ManualView : UIViewController <UIActionSheetDelegate> {
 	
 	UIImageView *logo;
 	UILabel *loggedInAs;
@@ -26,7 +26,11 @@
 - (IBAction) saveOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
-- (IBAction) useMenu:(id)sender;
+- (IBAction) displayMenu:(id)sender;
+
+- (void) login;
+- (void) experiment;
+- (void) upload;
 
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
 @property (nonatomic, retain) IBOutlet UILabel *loggedInAs;
