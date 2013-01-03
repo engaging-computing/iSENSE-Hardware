@@ -16,7 +16,7 @@
 @implementation CameraUsage
 
 + (void) useCamera {
-	if ([UIImagePickerController isSourceTypeAvailable:
+/*	if ([UIImagePickerController isSourceTypeAvailable:
 		 UIImagePickerControllerSourceTypeCamera]) {
 		
 		UIImagePickerController *imagePicker =
@@ -30,13 +30,13 @@
 		Data_CollectorAppDelegate *appDelegate = (Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate];
 		[[appDelegate navControl] presentModalViewController:imagePicker animated:YES];
 		[imagePicker release];
-	}
+	}*/
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
 	
-	NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+	/*NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
 	
 	[self dismissModalViewControllerAnimated:YES];
 	
@@ -51,14 +51,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 	}
 	else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
 		// Code here to support video if enabled
-	}
+	}*/
 }
 
 - (void)image:(UIImage *)image
 finishedSavingWithError:(NSError *)error 
 contextInfo:(void *)contextInfo {
 	
-	if (error) {
+	/*if (error) {
 		UIAlertView *alert = [[UIAlertView alloc]
 							  initWithTitle: @"Save failed"
 							  message: @"Failed to save image"
@@ -67,11 +67,11 @@ contextInfo:(void *)contextInfo {
 							  otherButtonTitles:nil];
 		[alert show];
 		[alert release];
-	}
+	}*/
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-	[self dismissModalViewControllerAnimated:YES];
+	//[self dismissModalViewControllerAnimated:YES];
 }
 
 
