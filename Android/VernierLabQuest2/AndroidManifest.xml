@@ -30,6 +30,10 @@
             android:name=".iSENSESettings"
             android:label="@string/isense_settings" >
         </activity>
+        <activity
+            android:name=".LabQuestFieldMatching"
+            android:label="@string/labquest_field_matching" >
+        </activity>        
     </application>
 
 </manifest>

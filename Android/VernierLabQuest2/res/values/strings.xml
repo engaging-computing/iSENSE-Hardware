@@ -10,6 +10,9 @@
     <string name="labquest_status_connected">Data Received</string>
 	<string name="labquest_settings">LabQuest2 Settings</string>
 	<string name="labquest_ip">LabQuest2 IP Address:</string>
+	<string name="labquest_manual_field_match_disabled">Manual Field Matching Disabled</string>
+	<string name="labquest_manual_field_match_enabled">Manual Field Matching Enabled</string>
+	<string name="labquest_field_matching">LabQuest Manual Field Matching</string>
     <string name="upload_to_isense">Upload to iSENSE</string>
     <string name="isense_status">iSENSE Status:</string>
     <string name="isense_status_not_logged_in">Not Logged In</string>
@@ -28,6 +31,7 @@
  	<string name="cancel">Cancel</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="configure">Configure</string>
     
     <string name="scan_qr_code">Scan QR Code</string>
     

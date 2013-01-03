@@ -33,7 +33,7 @@ import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.objects.ExperimentField;
 
 public class MainActivity extends Activity {
-	private String tag = "MainActivity";
+	private String tag = "LabQuest2 iSENSE";
 	private RestAPI rapi;
 	private Button Connect;
 	private EditText SessionName;
@@ -79,9 +79,7 @@ public class MainActivity extends Activity {
 		SharedPreferences sp = getSharedPreferences("isense_settings", 0);
 		String iSENSEExpID = sp.getString("isense_expid", "");
 
-		// TODO Field Matching
 		ArrayList<Integer> FieldMatch = new ArrayList<Integer>();
-
 		ArrayList<ExperimentField> iSENSEExpFields = rapi.getExperimentFields(Integer.parseInt(iSENSEExpID));
 
 		String tempstr;
@@ -127,7 +125,6 @@ public class MainActivity extends Activity {
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		Log.v(tag,"B" +iSENSEExpData.toString());
 		// Create Session
 		int iSENSESessionID = rapi.createSession(iSENSEExpID, SessionName.getText().toString(), "Uploaded with the iSENSE LabQuest2 App!", "", "", "");
 		Log.v(tag, "iSENSESessionID: " + Integer.toString(iSENSESessionID));
