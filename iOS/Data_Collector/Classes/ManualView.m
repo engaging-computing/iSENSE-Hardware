@@ -31,13 +31,27 @@
 				forControlEvents:UIControlEventEditingDidEndOnExit];
 	 sessionNameInput.enablesReturnKeyAutomatically = NO;
 	 
-	 loggedInAsLabel.text = [StringGrabber getString:@"logged_in_as"];
-	 expNumLabel.text = [StringGrabber getString:@"exp_num"];
-	 
 	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
 	 self.navigationItem.rightBarButtonItem = menuButton;
 	 [menuButton release];
 	 
+	 // stable     ^
+	 // ----------------------------------------------------------------------------------------------
+	 // needs work v
+	 
+	 //iapi = [iSENSE getInstance];
+	 //[iapi toggleUseDev:YES];
+	 
+	 [self initLocations];
+	 
+	 //* get exp. # from prefs
+	 
+	 //* get login info from prefs/rapi
+	 
+	 loggedInAsLabel.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"_"];
+	 expNumLabel.text = [StringGrabber concatenateWithHardcodedString:@"exp_num" :@"_"];
+	 
+	 //* if exp. # is null, launch the dialog for choosing exp. num
  }
 
 - (IBAction)textFieldFinished:(id)sender {}
@@ -74,14 +88,18 @@
 }
 
 - (IBAction) saveOnClick:(id)sender {
-	
+	//* if exp is null, toast
+	//* else if sessionName's length = 0, .setError
+	//* else SavaDataTask
 }
 
 - (IBAction) clearOnClick:(id)sender {
 	sessionNameInput.text = @"";
+	//* loop through UITextFields and clear them out
 }
 
 - (IBAction) mediaOnClick:(id)sender {
+	//* useCamera iff sessionNameInput.length != 0
 	[CameraUsage useCamera];
 }
 
@@ -127,10 +145,6 @@
 	[message release];
 }
 
-	
-
-
-
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
 	if (textField = sessionNameInput) {
@@ -141,9 +155,15 @@
 }
 
 - (void) login {
+	UIImage *check = [[UIImage alloc] init];
+	check = [UIImage imageNamed:@"bluecheck"];
 	[self.view makeToast:@"Login!"
 				duration:2.0
-				position:@"bottom"];
+				position:@"bottom"
+				   image:check];
+	
+	//* present dialog with login credentials
+	//[isenseAPI login:@"sor" with:@"sor"];
 	
 }
 
@@ -160,8 +180,86 @@
 	
 }
 
+// TODO gets data from the exp. #
 - (void) getDataFromExpNumber {
 	
+}
+
+// TODO allows for GPS to be recorded
+- (void) initLocations {
+	
+}
+
+// TODO
+- (void) fillDataFieldEntryList:(int)eid {
+	/*
+	 for (ExperimentField expField : fieldOrder) {
+	 
+		if (expField.type_id == expField.GEOSPACIAL) {
+			if (expField.unit_id == expField.UNIT_LATITUDE) {
+				addDataField(expField, TYPE_LATITUDE);
+			} else {
+				addDataField(expField, TYPE_LONGITUDE);
+			}
+		} else if (expField.type_id == expField.TIME) {
+			addDataField(expField, TYPE_TIME);
+		} else {
+			addDataField(expField, TYPE_DEFAULT);
+		}
+	 }
+	 
+	 checkLastImeOptions();
+	 */
+}
+
+// TODO
+- (void) addDataField:(NSString *)expField andType:(int)type {
+	/*
+	LinearLayout dataField = (LinearLayout) View.inflate(this,
+														 R.layout.manualentryfield, null);
+	TextView fieldName = (TextView) dataField
+	.findViewById(R.id.manual_dataFieldName);
+	fieldName.setText(expField.field_name);
+	EditText fieldContents = (EditText) dataField
+	.findViewById(R.id.manual_dataFieldContents);
+	
+	fieldContents.setSingleLine(true);
+	fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+	
+	if (type != TYPE_DEFAULT) {
+		fieldContents.setText("Auto");
+		fieldContents.setEnabled(false);
+		
+		fieldContents.setClickable(false);
+		fieldContents.setCursorVisible(false);
+		fieldContents.setFocusable(false);
+		fieldContents.setFocusableInTouchMode(false);
+		fieldContents.setTextColor(Color.GRAY);
+	}
+	
+	if (expField.type_id == expField.TEXT) {
+		// keyboard to text
+		fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
+		fieldContents
+		.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
+																	 60) });
+		fieldContents.setKeyListener(DigitsKeyListener
+									 .getInstance(getResources().getString(
+																		   R.string.digits_restriction)));
+	} else {
+		// keyboard to nums
+		fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
+		fieldContents
+		.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
+																	 20) });
+		fieldContents.setKeyListener(DigitsKeyListener
+									 .getInstance(getResources().getString(
+																		   R.string.numbers_restriction)));
+		
+	}
+	
+	dataFieldEntryList.addView(dataField);	
+	 */
 }
 
 @end

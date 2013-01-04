@@ -23,6 +23,7 @@
 	UIScrollView *scrollView;
 	
 	// Non-UI Elements
+	iSENSE *iapi;
 	NSString *sessionName;
 	NSString *username;
 	int experimentNum;
@@ -39,6 +40,11 @@
 - (void) upload;
 
 - (void) getDataFromExpNumber;
+
+- (void) initLocations;
+
+- (void) fillDataFieldEntryList:(int)eid;
+- (void) addDataField:(NSString *)expField andType:(int)type;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
