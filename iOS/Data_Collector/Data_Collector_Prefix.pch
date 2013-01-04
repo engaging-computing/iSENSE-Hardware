@@ -8,4 +8,5 @@
 	#import "StringGrabber.h"
 	#import "CameraUsage.h"
 	#import "Toast.h"
+	#import "iSENSE.h"
 #endif

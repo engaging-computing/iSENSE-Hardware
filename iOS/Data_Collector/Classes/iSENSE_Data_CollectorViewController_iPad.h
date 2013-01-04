@@ -9,8 +9,6 @@
 #import "UIPicButton.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <UIKit/UIKit.h>
-#import "iSENSE.h"
-
 
 @interface iSENSE_Data_CollectorViewController_iPad : UIViewController {
 	// Fuctionality

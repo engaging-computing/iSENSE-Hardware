@@ -240,14 +240,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">sessionName</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="589246441"/>
-					</object>
-					<int key="connectionID">26</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">scrollView</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="109375295"/>
@@ -279,22 +271,6 @@
 					<int key="connectionID">36</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">expNum</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="335552958"/>
-					</object>
-					<int key="connectionID">37</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">loggedInAs</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="295846778"/>
-					</object>
-					<int key="connectionID">38</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">clearOnClick:</string>
 						<reference key="source" ref="311708404"/>
@@ -320,6 +296,30 @@
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">41</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sessionNameInput</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="589246441"/>
+					</object>
+					<int key="connectionID">42</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">loggedInAsLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="295846778"/>
+					</object>
+					<int key="connectionID">43</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">expNumLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="335552958"/>
+					</object>
+					<int key="connectionID">44</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -465,7 +465,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">41</int>
+			<int key="maxID">44</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -478,11 +478,13 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>clearOnClick:</string>
+							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -493,6 +495,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>clearOnClick:</string>
+							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
 						</object>
@@ -500,6 +503,10 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">clearOnClick:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">displayMenu:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -517,13 +524,13 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>clear</string>
-							<string>expNum</string>
-							<string>loggedInAs</string>
+							<string>expNumLabel</string>
+							<string>loggedInAsLabel</string>
 							<string>logo</string>
 							<string>media</string>
 							<string>save</string>
 							<string>scrollView</string>
-							<string>sessionName</string>
+							<string>sessionNameInput</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -542,13 +549,13 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>clear</string>
-							<string>expNum</string>
-							<string>loggedInAs</string>
+							<string>expNumLabel</string>
+							<string>loggedInAsLabel</string>
 							<string>logo</string>
 							<string>media</string>
 							<string>save</string>
 							<string>scrollView</string>
-							<string>sessionName</string>
+							<string>sessionNameInput</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -557,11 +564,11 @@
 								<string key="candidateClassName">UIButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">expNum</string>
+								<string key="name">expNumLabel</string>
 								<string key="candidateClassName">UILabel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">loggedInAs</string>
+								<string key="name">loggedInAsLabel</string>
 								<string key="candidateClassName">UILabel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
@@ -581,7 +588,7 @@
 								<string key="candidateClassName">UIScrollView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">sessionName</string>
+								<string key="name">sessionNameInput</string>
 								<string key="candidateClassName">UITextField</string>
 							</object>
 						</object>
@@ -589,6 +596,13 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/ManualView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/Toast.h</string>
 					</object>
 				</object>
 			</object>
@@ -833,7 +847,7 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>{280, 67}</string>
+				<string>{640, 160}</string>
 				<string>{96, 96}</string>
 			</object>
 		</object>
