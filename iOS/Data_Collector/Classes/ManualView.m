@@ -13,12 +13,11 @@
 #define MENU_UPLOAD 0
 #define MENU_EXPERIMENT 1
 #define MENU_LOGIN 2
-#define MENU_CANCEL 3
 
 @implementation ManualView
 
-@synthesize logo, loggedInAs, expNum, save, clear, sessionName, media, scrollView;
-@synthesize session, username;
+@synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
+@synthesize sessionName, username;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -27,13 +26,13 @@
 	 
 	 [self.view sendSubviewToBack:scrollView];
 	 
-	 [self.sessionName addTarget:self
+	 [self.sessionNameInput addTarget:self
 						  action:@selector(textFieldFinished:)
 				forControlEvents:UIControlEventEditingDidEndOnExit];
-	 sessionName.enablesReturnKeyAutomatically = NO;
+	 sessionNameInput.enablesReturnKeyAutomatically = NO;
 	 
-	 loggedInAs.text = [StringGrabber getString:@"logged_in_as"];
-	 expNum.text = [StringGrabber getString:@"exp_num"];
+	 loggedInAsLabel.text = [StringGrabber getString:@"logged_in_as"];
+	 expNumLabel.text = [StringGrabber getString:@"exp_num"];
 	 
 	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
 	 self.navigationItem.rightBarButtonItem = menuButton;
@@ -60,11 +59,11 @@
 
 - (void)dealloc {
 	[logo release];
-	[loggedInAs release];
-	[expNum release];
+	[loggedInAsLabel release];
+	[expNumLabel release];
 	[save release];
 	[clear release];
-	[sessionName release];
+	[sessionNameInput release];
 	[media release];
 	[scrollView release];
 	
@@ -79,7 +78,7 @@
 }
 
 - (IBAction) clearOnClick:(id)sender {
-	sessionName.text = @"";
+	sessionNameInput.text = @"";
 }
 
 - (IBAction) mediaOnClick:(id)sender {
@@ -116,19 +115,25 @@
 			message.message = @"Login"; showMsg = NO; [self login];
 			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
 			break;
-		case MENU_CANCEL:
+		default:
 			showMsg = NO;
 			break;
 	}
 	
 	if (showMsg)
 		[message show];
+	
+	// eh?? -v
+	[message release];
 }
+
+	
+
 
 
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	if (textField = sessionName) {
+	if (textField = sessionNameInput) {
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
 		return (newLength > 25) ? NO : YES;
 	}
