@@ -14,16 +14,17 @@
 	
 	// UI Elements
 	UIImageView *logo;
-	UILabel *loggedInAs;
-	UILabel *expNum;
+	UILabel *loggedInAsLabel;
+	UILabel *expNumLabel;
 	UIButton *save;
 	UIButton *clear;
-	UITextField *sessionName;
+	UITextField *sessionNameInput;
 	UIButton *media;
 	UIScrollView *scrollView;
 	
 	// Non-UI Elements
-	NSString *session;
+	iSENSE *iapi;
+	NSString *sessionName;
 	NSString *username;
 	int experimentNum;
 	
@@ -40,18 +41,23 @@
 
 - (void) getDataFromExpNumber;
 
+- (void) initLocations;
+
+- (void) fillDataFieldEntryList:(int)eid;
+- (void) addDataField:(NSString *)expField andType:(int)type;
+
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
-@property (nonatomic, retain) IBOutlet UILabel *loggedInAs;
-@property (nonatomic, retain) IBOutlet UILabel *expNum;
+@property (nonatomic, retain) IBOutlet UILabel *loggedInAsLabel;
+@property (nonatomic, retain) IBOutlet UILabel *expNumLabel;
 @property (nonatomic, retain) IBOutlet UIButton *save;
 @property (nonatomic, retain) IBOutlet UIButton *clear;
-@property (nonatomic, retain) IBOutlet UITextField *sessionName;
+@property (nonatomic, retain) IBOutlet UITextField *sessionNameInput;
 @property (nonatomic, retain) IBOutlet UIButton *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 // Non-UI Properties
-@property (nonatomic, retain) NSString *session;
+@property (nonatomic, retain) NSString *sessionName;
 @property (nonatomic, retain) NSString *username;
 
 @end

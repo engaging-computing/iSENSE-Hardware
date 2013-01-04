@@ -26,8 +26,8 @@
 #define kDefaultLength 3.0
 #define kDefaultPosition @"bottom"
 
-#define kImageWidth 80.0
-#define kImageHeight 80.0
+#define kImageWidth 20.0 // @@@@@@@@@@@@@ 80.0
+#define kImageHeight 20.0 // @@@@@@@@@@@@@ 80.0
 
 #define kActivityWidth 100.0
 #define kActivityHeight 100.0
