@@ -14,6 +14,7 @@ static iSENSE* _iSENSE = nil;
 
 @implementation iSENSE
 
+// Makes a request to iSENSE and parse that JSONObject it gets back
 -(NSDictionary *)isenseQuery:(NSString*)target
 {
 	NSLog(@"Reached isenseQuery");
@@ -46,6 +47,7 @@ static iSENSE* _iSENSE = nil;
 	return nil;
 }
 
+// Called internal to handle requests for new object
 +(id)alloc
 {
 	@synchronized([iSENSE class])
@@ -58,6 +60,7 @@ static iSENSE* _iSENSE = nil;
 	return nil;
 }
 
+// Called internally to initialize singleton
 -(id)init {
 	self = [super init];
 	if (self != nil) {
@@ -68,6 +71,7 @@ static iSENSE* _iSENSE = nil;
 	
 	return self;
 }
+
 /* All of the following methods are obsolete */
 /*- (id)retain {
  return self;
@@ -99,14 +103,17 @@ static iSENSE* _iSENSE = nil;
  */
 /* End of obsolete methods. */
 
+// Use this method to access the session key if you are logged in.
 - (NSString *) getSessionKey {
 	return session_key;
 }
 
+// Use this method to access the user id number if you are logged in.
 - (NSNumber *) getUID {
 	return uid;
 }
 
+// Use this method to find out if you are logged in or not.
 - (bool) isLoggedIn {
 	if (session_key) {
 		if ([session_key isEqualToString:@""]) {
@@ -119,16 +126,19 @@ static iSENSE* _iSENSE = nil;
 	}
 }
 
+// Use this method to access the current username if you are logged in.
 - (NSString *) getLoggedInUsername {
 	return username;
 }
 
+// Use this method to logout of iSENSE(dev)
 - (void) logout {
 	session_key = NULL;
 	username = NULL;
 	uid = [NSNumber numberWithInt:-1];
 }
 
+// Use this method to login to iSENSE(dev)
 - (bool) login:(NSString *)user with:(NSString *)password {
 	NSLog(@"Login starts.");
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
@@ -144,9 +154,11 @@ static iSENSE* _iSENSE = nil;
 	return FALSE;
 }
 
+// To be completed
 //- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name andDescirption:(NSString *)description {
 //}
 
+// Use this function to access experiments and their data.
 - (Experiment *) getExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiment&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -173,6 +185,7 @@ static iSENSE* _iSENSE = nil;
     
 }
 
+// Use this method to access the data belonging to a given session.
 - (NSMutableArray *) sessionData:(NSString *)sessions {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=sessiondata&sessions=%@", sessions]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -209,6 +222,7 @@ static iSENSE* _iSENSE = nil;
 	return sessiondata;
 }
 
+// Use this method to go through iSENSE users.
 - (NSMutableArray *) getPeople:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getPeople&page=%@&limit=%@&action=%@&query=%@", fromPage, limit, action, query]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -254,6 +268,7 @@ static iSENSE* _iSENSE = nil;
 	return people;
 }
 
+// Use this method to retrieve specific user data.
 - (Item *) getProfile:(NSNumber *)user_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getUserProfile&user=%@", user_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -321,6 +336,7 @@ static iSENSE* _iSENSE = nil;
 	
 }
 
+// Use this method to retrieve experiments (may be deprecated).
 - (NSMutableArray *) getExperiments:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&action=%@&query=%@", fromPage, limit, action, query]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -357,6 +373,7 @@ static iSENSE* _iSENSE = nil;
 	
 }
 
+// Use this method to retrieve images associated with an experiment (may be deprecated).
 - (NSMutableArray *) getExperimentImages:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentImages&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -384,6 +401,7 @@ static iSENSE* _iSENSE = nil;
 	return images;
 }
 
+// Use this method to retrieve videos associated with an experiment (may be deprecated).
 - (NSMutableArray *) getExperimentVideos:(NSNumber *)exp_id {
 	return [[NSMutableArray new] autorelease];
 }
@@ -405,6 +423,7 @@ static iSENSE* _iSENSE = nil;
 	return tags;
 }
 
+// Use this method to get the experiment fields associated with an expiriment
 - (NSMutableArray *) getExperimentFields:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentFields&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -432,6 +451,7 @@ static iSENSE* _iSENSE = nil;
 	return fields;
 }
 
+// Use this method to retrieve sessions associated with an experiment (may be deprecated).
 - (NSMutableArray *) getSessions:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getSessions&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -467,6 +487,7 @@ static iSENSE* _iSENSE = nil;
 	return sessions;
 }
 
+// Use this method to create a session and receive its session number (may be deprecated).
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
 	NSNumber *sid = [[NSNumber alloc] autorelease];
@@ -476,6 +497,7 @@ static iSENSE* _iSENSE = nil;
 	return sid;
 }
 
+// Use this method to add data to a session (may be deprecated).
 - (bool) putSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
 	NSLog(@"%@", session_id);
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=putSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataJSON]];
@@ -488,6 +510,7 @@ static iSENSE* _iSENSE = nil;
 	return false;
 }
 
+// Use this method to add data to a session (may be deprecated). Duplicated of putSessionData.
 - (bool) updateSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=updateSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataJSON]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -499,6 +522,7 @@ static iSENSE* _iSENSE = nil;
 	return false;
 }
 
+// Use this method to toggle between using iSENSE and iSENSE dev
 - (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
 		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";

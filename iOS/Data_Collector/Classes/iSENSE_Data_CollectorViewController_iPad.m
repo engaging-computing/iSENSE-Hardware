@@ -68,7 +68,7 @@
 	// Create a label for login status
 	loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(234, 160, 300, 20)];
 	loginStatus.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
-	loginStatus.textAlignment = UITextAlignmentCenter;
+	loginStatus.textAlignment = NSTextAlignmentCenter;
 	loginStatus.textColor = [UIColor whiteColor];
 	loginStatus.font = [startStopLabel.font fontWithSize:18];
 	loginStatus.numberOfLines = 1;
@@ -79,7 +79,7 @@
 	startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
 	startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, containerForMainButton.bounds.size.width, containerForMainButton.bounds.size.height)];
 	startStopLabel.text = [StringGrabber getString:@"start_button_text"];
-	startStopLabel.textAlignment = UITextAlignmentCenter;
+	startStopLabel.textAlignment = NSTextAlignmentCenter;
 	startStopLabel.textColor = [UIColor whiteColor];
 	startStopLabel.font = [startStopLabel.font fontWithSize:25];
 	startStopLabel.numberOfLines = 2;
@@ -103,9 +103,9 @@
 	[self.view addSubview:containerForMainButton];
 	
 	// Attempt Login
-	//isenseAPI = [iSENSE getInstance];
-	//[isenseAPI toggleUseDev:YES];
-	//[isenseAPI login:@"sor" with:@"sor"];	
+	isenseAPI = [iSENSE getInstance];
+	[isenseAPI toggleUseDev:YES];
+	[isenseAPI login:@"sor" with:@"sor"];	
 	
 }
 
@@ -156,7 +156,6 @@
 	[loginStatus release];
 	[startStopLabel release];
     [startStopButton release];
-    //[rapi release];
     [super dealloc];
 	
 }
