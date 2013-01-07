@@ -7,15 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImageTint.h"
 
 
 
-@interface UIPicButton : UIView {
+@interface UILongClickButton : UIView {
 	BOOL clickEnabled;
+    UIImageView *button;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
+- (id)initWithFrame:(CGRect)frame withImageView:(UIImageView *)buttonImage;
 
-@property BOOL clickEnabled;
+@property (nonatomic) BOOL clickEnabled;
 
 @end

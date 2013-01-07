@@ -6,13 +6,14 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "UIPicButton.h"
+#import "UILongClickButton.h"
+#import "UIImageTint.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <UIKit/UIKit.h>
 
 @interface iSENSE_Data_CollectorViewController_iPad : UIViewController {
 	// Fuctionality
-    UIPicButton *containerForMainButton;
+    UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
     // GUI
     UIImageView *startStopButton;

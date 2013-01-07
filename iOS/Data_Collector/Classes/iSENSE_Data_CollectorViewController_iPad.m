@@ -14,11 +14,13 @@
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
+    
 	// Is the button ready to be clicked?
 	if ([containerForMainButton clickEnabled]) {
-		
+        	
         // Start Recording
 		if (![self isRecording]) {
+            
 			// Switch to green mode
 			startStopButton.image = [UIImage imageNamed:@"green_button.png"];
 			mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
@@ -62,11 +64,11 @@
 	[self setIsRecording:FALSE];
 	
 	// Add iSENSE LOGO background image at the top
-	mainLogo = [[UIImageView alloc] initWithFrame:CGRectMake(40, 0, 688, 150)];
+	mainLogo = [[UIImageView alloc] initWithFrame:CGRectMake(20, 5, 728, 150)];
 	mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
 	
 	// Create a label for login status
-	loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(234, 160, 300, 20)];
+	loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 160, 768, 20)];
 	loginStatus.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
 	loginStatus.textAlignment = NSTextAlignmentCenter;
 	loginStatus.textColor = [UIColor whiteColor];
@@ -75,8 +77,9 @@
 	[loginStatus setBackgroundColor:[UIColor clearColor]];
 	
 	// Allocate space and initialize the main button with its label
-	containerForMainButton = [[UIPicButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400)];
-	startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
+    startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
+	containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400) withImageView:startStopButton];
+	
 	startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, containerForMainButton.bounds.size.width, containerForMainButton.bounds.size.height)];
 	startStopLabel.text = [StringGrabber getString:@"start_button_text"];
 	startStopLabel.textAlignment = NSTextAlignmentCenter;
@@ -93,7 +96,7 @@
 	// Add long click listener to the containerForMainButton
 	UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onStartStopLongClick:)];
 	[longPressGesture setMinimumPressDuration:1];
-	longPressGesture.allowableMovement = 5;
+	longPressGesture.allowableMovement = 3;
 	[containerForMainButton addGestureRecognizer:longPressGesture];
     [longPressGesture release];
 	
@@ -119,11 +122,13 @@
 	NSLog(@"Rotate Initiated!");
 	if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		self.view.frame = CGRectMake(0, 0, 1024, 768);
-		mainLogo.frame = CGRectMake(10, 0, 502, 125 );	
-		containerForMainButton.frame = CGRectMake(568, 150, 400, 400);
+		mainLogo.frame = CGRectMake(5, 5, 502, 125 );
+		containerForMainButton.frame = CGRectMake(517, 184, 400, 400);
+        loginStatus.frame = CGRectMake(5, 135, 502, 20);
 	} else {
 		self.view.frame = CGRectMake(0, 0, 768, 1024);
-		mainLogo.frame = CGRectMake(10, 0, 748, 150);
+		mainLogo.frame = CGRectMake(20, 5, 728, 150);
+        loginStatus.frame = CGRectMake(0, 160, 768, 20);
 		containerForMainButton.frame = CGRectMake(174, 300, 400, 400);	
 	}
 }

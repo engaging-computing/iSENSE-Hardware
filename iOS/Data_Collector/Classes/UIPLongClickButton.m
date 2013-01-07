@@ -6,11 +6,11 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "UIPicButton.h"
+#import "UILongClickButton.h"
 
 
 
-@implementation UIPicButton
+@implementation UILongClickButton
 
 @synthesize clickEnabled;
 
@@ -20,9 +20,20 @@
     if (self) {
         // Initialization code.
 		clickEnabled = TRUE;
+        button = nil;
+        
     }
     return self;
 }
+
+- (id)initWithFrame:(CGRect)frame withImageView:(UIImageView *)buttonImage {
+    id i = [self initWithFrame:frame];
+    button = buttonImage;
+    
+    return i;
+}
+
+
 
 /*
  // Only override drawRect: if you perform custom drawing.
@@ -33,7 +44,14 @@
  */
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSLog(@"Button press detected");
 	clickEnabled = TRUE;
+    
+    // Darken the button
+    if (button != nil) {
+        NSLog(@"Updating Image");
+        button.image = [button.image tintedImageUsingColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
+    }
 }
 
 - (void)dealloc {
