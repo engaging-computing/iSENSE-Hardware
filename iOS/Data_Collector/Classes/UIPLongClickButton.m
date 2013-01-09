@@ -9,28 +9,35 @@
 #import "UILongClickButton.h"
 
 
-
 @implementation UILongClickButton
-
-@synthesize clickEnabled;
 
 - (id)initWithFrame:(CGRect)frame {
     
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code.
-		clickEnabled = TRUE;
-        button = nil;
+        image = nil;
+        originalImageCopy = nil;
+        recognizer = nil;
         
     }
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame withImageView:(UIImageView *)buttonImage {
-    id i = [self initWithFrame:frame];
-    button = buttonImage;
+- (id)initWithFrame:(CGRect)frame imageView:(UIImageView *)buttonImage target:(id)target action:(SEL)selector {
+    id newView = [self initWithFrame:frame];
+    image = buttonImage;
+    originalImageCopy = [[UIImageView alloc] initWithImage:image.image];
     
-    return i;
+	recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:target action:selector];
+	recognizer.MinimumPressDuration = 1;
+    recognizer.numberOfTouchesRequired = 1;
+    recognizer.allowableMovement = 25;
+    
+    [recognizer cancelsTouchesInView];
+    [self addGestureRecognizer:recognizer];
+    
+    return newView;
 }
 
 
@@ -43,18 +50,37 @@
  }
  */
 
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"Button press detected");
-	clickEnabled = TRUE;
-    
+   
     // Darken the button
-    if (button != nil) {
-        NSLog(@"Updating Image");
-        button.image = [button.image tintedImageUsingColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
+    if (image != nil) {
+        image.image = [image.image tintedImageUsingColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
+    }
+    
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    // Reset the button
+    if (image != nil) {
+        image.image = originalImageCopy.image;
+    }
+    
+    // Enabled the listener
+    if (recognizer != nil) {
+        recognizer.enabled = YES;
     }
 }
 
+- (void)updateImage:(UIImageView *)imageView {
+    [originalImageCopy release];
+    originalImageCopy = [[UIImageView alloc] initWithImage:imageView.image];
+}
+
 - (void)dealloc {
+    [recognizer release];
+    [originalImageCopy release];
     [super dealloc];
 }
 

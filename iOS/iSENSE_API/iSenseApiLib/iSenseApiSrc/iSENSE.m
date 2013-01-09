@@ -14,18 +14,16 @@ static iSENSE* _iSENSE = nil;
 
 @implementation iSENSE
 
-// Makes a request to iSENSE and parse that JSONObject it gets back
+// Makes a request to iSENSE and parse the JSONObject it gets back
 -(NSDictionary *)isenseQuery:(NSString*)target
 {
-	NSLog(@"Reached isenseQuery");
 	NSMutableString *base_url = [NSMutableString stringWithString:baseURL];
-	NSLog(@"%@", base_url);
 	[base_url appendString:target];
 	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 	NSLog(@"Sent to iSENSE: %@", final);
 	NSError *requestError = nil;
 	NSData *dataJSON = [NSData dataWithContentsOfURL:[NSURL URLWithString:final] options:NSDataReadingMappedIfSafe error:&requestError];
-    NSLog(@"Error Communication: %@", requestError);
+    NSLog(@"Error During Communication: %@", requestError);
     NSLog(@"Server Response: %@", [NSString stringWithUTF8String:[dataJSON bytes]]);
     NSDictionary *jsonDictionary = [[NSDictionary alloc] autorelease];
     jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
@@ -39,8 +37,7 @@ static iSENSE* _iSENSE = nil;
 	{
 		if (!_iSENSE)
 			[[self alloc] init];
-		NSLog(@"Initialized iSENSE object.");
-		
+	
 		return _iSENSE;
 	}
 	
@@ -116,7 +113,7 @@ static iSENSE* _iSENSE = nil;
 // Use this method to find out if you are logged in or not.
 - (bool) isLoggedIn {
 	if (session_key) {
-		if ([session_key isEqualToString:@""]) {
+		if (session_key == (id)[NSNull null] || session_key.length == 0) {
 			return FALSE;
 		} else {
 			return TRUE;
@@ -140,14 +137,13 @@ static iSENSE* _iSENSE = nil;
 
 // Use this method to login to iSENSE(dev)
 - (bool) login:(NSString *)user with:(NSString *)password {
-	NSLog(@"Login starts.");
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
-   	session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
-	NSLog(@"session_key = %@.", session_key);
+   	
+    session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
 	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
-	if ([self isLoggedIn]) {
+	
+    if ([self isLoggedIn]) {
 		username = user;
-        NSLog(@"Login set");
 		return TRUE;
 	}
 	
@@ -526,11 +522,8 @@ static iSENSE* _iSENSE = nil;
 - (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
 		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
-		NSLog(@"Switched to dev.");
 	} else {	
-		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
-		NSLog(@"Switched to iSENSE.");
-        
+		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";       
 	}
 }
 

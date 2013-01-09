@@ -12,13 +12,14 @@
 
 
 @interface UILongClickButton : UIView {
-	BOOL clickEnabled;
-    UIImageView *button;
+    UIImageView *image;
+    UIImageView *originalImageCopy;
+    UILongPressGestureRecognizer *recognizer;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
-- (id)initWithFrame:(CGRect)frame withImageView:(UIImageView *)buttonImage;
-
-@property (nonatomic) BOOL clickEnabled;
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
+- (id)initWithFrame:(CGRect)frame imageView:(UIImageView *)buttonImage target:(id)target action:(SEL)selector;
+- (void)updateImage:(UIImageView *)imageView;
 
 @end
