@@ -147,7 +147,7 @@
 
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	if (textField = sessionNameInput) {
+	if (textField == sessionNameInput) { // ** I fixed this- you were assigning sessionNameInput to textfield so it would always be true ** //
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
 		return (newLength > 25) ? NO : YES;
 	}
