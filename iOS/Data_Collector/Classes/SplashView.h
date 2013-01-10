@@ -9,7 +9,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ManualView.h"
-#import "iSENSE_Data_CollectorViewController_iPad.h"
+#import "AutomaticViewController.h"
+#import "AutomaticViewController_iPad.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface SplashView : UIViewController {
 	UIImageView *dataCollectorLogo;
@@ -20,8 +22,7 @@
 
 - (IBAction) loadAutomatic:(id)sender;
 - (IBAction) loadManual:(id)sender;
-- (void) rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
-			   curve:(int)curve degrees:(CGFloat)degrees;
+- (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat; 
 
 @property (nonatomic, retain) IBOutlet UIImageView *dataCollectorLogo;
 @property (nonatomic, retain) IBOutlet UIImageView *orb;

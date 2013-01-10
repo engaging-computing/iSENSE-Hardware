@@ -32,7 +32,7 @@
 	recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:target action:selector];
 	recognizer.MinimumPressDuration = 1;
     recognizer.numberOfTouchesRequired = 1;
-    recognizer.allowableMovement = 25;
+    recognizer.allowableMovement = 50;
     
     [recognizer cancelsTouchesInView];
     [self addGestureRecognizer:recognizer];

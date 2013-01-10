@@ -1,0 +1,315 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		398D33EC16921A45001133D7 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E416921A45001133D7 /* Experiment.h */; };
+		398D33ED16921A45001133D7 /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E516921A45001133D7 /* ExperimentField.h */; };
+		398D33EE16921A45001133D7 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E616921A45001133D7 /* Image.h */; };
+		398D33EF16921A45001133D7 /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E716921A45001133D7 /* iSENSE.h */; };
+		398D33F016921A45001133D7 /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E816921A45001133D7 /* Item.h */; };
+		398D33F116921A45001133D7 /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E916921A45001133D7 /* Person.h */; };
+		398D33F216921A45001133D7 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33EA16921A45001133D7 /* Session.h */; };
+		398D33F316921A45001133D7 /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33EB16921A45001133D7 /* SessionData.h */; };
+		398D33FE16921A4A001133D7 /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F516921A4A001133D7 /* iSENSE.m */; };
+		398D33FF16921A4A001133D7 /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F716921A4A001133D7 /* Experiment.m */; };
+		398D340016921A4A001133D7 /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F816921A4A001133D7 /* ExperimentField.m */; };
+		398D340116921A4A001133D7 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F916921A4A001133D7 /* Image.m */; };
+		398D340216921A4A001133D7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FA16921A4A001133D7 /* Item.m */; };
+		398D340316921A4A001133D7 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FB16921A4A001133D7 /* Person.m */; };
+		398D340416921A4A001133D7 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FC16921A4A001133D7 /* Session.m */; };
+		398D340516921A4A001133D7 /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FD16921A4A001133D7 /* SessionData.m */; };
+		AA747D9F0F9514B9006C5449 /* iSENSE_API_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */; };
+		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		398D33E416921A45001133D7 /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		398D33E516921A45001133D7 /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		398D33E616921A45001133D7 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		398D33E716921A45001133D7 /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		398D33E816921A45001133D7 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		398D33E916921A45001133D7 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		398D33EA16921A45001133D7 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		398D33EB16921A45001133D7 /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		398D33F516921A4A001133D7 /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
+		398D33F716921A4A001133D7 /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
+		398D33F816921A4A001133D7 /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
+		398D33F916921A4A001133D7 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		398D33FA16921A4A001133D7 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		398D33FB16921A4A001133D7 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		398D33FC16921A4A001133D7 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		398D33FD16921A4A001133D7 /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+		39D1FE15169492EA00ECD18A /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_API_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0867D691FE84028FC02AAC07 /* iSENSE_API */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				39D1FE15169492EA00ECD18A /* libiSENSE_API.a */,
+			);
+			name = iSENSE_API;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				398D33F416921A4A001133D7 /* iSenseApiSrc */,
+				398D33E216921A45001133D7 /* iSenseApiLib */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		398D33E216921A45001133D7 /* iSenseApiLib */ = {
+			isa = PBXGroup;
+			children = (
+				398D33E316921A45001133D7 /* Headers */,
+			);
+			path = iSenseApiLib;
+			sourceTree = "<group>";
+		};
+		398D33E316921A45001133D7 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				398D33E416921A45001133D7 /* Experiment.h */,
+				398D33E516921A45001133D7 /* ExperimentField.h */,
+				398D33E616921A45001133D7 /* Image.h */,
+				398D33E716921A45001133D7 /* iSENSE.h */,
+				398D33E816921A45001133D7 /* Item.h */,
+				398D33E916921A45001133D7 /* Person.h */,
+				398D33EA16921A45001133D7 /* Session.h */,
+				398D33EB16921A45001133D7 /* SessionData.h */,
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+		398D33F416921A4A001133D7 /* iSenseApiSrc */ = {
+			isa = PBXGroup;
+			children = (
+				398D33F516921A4A001133D7 /* iSENSE.m */,
+				398D33F616921A4A001133D7 /* Objects */,
+			);
+			path = iSenseApiSrc;
+			sourceTree = "<group>";
+		};
+		398D33F616921A4A001133D7 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				398D33F716921A4A001133D7 /* Experiment.m */,
+				398D33F816921A4A001133D7 /* ExperimentField.m */,
+				398D33F916921A4A001133D7 /* Image.m */,
+				398D33FA16921A4A001133D7 /* Item.m */,
+				398D33FB16921A4A001133D7 /* Person.m */,
+				398D33FC16921A4A001133D7 /* Session.m */,
+				398D33FD16921A4A001133D7 /* SessionData.m */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA747D9F0F9514B9006C5449 /* iSENSE_API_Prefix.pch in Headers */,
+				398D33EC16921A45001133D7 /* Experiment.h in Headers */,
+				398D33ED16921A45001133D7 /* ExperimentField.h in Headers */,
+				398D33EE16921A45001133D7 /* Image.h in Headers */,
+				398D33EF16921A45001133D7 /* iSENSE.h in Headers */,
+				398D33F016921A45001133D7 /* Item.h in Headers */,
+				398D33F116921A45001133D7 /* Person.h in Headers */,
+				398D33F216921A45001133D7 /* Session.h in Headers */,
+				398D33F316921A45001133D7 /* SessionData.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* iSENSE_API */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "iSENSE_API" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iSENSE_API;
+			productName = iSENSE_API;
+			productReference = 39D1FE15169492EA00ECD18A /* libiSENSE_API.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "iSENSE_API" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				en,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* iSENSE_API */;
+			productRefGroup = 0867D691FE84028FC02AAC07 /* iSENSE_API */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* iSENSE_API */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				398D33FE16921A4A001133D7 /* iSENSE.m in Sources */,
+				398D33FF16921A4A001133D7 /* Experiment.m in Sources */,
+				398D340016921A4A001133D7 /* ExperimentField.m in Sources */,
+				398D340116921A4A001133D7 /* Image.m in Sources */,
+				398D340216921A4A001133D7 /* Item.m in Sources */,
+				398D340316921A4A001133D7 /* Person.m in Sources */,
+				398D340416921A4A001133D7 /* Session.m in Sources */,
+				398D340516921A4A001133D7 /* SessionData.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iSENSE_API_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = iSENSE_API;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iSENSE_API_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = iSENSE_API;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "iSENSE_API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "iSENSE_API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
