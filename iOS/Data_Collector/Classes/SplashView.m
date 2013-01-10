@@ -9,17 +9,14 @@
 
 #import "SplashView.h"
 
-#define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
-
 @implementation SplashView
 
 @synthesize dataCollectorLogo, orb, automatic, manual;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	[self rotateImage:orb duration:1.5
-				curve:UIViewAnimationCurveLinear degrees:180];
+    
+    [self runSpinAnimationOnView:orb duration:1 rotations:1 repeat:FLT_MAX];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,10 +38,18 @@
 }
 
 - (IBAction) loadAutomatic:(id)sender {
-	iSENSE_Data_CollectorViewController_iPad *autoView = [[iSENSE_Data_CollectorViewController_iPad alloc] init];
-	autoView.title = @"Automatic";
-	[self.navigationController pushViewController:autoView animated:YES];
-	[autoView release];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        AutomaticViewController_iPad *autoViewIPad = [[AutomaticViewController_iPad alloc] init];
+        autoViewIPad.title = @"Automatic";
+        [self.navigationController pushViewController:autoViewIPad animated:YES];
+        [autoViewIPad release];
+    } else {
+        AutomaticViewController *autoView = [[AutomaticViewController alloc] init];
+        autoView.title = @"Automatic";
+        [self.navigationController pushViewController:autoView animated:YES];
+        [autoView release];
+    }	
+	
 }
 
 - (IBAction) loadManual:(id)sender {
@@ -54,23 +59,15 @@
 	[manualView release];
 }
 
-- (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
-			  curve:(int)curve degrees:(CGFloat)degrees {
-	
-	// Setup the animation
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:duration];
-	[UIView setAnimationCurve:curve];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationRepeatCount:1e100f];
-	
-	// The transform matrix
-	CGAffineTransform transform = 
-	CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
-	image.transform = transform;
-	
-	// Commit the changes
-	[UIView commitAnimations];
+- (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat {
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 /* full rotation */ * rotations * duration ];
+    rotationAnimation.duration = duration;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = repeat;
+    
+    [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
 }
 
 @end
