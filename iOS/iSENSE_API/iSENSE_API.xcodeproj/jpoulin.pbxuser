@@ -1,0 +1,124 @@
+// !$*UTF8*$!
+{
+	0867D690FE84028FC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeTarget = D2AAC07D0554694100DB518D /* iSENSE_API */;
+		addToTargets = (
+			D2AAC07D0554694100DB518D /* iSENSE_API */,
+		);
+		codeSenseManager = 39432593166F9DA3006C32AA /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1233,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 376499168;
+			PBXWorkspaceStateSaveDate = 376499168;
+		};
+		perUserProjectItems = {
+			3932E4C9166FD4E7004E96BC = 3932E4C9166FD4E7004E96BC /* PBXTextBookmark */;
+			3932E506166FDDF0004E96BC = 3932E506166FDDF0004E96BC /* PBXTextBookmark */;
+		};
+		sourceControlManager = 39432592166F9DA3006C32AA /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	3932E4C9166FD4E7004E96BC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 39432596166F9DBE006C32AA /* iSENSE.m */;
+		name = "iSENSE.m: 484";
+		rLen = 0;
+		rLoc = 16209;
+		rType = 0;
+		vrLen = 1294;
+		vrLoc = 1806;
+	};
+	3932E506166FDDF0004E96BC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 39432596166F9DBE006C32AA /* iSENSE.m */;
+		name = "iSENSE.m: 119";
+		rLen = 0;
+		rLoc = 2469;
+		rType = 0;
+		vrLen = 1409;
+		vrLoc = 1829;
+	};
+	39432592166F9DA3006C32AA /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	39432593166F9DA3006C32AA /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	39432595166F9DBE006C32AA /* iSENSE.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {929, 871}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 364}";
+		};
+	};
+	39432596166F9DBE006C32AA /* iSENSE.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1411, 6916}}";
+			sepNavSelRange = "{2469, 0}";
+			sepNavVisRange = "{1829, 1409}";
+			sepNavWindowFrame = "{{-1280, 26}, {1682, 1024}}";
+		};
+	};
+	39432598166F9DBE006C32AA /* JSON.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {565, 819}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 902}";
+		};
+	};
+	39432599166F9DBE006C32AA /* NSObject+SBJSON.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {565, 650}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 897}";
+		};
+	};
+	394325A4166F9DBE006C32AA /* Experiment.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {519, 858}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 351}";
+		};
+	};
+	394325B0166F9DBE006C32AA /* SessionData.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {519, 403}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 373}";
+		};
+	};
+	D2AAC07D0554694100DB518D /* iSENSE_API */ = {
+		activeExec = 0;
+	};
+}

@@ -1,14 +1,14 @@
 //
-//  iSENSE_Data_CollectorViewController_iPad.m
-//  iSENSE_Data_Collector
+//  AutomaticViewController_iPad.m
+//  Automatic
 //
 //  Created by Jeremy Poulin on 11/1/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "iSENSE_Data_CollectorViewController_iPad.h"
+#import "AutomaticViewController_iPad.h"
 
-@implementation iSENSE_Data_CollectorViewController_iPad
+@implementation AutomaticViewController_iPad
 
 @synthesize isRecording;
 
