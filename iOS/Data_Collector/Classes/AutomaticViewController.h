@@ -10,7 +10,7 @@
 #import "UIImageTint.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-@interface AutomaticViewController : UIViewController  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate> {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
@@ -19,9 +19,15 @@
     UIImageView *mainLogo;
     UILabel *startStopLabel;
     UILabel *loginStatus;
+    UIBarButtonItem *menuButton;
 }
 
+- (void) login;
+- (void) experiment;
+- (void) upload;
+
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
+-(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
 
 @property (nonatomic) BOOL isRecording;

@@ -1,12 +1,16 @@
 //
 //  AutomaticViewController_iPad.m
-//  Automatic
+//  Data_Collector
 //
 //  Created by Jeremy Poulin on 11/1/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "AutomaticViewController_iPad.h"
+
+#define MENU_UPLOAD 0
+#define MENU_EXPERIMENT 1
+#define MENU_LOGIN 2
 
 @implementation AutomaticViewController_iPad
 
@@ -30,7 +34,13 @@
             startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            // Record Data
             [self setIsRecording:TRUE];
+            NSMutableArray *results = [self recordData];
+            NSLog(@"Received %d results.", [results count]);
+            for(int i = 0; i < [results count]; i++) {
+                NSLog(@"Array item %d = %@", i, [results objectAtIndex:i]);
+            }
             
         // Stop Recording
         } else {
@@ -99,13 +109,28 @@
     [self.view addSubview:loginStatus];
 	[self.view addSubview:mainLogo];
 	[self.view addSubview:containerForMainButton];
+    
+    // Add a menu button
+    menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
+    self.navigationItem.rightBarButtonItem = menuButton;
 	
 	// Attempt Login
 	isenseAPI = [iSENSE getInstance];
 	[isenseAPI toggleUseDev:YES];
-	[isenseAPI login:@"sor" with:@"sor"];
     [self updateLoginStatus];
     
+}
+
+- (IBAction) displayMenu:(id)sender {
+	UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                 initWithTitle:nil
+                                 delegate:self
+                                 cancelButtonTitle:@"Cancel"
+                                 destructiveButtonTitle:nil
+                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
+	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+	[popupQuery showInView:self.view];
+	[popupQuery release];
 }
 
 // Set your login status to your username to not logged in as necessary
@@ -152,7 +177,6 @@
     // Release any cached data, images, etc. that aren't in use.
 }
 
-
 - (void)viewDidUnload {
     [super viewDidUnload];
 	//[self addChildViewController:(UIViewController*) self.yourChildController];
@@ -167,8 +191,93 @@
 	[loginStatus release];
 	[startStopLabel release];
     [startStopButton release];
+    [menuButton release];
     [super dealloc];
 	
+}
+
+- (void) login {
+    //* present dialog with login credentials
+    if ([isenseAPI login:@"sor" with:@"sor"]) {
+        UIImage *check = [[UIImage alloc] init];
+        check = [UIImage imageNamed:@"bluecheck"];
+        [self.view makeToast:@"Login Successful!"
+				duration:2.0
+				position:@"bottom"
+				   image:check];	
+	} else {
+        UIImage *red_x = [[UIImage alloc] init];
+        red_x = [UIImage imageNamed:@"red_x"];
+        [self.view makeToast:@"Login Failed!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:red_x];
+    }
+    
+    [self updateLoginStatus];
+	
+}
+
+// Record the data and return the NSMutable array to be JSONed
+- (NSArray *) recordData {
+    CMMotionManager *motionManager = [[[CMMotionManager alloc] init] autorelease];    
+    NSOperationQueue *queue = [[NSOperationQueue currentQueue] retain];
+    NSMutableArray *dataToBeJSONed = [[[NSMutableArray alloc] init] autorelease];
+    
+    CMAccelerometerHandler handler = ^(CMAccelerometerData *data, NSError *error) {
+        NSLog(@"Error = %@", error);
+        NSLog(@"X value = %lf", [data acceleration].x);
+        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x] autorelease] ];
+        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y] autorelease] ];
+        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z] autorelease] ];
+        NSLog(@"Current size of return %d.", [dataToBeJSONed count]);
+    };
+    
+    [motionManager startAccelerometerUpdatesToQueue:queue withHandler:handler];
+        
+    return dataToBeJSONed;
+}
+
+- (void) experiment {
+	[self.view makeToast:@"Experiment!"
+				duration:2.0
+				position:@"bottom"];
+}
+
+- (void) upload {
+	[self.view makeToast:@"Upload!"
+				duration:2.0
+				position:@"bottom"];
+	
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	BOOL showMsg = YES;
+	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
+													  message:@"Nil_message"
+													 delegate:nil
+											cancelButtonTitle:@"Okay"
+											otherButtonTitles:nil];
+	switch (buttonIndex) {
+		case MENU_UPLOAD:
+			message.message = @"Upload"; showMsg = NO; [self upload];
+			break;
+		case MENU_EXPERIMENT:
+			message.message = @"Experiment"; showMsg = NO; [self experiment];
+			break;
+		case MENU_LOGIN:
+			message.message = @"Login"; showMsg = NO; [self login];
+			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
+			break;
+		default:
+			showMsg = NO;
+			break;
+	}
+	
+	if (showMsg)
+		[message show];
+	
+	[message release];
 }
 
 

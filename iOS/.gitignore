@@ -1,3 +1,5 @@
 # Build files
 
 */build
+
+/project.xcworkspace/xcuserdata/*.xcuserdatad/UserInterfaceState.xcuserstate

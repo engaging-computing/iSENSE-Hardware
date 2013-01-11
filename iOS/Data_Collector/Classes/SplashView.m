@@ -15,7 +15,14 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+
+}
+
+// Is called every time SplashView appears
+- (void)viewDidAppear:(BOOL)animated {    
+    [super viewDidAppear:animated];
     
+    // Spin the orb!
     [self runSpinAnimationOnView:orb duration:1 rotations:1 repeat:FLT_MAX];
 }
 
