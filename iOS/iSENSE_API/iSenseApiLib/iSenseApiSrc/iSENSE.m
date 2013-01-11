@@ -64,6 +64,10 @@ static iSENSE* _iSENSE = nil;
 		username = [[NSString alloc] autorelease];
 		session_key =[[NSString alloc] autorelease];
 		uid = [[NSNumber alloc] autorelease];
+        
+        username = NULL;
+        session_key = NULL;
+        uid = NULL;
 	}
 	
 	return self;
@@ -113,7 +117,7 @@ static iSENSE* _iSENSE = nil;
 // Use this method to find out if you are logged in or not.
 - (bool) isLoggedIn {
 	if (session_key) {
-		if (session_key == (id)[NSNull null] || session_key.length == 0) {
+		if (session_key == (id)[NSNull null]) {
 			return FALSE;
 		} else {
 			return TRUE;
