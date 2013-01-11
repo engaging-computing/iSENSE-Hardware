@@ -9,6 +9,8 @@
 #import "UILongClickButton.h"
 #import "UIImageTint.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import <CoreMotion/CoreMotion.h>
+
 
 @interface AutomaticViewController_iPad : UIViewController <UIActionSheetDelegate>  {
 	// Fuctionality
@@ -25,6 +27,7 @@
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
 -(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
+-(NSMutableArray *) recordData;
 
 - (void) login;
 - (void) experiment;

@@ -34,7 +34,13 @@
             startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            // Record Data
             [self setIsRecording:TRUE];
+            NSMutableArray *results = [self recordData];
+            NSLog(@"Received %d results.", [results count]);
+            for(int i = 0; i < [results count]; i++) {
+                NSLog(@"Array item %d = %@", i, [results objectAtIndex:i]);
+            }
             
         // Stop Recording
         } else {
@@ -210,6 +216,26 @@
     
     [self updateLoginStatus];
 	
+}
+
+// Record the data and return the NSMutable array to be JSONed
+- (NSArray *) recordData {
+    CMMotionManager *motionManager = [[[CMMotionManager alloc] init] autorelease];    
+    NSOperationQueue *queue = [[NSOperationQueue currentQueue] retain];
+    NSMutableArray *dataToBeJSONed = [[[NSMutableArray alloc] init] autorelease];
+    
+    CMAccelerometerHandler handler = ^(CMAccelerometerData *data, NSError *error) {
+        NSLog(@"Error = %@", error);
+        NSLog(@"X value = %lf", [data acceleration].x);
+        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x] autorelease] ];
+        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y] autorelease] ];
+        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z] autorelease] ];
+        NSLog(@"Current size of return %d.", [dataToBeJSONed count]);
+    };
+    
+    [motionManager startAccelerometerUpdatesToQueue:queue withHandler:handler];
+        
+    return dataToBeJSONed;
 }
 
 - (void) experiment {
