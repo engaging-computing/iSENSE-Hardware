@@ -65,9 +65,9 @@ static iSENSE* _iSENSE = nil;
 		session_key =[[NSString alloc] autorelease];
 		uid = [[NSNumber alloc] autorelease];
         
-        username = NULL;
-        session_key = NULL;
-        uid = NULL;
+        username = nil;
+        session_key = nil;
+        uid = nil;
 	}
 	
 	return self;
@@ -116,14 +116,11 @@ static iSENSE* _iSENSE = nil;
 
 // Use this method to find out if you are logged in or not.
 - (bool) isLoggedIn {
-	if (session_key) {
-		if (session_key == (id)[NSNull null]) {
-			return FALSE;
-		} else {
-			return TRUE;
-		}
-	} else {
+    NSLog(@"Session Key: %@", session_key);
+	if (session_key == nil) {
 		return FALSE;
+    } else {
+		return TRUE;
 	}
 }
 
@@ -134,8 +131,8 @@ static iSENSE* _iSENSE = nil;
 
 // Use this method to logout of iSENSE(dev)
 - (void) logout {
-	session_key = NULL;
-	username = NULL;
+	session_key = nil;
+	username = nil;
 	uid = [NSNumber numberWithInt:-1];
 }
 
@@ -488,13 +485,16 @@ static iSENSE* _iSENSE = nil;
 }
 
 // Use this method to create a session and receive its session number (may be deprecated).
+// The API specification actually contains 'state' as opposed to 'country,' but historically we've always used country
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id {
-	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
-	NSNumber *sid = [[NSNumber alloc] autorelease];
+    if ([self isLoggedIn]) {
+        NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
+        NSNumber *sid = [[NSNumber alloc] autorelease];
 	
-	sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
-	
-	return sid;
+        sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
+            return sid;
+    }
+	return NULL;
 }
 
 // Use this method to add data to a session (may be deprecated).
