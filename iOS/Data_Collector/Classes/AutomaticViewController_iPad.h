@@ -27,12 +27,15 @@
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
 -(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
--(NSMutableArray *) recordData;
+-(CMMotionManager *) recordData;
+-(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
 
 - (void) login;
 - (void) experiment;
 - (void) upload;
 
 @property (nonatomic) BOOL isRecording;
+@property (atomic, assign) CMMotionManager *motionManager;
+@property (atomic, assign) NSMutableArray *dataToBeJSONed;
 
 @end

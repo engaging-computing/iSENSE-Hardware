@@ -15,6 +15,8 @@
 @implementation AutomaticViewController_iPad
 
 @synthesize isRecording;
+@synthesize motionManager;
+@synthesize dataToBeJSONed;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -36,12 +38,8 @@
             
             // Record Data
             [self setIsRecording:TRUE];
-            NSMutableArray *results = [self recordData];
-            NSLog(@"Received %d results.", [results count]);
-            for(int i = 0; i < [results count]; i++) {
-                NSLog(@"Array item %d = %@", i, [results objectAtIndex:i]);
-            }
-            
+            motionManager = [self recordData];
+                        
         // Stop Recording
         } else {
             // Back to red mode
@@ -50,7 +48,21 @@
             startStopLabel.text = [StringGrabber getString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            NSMutableArray *results = [self stopRecording:motionManager];
+            NSLog(@"Received %d results.", [results[0] count]);
+            
             [self setIsRecording:FALSE];
+            [motionManager release];
+            
+            NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
+            NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
+            NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+            NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+            NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+            NSNumber *exp_num = [[[NSNumber alloc] initWithInt:518] autorelease];
+            
+            [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+            
         }
         
         // Make the beep sound
@@ -219,22 +231,28 @@
 }
 
 // Record the data and return the NSMutable array to be JSONed
-- (NSArray *) recordData {
-    CMMotionManager *motionManager = [[[CMMotionManager alloc] init] autorelease];    
-    NSOperationQueue *queue = [[NSOperationQueue currentQueue] retain];
-    NSMutableArray *dataToBeJSONed = [[[NSMutableArray alloc] init] autorelease];
-    
-    CMAccelerometerHandler handler = ^(CMAccelerometerData *data, NSError *error) {
-        NSLog(@"Error = %@", error);
-        NSLog(@"X value = %lf", [data acceleration].x);
-        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x] autorelease] ];
-        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y] autorelease] ];
-        [dataToBeJSONed addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z] autorelease] ];
-        NSLog(@"Current size of return %d.", [dataToBeJSONed count]);
+- (CMMotionManager *) recordData {
+    CMMotionManager *newMotionManager = [[[CMMotionManager alloc] init] retain];
+    NSOperationQueue *queue = [[[[NSOperationQueue alloc] init] retain] autorelease];
+    dataToBeJSONed = [[NSMutableArray alloc] init];
+    [dataToBeJSONed addObject:[[NSMutableArray alloc] init]];
+    [dataToBeJSONed addObject:[[NSMutableArray alloc] init]];
+    [dataToBeJSONed addObject:[[NSMutableArray alloc] init]];
+          
+    CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
+        [dataToBeJSONed[0] addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease] ];
+        [dataToBeJSONed[1] addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease] ];
+        [dataToBeJSONed[2] addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease] ];
     };
     
-    [motionManager startAccelerometerUpdatesToQueue:queue withHandler:handler];
+    [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
         
+    return [newMotionManager autorelease];
+}
+
+// Stops the recording and returns the actual data recorded :)
+-(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager {
+    [finalMotionManager stopAccelerometerUpdates];  
     return dataToBeJSONed;
 }
 
