@@ -28,7 +28,7 @@
 -(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
 -(CMMotionManager *) recordData;
--(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
+-(NSMutableDictionary *) stopRecording:(CMMotionManager *)finalMotionManager;
 
 - (void) login;
 - (void) experiment;
@@ -36,6 +36,6 @@
 
 @property (nonatomic) BOOL isRecording;
 @property (atomic, assign) CMMotionManager *motionManager;
-@property (atomic, assign) NSMutableArray *dataToBeJSONed;
+@property (atomic, assign) NSMutableDictionary *dataToBeJSONed;
 
 @end

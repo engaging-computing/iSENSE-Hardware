@@ -10,13 +10,12 @@
 #import "iSENSE.h"
 
 static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
-static iSENSE* _iSENSE = nil;
+static iSENSE *_iSENSE = nil;
 
 @implementation iSENSE
 
 // Makes a request to iSENSE and parse the JSONObject it gets back
--(NSDictionary *)isenseQuery:(NSString*)target
-{
+-(NSDictionary *)isenseQuery:(NSString*)target {
 	NSMutableString *base_url = [NSMutableString stringWithString:baseURL];
 	[base_url appendString:target];
 	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -31,8 +30,7 @@ static iSENSE* _iSENSE = nil;
     return jsonDictionary;
 }
 
-+(iSENSE*)getInstance
-{
++(iSENSE*)getInstance {
 	@synchronized([iSENSE class])
 	{
 		if (!_iSENSE)
@@ -45,8 +43,7 @@ static iSENSE* _iSENSE = nil;
 }
 
 // Called internal to handle requests for new object
-+(id)alloc
-{
++(id)alloc {
 	@synchronized([iSENSE class])
 	{
 		NSAssert(_iSENSE == nil, @"Attempted to allocate a second instance of a singleton.");
@@ -61,9 +58,9 @@ static iSENSE* _iSENSE = nil;
 -(id)init {
 	self = [super init];
 	if (self != nil) {
-		username = [[NSString alloc] autorelease];
-		session_key =[[NSString alloc] autorelease];
-		uid = [[NSNumber alloc] autorelease];
+        session_key = [[NSString alloc] init];
+        username = [[NSString alloc] init];
+        uid = [[NSNumber alloc] initWithInt:-1];
         
         username = nil;
         session_key = nil;
@@ -82,6 +79,7 @@ static iSENSE* _iSENSE = nil;
  return UINT_MAX; //denotes an object that cannot be released
  }
  
+  
  - (id)autorelease {
  return self;
  }
@@ -89,20 +87,23 @@ static iSENSE* _iSENSE = nil;
  -(oneway void)release {
  }
  
- - (void)dealloc {
- // Should never be called, but just here for clarity really.
- [username release];
- [session_key release];
- [uid release];
- [_iSENSE release];
- [super dealloc];
- }
- 
  - (NSZone *)zone {
  return zoneWhereAllocated ;
  }
  */
 /* End of obsolete methods. */
+
+
+- (void)dealloc {
+    NSLog(@"Session_key released");
+    [username release];
+    [session_key release];
+    [uid release];
+    [_iSENSE release];
+    [super dealloc];
+}
+
+
 
 // Use this method to access the session key if you are logged in.
 - (NSString *) getSessionKey {
@@ -116,8 +117,7 @@ static iSENSE* _iSENSE = nil;
 
 // Use this method to find out if you are logged in or not.
 - (bool) isLoggedIn {
-    NSLog(@"Session Key: %@", session_key);
-	if (session_key == nil) {
+	if (session_key == nil || session_key == (id)[NSNull null]) {
 		return FALSE;
     } else {
 		return TRUE;
@@ -140,7 +140,7 @@ static iSENSE* _iSENSE = nil;
 - (bool) login:(NSString *)user with:(NSString *)password {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
    	
-    session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
+    session_key = [[NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]] retain];
 	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
 	
     if ([self isLoggedIn]) {
@@ -498,14 +498,18 @@ static iSENSE* _iSENSE = nil;
 }
 
 // Use this method to add data to a session (may be deprecated).
-- (bool) putSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
-	NSLog(@"%@", session_id);
-	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=putSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataJSON]];
-	NSArray *data = [result objectForKey:@"data"];
-	
-	if (data) {
-		return true;
-	}
+- (bool) putSessionData:(NSData *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
+    if ([self isLoggedIn]) {
+        
+        NSString *dataAsString = [[[NSString alloc] initWithData:dataJSON encoding:NSUTF8StringEncoding] autorelease];
+        NSLog(@"Session Key: = %@", session_key);
+        NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=putSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataAsString]];
+        NSArray *data = [result objectForKey:@"data"];
+        
+        if (data) {
+            return true;
+        }
+    }
 	
 	return false;
 }
