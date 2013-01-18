@@ -60,10 +60,10 @@
 }
 
 - (IBAction) loadManual:(id)sender {
-	ManualView *manualView = [[ManualView alloc] init];
-	manualView.title = @"Manual";
-	[self.navigationController pushViewController:manualView animated:YES];
-	[manualView release];
+	ManualViewController *manualViewController = [[ManualViewController alloc] init];
+	manualViewController.title = @"Manual";
+	[self.navigationController pushViewController:manualViewController animated:YES];
+	[manualViewController release];
 }
 
 - (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat {

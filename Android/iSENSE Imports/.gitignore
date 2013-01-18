@@ -1,3 +1,14 @@
-# bin files
+#       Bin Files
 
 /bin
+
+#       Exceptions
+
+!/bin/Android_Manifest.xml
+
+#       Other Useless Files
+/gen
+lint.xml
+
+#       .orig Files
+*.orig

@@ -66,13 +66,29 @@ static NSString *kDurationKey = @"CSToastDurationKey";
     [self showToast:toast duration:interval position:position];
 }
 
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position image:(UIImage *)image {
-    UIView *toast = [self makeViewForMessage:message title:nil image:image];
+- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image {
+    UIImage *display;
+    if (image == @"check") {
+        display = [[[UIImage alloc] init] autorelease];
+        display = [UIImage imageNamed:@"bluecheck"];
+    } else {
+        display = [[[UIImage alloc] init] autorelease];
+        display = [UIImage imageNamed:@"red_x"];
+    }
+    UIView *toast = [self makeViewForMessage:message title:nil image:display];
     [self showToast:toast duration:interval position:position];
 }
 
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(UIImage *)image {
-    UIView *toast = [self makeViewForMessage:message title:title image:image];
+- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image {
+    UIImage *display;
+    if (image == @"check") {
+        display = [[[UIImage alloc] init] autorelease];
+        display = [UIImage imageNamed:@"bluecheck"];
+    } else {
+        display = [[[UIImage alloc] init] autorelease];
+        display = [UIImage imageNamed:@"red_x"];
+    }
+    UIView *toast = [self makeViewForMessage:message title:title image:display];
     [self showToast:toast duration:interval position:position];
 }
 
