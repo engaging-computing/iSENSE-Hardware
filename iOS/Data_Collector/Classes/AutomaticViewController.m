@@ -193,21 +193,17 @@
 }
 
 - (void) login {
-    //* present dialog with login credentials
+    // present dialog with login credentials
     if ([isenseAPI login:@"sor" with:@"sor"]) {
-        UIImage *check = [[UIImage alloc] init];
-        check = [UIImage imageNamed:@"bluecheck"];
         [self.view makeToast:@"Login Successful!"
                     duration:2.0
                     position:@"bottom"
-                       image:check];
+                       image:@"check"];
 	} else {
-        UIImage *red_x = [[UIImage alloc] init];
-        red_x = [UIImage imageNamed:@"red_x"];
         [self.view makeToast:@"Login Failed!"
                     duration:2.0
                     position:@"bottom"
-                       image:red_x];
+                       image:@"red_x"];
     }
     
     [self updateLoginStatus];

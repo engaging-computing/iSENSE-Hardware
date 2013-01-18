@@ -53,7 +53,7 @@
 		52572B911691F788009037A7 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B8F1691F788009037A7 /* AboutView.xib */; };
 		52572B951691F796009037A7 /* GuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B931691F796009037A7 /* GuideView.m */; };
 		52572B961691F796009037A7 /* GuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B941691F796009037A7 /* GuideView.xib */; };
-		52572B9A1691F7B1009037A7 /* ManualView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualView.m */; };
+		52572B9A1691F7B1009037A7 /* ManualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.m */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UIPLongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UIPLongClickButton.m */; };
 /* End PBXBuildFile section */
@@ -124,8 +124,8 @@
 		52572B921691F796009037A7 /* GuideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuideView.h; sourceTree = "<group>"; };
 		52572B931691F796009037A7 /* GuideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuideView.m; sourceTree = "<group>"; };
 		52572B941691F796009037A7 /* GuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = GuideView.xib; path = Classes/GuideView.xib; sourceTree = "<group>"; };
-		52572B971691F7B1009037A7 /* ManualView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualView.h; sourceTree = "<group>"; };
-		52572B981691F7B1009037A7 /* ManualView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualView.m; sourceTree = "<group>"; };
+		52572B971691F7B1009037A7 /* ManualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualViewController.h; sourceTree = "<group>"; };
+		52572B981691F7B1009037A7 /* ManualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualViewController.m; sourceTree = "<group>"; };
 		52572B9E1691F816009037A7 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		52572BC61691FBC6009037A7 /* SplashView-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SplashView-iPad.xib"; sourceTree = "<group>"; };
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
@@ -387,8 +387,8 @@
 		52572B6F1691F6E9009037A7 /* Manual */ = {
 			isa = PBXGroup;
 			children = (
-				52572B971691F7B1009037A7 /* ManualView.h */,
-				52572B981691F7B1009037A7 /* ManualView.m */,
+				52572B971691F7B1009037A7 /* ManualViewController.h */,
+				52572B981691F7B1009037A7 /* ManualViewController.m */,
 			);
 			name = Manual;
 			sourceTree = "<group>";
@@ -396,11 +396,11 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				39088251169B684100BEE04F /* UIImageTint */,
 				3963689A1697258700631268 /* Toast */,
 				39F8AF9B1694C22100E5E4C2 /* CameraUsage */,
 				39F8AF971694C1FB00E5E4C2 /* StringGrabber */,
 				52572BED1691FD33009037A7 /* UILongClickButton */,
+				39088251169B684100BEE04F /* UIImageTint */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -513,7 +513,7 @@
 				52572B8B1691F77D009037A7 /* SplashView.m in Sources */,
 				52572B901691F788009037A7 /* AboutView.m in Sources */,
 				52572B951691F796009037A7 /* GuideView.m in Sources */,
-				52572B9A1691F7B1009037A7 /* ManualView.m in Sources */,
+				52572B9A1691F7B1009037A7 /* ManualViewController.m in Sources */,
 				52572BF01691FD71009037A7 /* UIPLongClickButton.m in Sources */,
 				39521F2916949AA60076A9CA /* iSENSE.m in Sources */,
 				39521F2A16949AA60076A9CA /* Experiment.m in Sources */,

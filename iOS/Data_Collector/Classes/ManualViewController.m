@@ -7,14 +7,14 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-#import "ManualView.h"
+#import "ManualViewController.h"
 #import "Data_CollectorAppDelegate.h"
 
 #define MENU_UPLOAD 0
 #define MENU_EXPERIMENT 1
 #define MENU_LOGIN 2
 
-@implementation ManualView
+@implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
 @synthesize sessionName, username;
@@ -155,28 +155,25 @@
 }
 
 - (void) login {
-	UIImage *check = [[UIImage alloc] init];
-	check = [UIImage imageNamed:@"bluecheck"];
 	[self.view makeToast:@"Login!"
 				duration:2.0
 				position:@"bottom"
-				   image:check];
-	
-	//* present dialog with login credentials
-	//[isenseAPI login:@"sor" with:@"sor"];
+				   image:@"check"];
 	
 }
 
 - (void) experiment {
 	[self.view makeToast:@"Experiment!"
 				duration:2.0
-				position:@"bottom"];
+				position:@"bottom"
+                   image:@"red_x"];
 }
 
 - (void) upload {
 	[self.view makeToast:@"Upload!"
 				duration:2.0
-				position:@"bottom"];
+				position:@"bottom"
+                   image:@"check"];
 	
 }
 
