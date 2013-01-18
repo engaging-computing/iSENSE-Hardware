@@ -38,7 +38,7 @@
             
             // Record Data
             [self setIsRecording:TRUE];
-            motionManager = [self recordData];
+            motionManager = [[self recordData] retain];
                         
         // Stop Recording
         } else {
@@ -49,11 +49,11 @@
             [containerForMainButton updateImage:startStopButton];
             
             NSMutableArray *results = [self stopRecording:motionManager];
-            NSLog(@"Received %d results.", [results[0] count]);
+            NSLog(@"Received %d results.", [results count]);
             
             [self setIsRecording:FALSE];
-            [motionManager release];
             
+            // Create a session to upload to
             NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
             NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
             NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
@@ -61,7 +61,12 @@
             NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
             NSNumber *exp_num = [[[NSNumber alloc] initWithInt:518] autorelease];
             
-            [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+            NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+            
+            // Upload to iSENSE (pass me JSON data)
+            NSError *error = nil;
+            NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+            [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
             
         }
         
@@ -232,17 +237,17 @@
 
 // Record the data and return the NSMutable array to be JSONed
 - (CMMotionManager *) recordData {
-    CMMotionManager *newMotionManager = [[[CMMotionManager alloc] init] retain];
-    NSOperationQueue *queue = [[[[NSOperationQueue alloc] init] retain] autorelease];
+    CMMotionManager *newMotionManager = [[CMMotionManager alloc] init];
+    NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
     dataToBeJSONed = [[NSMutableArray alloc] init];
-    [dataToBeJSONed addObject:[[NSMutableArray alloc] init]];
-    [dataToBeJSONed addObject:[[NSMutableArray alloc] init]];
-    [dataToBeJSONed addObject:[[NSMutableArray alloc] init]];
-          
-    CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
-        [dataToBeJSONed[0] addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease] ];
-        [dataToBeJSONed[1] addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease] ];
-        [dataToBeJSONed[2] addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease] ];
+    
+     CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
+        NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease]];
+         
+        [dataToBeJSONed addObject:temp];
     };
     
     [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
