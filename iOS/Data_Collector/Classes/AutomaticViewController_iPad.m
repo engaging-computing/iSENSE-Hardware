@@ -48,25 +48,25 @@
             startStopLabel.text = [StringGrabber getString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
-            NSMutableDictionary *results = [self stopRecording:motionManager];
+            NSMutableArray *results = [self stopRecording:motionManager];
             NSLog(@"Received %d results.", [results count]);
             
             [self setIsRecording:FALSE];
             
             // Create a session to upload to
-            /*NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
+            NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
             NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
             NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
             NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
-            NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];*/
+            NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
             NSNumber *exp_num = [[[NSNumber alloc] initWithInt:518] autorelease];
             
-            //[isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+            NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
             
             // Upload to iSENSE (pass me JSON data)
             NSError *error = nil;
             NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-            [isenseAPI putSessionData:dataJSON forSession:[[[NSNumber alloc] initWithInt:6242] autorelease] inExperiment:exp_num];
+            [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
             
         }
         
@@ -239,20 +239,15 @@
 - (CMMotionManager *) recordData {
     CMMotionManager *newMotionManager = [[CMMotionManager alloc] init];
     NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
-    dataToBeJSONed = [[NSMutableDictionary alloc] init];
+    dataToBeJSONed = [[NSMutableArray alloc] init];
     
-    NSMutableArray *x = [[NSMutableArray alloc] init];
-    NSMutableArray *y = [[NSMutableArray alloc] init];
-    NSMutableArray *z = [[NSMutableArray alloc] init];
-    
-    [dataToBeJSONed setObject:x forKey:@"x"];
-    [dataToBeJSONed setObject:y forKey:@"y"];
-    [dataToBeJSONed setObject:z forKey:@"z"];
-    
-    CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
-        [x addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease]];
-        [y addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease]];
-        [z addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease]];
+     CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
+        NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease]];
+         
+        [dataToBeJSONed addObject:temp];
     };
     
     [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
@@ -261,7 +256,7 @@
 }
 
 // Stops the recording and returns the actual data recorded :)
--(NSMutableDictionary *) stopRecording:(CMMotionManager *)finalMotionManager {
+-(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager {
     [finalMotionManager stopAccelerometerUpdates];  
     return dataToBeJSONed;
 }

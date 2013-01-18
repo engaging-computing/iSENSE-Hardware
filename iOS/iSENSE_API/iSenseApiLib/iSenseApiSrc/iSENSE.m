@@ -14,16 +14,24 @@ static iSENSE *_iSENSE = nil;
 
 @implementation iSENSE
 
-// Makes a request to iSENSE and parse the JSONObject it gets back
+// Makes a request to iSENSE and parse the JSONObject it gets back (TODO)
 -(NSDictionary *)isenseQuery:(NSString*)target {
-	NSMutableString *base_url = [NSMutableString stringWithString:baseURL];
-	[base_url appendString:target];
-	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-	NSLog(@"Sent to iSENSE: %@", final);
+
+	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+	NSLog(@"Sent to iSENSE: %@", final_target);
 	NSError *requestError = nil;
-	NSData *dataJSON = [NSData dataWithContentsOfURL:[NSURL URLWithString:final] options:NSDataReadingMappedIfSafe error:&requestError];
-    NSLog(@"Error During Communication: %@", requestError);
-    NSLog(@"Server Response: %@", [NSString stringWithUTF8String:[dataJSON bytes]]);
+    
+    /* Post request to allow for longer request */
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:baseURL]];
+    [request setHTTPMethod:@"POST"];
+    NSData *data = [final_target dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:data];
+    NSString *length = [[NSNumber numberWithUnsignedInt:data.length] stringValue];
+    [request setValue:length forHTTPHeaderField:@"Content-Length"];
+    
+    NSURLResponse *serverResponse;
+    NSData *dataJSON = [NSURLConnection sendSynchronousRequest:request returningResponse:&serverResponse error:&requestError];
+    
     NSDictionary *jsonDictionary = [[NSDictionary alloc] autorelease];
     jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
     NSLog(@"Error Returning Dictionary: %@", requestError);
