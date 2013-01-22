@@ -22,11 +22,10 @@
 	@synthesize session_count;
 	@synthesize timecreated;
 	@synthesize timemodified;
-	@synthesize timeobj;
-	@synthesize data_diff;
 	@synthesize provider_url;
-	@synthesize lastname;
 	@synthesize name;
 	@synthesize firstname;
+    @synthesize lastname;
 	@synthesize description;
+    @synthesize srate;
 @end

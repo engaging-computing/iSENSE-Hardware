@@ -22,19 +22,17 @@
 	NSNumber *rating;
 	NSNumber *rating_votes;
 	NSNumber *session_count;
-	
 	NSString *timecreated;
 	NSString *timemodified;
-	NSString *timeobj;
-	NSString *data_diff;
 	NSString *provider_url;
-	NSString *lastname;
 	NSString *name;
 	NSString *firstname;
+    NSString *lastname;
 	NSString *description;
+    NSNumber *srate;
 }
 
-/*Properties for getting/setting variables*/
+/* Properties for getting/setting variables */
 @property (assign) NSNumber *default_join;
 @property (assign) NSNumber *default_read;
 @property (assign) NSNumber *experiment_id;
@@ -46,12 +44,11 @@
 @property (assign) NSNumber *session_count;
 @property (assign) NSString *timecreated;
 @property (assign) NSString *timemodified;
-@property (assign) NSString *timeobj;
-@property (assign) NSString *data_diff;
 @property (assign) NSString *provider_url;
-@property (assign) NSString *lastname;
 @property (assign) NSString *name;
 @property (assign) NSString *firstname;
+@property (assign) NSString *lastname;
 @property (assign) NSString *description;
+@property (assign) NSNumber *srate;
 
 @end
