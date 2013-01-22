@@ -15,6 +15,9 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording;
+@synthesize motionManager;
+@synthesize dataToBeJSONed;
+
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -34,7 +37,9 @@
             startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            // Record Data
             [self setIsRecording:TRUE];
+            motionManager = [[self recordData] retain];
             
             // Stop Recording
         } else {
@@ -44,7 +49,26 @@
             startStopLabel.text = [StringGrabber getString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            NSMutableArray *results = [self stopRecording:motionManager];
+            NSLog(@"Received %d results.", [results count]);
+            
             [self setIsRecording:FALSE];
+            
+            // Create a session to upload to
+            NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
+            NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
+            NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+            NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+            NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+            NSNumber *exp_num = [[[NSNumber alloc] initWithInt:518] autorelease];
+            
+            NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+            
+            // Upload to iSENSE (pass me JSON data)
+            NSError *error = nil;
+            NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+            [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+            
         }
         
         // Make the beep sound
@@ -192,9 +216,9 @@
 	
 }
 
-- (void) login {
+- (void) login:(NSString *) username withPassword:(NSString *)password {
     // present dialog with login credentials
-    if ([isenseAPI login:@"sort" with:@"sor"]) {
+    if ([isenseAPI login:username with:password]) {
         [self.view makeToast:@"Login Successful!"
                     duration:2.0
                     position:@"bottom"
@@ -209,6 +233,33 @@
     [self updateLoginStatus];
 	
 }
+
+// Record the data and return the NSMutable array to be JSONed
+- (CMMotionManager *) recordData {
+    CMMotionManager *newMotionManager = [[CMMotionManager alloc] init];
+    NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
+    dataToBeJSONed = [[NSMutableArray alloc] init];
+    
+    CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
+        NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease]];
+        
+        [dataToBeJSONed addObject:temp];
+    };
+    
+    [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
+    
+    return [newMotionManager autorelease];
+}
+
+// Stops the recording and returns the actual data recorded :)
+-(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager {
+    [finalMotionManager stopAccelerometerUpdates];
+    return dataToBeJSONed;
+}
+
 
 - (void) experiment {
 	[self.view makeToast:@"Experiment!"
@@ -256,6 +307,15 @@
 		[message show];
 	
 	[message release];
+}
+
+// Basic Login Action Sheet
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != 0) {
+        NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+        NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+        [self login:usernameInput withPassword:passwordInput];
+    }
 }
 
 @end

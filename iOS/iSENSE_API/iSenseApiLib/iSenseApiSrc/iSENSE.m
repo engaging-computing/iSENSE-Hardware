@@ -188,7 +188,7 @@ static iSENSE *_iSENSE = nil;
 		[e setRating_votes:[data valueForKey:@"rating_votes"]];
 		[e setHidden:[data valueForKey:@"hidden"]];
 		[e setFirstname:[data valueForKey:@"firstname"]];
-		[e setLastname:[data valueForKey:@"lastname"]];
+        [e setSrate:[data valueForKey:@"srate"]];
 	}
 	
 	return e;
@@ -373,7 +373,8 @@ static iSENSE *_iSENSE = nil;
 			[exp setRating_votes:[meta objectForKey:@"rating_votes"]];
 			[exp setHidden:[meta objectForKey:@"hidden"]];
 			[exp setFirstname:[meta objectForKey:@"firstname"]];
-			[exp setLastname:[meta objectForKey:@"lastname"]];
+            [exp setLastname:[meta objectForKey:@"lastname"]];
+            [exp setSrate:[meta objectForKey:@"srate"]];
 			
 			[experiments addObject:exp];
 		}
