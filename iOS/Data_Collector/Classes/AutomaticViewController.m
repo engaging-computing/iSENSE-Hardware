@@ -109,7 +109,7 @@
     self.navigationItem.rightBarButtonItem = menuButton;
     
 	
-	// Attempt Login - EXCEPT NAWT 
+	// Prepare isenseAPI and set login status
 	isenseAPI = [iSENSE getInstance];
 	[isenseAPI toggleUseDev:YES];
     [self updateLoginStatus];
@@ -194,7 +194,7 @@
 
 - (void) login {
     // present dialog with login credentials
-    if ([isenseAPI login:@"sor" with:@"sor"]) {
+    if ([isenseAPI login:@"sort" with:@"sor"]) {
         [self.view makeToast:@"Login Successful!"
                     duration:2.0
                     position:@"bottom"
@@ -223,23 +223,29 @@
 	
 }
 
+- (void) getExperiment {
+    [isenseAPI getExperiment:[NSNumber numberWithUnsignedInt:516]];
+}
+
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
-													 delegate:nil
-											cancelButtonTitle:@"Okay"
-											otherButtonTitles:nil];
+													 delegate:self
+											cancelButtonTitle:@"Cancel"
+											otherButtonTitles:@"Okay", nil];
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
 			message.message = @"Upload"; showMsg = NO; [self upload];
 			break;
 		case MENU_EXPERIMENT:
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
+            [self getExperiment];
 			break;
 		case MENU_LOGIN:
-			message.message = @"Login"; showMsg = NO; [self login];
-			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
+            message.message = nil;
+            message.title = @"Login";
+            [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
 			break;
 		default:
 			showMsg = NO;
@@ -251,6 +257,5 @@
 	
 	[message release];
 }
-
 
 @end

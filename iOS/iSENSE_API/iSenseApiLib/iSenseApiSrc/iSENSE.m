@@ -147,10 +147,15 @@ static iSENSE *_iSENSE = nil;
 // Use this method to login to iSENSE(dev)
 - (bool) login:(NSString *)user with:(NSString *)password {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
-   	
-    session_key = [[NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]] retain];
-	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
-	
+    
+    @try {
+        session_key = [[NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]] retain];
+        uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
+	} @catch (NSException *e) {
+        NSLog(@"Exception: %@", e);
+        return FALSE;
+    }
+    
     if ([self isLoggedIn]) {
 		username = user;
 		return TRUE;

@@ -33,6 +33,7 @@
 - (void) login;
 - (void) experiment;
 - (void) upload;
+- (void) getExperiment;
 
 @property (nonatomic) BOOL isRecording;
 @property (atomic, assign) CMMotionManager *motionManager;
