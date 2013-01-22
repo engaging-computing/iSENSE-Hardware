@@ -35,7 +35,7 @@
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
 
-- (void) login;
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
 - (void) upload;
 
