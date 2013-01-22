@@ -274,9 +274,9 @@
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
-													 delegate:nil
-											cancelButtonTitle:@"Okay"
-											otherButtonTitles:nil];
+													 delegate:self
+											cancelButtonTitle:@"Cancel"
+											otherButtonTitles:@"Okay", nil];
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
 			message.message = @"Upload"; showMsg = NO; [self upload];
@@ -285,8 +285,9 @@
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
 			break;
 		case MENU_LOGIN:
-			message.message = @"Login"; showMsg = NO; [self login];
-			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
+            message.message = nil;
+            message.title = @"Login";
+            [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
 			break;
 		default:
 			showMsg = NO;
