@@ -36,7 +36,7 @@
 - (NSMutableArray *) sessionData:(NSString *)sessions;
 - (NSMutableArray *) getPeople:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query;
 - (Item *) getProfile:(NSNumber *)user_id;
-- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query;
+- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort;
 - (NSMutableArray *) getExperimentImages:(NSNumber *)exp_id;
 - (NSMutableArray *) getExperimentVideos:(NSNumber *)exp_id;
 - (NSMutableArray *) getExperimentTags:(NSNumber *)exp_id;
