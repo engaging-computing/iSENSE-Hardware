@@ -35,21 +35,19 @@
 	 self.navigationItem.rightBarButtonItem = menuButton;
 	 [menuButton release];
 	 
-	 // stable     ^
-	 // ----------------------------------------------------------------------------------------------
-	 // needs work v
-	 
 	 iapi = [iSENSE getInstance];
      [iapi toggleUseDev:YES];
 	 
-	 [self initLocations];
+	 [self initLocations]; //* make initLocations.. ya know.. do something
 	 
-	 //* get exp. # from prefs
-	 
-	 //* get login info from prefs/rapi
-	 
-	 loggedInAsLabel.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"_"];
-	 expNumLabel.text = [StringGrabber concatenateWithHardcodedString:@"exp_num" :@"_"];
+     if ([iapi isLoggedIn]) {
+         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+     } else {
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
+     }
+     
+     //* get exp. # from prefs
+	 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
 	 
 	 //* if exp. # is null, launch the dialog for choosing exp. num
  }
@@ -133,7 +131,8 @@
 			message.message = nil;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             message.title = @"Login";
-			break;
+            message.tag = MENU_LOGIN;
+            break;
 		default:
 			showMsg = NO;
 			break;
@@ -146,10 +145,14 @@
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex { // HERE JEREMY OVERRIDE THIS
-    if (buttonIndex != 0) {
-        NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
-        NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
-        [self login:usernameInput withPassword:passwordInput];
+    if (actionSheet.tag == MENU_LOGIN) {
+        if (buttonIndex != 0) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else {
+        
     }
 }
 
@@ -168,6 +171,7 @@
                     duration:2.0
                     position:@"bottom"
                        image:@"check"];
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:usernameInput];
 	} else {
         [self.view makeToast:@"Login Failed!"
                     duration:2.0
