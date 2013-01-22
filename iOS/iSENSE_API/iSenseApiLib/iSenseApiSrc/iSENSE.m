@@ -347,8 +347,8 @@ static iSENSE *_iSENSE = nil;
 }
 
 // Use this method to retrieve experiments (may be deprecated).
-- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query {
-	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&action=%@&query=%@", fromPage, limit, action, query]];
+- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
+	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *experiments = [[NSMutableArray new] autorelease];
