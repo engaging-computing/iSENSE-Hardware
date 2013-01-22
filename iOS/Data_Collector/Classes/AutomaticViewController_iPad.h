@@ -12,7 +12,7 @@
 #import <CoreMotion/CoreMotion.h>
 
 
-@interface AutomaticViewController_iPad : UIViewController <UIActionSheetDelegate>  {
+@interface AutomaticViewController_iPad : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>  {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
