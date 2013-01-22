@@ -39,8 +39,8 @@
 	 // ----------------------------------------------------------------------------------------------
 	 // needs work v
 	 
-	 //iapi = [iSENSE getInstance];
-	 //[iapi toggleUseDev:YES];
+	 iapi = [iSENSE getInstance];
+     [iapi toggleUseDev:YES];
 	 
 	 [self initLocations];
 	 
@@ -119,9 +119,9 @@
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
-													 delegate:nil
-											cancelButtonTitle:@"Okay"
-											otherButtonTitles:nil];
+													 delegate:self
+											cancelButtonTitle:@"Cancel"
+											otherButtonTitles:@"Okay", nil];
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
 			message.message = @"Upload"; showMsg = NO; [self upload];
@@ -130,8 +130,9 @@
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
 			break;
 		case MENU_LOGIN:
-			message.message = @"Login"; showMsg = NO; [self login];
-			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
+			message.message = nil;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            message.title = @"Login";
 			break;
 		default:
 			showMsg = NO;
@@ -145,9 +146,18 @@
 	[message release];
 }
 
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex { // HERE JEREMY OVERRIDE THIS
+    // User clicked cancel
+    if (buttonIndex == 0) {
+        
+    } else { // User clicked okay
+        [self login];
+    }
+}
+
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	if (textField == sessionNameInput) { // ** I fixed this- you were assigning sessionNameInput to textfield so it would always be true ** //
+	if (textField == sessionNameInput) {
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
 		return (newLength > 25) ? NO : YES;
 	}
@@ -155,11 +165,17 @@
 }
 
 - (void) login {
-	[self.view makeToast:@"Login!"
-				duration:2.0
-				position:@"bottom"
-				   image:@"check"];
-	
+    if ([iapi login:@"sor" with:@"sor"]) {
+        [self.view makeToast:@"Login Successful!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"check"];
+	} else {
+        [self.view makeToast:@"Login Failed!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"red_x"];
+    }
 }
 
 - (void) experiment {
