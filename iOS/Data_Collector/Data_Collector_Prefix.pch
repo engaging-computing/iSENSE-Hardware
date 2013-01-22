@@ -5,8 +5,8 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
-	#import "StringGrabber.h"
-	#import "CameraUsage.h"
-	#import "Toast.h"
-	#import "iSENSE.h"
+    #import "StringGrabber.h"
+    #import "CameraUsage.h"
+    #import "Toast.h"
+    #import "iSENSE.h"
 #endif
