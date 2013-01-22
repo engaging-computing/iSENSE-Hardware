@@ -142,16 +142,14 @@
 	if (showMsg)
 		[message show];
 	
-	// eh?? -v
 	[message release];
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex { // HERE JEREMY OVERRIDE THIS
-    // User clicked cancel
-    if (buttonIndex == 0) {
-        
-    } else { // User clicked okay
-        [self login];
+    if (buttonIndex != 0) {
+        NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+        NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+        [self login:usernameInput withPassword:passwordInput];
     }
 }
 
@@ -164,8 +162,8 @@
 	return YES;
 }
 
-- (void) login {
-    if ([iapi login:@"sor" with:@"sor"]) {
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    if ([iapi login:usernameInput with:passwordInput]) {
         [self.view makeToast:@"Login Successful!"
                     duration:2.0
                     position:@"bottom"
