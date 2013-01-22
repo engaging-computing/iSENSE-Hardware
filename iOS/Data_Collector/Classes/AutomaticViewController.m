@@ -109,7 +109,7 @@
     self.navigationItem.rightBarButtonItem = menuButton;
     
 	
-	// Attempt Login
+	// Attempt Login - EXCEPT NAWT 
 	isenseAPI = [iSENSE getInstance];
 	[isenseAPI toggleUseDev:YES];
     [self updateLoginStatus];

@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface ManualViewController : UIViewController <UIActionSheetDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
 	
 	// UI Elements
 	UIImageView *logo;
