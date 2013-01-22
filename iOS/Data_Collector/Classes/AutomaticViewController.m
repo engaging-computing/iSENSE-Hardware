@@ -296,6 +296,7 @@
 		case MENU_LOGIN:
             message.message = nil;
             message.title = @"Login";
+            message.tag = MENU_LOGIN;
             [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
 			break;
 		default:
@@ -310,12 +311,16 @@
 }
 
 // Basic Login Action Sheet
-- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != 0) {
-        NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
-        NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
-        [self login:usernameInput withPassword:passwordInput];
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex { // HERE JEREMY OVERRIDE THIS
+    if (actionSheet.tag == MENU_LOGIN) {
+        NSLog(@"is here");
+        if (buttonIndex != 0) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else {
+        
     }
 }
-
 @end
