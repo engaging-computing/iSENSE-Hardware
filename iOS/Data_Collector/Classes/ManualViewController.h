@@ -25,7 +25,6 @@
 	// Non-UI Elements
 	iSENSE *iapi;
 	NSString *sessionName;
-	NSString *username;
 	int experimentNum;
 	
 }
@@ -58,7 +57,6 @@
 
 // Non-UI Properties
 @property (nonatomic, retain) NSString *sessionName;
-@property (nonatomic, retain) NSString *username;
 
 @end
 
