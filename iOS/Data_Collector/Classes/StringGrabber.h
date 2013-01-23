@@ -13,6 +13,6 @@
 @interface StringGrabber : NSObject {}    
 
 + (NSString *) getString:(NSString *)label;
-+ (NSString *) concatenateWithHardcodedString:(NSString *)label:(NSString *)string;
++ (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string;
 
 @end

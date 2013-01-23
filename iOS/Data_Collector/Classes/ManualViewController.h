@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface ManualView : UIViewController <UIActionSheetDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
 	
 	// UI Elements
 	UIImageView *logo;
@@ -25,7 +25,6 @@
 	// Non-UI Elements
 	iSENSE *iapi;
 	NSString *sessionName;
-	NSString *username;
 	int experimentNum;
 	
 }
@@ -35,7 +34,7 @@
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
 
-- (void) login;
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
 - (void) upload;
 
@@ -58,7 +57,6 @@
 
 // Non-UI Properties
 @property (nonatomic, retain) NSString *sessionName;
-@property (nonatomic, retain) NSString *username;
 
 @end
 

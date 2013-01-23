@@ -7,17 +7,17 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-#import "ManualView.h"
+#import "ManualViewController.h"
 #import "Data_CollectorAppDelegate.h"
 
 #define MENU_UPLOAD 0
 #define MENU_EXPERIMENT 1
 #define MENU_LOGIN 2
 
-@implementation ManualView
+@implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName, username;
+@synthesize sessionName;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -35,21 +35,19 @@
 	 self.navigationItem.rightBarButtonItem = menuButton;
 	 [menuButton release];
 	 
-	 // stable     ^
-	 // ----------------------------------------------------------------------------------------------
-	 // needs work v
+	 iapi = [iSENSE getInstance];
+     [iapi toggleUseDev:YES];
 	 
-	 //iapi = [iSENSE getInstance];
-	 //[iapi toggleUseDev:YES];
+	 [self initLocations]; //* make initLocations.. ya know.. do something
 	 
-	 [self initLocations];
-	 
-	 //* get exp. # from prefs
-	 
-	 //* get login info from prefs/rapi
-	 
-	 loggedInAsLabel.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"_"];
-	 expNumLabel.text = [StringGrabber concatenateWithHardcodedString:@"exp_num" :@"_"];
+     if ([iapi isLoggedIn]) {
+         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+     } else {
+         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
+     }
+     
+     //* get exp. # from prefs
+	 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
 	 
 	 //* if exp. # is null, launch the dialog for choosing exp. num
  }
@@ -82,8 +80,7 @@
 	[scrollView release];
 	
 	[sessionName release];
-	[username release];
-	
+    
 	[super dealloc];
 }
 
@@ -119,9 +116,9 @@
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
-													 delegate:nil
-											cancelButtonTitle:@"Okay"
-											otherButtonTitles:nil];
+													 delegate:self
+											cancelButtonTitle:@"Cancel"
+											otherButtonTitles:@"Okay", nil];
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
 			message.message = @"Upload"; showMsg = NO; [self upload];
@@ -130,9 +127,11 @@
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
 			break;
 		case MENU_LOGIN:
-			message.message = @"Login"; showMsg = NO; [self login];
-			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
-			break;
+			message.message = nil;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            message.title = @"Login";
+            message.tag = MENU_LOGIN;
+            break;
 		default:
 			showMsg = NO;
 			break;
@@ -141,42 +140,57 @@
 	if (showMsg)
 		[message show];
 	
-	// eh?? -v
 	[message release];
+}
+
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == MENU_LOGIN) {
+        if (buttonIndex != 0) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else {
+        
+    }
 }
 
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	if (textField == sessionNameInput) { // ** I fixed this- you were assigning sessionNameInput to textfield so it would always be true ** //
+	if (textField == sessionNameInput) {
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
 		return (newLength > 25) ? NO : YES;
 	}
 	return YES;
 }
 
-- (void) login {
-	UIImage *check = [[UIImage alloc] init];
-	check = [UIImage imageNamed:@"bluecheck"];
-	[self.view makeToast:@"Login!"
-				duration:2.0
-				position:@"bottom"
-				   image:check];
-	
-	//* present dialog with login credentials
-	//[isenseAPI login:@"sor" with:@"sor"];
-	
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    if ([iapi login:usernameInput with:passwordInput]) {
+        [self.view makeToast:@"Login Successful!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"check"];
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+	} else {
+        [self.view makeToast:@"Login Failed!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"red_x"];
+    }
 }
 
 - (void) experiment {
 	[self.view makeToast:@"Experiment!"
 				duration:2.0
-				position:@"bottom"];
+				position:@"bottom"
+                   image:@"red_x"];
 }
 
 - (void) upload {
 	[self.view makeToast:@"Upload!"
 				duration:2.0
-				position:@"bottom"];
+				position:@"bottom"
+                   image:@"check"];
 	
 }
 

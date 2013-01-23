@@ -12,7 +12,7 @@
 #import <CoreMotion/CoreMotion.h>
 
 
-@interface AutomaticViewController_iPad : UIViewController <UIActionSheetDelegate>  {
+@interface AutomaticViewController_iPad : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>  {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
@@ -30,7 +30,7 @@
 -(CMMotionManager *) recordData;
 -(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
 
-- (void) login;
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
 - (void) upload;
 

@@ -147,14 +147,22 @@ static iSENSE *_iSENSE = nil;
 // Use this method to login to iSENSE(dev)
 - (bool) login:(NSString *)user with:(NSString *)password {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
-   	
-    session_key = [[NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]] retain];
-	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
-	
+    
+    @try {
+        session_key = [[NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]] retain];
+        uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
+	} @catch (NSException *e) {
+        NSLog(@"Exception: %@", e);
+        return FALSE;
+    }
+    
     if ([self isLoggedIn]) {
-		username = user;
+        
+        NSString *successfulLoginName = [[[NSString alloc] initWithString:user] retain];
+		username = successfulLoginName;
+        
 		return TRUE;
-	}
+	} else username = nil;
 	
 	return FALSE;
 }
@@ -183,7 +191,7 @@ static iSENSE *_iSENSE = nil;
 		[e setRating_votes:[data valueForKey:@"rating_votes"]];
 		[e setHidden:[data valueForKey:@"hidden"]];
 		[e setFirstname:[data valueForKey:@"firstname"]];
-		[e setLastname:[data valueForKey:@"lastname"]];
+        [e setSrate:[data valueForKey:@"srate"]];
 	}
 	
 	return e;
@@ -342,8 +350,8 @@ static iSENSE *_iSENSE = nil;
 }
 
 // Use this method to retrieve experiments (may be deprecated).
-- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query {
-	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&action=%@&query=%@", fromPage, limit, action, query]];
+- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
+	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *experiments = [[NSMutableArray new] autorelease];
@@ -368,7 +376,8 @@ static iSENSE *_iSENSE = nil;
 			[exp setRating_votes:[meta objectForKey:@"rating_votes"]];
 			[exp setHidden:[meta objectForKey:@"hidden"]];
 			[exp setFirstname:[meta objectForKey:@"firstname"]];
-			[exp setLastname:[meta objectForKey:@"lastname"]];
+            [exp setLastname:[meta objectForKey:@"lastname"]];
+            [exp setSrate:[meta objectForKey:@"srate"]];
 			
 			[experiments addObject:exp];
 		}

@@ -15,6 +15,9 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording;
+@synthesize motionManager;
+@synthesize dataToBeJSONed;
+
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -34,7 +37,9 @@
             startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            // Record Data
             [self setIsRecording:TRUE];
+            motionManager = [[self recordData] retain];
             
             // Stop Recording
         } else {
@@ -44,7 +49,26 @@
             startStopLabel.text = [StringGrabber getString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
+            NSMutableArray *results = [self stopRecording:motionManager];
+            NSLog(@"Received %d results.", [results count]);
+            
             [self setIsRecording:FALSE];
+            
+            // Create a session to upload to
+            NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
+            NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
+            NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+            NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+            NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+            NSNumber *exp_num = [[[NSNumber alloc] initWithInt:518] autorelease];
+            
+            NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+            
+            // Upload to iSENSE (pass me JSON data)
+            NSError *error = nil;
+            NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+            [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+            
         }
         
         // Make the beep sound
@@ -109,7 +133,7 @@
     self.navigationItem.rightBarButtonItem = menuButton;
     
 	
-	// Attempt Login
+	// Prepare isenseAPI and set login status
 	isenseAPI = [iSENSE getInstance];
 	[isenseAPI toggleUseDev:YES];
     [self updateLoginStatus];
@@ -131,10 +155,10 @@
 // Set your login status to your username to not logged in as necessary
 - (void) updateLoginStatus {
     if ([isenseAPI isLoggedIn]) {
-        loginStatus.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as":[isenseAPI getLoggedInUsername]];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
     	loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateWithHardcodedString:@"logged_in_as" :@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
        	loginStatus.textColor = [UIColor yellowColor];
     }
 }
@@ -192,27 +216,47 @@
 	
 }
 
-- (void) login {
-    //* present dialog with login credentials
-    if ([isenseAPI login:@"sor" with:@"sor"]) {
-        UIImage *check = [[UIImage alloc] init];
-        check = [UIImage imageNamed:@"bluecheck"];
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    if ([isenseAPI login:usernameInput with:passwordInput]) {
         [self.view makeToast:@"Login Successful!"
                     duration:2.0
                     position:@"bottom"
-                       image:check];
+                       image:@"check"];
+        [self updateLoginStatus];
 	} else {
-        UIImage *red_x = [[UIImage alloc] init];
-        red_x = [UIImage imageNamed:@"red_x"];
         [self.view makeToast:@"Login Failed!"
                     duration:2.0
                     position:@"bottom"
-                       image:red_x];
+                       image:@"red_x"];
     }
-    
-    [self updateLoginStatus];
-	
 }
+
+// Record the data and return the NSMutable array to be JSONed
+- (CMMotionManager *) recordData {
+    CMMotionManager *newMotionManager = [[CMMotionManager alloc] init];
+    NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
+    dataToBeJSONed = [[NSMutableArray alloc] init];
+    
+    CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
+        NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease]];
+        
+        [dataToBeJSONed addObject:temp];
+    };
+    
+    [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
+    
+    return [newMotionManager autorelease];
+}
+
+// Stops the recording and returns the actual data recorded :)
+-(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager {
+    [finalMotionManager stopAccelerometerUpdates];
+    return dataToBeJSONed;
+}
+
 
 - (void) experiment {
 	[self.view makeToast:@"Experiment!"
@@ -227,13 +271,17 @@
 	
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) getExperiment {
+    [isenseAPI getExperiment:[NSNumber numberWithUnsignedInt:516]];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
-													 delegate:nil
-											cancelButtonTitle:@"Okay"
-											otherButtonTitles:nil];
+													 delegate:self
+											cancelButtonTitle:@"Cancel"
+											otherButtonTitles:@"Okay", nil];
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
 			message.message = @"Upload"; showMsg = NO; [self upload];
@@ -242,9 +290,11 @@
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
 			break;
 		case MENU_LOGIN:
-			message.message = @"Login"; showMsg = NO; [self login];
-			//[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput]; <- implemented later
-			break;
+			message.message = nil;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            message.title = @"Login";
+            message.tag = MENU_LOGIN;
+            break;
 		default:
 			showMsg = NO;
 			break;
@@ -256,5 +306,16 @@
 	[message release];
 }
 
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == MENU_LOGIN) {
+        if (buttonIndex != 0) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else {
+        
+    }
+}
 
 @end

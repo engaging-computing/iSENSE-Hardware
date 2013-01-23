@@ -20,7 +20,7 @@
 	return loc;
 }
 
-+ (NSString *) concatenateWithHardcodedString:(NSString *)label:(NSString *)string {
++ (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string {
 	
 	NSString *hardCodedString = [[[NSString alloc] init] autorelease]; 
 	hardCodedString = [self getString:label];
