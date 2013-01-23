@@ -156,7 +156,7 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
     	loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
        	loginStatus.textColor = [UIColor yellowColor];
     }
 }
@@ -209,26 +209,24 @@
 	[startStopLabel release];
     [startStopButton release];
     [menuButton release];
+
     [super dealloc];
 	
 }
 
-- (void) login {
-    //* present dialog with login credentials
-    if ([isenseAPI login:@"sor" with:@"sor"]) {
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    if ([isenseAPI login:usernameInput with:passwordInput]) {
         [self.view makeToast:@"Login Successful!"
-				duration:2.0
-				position:@"bottom"
-				   image:@"check"];
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"check"];
+        [self updateLoginStatus];
 	} else {
         [self.view makeToast:@"Login Failed!"
                     duration:2.0
                     position:@"bottom"
                        image:@"red_x"];
     }
-    
-    [self updateLoginStatus];
-	
 }
 
 // Record the data and return the NSMutable array to be JSONed
@@ -270,7 +268,7 @@
 	
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
@@ -285,10 +283,11 @@
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
 			break;
 		case MENU_LOGIN:
-            message.message = nil;
+			message.message = nil;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             message.title = @"Login";
-            [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-			break;
+            message.tag = MENU_LOGIN;
+            break;
 		default:
 			showMsg = NO;
 			break;
@@ -298,6 +297,18 @@
 		[message show];
 	
 	[message release];
+}
+
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == MENU_LOGIN) {
+        if (buttonIndex != 0) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else {
+        
+    }
 }
 
 

@@ -17,7 +17,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName, username;
+@synthesize sessionName;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -43,7 +43,7 @@
      if ([iapi isLoggedIn]) {
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
      } else {
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
+         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
      }
      
      //* get exp. # from prefs
@@ -80,8 +80,7 @@
 	[scrollView release];
 	
 	[sessionName release];
-	[username release];
-	
+    
 	[super dealloc];
 }
 
@@ -144,7 +143,7 @@
 	[message release];
 }
 
-- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex { // HERE JEREMY OVERRIDE THIS
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
         if (buttonIndex != 0) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
@@ -171,7 +170,7 @@
                     duration:2.0
                     position:@"bottom"
                        image:@"check"];
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:usernameInput];
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
 	} else {
         [self.view makeToast:@"Login Failed!"
                     duration:2.0

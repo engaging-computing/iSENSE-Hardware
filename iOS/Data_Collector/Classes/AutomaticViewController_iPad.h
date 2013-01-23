@@ -30,7 +30,7 @@
 -(CMMotionManager *) recordData;
 -(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
 
-- (void) login;
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
 - (void) upload;
 

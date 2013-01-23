@@ -216,22 +216,19 @@
 	
 }
 
-- (void) login:(NSString *) username withPassword:(NSString *)password {
-    // present dialog with login credentials
-    if ([isenseAPI login:username with:password]) {
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    if ([isenseAPI login:usernameInput with:passwordInput]) {
         [self.view makeToast:@"Login Successful!"
                     duration:2.0
                     position:@"bottom"
                        image:@"check"];
+        [self updateLoginStatus];
 	} else {
         [self.view makeToast:@"Login Failed!"
                     duration:2.0
                     position:@"bottom"
                        image:@"red_x"];
     }
-    
-    [self updateLoginStatus];
-	
 }
 
 // Record the data and return the NSMutable array to be JSONed
@@ -278,7 +275,7 @@
     [isenseAPI getExperiment:[NSNumber numberWithUnsignedInt:516]];
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	BOOL showMsg = YES;
 	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
 													  message:@"Nil_message"
@@ -291,14 +288,13 @@
 			break;
 		case MENU_EXPERIMENT:
 			message.message = @"Experiment"; showMsg = NO; [self experiment];
-            [self getExperiment];
 			break;
 		case MENU_LOGIN:
-            message.message = nil;
+			message.message = nil;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             message.title = @"Login";
             message.tag = MENU_LOGIN;
-            [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-			break;
+            break;
 		default:
 			showMsg = NO;
 			break;
@@ -310,10 +306,8 @@
 	[message release];
 }
 
-// Basic Login Action Sheet
-- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex { // HERE JEREMY OVERRIDE THIS
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
-        NSLog(@"is here");
         if (buttonIndex != 0) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
@@ -323,4 +317,5 @@
         
     }
 }
+
 @end
