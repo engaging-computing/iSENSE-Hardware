@@ -114,24 +114,45 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	BOOL showMsg = YES;
-	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
-													  message:@"Nil_message"
-													 delegate:self
-											cancelButtonTitle:@"Cancel"
-											otherButtonTitles:@"Okay", nil];
+	UIAlertView *message = [UIAlertView alloc];
+    
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
-			message.message = @"Upload"; showMsg = NO; [self upload];
+			message = [[UIAlertView alloc] initWithTitle:@"Upload"
+                                                 message:@"Would you like to upload your data to iSENSE?"
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = MENU_UPLOAD;
+            [message setAlertViewStyle:UIAlertViewStyleDefault];
+            
 			break;
+            
 		case MENU_EXPERIMENT:
-			message.message = @"Experiment"; showMsg = NO; [self experiment];
+            message = [[UIAlertView alloc] initWithTitle:@"Experiment Selection"
+                                                 message:@"Enter an experiment #, browse experiments, or scan a QR code"
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", @"Browse", @"Scan QR", nil];
+            
+            message.tag = MENU_EXPERIMENT;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            
 			break;
+            
 		case MENU_LOGIN:
-			message.message = nil;
-			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-            message.title = @"Login";
+            message = [[UIAlertView alloc] initWithTitle:@"Login"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
             message.tag = MENU_LOGIN;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            
             break;
+            
 		default:
 			showMsg = NO;
 			break;
@@ -140,7 +161,7 @@
 	if (showMsg)
 		[message show];
 	
-	[message release];
+    [message release];
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -150,7 +171,19 @@
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self login:usernameInput withPassword:passwordInput];
         }
-    } else {
+        
+    } else if (actionSheet.tag == MENU_EXPERIMENT){
+        if (buttonIndex == 0) {
+            NSLog(@"0");
+        } else if (buttonIndex == 1) {
+            NSLog(@"1");
+        } else if (buttonIndex == 2) {
+            NSLog(@"2");
+        } else if (buttonIndex == 3) {
+            NSLog(@"3");
+        }
+        
+    } else if (actionSheet.tag == MENU_UPLOAD) {
         
     }
 }
