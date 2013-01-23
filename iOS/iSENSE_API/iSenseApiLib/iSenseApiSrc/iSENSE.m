@@ -157,9 +157,12 @@ static iSENSE *_iSENSE = nil;
     }
     
     if ([self isLoggedIn]) {
-		username = user;
+        
+        NSString *successfulLoginName = [[[NSString alloc] initWithString:user] retain];
+		username = successfulLoginName;
+        
 		return TRUE;
-	}
+	} else username = nil;
 	
 	return FALSE;
 }
