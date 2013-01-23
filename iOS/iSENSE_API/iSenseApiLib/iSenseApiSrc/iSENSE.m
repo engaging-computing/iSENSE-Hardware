@@ -191,6 +191,7 @@ static iSENSE *_iSENSE = nil;
 		[e setRating_votes:[data valueForKey:@"rating_votes"]];
 		[e setHidden:[data valueForKey:@"hidden"]];
 		[e setFirstname:[data valueForKey:@"firstname"]];
+        [e setLastname:[data valueForKey:@"lastname"]];
         [e setSrate:[data valueForKey:@"srate"]];
 	}
 	
@@ -349,7 +350,14 @@ static iSENSE *_iSENSE = nil;
 	
 }
 
-// Use this method to retrieve experiments (may be deprecated).
+/*
+ * Returns an array of experiment objects.
+ *
+ * Limit: How many results do you want returned. Defaults to 10.
+ * Page: Depends on limit.  Assuming a limit of 10,  page 2 would yield results 11-20.
+ * Query: Use this to search for experiments by keyword.
+ * Sort: Sort results like on iSENSE.  Accepts "recent", "rating", "activity", and "popularity".
+ */
 - (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -361,6 +369,7 @@ static iSENSE *_iSENSE = nil;
 		id object;
 		while (object = [e nextObject]) {
 			NSDictionary *meta = [object objectForKey:@"meta"];
+            NSDictionary *obj = (NSDictionary *)object;
 			Experiment *exp = [[Experiment new] autorelease];
 			
 			[exp setExperiment_id:[meta objectForKey:@"experiment_id"]];
@@ -376,10 +385,25 @@ static iSENSE *_iSENSE = nil;
 			[exp setRating_votes:[meta objectForKey:@"rating_votes"]];
 			[exp setHidden:[meta objectForKey:@"hidden"]];
 			[exp setFirstname:[meta objectForKey:@"firstname"]];
-            [exp setLastname:[meta objectForKey:@"lastname"]];
+            [exp setActivity:[meta objectForKey:@"activity"]];
+            [exp setActivity_for:[meta objectForKey:@"activity_for"]];
+            [exp setReq_name:[meta objectForKey:@"req_name"]];
+            [exp setReq_procedure:[meta objectForKey:@"req_procedure"]];
+            [exp setReq_location:[meta objectForKey:@"req_location"]];
+            [exp setName_prefix:[meta objectForKey:@"name_prefix"]];
+            [exp setLocation:[meta objectForKey:@"location"]];
+            [exp setClosed:[meta objectForKey:@"closed"]];
+            [exp setExp_image:[meta objectForKey:@"exp_image"]];
+            [exp setRecommended:[meta objectForKey:@"recommended"]];
             [exp setSrate:[meta objectForKey:@"srate"]];
-			
-			[experiments addObject:exp];
+            [exp setDefault_vis:[meta objectForKey:@"default_vis"]];
+            [exp setRating_comp:[meta objectForKey:@"rating_comp"]];
+            [exp setTags:[obj objectForKey:@"tags"]];
+            [exp setRelevancy:[obj objectForKey:@"relevancy"]];
+            [exp setContrib_count:[obj objectForKey:@"contrib_count"]];
+            [exp setSession_count:[obj objectForKey:@"session_count"]];
+            
+            [experiments addObject:exp];
 		}
 	}
 	

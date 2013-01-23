@@ -54,7 +54,8 @@
             
             [self setIsRecording:FALSE];
             
-            // Create a session to upload to
+            // Create a session on iSENSE/dev.
+            /*
             NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
             NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
             NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
@@ -68,7 +69,9 @@
             NSError *error = nil;
             NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
             [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+            */
             
+            [self getExperiments];
         }
         
         // Make the beep sound
@@ -271,8 +274,14 @@
 	
 }
 
-- (void) getExperiment {
-    [isenseAPI getExperiment:[NSNumber numberWithUnsignedInt:516]];
+- (void) getExperiments {
+    NSMutableArray *results = [isenseAPI getExperiments:[NSNumber numberWithUnsignedInt:1] withLimit:[NSNumber numberWithUnsignedInt:10] withQuery:@"" andSort:@"recent"];
+    if ([results count] == 0) NSLog(@"No results found");
+    for (int i = 0; i < [results count]; i++) {
+        NSLog(@"Experiment %d: %@", i + 1, ((Experiment *)results[i]).name);
+        NSLog(@"Session Count: %@", ((Experiment *)results[i]).session_count);
+    }
+    
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
