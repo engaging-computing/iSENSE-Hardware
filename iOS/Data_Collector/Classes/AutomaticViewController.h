@@ -36,7 +36,8 @@
 - (void) getExperiments;
 
 @property (nonatomic) BOOL isRecording;
-@property (atomic, assign) CMMotionManager *motionManager;
-@property (atomic, assign) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) CMMotionManager *motionManager;
+@property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) NSNumber *expNum;
 
 @end
