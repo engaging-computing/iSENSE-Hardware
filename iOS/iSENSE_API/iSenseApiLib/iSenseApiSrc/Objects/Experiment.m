@@ -27,5 +27,20 @@
 	@synthesize firstname;
     @synthesize lastname;
 	@synthesize description;
+    @synthesize activity;
+    @synthesize activity_for;
+    @synthesize req_name;
+    @synthesize req_procedure;
+    @synthesize req_location;
+    @synthesize name_prefix;
+    @synthesize location;
+    @synthesize closed;
+    @synthesize exp_image;
+    @synthesize recommended;
     @synthesize srate;
+    @synthesize default_vis;
+    @synthesize rating_comp;
+    @synthesize tags;
+    @synthesize relevancy;
+    @synthesize contrib_count;
 @end

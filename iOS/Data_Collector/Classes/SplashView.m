@@ -15,11 +15,11 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-
+    
 }
 
 // Is called every time SplashView appears
-- (void)viewDidAppear:(BOOL)animated {    
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     // Spin the orb!
@@ -45,18 +45,10 @@
 }
 
 - (IBAction) loadAutomatic:(id)sender {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        AutomaticViewController_iPad *autoViewIPad = [[AutomaticViewController_iPad alloc] init];
-        autoViewIPad.title = @"Automatic";
-        [self.navigationController pushViewController:autoViewIPad animated:YES];
-        [autoViewIPad release];
-    } else {
-        AutomaticViewController *autoView = [[AutomaticViewController alloc] init];
-        autoView.title = @"Automatic";
-        [self.navigationController pushViewController:autoView animated:YES];
-        [autoView release];
-    }	
-	
+    AutomaticViewController *autoView = [[AutomaticViewController alloc] init];
+    autoView.title = @"Automatic";
+    [self.navigationController pushViewController:autoView animated:YES];
+    [autoView release];
 }
 
 - (IBAction) loadManual:(id)sender {

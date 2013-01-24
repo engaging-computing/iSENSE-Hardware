@@ -16,7 +16,7 @@ static iSENSE *_iSENSE = nil;
 
 // Makes a request to iSENSE and parse the JSONObject it gets back (TODO)
 -(NSDictionary *)isenseQuery:(NSString*)target {
-
+    
 	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 	NSLog(@"Sent to iSENSE: %@", final_target);
 	NSError *requestError = nil;
@@ -43,7 +43,7 @@ static iSENSE *_iSENSE = nil;
 	{
 		if (!_iSENSE)
 			[[self alloc] init];
-	
+        
 		return _iSENSE;
 	}
 	
@@ -87,7 +87,7 @@ static iSENSE *_iSENSE = nil;
  return UINT_MAX; //denotes an object that cannot be released
  }
  
-  
+ 
  - (id)autorelease {
  return self;
  }
@@ -171,13 +171,17 @@ static iSENSE *_iSENSE = nil;
 //- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name andDescirption:(NSString *)description {
 //}
 
-// Use this function to access experiments and their data.
+/*
+ * Use this function to access experiments and their data.
+ * 
+ * Exp_id: The experiment id you want to get data from.
+ */
 - (Experiment *) getExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiment&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	Experiment *e = [[Experiment new] autorelease];
 	
-	if (data) {	
+	if (data) {
 		[e setExperiment_id:[data valueForKey:@"experiment_id"]];
 		[e setOwner_id:[data valueForKey:@"owner_id"]];
 		[e setName:[data valueForKey:@"name"]];
@@ -190,7 +194,19 @@ static iSENSE *_iSENSE = nil;
 		[e setRating:[data valueForKey:@"rating"]];
 		[e setRating_votes:[data valueForKey:@"rating_votes"]];
 		[e setHidden:[data valueForKey:@"hidden"]];
+        [e setActivity:[data valueForKey:@"activity"]];
+        [e setActivity_for:[data valueForKey:@"activity_for"]];
+        [e setReq_name:[data valueForKey:@"req_name"]];
+        [e setReq_procedure:[data valueForKey:@"req_procedure"]];
+        [e setReq_location:[data valueForKey:@"req_location"]];
+        [e setName_prefix:[data valueForKey:@"name_prefix"]];
+        [e setLocation:[data valueForKey:@"location"]];
+        [e setClosed:[data valueForKey:@"closed"]];
+        [e setExp_image:[data valueForKey:@"exp_image"]];
+        [e setRecommended:[data valueForKey:@"recommended"]];
+        [e setDefault_vis:[data valueForKey:@"default_vis"]];
 		[e setFirstname:[data valueForKey:@"firstname"]];
+        [e setLastname:[data valueForKey:@"lastname"]];
         [e setSrate:[data valueForKey:@"srate"]];
 	}
 	
@@ -349,7 +365,14 @@ static iSENSE *_iSENSE = nil;
 	
 }
 
-// Use this method to retrieve experiments (may be deprecated).
+/*
+ * Returns an array of experiment objects.
+ *
+ * Limit: How many results do you want returned. Defaults to 10.
+ * Page: Depends on limit.  Assuming a limit of 10,  page 2 would yield results 11-20.
+ * Query: Use this to search for experiments by keyword.
+ * Sort: Sort results like on iSENSE.  Accepts "recent", "rating", "activity", and "popularity".
+ */
 - (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -361,6 +384,7 @@ static iSENSE *_iSENSE = nil;
 		id object;
 		while (object = [e nextObject]) {
 			NSDictionary *meta = [object objectForKey:@"meta"];
+            NSDictionary *obj = (NSDictionary *)object;
 			Experiment *exp = [[Experiment new] autorelease];
 			
 			[exp setExperiment_id:[meta objectForKey:@"experiment_id"]];
@@ -376,10 +400,25 @@ static iSENSE *_iSENSE = nil;
 			[exp setRating_votes:[meta objectForKey:@"rating_votes"]];
 			[exp setHidden:[meta objectForKey:@"hidden"]];
 			[exp setFirstname:[meta objectForKey:@"firstname"]];
-            [exp setLastname:[meta objectForKey:@"lastname"]];
+            [exp setActivity:[meta objectForKey:@"activity"]];
+            [exp setActivity_for:[meta objectForKey:@"activity_for"]];
+            [exp setReq_name:[meta objectForKey:@"req_name"]];
+            [exp setReq_procedure:[meta objectForKey:@"req_procedure"]];
+            [exp setReq_location:[meta objectForKey:@"req_location"]];
+            [exp setName_prefix:[meta objectForKey:@"name_prefix"]];
+            [exp setLocation:[meta objectForKey:@"location"]];
+            [exp setClosed:[meta objectForKey:@"closed"]];
+            [exp setExp_image:[meta objectForKey:@"exp_image"]];
+            [exp setRecommended:[meta objectForKey:@"recommended"]];
             [exp setSrate:[meta objectForKey:@"srate"]];
-			
-			[experiments addObject:exp];
+            [exp setDefault_vis:[meta objectForKey:@"default_vis"]];
+            [exp setRating_comp:[meta objectForKey:@"rating_comp"]];
+            [exp setTags:[obj objectForKey:@"tags"]];
+            [exp setRelevancy:[obj objectForKey:@"relevancy"]];
+            [exp setContrib_count:[obj objectForKey:@"contrib_count"]];
+            [exp setSession_count:[obj objectForKey:@"session_count"]];
+            
+            [experiments addObject:exp];
 		}
 	}
 	
@@ -437,7 +476,12 @@ static iSENSE *_iSENSE = nil;
 	return tags;
 }
 
-// Use this method to get the experiment fields associated with an expiriment
+/*
+ * Use this method to get the experiment fields associated with an expiriment.
+ * Please note that we don't store the experiment id belonging to the field, as we already know which experiment it belongs to.
+ *
+ * Exp_id: The experiment id whose fields who want.
+ */
 - (NSMutableArray *) getExperimentFields:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentFields&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -507,9 +551,9 @@ static iSENSE *_iSENSE = nil;
     if ([self isLoggedIn]) {
         NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
         NSNumber *sid = [[NSNumber alloc] autorelease];
-	
+        
         sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
-            return sid;
+        return sid;
     }
 	return NULL;
 }
@@ -547,8 +591,8 @@ static iSENSE *_iSENSE = nil;
 - (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
 		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
-	} else {	
-		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";       
+	} else {
+		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 	}
 }
 

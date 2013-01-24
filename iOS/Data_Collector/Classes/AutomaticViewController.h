@@ -33,7 +33,7 @@
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)password;
 - (void) experiment;
 - (void) upload;
-- (void) getExperiment;
+- (void) getExperiments;
 
 @property (nonatomic) BOOL isRecording;
 @property (atomic, assign) CMMotionManager *motionManager;
