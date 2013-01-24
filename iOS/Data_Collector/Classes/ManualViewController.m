@@ -13,11 +13,19 @@
 #define MENU_UPLOAD 0
 #define MENU_EXPERIMENT 1
 #define MENU_LOGIN 2
+#define EXPERIMENT_MANUAL_ENTRY 3
+#define EXPERIMENT_BROWSE_EXPERIMENTS 4
+#define EXPERIMENT_SCAN_QR_CODE 5
+
+#define OPTION_CANCELED 0
+#define OPTION_ENTER_EXPERIMENT_NUMBER 1
+#define OPTION_BROWSE_EXPERIMENTS 2
+#define OPTION_SCAN_QR_CODE 3
 
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName;
+@synthesize sessionName, expNum;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -50,6 +58,10 @@
 	 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
 	 
 	 //* if exp. # is null, launch the dialog for choosing exp. num
+ 
+ 
+ 
+     NSLog(@"ExperimentNum = %@", expNum);
  }
 
 - (IBAction)textFieldFinished:(id)sender {}
@@ -125,19 +137,18 @@
                                        otherButtonTitles:@"Okay", nil];
             
             message.tag = MENU_UPLOAD;
-            [message setAlertViewStyle:UIAlertViewStyleDefault];
+            //[message setAlertViewStyle:UIAlertViewStyleDefault];
             
 			break;
             
 		case MENU_EXPERIMENT:
             message = [[UIAlertView alloc] initWithTitle:@"Experiment Selection"
-                                                 message:@"Enter an experiment #, browse experiments, or scan a QR code"
+                                                 message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", @"Browse", @"Scan QR", nil];
+                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
             
             message.tag = MENU_EXPERIMENT;
-            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             
 			break;
             
@@ -166,24 +177,47 @@
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
-        if (buttonIndex != 0) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self login:usernameInput withPassword:passwordInput];
         }
         
     } else if (actionSheet.tag == MENU_EXPERIMENT){
-        if (buttonIndex == 0) {
-            NSLog(@"0");
-        } else if (buttonIndex == 1) {
-            NSLog(@"1");
-        } else if (buttonIndex == 2) {
-            NSLog(@"2");
-        } else if (buttonIndex == 3) {
-            NSLog(@"3");
+        
+        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message show];
+            [message release];
+            
+        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            
         }
         
     } else if (actionSheet.tag == MENU_UPLOAD) {
+        
+    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
+            NSLog(@"ExperimentNum = %@", expNum);
+        }
+        
+    } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
+        
+    } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
         
     }
 }
