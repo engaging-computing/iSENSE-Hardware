@@ -29,7 +29,22 @@
 	NSString *firstname;
     NSString *lastname;
 	NSString *description;
+    NSNumber *activity;
+    NSNumber *activity_for;
+    NSNumber *req_name;
+    NSNumber *req_procedure;
+    NSNumber *req_location;
+    NSString *name_prefix;
+    NSString *location;
+    NSNumber *closed;
+    NSURL *exp_image;
+    NSNumber *recommended;
     NSNumber *srate;
+    NSString *default_vis;
+    NSString *rating_comp;
+    NSArray *tags;
+    NSNumber *relevancy;
+    NSNumber *contrib_count;
 }
 
 /* Properties for getting/setting variables */
@@ -49,6 +64,21 @@
 @property (assign) NSString *firstname;
 @property (assign) NSString *lastname;
 @property (assign) NSString *description;
+@property (assign) NSNumber *activity;
+@property (assign) NSNumber *activity_for;
+@property (assign) NSNumber *req_name;
+@property (assign) NSNumber *req_procedure;
+@property (assign) NSNumber *req_location;
+@property (assign) NSString *name_prefix;
+@property (assign) NSString *location;
+@property (assign) NSNumber *closed;
+@property (assign) NSURL *exp_image;
+@property (assign) NSNumber *recommended;
 @property (assign) NSNumber *srate;
+@property (assign) NSString *default_vis;
+@property (assign) NSString *rating_comp;
+@property (assign) NSArray *tags;
+@property (assign) NSNumber *relevancy;
+@property (assign) NSNumber *contrib_count;
 
 @end
