@@ -16,7 +16,7 @@ static iSENSE *_iSENSE = nil;
 
 // Makes a request to iSENSE and parse the JSONObject it gets back (TODO)
 -(NSDictionary *)isenseQuery:(NSString*)target {
-
+    
 	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 	NSLog(@"Sent to iSENSE: %@", final_target);
 	NSError *requestError = nil;
@@ -43,7 +43,7 @@ static iSENSE *_iSENSE = nil;
 	{
 		if (!_iSENSE)
 			[[self alloc] init];
-	
+        
 		return _iSENSE;
 	}
 	
@@ -87,7 +87,7 @@ static iSENSE *_iSENSE = nil;
  return UINT_MAX; //denotes an object that cannot be released
  }
  
-  
+ 
  - (id)autorelease {
  return self;
  }
@@ -171,13 +171,15 @@ static iSENSE *_iSENSE = nil;
 //- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name andDescirption:(NSString *)description {
 //}
 
-// Use this function to access experiments and their data.
+/*
+ * Use this function to access experiments and their data.
+ */
 - (Experiment *) getExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiment&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	Experiment *e = [[Experiment new] autorelease];
 	
-	if (data) {	
+	if (data) {
 		[e setExperiment_id:[data valueForKey:@"experiment_id"]];
 		[e setOwner_id:[data valueForKey:@"owner_id"]];
 		[e setName:[data valueForKey:@"name"]];
@@ -190,6 +192,17 @@ static iSENSE *_iSENSE = nil;
 		[e setRating:[data valueForKey:@"rating"]];
 		[e setRating_votes:[data valueForKey:@"rating_votes"]];
 		[e setHidden:[data valueForKey:@"hidden"]];
+        [e setActivity:[data valueForKey:@"activity"]];
+        [e setActivity_for:[data valueForKey:@"activity_for"]];
+        [e setReq_name:[data valueForKey:@"req_name"]];
+        [e setReq_procedure:[data valueForKey:@"req_procedure"]];
+        [e setReq_location:[data valueForKey:@"req_location"]];
+        [e setName_prefix:[data valueForKey:@"name_prefix"]];
+        [e setLocation:[data valueForKey:@"location"]];
+        [e setClosed:[data valueForKey:@"closed"]];
+        [e setExp_image:[data valueForKey:@"exp_image"]];
+        [e setRecommended:[data valueForKey:@"recommended"]];
+        [e setDefault_vis:[data valueForKey:@"default_vis"]];
 		[e setFirstname:[data valueForKey:@"firstname"]];
         [e setLastname:[data valueForKey:@"lastname"]];
         [e setSrate:[data valueForKey:@"srate"]];
@@ -531,9 +544,9 @@ static iSENSE *_iSENSE = nil;
     if ([self isLoggedIn]) {
         NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
         NSNumber *sid = [[NSNumber alloc] autorelease];
-	
+        
         sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
-            return sid;
+        return sid;
     }
 	return NULL;
 }
@@ -571,8 +584,8 @@ static iSENSE *_iSENSE = nil;
 - (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
 		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
-	} else {	
-		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";       
+	} else {
+		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 	}
 }
 
