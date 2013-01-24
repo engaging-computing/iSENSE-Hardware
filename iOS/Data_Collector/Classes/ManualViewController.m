@@ -13,11 +13,19 @@
 #define MENU_UPLOAD 0
 #define MENU_EXPERIMENT 1
 #define MENU_LOGIN 2
+#define EXPERIMENT_MANUAL_ENTRY 3
+#define EXPERIMENT_BROWSE_EXPERIMENTS 4
+#define EXPERIMENT_SCAN_QR_CODE 5
+
+#define OPTION_CANCELED 0
+#define OPTION_ENTER_EXPERIMENT_NUMBER 1
+#define OPTION_BROWSE_EXPERIMENTS 2
+#define OPTION_SCAN_QR_CODE 3
 
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName;
+@synthesize sessionName, expNum;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -50,6 +58,10 @@
 	 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
 	 
 	 //* if exp. # is null, launch the dialog for choosing exp. num
+ 
+ 
+ 
+     NSLog(@"ExperimentNum = %@", expNum);
  }
 
 - (IBAction)textFieldFinished:(id)sender {}
@@ -114,24 +126,44 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	BOOL showMsg = YES;
-	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Menu item clicked:"
-													  message:@"Nil_message"
-													 delegate:self
-											cancelButtonTitle:@"Cancel"
-											otherButtonTitles:@"Okay", nil];
+	UIAlertView *message = [UIAlertView alloc];
+    
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
-			message.message = @"Upload"; showMsg = NO; [self upload];
+			message = [[UIAlertView alloc] initWithTitle:@"Upload"
+                                                 message:@"Would you like to upload your data to iSENSE?"
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = MENU_UPLOAD;
+            //[message setAlertViewStyle:UIAlertViewStyleDefault];
+            
 			break;
+            
 		case MENU_EXPERIMENT:
-			message.message = @"Experiment"; showMsg = NO; [self experiment];
+            message = [[UIAlertView alloc] initWithTitle:@"Experiment Selection"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+            
+            message.tag = MENU_EXPERIMENT;
+            
 			break;
+            
 		case MENU_LOGIN:
-			message.message = nil;
-			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-            message.title = @"Login";
+            message = [[UIAlertView alloc] initWithTitle:@"Login"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
             message.tag = MENU_LOGIN;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            
             break;
+            
 		default:
 			showMsg = NO;
 			break;
@@ -140,17 +172,52 @@
 	if (showMsg)
 		[message show];
 	
-	[message release];
+    [message release];
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
-        if (buttonIndex != 0) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self login:usernameInput withPassword:passwordInput];
         }
-    } else {
+        
+    } else if (actionSheet.tag == MENU_EXPERIMENT){
+        
+        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message show];
+            [message release];
+            
+        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            
+        }
+        
+    } else if (actionSheet.tag == MENU_UPLOAD) {
+        
+    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
+            NSLog(@"ExperimentNum = %@", expNum);
+        }
+        
+    } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
+        
+    } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
         
     }
 }

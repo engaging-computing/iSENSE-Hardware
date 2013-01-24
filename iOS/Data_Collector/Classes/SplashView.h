@@ -10,7 +10,6 @@
 #import <UIKit/UIKit.h>
 #import "ManualViewController.h"
 #import "AutomaticViewController.h"
-#import "AutomaticViewController_iPad.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface SplashView : UIViewController {

@@ -25,8 +25,8 @@
 	// Non-UI Elements
 	iSENSE *iapi;
 	NSString *sessionName;
-	int experimentNum;
-	
+	NSNumber *expNum;
+    
 }
 
 - (IBAction) saveOnClick:(id)sender;
@@ -56,7 +56,8 @@
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 // Non-UI Properties
-@property (nonatomic, retain) NSString *sessionName;
+@property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic, strong) NSNumber *expNum;
 
 @end
 
