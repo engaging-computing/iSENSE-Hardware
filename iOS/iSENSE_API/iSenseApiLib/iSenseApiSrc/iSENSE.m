@@ -173,6 +173,8 @@ static iSENSE *_iSENSE = nil;
 
 /*
  * Use this function to access experiments and their data.
+ * 
+ * Exp_id: The experiment id you want to get data from.
  */
 - (Experiment *) getExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiment&experiment=%@", exp_id]];
@@ -474,7 +476,12 @@ static iSENSE *_iSENSE = nil;
 	return tags;
 }
 
-// Use this method to get the experiment fields associated with an expiriment
+/*
+ * Use this method to get the experiment fields associated with an expiriment.
+ * Please note that we don't store the experiment id belonging to the field, as we already know which experiment it belongs to.
+ *
+ * Exp_id: The experiment id whose fields who want.
+ */
 - (NSMutableArray *) getExperimentFields:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentFields&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];

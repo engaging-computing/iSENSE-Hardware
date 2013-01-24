@@ -281,7 +281,16 @@
         NSLog(@"Experiment %d: %@", i + 1, ((Experiment *)results[i]).name);
         NSLog(@"Session Count: %@", ((Experiment *)results[i]).session_count);
     }
-    
+
+    Experiment *myExperiment = [isenseAPI getExperiment:[NSNumber numberWithUnsignedInt:514]];
+    NSLog(@"My experiment name is %@.", myExperiment.name);
+
+    NSMutableArray *resultsFields = [isenseAPI getExperimentFields:[NSNumber numberWithUnsignedInt:514]];
+    if ([resultsFields count] == 0) NSLog(@"No results found");
+    for (int i = 0; i < [resultsFields count]; i++) {
+        NSLog(@"Experiment Field %d: %@", i + 1, ((ExperimentField*)resultsFields[i]).field_name);
+    }
+
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
