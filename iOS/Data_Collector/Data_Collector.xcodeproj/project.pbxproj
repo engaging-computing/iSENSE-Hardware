@@ -25,6 +25,7 @@
 		3963689E169725AA00631268 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3963689D169725AA00631268 /* Toast.m */; };
 		397DD9FD169761C90065DBD3 /* bluecheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 397DD9FB169761C90065DBD3 /* bluecheck.png */; };
 		397DD9FE169761C90065DBD3 /* red_x.png in Resources */ = {isa = PBXBuildFile; fileRef = 397DD9FC169761C90065DBD3 /* red_x.png */; };
+		399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 399787AA16B2FDED005F147B /* ExperimentBlock.m */; };
 		399B39D316A089B0000564D9 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399B39D216A089B0000564D9 /* CoreMotion.framework */; };
 		399BE2F9169F1D1F000F7B2E /* AutomaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399BE2F8169F1D1F000F7B2E /* AutomaticViewController.m */; };
 		399BE2FB169F3878000F7B2E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399BE2FA169F3878000F7B2E /* QuartzCore.framework */; };
@@ -81,6 +82,8 @@
 		3963689D169725AA00631268 /* Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toast.m; sourceTree = "<group>"; };
 		397DD9FB169761C90065DBD3 /* bluecheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluecheck.png; sourceTree = "<group>"; };
 		397DD9FC169761C90065DBD3 /* red_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_x.png; sourceTree = "<group>"; };
+		399787A916B2FDED005F147B /* ExperimentBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBlock.h; sourceTree = "<group>"; };
+		399787AA16B2FDED005F147B /* ExperimentBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBlock.m; sourceTree = "<group>"; };
 		399B39D216A089B0000564D9 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutomaticViewController.h; sourceTree = "<group>"; };
 		399BE2F8169F1D1F000F7B2E /* AutomaticViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutomaticViewController.m; sourceTree = "<group>"; };
@@ -257,6 +260,15 @@
 			name = Toast;
 			sourceTree = "<group>";
 		};
+		399787A716B2FDA6005F147B /* ExperimentBlock */ = {
+			isa = PBXGroup;
+			children = (
+				399787A916B2FDED005F147B /* ExperimentBlock.h */,
+				399787AA16B2FDED005F147B /* ExperimentBlock.m */,
+			);
+			name = ExperimentBlock;
+			sourceTree = "<group>";
+		};
 		39A9E9F616921EFA003D2EBB /* iSenseApiLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,6 +403,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Toast */,
 				39F8AF9B1694C22100E5E4C2 /* CameraUsage */,
 				39F8AF971694C1FB00E5E4C2 /* StringGrabber */,
@@ -522,6 +535,7 @@
 				3963689E169725AA00631268 /* Toast.m in Sources */,
 				39088254169B689F00BEE04F /* UIImageTint.m in Sources */,
 				399BE2F9169F1D1F000F7B2E /* AutomaticViewController.m in Sources */,
+				399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

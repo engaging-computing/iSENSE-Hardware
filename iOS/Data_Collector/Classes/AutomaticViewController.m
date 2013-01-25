@@ -76,9 +76,10 @@
              NSError *error = nil;
              NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
              [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-             */
+             
             
             [self getExperiments];
+             */
         }
         
         // Make the beep sound
@@ -263,6 +264,7 @@
     }
 }
 
+// Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
     return YES;
@@ -326,6 +328,8 @@
         [dataToBeJSONed addObject:temp];
     };
     
+    // Set the accelerometer update interval to reccomended sample interval, and start updates
+    newMotionManager.accelerometerUpdateInterval = .5;
     [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
     
     return [newMotionManager autorelease];
@@ -351,6 +355,7 @@
     
 }
 
+// Fetch the experiments from iSENSE
 - (void) getExperiments {
     NSMutableArray *results = [isenseAPI getExperiments:[NSNumber numberWithUnsignedInt:1] withLimit:[NSNumber numberWithUnsignedInt:10] withQuery:@"" andSort:@"recent"];
     if ([results count] == 0) NSLog(@"No results found");
