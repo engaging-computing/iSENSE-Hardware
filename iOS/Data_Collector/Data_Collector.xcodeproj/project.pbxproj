@@ -32,6 +32,7 @@
 		399D31E1169DFFCB005F9D51 /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC61691FBC6009037A7 /* SplashView-iPad.xib */; };
 		399D31EA169E02DF005F9D51 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */; };
 		399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31EB169E02FD005F9D51 /* MainWindow.xib */; };
+		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
 		39F8AF9A1694C20C00E5E4C2 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F8AF991694C20C00E5E4C2 /* StringGrabber.m */; };
@@ -98,6 +99,8 @@
 		39A9E9FD16921EFA003D2EBB /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		39A9E9FE16921EFA003D2EBB /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
 		39A9E9FF16921EFA003D2EBB /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
+		39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBrowseViewController.m; sourceTree = "<group>"; };
 		39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView~ipad.xib"; sourceTree = "<group>"; };
 		39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "ManualView~iphone.xib"; path = "Classes/ManualView~iphone.xib"; sourceTree = "<group>"; };
 		39F8AF981694C20C00E5E4C2 /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				39DA66D016B6F840001EE336 /* ExperimentBrowser */,
 				39A9E9F616921EFA003D2EBB /* iSenseApiLib */,
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
@@ -292,6 +296,15 @@
 				39A9E9FF16921EFA003D2EBB /* SessionData.h */,
 			);
 			path = Headers;
+			sourceTree = "<group>";
+		};
+		39DA66D016B6F840001EE336 /* ExperimentBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */,
+				39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */,
+			);
+			name = ExperimentBrowser;
 			sourceTree = "<group>";
 		};
 		39F8AF971694C1FB00E5E4C2 /* StringGrabber */ = {
@@ -536,6 +549,7 @@
 				39088254169B689F00BEE04F /* UIImageTint.m in Sources */,
 				399BE2F9169F1D1F000F7B2E /* AutomaticViewController.m in Sources */,
 				399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */,
+				39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

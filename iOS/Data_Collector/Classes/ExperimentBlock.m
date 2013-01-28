@@ -19,8 +19,18 @@
         
         // Backround black and white stroke
         [self setBackgroundColor:[UIColor blackColor]];
-        [self.layer ];
-        self.layer.borderWith = 2;
+        self.layer.borderWidth = .2;
+        self.layer.borderColor = [UIColor whiteColor].CGColor;
+        
+        // Center Experiment Information in a Label
+        UILabel *experimentNameLabel = [[UILabel alloc] initWithFrame:frame];
+        [experimentNameLabel setBackgroundColor:[UIColor clearColor]];
+        experimentNameLabel.text = expName;
+        experimentNameLabel.textAlignment = NSTextAlignmentCenter;
+        
+        // Add the label to the main view
+        [self addSubview:experimentNameLabel];
+        
     }
     return self;
 }

@@ -451,6 +451,10 @@
             [message release];
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            /* Code that shouldn't work yet */
+            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            [browseView release];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
