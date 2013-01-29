@@ -454,6 +454,7 @@
             /* Code that shouldn't work yet */
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
+            [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {

@@ -13,4 +13,7 @@
     NSString *experimentName;
     NSNumber *experimentNumber;
 }
+
+- (id)initWithFrame:(CGRect)frame experimentName:(NSString *)expName experimentNumber:(NSInteger)expNum;
+
 @end
