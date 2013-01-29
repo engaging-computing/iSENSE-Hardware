@@ -10,6 +10,7 @@
 #import "UIImageTint.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreMotion/CoreMotion.h>
+#import "ExperimentBrowseViewController.h"
 
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>  {
@@ -36,7 +37,8 @@
 - (void) getExperiments;
 
 @property (nonatomic) BOOL isRecording;
-@property (atomic, assign) CMMotionManager *motionManager;
-@property (atomic, assign) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) CMMotionManager *motionManager;
+@property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) NSNumber *expNum;
 
 @end
