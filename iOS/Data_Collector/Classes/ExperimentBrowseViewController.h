@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ExperimentBlock.h"
 
-@interface ExperimentBrowseViewController : UIViewController
-
+@interface ExperimentBrowseViewController : UIViewController {
+    iSENSE *isenseAPI;
+}
 @end

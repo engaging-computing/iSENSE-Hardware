@@ -679,7 +679,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
@@ -705,7 +705,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;

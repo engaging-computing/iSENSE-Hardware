@@ -35,7 +35,8 @@
         self.view.backgroundColor = [UIColor blackColor];
     }
     
-    //iSENSE *isenseAPI = [iSENSE getInstance];
+    isenseAPI = [iSENSE getInstance];
+    [isenseAPI getExperiments:[NSNumber numberWithInt:1] withLimit:[NSNumber numberWithInt:10] withQuery:@"Peppy" andSort:@"Recent"];
     ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, 0, 150, 50) experimentName:@"Experiment Name" experimentNumber:132];
     
     [self.view addSubview:block];
