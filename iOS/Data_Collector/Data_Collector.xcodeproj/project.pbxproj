@@ -54,10 +54,41 @@
 		52572B911691F788009037A7 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B8F1691F788009037A7 /* AboutView.xib */; };
 		52572B951691F796009037A7 /* GuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B931691F796009037A7 /* GuideView.m */; };
 		52572B961691F796009037A7 /* GuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B941691F796009037A7 /* GuideView.xib */; };
-		52572B9A1691F7B1009037A7 /* ManualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.m */; };
+		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UIPLongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UIPLongClickButton.m */; };
+		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
+		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		B74A1F0E16B8641E00F0E9EE /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */; };
+		B74A1F1016B8642200F0E9EE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */; };
+		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
+		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
+		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B7DD76CC16B86543000B0CCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = ZXingWidget;
+		};
+		B7DD76CE16B86543000B0CCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D60398D13DF7CAD006F4B51;
+			remoteInfo = ZXingTests;
+		};
+		B7DD76D116B86550000B0CCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = ZXingWidget;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -128,12 +159,20 @@
 		52572B931691F796009037A7 /* GuideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuideView.m; sourceTree = "<group>"; };
 		52572B941691F796009037A7 /* GuideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = GuideView.xib; path = Classes/GuideView.xib; sourceTree = "<group>"; };
 		52572B971691F7B1009037A7 /* ManualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualViewController.h; sourceTree = "<group>"; };
-		52572B981691F7B1009037A7 /* ManualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualViewController.m; sourceTree = "<group>"; };
+		52572B981691F7B1009037A7 /* ManualViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ManualViewController.mm; sourceTree = "<group>"; };
 		52572B9E1691F816009037A7 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		52572BC61691FBC6009037A7 /* SplashView-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SplashView-iPad.xib"; sourceTree = "<group>"; };
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UIPLongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPLongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
+		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
+		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
+		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +180,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
+				B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */,
+				B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */,
+				B74A1F1016B8642200F0E9EE /* CoreMedia.framework in Frameworks */,
+				B74A1F0E16B8641E00F0E9EE /* CoreVideo.framework in Frameworks */,
+				B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */,
+				B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */,
 				399B39D316A089B0000564D9 /* CoreMotion.framework in Frameworks */,
 				399BE2FB169F3878000F7B2E /* QuartzCore.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -179,6 +225,13 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
+				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
+				B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */,
+				B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */,
+				B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */,
+				B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */,
+				B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */,
 				080E96DDFE201D6D7F000001 /* Source */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				8D1107310486CEB800E47090 /* Data_Collector-Info.plist */,
@@ -408,7 +461,7 @@
 			isa = PBXGroup;
 			children = (
 				52572B971691F7B1009037A7 /* ManualViewController.h */,
-				52572B981691F7B1009037A7 /* ManualViewController.m */,
+				52572B981691F7B1009037A7 /* ManualViewController.mm */,
 			);
 			name = Manual;
 			sourceTree = "<group>";
@@ -416,6 +469,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Toast */,
 				39F8AF9B1694C22100E5E4C2 /* CameraUsage */,
@@ -444,6 +498,23 @@
 			name = UILongClickButton;
 			sourceTree = "<group>";
 		};
+		B74A1EEC16B8623B00F0E9EE /* ZXing */ = {
+			isa = PBXGroup;
+			children = (
+				B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */,
+			);
+			name = ZXing;
+			sourceTree = "<group>";
+		};
+		B7DD76C816B86543000B0CCF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B7DD76CD16B86543000B0CCF /* libZXingWidget.a */,
+				B7DD76CF16B86543000B0CCF /* ZXingTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -458,6 +529,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B7DD76D216B86550000B0CCF /* PBXTargetDependency */,
 			);
 			name = Data_Collector;
 			productName = Data_Collector;
@@ -484,12 +556,35 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = B7DD76C816B86543000B0CCF /* Products */;
+					ProjectRef = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Data_Collector */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		B7DD76CD16B86543000B0CCF /* libZXingWidget.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZXingWidget.a;
+			remoteRef = B7DD76CC16B86543000B0CCF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B7DD76CF16B86543000B0CCF /* ZXingTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZXingTests.octest;
+			remoteRef = B7DD76CE16B86543000B0CCF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1D60588D0D05DD3D006BFB54 /* Resources */ = {
@@ -533,7 +628,7 @@
 				52572B8B1691F77D009037A7 /* SplashView.m in Sources */,
 				52572B901691F788009037A7 /* AboutView.m in Sources */,
 				52572B951691F796009037A7 /* GuideView.m in Sources */,
-				52572B9A1691F7B1009037A7 /* ManualViewController.m in Sources */,
+				52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */,
 				52572BF01691FD71009037A7 /* UIPLongClickButton.m in Sources */,
 				39521F2916949AA60076A9CA /* iSENSE.m in Sources */,
 				39521F2A16949AA60076A9CA /* Experiment.m in Sources */,
@@ -555,6 +650,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		B7DD76D216B86550000B0CCF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ZXingWidget;
+			targetProxy = B7DD76D116B86550000B0CCF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -566,12 +669,17 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Data_Collector_Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../zxing/iphone/ZXingWidget/Classes/**",
+					"$(PROJECT_DIR)/../zxing/cpp/core/src",
+				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
@@ -587,12 +695,17 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Data_Collector_Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../zxing/iphone/ZXingWidget/Classes/**",
+					"$(PROJECT_DIR)/../zxing/cpp/core/src",
+				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;

@@ -1,1 +1,9 @@
 App prototypes for iOS will be found here.
+
+Also, zxing is not owned by us. It is a free
+library that allows for QR code scanning. It is
+committed in this iOS directory as it makes
+possible the use of relative paths to reference
+zxing's project into our code across multiple
+computers.  Also, it's the only version we want
+to be using right now.
