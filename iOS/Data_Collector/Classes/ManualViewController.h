@@ -43,7 +43,7 @@
 - (void) initLocations;
 
 - (void) fillDataFieldEntryList:(int)eid;
-- (void) addDataField:(NSString *)expField andType:(int)type;
+- (void) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
