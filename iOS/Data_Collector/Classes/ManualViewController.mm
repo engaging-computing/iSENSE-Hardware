@@ -25,6 +25,15 @@
 #define OPTION_BROWSE_EXPERIMENTS 2
 #define OPTION_SCAN_QR_CODE 3
 
+#define TYPE_DEFAULT 1000
+#define TYPE_LATITUDE 1001
+#define TYPE_LONGITUDE 1002
+#define TYPE_TIME 1003
+
+#define SCROLLVIEW_IPAD_TROLL 50
+#define SCROLLVIEW_Y_OFFSET 50
+#define SCROLLVIEW_OBJ_INCR 30
+
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
@@ -57,6 +66,11 @@
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
      }
      
+     CGFloat scrollHeight = scrollView.frame.size.height;
+     CGFloat scrollWidth = scrollView.frame.size.width;
+     [scrollView setContentSize:CGSizeMake(scrollHeight, scrollWidth)];
+     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+     
      //* get exp. # from prefs
 	 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
 	 
@@ -64,7 +78,14 @@
  
  
  
+     /*** DELETEY STUFFZ!!!!!!!! **////////////
+     
      NSLog(@"ExperimentNum = %@", expNum);
+     NSLog(@"Temperature is: %d", TEMPERATURE);
+     NSLog(@"Height = %f, Width = %f", scrollHeight, scrollWidth);
+     
+     /****************************************/
+
  }
 
 - (IBAction)textFieldFinished:(id)sender {}
@@ -140,7 +161,6 @@
                                        otherButtonTitles:@"Okay", nil];
             
             message.tag = MENU_UPLOAD;
-            //[message setAlertViewStyle:UIAlertViewStyleDefault];
             
 			break;
             
@@ -204,7 +224,16 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
+            
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            
+            ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:(id <ZXingDelegate>)self showCancel:YES OneDMode:NO];
+            QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
+            
+            NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
+            widController.readers = readers;
+            
+            [self presentModalViewController:widController animated:YES];
             
         }
         
@@ -216,16 +245,25 @@
             
             expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
             NSLog(@"ExperimentNum = %@", expNum);
+            
+            // check if the expNum changed since last time, then do ----v
+            [self fillDataFieldEntryList:expNum.intValue];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
         
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            // fill view with stuffz!
+        }
+        
     } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
-        ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:(id <ZXingDelegate>)self showCancel:YES OneDMode:NO];
-        QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-        NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-        widController.readers = readers;
-        [self presentModalViewController:widController animated:YES];
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            // fill view with stuffz!
+        }
+        
     }
 }
 
@@ -278,76 +316,70 @@
 	
 }
 
-// TODO
 - (void) fillDataFieldEntryList:(int)eid {
-	/*
-	 for (ExperimentField expField : fieldOrder) {
-	 
-		if (expField.type_id == expField.GEOSPACIAL) {
-			if (expField.unit_id == expField.UNIT_LATITUDE) {
-				addDataField(expField, TYPE_LATITUDE);
-			} else {
-				addDataField(expField, TYPE_LONGITUDE);
-			}
-		} else if (expField.type_id == expField.TIME) {
-			addDataField(expField, TYPE_TIME);
-		} else {
-			addDataField(expField, TYPE_DEFAULT);
-		}
-	 }
-	 
-	 checkLastImeOptions();
-	 */
+    
+    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
+    int objNumber = 0;
+    
+    for (ExperimentField *expField in fieldOrder) {
+        
+        if (expField.type_id == [NSNumber numberWithInt:GEOSPACIAL]) {
+            if (expField.unit_id == [NSNumber numberWithInt:UNIT_LATITUDE]) {
+                [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
+            } else {
+                [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
+            }
+        } else if (expField.type_id == [NSNumber numberWithInt:TIME]) {
+            [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
+        } else {
+            [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
+        }
+        ++objNumber;
+    }
 }
 
-// TODO
-- (void) addDataField:(NSString *)expField andType:(int)type {
-	/*
-	LinearLayout dataField = (LinearLayout) View.inflate(this,
-														 R.layout.manualentryfield, null);
-	TextView fieldName = (TextView) dataField
-	.findViewById(R.id.manual_dataFieldName);
-	fieldName.setText(expField.field_name);
-	EditText fieldContents = (EditText) dataField
-	.findViewById(R.id.manual_dataFieldContents);
-	
-	fieldContents.setSingleLine(true);
-	fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-	
-	if (type != TYPE_DEFAULT) {
-		fieldContents.setText("Auto");
-		fieldContents.setEnabled(false);
-		
-		fieldContents.setClickable(false);
-		fieldContents.setCursorVisible(false);
-		fieldContents.setFocusable(false);
-		fieldContents.setFocusableInTouchMode(false);
-		fieldContents.setTextColor(Color.GRAY);
-	}
-	
-	if (expField.type_id == expField.TEXT) {
-		// keyboard to text
-		fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
-		fieldContents
-		.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
-																	 60) });
-		fieldContents.setKeyListener(DigitsKeyListener
-									 .getInstance(getResources().getString(
-																		   R.string.digits_restriction)));
-	} else {
-		// keyboard to nums
-		fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
-		fieldContents
-		.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
-																	 20) });
-		fieldContents.setKeyListener(DigitsKeyListener
-									 .getInstance(getResources().getString(
-																		   R.string.numbers_restriction)));
-		
-	}
-	
-	dataFieldEntryList.addView(dataField);	
-	 */
+- (void) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum {
+    
+    CGFloat Y_FIELDNAME = SCROLLVIEW_IPAD_TROLL + (objNum * SCROLLVIEW_Y_OFFSET);
+    CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
+    
+    UILabel *fieldName;
+    if (objNum == 0) {
+        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, 20)];
+    } else {
+        Y_FIELDNAME += (SCROLLVIEW_OBJ_INCR * objNum);
+        Y_FIELDCONTENTS += (SCROLLVIEW_OBJ_INCR * objNum);
+        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, 20)];
+    }
+    fieldName.backgroundColor = [UIColor blackColor];
+    fieldName.textColor = [UIColor whiteColor];
+    fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
+    
+    UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, 35)];
+    fieldContents.backgroundColor = [UIColor whiteColor];
+    fieldContents.font = [UIFont systemFontOfSize:24];
+    
+    if (type != TYPE_DEFAULT) {
+        fieldContents.text = @"Auto";
+        fieldContents.enabled = NO;
+        //fieldContents.editable = NO;
+        fieldContents.backgroundColor = [UIColor grayColor];
+    }
+    
+    if (expField.type_id == [NSNumber numberWithInt:TEXT]) {
+        fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
+        // TOOO - restrict amount of chars to 60
+        // TODO - restrict digits
+    } else {
+        fieldContents.keyboardType = UIKeyboardTypeNumberPad;
+        // TODO - restrict # to 20 chars
+        // TODO - restrict nums
+    }
+    
+    [scrollView addSubview:fieldName];
+    [scrollView addSubview:fieldContents];        
 }
 
 @end
