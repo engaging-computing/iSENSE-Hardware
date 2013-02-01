@@ -14,5 +14,6 @@
 
 + (NSString *) getString:(NSString *)label;
 + (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string;
++ (NSString *) concatenate:(NSString*)string withHardcodedString:(NSString *)label;
 
 @end

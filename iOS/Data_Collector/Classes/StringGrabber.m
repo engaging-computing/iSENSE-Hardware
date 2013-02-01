@@ -31,4 +31,15 @@
 	return [NSString stringWithString:temp];
 }
 
++ (NSString *) concatenate:(NSString*)string withHardcodedString:(NSString *)label {
+    
+    NSString *hardCodedString = [[[NSString alloc] init] autorelease];
+	hardCodedString = [self getString:label];
+	
+	NSMutableString *temp = [[[NSMutableString alloc] init] autorelease];
+	temp = [NSMutableString stringWithFormat:@"%@%@", string, hardCodedString];
+	
+	return [NSString stringWithString:temp];
+}
+
 @end
