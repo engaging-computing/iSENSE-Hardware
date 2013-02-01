@@ -229,13 +229,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
-				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
-				B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */,
-				B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */,
-				B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */,
-				B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */,
-				B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */,
 				080E96DDFE201D6D7F000001 /* Source */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				8D1107310486CEB800E47090 /* Data_Collector-Info.plist */,
@@ -270,6 +263,13 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
+				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
+				B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */,
+				B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */,
+				B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */,
+				B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */,
+				B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */,
 				399B39D216A089B0000564D9 /* CoreMotion.framework */,
 				399BE2FA169F3878000F7B2E /* QuartzCore.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
