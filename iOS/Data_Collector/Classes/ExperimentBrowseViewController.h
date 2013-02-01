@@ -9,7 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "ExperimentBlock.h"
 
-@interface ExperimentBrowseViewController : UIViewController {
+@interface ExperimentBrowseViewController : UIViewController <UISearchBarDelegate> {
     iSENSE *isenseAPI;
+    UIScrollView *scrollView;
 }
+
+- (IBAction)onExperimentButtonClicked:(id)caller;
+
+
 @end
