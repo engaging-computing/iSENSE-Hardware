@@ -35,10 +35,17 @@
         self.view.backgroundColor = [UIColor blackColor];
     }
     
-    //iSENSE *isenseAPI = [iSENSE getInstance];
-    ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, 0, 150, 50) experimentName:@"Experiment Name" experimentNumber:132];
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+    searchBar.delegate = self;
+    [self.view addSubview:searchBar];
     
-    [self.view addSubview:block];
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 320, self.view.bounds.size.height)];
+    scrollView.delaysContentTouches = NO;
+    [self.view addSubview:scrollView];
+                                                             
+    
+    isenseAPI = [iSENSE getInstance];
+
 }
 
 - (void)viewDidLoad
@@ -51,6 +58,48 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+/* Search bar methods */
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [self handleSearch:searchBar];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    [self handleSearch:searchBar];
+}
+
+- (void)handleSearch:(UISearchBar *)searchBar {
+    NSLog(@"User searched for %@", searchBar.text);
+    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    NSMutableArray *experiments = [isenseAPI getExperiments:[NSNumber numberWithInt:1] withLimit:[NSNumber numberWithInt:25] withQuery:searchBar.text andSort:@"Recent"];
+    int i = 0, maxHeight = 0;
+    for(Experiment *exp in experiments) {
+        
+        ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, i*60, 310, 50)
+                                                        experimentName:exp.name
+                                                        experimentNumber:[exp.experiment_id integerValue]
+                                                        target:self
+                                                        action:@selector(onExperimentButtonClicked:)];
+        [scrollView addSubview:block];
+        i++;
+        maxHeight += 60;
+    }
+    
+    CGSize scrollableSize = CGSizeMake(320, maxHeight);
+    [scrollView setContentSize:scrollableSize];
+
+    [searchBar resignFirstResponder]; // if you want the keyboard to go away
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar {
+    NSLog(@"User canceled search");
+    [searchBar resignFirstResponder]; // if you want the keyboard to go away
+}
+
+- (IBAction)onExperimentButtonClicked:(id)caller {
+    [caller switchToDarkImage:false];
 }
 
 @end
