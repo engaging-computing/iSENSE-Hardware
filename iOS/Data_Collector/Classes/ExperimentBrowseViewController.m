@@ -35,11 +35,12 @@
         self.view.backgroundColor = [UIColor blackColor];
     }
     
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 5, self.view.bounds.size.width, 40)];
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
     searchBar.delegate = self;
     [self.view addSubview:searchBar];
     
-    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(5, 55, 330, self.view.bounds.size.height - 60)];
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 320, self.view.bounds.size.height)];
+    scrollView.delaysContentTouches = NO;
     [self.view addSubview:scrollView];
                                                              
     
@@ -86,7 +87,7 @@
         maxHeight += 60;
     }
     
-    CGSize scrollableSize = CGSizeMake(330, maxHeight);
+    CGSize scrollableSize = CGSizeMake(320, maxHeight);
     [scrollView setContentSize:scrollableSize];
 
     [searchBar resignFirstResponder]; // if you want the keyboard to go away

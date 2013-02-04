@@ -12,6 +12,7 @@
 @interface ExperimentBrowseViewController : UIViewController <UISearchBarDelegate> {
     iSENSE *isenseAPI;
     UIScrollView *scrollView;
+    UIActivityIndicatorView *spinner;
 }
 
 - (IBAction)onExperimentButtonClicked:(id)caller;
