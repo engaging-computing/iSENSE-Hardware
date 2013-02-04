@@ -30,9 +30,10 @@
 #define TYPE_LONGITUDE 1002
 #define TYPE_TIME 1003
 
-#define SCROLLVIEW_IPAD_TROLL 50
 #define SCROLLVIEW_Y_OFFSET 50
 #define SCROLLVIEW_OBJ_INCR 30
+#define SCROLLVIEW_LABEL_HEIGHT 20
+#define SCROLLVIEW_TEXT_HEIGHT 35
 
 @implementation ManualViewController
 
@@ -66,9 +67,9 @@
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
      }
      
-     CGFloat scrollHeight = scrollView.frame.size.height;
+     /*CGFloat scrollHeight = scrollView.frame.size.height;
      CGFloat scrollWidth = scrollView.frame.size.width;
-     [scrollView setContentSize:CGSizeMake(scrollHeight, scrollWidth)];
+     [scrollView setContentSize:CGSizeMake(scrollHeight, scrollWidth)];*/
      scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
      
      //* get exp. # from prefs
@@ -82,7 +83,7 @@
      
      NSLog(@"ExperimentNum = %@", expNum);
      NSLog(@"Temperature is: %d", TEMPERATURE);
-     NSLog(@"Height = %f, Width = %f", scrollHeight, scrollWidth);
+    // NSLog(@"Height = %f, Width = %f", scrollHeight, scrollWidth);
      
      /****************************************/
 
@@ -128,7 +129,12 @@
 
 - (IBAction) clearOnClick:(id)sender {
 	sessionNameInput.text = @"";
-	//* loop through UITextFields and clear them out
+    
+    for (UIView *element in scrollView.subviews) {
+        if ([element isKindOfClass:[UITextField class]]) {
+            ((UITextField *) element).text = @"";
+        }
+    }
 }
 
 - (IBAction) mediaOnClick:(id)sender {
@@ -245,6 +251,7 @@
             
             expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
             NSLog(@"ExperimentNum = %@", expNum);
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%@", expNum]];
             
             // check if the expNum changed since last time, then do ----v
             [self fillDataFieldEntryList:expNum.intValue];
@@ -322,42 +329,49 @@
     
     NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
     int objNumber = 0;
+    int scrollHeight = 0;
     
     for (ExperimentField *expField in fieldOrder) {
         
         if (expField.type_id == [NSNumber numberWithInt:GEOSPACIAL]) {
             if (expField.unit_id == [NSNumber numberWithInt:UNIT_LATITUDE]) {
-                [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
+                scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
             } else {
-                [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
+                scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
             }
         } else if (expField.type_id == [NSNumber numberWithInt:TIME]) {
-            [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
+            scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
         } else {
-            [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
+            scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
         }
+        
         ++objNumber;
     }
+    
+    scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
+    CGFloat scrollWidth = scrollView.frame.size.width;
+    [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
+    
 }
 
-- (void) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum {
+- (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum {
     
-    CGFloat Y_FIELDNAME = SCROLLVIEW_IPAD_TROLL + (objNum * SCROLLVIEW_Y_OFFSET);
+    CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
     
     UILabel *fieldName;
     if (objNum == 0) {
-        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, 20)];
+        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
     } else {
         Y_FIELDNAME += (SCROLLVIEW_OBJ_INCR * objNum);
         Y_FIELDCONTENTS += (SCROLLVIEW_OBJ_INCR * objNum);
-        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, 20)];
+        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
     }
     fieldName.backgroundColor = [UIColor blackColor];
     fieldName.textColor = [UIColor whiteColor];
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
-    UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, 35)];
+    UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
     
@@ -379,7 +393,9 @@
     }
     
     [scrollView addSubview:fieldName];
-    [scrollView addSubview:fieldContents];        
+    [scrollView addSubview:fieldContents];
+    
+    return (int) Y_FIELDCONTENTS;
 }
 
 @end
