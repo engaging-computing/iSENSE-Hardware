@@ -19,8 +19,8 @@
 @interface iSENSE : NSObject {
 	NSString *username;
 	NSString *session_key;
-	
-	NSNumber * uid;
+	NSNumber *uid;
+    NSNumber *currentExp;
 }
 
 -(NSDictionary *)isenseQuery:(NSString*)target;
