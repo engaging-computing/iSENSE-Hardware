@@ -468,6 +468,7 @@
         if (buttonIndex != OPTION_CANCELED) {
             
             expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
+            [isenseAPI setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
             NSLog(@"ExperimentNum = %@", expNum);
         }
         
