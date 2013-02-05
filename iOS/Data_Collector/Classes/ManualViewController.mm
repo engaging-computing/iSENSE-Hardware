@@ -25,10 +25,8 @@
 #define OPTION_BROWSE_EXPERIMENTS 2
 #define OPTION_SCAN_QR_CODE 3
 
-#define TYPE_DEFAULT 1000
-#define TYPE_LATITUDE 1001
-#define TYPE_LONGITUDE 1002
-#define TYPE_TIME 1003
+#define TYPE_DEFAULT 0
+#define TYPE_FILL_WITH_AUTO 1
 
 #define SCROLLVIEW_Y_OFFSET 50
 #define SCROLLVIEW_OBJ_INCR 30
@@ -59,7 +57,7 @@
 	 iapi = [iSENSE getInstance];
      [iapi toggleUseDev:YES];
 	 
-	 [self initLocations]; //* make initLocations.. ya know.. do something
+	 [self initLocations]; //* make initLocations do something
 	 
      if ([iapi isLoggedIn]) {
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
@@ -67,26 +65,19 @@
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
      }
      
-     /*CGFloat scrollHeight = scrollView.frame.size.height;
-     CGFloat scrollWidth = scrollView.frame.size.width;
-     [scrollView setContentSize:CGSizeMake(scrollHeight, scrollWidth)];*/
      scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-     
-     //* get exp. # from prefs
-	 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
 	 
 	 //* if exp. # is null, launch the dialog for choosing exp. num
- 
- 
- 
-     /*** DELETEY STUFFZ!!!!!!!! **////////////
+     //if ([iapi getCurrentExp] != 0) {
+     //    [self fillDataFieldEntryList:expNum.intValue];
+     //    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+     //                                                            with:[NSString stringWithFormat:@"%d",
+     //                                                                  [iapi getCurrentExp]]];
+     //} else {
+         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+     //}
      
-     NSLog(@"ExperimentNum = %@", expNum);
-     NSLog(@"Temperature is: %d", TEMPERATURE);
-    // NSLog(@"Height = %f, Width = %f", scrollHeight, scrollWidth);
      
-     /****************************************/
-
  }
 
 - (IBAction)textFieldFinished:(id)sender {}
@@ -233,7 +224,9 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:(id <ZXingDelegate>)self showCancel:YES OneDMode:NO];
+            ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:(id <ZXingDelegate>)self
+                                                                                        showCancel:YES
+                                                                                          OneDMode:NO];
             QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
             
             NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
@@ -249,12 +242,11 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
-            NSLog(@"ExperimentNum = %@", expNum);
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%@", expNum]];
+            [iapi setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+                                                                    with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
             
-            // check if the expNum changed since last time, then do ----v
-            [self fillDataFieldEntryList:expNum.intValue];
+            [self fillDataFieldEntryList:[iapi getCurrentExp]];            
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
@@ -313,11 +305,6 @@
 	
 }
 
-// TODO gets data from the exp. #
-- (void) getDataFromExpNumber {
-	
-}
-
 // TODO allows for GPS to be recorded
 - (void) initLocations {
 	
@@ -333,14 +320,8 @@
     
     for (ExperimentField *expField in fieldOrder) {
         
-        if (expField.type_id == [NSNumber numberWithInt:GEOSPACIAL]) {
-            if (expField.unit_id == [NSNumber numberWithInt:UNIT_LATITUDE]) {
-                scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
-            } else {
-                scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
-            }
-        } else if (expField.type_id == [NSNumber numberWithInt:TIME]) {
-            scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
+        if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
+            scrollHeight = [self addDataField:expField withType:TYPE_FILL_WITH_AUTO andObjNumber:objNumber];
         } else {
             scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
         }
@@ -375,19 +356,18 @@
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
     
-    if (type != TYPE_DEFAULT) {
+    if (type == TYPE_FILL_WITH_AUTO) {
         fieldContents.text = @"Auto";
         fieldContents.enabled = NO;
-        //fieldContents.editable = NO;
         fieldContents.backgroundColor = [UIColor grayColor];
     }
     
-    if (expField.type_id == [NSNumber numberWithInt:TEXT]) {
+    if (expField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
         // TOOO - restrict amount of chars to 60
         // TODO - restrict digits
     } else {
-        fieldContents.keyboardType = UIKeyboardTypeNumberPad;
+        fieldContents.keyboardType = UIKeyboardTypePhonePad;
         // TODO - restrict # to 20 chars
         // TODO - restrict nums
     }
@@ -396,6 +376,14 @@
     [scrollView addSubview:fieldContents];
     
     return (int) Y_FIELDCONTENTS;
+}
+
+- (void) getDataFromFields { // TODO - this stuff
+    for (UIView *element in scrollView.subviews) {
+        if ([element isKindOfClass:[UITextField class]]) {
+            ((UITextField *) element).text = @"";
+        }
+    }
 }
 
 @end
