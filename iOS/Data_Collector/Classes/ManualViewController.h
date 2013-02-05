@@ -38,7 +38,7 @@
 - (void) experiment;
 - (void) upload;
 
-- (void) getDataFromExpNumber;
+- (void) getDataFromFields;
 
 - (void) initLocations;
 

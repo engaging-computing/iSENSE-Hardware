@@ -59,6 +59,7 @@
 		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UILongClickButton.m */; };
+		B72DC21616C18D2700999C7E /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21516C18D2700999C7E /* DataSet.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B74A1F0E16B8641E00F0E9EE /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */; };
@@ -169,6 +170,8 @@
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UILongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		B72DC21416C18D2700999C7E /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
+		B72DC21516C18D2700999C7E /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
 		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
 		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -475,6 +478,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				B72DC21316C18D0700999C7E /* DataSet */,
 				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Toast */,
@@ -502,6 +506,15 @@
 				52572BEF1691FD71009037A7 /* UILongClickButton.m */,
 			);
 			name = UILongClickButton;
+			sourceTree = "<group>";
+		};
+		B72DC21316C18D0700999C7E /* DataSet */ = {
+			isa = PBXGroup;
+			children = (
+				B72DC21416C18D2700999C7E /* DataSet.h */,
+				B72DC21516C18D2700999C7E /* DataSet.m */,
+			);
+			name = DataSet;
 			sourceTree = "<group>";
 		};
 		B74A1EEC16B8623B00F0E9EE /* ZXing */ = {
@@ -653,6 +666,7 @@
 				399BE2F9169F1D1F000F7B2E /* AutomaticViewController.m in Sources */,
 				399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */,
 				39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */,
+				B72DC21616C18D2700999C7E /* DataSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +702,7 @@
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
+					"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
@@ -714,6 +729,7 @@
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
+					"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;

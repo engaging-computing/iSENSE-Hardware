@@ -46,6 +46,8 @@
 - (bool) putSessionData:(NSData *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id;
 - (bool) updateSessionData:(NSData *)dataJSON forSession:(NSNumber *)sessioN_id inExperiment:(NSNumber *)exp_id;
 - (void) toggleUseDev:(BOOL)toggle;
+- (void) setCurrentExp:(int)expNum;
+- (int)  getCurrentExp;
 
 @end
 
