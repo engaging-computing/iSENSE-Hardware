@@ -19,6 +19,10 @@
 "accepted_digits" = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@";
 "accepted_numbers" = "1234567890.-";
 
+"auto_time" = "(Auto-fill for time)";
+"auto_lat"  = "(Auto-fill for latitude)";
+"auto_long" = "(Auto-fill for longitude)";
+
 
 // ---------------
 // ---------------
