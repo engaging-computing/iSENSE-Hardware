@@ -310,12 +310,51 @@
                    image:@"red_x"];
 }
 
-- (void) upload {
-	[self.view makeToast:@"Upload!"
-				duration:2.0
-				position:@"bottom"
-                   image:@"check"];
-	
+- (void) upload:(NSMutableArray *)results {
+    if ([iapi getCurrentExp] == 0) {
+        [self.view makeToast:@"Please Enter an Experiment # First"
+                    duration:3.5
+                    position:@"bottom"
+                       image:@"red_x"];
+        return;
+    }
+    if (!([iapi isLoggedIn])) {
+        [self.view makeToast:@"Please Login First"
+                    duration:3.5
+                    position:@"bottom"
+                       image:@"red_x"];
+        return;
+    }
+    if ([[sessionNameInput text] isEqualToString:@""]) {
+        [self.view makeToast:@"Please Enter a Session Name First"
+                    duration:3.5
+                    position:@"bottom"
+                       image:@"red_x"];
+        return;
+    }
+    
+    NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
+    NSString *description = [[[NSString alloc] initWithString:@"Manual data entry from the iOS Data Collector application."] autorelease];
+    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:[iapi getCurrentExp]] autorelease];
+    NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+    NSError *error = nil;
+    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+
+    
+    if ([iapi putSessionData:dataJSON forSession:session_num inExperiment:exp_num]) {
+        [self.view makeToast:@"Upload Success!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"check"];
+    } else {
+        [self.view makeToast:@"Upload Failed!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"red_x"];
+    }
 }
 
 // TODO allows for GPS to be recorded
@@ -450,9 +489,12 @@
         count++;
     }
     
-    // call some upload function
+    NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
+    [dataEncapsulator addObject:data];
+    [self upload:data];
     
-    NSLog(@"Count = %d", count);
+    
+    /*NSLog(@"Count = %d", count);
     int i = 0;
     for (id object in data) {
         NSLog(@"Obj %d = %@", ++i, object);
@@ -461,9 +503,10 @@
     if (count)
         [self.view makeToast:@"Successfully saved data!" duration:2.0 position:@"bottom" image:@"check"];
     else
-        [self.view makeToast:@"No data to save!" duration:2.0 position:@"bottom" image:@"red_x"];
+        [self.view makeToast:@"No data to save!" duration:2.0 position:@"bottom" image:@"red_x"];*/
     
     [data release];
+    [dataEncapsulator release];
 }
 
 - (void)hideKeyboard {

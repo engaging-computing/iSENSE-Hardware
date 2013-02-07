@@ -67,9 +67,9 @@ static iSENSE *_iSENSE = nil;
         session_key = [[NSString alloc] init];
         username = [[NSString alloc] init];
         uid = [[NSNumber alloc] initWithInt:-1];
-        currentExp = [[NSNumber alloc] initWithInt:0];
+        currentExp = [[[NSNumber alloc] initWithInt:0] retain];
         
-        currentExp = nil;
+        //currentExp = nil;
         username = nil;
         session_key = nil;
         uid = nil;
@@ -607,17 +607,18 @@ static iSENSE *_iSENSE = nil;
 - (void) setCurrentExp:(int)expNum {
     
     currentExp = [NSNumber numberWithInt:expNum];
+    [currentExp retain];
 }
 
 // Use this method to get the current experiment number
 - (int) getCurrentExp {
-    @try {
-        return currentExp.intValue;
-    }
-    @catch (NSException *exception) {
+    if (!currentExp)
         return 0;
-    }
     
+    if (currentExp == nil)
+        return 0;
+    
+    return currentExp.intValue;
 }
 
 

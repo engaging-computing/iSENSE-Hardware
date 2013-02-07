@@ -36,7 +36,7 @@
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
-- (void) upload;
+- (void) upload:(NSMutableArray *)results;
 
 - (void) getDataFromFields;
 
