@@ -1,9 +1,5 @@
 //
 //  HexColor.m
-//  Data_Collector
-//
-//  Created by Michael Stowell on 2/5/13.
-//
 //
 
 #import "HexColor.h"
