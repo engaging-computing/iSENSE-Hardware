@@ -489,7 +489,14 @@ static iSENSE *_iSENSE = nil;
 	NSMutableArray *fields = [[NSMutableArray new] autorelease];
 	
 	if (data) {
-		NSEnumerator *e = [data objectEnumerator];
+        NSEnumerator *e;
+        @try {
+            e = [data objectEnumerator];
+        }
+        @catch (NSException *exception) {
+            return fields;
+        }
+
 		id object;
 		while (object = [e nextObject]) {
 			ExperimentField *expField = [[ExperimentField new] autorelease];

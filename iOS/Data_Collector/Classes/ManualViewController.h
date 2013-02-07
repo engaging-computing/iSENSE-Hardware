@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate> {
 	
 	// UI Elements
 	UIImageView *logo;
@@ -44,6 +44,7 @@
 
 - (void) fillDataFieldEntryList:(int)eid;
 - (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (void) hideKeyboard;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
