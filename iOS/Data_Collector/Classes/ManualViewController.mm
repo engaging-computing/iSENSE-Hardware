@@ -50,6 +50,7 @@
 	 [self.sessionNameInput addTarget:self
 						  action:@selector(textFieldFinished:)
 				forControlEvents:UIControlEventEditingDidEndOnExit];
+     sessionNameInput.delegate = self;
 	 sessionNameInput.enablesReturnKeyAutomatically = NO;
 	 
 	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
@@ -69,9 +70,14 @@
      
      scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
      [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	 
+     
 	 //* if exp. # is null, launch the dialog for choosing exp. num
      expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+     
+     UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+     tapGestureM.cancelsTouchesInView = NO;
+     [self.view addGestureRecognizer:tapGestureM];
+     [tapGestureM release];
      
  }
 
@@ -105,6 +111,11 @@
 	[sessionName release];
     
 	[super dealloc];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
 }
 
 - (IBAction) saveOnClick:(id)sender {
@@ -217,6 +228,7 @@
             
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             [message show];
             [message release];
             
@@ -269,11 +281,11 @@
 
 // TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	if (textField == sessionNameInput) {
+	//if (textField == sessionNameInput) {
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
 		return (newLength > 25) ? NO : YES;
-	}
-	return YES;
+	//}
+	//return YES;
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
@@ -315,6 +327,7 @@
     
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
+    NSLog(@"eid = %d", eid);
     NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
     int objNumber = 0;
     int scrollHeight = 0;
@@ -339,6 +352,14 @@
     scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
     CGFloat scrollWidth = scrollView.frame.size.width;
     [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
+   
+    if (scrollView.subviews.count == 0) {
+        UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, 730, SCROLLVIEW_LABEL_HEIGHT)];
+        noFields.text = @"Invalid experiment.";
+        noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
+        noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
+        [scrollView addSubview: noFields];
+    }
     
 }
 
@@ -360,6 +381,7 @@
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
+    fieldContents.delegate = self;
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
     
@@ -382,10 +404,11 @@
         // TOOO - restrict amount of chars to 60
         // TODO - restrict digits
     } else {
-        fieldContents.keyboardType = UIKeyboardTypePhonePad;
+        fieldContents.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         // TODO - restrict # to 20 chars
         // TODO - restrict nums
     }
+    [fieldContents setReturnKeyType:UIReturnKeyDone];
     
     [scrollView addSubview:fieldName];
     [scrollView addSubview:fieldContents];
@@ -400,22 +423,28 @@
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UITextField class]]) {
             if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_lat"]]) {
+                
                 // get geospacial latitude co-ordinate, store it in data
-                NSLog(@"lol you found latitude!");
+                [data addObject:@"ADD LATITUDE"];
+
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_long"]]) {
+                
                 // get geospacial longitude co-ordinate, store it in data
-                NSLog(@"ROFL! I'm lonnggggitttudeeee!");
+                [data addObject:@"ADD LONGITUDE"];
+                
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_time"]]) {
+                
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
                 NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
                 [data addObject:currentTime];
-                NSLog(@"Trololol, heyheyheyhey - TIME!!! = %@", currentTime);
+                
             } else {
-                NSLog(@"... I'm borrrinnnggggg ...");
+                
                 if ([((UITextField *) element).text length] != 0)
                     [data addObject:((UITextField *) element).text];
                 else
                     [data addObject:@""];
+                
             }
         }
         count++;
@@ -424,6 +453,10 @@
     // call some upload function
     
     NSLog(@"Count = %d", count);
+    int i = 0;
+    for (id object in data) {
+        NSLog(@"Obj %d = %@", ++i, object);
+    }
     
     if (count)
         [self.view makeToast:@"Successfully saved data!" duration:2.0 position:@"bottom" image:@"check"];
@@ -431,6 +464,15 @@
         [self.view makeToast:@"No data to save!" duration:2.0 position:@"bottom" image:@"red_x"];
     
     [data release];
+}
+
+- (void)hideKeyboard {
+    [sessionNameInput resignFirstResponder];
+    for (UIView *element in scrollView.subviews) {
+        if ([element isKindOfClass:[UITextField class]]) {
+            [element resignFirstResponder];
+        }
+    }
 }
 
 @end
