@@ -279,13 +279,33 @@
     }
 }
 
-// TODO - make this actually restrict character limits
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	//if (textField == sessionNameInput) {
+    
+    if (![self containsAcceptedCharacters:string])
+        return NO;
+    
+	if (textField == sessionNameInput) {
+        
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
-		return (newLength > 25) ? NO : YES;
-	//}
-	//return YES;
+		return (newLength > 52) ? NO : YES;
+        
+	} else {
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        if (newLength > 25)
+            return NO;
+        else
+            return YES;
+        
+    }
+    return YES;
+}
+
+- (BOOL) containsAcceptedCharacters:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+        [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber getString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
@@ -340,8 +360,8 @@
     NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
     NSNumber *exp_num = [[[NSNumber alloc] initWithInt:[iapi getCurrentExp]] autorelease];
     NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
-    NSError *error = nil;
-    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+    NSError  *error = nil;
+    NSData   *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
 
     
     if ([iapi putSessionData:dataJSON forSession:session_num inExperiment:exp_num]) {
@@ -464,12 +484,12 @@
             if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_lat"]]) {
                 
                 // get geospacial latitude co-ordinate, store it in data
-                [data addObject:@"ADD LATITUDE"];
+                [data addObject:@"9000"];
 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_long"]]) {
                 
                 // get geospacial longitude co-ordinate, store it in data
-                [data addObject:@"ADD LONGITUDE"];
+                [data addObject:@"9002"];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_time"]]) {
                 
@@ -491,19 +511,7 @@
     
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
     [dataEncapsulator addObject:data];
-    [self upload:data];
-    
-    
-    /*NSLog(@"Count = %d", count);
-    int i = 0;
-    for (id object in data) {
-        NSLog(@"Obj %d = %@", ++i, object);
-    }
-    
-    if (count)
-        [self.view makeToast:@"Successfully saved data!" duration:2.0 position:@"bottom" image:@"check"];
-    else
-        [self.view makeToast:@"No data to save!" duration:2.0 position:@"bottom" image:@"red_x"];*/
+    [self upload:dataEncapsulator];
     
     [data release];
     [dataEncapsulator release];

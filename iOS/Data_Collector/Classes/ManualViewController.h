@@ -39,8 +39,8 @@
 - (void) upload:(NSMutableArray *)results;
 
 - (void) getDataFromFields;
-
 - (void) initLocations;
+- (BOOL) containsAcceptedCharacters:(NSString *)mString;
 
 - (void) fillDataFieldEntryList:(int)eid;
 - (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
