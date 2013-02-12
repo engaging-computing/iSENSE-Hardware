@@ -10,8 +10,10 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface ExperimentBlock : UIView {
+    @public
     NSString *experimentName;
     NSNumber *experimentNumber;
+    @protected
     UIImageView *background;
     SEL _selector;
     id _target;
@@ -20,7 +22,7 @@
 
 - (id)initWithFrame:(CGRect)frame experimentName:(NSString *)expName experimentNumber:(NSInteger)expNum target:(id)target action:(SEL)selector;
 - (void)switchToDarkImage:(bool)booleanSwitch;
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 //- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 
 @end
