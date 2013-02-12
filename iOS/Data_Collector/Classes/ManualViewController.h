@@ -8,9 +8,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <ZXingWidgetController.h>
+#import <QRCodeReader.h>
 
-
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
 	
 	// UI Elements
 	UIImageView *logo;
@@ -26,6 +28,12 @@
 	iSENSE *iapi;
 	NSString *sessionName;
 	NSNumber *expNum;
+    
+    NSString *qrResults;
+    ZXingWidgetController *widController;
+    
+    CLLocation *location;
+    CLLocationManager *locationManager;
     
 }
 
@@ -58,6 +66,7 @@
 
 // Non-UI Properties
 @property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic, copy) NSString *qrResults;
 @property (nonatomic, strong) NSNumber *expNum;
 
 @end
