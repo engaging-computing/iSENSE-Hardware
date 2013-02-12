@@ -34,6 +34,7 @@
 		399D31E1169DFFCB005F9D51 /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC61691FBC6009037A7 /* SplashView-iPad.xib */; };
 		399D31EA169E02DF005F9D51 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */; };
 		399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31EB169E02FD005F9D51 /* MainWindow.xib */; };
+		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
@@ -128,6 +129,8 @@
 		399BE2FA169F3878000F7B2E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources-iPad/MainWindow~ipad.xib"; sourceTree = "<group>"; };
 		399D31EB169E02FD005F9D51 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
+		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		39A9E9F816921EFA003D2EBB /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
 		39A9E9F916921EFA003D2EBB /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
 		39A9E9FA16921EFA003D2EBB /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
@@ -337,6 +340,15 @@
 			name = ExperimentBlock;
 			sourceTree = "<group>";
 		};
+		39A5AA7816C29555005862E7 /* ISenseSearch */ = {
+			isa = PBXGroup;
+			children = (
+				39A752EE16C18EFB00914BBE /* ISenseSearch.h */,
+				39A752EF16C18EFB00914BBE /* ISenseSearch.m */,
+			);
+			name = ISenseSearch;
+			sourceTree = "<group>";
+		};
 		39A9E9F616921EFA003D2EBB /* iSenseApiLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,6 +495,7 @@
 			isa = PBXGroup;
 			children = (
 				B72DC21716C19A2900999C7E /* HexColor */,
+				39A5AA7816C29555005862E7 /* ISenseSearch */,
 				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Toast */,
@@ -671,6 +684,7 @@
 				399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */,
 				39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */,
 				B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */,
+				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

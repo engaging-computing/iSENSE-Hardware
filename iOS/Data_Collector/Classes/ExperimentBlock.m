@@ -54,11 +54,11 @@
     [_target performSelector:_selector withObject:self];
 }
 
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+/*- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     NSLog(@"buttonClicked -- start");
 
     [self switchToDarkImage:true];
-}
+}*/
 /*
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     NSLog(@"buttonClicked -- released");
