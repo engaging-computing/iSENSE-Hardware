@@ -432,8 +432,7 @@ static iSENSE *_iSENSE = nil;
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *images = [[NSMutableArray new] autorelease];
-	
-	if (data) {
+    if (data && data != (id)[NSNull null]) {
 		NSEnumerator *e = [data objectEnumerator];
 		id object;
 		while (object = [e nextObject]) {
