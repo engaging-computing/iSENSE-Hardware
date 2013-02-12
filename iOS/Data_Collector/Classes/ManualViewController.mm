@@ -10,35 +10,32 @@
 #import "ManualViewController.h"
 #import "Data_CollectorAppDelegate.h"
 
-#import <ZXingWidgetController.h>
-#import <QRCodeReader.h>
-
-#define MENU_UPLOAD 0
-#define MENU_EXPERIMENT 1
-#define MENU_LOGIN 2
-#define EXPERIMENT_MANUAL_ENTRY 3
+#define MENU_UPLOAD                   0
+#define MENU_EXPERIMENT               1
+#define MENU_LOGIN                    2
+#define EXPERIMENT_MANUAL_ENTRY       3
 #define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define EXPERIMENT_SCAN_QR_CODE 5
+#define EXPERIMENT_SCAN_QR_CODE       5
 
-#define OPTION_CANCELED 0
+#define OPTION_CANCELED                0
 #define OPTION_ENTER_EXPERIMENT_NUMBER 1
-#define OPTION_BROWSE_EXPERIMENTS 2
-#define OPTION_SCAN_QR_CODE 3
+#define OPTION_BROWSE_EXPERIMENTS      2
+#define OPTION_SCAN_QR_CODE            3
 
-#define TYPE_DEFAULT 0
-#define TYPE_LATITUDE 1
+#define TYPE_DEFAULT   0
+#define TYPE_LATITUDE  1
 #define TYPE_LONGITUDE 2
-#define TYPE_TIME 3
+#define TYPE_TIME      3
 
-#define SCROLLVIEW_Y_OFFSET 50
-#define SCROLLVIEW_OBJ_INCR 30
+#define SCROLLVIEW_Y_OFFSET     50
+#define SCROLLVIEW_OBJ_INCR     30
 #define SCROLLVIEW_LABEL_HEIGHT 20
-#define SCROLLVIEW_TEXT_HEIGHT 35
+#define SCROLLVIEW_TEXT_HEIGHT  35
 
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName, expNum;
+@synthesize sessionName, expNum, qrResults;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -60,7 +57,7 @@
 	 iapi = [iSENSE getInstance];
      [iapi toggleUseDev:YES];
 	 
-	 [self initLocations]; //* make initLocations do something
+	 [self initLocations]; // TODO - make initLocations do something
 	 
      if ([iapi isLoggedIn]) {
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
@@ -71,7 +68,7 @@
      scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
      [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
      
-	 //* if exp. # is null, launch the dialog for choosing exp. num
+	 // TODO -  if exp. # is null, launch the dialog for choosing exp. num
      expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
      
      UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
@@ -85,16 +82,11 @@
  
 
 - (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc. that aren't in use.
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 
@@ -109,8 +101,20 @@
 	[scrollView release];
 	
 	[sessionName release];
+    [expNum release];
+    [qrResults release];
+    [widController release];
+    
+    [location release];
+    [locationManager release];
     
 	[super dealloc];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    location = [locations objectAtIndex:0];
+    NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    [self.view makeToast:[NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude]];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -119,9 +123,6 @@
 }
 
 - (IBAction) saveOnClick:(id)sender {
-	//* if exp is null, toast
-	//* else if sessionName's length = 0, .setError
-	//* else SavaDataTask
     [self getDataFromFields];
 }
 
@@ -237,15 +238,32 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:(id <ZXingDelegate>)self
-                                                                                        showCancel:YES
-                                                                                          OneDMode:NO];
-            QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-            
-            NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-            widController.readers = readers;
-            
-            [self presentModalViewController:widController animated:YES];
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+               
+                widController = [[ZXingWidgetController alloc] initWithDelegate:self
+                                                                     showCancel:YES
+                                                                       OneDMode:NO];
+                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
+                
+                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
+                widController.readers = readers;
+                
+                [self presentModalViewController:widController animated:YES];
+                [qRCodeReader release];
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
             
         }
         
@@ -266,17 +284,27 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            // fill view with stuffz!
+            // TODO - fill view with stuffz!
         }
         
     } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            // fill view with stuffz!
+            // TODO - fill view with stuffz!
         }
         
-    }
+    } // TODO - catch QR code stuffz!
+}
+
+- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+    qrResults = [result retain];
+    NSLog(@"Scanned: %@", qrResults);
+    [widController.view removeFromSuperview];
+}
+
+- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
+    [widController.view removeFromSuperview];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -379,7 +407,11 @@
 
 // TODO allows for GPS to be recorded
 - (void) initLocations {
-	
+	locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
 }
 
 - (void) fillDataFieldEntryList:(int)eid {
@@ -475,7 +507,7 @@
     return (int) Y_FIELDCONTENTS;
 }
 
-- (void) getDataFromFields { // TODO - this stuff
+- (void) getDataFromFields {
     NSMutableArray *data = [[NSMutableArray alloc] init];
     int count = 0;
     
@@ -483,13 +515,13 @@
         if ([element isKindOfClass:[UITextField class]]) {
             if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_lat"]]) {
                 
-                // get geospacial latitude co-ordinate, store it in data
-                [data addObject:@"9000"];
+                NSString *latitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
+                [data addObject:latitude];
 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_long"]]) {
                 
-                // get geospacial longitude co-ordinate, store it in data
-                [data addObject:@"9002"];
+                NSString *longitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
+                [data addObject:longitude];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_time"]]) {
                 
