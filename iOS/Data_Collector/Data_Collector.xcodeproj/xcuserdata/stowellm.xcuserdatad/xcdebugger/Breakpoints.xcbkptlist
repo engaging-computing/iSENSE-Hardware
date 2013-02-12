@@ -42,18 +42,5 @@
          landmarkName = "-setCurrentExp:"
          landmarkType = "5">
       </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Classes/DataSet.m"
-         timestampString = "381784478.436072"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "13"
-         endingLineNumber = "13"
-         landmarkName = "@synthesize type, name, desc, eid, readyForUpload, data, sid, city, state, country, addr;"
-         landmarkType = "19">
-      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
