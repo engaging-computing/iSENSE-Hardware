@@ -10,35 +10,32 @@
 #import "ManualViewController.h"
 #import "Data_CollectorAppDelegate.h"
 
-#import <ZXingWidgetController.h>
-#import <QRCodeReader.h>
-
-#define MENU_UPLOAD 0
-#define MENU_EXPERIMENT 1
-#define MENU_LOGIN 2
-#define EXPERIMENT_MANUAL_ENTRY 3
+#define MENU_UPLOAD                   0
+#define MENU_EXPERIMENT               1
+#define MENU_LOGIN                    2
+#define EXPERIMENT_MANUAL_ENTRY       3
 #define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define EXPERIMENT_SCAN_QR_CODE 5
+#define EXPERIMENT_SCAN_QR_CODE       5
 
-#define OPTION_CANCELED 0
+#define OPTION_CANCELED                0
 #define OPTION_ENTER_EXPERIMENT_NUMBER 1
-#define OPTION_BROWSE_EXPERIMENTS 2
-#define OPTION_SCAN_QR_CODE 3
+#define OPTION_BROWSE_EXPERIMENTS      2
+#define OPTION_SCAN_QR_CODE            3
 
-#define TYPE_DEFAULT 0
-#define TYPE_LATITUDE 1
+#define TYPE_DEFAULT   0
+#define TYPE_LATITUDE  1
 #define TYPE_LONGITUDE 2
-#define TYPE_TIME 3
+#define TYPE_TIME      3
 
-#define SCROLLVIEW_Y_OFFSET 50
-#define SCROLLVIEW_OBJ_INCR 30
+#define SCROLLVIEW_Y_OFFSET     50
+#define SCROLLVIEW_OBJ_INCR     30
 #define SCROLLVIEW_LABEL_HEIGHT 20
-#define SCROLLVIEW_TEXT_HEIGHT 35
+#define SCROLLVIEW_TEXT_HEIGHT  35
 
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName, expNum;
+@synthesize sessionName, expNum, qrResults;
 
 
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -50,6 +47,7 @@
 	 [self.sessionNameInput addTarget:self
 						  action:@selector(textFieldFinished:)
 				forControlEvents:UIControlEventEditingDidEndOnExit];
+     sessionNameInput.delegate = self;
 	 sessionNameInput.enablesReturnKeyAutomatically = NO;
 	 
 	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
@@ -59,7 +57,7 @@
 	 iapi = [iSENSE getInstance];
      [iapi toggleUseDev:YES];
 	 
-	 [self initLocations]; //* make initLocations do something
+	 [self initLocations]; // TODO - make initLocations do something
 	 
      if ([iapi isLoggedIn]) {
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
@@ -69,9 +67,14 @@
      
      scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
      [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	 
-	 //* if exp. # is null, launch the dialog for choosing exp. num
+     
+	 // TODO -  if exp. # is null, launch the dialog for choosing exp. num
      expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+     
+     UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+     tapGestureM.cancelsTouchesInView = NO;
+     [self.view addGestureRecognizer:tapGestureM];
+     [tapGestureM release];
      
  }
 
@@ -79,16 +82,11 @@
  
 
 - (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc. that aren't in use.
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 
@@ -103,14 +101,28 @@
 	[scrollView release];
 	
 	[sessionName release];
+    [expNum release];
+    [qrResults release];
+    [widController release];
+    
+    [location release];
+    [locationManager release];
     
 	[super dealloc];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    location = [locations objectAtIndex:0];
+    NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    [self.view makeToast:[NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude]];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
 - (IBAction) saveOnClick:(id)sender {
-	//* if exp is null, toast
-	//* else if sessionName's length = 0, .setError
-	//* else SavaDataTask
     [self getDataFromFields];
 }
 
@@ -217,6 +229,7 @@
             
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             [message show];
             [message release];
             
@@ -225,15 +238,32 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:(id <ZXingDelegate>)self
-                                                                                        showCancel:YES
-                                                                                          OneDMode:NO];
-            QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-            
-            NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-            widController.readers = readers;
-            
-            [self presentModalViewController:widController animated:YES];
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+               
+                widController = [[ZXingWidgetController alloc] initWithDelegate:self
+                                                                     showCancel:YES
+                                                                       OneDMode:NO];
+                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
+                
+                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
+                widController.readers = readers;
+                
+                [self presentModalViewController:widController animated:YES];
+                [qRCodeReader release];
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
             
         }
         
@@ -254,26 +284,56 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            // fill view with stuffz!
+            // TODO - fill view with stuffz!
         }
         
     } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            // fill view with stuffz!
+            // TODO - fill view with stuffz!
         }
         
-    }
+    } // TODO - catch QR code stuffz!
 }
 
-// TODO - make this actually restrict character limits
+- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+    qrResults = [result retain];
+    NSLog(@"Scanned: %@", qrResults);
+    [widController.view removeFromSuperview];
+}
+
+- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
+    [widController.view removeFromSuperview];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    if (![self containsAcceptedCharacters:string])
+        return NO;
+    
 	if (textField == sessionNameInput) {
+        
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
-		return (newLength > 25) ? NO : YES;
-	}
-	return YES;
+		return (newLength > 52) ? NO : YES;
+        
+	} else {
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        if (newLength > 25)
+            return NO;
+        else
+            return YES;
+        
+    }
+    return YES;
+}
+
+- (BOOL) containsAcceptedCharacters:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+        [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber getString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
@@ -298,23 +358,67 @@
                    image:@"red_x"];
 }
 
-- (void) upload {
-	[self.view makeToast:@"Upload!"
-				duration:2.0
-				position:@"bottom"
-                   image:@"check"];
-	
+- (void) upload:(NSMutableArray *)results {
+    if ([iapi getCurrentExp] == 0) {
+        [self.view makeToast:@"Please Enter an Experiment # First"
+                    duration:3.5
+                    position:@"bottom"
+                       image:@"red_x"];
+        return;
+    }
+    if (!([iapi isLoggedIn])) {
+        [self.view makeToast:@"Please Login First"
+                    duration:3.5
+                    position:@"bottom"
+                       image:@"red_x"];
+        return;
+    }
+    if ([[sessionNameInput text] isEqualToString:@""]) {
+        [self.view makeToast:@"Please Enter a Session Name First"
+                    duration:3.5
+                    position:@"bottom"
+                       image:@"red_x"];
+        return;
+    }
+    
+    NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
+    NSString *description = [[[NSString alloc] initWithString:@"Manual data entry from the iOS Data Collector application."] autorelease];
+    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:[iapi getCurrentExp]] autorelease];
+    NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+    NSError  *error = nil;
+    NSData   *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+
+    
+    if ([iapi putSessionData:dataJSON forSession:session_num inExperiment:exp_num]) {
+        [self.view makeToast:@"Upload Success!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"check"];
+    } else {
+        [self.view makeToast:@"Upload Failed!"
+                    duration:2.0
+                    position:@"bottom"
+                       image:@"red_x"];
+    }
 }
 
 // TODO allows for GPS to be recorded
 - (void) initLocations {
-	
+	locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
 }
 
 - (void) fillDataFieldEntryList:(int)eid {
     
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
+    NSLog(@"eid = %d", eid);
     NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
     int objNumber = 0;
     int scrollHeight = 0;
@@ -339,6 +443,14 @@
     scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
     CGFloat scrollWidth = scrollView.frame.size.width;
     [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
+   
+    if (scrollView.subviews.count == 0) {
+        UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, 730, SCROLLVIEW_LABEL_HEIGHT)];
+        noFields.text = @"Invalid experiment.";
+        noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
+        noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
+        [scrollView addSubview: noFields];
+    }
     
 }
 
@@ -360,6 +472,7 @@
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
+    fieldContents.delegate = self;
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
     
@@ -382,10 +495,11 @@
         // TOOO - restrict amount of chars to 60
         // TODO - restrict digits
     } else {
-        fieldContents.keyboardType = UIKeyboardTypePhonePad;
+        fieldContents.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         // TODO - restrict # to 20 chars
         // TODO - restrict nums
     }
+    [fieldContents setReturnKeyType:UIReturnKeyDone];
     
     [scrollView addSubview:fieldName];
     [scrollView addSubview:fieldContents];
@@ -393,44 +507,55 @@
     return (int) Y_FIELDCONTENTS;
 }
 
-- (void) getDataFromFields { // TODO - this stuff
+- (void) getDataFromFields {
     NSMutableArray *data = [[NSMutableArray alloc] init];
     int count = 0;
     
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UITextField class]]) {
             if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_lat"]]) {
-                // get geospacial latitude co-ordinate, store it in data
-                NSLog(@"lol you found latitude!");
+                
+                NSString *latitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
+                [data addObject:latitude];
+
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_long"]]) {
-                // get geospacial longitude co-ordinate, store it in data
-                NSLog(@"ROFL! I'm lonnggggitttudeeee!");
+                
+                NSString *longitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
+                [data addObject:longitude];
+                
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_time"]]) {
+                
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
                 NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
                 [data addObject:currentTime];
-                NSLog(@"Trololol, heyheyheyhey - TIME!!! = %@", currentTime);
+                
             } else {
-                NSLog(@"... I'm borrrinnnggggg ...");
+                
                 if ([((UITextField *) element).text length] != 0)
                     [data addObject:((UITextField *) element).text];
                 else
                     [data addObject:@""];
+                
             }
         }
         count++;
     }
     
-    // call some upload function
-    
-    NSLog(@"Count = %d", count);
-    
-    if (count)
-        [self.view makeToast:@"Successfully saved data!" duration:2.0 position:@"bottom" image:@"check"];
-    else
-        [self.view makeToast:@"No data to save!" duration:2.0 position:@"bottom" image:@"red_x"];
+    NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
+    [dataEncapsulator addObject:data];
+    [self upload:dataEncapsulator];
     
     [data release];
+    [dataEncapsulator release];
+}
+
+- (void)hideKeyboard {
+    [sessionNameInput resignFirstResponder];
+    for (UIView *element in scrollView.subviews) {
+        if ([element isKindOfClass:[UITextField class]]) {
+            [element resignFirstResponder];
+        }
+    }
 }
 
 @end

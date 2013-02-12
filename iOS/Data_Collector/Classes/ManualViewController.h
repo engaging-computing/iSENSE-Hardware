@@ -8,9 +8,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <ZXingWidgetController.h>
+#import <QRCodeReader.h>
 
-
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
 	
 	// UI Elements
 	UIImageView *logo;
@@ -27,6 +29,12 @@
 	NSString *sessionName;
 	NSNumber *expNum;
     
+    NSString *qrResults;
+    ZXingWidgetController *widController;
+    
+    CLLocation *location;
+    CLLocationManager *locationManager;
+    
 }
 
 - (IBAction) saveOnClick:(id)sender;
@@ -36,14 +44,15 @@
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
-- (void) upload;
+- (void) upload:(NSMutableArray *)results;
 
 - (void) getDataFromFields;
-
 - (void) initLocations;
+- (BOOL) containsAcceptedCharacters:(NSString *)mString;
 
 - (void) fillDataFieldEntryList:(int)eid;
 - (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (void) hideKeyboard;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
@@ -57,6 +66,7 @@
 
 // Non-UI Properties
 @property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic, copy) NSString *qrResults;
 @property (nonatomic, strong) NSNumber *expNum;
 
 @end
