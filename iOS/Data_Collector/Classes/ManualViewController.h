@@ -18,7 +18,7 @@
 	UIImageView *logo;
 	UILabel *loggedInAsLabel;
 	UILabel *expNumLabel;
-	UIButton *save;
+	UIButton *upload;
 	UIButton *clear;
 	UITextField *sessionNameInput;
 	UIButton *media;
@@ -37,7 +37,7 @@
     
 }
 
-- (IBAction) saveOnClick:(id)sender;
+- (IBAction) uploadOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
@@ -58,7 +58,7 @@
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
 @property (nonatomic, retain) IBOutlet UILabel *loggedInAsLabel;
 @property (nonatomic, retain) IBOutlet UILabel *expNumLabel;
-@property (nonatomic, retain) IBOutlet UIButton *save;
+@property (nonatomic, retain) IBOutlet UIButton *upload;
 @property (nonatomic, retain) IBOutlet UIButton *clear;
 @property (nonatomic, retain) IBOutlet UITextField *sessionNameInput;
 @property (nonatomic, retain) IBOutlet UIButton *media;
