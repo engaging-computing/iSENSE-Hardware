@@ -51,7 +51,7 @@
 		52572B841691F742009037A7 /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7B1691F742009037A7 /* red_button.png */; };
 		52572B851691F742009037A7 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7C1691F742009037A7 /* logo_green.png */; };
 		52572B871691F74C009037A7 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 52572B861691F74C009037A7 /* button-37.wav */; };
-		52572B8B1691F77D009037A7 /* SplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B891691F77D009037A7 /* SplashView.m */; };
+		52572B8B1691F77D009037A7 /* SplashView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B891691F77D009037A7 /* SplashView.mm */; };
 		52572B8C1691F77D009037A7 /* SplashView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B8A1691F77D009037A7 /* SplashView.xib */; };
 		52572B901691F788009037A7 /* AboutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B8E1691F788009037A7 /* AboutView.m */; };
 		52572B911691F788009037A7 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B8F1691F788009037A7 /* AboutView.xib */; };
@@ -60,7 +60,6 @@
 		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UILongClickButton.m */; };
-		B72DC21616C18D2700999C7E /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21516C18D2700999C7E /* DataSet.m */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -69,6 +68,7 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,7 +159,7 @@
 		52572B7C1691F742009037A7 /* logo_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_green.png; sourceTree = "<group>"; };
 		52572B861691F74C009037A7 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		52572B881691F77D009037A7 /* SplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashView.h; sourceTree = "<group>"; };
-		52572B891691F77D009037A7 /* SplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashView.m; sourceTree = "<group>"; };
+		52572B891691F77D009037A7 /* SplashView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SplashView.mm; sourceTree = "<group>"; };
 		52572B8A1691F77D009037A7 /* SplashView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SplashView.xib; path = Classes/SplashView.xib; sourceTree = "<group>"; };
 		52572B8D1691F788009037A7 /* AboutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutView.h; sourceTree = "<group>"; };
 		52572B8E1691F788009037A7 /* AboutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutView.m; sourceTree = "<group>"; };
@@ -174,8 +174,6 @@
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UILongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
-		B72DC21416C18D2700999C7E /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
-		B72DC21516C18D2700999C7E /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
@@ -186,6 +184,7 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */,
 				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
 				B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */,
 				B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */,
@@ -272,6 +272,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7F534FE16CA941F007FBFCA /* CoreLocation.framework */,
 				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
 				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
 				B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */,
@@ -463,7 +464,7 @@
 			isa = PBXGroup;
 			children = (
 				52572B881691F77D009037A7 /* SplashView.h */,
-				52572B891691F77D009037A7 /* SplashView.m */,
+				52572B891691F77D009037A7 /* SplashView.mm */,
 				52572B8D1691F788009037A7 /* AboutView.h */,
 				52572B8E1691F788009037A7 /* AboutView.m */,
 				52572B921691F796009037A7 /* GuideView.h */,
@@ -493,12 +494,12 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				B72DC21716C19A2900999C7E /* HexColor */,
 <<<<<<< HEAD
 				39A5AA7816C29555005862E7 /* ISenseSearch */,
-=======
-				B72DC21716C19A2900999C7E /* HexColor */,
->>>>>>> upstream/master
 				B72DC21316C18D0700999C7E /* DataSet */,
+=======
+>>>>>>> upstream/master
 				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Toast */,
@@ -526,15 +527,6 @@
 				52572BEF1691FD71009037A7 /* UILongClickButton.m */,
 			);
 			name = UILongClickButton;
-			sourceTree = "<group>";
-		};
-		B72DC21316C18D0700999C7E /* DataSet */ = {
-			isa = PBXGroup;
-			children = (
-				B72DC21416C18D2700999C7E /* DataSet.h */,
-				B72DC21516C18D2700999C7E /* DataSet.m */,
-			);
-			name = DataSet;
 			sourceTree = "<group>";
 		};
 		B72DC21716C19A2900999C7E /* HexColor */ = {
@@ -675,7 +667,7 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* Data_CollectorAppDelegate.m in Sources */,
-				52572B8B1691F77D009037A7 /* SplashView.m in Sources */,
+				52572B8B1691F77D009037A7 /* SplashView.mm in Sources */,
 				52572B901691F788009037A7 /* AboutView.m in Sources */,
 				52572B951691F796009037A7 /* GuideView.m in Sources */,
 				52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */,
@@ -695,12 +687,8 @@
 				399BE2F9169F1D1F000F7B2E /* AutomaticViewController.m in Sources */,
 				399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */,
 				39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */,
-				B72DC21616C18D2700999C7E /* DataSet.m in Sources */,
-<<<<<<< HEAD
-				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
-=======
 				B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */,
->>>>>>> upstream/master
+				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
