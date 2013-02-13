@@ -9,17 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "ExperimentBlock.h"
 #import "ISenseSearch.h"
+#import "StringGrabber.h"
 
 @interface ExperimentBrowseViewController : UIViewController <UISearchBarDelegate, UIScrollViewDelegate> {
     iSENSE *isenseAPI;
     UIScrollView *scrollView;
-    UIActivityIndicatorView *spinner;
+    UIActivityIndicatorView *experimentSpinner;
+    UIActivityIndicatorView *experimentInfoSpinner;
     NSThread *loadExperimentThread;
+    NSThread *experimentInfoThread;
     UIView *experimentInfo;
+    UIButton *chooseExperiment;
 }
 
 - (IBAction)onExperimentButtonClicked:(id)caller;
 - (void) updateScrollView:(ISenseSearch *)iSS;
+- (void) loadExperimentInfomationForIPad;
 
 @property (nonatomic, assign) int currentPage;
 @property (nonatomic, assign) NSString *currentQuery;

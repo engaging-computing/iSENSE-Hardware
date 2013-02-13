@@ -24,11 +24,27 @@
 - (void)loadView {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - 44)];
         self.view.backgroundColor = [UIColor blackColor];
+        
+        // Prepare ExperimentInfo Frame
+        experimentInfo = [[UIView alloc] initWithFrame:CGRectMake(320, 50, 433, self.view.bounds.size.height - 100)];
+        experimentInfo.backgroundColor = [UIColor clearColor];
+        experimentInfo.layer.borderWidth = 3;
+        experimentInfo.layer.borderColor = [[UIColor whiteColor] CGColor];
+        experimentInfo.hidden = YES;
+        [self.view addSubview:experimentInfo];
+        experimentInfoSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
+        
+        // Prepare choose experiment button
+        chooseExperiment = [[UIButton alloc] initWithFrame:CGRectMake(20, self.view.bounds.size.height - 160, 433 - 40, 50)];
+        chooseExperiment.backgroundColor = [UIColor grayColor];
+        [chooseExperiment setTitle:[StringGrabber getString:@"choose_experiment"] forState:UIControlStateNormal];
+
     } else {
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - 44)];
         self.view.backgroundColor = [UIColor blackColor];
     }
     
@@ -45,33 +61,23 @@
     }
     searchBarTextField.enablesReturnKeyAutomatically = NO;
     
-    // Prepare spinner for loading at bottom
-    UIView *bottomSpinnerBlock = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 180, 320, 180)];
-    [self setCenter:bottomSpinnerBlock];
-    [bottomSpinnerBlock addSubview:spinner];
+    // Prepare experimentSpinner for loading at bottom
+    UIView *bottomSpinnerBlock = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 60, 320, 40)];
     [self.view addSubview:bottomSpinnerBlock];
+    experimentSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [bottomSpinnerBlock addSubview:experimentSpinner];
+    [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
     
     // Prepare scrollview
-    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 320, self.view.bounds.size.height - 160)];
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 320, self.view.bounds.size.height - 120)];
     scrollHeight = scrollView.bounds.size.height;
     scrollView.delaysContentTouches = NO;
     scrollView.delegate = self;
     [self.view addSubview:scrollView];
     
-    // Prepare Frame
-    experimentInfo = [[UIView alloc] initWithFrame:CGRectMake(320, 50, 433, self.view.bounds.size.height - 100)];
-    experimentInfo.backgroundColor = [UIColor clearColor];
-    experimentInfo.layer.borderWidth = 3;
-    experimentInfo.layer.borderColor = [[UIColor whiteColor] CGColor];
-    experimentInfo.hidden = YES;
-    
     // Prepare rapi
     isenseAPI = [iSENSE getInstance];
     [isenseAPI toggleUseDev:YES];
-
-    
-    // Start spinner
-    [spinner startAnimating];
     
     // Load the first 10 experiments.
    loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:[[ISenseSearch alloc] init]];
@@ -123,53 +129,86 @@
 
 - (IBAction)onExperimentButtonClicked:(id)caller {
     [caller switchToDarkImage:TRUE];
-    if (lastExperimentClicked && !(caller == lastExperimentClicked)) [lastExperimentClicked switchToDarkImage:FALSE];
     
-    lastExperimentClicked = caller;
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        // Use extra space for Experiment Data
-        experimentInfo.hidden = NO;
-        [[experimentInfo subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        
-        NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked->experimentNumber];
-        NSLog(@"Image count:%d", imageArray.count);
-        if (imageArray.count) {
-            Image *firstImage = imageArray[0];
-            NSURL *url = [NSURL URLWithString:firstImage.provider_url];
-            NSData *data = [NSData dataWithContentsOfURL:url];
-            UIImage *image = [UIImage imageWithData:data];
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 433, 433)];
-            imageView.image = image;
-            imageView.contentMode = UIViewContentModeScaleAspectFit;
-            [experimentInfo addSubview:imageView];
+    if (!(caller == lastExperimentClicked)) {
+        if (lastExperimentClicked) {
+            [lastExperimentClicked switchToDarkImage:FALSE];
+        } else  {
+            experimentInfo.hidden = NO;
         }
         
-        [self.view addSubview:experimentInfo];
+        lastExperimentClicked = caller;
+        
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            
+            if ([experimentInfoThread isExecuting])
+                [experimentInfoThread cancel];
+            
+            [[experimentInfo subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+            [experimentInfo addSubview:experimentInfoSpinner];
+            [experimentInfoSpinner startAnimating];
+            
+            experimentInfoThread = [[NSThread alloc] initWithTarget:self selector:@selector(loadExperimentInfomationForIPad) object:nil];
+            [experimentInfoThread start];
+        }
     }
-    
 }
 
-// Sets our spinner to the middle of the bottom block.
-- (void)setCenter:(UIView *)view {
-    spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [view addSubview:spinner];
+// Extra experiment information for loading in experimentInfoThread
+- (void) loadExperimentInfomationForIPad {
+    
+    NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked->experimentNumber];
+    NSLog(@"Image count:%d", imageArray.count);
+    if (imageArray.count) {
+        // Fetch Images
+        Image *firstImage = imageArray[0];
+        NSURL *url = [NSURL URLWithString:firstImage.provider_url];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        UIImage *image = [UIImage imageWithData:data];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 110, 433, 433)];
+        imageView.image = image;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        
+        // Add image to experimentInfo
+        [experimentInfo addSubview:imageView];
+    }
+    
+    // Set experimentTitle
+    UILabel *experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 433 - 40, 100)];
+    experimentTitle.backgroundColor = [UIColor clearColor];
+    experimentTitle.text = lastExperimentClicked->experimentName;
+    experimentTitle.textAlignment = NSTextAlignmentCenter;
+    experimentTitle.textColor = [UIColor whiteColor];
+    experimentTitle.numberOfLines = 0;
+    experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
+    
+    // Update experimentInfo
+    [experimentInfo addSubview:experimentTitle];
+    [experimentInfo addSubview:chooseExperiment];
+
+    
+    [experimentInfoSpinner stopAnimating];
+
+}
+
+// Sets our experimentSpinner to the middle of the bottom block.
+- (void)setCenter:(UIView *)view forSpinner:(UIActivityIndicatorView *)newSpinner {
     CGSize boundsSize = view.bounds.size;
-    CGRect frameToCenter = spinner.frame;
-    // center horizontally
+    CGRect frameToCenter = newSpinner.frame;
+    /* Center horizontally */
     if (frameToCenter.size.width < boundsSize.width)
         frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
     else
         frameToCenter.origin.x = 0;
     
-    // center vertically
+    /* Center vertically */
     if (frameToCenter.size.height < boundsSize.height)
         frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
     else
         frameToCenter.origin.y = 0;
     
-    spinner.frame = frameToCenter;
-    NSLog(@"The spinner is currently at %f, %f.", spinner.center.x, spinner.center.y);
+    newSpinner.frame = frameToCenter;
+    NSLog(@"The newSpinner is currently at %f, %f.", newSpinner.center.x, newSpinner.center.y);
 }
 
 // Update scrollView by appending or making a new search on a separate thread.
@@ -212,13 +251,13 @@
         [self updateScrollView:iSS];
     }
     
-    [spinner stopAnimating];
+    [experimentSpinner stopAnimating];
 }
 
 // Check if scrollview has reached bottom
 - (void)scrollViewDidScroll:(UIScrollView *)scroller{
     if (scroller.contentOffset.y == scroller.contentSize.height - scroller.frame.size.height) {
-        [spinner startAnimating];
+        [experimentSpinner startAnimating];
         
         if ([loadExperimentThread isExecuting])
             [loadExperimentThread cancel];
