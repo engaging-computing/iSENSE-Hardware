@@ -14,6 +14,8 @@
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		39088250169B325A00BEE04F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3908824F169B325A00BEE04F /* Default-568h@2x.png */; };
 		39088254169B689F00BEE04F /* UIImageTint.m in Sources */ = {isa = PBXBuildFile; fileRef = 39088253169B689F00BEE04F /* UIImageTint.m */; };
+		391B093D16BAE99700FB8DF3 /* button_experiment_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */; };
+		391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */; };
 		39521F2916949AA60076A9CA /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2016949AA60076A9CA /* iSENSE.m */; };
 		39521F2A16949AA60076A9CA /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2216949AA60076A9CA /* Experiment.m */; };
 		39521F2B16949AA60076A9CA /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2316949AA60076A9CA /* ExperimentField.m */; };
@@ -32,6 +34,7 @@
 		399D31E1169DFFCB005F9D51 /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC61691FBC6009037A7 /* SplashView-iPad.xib */; };
 		399D31EA169E02DF005F9D51 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */; };
 		399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31EB169E02FD005F9D51 /* MainWindow.xib */; };
+		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
@@ -48,7 +51,7 @@
 		52572B841691F742009037A7 /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7B1691F742009037A7 /* red_button.png */; };
 		52572B851691F742009037A7 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7C1691F742009037A7 /* logo_green.png */; };
 		52572B871691F74C009037A7 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 52572B861691F74C009037A7 /* button-37.wav */; };
-		52572B8B1691F77D009037A7 /* SplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B891691F77D009037A7 /* SplashView.m */; };
+		52572B8B1691F77D009037A7 /* SplashView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B891691F77D009037A7 /* SplashView.mm */; };
 		52572B8C1691F77D009037A7 /* SplashView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B8A1691F77D009037A7 /* SplashView.xib */; };
 		52572B901691F788009037A7 /* AboutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572B8E1691F788009037A7 /* AboutView.m */; };
 		52572B911691F788009037A7 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B8F1691F788009037A7 /* AboutView.xib */; };
@@ -56,7 +59,8 @@
 		52572B961691F796009037A7 /* GuideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572B941691F796009037A7 /* GuideView.xib */; };
 		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
-		52572BF01691FD71009037A7 /* UIPLongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UIPLongClickButton.m */; };
+		52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UILongClickButton.m */; };
+		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B74A1F0E16B8641E00F0E9EE /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */; };
@@ -64,6 +68,7 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +107,8 @@
 		3908824F169B325A00BEE04F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		39088252169B689F00BEE04F /* UIImageTint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageTint.h; sourceTree = "<group>"; };
 		39088253169B689F00BEE04F /* UIImageTint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageTint.m; sourceTree = "<group>"; };
+		391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_experiment_clean.png; path = "Resources-iPad/button_experiment_clean.png"; sourceTree = "<group>"; };
+		391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_experiment_dark.png; path = "Resources-iPad/button_experiment_dark.png"; sourceTree = "<group>"; };
 		39521F2016949AA60076A9CA /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
 		39521F2216949AA60076A9CA /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
 		39521F2316949AA60076A9CA /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
@@ -122,6 +129,8 @@
 		399BE2FA169F3878000F7B2E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources-iPad/MainWindow~ipad.xib"; sourceTree = "<group>"; };
 		399D31EB169E02FD005F9D51 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
+		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		39A9E9F816921EFA003D2EBB /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
 		39A9E9F916921EFA003D2EBB /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
 		39A9E9FA16921EFA003D2EBB /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
@@ -150,7 +159,7 @@
 		52572B7C1691F742009037A7 /* logo_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_green.png; sourceTree = "<group>"; };
 		52572B861691F74C009037A7 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		52572B881691F77D009037A7 /* SplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashView.h; sourceTree = "<group>"; };
-		52572B891691F77D009037A7 /* SplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashView.m; sourceTree = "<group>"; };
+		52572B891691F77D009037A7 /* SplashView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SplashView.mm; sourceTree = "<group>"; };
 		52572B8A1691F77D009037A7 /* SplashView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SplashView.xib; path = Classes/SplashView.xib; sourceTree = "<group>"; };
 		52572B8D1691F788009037A7 /* AboutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutView.h; sourceTree = "<group>"; };
 		52572B8E1691F788009037A7 /* AboutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutView.m; sourceTree = "<group>"; };
@@ -163,8 +172,10 @@
 		52572B9E1691F816009037A7 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		52572BC61691FBC6009037A7 /* SplashView-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "SplashView-iPad.xib"; sourceTree = "<group>"; };
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
-		52572BEF1691FD71009037A7 /* UIPLongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPLongClickButton.m; sourceTree = "<group>"; };
+		52572BEF1691FD71009037A7 /* UILongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
+		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
 		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
 		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -173,6 +184,7 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */,
 				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
 				B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */,
 				B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */,
@@ -259,6 +272,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7F534FE16CA941F007FBFCA /* CoreLocation.framework */,
 				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
 				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
 				B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */,
@@ -326,6 +340,15 @@
 			name = ExperimentBlock;
 			sourceTree = "<group>";
 		};
+		39A5AA7816C29555005862E7 /* ISenseSearch */ = {
+			isa = PBXGroup;
+			children = (
+				39A752EE16C18EFB00914BBE /* ISenseSearch.h */,
+				39A752EF16C18EFB00914BBE /* ISenseSearch.m */,
+			);
+			name = ISenseSearch;
+			sourceTree = "<group>";
+		};
 		39A9E9F616921EFA003D2EBB /* iSenseApiLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,6 +404,8 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */,
+				391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */,
 				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
 				397DD9FB169761C90065DBD3 /* bluecheck.png */,
 				397DD9FC169761C90065DBD3 /* red_x.png */,
@@ -439,7 +464,7 @@
 			isa = PBXGroup;
 			children = (
 				52572B881691F77D009037A7 /* SplashView.h */,
-				52572B891691F77D009037A7 /* SplashView.m */,
+				52572B891691F77D009037A7 /* SplashView.mm */,
 				52572B8D1691F788009037A7 /* AboutView.h */,
 				52572B8E1691F788009037A7 /* AboutView.m */,
 				52572B921691F796009037A7 /* GuideView.h */,
@@ -469,6 +494,8 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				B72DC21716C19A2900999C7E /* HexColor */,
+				39A5AA7816C29555005862E7 /* ISenseSearch */,
 				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Toast */,
@@ -493,9 +520,18 @@
 			isa = PBXGroup;
 			children = (
 				52572BEE1691FD71009037A7 /* UILongClickButton.h */,
-				52572BEF1691FD71009037A7 /* UIPLongClickButton.m */,
+				52572BEF1691FD71009037A7 /* UILongClickButton.m */,
 			);
 			name = UILongClickButton;
+			sourceTree = "<group>";
+		};
+		B72DC21716C19A2900999C7E /* HexColor */ = {
+			isa = PBXGroup;
+			children = (
+				B72DC21816C19A4F00999C7E /* HexColor.h */,
+				B72DC21916C19A4F00999C7E /* HexColor.m */,
+			);
+			name = HexColor;
 			sourceTree = "<group>";
 		};
 		B74A1EEC16B8623B00F0E9EE /* ZXing */ = {
@@ -613,6 +649,8 @@
 				399D31E1169DFFCB005F9D51 /* SplashView-iPad.xib in Resources */,
 				399D31EA169E02DF005F9D51 /* MainWindow~ipad.xib in Resources */,
 				399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */,
+				391B093D16BAE99700FB8DF3 /* button_experiment_clean.png in Resources */,
+				391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,11 +663,11 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* Data_CollectorAppDelegate.m in Sources */,
-				52572B8B1691F77D009037A7 /* SplashView.m in Sources */,
+				52572B8B1691F77D009037A7 /* SplashView.mm in Sources */,
 				52572B901691F788009037A7 /* AboutView.m in Sources */,
 				52572B951691F796009037A7 /* GuideView.m in Sources */,
 				52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */,
-				52572BF01691FD71009037A7 /* UIPLongClickButton.m in Sources */,
+				52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */,
 				39521F2916949AA60076A9CA /* iSENSE.m in Sources */,
 				39521F2A16949AA60076A9CA /* Experiment.m in Sources */,
 				39521F2B16949AA60076A9CA /* ExperimentField.m in Sources */,
@@ -645,6 +683,8 @@
 				399BE2F9169F1D1F000F7B2E /* AutomaticViewController.m in Sources */,
 				399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */,
 				39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */,
+				B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */,
+				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,7 +719,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
+					"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
@@ -705,7 +746,8 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
+					"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;

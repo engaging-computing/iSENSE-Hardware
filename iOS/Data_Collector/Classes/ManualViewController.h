@@ -8,15 +8,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <ZXingWidgetController.h>
+#import <QRCodeReader.h>
 
-
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
 	
 	// UI Elements
 	UIImageView *logo;
 	UILabel *loggedInAsLabel;
 	UILabel *expNumLabel;
-	UIButton *save;
+	UIButton *upload;
 	UIButton *clear;
 	UITextField *sessionNameInput;
 	UIButton *media;
@@ -27,29 +29,36 @@
 	NSString *sessionName;
 	NSNumber *expNum;
     
+    NSString *qrResults;
+    ZXingWidgetController *widController;
+    
+    CLLocation *location;
+    CLLocationManager *locationManager;
+    
 }
 
-- (IBAction) saveOnClick:(id)sender;
+- (IBAction) uploadOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
-- (void) upload;
+- (void) upload:(NSMutableArray *)results;
 
-- (void) getDataFromExpNumber;
-
+- (void) getDataFromFields;
 - (void) initLocations;
+- (BOOL) containsAcceptedCharacters:(NSString *)mString;
 
 - (void) fillDataFieldEntryList:(int)eid;
-- (void) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (void) hideKeyboard;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView *logo;
 @property (nonatomic, retain) IBOutlet UILabel *loggedInAsLabel;
 @property (nonatomic, retain) IBOutlet UILabel *expNumLabel;
-@property (nonatomic, retain) IBOutlet UIButton *save;
+@property (nonatomic, retain) IBOutlet UIButton *upload;
 @property (nonatomic, retain) IBOutlet UIButton *clear;
 @property (nonatomic, retain) IBOutlet UITextField *sessionNameInput;
 @property (nonatomic, retain) IBOutlet UIButton *media;
@@ -57,6 +66,7 @@
 
 // Non-UI Properties
 @property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic, copy) NSString *qrResults;
 @property (nonatomic, strong) NSNumber *expNum;
 
 @end

@@ -39,8 +39,7 @@ static iSENSE *_iSENSE = nil;
 }
 
 +(iSENSE*)getInstance {
-	@synchronized([iSENSE class])
-	{
+	@synchronized([iSENSE class]) {
 		if (!_iSENSE)
 			[[self alloc] init];
         
@@ -52,8 +51,7 @@ static iSENSE *_iSENSE = nil;
 
 // Called internal to handle requests for new object
 +(id)alloc {
-	@synchronized([iSENSE class])
-	{
+	@synchronized([iSENSE class]) {
 		NSAssert(_iSENSE == nil, @"Attempted to allocate a second instance of a singleton.");
 		_iSENSE = [super alloc];
 		return _iSENSE;
@@ -69,7 +67,9 @@ static iSENSE *_iSENSE = nil;
         session_key = [[NSString alloc] init];
         username = [[NSString alloc] init];
         uid = [[NSNumber alloc] initWithInt:-1];
+        currentExp = [[[NSNumber alloc] initWithInt:0] retain];
         
+        //currentExp = nil;
         username = nil;
         session_key = nil;
         uid = nil;
@@ -432,8 +432,7 @@ static iSENSE *_iSENSE = nil;
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *images = [[NSMutableArray new] autorelease];
-	
-	if (data) {
+    if (data && data != (id)[NSNull null]) {
 		NSEnumerator *e = [data objectEnumerator];
 		id object;
 		while (object = [e nextObject]) {
@@ -489,7 +488,14 @@ static iSENSE *_iSENSE = nil;
 	NSMutableArray *fields = [[NSMutableArray new] autorelease];
 	
 	if (data) {
-		NSEnumerator *e = [data objectEnumerator];
+        NSEnumerator *e;
+        @try {
+            e = [data objectEnumerator];
+        }
+        @catch (NSException *exception) {
+            return fields;
+        }
+
 		id object;
 		while (object = [e nextObject]) {
 			ExperimentField *expField = [[ExperimentField new] autorelease];
@@ -596,6 +602,23 @@ static iSENSE *_iSENSE = nil;
 	}
 }
 
+// Use this method to set the current experiment number
+- (void) setCurrentExp:(int)expNum {
+    
+    currentExp = [NSNumber numberWithInt:expNum];
+    [currentExp retain];
+}
+
+// Use this method to get the current experiment number
+- (int) getCurrentExp {
+    if (!currentExp)
+        return 0;
+    
+    if (currentExp == nil)
+        return 0;
+    
+    return currentExp.intValue;
+}
 
 
 @end
