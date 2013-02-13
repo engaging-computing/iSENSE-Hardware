@@ -34,7 +34,7 @@
 
 @implementation ManualViewController
 
-@synthesize logo, loggedInAsLabel, expNumLabel, save, clear, sessionNameInput, media, scrollView;
+@synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView;
 @synthesize sessionName, expNum, qrResults;
 
 
@@ -45,10 +45,11 @@
 	 [self.view sendSubviewToBack:scrollView];
 	 
 	 [self.sessionNameInput addTarget:self
-						  action:@selector(textFieldFinished:)
-				forControlEvents:UIControlEventEditingDidEndOnExit];
+                               action:@selector(textFieldFinished:)
+                     forControlEvents:UIControlEventEditingDidEndOnExit];
      sessionNameInput.delegate = self;
 	 sessionNameInput.enablesReturnKeyAutomatically = NO;
+     sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
 	 
 	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
 	 self.navigationItem.rightBarButtonItem = menuButton;
@@ -94,7 +95,7 @@
 	[logo release];
 	[loggedInAsLabel release];
 	[expNumLabel release];
-	[save release];
+	[upload release];
 	[clear release];
 	[sessionNameInput release];
 	[media release];
@@ -122,7 +123,7 @@
     return YES;
 }
 
-- (IBAction) saveOnClick:(id)sender {
+- (IBAction) uploadOnClick:(id)sender {
     [self getDataFromFields];
 }
 
