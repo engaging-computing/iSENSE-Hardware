@@ -160,8 +160,8 @@
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	BOOL showMsg = YES;
-	UIAlertView *message = [UIAlertView alloc];
+
+	UIAlertView *message;
     
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
@@ -170,8 +170,9 @@
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Okay", nil];
-            
             message.tag = MENU_UPLOAD;
+            [message show];
+            [message release];
             
 			break;
             
@@ -181,8 +182,9 @@
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            
             message.tag = MENU_EXPERIMENT;
+            [message show];
+            [message release];
             
 			break;
             
@@ -192,21 +194,17 @@
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Okay", nil];
-            
             message.tag = MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message show];
+            [message release];
             
             break;
             
 		default:
-			showMsg = NO;
 			break;
 	}
 	
-	if (showMsg)
-		[message show];
-	
-    [message release];
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -251,6 +249,7 @@
                 
                 [self presentModalViewController:widController animated:YES];
                 [qRCodeReader release];
+                [readers release];
                 
             } else {
                 
@@ -451,6 +450,7 @@
         noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
         noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
         [scrollView addSubview: noFields];
+        [noFields release];
     }
     
 }
@@ -504,6 +504,9 @@
     
     [scrollView addSubview:fieldName];
     [scrollView addSubview:fieldContents];
+    
+    [fieldName release];
+    [fieldContents release];
     
     return (int) Y_FIELDCONTENTS;
 }
