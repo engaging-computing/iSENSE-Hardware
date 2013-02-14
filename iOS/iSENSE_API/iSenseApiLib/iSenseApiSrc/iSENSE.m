@@ -32,21 +32,28 @@ static iSENSE *_iSENSE = nil;
     NSURLResponse *serverResponse;
     NSData *dataJSON = [NSURLConnection sendSynchronousRequest:request returningResponse:&serverResponse error:&requestError];
     
-    NSDictionary *jsonDictionary = [[NSDictionary alloc] autorelease];
-    jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
     NSLog(@"Error Returning Dictionary: %@", requestError);
     return jsonDictionary;
 }
 
 +(iSENSE*)getInstance {
-	@synchronized([iSENSE class]) {
+	/*@synchronized([iSENSE class]) {
 		if (!_iSENSE)
 			[[self alloc] init];
         
 		return _iSENSE;
 	}
 	
-	return nil;
+	return nil;*/
+    
+     //Code above has memory problems. This works though:
+     static dispatch_once_t pred;
+     static iSENSE *sharedInstance = nil;
+     dispatch_once(&pred, ^{
+        sharedInstance = [[iSENSE alloc] init];
+     });
+     return sharedInstance;
 }
 
 // Called internal to handle requests for new object
@@ -109,6 +116,7 @@ static iSENSE *_iSENSE = nil;
     [uid release];
     [_iSENSE release];
     [super dealloc];
+    // use just "abort();" to retain all.
 }
 
 
@@ -556,9 +564,7 @@ static iSENSE *_iSENSE = nil;
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id {
     if ([self isLoggedIn]) {
         NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
-        NSNumber *sid = [[NSNumber alloc] autorelease];
-        
-        sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
+        NSNumber *sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
         return sid;
     }
 	return NULL;
