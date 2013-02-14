@@ -15,7 +15,6 @@
 #define MENU_LOGIN                    2
 #define EXPERIMENT_MANUAL_ENTRY       3
 #define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define EXPERIMENT_SCAN_QR_CODE       5
 
 #define OPTION_CANCELED                0
 #define OPTION_ENTER_EXPERIMENT_NUMBER 1
@@ -287,14 +286,7 @@
             // TODO - fill view with stuffz!
         }
         
-    } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            
-            // TODO - fill view with stuffz!
-        }
-        
-    } // TODO - catch QR code stuffz!
+    }
 }
 
 - (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
