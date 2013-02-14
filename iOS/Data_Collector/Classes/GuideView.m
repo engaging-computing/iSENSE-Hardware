@@ -17,7 +17,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	guideText.text = [StringGrabber getString:@"guide_text"];
+	guideText.text = [StringGrabber grabString:@"guide_text"];
 	
 }
 

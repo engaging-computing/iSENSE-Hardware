@@ -12,7 +12,7 @@
   
 @implementation StringGrabber  
 
-+ (NSString *) getString:(NSString *)label {
++ (NSString *) grabString:(NSString *)label {
 	
 	NSString *fname = [[NSBundle mainBundle] pathForResource:@"Strings" ofType:@"strings"];
 	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
@@ -22,7 +22,7 @@
 
 + (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string {
 	
-	NSString *hardCodedString = [self getString:label];
+	NSString *hardCodedString = [self grabString:label];
 	NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", hardCodedString, string];
 	
 	return [NSString stringWithString:temp];
@@ -30,7 +30,7 @@
 
 + (NSString *) concatenate:(NSString*)string withHardcodedString:(NSString *)label {
     
-    NSString *hardCodedString = [self getString:label];
+    NSString *hardCodedString = [self grabString:label];
 	NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", string, hardCodedString];
 	
 	return [NSString stringWithString:temp];

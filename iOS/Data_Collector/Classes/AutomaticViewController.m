@@ -41,7 +41,7 @@
             // Switch to green mode
             startStopButton.image = [UIImage imageNamed:@"green_button.png"];
             mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
-            startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
+            startStopLabel.text = [StringGrabber grabString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
             // Record Data
@@ -53,7 +53,7 @@
             // Back to red mode
             startStopButton.image = [UIImage imageNamed:@"red_button.png"];
             mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-            startStopLabel.text = [StringGrabber getString:@"start_button_text"];
+            startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
             NSMutableArray *results = [self stopRecording:motionManager];
@@ -123,7 +123,7 @@
         
         // Allocate space and add the label to the main button
         startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, startStopButton.bounds.size.width, startStopButton.bounds.size.height)];
-        startStopLabel.text = [StringGrabber getString:@"start_button_text"];
+        startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
         startStopLabel.textAlignment = NSTextAlignmentCenter;
         startStopLabel.textColor = [UIColor whiteColor];
         startStopLabel.font = [startStopLabel.font fontWithSize:25];
@@ -175,7 +175,7 @@
         
         // Allocate space and add the label to the main button
         startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, startStopButton.bounds.size.width, startStopButton.bounds.size.height)];
-        startStopLabel.text = [StringGrabber getString:@"start_button_text"];
+        startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
         startStopLabel.textAlignment = NSTextAlignmentCenter;
         startStopLabel.textColor = [UIColor whiteColor];
         startStopLabel.font = [startStopLabel.font fontWithSize:25];
@@ -223,7 +223,7 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
         loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber grabString:@"login_status_not_logged_in"];
         loginStatus.textColor = [UIColor yellowColor];
     }
 }

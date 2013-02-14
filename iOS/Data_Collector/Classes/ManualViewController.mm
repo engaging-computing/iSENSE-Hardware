@@ -57,7 +57,7 @@
 	 iapi = [iSENSE getInstance];
      [iapi toggleUseDev:YES];
 	 
-	 [self initLocations]; // TODO - make initLocations do something
+	 [self initLocations];
 	 
      if ([iapi isLoggedIn]) {
          loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
@@ -131,9 +131,9 @@
     
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UITextField class]]) {
-            if (!([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_lat" ]] ||
-                  [((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_long"]] ||
-                  [((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_time"]] ))
+            if (!([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat" ]] ||
+                  [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]] ||
+                  [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]] ))
                 
                 ((UITextField *) element).text = @"";
         
@@ -323,7 +323,7 @@
 
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-        [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber getString:@"accepted_chars"]] invertedSet];
+        [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
@@ -397,7 +397,6 @@
     }
 }
 
-// TODO allows for GPS to be recorded
 - (void) initLocations {
 	locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
@@ -472,25 +471,23 @@
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;
         if (type == TYPE_LATITUDE) {
-            fieldContents.text = [StringGrabber getString:@"auto_lat"];
+            fieldContents.text = [StringGrabber grabString:@"auto_lat"];
             fieldContents.backgroundColor = [HexColor colorWithHexString:@"666666"];
         } else if (type == TYPE_LONGITUDE) {
-            fieldContents.text = [StringGrabber getString:@"auto_long"];
+            fieldContents.text = [StringGrabber grabString:@"auto_long"];
             fieldContents.backgroundColor = [HexColor colorWithHexString:@"666666"];
         } else {
-            fieldContents.text = [StringGrabber getString:@"auto_time"];
+            fieldContents.text = [StringGrabber grabString:@"auto_time"];
             fieldContents.backgroundColor = [HexColor colorWithHexString:@"666666"];
         }
     }
     
     if (expField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
-        // TOOO - restrict amount of chars to 60
-        // TODO - restrict digits
+        // TODO - restrict amount of chars to 60, restrict digits
     } else {
         fieldContents.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-        // TODO - restrict # to 20 chars
-        // TODO - restrict nums
+        // TODO - restrict # to 20 chars, restrict nums
     }
     [fieldContents setReturnKeyType:UIReturnKeyDone];
     
@@ -509,17 +506,17 @@
     
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UITextField class]]) {
-            if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_lat"]]) {
+            if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat"]]) {
                 
                 NSString *latitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
                 [data addObject:latitude];
 
-            } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_long"]]) {
+            } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
                 NSString *longitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
                 [data addObject:longitude];
                 
-            } else if ([((UITextField *) element).text isEqualToString:[StringGrabber getString:@"auto_time"]]) {
+            } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
                 
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
                 NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
