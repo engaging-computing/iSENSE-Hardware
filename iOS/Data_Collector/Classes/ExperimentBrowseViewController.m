@@ -37,7 +37,7 @@
         chooseExperiment = [[UIButton alloc] initWithFrame:CGRectMake(20, self.view.bounds.size.height - 160, 433 - 40, 50)];
         chooseExperiment.backgroundColor = [UIColor grayColor];
         [chooseExperiment setTitle:[StringGrabber getString:@"choose_experiment"] forState:UIControlStateNormal];
-
+        
     } else {
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - 44)];
@@ -79,14 +79,16 @@
     [isenseAPI toggleUseDev:YES];
     
     // Load the first 10 experiments.
-   loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:[[ISenseSearch alloc] init]];
+    ISenseSearch *newSearch = [[ISenseSearch alloc] init];
+    loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:newSearch];
+    [newSearch release];
     [loadExperimentThread start];
-        
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -112,10 +114,12 @@
     if ([loadExperimentThread isExecuting])
         [loadExperimentThread cancel];
     
-    loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:[[ISenseSearch alloc] initWithQuery:query searchType:RECENT page:1 andBuildType:NEW]];
-    
+    ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:query searchType:RECENT page:1 andBuildType:NEW];
+    loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:newSearch];
+    [query release];
+    [newSearch release];
     [loadExperimentThread start];
-
+    
     // Dismiss keyboard.
     [searchBar resignFirstResponder];
 }
@@ -167,10 +171,10 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 110, 433, 433)];
         imageView.image = image;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
-
+        
         // Add image to experimentInfo
         [experimentInfo addSubview:imageView];
-        //[imageView release];
+        [imageView release];
         
     }
     
@@ -182,14 +186,16 @@
     experimentTitle.textColor = [UIColor whiteColor];
     experimentTitle.numberOfLines = 0;
     experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
-    //[experimentTitle release];
-    
+ 
     // Update experimentInfo
     [experimentInfo addSubview:experimentTitle];
     [experimentInfo addSubview:chooseExperiment];
     
+    // Release subviews
+    [experimentTitle release];
+    
     [experimentInfoSpinner stopAnimating];
-
+    
 }
 
 // Sets our experimentSpinner to the middle of the bottom block.
@@ -213,7 +219,7 @@
 }
 
 // Update scrollView by appending or making a new search on a separate thread.
-- (void) updateScrollView:(ISenseSearch *)iSS {    
+- (void) updateScrollView:(ISenseSearch *)iSS {
     if (iSS.buildType == NEW) {
         [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
         contentHeight = 0;
@@ -230,8 +236,6 @@
     }
     
     for (Experiment *exp in experiments) {
-        [exp retain];
-        NSLog(@"%d, %@", exp.retainCount, exp.name);
         NSLog(@"Made a new block at %d", maxHeight);
         ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
                                                              experiment:exp
@@ -239,15 +243,16 @@
                                                                  action:@selector(onExperimentButtonClicked:)];
         [scrollView addSubview:block];
         //[block release];
-         maxHeight += 60;
+        maxHeight += 60;
     }
+    
     
     CGSize scrollableSize = CGSizeMake(320, maxHeight);
     [scrollView setContentSize:scrollableSize];
     
     contentHeight = maxHeight;
     
-    NSLog(@"ScrollView Content size = %d. ScrollView size = %d", contentHeight, scrollHeight);  
+    NSLog(@"ScrollView Content size = %d. ScrollView size = %d", contentHeight, scrollHeight);
     if (contentHeight <= scrollHeight && experiments.count == 10) {
         iSS.page++;
         iSS.buildType = APPEND;
@@ -265,7 +270,9 @@
         if ([loadExperimentThread isExecuting])
             [loadExperimentThread cancel];
         
-        loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:[[ISenseSearch alloc] initWithQuery:currentQuery searchType:RECENT page:(currentPage + 1) andBuildType:APPEND]];
+        ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:currentQuery searchType:RECENT page:(currentPage + 1) andBuildType:APPEND];
+        loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:newSearch];
+        [newSearch release];
         
         [loadExperimentThread start];
         

@@ -14,13 +14,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        experiment = exp;
+        experiment = [exp retain];
         _target = target;
         _selector = selector;
         self.multipleTouchEnabled = false;
-        
-        [experiment retain];
-        NSLog(@"%d, %@", experiment.retainCount, experiment.name);
         
         // Backround image
         background = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_experiment_clean.png"]];
