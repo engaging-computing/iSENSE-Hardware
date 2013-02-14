@@ -22,22 +22,16 @@
 
 + (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string {
 	
-	NSString *hardCodedString = [[[NSString alloc] init] autorelease]; 
-	hardCodedString = [self getString:label];
-	
-	NSMutableString *temp = [[[NSMutableString alloc] init] autorelease];
-	temp = [NSMutableString stringWithFormat:@"%@%@", hardCodedString, string]; 
+	NSString *hardCodedString = [self getString:label];
+	NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", hardCodedString, string];
 	
 	return [NSString stringWithString:temp];
 }
 
 + (NSString *) concatenate:(NSString*)string withHardcodedString:(NSString *)label {
     
-    NSString *hardCodedString = [[[NSString alloc] init] autorelease];
-	hardCodedString = [self getString:label];
-	
-	NSMutableString *temp = [[[NSMutableString alloc] init] autorelease];
-	temp = [NSMutableString stringWithFormat:@"%@%@", string, hardCodedString];
+    NSString *hardCodedString = [self getString:label];
+	NSMutableString *temp = [NSMutableString stringWithFormat:@"%@%@", string, hardCodedString];
 	
 	return [NSString stringWithString:temp];
 }
