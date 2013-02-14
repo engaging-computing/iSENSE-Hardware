@@ -12,20 +12,16 @@
 
 @synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastExperimentClicked;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
+    UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - 44)];
-        self.view.backgroundColor = [UIColor blackColor];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - 44)];
+        mainView.backgroundColor = [UIColor blackColor];
+        self.view = mainView;
+        [mainView release];
         
         // Prepare ExperimentInfo Frame
         experimentInfo = [[UIView alloc] initWithFrame:CGRectMake(320, 50, 433, self.view.bounds.size.height - 100)];
@@ -44,8 +40,10 @@
 
     } else {
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - 44)];
-        self.view.backgroundColor = [UIColor blackColor];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - 44)];
+        mainView.backgroundColor = [UIColor blackColor];
+        self.view = mainView;
+        [mainView release];
     }
     
     // Prepare search bar
@@ -67,6 +65,7 @@
     experimentSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [bottomSpinnerBlock addSubview:experimentSpinner];
     [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+    [bottomSpinnerBlock release];
     
     // Prepare scrollview
     scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 320, self.view.bounds.size.height - 120)];
@@ -157,7 +156,7 @@
 // Extra experiment information for loading in experimentInfoThread
 - (void) loadExperimentInfomationForIPad {
     
-    NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked->experimentNumber];
+    NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked->experiment.experiment_id];
     NSLog(@"Image count:%d", imageArray.count);
     if (imageArray.count) {
         // Fetch Images
@@ -168,24 +167,26 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 110, 433, 433)];
         imageView.image = image;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
-        
+
         // Add image to experimentInfo
         [experimentInfo addSubview:imageView];
+        //[imageView release];
+        
     }
     
     // Set experimentTitle
     UILabel *experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 433 - 40, 100)];
     experimentTitle.backgroundColor = [UIColor clearColor];
-    experimentTitle.text = lastExperimentClicked->experimentName;
+    experimentTitle.text = lastExperimentClicked->experiment.name;
     experimentTitle.textAlignment = NSTextAlignmentCenter;
     experimentTitle.textColor = [UIColor whiteColor];
     experimentTitle.numberOfLines = 0;
     experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
+    //[experimentTitle release];
     
     // Update experimentInfo
     [experimentInfo addSubview:experimentTitle];
     [experimentInfo addSubview:chooseExperiment];
-
     
     [experimentInfoSpinner stopAnimating];
 
@@ -228,14 +229,16 @@
         NSLog(@"CONTENT HEIGHT IS %d", contentHeight);
     }
     
-    for(Experiment *exp in experiments) {
+    for (Experiment *exp in experiments) {
+        [exp retain];
+        NSLog(@"%d, %@", exp.retainCount, exp.name);
         NSLog(@"Made a new block at %d", maxHeight);
         ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
-                                                         experimentName:exp.name
-                                                       experimentNumber:[exp.experiment_id integerValue]
+                                                             experiment:exp
                                                                  target:self
                                                                  action:@selector(onExperimentButtonClicked:)];
         [scrollView addSubview:block];
+        //[block release];
          maxHeight += 60;
     }
     
@@ -267,6 +270,10 @@
         [loadExperimentThread start];
         
     }
+}
+
+- (void) dealloc {
+    [super dealloc];
 }
 
 @end

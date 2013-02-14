@@ -12,7 +12,6 @@
 
 
 @interface Experiment : NSObject {
-	
 	NSNumber *default_join;
 	NSNumber *default_read;
 	NSNumber *experiment_id;
@@ -48,37 +47,37 @@
 }
 
 /* Properties for getting/setting variables */
-@property (assign) NSNumber *default_join;
-@property (assign) NSNumber *default_read;
-@property (assign) NSNumber *experiment_id;
-@property (assign) NSNumber *featured;
-@property (assign) NSNumber *hidden;
-@property (assign) NSNumber *owner_id;
-@property (assign) NSNumber *rating;
-@property (assign) NSNumber *rating_votes;
-@property (assign) NSNumber *session_count;
-@property (assign) NSString *timecreated;
-@property (assign) NSString *timemodified;
-@property (assign) NSString *provider_url;
-@property (assign) NSString *name;
-@property (assign) NSString *firstname;
-@property (assign) NSString *lastname;
-@property (assign) NSString *description;
-@property (assign) NSNumber *activity;
-@property (assign) NSNumber *activity_for;
-@property (assign) NSNumber *req_name;
-@property (assign) NSNumber *req_procedure;
-@property (assign) NSNumber *req_location;
-@property (assign) NSString *name_prefix;
-@property (assign) NSString *location;
-@property (assign) NSNumber *closed;
-@property (assign) NSURL *exp_image;
-@property (assign) NSNumber *recommended;
-@property (assign) NSNumber *srate;
-@property (assign) NSString *default_vis;
-@property (assign) NSString *rating_comp;
-@property (assign) NSArray *tags;
-@property (assign) NSNumber *relevancy;
-@property (assign) NSNumber *contrib_count;
+@property (retain) NSNumber *default_join;
+@property (retain) NSNumber *default_read;
+@property (retain) NSNumber *experiment_id;
+@property (retain) NSNumber *featured;
+@property (retain) NSNumber *hidden;
+@property (retain) NSNumber *owner_id;
+@property (retain) NSNumber *rating;
+@property (retain) NSNumber *rating_votes;
+@property (retain) NSNumber *session_count;
+@property (retain) NSString *timecreated;
+@property (retain) NSString *timemodified;
+@property (retain) NSString *provider_url;
+@property (retain) NSString *name;
+@property (retain) NSString *firstname;
+@property (retain) NSString *lastname;
+@property (retain) NSString *description;
+@property (retain) NSNumber *activity;
+@property (retain) NSNumber *activity_for;
+@property (retain) NSNumber *req_name;
+@property (retain) NSNumber *req_procedure;
+@property (retain) NSNumber *req_location;
+@property (retain) NSString *name_prefix;
+@property (retain) NSString *location;
+@property (retain) NSNumber *closed;
+@property (retain) NSURL *exp_image;
+@property (retain) NSNumber *recommended;
+@property (retain) NSNumber *srate;
+@property (retain) NSString *default_vis;
+@property (retain) NSString *rating_comp;
+@property (retain) NSArray *tags;
+@property (retain) NSNumber *relevancy;
+@property (retain) NSNumber *contrib_count;
 
 @end

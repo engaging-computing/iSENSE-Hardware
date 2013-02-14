@@ -97,7 +97,7 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
-    
+    self = [super init];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
         self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
@@ -128,7 +128,7 @@
         startStopLabel.textColor = [UIColor whiteColor];
         startStopLabel.font = [startStopLabel.font fontWithSize:25];
         startStopLabel.numberOfLines = 2;
-        startStopLabel.backgroundColor =[UIColor clearColor];
+        startStopLabel.backgroundColor = [UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
         containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];

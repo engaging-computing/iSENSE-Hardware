@@ -11,8 +11,7 @@
 
 @interface ExperimentBlock : UIView {
     @public
-    NSString *experimentName;
-    NSNumber *experimentNumber;
+    Experiment *experiment;
     @protected
     UIImageView *background;
     SEL _selector;
@@ -20,9 +19,7 @@
 
 }
 
-- (id)initWithFrame:(CGRect)frame experimentName:(NSString *)expName experimentNumber:(NSInteger)expNum target:(id)target action:(SEL)selector;
+- (id)initWithFrame:(CGRect)frame experiment:(Experiment*)exp target:(id)target action:(SEL)selector;
 - (void)switchToDarkImage:(bool)booleanSwitch;
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
-//- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 
 @end

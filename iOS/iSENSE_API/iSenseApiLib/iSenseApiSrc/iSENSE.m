@@ -32,8 +32,7 @@ static iSENSE *_iSENSE = nil;
     NSURLResponse *serverResponse;
     NSData *dataJSON = [NSURLConnection sendSynchronousRequest:request returningResponse:&serverResponse error:&requestError];
     
-    NSDictionary *jsonDictionary = [[NSDictionary alloc] autorelease];
-    jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
     NSLog(@"Error Returning Dictionary: %@", requestError);
     return jsonDictionary;
 }
