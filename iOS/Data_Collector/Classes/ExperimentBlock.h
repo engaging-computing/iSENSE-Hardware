@@ -10,14 +10,13 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface ExperimentBlock : UIView {
-    @public
-    Experiment *experiment;
-    @protected
     UIImageView *background;
     SEL _selector;
     id _target;
 
 }
+
+@property (nonatomic, retain) Experiment *experiment;
 
 - (id)initWithFrame:(CGRect)frame experiment:(Experiment*)exp target:(id)target action:(SEL)selector;
 - (void)switchToDarkImage:(bool)booleanSwitch;

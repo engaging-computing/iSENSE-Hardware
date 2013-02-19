@@ -8,6 +8,8 @@
 
 #import "ExperimentBrowseViewController.h"
 
+#define NAVIGATION_CONTROLLER_HEIGHT 44
+
 @implementation ExperimentBrowseViewController
 
 @synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastExperimentClicked;
@@ -18,7 +20,7 @@
     UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
-        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - 44)];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
         mainView.backgroundColor = [UIColor blackColor];
         self.view = mainView;
         [mainView release];
@@ -40,7 +42,7 @@
         
     } else {
         // Bound, allocate, and customize the main view
-        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - 44)];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
         mainView.backgroundColor = [UIColor blackColor];
         self.view = mainView;
         [mainView release];
@@ -80,9 +82,8 @@
     
     // Load the first 10 experiments.
     ISenseSearch *newSearch = [[ISenseSearch alloc] init];
-    loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:newSearch];
+    [self updateScrollView:newSearch];
     [newSearch release];
-    [loadExperimentThread start];
     
 }
 
@@ -111,14 +112,12 @@
     
     NSString *query = [[NSString alloc] initWithString:searchBar.text];
     
-    if ([loadExperimentThread isExecuting])
-        [loadExperimentThread cancel];
-    
     ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:query searchType:RECENT page:1 andBuildType:NEW];
-    loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:newSearch];
+    [self updateScrollView:newSearch];
+    
     [query release];
     [newSearch release];
-    [loadExperimentThread start];
+    
     
     // Dismiss keyboard.
     [searchBar resignFirstResponder];
@@ -160,7 +159,7 @@
 // Extra experiment information for loading in experimentInfoThread
 - (void) loadExperimentInfomationForIPad {
     
-    NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked->experiment.experiment_id];
+    NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked.experiment.experiment_id];
     NSLog(@"Image count:%d", imageArray.count);
     if (imageArray.count) {
         // Fetch Images
@@ -181,12 +180,12 @@
     // Set experimentTitle
     UILabel *experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 433 - 40, 100)];
     experimentTitle.backgroundColor = [UIColor clearColor];
-    experimentTitle.text = lastExperimentClicked->experiment.name;
+    experimentTitle.text = lastExperimentClicked.experiment.name;
     experimentTitle.textAlignment = NSTextAlignmentCenter;
     experimentTitle.textColor = [UIColor whiteColor];
     experimentTitle.numberOfLines = 0;
     experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
- 
+    
     // Update experimentInfo
     [experimentInfo addSubview:experimentTitle];
     [experimentInfo addSubview:chooseExperiment];
@@ -215,51 +214,63 @@
         frameToCenter.origin.y = 0;
     
     newSpinner.frame = frameToCenter;
-    NSLog(@"The newSpinner is currently at %f, %f.", newSpinner.center.x, newSpinner.center.y);
 }
 
 // Update scrollView by appending or making a new search on a separate thread.
 - (void) updateScrollView:(ISenseSearch *)iSS {
-    if (iSS.buildType == NEW) {
-        [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        contentHeight = 0;
-    }
+   
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSMutableArray *experiments = [[isenseAPI getExperiments:[NSNumber numberWithInt:iSS.page]
+                                                       withLimit:[NSNumber numberWithInt:10]
+                                                       withQuery:iSS.query
+                                                         andSort:[iSS searchTypeToString]] retain];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            currentPage = iSS.page;
+            currentQuery = iSS.query;
+            
+            int maxHeight = 0;
+            
+            if (iSS.buildType == NEW) {
+                [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                contentHeight = 0;
+            }
+            
+            if (iSS.buildType == APPEND) {
+                maxHeight = contentHeight;
+            }
+            
+            for (Experiment *exp in experiments) {
+                
+                ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
+                                                                     experiment:exp
+                                                                         target:self
+                                                                         action:@selector(onExperimentButtonClicked:)];
+                
+                [scrollView addSubview:block];
+                [block release];
+                maxHeight += 60;
+            }
+            
+            CGSize scrollableSize = CGSizeMake(320, maxHeight);
+            [scrollView setContentSize:scrollableSize];
+            
+            contentHeight = maxHeight;
+            
+            NSLog(@"ScrollView Content size = %d. ScrollView size = %d", contentHeight, scrollHeight);
+            if (contentHeight <= scrollHeight && experiments.count == 10) {
+                iSS.page++;
+                iSS.buildType = APPEND;
+                [self updateScrollView:iSS];
+            }
     
-    NSMutableArray *experiments = [isenseAPI getExperiments:[NSNumber numberWithInt:iSS.page] withLimit:[NSNumber numberWithInt:10] withQuery:iSS.query andSort:[iSS searchTypeToString]];
-    currentPage = iSS.page;
-    currentQuery = iSS.query;
-    int maxHeight = 0;
+            [experiments release];
+            [experimentSpinner stopAnimating];
     
-    if (iSS.buildType == APPEND) {
-        maxHeight = contentHeight;
-        NSLog(@"CONTENT HEIGHT IS %d", contentHeight);
-    }
-    
-    for (Experiment *exp in experiments) {
-        NSLog(@"Made a new block at %d", maxHeight);
-        ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
-                                                             experiment:exp
-                                                                 target:self
-                                                                 action:@selector(onExperimentButtonClicked:)];
-        [scrollView addSubview:block];
-        //[block release];
-        maxHeight += 60;
-    }
-    
-    
-    CGSize scrollableSize = CGSizeMake(320, maxHeight);
-    [scrollView setContentSize:scrollableSize];
-    
-    contentHeight = maxHeight;
-    
-    NSLog(@"ScrollView Content size = %d. ScrollView size = %d", contentHeight, scrollHeight);
-    if (contentHeight <= scrollHeight && experiments.count == 10) {
-        iSS.page++;
-        iSS.buildType = APPEND;
-        [self updateScrollView:iSS];
-    }
-    
-    [experimentSpinner stopAnimating];
+        });
+        
+    });
 }
 
 // Check if scrollview has reached bottom
@@ -267,14 +278,9 @@
     if (scroller.contentOffset.y == scroller.contentSize.height - scroller.frame.size.height) {
         [experimentSpinner startAnimating];
         
-        if ([loadExperimentThread isExecuting])
-            [loadExperimentThread cancel];
-        
         ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:currentQuery searchType:RECENT page:(currentPage + 1) andBuildType:APPEND];
-        loadExperimentThread = [[NSThread alloc] initWithTarget:self selector:@selector(updateScrollView:) object:newSearch];
+        [self updateScrollView:newSearch];
         [newSearch release];
-        
-        [loadExperimentThread start];
         
     }
 }

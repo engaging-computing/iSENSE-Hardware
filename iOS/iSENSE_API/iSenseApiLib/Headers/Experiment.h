@@ -3,7 +3,7 @@
 //  isenseAPI
 //
 //  Created by James Dalphond on 2/23/11.
-//  Copyright 2011 UMass Lowell. All rights reserved.
+//  copyright 2011 UMass Lowell. All rights reserved.
 //
 //  Modified by John Fertitta on 3/1/11.
 //
@@ -47,37 +47,37 @@
 }
 
 /* Properties for getting/setting variables */
-@property (retain) NSNumber *default_join;
-@property (retain) NSNumber *default_read;
-@property (retain) NSNumber *experiment_id;
-@property (retain) NSNumber *featured;
-@property (retain) NSNumber *hidden;
-@property (retain) NSNumber *owner_id;
-@property (retain) NSNumber *rating;
-@property (retain) NSNumber *rating_votes;
-@property (retain) NSNumber *session_count;
-@property (retain) NSString *timecreated;
-@property (retain) NSString *timemodified;
-@property (retain) NSString *provider_url;
-@property (retain) NSString *name;
-@property (retain) NSString *firstname;
-@property (retain) NSString *lastname;
-@property (retain) NSString *description;
-@property (retain) NSNumber *activity;
-@property (retain) NSNumber *activity_for;
-@property (retain) NSNumber *req_name;
-@property (retain) NSNumber *req_procedure;
-@property (retain) NSNumber *req_location;
-@property (retain) NSString *name_prefix;
-@property (retain) NSString *location;
-@property (retain) NSNumber *closed;
-@property (retain) NSURL *exp_image;
-@property (retain) NSNumber *recommended;
-@property (retain) NSNumber *srate;
-@property (retain) NSString *default_vis;
-@property (retain) NSString *rating_comp;
-@property (retain) NSArray *tags;
-@property (retain) NSNumber *relevancy;
-@property (retain) NSNumber *contrib_count;
+@property (copy) NSNumber *default_join;
+@property (copy) NSNumber *default_read;
+@property (copy) NSNumber *experiment_id;
+@property (copy) NSNumber *featured;
+@property (copy) NSNumber *hidden;
+@property (copy) NSNumber *owner_id;
+@property (copy) NSNumber *rating;
+@property (copy) NSNumber *rating_votes;
+@property (copy) NSNumber *session_count;
+@property (copy) NSString *timecreated;
+@property (copy) NSString *timemodified;
+@property (copy) NSString *provider_url;
+@property (copy) NSString *name;
+@property (copy) NSString *firstname;
+@property (copy) NSString *lastname;
+@property (copy) NSString *description;
+@property (copy) NSNumber *activity;
+@property (copy) NSNumber *activity_for;
+@property (copy) NSNumber *req_name;
+@property (copy) NSNumber *req_procedure;
+@property (copy) NSNumber *req_location;
+@property (copy) NSString *name_prefix;
+@property (copy) NSString *location;
+@property (copy) NSNumber *closed;
+@property (copy) NSURL *exp_image;
+@property (copy) NSNumber *recommended;
+@property (copy) NSNumber *srate;
+@property (copy) NSString *default_vis;
+@property (copy) NSString *rating_comp;
+@property (copy) NSArray *tags;
+@property (copy) NSNumber *relevancy;
+@property (copy) NSNumber *contrib_count;
 
 @end

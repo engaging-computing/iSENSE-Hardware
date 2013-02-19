@@ -10,6 +10,8 @@
 
 @implementation ExperimentBlock
 
+@synthesize experiment;
+
 - (id)initWithFrame:(CGRect)frame experiment:(Experiment *)exp target:(id)target action:(SEL)selector {
     self = [super initWithFrame:frame];
     if (self) {
@@ -40,7 +42,7 @@
         [pressRecognizer release];
         
     }
-    return [self autorelease];
+    return self;
 }
 
 - (void) switchToDarkImage:(bool)booleanSwitch {
@@ -53,6 +55,11 @@
 
 - (void) buttonClicked {
     [_target performSelector:_selector withObject:self];
+}
+
+- (void) dealloc {
+    [experiment release];
+    [super dealloc];
 }
 
 @end
