@@ -293,9 +293,20 @@
 }
 
 - (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-    qrResults = [result retain];
-    NSLog(@"Scanned: %@", qrResults);
     [widController.view removeFromSuperview];
+    
+    qrResults = [result retain];
+    NSArray *split = [qrResults componentsSeparatedByString:@"="];
+    if ([split count] != 2) {
+        [self.view makeToast:@"Invalid QR code scanned"
+                    duration:3.0
+                    position:@"bottom"
+                       image:@"red_x"];
+    } else {
+        expNum = [NSNumber numberWithInt:[[split objectAtIndex:1] intValue]];
+        [iapi setCurrentExp:[expNum intValue]];
+        [self fillDataFieldEntryList:[expNum intValue]];
+    }
 }
 
 - (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
