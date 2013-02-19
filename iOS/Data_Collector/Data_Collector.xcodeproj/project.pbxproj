@@ -215,11 +215,11 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				39DA66D016B6F840001EE336 /* ExperimentBrowser */,
 				39A9E9F616921EFA003D2EBB /* iSenseApiLib */,
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
 				52572B6F1691F6E9009037A7 /* Manual */,
+				39DA66D016B6F840001EE336 /* ExperimentBrowser */,
 				52572B711691F6F5009037A7 /* Objects */,
 				52572B721691F703009037A7 /* Delegate Files */,
 			);

@@ -40,7 +40,7 @@
         // Prepare choose experiment button
         chooseExperiment = [[UIButton alloc] initWithFrame:CGRectMake(20, self.view.bounds.size.height - 160, 433 - 40, 50)];
         chooseExperiment.backgroundColor = [UIColor grayColor];
-        [chooseExperiment setTitle:[StringGrabber getString:@"choose_experiment"] forState:UIControlStateNormal];
+        [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
 
     } else {
         // Bound, allocate, and customize the main view
