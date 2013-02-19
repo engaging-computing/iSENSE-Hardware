@@ -112,8 +112,8 @@
 
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     location = [locations objectAtIndex:0];
-    NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
-    [self.view makeToast:[NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude]];
+    // NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    // [self.view makeToast:[NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude]];
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
@@ -327,7 +327,7 @@
     [widController.view removeFromSuperview];
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
     if (![self containsAcceptedCharacters:string])
         return NO;
@@ -464,14 +464,13 @@
 }
 
 - (void) fillDataFieldEntryList:(int)eid {
-    
-    
+
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         
-        NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
+        NSMutableArray *fieldOrder = [[iapi getExperimentFields:[NSNumber numberWithInt:eid]] retain];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -479,6 +478,8 @@
             int scrollHeight = 0;
             
             for (ExperimentField *expField in fieldOrder) {
+                
+                NSLog(@"Field's type_id = %@", expField.type_id);
                 
                 if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
                     if (expField.unit_id.intValue == UNIT_LATITUDE) {
@@ -493,23 +494,27 @@
                 }
                 
                 ++objNumber;
+
             }
+            
+            [fieldOrder release];
             
             scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
             CGFloat scrollWidth = scrollView.frame.size.width;
             [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
             
             if (scrollView.subviews.count == 0) {
+                
                 UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, 730, SCROLLVIEW_LABEL_HEIGHT)];
                 noFields.text = @"Invalid experiment.";
                 noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
                 noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
                 [scrollView addSubview: noFields];
                 [noFields release];
-                
             }
             
         });
+        
     });
 }
 
@@ -534,6 +539,7 @@
     fieldContents.delegate = self;
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
+    fieldContents.borderStyle = UITextBorderStyleRoundedRect;
     
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;

@@ -493,7 +493,7 @@ static iSENSE *_iSENSE = nil;
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentFields&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	
-	NSMutableArray *fields = [[NSMutableArray new] autorelease];
+	NSMutableArray *fields = [NSMutableArray new];
 	
 	if (data) {
         NSEnumerator *e;
@@ -501,6 +501,7 @@ static iSENSE *_iSENSE = nil;
             e = [data objectEnumerator];
         }
         @catch (NSException *exception) {
+            NSLog(@"Empty array returned");
             return fields;
         }
 
@@ -520,7 +521,7 @@ static iSENSE *_iSENSE = nil;
 		}
 	}
 	
-	return fields;
+	return [fields autorelease];
 }
 
 // Use this method to retrieve sessions associated with an experiment (may be deprecated).

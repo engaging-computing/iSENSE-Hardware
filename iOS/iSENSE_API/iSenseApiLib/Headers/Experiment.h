@@ -45,6 +45,7 @@
     NSArray *tags;
     NSNumber *relevancy;
     NSNumber *contrib_count;
+    
 }
 
 /* Properties for getting/setting variables */
