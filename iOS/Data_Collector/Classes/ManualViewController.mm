@@ -15,6 +15,7 @@
 #define MENU_LOGIN                    2
 #define EXPERIMENT_MANUAL_ENTRY       3
 #define EXPERIMENT_BROWSE_EXPERIMENTS 4
+#define CLEAR_FIELDS_DIALOG           5
 
 #define OPTION_CANCELED                0
 #define OPTION_ENTER_EXPERIMENT_NUMBER 1
@@ -125,18 +126,15 @@
 }
 
 - (IBAction) clearOnClick:(id)sender {
-	sessionNameInput.text = @"";
-    
-    for (UIView *element in scrollView.subviews) {
-        if ([element isKindOfClass:[UITextField class]]) {
-            if (!([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat" ]] ||
-                  [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]] ||
-                  [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]] ))
-                
-                ((UITextField *) element).text = @"";
-        
-        }
-    }
+	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Are you sure you want to clear your session name and all field data?"
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:@"Cancel"
+                                            otherButtonTitles:@"Okay", nil];
+    [message setTag:CLEAR_FIELDS_DIALOG];
+    [message setAlertViewStyle:UIAlertViewStyleDefault];
+    [message show];
+    [message release];
 }
 
 - (IBAction) mediaOnClick:(id)sender {
@@ -289,6 +287,22 @@
             // TODO - fill view with stuffz!
         }
         
+    } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            sessionNameInput.text = @"";
+            
+            for (UIView *element in scrollView.subviews) {
+                if ([element isKindOfClass:[UITextField class]]) {
+                    if (!([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat" ]] ||
+                          [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]] ||
+                          [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]] ))
+                        
+                        ((UITextField *) element).text = @"";
+                    
+                }
+            }
+        }
     }
 }
 
