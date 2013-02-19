@@ -13,7 +13,7 @@
 @synthesize query, searchType, buildType, page;
 
 - (id) init {
-    [super init];
+    self = [super init];
     if (self) {
         query = @"";
         searchType = RECENT;
@@ -25,7 +25,7 @@
 }
 
 - (id) initWithQuery:(NSString *)q searchType:(SearchType)st page:(int)p andBuildType:(BuildType)bt {
-    [self init];
+    self = [self init];
     if (self) {
         query = q;
         searchType = st;
@@ -37,14 +37,14 @@
 
 - (NSString *) searchTypeToString {
     switch (searchType) {
-    case RECENT:
-        return @"Recent";
-    case RATING:
-        return @"Rating";
-    case POPULARITY:
-        return @"Popularity";
-    case ACTIVITY:
-        return @"Activity";
+        case RECENT:
+            return @"Recent";
+        case RATING:
+            return @"Rating";
+        case POPULARITY:
+            return @"Popularity";
+        case ACTIVITY:
+            return @"Activity";
     }
 }
 

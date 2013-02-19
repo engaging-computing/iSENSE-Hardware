@@ -37,22 +37,14 @@ static iSENSE *_iSENSE = nil;
     return jsonDictionary;
 }
 
-+(iSENSE*)getInstance {
-	/*@synchronized([iSENSE class]) {
-		if (!_iSENSE)
-			[[self alloc] init];
-        
-		return _iSENSE;
-	}
-	
-	return nil;*/
-    
-     //Code above has memory problems. This works though:
++(iSENSE*)getInstance {   
      static dispatch_once_t pred;
      static iSENSE *sharedInstance = nil;
+    
      dispatch_once(&pred, ^{
         sharedInstance = [[iSENSE alloc] init];
      });
+    
      return sharedInstance;
 }
 

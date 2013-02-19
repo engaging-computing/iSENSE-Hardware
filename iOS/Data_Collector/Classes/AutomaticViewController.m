@@ -97,11 +97,13 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
-    
+    UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
-        self.view.backgroundColor = [UIColor blackColor];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
+        mainView.backgroundColor = [UIColor blackColor];
+        self.view = mainView;
+        [mainView release];
         
         // Initialize isRecording to false
         [self setIsRecording:FALSE];
@@ -128,7 +130,7 @@
         startStopLabel.textColor = [UIColor whiteColor];
         startStopLabel.font = [startStopLabel.font fontWithSize:25];
         startStopLabel.numberOfLines = 2;
-        startStopLabel.backgroundColor =[UIColor clearColor];
+        startStopLabel.backgroundColor = [UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
         containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
@@ -152,8 +154,10 @@
     } else {
         
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-        self.view.backgroundColor = [UIColor blackColor];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        mainView.backgroundColor = [UIColor blackColor];
+        self.view = mainView;
+        [mainView release];
         
         // Initialize isRecording to false
         [self setIsRecording:FALSE];
@@ -376,8 +380,7 @@
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	BOOL showMsg = YES;
-	UIAlertView *message = [UIAlertView alloc];
+	UIAlertView *message;
     
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
@@ -388,8 +391,8 @@
                                        otherButtonTitles:@"Okay", nil];
             
             message.tag = MENU_UPLOAD;
-            //[message setAlertViewStyle:UIAlertViewStyleDefault];
-            
+            [message show];
+            [message release];
 			break;
             
 		case MENU_EXPERIMENT:
@@ -400,7 +403,8 @@
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
             
             message.tag = MENU_EXPERIMENT;
-            
+            [message show];
+            [message release];
 			break;
             
 		case MENU_LOGIN:
@@ -412,18 +416,16 @@
             
             message.tag = MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-            
+            [message show];
+            [message release];
             break;
             
 		default:
-			showMsg = NO;
 			break;
 	}
 	
-	if (showMsg)
-		[message show];
 	
-    [message release];
+    
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {

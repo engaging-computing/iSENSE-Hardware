@@ -25,7 +25,7 @@
 }
 
 - (id)initWithFrame:(CGRect)frame imageView:(UIImageView *)buttonImage target:(id)target action:(SEL)selector {
-    id newView = [self initWithFrame:frame];
+    self = [self initWithFrame:frame];
     image = buttonImage;
     originalImageCopy = [[UIImageView alloc] initWithImage:image.image];
     
@@ -37,7 +37,7 @@
     [recognizer cancelsTouchesInView];
     [self addGestureRecognizer:recognizer];
     
-    return newView;
+    return self;
 }
 
 
