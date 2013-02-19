@@ -1,6 +1,6 @@
 //
 //  ManualView.m
-//  Splash
+//  iOS Data Collector
 //
 //  Created by Mike Stowell on 12/28/12.
 //  Copyright 2012 iSENSE Development Team. All rights reserved.
@@ -37,8 +37,7 @@
 @synthesize sessionName, expNum, qrResults;
 
 
- // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
- - (void)viewDidLoad {
+- (void) viewDidLoad {
 	 [super viewDidLoad];
 	 
 	 [self.view sendSubviewToBack:scrollView];
@@ -68,29 +67,28 @@
      scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
      [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
      
-	 // TODO -  if exp. # is null, launch the dialog for choosing exp. num
      expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
      
      UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
      tapGestureM.cancelsTouchesInView = NO;
      [self.view addGestureRecognizer:tapGestureM];
      [tapGestureM release];
-     
- }
 
-- (IBAction)textFieldFinished:(id)sender {}
+}
+
+- (IBAction) textFieldFinished:(id)sender {}
  
 
-- (void)didReceiveMemoryWarning {
+- (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-- (void)viewDidUnload {
+- (void) viewDidUnload {
     [super viewDidUnload];
 }
 
 
-- (void)dealloc {
+- (void) dealloc {
 	[logo release];
 	[loggedInAsLabel release];
 	[expNumLabel release];
@@ -111,13 +109,13 @@
 	[super dealloc];
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+- (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     location = [locations objectAtIndex:0];
     NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
     [self.view makeToast:[NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude]];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
 }
@@ -142,8 +140,13 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
-	//* useCamera iff sessionNameInput.length != 0
-	[CameraUsage useCamera];
+    if (sessionNameInput.text.length != 0)
+        [CameraUsage useCamera];
+    else
+        [self.view makeToast:@"Please Enter a Session Name First"
+                    duration:3.0
+                    position:@"bottom"
+                       image:@"red_x"];
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -158,7 +161,7 @@
 	[popupQuery release];
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 	UIAlertView *message;
     
@@ -206,7 +209,7 @@
 	
 }
 
-- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -289,13 +292,13 @@
     }
 }
 
-- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
     qrResults = [result retain];
     NSLog(@"Scanned: %@", qrResults);
     [widController.view removeFromSuperview];
 }
 
-- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
+- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
     [widController.view removeFromSuperview];
 }
 
@@ -329,18 +332,26 @@
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
-    if ([iapi login:usernameInput with:passwordInput]) {
-        [self.view makeToast:@"Login Successful!"
-                    duration:2.0
-                    position:@"bottom"
-                       image:@"check"];
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
-	} else {
-        [self.view makeToast:@"Login Failed!"
-                    duration:2.0
-                    position:@"bottom"
-                       image:@"red_x"];
-    }
+   
+    dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL success = [iapi login:usernameInput with:passwordInput];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [self.view makeToast:@"Login Successful!"
+                            duration:2.0
+                            position:@"bottom"
+                               image:@"check"];
+                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+            } else {
+                [self.view makeToast:@"Login Failed!"
+                            duration:2.0
+                            position:@"bottom"
+                               image:@"red_x"];
+            }
+        });
+    });
+    
 }
 
 - (void) experiment {
@@ -351,50 +362,72 @@
 }
 
 - (void) upload:(NSMutableArray *)results {
-    if ([iapi getCurrentExp] == 0) {
-        [self.view makeToast:@"Please Enter an Experiment # First"
-                    duration:3.5
-                    position:@"bottom"
-                       image:@"red_x"];
-        return;
-    }
-    if (!([iapi isLoggedIn])) {
-        [self.view makeToast:@"Please Login First"
-                    duration:3.5
-                    position:@"bottom"
-                       image:@"red_x"];
-        return;
-    }
-    if ([[sessionNameInput text] isEqualToString:@""]) {
-        [self.view makeToast:@"Please Enter a Session Name First"
-                    duration:3.5
-                    position:@"bottom"
-                       image:@"red_x"];
-        return;
-    }
-    
-    NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
-    NSString *description = [[[NSString alloc] initWithString:@"Manual data entry from the iOS Data Collector application."] autorelease];
-    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
-    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
-    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
-    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:[iapi getCurrentExp]] autorelease];
-    NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
-    NSError  *error = nil;
-    NSData   *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-
-    
-    if ([iapi putSessionData:dataJSON forSession:session_num inExperiment:exp_num]) {
-        [self.view makeToast:@"Upload Success!"
-                    duration:2.0
-                    position:@"bottom"
-                       image:@"check"];
-    } else {
-        [self.view makeToast:@"Upload Failed!"
-                    duration:2.0
-                    position:@"bottom"
-                       image:@"red_x"];
-    }
+    dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
+        short uploadSuccess = -1;
+        
+        if ([iapi getCurrentExp] == 0) 
+            exp = FALSE;
+           
+        else
+            if (!([iapi isLoggedIn])) 
+                loggedIn = FALSE;
+        
+            else 
+                if ([[sessionNameInput text] isEqualToString:@""]) 
+                    hasSessionName = FALSE;
+                    
+                else {
+                    NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
+                    NSString *description = [[[NSString alloc] initWithString:@"Manual data entry from the iOS Data Collector application."] autorelease];
+                    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+                    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+                    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+                    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:[iapi getCurrentExp]] autorelease];
+                    NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+                    NSError  *error = nil;
+                    NSData   *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+                    
+                    
+                    if (([iapi putSessionData:dataJSON forSession:session_num inExperiment:exp_num]))
+                        uploadSuccess = TRUE;
+                    else
+                        uploadSuccess = FALSE;
+                    
+                }
+                   
+        dispatch_async(dispatch_get_main_queue(), ^{
+        
+            if (!exp)
+                [self.view makeToast:@"Please Enter an Experiment # First"
+                            duration:3.5
+                            position:@"bottom"
+                               image:@"red_x"];
+            if (!loggedIn)
+                [self.view makeToast:@"Please Login First"
+                            duration:3.5
+                            position:@"bottom"
+                               image:@"red_x"];
+            if (!hasSessionName)
+                [self.view makeToast:@"Please Enter a Session Name First"
+                            duration:3.5
+                            position:@"bottom"
+                               image:@"red_x"];
+            if (uploadSuccess != -1) {
+                if (uploadSuccess)
+                    [self.view makeToast:@"Upload Success!"
+                                duration:2.0
+                                position:@"bottom"
+                                   image:@"check"];
+                else
+                    [self.view makeToast:@"Upload Failed!"
+                                duration:2.0
+                                position:@"bottom"
+                                   image:@"check"];
+            }
+        });
+    });
 }
 
 - (void) initLocations {
@@ -407,43 +440,52 @@
 
 - (void) fillDataFieldEntryList:(int)eid {
     
+    
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    NSLog(@"eid = %d", eid);
-    NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
-    int objNumber = 0;
-    int scrollHeight = 0;
-    
-    for (ExperimentField *expField in fieldOrder) {
+    dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
+    dispatch_async(queue, ^{
         
-        if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
-            if (expField.unit_id.intValue == UNIT_LATITUDE) {
-                scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
-            } else if (expField.unit_id.intValue == UNIT_LONGITUDE) {
-                scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
-            } else /* Time */ {
-                scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
+        NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            int objNumber = 0;
+            int scrollHeight = 0;
+            
+            for (ExperimentField *expField in fieldOrder) {
+                
+                if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
+                    if (expField.unit_id.intValue == UNIT_LATITUDE) {
+                        scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
+                    } else if (expField.unit_id.intValue == UNIT_LONGITUDE) {
+                        scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
+                    } else /* Time */ {
+                        scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
+                    }
+                } else {
+                    scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
+                }
+                
+                ++objNumber;
             }
-        } else {
-            scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
-        }
-        
-        ++objNumber;
-    }
-    
-    scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
-    CGFloat scrollWidth = scrollView.frame.size.width;
-    [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
-   
-    if (scrollView.subviews.count == 0) {
-        UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, 730, SCROLLVIEW_LABEL_HEIGHT)];
-        noFields.text = @"Invalid experiment.";
-        noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
-        noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
-        [scrollView addSubview: noFields];
-        [noFields release];
-    }
-    
+            
+            scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
+            CGFloat scrollWidth = scrollView.frame.size.width;
+            [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
+            
+            if (scrollView.subviews.count == 0) {
+                UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, 730, SCROLLVIEW_LABEL_HEIGHT)];
+                noFields.text = @"Invalid experiment.";
+                noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
+                noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
+                [scrollView addSubview: noFields];
+                [noFields release];
+                
+            }
+            
+        });
+    });
 }
 
 - (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum {
@@ -542,7 +584,7 @@
     [dataEncapsulator release];
 }
 
-- (void)hideKeyboard {
+- (void) hideKeyboard {
     [sessionNameInput resignFirstResponder];
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UITextField class]]) {
