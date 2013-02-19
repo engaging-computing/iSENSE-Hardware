@@ -15,7 +15,7 @@ typedef enum BuildType { NEW = 0, APPEND = 1 } BuildType;
 }
 
 @property (nonatomic, assign) SearchType searchType;
-@property (nonatomic, assign) NSString *query;
+@property (nonatomic, retain) NSString *query;
 @property (nonatomic, assign) BuildType buildType;
 @property (nonatomic, assign) int page;
 

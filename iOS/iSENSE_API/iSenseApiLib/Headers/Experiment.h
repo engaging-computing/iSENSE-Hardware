@@ -3,7 +3,7 @@
 //  isenseAPI
 //
 //  Created by James Dalphond on 2/23/11.
-//  Copyright 2011 UMass Lowell. All rights reserved.
+//  copyright 2011 UMass Lowell. All rights reserved.
 //
 //  Modified by John Fertitta on 3/1/11.
 //
@@ -12,7 +12,6 @@
 
 
 @interface Experiment : NSObject {
-	
 	NSNumber *default_join;
 	NSNumber *default_read;
 	NSNumber *experiment_id;
@@ -49,37 +48,37 @@
 }
 
 /* Properties for getting/setting variables */
-@property (assign) NSNumber *default_join;
-@property (assign) NSNumber *default_read;
-@property (assign) NSNumber *experiment_id;
-@property (assign) NSNumber *featured;
-@property (assign) NSNumber *hidden;
-@property (assign) NSNumber *owner_id;
-@property (assign) NSNumber *rating;
-@property (assign) NSNumber *rating_votes;
-@property (assign) NSNumber *session_count;
-@property (assign) NSString *timecreated;
-@property (assign) NSString *timemodified;
-@property (assign) NSString *provider_url;
-@property (assign) NSString *name;
-@property (assign) NSString *firstname;
-@property (assign) NSString *lastname;
-@property (assign) NSString *description;
-@property (assign) NSNumber *activity;
-@property (assign) NSNumber *activity_for;
-@property (assign) NSNumber *req_name;
-@property (assign) NSNumber *req_procedure;
-@property (assign) NSNumber *req_location;
-@property (assign) NSString *name_prefix;
-@property (assign) NSString *location;
-@property (assign) NSNumber *closed;
-@property (assign) NSURL *exp_image;
-@property (assign) NSNumber *recommended;
-@property (assign) NSNumber *srate;
-@property (assign) NSString *default_vis;
-@property (assign) NSString *rating_comp;
-@property (assign) NSArray *tags;
-@property (assign) NSNumber *relevancy;
-@property (assign) NSNumber *contrib_count;
+@property (copy) NSNumber *default_join;
+@property (copy) NSNumber *default_read;
+@property (copy) NSNumber *experiment_id;
+@property (copy) NSNumber *featured;
+@property (copy) NSNumber *hidden;
+@property (copy) NSNumber *owner_id;
+@property (copy) NSNumber *rating;
+@property (copy) NSNumber *rating_votes;
+@property (copy) NSNumber *session_count;
+@property (copy) NSString *timecreated;
+@property (copy) NSString *timemodified;
+@property (copy) NSString *provider_url;
+@property (copy) NSString *name;
+@property (copy) NSString *firstname;
+@property (copy) NSString *lastname;
+@property (copy) NSString *description;
+@property (copy) NSNumber *activity;
+@property (copy) NSNumber *activity_for;
+@property (copy) NSNumber *req_name;
+@property (copy) NSNumber *req_procedure;
+@property (copy) NSNumber *req_location;
+@property (copy) NSString *name_prefix;
+@property (copy) NSString *location;
+@property (copy) NSNumber *closed;
+@property (copy) NSURL *exp_image;
+@property (copy) NSNumber *recommended;
+@property (copy) NSNumber *srate;
+@property (copy) NSString *default_vis;
+@property (copy) NSString *rating_comp;
+@property (copy) NSArray *tags;
+@property (copy) NSNumber *relevancy;
+@property (copy) NSNumber *contrib_count;
 
 @end
