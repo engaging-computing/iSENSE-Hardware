@@ -14,6 +14,7 @@
 
 @synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastExperimentClicked;
 
+
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
     UIView *mainView;
@@ -37,9 +38,13 @@
         // Prepare choose experiment button
         chooseExperiment = [[UIButton alloc] initWithFrame:CGRectMake(20, self.view.bounds.size.height - 160, 433 - 40, 50)];
         chooseExperiment.backgroundColor = [UIColor grayColor];
+<<<<<<< HEAD
+        [chooseExperiment setTitle:[StringGrabber getString:@"choose_experiment"] forState:UIControlStateNormal];
+        
+=======
         [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
-        [chooseExperiment addTarget:self action:@selector(experimentChosen) forControlEvents:UIControlEventTouchUpInside];
 
+>>>>>>> upstream/master
     } else {
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
@@ -80,16 +85,11 @@
     isenseAPI = [iSENSE getInstance];
     [isenseAPI toggleUseDev:YES];
     
-    // Load the first 10 experiments. (And more if screen size is large.)
+    // Load the first 10 experiments.
     ISenseSearch *newSearch = [[ISenseSearch alloc] init];
     [self updateScrollView:newSearch];
     [newSearch release];
     
-}
-
-- (void) experimentChosen {
-    *_chosenExperiment = lastExperimentClicked.experiment.experiment_id.intValue;
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewDidLoad {
@@ -123,6 +123,7 @@
     [query release];
     [newSearch release];
     
+    
     // Dismiss keyboard.
     [searchBar resignFirstResponder];
 }
@@ -147,70 +148,64 @@
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             
+            if ([experimentInfoThread isExecuting])
+                [experimentInfoThread cancel];
+            
             [[experimentInfo subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
             [experimentInfo addSubview:experimentInfoSpinner];
             [experimentInfoSpinner startAnimating];
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [self loadExperimentInfomationForIPad];
-            });
+            experimentInfoThread = [[NSThread alloc] initWithTarget:self selector:@selector(loadExperimentInfomationForIPad) object:nil];
+            [experimentInfoThread start];
         }
     }
 }
 
-// Extra experiment information for loading in background.
+// Extra experiment information for loading in experimentInfoThread
 - (void) loadExperimentInfomationForIPad {
     
     NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked.experiment.experiment_id];
     NSLog(@"Image count:%d", imageArray.count);
     if (imageArray.count) {
-        
         // Fetch Images
         Image *firstImage = imageArray[0];
         NSURL *url = [NSURL URLWithString:firstImage.provider_url];
         NSData *data = [NSData dataWithContentsOfURL:url];
         UIImage *image = [UIImage imageWithData:data];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, 403, 400)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 110, 433, 433)];
         imageView.image = image;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         // Add image to experimentInfo
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [experimentInfo addSubview:imageView];
-            [imageView release];
-        });
+        [experimentInfo addSubview:imageView];
+        [imageView release];
+        
     }
     
-        
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        // Set experimentTitle
-        UILabel *experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 433 - 40, 100)];
-        experimentTitle.backgroundColor = [UIColor clearColor];
-        experimentTitle.text = lastExperimentClicked.experiment.name;
-        experimentTitle.textAlignment = NSTextAlignmentCenter;
-        experimentTitle.textColor = [UIColor whiteColor];
-        experimentTitle.numberOfLines = 0;
-        experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
-        
-        // Update experimentInfo
-        [experimentInfo addSubview:experimentTitle];
-        [experimentInfo addSubview:chooseExperiment];
+    // Set experimentTitle
+    UILabel *experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 433 - 40, 100)];
+    experimentTitle.backgroundColor = [UIColor clearColor];
+    experimentTitle.text = lastExperimentClicked.experiment.name;
+    experimentTitle.textAlignment = NSTextAlignmentCenter;
+    experimentTitle.textColor = [UIColor whiteColor];
+    experimentTitle.numberOfLines = 0;
+    experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
     
-        // Release subviews
-        [experimentTitle release];
+    // Update experimentInfo
+    [experimentInfo addSubview:experimentTitle];
+    [experimentInfo addSubview:chooseExperiment];
     
-        [experimentInfoSpinner stopAnimating];
-    });
+    // Release subviews
+    [experimentTitle release];
+    
+    [experimentInfoSpinner stopAnimating];
     
 }
 
 // Sets our experimentSpinner to the middle of the bottom block.
 - (void)setCenter:(UIView *)view forSpinner:(UIActivityIndicatorView *)newSpinner {
-    
     CGSize boundsSize = view.bounds.size;
     CGRect frameToCenter = newSpinner.frame;
-    
     /* Center horizontally */
     if (frameToCenter.size.width < boundsSize.width)
         frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
@@ -226,7 +221,7 @@
     newSpinner.frame = frameToCenter;
 }
 
-// Update scrollView by appending or making a new search in background.
+// Update scrollView by appending or making a new search on a separate thread.
 - (void) updateScrollView:(ISenseSearch *)iSS {
    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
