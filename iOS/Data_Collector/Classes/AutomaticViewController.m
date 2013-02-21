@@ -1,9 +1,10 @@
 //
 //  AutomaticViewController.m
-//  Data_Collector
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 1/10/13.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "AutomaticViewController.h"
