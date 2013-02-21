@@ -1,9 +1,10 @@
 //
-//  UIPicButton.m
-//  iSENSE_Data_Collector
+//  UILongClickButton.m
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 10/30/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "UILongClickButton.h"
@@ -25,7 +26,7 @@
 }
 
 - (id)initWithFrame:(CGRect)frame imageView:(UIImageView *)buttonImage target:(id)target action:(SEL)selector {
-    id newView = [self initWithFrame:frame];
+    self = [self initWithFrame:frame];
     image = buttonImage;
     originalImageCopy = [[UIImageView alloc] initWithImage:image.image];
     
@@ -37,7 +38,7 @@
     [recognizer cancelsTouchesInView];
     [self addGestureRecognizer:recognizer];
     
-    return newView;
+    return self;
 }
 
 

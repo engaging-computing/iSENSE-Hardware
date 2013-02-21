@@ -37,22 +37,14 @@ static iSENSE *_iSENSE = nil;
     return jsonDictionary;
 }
 
-+(iSENSE*)getInstance {
-	/*@synchronized([iSENSE class]) {
-		if (!_iSENSE)
-			[[self alloc] init];
-        
-		return _iSENSE;
-	}
-	
-	return nil;*/
-    
-     //Code above has memory problems. This works though:
++(iSENSE*)getInstance {   
      static dispatch_once_t pred;
      static iSENSE *sharedInstance = nil;
+    
      dispatch_once(&pred, ^{
         sharedInstance = [[iSENSE alloc] init];
      });
+    
      return sharedInstance;
 }
 
@@ -493,7 +485,7 @@ static iSENSE *_iSENSE = nil;
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentFields&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	
-	NSMutableArray *fields = [[NSMutableArray new] autorelease];
+	NSMutableArray *fields = [NSMutableArray new];
 	
 	if (data) {
         NSEnumerator *e;
@@ -501,6 +493,7 @@ static iSENSE *_iSENSE = nil;
             e = [data objectEnumerator];
         }
         @catch (NSException *exception) {
+            NSLog(@"Empty array returned");
             return fields;
         }
 
@@ -520,7 +513,7 @@ static iSENSE *_iSENSE = nil;
 		}
 	}
 	
-	return fields;
+	return [fields autorelease];
 }
 
 // Use this method to retrieve sessions associated with an experiment (may be deprecated).

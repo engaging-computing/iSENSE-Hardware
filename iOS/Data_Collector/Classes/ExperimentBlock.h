@@ -1,28 +1,25 @@
 //
 //  ExperimentBlock.h
-//  Data_Collector
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 1/25/13.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
 @interface ExperimentBlock : UIView {
-    @public
-    NSString *experimentName;
-    NSNumber *experimentNumber;
-    @protected
     UIImageView *background;
     SEL _selector;
     id _target;
 
 }
 
-- (id)initWithFrame:(CGRect)frame experimentName:(NSString *)expName experimentNumber:(NSInteger)expNum target:(id)target action:(SEL)selector;
+@property (nonatomic, retain) Experiment *experiment;
+
+- (id)initWithFrame:(CGRect)frame experiment:(Experiment*)exp target:(id)target action:(SEL)selector;
 - (void)switchToDarkImage:(bool)booleanSwitch;
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
-//- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 
 @end

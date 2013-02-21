@@ -147,14 +147,14 @@
 }
 
 /*Properties for setting/getting variables*/
-@property (assign) NSNumber *field_id;
-@property (assign) NSNumber *type_id;
-@property (assign) NSNumber *unit_id;
+@property (retain) NSNumber *field_id;
+@property (retain) NSNumber *type_id;
+@property (retain) NSNumber *unit_id;
 
-@property (assign) NSString *field_name;
-@property (assign) NSString *type_name;
-@property (assign) NSString *unit_abbreviation;
-@property (assign) NSString *unit_name;
+@property (retain) NSString *field_name;
+@property (retain) NSString *type_name;
+@property (retain) NSString *unit_abbreviation;
+@property (retain) NSString *unit_name;
 
 @end
 
