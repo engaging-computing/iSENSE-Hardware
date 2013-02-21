@@ -1,5 +1,6 @@
 //
 //  HexColor.h
+//  Open source code not authored by ECG
 //
 
 #import <UIKit/UIKit.h>

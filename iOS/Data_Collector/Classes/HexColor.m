@@ -1,5 +1,6 @@
 //
 //  HexColor.m
+//  Open source code not authored by ECG
 //
 
 #import "HexColor.h"

@@ -3,7 +3,7 @@
 //  iOS Data Collector
 //
 //  Created by Mike Stowell on 12/28/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
@@ -32,16 +32,17 @@
     NSString *qrResults;
     ZXingWidgetController *widController;
     
-    CLLocation *location;
     CLLocationManager *locationManager;
     
 }
 
+// Storyboard functions
 - (IBAction) uploadOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
 
+// Programmatic functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
 - (void) upload:(NSMutableArray *)results;
@@ -53,6 +54,8 @@
 - (void) fillDataFieldEntryList:(int)eid;
 - (int)  addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
 - (void) hideKeyboard;
+
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView  *logo;
@@ -68,6 +71,7 @@
 @property (nonatomic, copy)   NSString *sessionName;
 @property (nonatomic, copy)   NSString *qrResults;
 @property (nonatomic, strong) NSNumber *expNum;
+@property (nonatomic, retain) CLLocationManager *locationManager;
 
 @end
 
