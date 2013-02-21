@@ -1,10 +1,12 @@
 //
 //  ExperimentBlock.m
-//  Data_Collector
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 1/25/13.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
-//
+
 
 #import "ExperimentBlock.h"
 

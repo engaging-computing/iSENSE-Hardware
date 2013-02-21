@@ -1,9 +1,9 @@
 //
-//  ManualView.m
+//  ManualView.mm
 //  iOS Data Collector
 //
 //  Created by Mike Stowell on 12/28/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
@@ -35,7 +35,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView;
-@synthesize sessionName, expNum, qrResults;
+@synthesize sessionName, expNum, qrResults, locationManager;
 
 
 - (void) viewDidLoad {
@@ -85,6 +85,7 @@
 }
 
 - (void) viewDidUnload {
+    //[locationManager stopUpdatingLocation];
     [super viewDidUnload];
 }
 
@@ -104,16 +105,23 @@
     [qrResults release];
     [widController release];
     
-    [location release];
     [locationManager release];
     
 	[super dealloc];
 }
 
+- (void) initLocations {
+	locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
+}
+
+// method not called on real device - don't assign a location to a global variable here
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    location = [locations objectAtIndex:0];
-    // NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
-    // [self.view makeToast:[NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude]];
+    CLLocation *location = [locations lastObject];
+    NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
@@ -284,7 +292,7 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            // TODO - fill view with stuffz!
+            // TODO - get Jeremy's experiment browsing code when he's done
         }
         
     } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
@@ -358,6 +366,10 @@
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [message show];
+    [message release];
+    
     dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
     dispatch_async(queue, ^{
         BOOL success = [iapi login:usernameInput with:passwordInput];
@@ -374,6 +386,7 @@
                             position:@"bottom"
                                image:@"red_x"];
             }
+            [message dismissWithClickedButtonIndex:nil animated:YES];
         });
     });
     
@@ -387,6 +400,10 @@
 }
 
 - (void) upload:(NSMutableArray *)results {
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
+    [message show];
+    [message release];
+    
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
@@ -404,6 +421,7 @@
                     hasSessionName = FALSE;
                     
                 else {
+                    
                     NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
                     NSString *description = [[[NSString alloc] initWithString:@"Manual data entry from the iOS Data Collector application."] autorelease];
                     NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
@@ -451,21 +469,20 @@
                                 position:@"bottom"
                                    image:@"check"];
             }
+            
+           
+            [message dismissWithClickedButtonIndex:nil animated:YES];
         });
     });
-}
-
-- (void) initLocations {
-	locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [locationManager startUpdatingLocation];
 }
 
 - (void) fillDataFieldEntryList:(int)eid {
 
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving experiment fields..."];
+    [message show];
+    [message release];
     
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
@@ -478,8 +495,6 @@
             int scrollHeight = 0;
             
             for (ExperimentField *expField in fieldOrder) {
-                
-                NSLog(@"Field's type_id = %@", expField.type_id);
                 
                 if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
                     if (expField.unit_id.intValue == UNIT_LATITUDE) {
@@ -512,6 +527,8 @@
                 [scrollView addSubview: noFields];
                 [noFields release];
             }
+            
+            [message dismissWithClickedButtonIndex:nil animated:YES];
             
         });
         
@@ -581,12 +598,16 @@
         if ([element isKindOfClass:[UITextField class]]) {
             if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat"]]) {
                 
-                NSString *latitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
+                CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+                double lat  = lc2d.latitude;
+                NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
                 [data addObject:latitude];
 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
-                NSString *longitude = [NSString stringWithFormat:@"%lf", location.coordinate.latitude];
+                CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+                double lon = lc2d.longitude;
+                NSString *longitude = [NSString stringWithFormat:@"%lf", lon];
                 [data addObject:longitude];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
@@ -622,6 +643,19 @@
             [element resignFirstResponder];
         }
     }
+}
+
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                         message:nil
+                                        delegate:self
+                               cancelButtonTitle:nil
+                               otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5); // .5 so it doesn't blur
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
 }
 
 @end
