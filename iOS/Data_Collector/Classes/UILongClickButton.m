@@ -1,9 +1,10 @@
 //
-//  UIPicButton.m
-//  iSENSE_Data_Collector
+//  UILongClickButton.m
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 10/30/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "UILongClickButton.h"
