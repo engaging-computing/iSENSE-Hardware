@@ -126,7 +126,7 @@
         expNumStatus.textAlignment = NSTextAlignmentCenter;
         expNumStatus.numberOfLines = 1;
         expNumStatus.backgroundColor = [UIColor clearColor];
-        expNumStatus.text = @"placeholder";
+        expNumStatus.font = [UIFont fontWithName:@"Arial" size:24];
         
         // Allocate space and initialize the main button
         startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
@@ -256,6 +256,7 @@
     if (expNum && expNumStatus) {
         NSString *update = [[NSString alloc] initWithFormat:@"Experiment number is %d", expNum];
         expNumStatus.text = update;
+        [update release];
     }
 }
 
@@ -310,9 +311,9 @@
 }
 
 // iOS6
-//- (NSUInteger)supportedInterfaceOrientations {
-//    return UIInterfaceOrientationMaskLandscape;
-//}
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
 
 
 - (void)didReceiveMemoryWarning {
@@ -512,7 +513,7 @@
             
             expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
             [isenseAPI setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
-            NSLog(@"ExperimentNum = %d", expNum);
+            [self updateExpNumStatus];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
