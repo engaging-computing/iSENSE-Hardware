@@ -21,7 +21,7 @@
 
 - (IBAction) loadAutomatic:(id)sender;
 - (IBAction) loadManual:(id)sender;
-- (void)viewDidAppear:(BOOL)animated;
+- (void) viewDidAppear:(BOOL)animated;
 - (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat; 
 
 @property (nonatomic, retain) IBOutlet UIImageView *dataCollectorLogo;

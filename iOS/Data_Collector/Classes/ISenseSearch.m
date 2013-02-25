@@ -28,7 +28,8 @@
 - (id) initWithQuery:(NSString *)q searchType:(SearchType)st page:(int)p andBuildType:(BuildType)bt {
     self = [self init];
     if (self) {
-        query = q;
+        query = [q retain];
+        NSLog(@"Query RetainCount = %d", query.retainCount);
         searchType = st;
         buildType = bt;
         page = p;
