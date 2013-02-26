@@ -670,11 +670,8 @@
 				399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */,
 				391B093D16BAE99700FB8DF3 /* button_experiment_clean.png in Resources */,
 				391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */,
-<<<<<<< HEAD
 				B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */,
-=======
 				39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */,
->>>>>>> upstream/master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
