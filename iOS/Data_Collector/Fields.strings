@@ -1,0 +1,33 @@
+//
+// Strings.strings
+// Splash
+//
+//  Created by Mike Stowell on 2/21/13.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
+//
+
+
+// < "Label"        = "Value" > //
+
+"null_string"       = "nil"
+"time"              = "Time"                          
+"accel_x"           = "Accel-X                     
+"accel_y"           = "Accel-Y                     
+"accel_z"           = "Accel-Z                     
+"accel_total"       = "Accel-Total             
+"latitude"          = "Latitude                   
+"longitude"         = "Longitude                 
+"magnetic_x"        = "Magnetic-X               
+"magnetic_y"        = "Magnetic-Y               
+"magnetic_z"        = "Magnetic-Z               
+"magnetic_total"    = "Magnetic-Total       
+"heading_deg"       = "Heading-Deg             
+"heading_rad"       = "Heading-Rad             
+"temperature_c"     = "Temperature-C         
+"pressure"          = "Pressure                   
+"altitude"          = "Altitude                   
+"luminous_flux"     = "Luminous Flux         
+
+"temperature_f"     = "Temperature-F         
+"temperature_k"     = "Temperature-K			

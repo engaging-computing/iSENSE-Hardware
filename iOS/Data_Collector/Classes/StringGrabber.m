@@ -20,6 +20,13 @@
 	return loc;
 }
 
++ (NSString *) grabField:(NSString *)label {
+    NSString *fname = [[NSBundle mainBundle] pathForResource:@"Fields" ofType:@"strings"];
+	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:fname];
+	NSString *loc = [d objectForKey:label];
+	return loc;
+}
+
 + (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string {
 	
 	NSString *hardCodedString = [self grabString:label];
