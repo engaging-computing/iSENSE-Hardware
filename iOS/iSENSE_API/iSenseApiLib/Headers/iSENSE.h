@@ -30,7 +30,7 @@
 - (bool) isLoggedIn;
 - (NSString *) getLoggedInUsername;
 - (void) logout;
-//- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name withDescription:(NSString *)description;
+- (bool) upload:(UIImage *)picture toExperiment:(NSNumber *)exp_id forSession:(NSNumber *)ses_id withName:(NSString *)name andDescription:(NSString *)description;
 - (bool) login:(NSString *)user with:(NSString *)password;
 - (Experiment *) getExperiment:(NSNumber *)exp_id;
 - (NSMutableArray *) sessionData:(NSString *)sessions;
