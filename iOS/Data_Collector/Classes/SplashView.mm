@@ -22,6 +22,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     [self runSpinAnimationOnView:orb duration:1 rotations:1 repeat:FLT_MAX];
 }
 
@@ -62,5 +63,39 @@
     
     [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
 }
+
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-landscape-ipad", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-iPad", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        
+    }
+}
+
 
 @end

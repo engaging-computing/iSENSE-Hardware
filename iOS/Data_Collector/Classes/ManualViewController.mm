@@ -132,6 +132,21 @@
     NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
 }
 
+/*
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+        [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-landscape", NSStringFromClass([self class])]
+                                      owner:self
+                                    options:nil];
+        [self viewDidLoad];
+    } else {
+        [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@", NSStringFromClass([self class])]
+                                      owner:self
+                                    options:nil];
+        [self viewDidLoad];
+    }
+}*/
+
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
