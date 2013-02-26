@@ -40,6 +40,7 @@
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
 		39F8AF9A1694C20C00E5E4C2 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F8AF991694C20C00E5E4C2 /* StringGrabber.m */; };
 		39F8AF9E1694C23800E5E4C2 /* CameraUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F8AF9D1694C23800E5E4C2 /* CameraUsage.m */; };
+		39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */; };
 		52572B651691F671009037A7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52572B641691F671009037A7 /* AudioToolbox.framework */; };
 		52572B7D1691F742009037A7 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		52572B7E1691F742009037A7 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
@@ -149,6 +150,7 @@
 		39F8AF991694C20C00E5E4C2 /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		39F8AF9C1694C23800E5E4C2 /* CameraUsage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraUsage.h; sourceTree = "<group>"; };
 		39F8AF9D1694C23800E5E4C2 /* CameraUsage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraUsage.m; sourceTree = "<group>"; };
+		39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = noimagedata_normal.png; path = "Resources-iPad/noimagedata_normal.png"; sourceTree = "<group>"; };
 		52572B641691F671009037A7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		52572B741691F742009037A7 /* media_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_icon.png; sourceTree = "<group>"; };
 		52572B751691F742009037A7 /* logo_manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_manual.png; sourceTree = "<group>"; };
@@ -409,6 +411,7 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */,
 				391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */,
 				391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */,
 				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
@@ -667,7 +670,11 @@
 				399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */,
 				391B093D16BAE99700FB8DF3 /* button_experiment_clean.png in Resources */,
 				391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */,
+<<<<<<< HEAD
 				B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */,
+=======
+				39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */,
+>>>>>>> upstream/master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

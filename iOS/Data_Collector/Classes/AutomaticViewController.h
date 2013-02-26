@@ -23,6 +23,7 @@
     UIImageView *mainLogo;
     UILabel *startStopLabel;
     UILabel *loginStatus;
+    UILabel *expNumStatus;
     UIBarButtonItem *menuButton;
 }
 
@@ -40,6 +41,6 @@
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic, assign) CMMotionManager *motionManager;
 @property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
-@property (nonatomic, assign) NSNumber *expNum;
+@property (nonatomic, assign) int expNum;
 
 @end
