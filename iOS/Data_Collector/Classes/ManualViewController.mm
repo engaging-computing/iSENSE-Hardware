@@ -39,46 +39,54 @@
 
 
 - (void) viewDidLoad {
-	 [super viewDidLoad];
-	 
-	 [self.view sendSubviewToBack:scrollView];
-	 
-	 [self.sessionNameInput addTarget:self
-                               action:@selector(textFieldFinished:)
-                     forControlEvents:UIControlEventEditingDidEndOnExit];
-     sessionNameInput.delegate = self;
-	 sessionNameInput.enablesReturnKeyAutomatically = NO;
-     sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
-	 
-	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
-	 self.navigationItem.rightBarButtonItem = menuButton;
-	 [menuButton release];
-	 
-	 iapi = [iSENSE getInstance];
-     [iapi toggleUseDev:YES];
-	 
-	 [self initLocations];
-	 
-     if ([iapi isLoggedIn]) {
-         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
-     } else {
-         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
-     }
-     
-     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-     
-     expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
-     
-     UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-     tapGestureM.cancelsTouchesInView = NO;
-     [self.view addGestureRecognizer:tapGestureM];
-     [tapGestureM release];
-
+    [super viewDidLoad];
+    
+    [self.view sendSubviewToBack:scrollView];
+    
+    [self.sessionNameInput addTarget:self
+                              action:@selector(textFieldFinished:)
+                    forControlEvents:UIControlEventEditingDidEndOnExit];
+    sessionNameInput.delegate = self;
+    sessionNameInput.enablesReturnKeyAutomatically = NO;
+    sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
+    
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
+    self.navigationItem.rightBarButtonItem = menuButton;
+    [menuButton release];
+    
+    iapi = [iSENSE getInstance];
+    [iapi toggleUseDev:YES];
+    
+    [self initLocations];
+    
+    if ([iapi isLoggedIn]) {
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+    } else {
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
+    }
+    
+    scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+    
+    UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    tapGestureM.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGestureM];
+    [tapGestureM release];
+    
+    /////Try to upload an image//////
+    
+    /*UIImage *image = [UIImage imageNamed:@"logo_manual.png"];
+    [iapi login:@"sor" with:@"sor"];
+    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:281] forSession:[NSNumber numberWithInt:6352] withName:@"Name" andDescription:@"Description"];
+    NSLog(@"Image success = %d", success);*/
+    
+    /////////////////////////////////
 }
 
 - (IBAction) textFieldFinished:(id)sender {}
- 
+
 
 - (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -156,19 +164,19 @@
 }
 
 - (IBAction) displayMenu:(id)sender {
-	UIActionSheet *popupQuery = [[UIActionSheet alloc] 
-				  initWithTitle:nil 
-			           delegate:self
-	          cancelButtonTitle:@"Cancel" 
-	     destructiveButtonTitle:nil 
-			  otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
+	UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                 initWithTitle:nil
+                                 delegate:self
+                                 cancelButtonTitle:@"Cancel"
+                                 destructiveButtonTitle:nil
+                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-
+    
 	UIAlertView *message;
     
 	switch (buttonIndex) {
@@ -229,10 +237,10 @@
         if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
             
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -246,7 +254,7 @@
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
             if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-               
+                
                 widController = [[ZXingWidgetController alloc] initWithDelegate:self
                                                                      showCancel:YES
                                                                        OneDMode:NO];
@@ -285,7 +293,7 @@
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
             
-            [self fillDataFieldEntryList:[iapi getCurrentExp]];            
+            [self fillDataFieldEntryList:[iapi getCurrentExp]];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
@@ -359,13 +367,13 @@
 
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-        [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
-   
+    
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
     [message show];
     [message release];
@@ -409,17 +417,17 @@
         BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
         short uploadSuccess = -1;
         
-        if ([iapi getCurrentExp] == 0) 
+        if ([iapi getCurrentExp] == 0)
             exp = FALSE;
-           
+        
         else
-            if (!([iapi isLoggedIn])) 
+            if (!([iapi isLoggedIn]))
                 loggedIn = FALSE;
         
-            else 
-                if ([[sessionNameInput text] isEqualToString:@""]) 
+            else
+                if ([[sessionNameInput text] isEqualToString:@""])
                     hasSessionName = FALSE;
-                    
+        
                 else {
                     
                     NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
@@ -439,9 +447,9 @@
                         uploadSuccess = FALSE;
                     
                 }
-                   
-        dispatch_async(dispatch_get_main_queue(), ^{
         
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
             if (!exp)
                 [self.view makeToast:@"Please Enter an Experiment # First"
                             duration:3.5
@@ -470,14 +478,13 @@
                                    image:@"check"];
             }
             
-           
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
     });
 }
 
 - (void) fillDataFieldEntryList:(int)eid {
-
+    
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving experiment fields..."];
@@ -509,7 +516,7 @@
                 }
                 
                 ++objNumber;
-
+                
             }
             
             [fieldOrder release];
@@ -602,7 +609,7 @@
                 double lat  = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
                 [data addObject:latitude];
-
+                
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
@@ -647,10 +654,10 @@
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
-                                         message:nil
-                                        delegate:self
-                               cancelButtonTitle:nil
-                               otherButtonTitles:nil];
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     spinner.center = CGPointMake(139.5, 75.5); // .5 so it doesn't blur
     [message addSubview:spinner];
