@@ -93,7 +93,17 @@
             [self viewDidLoad];
         }
     } else {
-        
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-landscape", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
     }
 }
 
