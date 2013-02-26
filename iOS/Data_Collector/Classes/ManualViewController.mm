@@ -376,8 +376,7 @@
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
     [message show];
-    [message release];
-    
+        
     dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
     dispatch_async(queue, ^{
         BOOL success = [iapi login:usernameInput with:passwordInput];
@@ -410,8 +409,7 @@
 - (void) upload:(NSMutableArray *)results {
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
     [message show];
-    [message release];
-    
+      
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
@@ -489,8 +487,7 @@
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving experiment fields..."];
     [message show];
-    [message release];
-    
+        
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         
@@ -662,7 +659,8 @@
     spinner.center = CGPointMake(139.5, 75.5); // .5 so it doesn't blur
     [message addSubview:spinner];
     [spinner startAnimating];
-    return message;
+    [spinner release];
+    return [message autorelease];
 }
 
 @end

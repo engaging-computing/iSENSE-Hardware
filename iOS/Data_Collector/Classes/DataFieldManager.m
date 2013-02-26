@@ -15,7 +15,7 @@
     
     NSMutableArray *order = [[NSMutableArray alloc] init];
     
-    iSENSE *iapi;
+    iSENSE *iapi = [iSENSE getInstance];
     NSMutableArray *fields = [iapi getExperimentFields:[NSNumber numberWithInt:exp]];
     
     for (ExperimentField *field in fields) {
