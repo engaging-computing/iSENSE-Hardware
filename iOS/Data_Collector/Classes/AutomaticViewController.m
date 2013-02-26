@@ -25,8 +25,6 @@
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum;
 
-
-
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
     
@@ -224,7 +222,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Spin the orb!
+    // UpdateExperimentNumber status
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     [self updateExpNumStatus];
 }
 
@@ -246,7 +245,7 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
         loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber grabString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
         loginStatus.textColor = [UIColor yellowColor];
     }
 }
@@ -266,7 +265,6 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"Rotate Initiated!");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
@@ -301,7 +299,6 @@
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
-    NSLog(@"I can rotate now");
     return YES;
 }
 
