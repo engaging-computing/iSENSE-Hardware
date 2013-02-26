@@ -25,8 +25,6 @@
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum;
 
-
-
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
     
@@ -198,19 +196,27 @@
         startStopLabel.backgroundColor =[UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 120, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
+        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 130, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
+        // Create a label for experiment number
+        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 25)];
+        expNumStatus.textColor = [UIColor whiteColor];
+        expNumStatus.textAlignment = NSTextAlignmentCenter;
+        expNumStatus.numberOfLines = 1;
+        expNumStatus.backgroundColor = [UIColor clearColor];
+        expNumStatus.font = [UIFont fontWithName:@"Arial" size:12];
+        
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
+        [self.view addSubview:expNumStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
         
         // Add a menu button
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
         self.navigationItem.rightBarButtonItem = menuButton;
-        
         
         // Prepare isenseAPI and set login status
         isenseAPI = [iSENSE getInstance];
@@ -224,7 +230,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Spin the orb!
+    // UpdateExperimentNumber status
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     [self updateExpNumStatus];
 }
 
@@ -246,7 +253,7 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
         loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber grabString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
         loginStatus.textColor = [UIColor yellowColor];
     }
 }
@@ -254,7 +261,7 @@
 // Set your expNumStatus to show you the last experiment chosen.
 - (void) updateExpNumStatus {
     if (expNum && expNumStatus) {
-        NSString *update = [[NSString alloc] initWithFormat:@"Experiment number is %d", expNum];
+        NSString *update = [[NSString alloc] initWithFormat:@"Experiment Number: %d", expNum];
         expNumStatus.text = update;
         [update release];
     }
@@ -266,7 +273,6 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"Rotate Initiated!");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
@@ -289,11 +295,13 @@
             mainLogo.frame = CGRectMake(15, 5, 180, 40);
             containerForMainButton.frame = CGRectMake(220, 5, 250, 250);
             loginStatus.frame = CGRectMake(5, 50, 200, 20);
+            expNumStatus.frame = CGRectMake(5, 65, 200, 20);
         } else {
             self.view.frame = CGRectMake(0, 0, 320, 480);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
+            containerForMainButton.frame = CGRectMake(35, 130, 250, 250);
             loginStatus.frame = CGRectMake(0, 85, 320, 20);
-            containerForMainButton.frame = CGRectMake(35, 120, 250, 250);
+            expNumStatus.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
         }
     }
 }
@@ -301,7 +309,6 @@
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
-    NSLog(@"I can rotate now");
     return YES;
 }
 

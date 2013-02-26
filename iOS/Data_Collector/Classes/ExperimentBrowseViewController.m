@@ -37,7 +37,7 @@
         
         // Prepare choose experiment button
         chooseExperiment = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
-        chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, 433 - 40, 50);
+        chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
         chooseExperiment.backgroundColor = [UIColor grayColor];
         [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
         [chooseExperiment addTarget:self action:@selector(experimentChosen) forControlEvents:UIControlEventTouchUpInside];
@@ -51,7 +51,7 @@
     }
     
     // Prepare search bar
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
     searchBar.delegate = self;
     [self.view addSubview:searchBar];
     UITextField *searchBarTextField = nil;
@@ -64,7 +64,7 @@
     searchBarTextField.enablesReturnKeyAutomatically = NO;
     
     // Prepare experimentSpinner for loading at bottom
-    UIView *bottomSpinnerBlock = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 60, 320, 40)];
+    bottomSpinnerBlock = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 60, 320, 40)];
     [self.view addSubview:bottomSpinnerBlock];
     experimentSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [bottomSpinnerBlock addSubview:experimentSpinner];
@@ -89,7 +89,81 @@
     
 }
 
-- (void) experimentChosen {
+// Is called every time ExperimentBrowser appears
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // UpdateExperimentNumber status
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+}
+
+// Allows the device to rotate as necessary.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Overriden to allow any orientation.
+    return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+/** Todo */
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+            self.view.frame = CGRectMake(0, 0, 1024, 768 - NAVIGATION_CONTROLLER_HEIGHT);
+            experimentInfo.frame = CGRectMake(320, 50, self.view.bounds.size.width - 330, self.view.bounds.size.height - 100);
+            [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
+            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, 320, 40);
+            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+            chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
+            searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
+            scrollView.frame = CGRectMake(0, 50, 320, self.view.bounds.size.height - 120);
+            if (additionalInfo) additionalInfo.frame = CGRectMake(20, 405, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 475);
+            if (imageView) imageView.frame = CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300);
+            if (experimentTitle) experimentTitle.frame = CGRectMake(20, 0, experimentInfo.frame.size.width - 40, 100);
+        } else {
+            self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
+            experimentInfo.frame = CGRectMake(320, 50, 433, self.view.bounds.size.height - 100);
+            [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
+            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, 320, 40);
+            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+            chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
+            searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
+            scrollView.frame = CGRectMake(0, 50, 320, self.view.bounds.size.height - 120);
+            if (additionalInfo) additionalInfo.frame = CGRectMake(20, 500, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 500);
+            if (imageView) imageView.frame = CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300);
+            if (experimentTitle) experimentTitle.frame = CGRectMake(20, 0, experimentInfo.frame.size.width - 40, 100);
+        }
+
+    } else {
+        
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+            self.view.frame = CGRectMake(0, 0, 480, 320 - NAVIGATION_CONTROLLER_HEIGHT);
+            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, self.view.frame.size.width, 40);
+            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+            searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
+            scrollView.frame = CGRectMake(80, 50, self.view.bounds.size.width - 160, self.view.bounds.size.height - 120);
+        } else {
+            self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
+            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, 320, 40);
+            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+            searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
+            scrollView.frame = CGRectMake(0, 50, 320, self.view.bounds.size.height - 120);
+        }
+    }
+}
+
+
+
+- (void)experimentChosen {
     *_chosenExperiment = lastExperimentClicked.experiment.experiment_id.intValue;
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -106,17 +180,12 @@
 
 
 /* Search bar methods */
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [self handleSearch:searchBar];
+- (void)searchBarSearchButtonClicked:(UISearchBar *)search {
+    [self handleSearch:search];
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    //[self handleSearch:searchBar];
-}
-
-- (void)handleSearch:(UISearchBar *)searchBar {
-    NSString *query = [searchBar.text copy];
-    NSLog(@"User searched for %@, retaincount %d", query, query.retainCount);
+- (void)handleSearch:(UISearchBar *)search {
+    NSString *query = [search.text copy];
    
     ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:query searchType:RECENT page:1 andBuildType:NEW];
     [self updateScrollView:newSearch];
@@ -125,13 +194,12 @@
     [query release];
     
     // Dismiss keyboard.
-    [searchBar resignFirstResponder];
+    [search resignFirstResponder];
 }
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar {
-    NSLog(@"User canceled search");
+- (void)searchBarCancelButtonClicked:(UISearchBar *) search {
     // Dismiss keyboard.
-    [searchBar resignFirstResponder];
+    [search resignFirstResponder];
 }
 
 - (IBAction)onExperimentButtonClicked:(id)caller {
@@ -156,6 +224,8 @@
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 [self loadExperimentInfomationForIPad];
             });
+        } else {
+            [self experimentChosen];
         }
     }
 }
@@ -173,7 +243,7 @@
         NSURL *url = [NSURL URLWithString:firstImage.provider_url];
         NSData *data = [NSData dataWithContentsOfURL:url];
         UIImage *image = [UIImage imageWithData:data];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, 403, 400)];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300)];
         imageView.image = image;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         
@@ -183,7 +253,7 @@
             [imageView release];
         });
     } else {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, 403, 400)];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300)];
         imageView.image = [UIImage imageNamed:@"noimagedata_normal.png"];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         
@@ -199,7 +269,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         // Set experimentTitle
-        UILabel *experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 433 - 40, 100)];
+        experimentTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, experimentInfo.frame.size.width - 40, 100)];
         experimentTitle.backgroundColor = [UIColor clearColor];
         experimentTitle.text = lastExperimentClicked.experiment.name;
         experimentTitle.textAlignment = NSTextAlignmentCenter;
@@ -208,7 +278,8 @@
         experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
         
         // Set additional information
-        UITextView *additionalInfo = [[UITextView alloc] initWithFrame:CGRectMake(20, 520, 433 - 40, experimentInfo.frame.size.height - 600)];
+        additionalInfo = [[UITextView alloc] initWithFrame:CGRectMake(20, 450, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 500)];
+        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) additionalInfo.frame = CGRectMake(20, 405, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 475);
         additionalInfo.text = [NSString stringWithFormat:@"Created by: %@\nNumber of Sessions: %@\nLast Modified: %@\n\nDescription: %@", lastExperimentClicked.experiment.firstname, lastExperimentClicked.experiment.session_count, lastExperimentClicked.experiment.timecreated, lastExperimentClicked.experiment.description];
         additionalInfo.textAlignment = NSTextAlignmentCenter;
         additionalInfo.font = [UIFont fontWithName:@"Arial" size:18];

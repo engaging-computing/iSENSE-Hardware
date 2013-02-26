@@ -21,6 +21,11 @@
     NSThread *experimentInfoThread;
     UIView *experimentInfo;
     UIButton *chooseExperiment;
+    UISearchBar *searchBar;
+    UITextView *additionalInfo;
+    UIImageView *imageView;
+    UILabel *experimentTitle;
+    UIView *bottomSpinnerBlock;
 }
 
 - (IBAction) onExperimentButtonClicked:(id)caller;
