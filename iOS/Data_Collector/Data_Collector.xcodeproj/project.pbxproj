@@ -61,8 +61,11 @@
 		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UILongClickButton.m */; };
+		B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */; };
 		B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */; };
 		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
+		B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */; };
+		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -178,9 +181,12 @@
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UILongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape-ipad.xib"; sourceTree = "<group>"; };
 		B7115C1E16D6AA800033AAA1 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
 		B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
 		B7115C2116D6ACD80033AAA1 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape.xib"; sourceTree = "<group>"; };
+		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
@@ -446,6 +452,7 @@
 				52572B8F1691F788009037A7 /* AboutView.xib */,
 				52572B941691F796009037A7 /* GuideView.xib */,
 				52572B8A1691F77D009037A7 /* SplashView.xib */,
+				B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -455,7 +462,9 @@
 			children = (
 				399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */,
 				39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */,
+				B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */,
 				52572BC61691FBC6009037A7 /* SplashView-iPad.xib */,
+				B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -672,6 +681,9 @@
 				391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */,
 				B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */,
 				39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */,
+				B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */,
+				B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */,
+				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
