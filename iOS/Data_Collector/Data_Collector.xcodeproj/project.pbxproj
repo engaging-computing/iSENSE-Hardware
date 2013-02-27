@@ -65,6 +65,7 @@
 		B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */; };
 		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
 		B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */; };
+		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -185,6 +186,7 @@
 		B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
 		B7115C2116D6ACD80033AAA1 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape.xib"; sourceTree = "<group>"; };
+		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
@@ -460,6 +462,7 @@
 			children = (
 				399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */,
 				39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */,
+				B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */,
 				52572BC61691FBC6009037A7 /* SplashView-iPad.xib */,
 				B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */,
 			);
@@ -680,6 +683,7 @@
 				39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */,
 				B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */,
 				B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */,
+				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
