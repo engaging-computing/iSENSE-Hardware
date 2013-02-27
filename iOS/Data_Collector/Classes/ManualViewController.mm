@@ -41,39 +41,48 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     
-    [self.view sendSubviewToBack:scrollView];
+    // allocations
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(displayMenu:)];
+    self.navigationItem.rightBarButtonItem = menuButton;
+    [menuButton release];
     
+    UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(hideKeyboard)];
+    tapGestureM.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGestureM];
+    [tapGestureM release];
+    
+    [self initLocations];
+    
+    // iSENSE API
+    iapi = [iSENSE getInstance];
+    [iapi toggleUseDev:YES];
+    if ([iapi isLoggedIn])
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+    else
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
+    
+    if ([iapi getCurrentExp] != 0) {
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
+        [self fillDataFieldEntryList:[iapi getCurrentExp]];
+    } else
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"]; 
+    
+    // scrollview
+    [self.view sendSubviewToBack:scrollView];
+    scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    // session name
     [self.sessionNameInput addTarget:self
                               action:@selector(textFieldFinished:)
                     forControlEvents:UIControlEventEditingDidEndOnExit];
     sessionNameInput.delegate = self;
     sessionNameInput.enablesReturnKeyAutomatically = NO;
     sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
-    
-    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
-    self.navigationItem.rightBarButtonItem = menuButton;
-    [menuButton release];
-    
-    iapi = [iSENSE getInstance];
-    [iapi toggleUseDev:YES];
-    
-    [self initLocations];
-    
-    if ([iapi isLoggedIn]) {
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
-    } else {
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
-    }
-    
-    scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
-    
-    UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-    tapGestureM.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tapGestureM];
-    [tapGestureM release];
     
     /////Try to upload an image//////
     
@@ -97,6 +106,10 @@
     [super viewDidUnload];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+}
 
 - (void) dealloc {
 	[logo release];
@@ -114,22 +127,57 @@
     [widController release];
     
     [locationManager release];
+    locationManager = nil;
     
 	[super dealloc];
 }
 
 - (void) initLocations {
-	locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [locationManager startUpdatingLocation];
+    if (!locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.distanceFilter = kCLDistanceFilterNone;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [locationManager startUpdatingLocation];
+    }
 }
 
 // method not called on real device - don't assign a location to a global variable here
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation *location = [locations lastObject];
     NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        
+    }
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
@@ -288,7 +336,7 @@
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
-            
+
             [iapi setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
