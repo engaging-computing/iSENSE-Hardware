@@ -7,138 +7,149 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		398D33EC16921A45001133D7 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E416921A45001133D7 /* Experiment.h */; };
-		398D33ED16921A45001133D7 /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E516921A45001133D7 /* ExperimentField.h */; };
-		398D33EE16921A45001133D7 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E616921A45001133D7 /* Image.h */; };
-		398D33EF16921A45001133D7 /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E716921A45001133D7 /* iSENSE.h */; };
-		398D33F016921A45001133D7 /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E816921A45001133D7 /* Item.h */; };
-		398D33F116921A45001133D7 /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33E916921A45001133D7 /* Person.h */; };
-		398D33F216921A45001133D7 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33EA16921A45001133D7 /* Session.h */; };
-		398D33F316921A45001133D7 /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 398D33EB16921A45001133D7 /* SessionData.h */; };
-		398D33FE16921A4A001133D7 /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F516921A4A001133D7 /* iSENSE.m */; };
-		398D33FF16921A4A001133D7 /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F716921A4A001133D7 /* Experiment.m */; };
-		398D340016921A4A001133D7 /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F816921A4A001133D7 /* ExperimentField.m */; };
-		398D340116921A4A001133D7 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33F916921A4A001133D7 /* Image.m */; };
-		398D340216921A4A001133D7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FA16921A4A001133D7 /* Item.m */; };
-		398D340316921A4A001133D7 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FB16921A4A001133D7 /* Person.m */; };
-		398D340416921A4A001133D7 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FC16921A4A001133D7 /* Session.m */; };
-		398D340516921A4A001133D7 /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 398D33FD16921A4A001133D7 /* SessionData.m */; };
-		AA747D9F0F9514B9006C5449 /* iSENSE_API_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */; };
-		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
+		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
+		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
+		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (); }; };
+		39A1CC2C16DFB48700B1979F /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261516DFA86B0062C3DC /* Item.h */; };
+		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
+		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
+		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
+		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
+		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
+		39FF262416DFA8760062C3DC /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
+		39FF262516DFA8760062C3DC /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261D16DFA8760062C3DC /* ExperimentField.m */; };
+		39FF262616DFA8760062C3DC /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261E16DFA8760062C3DC /* Image.m */; };
+		39FF262716DFA8760062C3DC /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261F16DFA8760062C3DC /* Item.m */; };
+		39FF262816DFA8760062C3DC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
+		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
+		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		39FF25DE16DFA28A0062C3DC /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		398D33E416921A45001133D7 /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
-		398D33E516921A45001133D7 /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
-		398D33E616921A45001133D7 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		398D33E716921A45001133D7 /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
-		398D33E816921A45001133D7 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
-		398D33E916921A45001133D7 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
-		398D33EA16921A45001133D7 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
-		398D33EB16921A45001133D7 /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
-		398D33F516921A4A001133D7 /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
-		398D33F716921A4A001133D7 /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
-		398D33F816921A4A001133D7 /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
-		398D33F916921A4A001133D7 /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
-		398D33FA16921A4A001133D7 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
-		398D33FB16921A4A001133D7 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
-		398D33FC16921A4A001133D7 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
-		398D33FD16921A4A001133D7 /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
-		39D1FE15169492EA00ECD18A /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_API_Prefix.pch; sourceTree = SOURCE_ROOT; };
-		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		39FF25E316DFA28A0062C3DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API-Prefix.pch"; sourceTree = "<group>"; };
+		39FF261116DFA86B0062C3DC /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		39FF261216DFA86B0062C3DC /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		39FF261316DFA86B0062C3DC /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		39FF261416DFA86B0062C3DC /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		39FF261516DFA86B0062C3DC /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		39FF261616DFA86B0062C3DC /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		39FF261716DFA86B0062C3DC /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		39FF261816DFA86B0062C3DC /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		39FF261A16DFA8760062C3DC /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
+		39FF261C16DFA8760062C3DC /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
+		39FF261D16DFA8760062C3DC /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
+		39FF261E16DFA8760062C3DC /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		39FF261F16DFA8760062C3DC /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		39FF262016DFA8760062C3DC /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D2AAC07C0554694100DB518D /* Frameworks */ = {
+		39FF25DD16DFA28A0062C3DC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
+				39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0867D691FE84028FC02AAC07 /* iSENSE_API */ = {
+		39FF25D516DFA28A0062C3DC = {
 			isa = PBXGroup;
 			children = (
-				08FB77AEFE84172EC02AAC07 /* Classes */,
-				32C88DFF0371C24200C91783 /* Other Sources */,
-				0867D69AFE84028FC02AAC07 /* Frameworks */,
-				39D1FE15169492EA00ECD18A /* libiSENSE_API.a */,
+				39FF25E516DFA28A0062C3DC /* iSENSE_API */,
+				39FF25E216DFA28A0062C3DC /* Frameworks */,
+				39FF25E116DFA28A0062C3DC /* Products */,
 			);
-			name = iSENSE_API;
 			sourceTree = "<group>";
 		};
-		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+		39FF25E116DFA28A0062C3DC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+				39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39FF25E216DFA28A0062C3DC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39FF25E316DFA28A0062C3DC /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
-				398D33F416921A4A001133D7 /* iSenseApiSrc */,
-				398D33E216921A45001133D7 /* iSenseApiLib */,
+				39FF261916DFA8760062C3DC /* src */,
+				39FF261016DFA86B0062C3DC /* headers */,
+				39FF25E616DFA28A0062C3DC /* Supporting Files */,
 			);
-			name = Classes;
+			path = iSENSE_API;
 			sourceTree = "<group>";
 		};
-		32C88DFF0371C24200C91783 /* Other Sources */ = {
+		39FF25E616DFA28A0062C3DC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AA747D9E0F9514B9006C5449 /* iSENSE_API_Prefix.pch */,
+				39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */,
 			);
-			name = "Other Sources";
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		398D33E216921A45001133D7 /* iSenseApiLib */ = {
+		39FF261016DFA86B0062C3DC /* headers */ = {
 			isa = PBXGroup;
 			children = (
-				398D33E316921A45001133D7 /* Headers */,
+				39FF261116DFA86B0062C3DC /* Experiment.h */,
+				39FF261216DFA86B0062C3DC /* ExperimentField.h */,
+				39FF261316DFA86B0062C3DC /* Image.h */,
+				39FF261416DFA86B0062C3DC /* iSENSE.h */,
+				39FF261516DFA86B0062C3DC /* Item.h */,
+				39FF261616DFA86B0062C3DC /* Person.h */,
+				39FF261716DFA86B0062C3DC /* Session.h */,
+				39FF261816DFA86B0062C3DC /* SessionData.h */,
 			);
-			path = iSenseApiLib;
+			path = headers;
 			sourceTree = "<group>";
 		};
-		398D33E316921A45001133D7 /* Headers */ = {
+		39FF261916DFA8760062C3DC /* src */ = {
 			isa = PBXGroup;
 			children = (
-				398D33E416921A45001133D7 /* Experiment.h */,
-				398D33E516921A45001133D7 /* ExperimentField.h */,
-				398D33E616921A45001133D7 /* Image.h */,
-				398D33E716921A45001133D7 /* iSENSE.h */,
-				398D33E816921A45001133D7 /* Item.h */,
-				398D33E916921A45001133D7 /* Person.h */,
-				398D33EA16921A45001133D7 /* Session.h */,
-				398D33EB16921A45001133D7 /* SessionData.h */,
+				39FF261A16DFA8760062C3DC /* iSENSE.m */,
+				39FF261B16DFA8760062C3DC /* Objects */,
 			);
-			path = Headers;
+			path = src;
 			sourceTree = "<group>";
 		};
-		398D33F416921A4A001133D7 /* iSenseApiSrc */ = {
+		39FF261B16DFA8760062C3DC /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				398D33F516921A4A001133D7 /* iSENSE.m */,
-				398D33F616921A4A001133D7 /* Objects */,
-			);
-			path = iSenseApiSrc;
-			sourceTree = "<group>";
-		};
-		398D33F616921A4A001133D7 /* Objects */ = {
-			isa = PBXGroup;
-			children = (
-				398D33F716921A4A001133D7 /* Experiment.m */,
-				398D33F816921A4A001133D7 /* ExperimentField.m */,
-				398D33F916921A4A001133D7 /* Image.m */,
-				398D33FA16921A4A001133D7 /* Item.m */,
-				398D33FB16921A4A001133D7 /* Person.m */,
-				398D33FC16921A4A001133D7 /* Session.m */,
-				398D33FD16921A4A001133D7 /* SessionData.m */,
+				39FF261C16DFA8760062C3DC /* Experiment.m */,
+				39FF261D16DFA8760062C3DC /* ExperimentField.m */,
+				39FF261E16DFA8760062C3DC /* Image.m */,
+				39FF261F16DFA8760062C3DC /* Item.m */,
+				39FF262016DFA8760062C3DC /* Person.m */,
+				39FF262116DFA8760062C3DC /* Session.m */,
+				39FF262216DFA8760062C3DC /* SessionData.m */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -146,32 +157,32 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		D2AAC07A0554694100DB518D /* Headers */ = {
+		39A1CC2616DFB47000B1979F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA747D9F0F9514B9006C5449 /* iSENSE_API_Prefix.pch in Headers */,
-				398D33EC16921A45001133D7 /* Experiment.h in Headers */,
-				398D33ED16921A45001133D7 /* ExperimentField.h in Headers */,
-				398D33EE16921A45001133D7 /* Image.h in Headers */,
-				398D33EF16921A45001133D7 /* iSENSE.h in Headers */,
-				398D33F016921A45001133D7 /* Item.h in Headers */,
-				398D33F116921A45001133D7 /* Person.h in Headers */,
-				398D33F216921A45001133D7 /* Session.h in Headers */,
-				398D33F316921A45001133D7 /* SessionData.h in Headers */,
+				39A1CC2816DFB48700B1979F /* Experiment.h in Headers */,
+				39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */,
+				39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */,
+				39A1CC2A16DFB48700B1979F /* Image.h in Headers */,
+				39A1CC2C16DFB48700B1979F /* Item.h in Headers */,
+				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
+				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
+				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D2AAC07D0554694100DB518D /* iSENSE_API */ = {
+		39FF25DF16DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "iSENSE_API" */;
+			buildConfigurationList = 39FF25EE16DFA28A0062C3DC /* Build configuration list for PBXNativeTarget "iSENSE_API" */;
 			buildPhases = (
-				D2AAC07A0554694100DB518D /* Headers */,
-				D2AAC07B0554694100DB518D /* Sources */,
-				D2AAC07C0554694100DB518D /* Frameworks */,
+				39FF25DC16DFA28A0062C3DC /* Sources */,
+				39FF25DD16DFA28A0062C3DC /* Frameworks */,
+				39FF25DE16DFA28A0062C3DC /* Copy Files */,
+				39A1CC2616DFB47000B1979F /* Headers */,
 			);
 			buildRules = (
 			);
@@ -179,137 +190,155 @@
 			);
 			name = iSENSE_API;
 			productName = iSENSE_API;
-			productReference = 39D1FE15169492EA00ECD18A /* libiSENSE_API.a */;
+			productReference = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		0867D690FE84028FC02AAC07 /* Project object */ = {
+		39FF25D716DFA28A0062C3DC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Jeremy Poulin";
 			};
-			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "iSENSE_API" */;
+			buildConfigurationList = 39FF25DA16DFA28A0062C3DC /* Build configuration list for PBXProject "iSENSE_API" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
-			hasScannedForEncodings = 1;
+			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
 				en,
 			);
-			mainGroup = 0867D691FE84028FC02AAC07 /* iSENSE_API */;
-			productRefGroup = 0867D691FE84028FC02AAC07 /* iSENSE_API */;
+			mainGroup = 39FF25D516DFA28A0062C3DC;
+			productRefGroup = 39FF25E116DFA28A0062C3DC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D2AAC07D0554694100DB518D /* iSENSE_API */,
+				39FF25DF16DFA28A0062C3DC /* iSENSE_API */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D2AAC07B0554694100DB518D /* Sources */ = {
+		39FF25DC16DFA28A0062C3DC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				398D33FE16921A4A001133D7 /* iSENSE.m in Sources */,
-				398D33FF16921A4A001133D7 /* Experiment.m in Sources */,
-				398D340016921A4A001133D7 /* ExperimentField.m in Sources */,
-				398D340116921A4A001133D7 /* Image.m in Sources */,
-				398D340216921A4A001133D7 /* Item.m in Sources */,
-				398D340316921A4A001133D7 /* Person.m in Sources */,
-				398D340416921A4A001133D7 /* Session.m in Sources */,
-				398D340516921A4A001133D7 /* SessionData.m in Sources */,
+				39FF262316DFA8760062C3DC /* iSENSE.m in Sources */,
+				39FF262416DFA8760062C3DC /* Experiment.m in Sources */,
+				39FF262516DFA8760062C3DC /* ExperimentField.m in Sources */,
+				39FF262616DFA8760062C3DC /* Image.m in Sources */,
+				39FF262716DFA8760062C3DC /* Item.m in Sources */,
+				39FF262816DFA8760062C3DC /* Person.m in Sources */,
+				39FF262916DFA8760062C3DC /* Session.m in Sources */,
+				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB921F08733DC00010E9CD /* Debug */ = {
+		39FF25EC16DFA28A0062C3DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = iSENSE_API_Prefix.pch;
-				INSTALL_PATH = /usr/local/lib;
-				PRODUCT_NAME = iSENSE_API;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
 			};
 			name = Debug;
 		};
-		1DEB922008733DC00010E9CD /* Release */ = {
+		39FF25ED16DFA28A0062C3DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				DSTROOT = /tmp/iSENSE_API.dst;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = iSENSE_API_Prefix.pch;
-				INSTALL_PATH = /usr/local/lib;
-				PRODUCT_NAME = iSENSE_API;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		1DEB922308733DC00010E9CD /* Debug */ = {
+		39FF25EF16DFA28A0062C3DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 			};
 			name = Debug;
 		};
-		1DEB922408733DC00010E9CD /* Release */ = {
+		39FF25F016DFA28A0062C3DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "iSENSE_API" */ = {
+		39FF25DA16DFA28A0062C3DC /* Build configuration list for PBXProject "iSENSE_API" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB921F08733DC00010E9CD /* Debug */,
-				1DEB922008733DC00010E9CD /* Release */,
+				39FF25EC16DFA28A0062C3DC /* Debug */,
+				39FF25ED16DFA28A0062C3DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "iSENSE_API" */ = {
+		39FF25EE16DFA28A0062C3DC /* Build configuration list for PBXNativeTarget "iSENSE_API" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB922308733DC00010E9CD /* Debug */,
-				1DEB922408733DC00010E9CD /* Release */,
+				39FF25EF16DFA28A0062C3DC /* Debug */,
+				39FF25F016DFA28A0062C3DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+	rootObject = 39FF25D716DFA28A0062C3DC /* Project object */;
 }

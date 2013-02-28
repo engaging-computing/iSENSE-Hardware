@@ -25,6 +25,7 @@
     UILabel *loginStatus;
     UILabel *expNumStatus;
     UIBarButtonItem *menuButton;
+    UILabel *elapsedTimeView;
 }
 
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
@@ -39,6 +40,8 @@
 - (void) getExperiments;
 
 @property (nonatomic) BOOL isRecording;
+@property (nonatomic) int elapsedTime;
+@property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
 @property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, assign) int expNum;
