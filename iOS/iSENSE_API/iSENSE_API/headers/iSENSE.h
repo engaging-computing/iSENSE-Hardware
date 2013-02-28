@@ -8,6 +8,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "Experiment.h"
 #import "ExperimentField.h"
 #import "Image.h"
@@ -19,8 +20,8 @@
 @interface iSENSE : NSObject {
 	NSString *username;
 	NSString *session_key;
-	
-	NSNumber * uid;
+	NSNumber *uid;
+    NSNumber *currentExp;
 }
 
 -(NSDictionary *)isenseQuery:(NSString*)target;
@@ -30,13 +31,13 @@
 - (bool) isLoggedIn;
 - (NSString *) getLoggedInUsername;
 - (void) logout;
-//- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name andDescirption:(NSString *)description;
+- (bool) upload:(UIImage *)picture toExperiment:(NSNumber *)exp_id forSession:(NSNumber *)ses_id withName:(NSString *)name andDescription:(NSString *)description;
 - (bool) login:(NSString *)user with:(NSString *)password;
 - (Experiment *) getExperiment:(NSNumber *)exp_id;
 - (NSMutableArray *) sessionData:(NSString *)sessions;
 - (NSMutableArray *) getPeople:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query;
 - (Item *) getProfile:(NSNumber *)user_id;
-- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query;
+- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort;
 - (NSMutableArray *) getExperimentImages:(NSNumber *)exp_id;
 - (NSMutableArray *) getExperimentVideos:(NSNumber *)exp_id;
 - (NSMutableArray *) getExperimentTags:(NSNumber *)exp_id;
@@ -46,6 +47,8 @@
 - (bool) putSessionData:(NSData *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id;
 - (bool) updateSessionData:(NSData *)dataJSON forSession:(NSNumber *)sessioN_id inExperiment:(NSNumber *)exp_id;
 - (void) toggleUseDev:(BOOL)toggle;
+- (void) setCurrentExp:(int)expNum;
+- (int)  getCurrentExp;
 
 @end
 

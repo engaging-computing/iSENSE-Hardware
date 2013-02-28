@@ -10,48 +10,46 @@
 #import "iSENSE.h"
 
 static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
-static iSENSE *_iSENSE = nil;
+static iSENSE* _iSENSE = nil;
 
 @implementation iSENSE
 
-// Makes a request to iSENSE and parse the JSONObject it gets back (TODO)
--(NSDictionary *)isenseQuery:(NSString*)target {
-    
-	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-	NSLog(@"Sent to iSENSE: %@", final_target);
+-(NSDictionary *)isenseQuery:(NSString*)target
+{
+	NSLog(@"Reached isenseQuery");
+	NSMutableString *base_url = [NSMutableString stringWithString:baseURL];
+	NSLog(@"%@", base_url);
+	[base_url appendString:target];
+	NSString *final = [base_url stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+	NSLog(@"Sent to iSENSE: %@", final);
 	NSError *requestError = nil;
-    
-    /* Post request to allow for longer request */
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:baseURL]];
-    [request setHTTPMethod:@"POST"];
-    
-    NSData *data = [final_target dataUsingEncoding:NSUTF8StringEncoding];
-    [request setHTTPBody:data];
-    NSString *length = [[NSNumber numberWithUnsignedInt:data.length] stringValue];
-    [request setValue:length forHTTPHeaderField:@"Content-Length"];
-    
-    NSURLResponse *serverResponse;
-    NSData *dataJSON = [NSURLConnection sendSynchronousRequest:request returningResponse:&serverResponse error:&requestError];
-    
-    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
+	NSData *dataJSON = [NSData dataWithContentsOfURL:[NSURL URLWithString:final] options:NSDataReadingMappedIfSafe error:&requestError];
+    NSLog(@"Error Communication: %@", requestError);
+    NSLog(@"Server Response: %@", [NSString stringWithUTF8String:[dataJSON bytes]]);
+    NSDictionary *jsonDictionary = [[NSDictionary alloc] autorelease];
+    jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
     NSLog(@"Error Returning Dictionary: %@", requestError);
     return jsonDictionary;
 }
 
-+(iSENSE*)getInstance {   
-     static dispatch_once_t pred;
-     static iSENSE *sharedInstance = nil;
-    
-     dispatch_once(&pred, ^{
-        sharedInstance = [[iSENSE alloc] init];
-     });
-    
-     return sharedInstance;
++(iSENSE*)getInstance
+{
+	@synchronized([iSENSE class])
+	{
+		if (!_iSENSE)
+			[[self alloc] init];
+		NSLog(@"Initialized iSENSE object.");
+		
+		return _iSENSE;
+	}
+	
+	return nil;
 }
 
-// Called internal to handle requests for new object
-+(id)alloc {
-	@synchronized([iSENSE class]) {
++(id)alloc
+{
+	@synchronized([iSENSE class])
+	{
 		NSAssert(_iSENSE == nil, @"Attempted to allocate a second instance of a singleton.");
 		_iSENSE = [super alloc];
 		return _iSENSE;
@@ -60,24 +58,16 @@ static iSENSE *_iSENSE = nil;
 	return nil;
 }
 
-// Called internally to initialize singleton
 -(id)init {
 	self = [super init];
 	if (self != nil) {
-        session_key = [[NSString alloc] init];
-        username = [[NSString alloc] init];
-        uid = [[NSNumber alloc] initWithInt:-1];
-        currentExp = [[[NSNumber alloc] initWithInt:0] retain];
-        
-        //currentExp = nil;
-        username = nil;
-        session_key = nil;
-        uid = nil;
+		username = [[NSString alloc] autorelease];
+		session_key =[[NSString alloc] autorelease];
+		uid = [[NSNumber alloc] autorelease];
 	}
 	
 	return self;
 }
-
 /* All of the following methods are obsolete */
 /*- (id)retain {
  return self;
@@ -87,12 +77,20 @@ static iSENSE *_iSENSE = nil;
  return UINT_MAX; //denotes an object that cannot be released
  }
  
- 
  - (id)autorelease {
  return self;
  }
  
  -(oneway void)release {
+ }
+ 
+ - (void)dealloc {
+ // Should never be called, but just here for clarity really.
+ [username release];
+ [session_key release];
+ [uid release];
+ [_iSENSE release];
+ [super dealloc];
  }
  
  - (NSZone *)zone {
@@ -101,170 +99,60 @@ static iSENSE *_iSENSE = nil;
  */
 /* End of obsolete methods. */
 
-
-- (void)dealloc {
-    NSLog(@"Session_key released");
-    [username release];
-    [session_key release];
-    [uid release];
-    [_iSENSE release];
-    [super dealloc];
-    // use just "abort();" to retain all.
-}
-
-
-
-// Use this method to access the session key if you are logged in.
 - (NSString *) getSessionKey {
 	return session_key;
 }
 
-// Use this method to access the user id number if you are logged in.
 - (NSNumber *) getUID {
 	return uid;
 }
 
-// Use this method to find out if you are logged in or not.
 - (bool) isLoggedIn {
-	if (session_key == nil || session_key == (id)[NSNull null]) {
+	if (session_key) {
+		if ([session_key isEqualToString:@""]) {
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	} else {
 		return FALSE;
-    } else {
-		return TRUE;
 	}
 }
 
-// Use this method to access the current username if you are logged in.
 - (NSString *) getLoggedInUsername {
 	return username;
 }
 
-// Use this method to logout of iSENSE(dev)
 - (void) logout {
-	session_key = nil;
-	username = nil;
+	session_key = NULL;
+	username = NULL;
 	uid = [NSNumber numberWithInt:-1];
 }
 
-// Use this method to login to iSENSE(dev)
 - (bool) login:(NSString *)user with:(NSString *)password {
+	NSLog(@"Login starts.");
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=login&username=%@&password=%@", user, password]];
-    
-    @try {
-        session_key = [[NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]] retain];
-        uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
-	} @catch (NSException *e) {
-        NSLog(@"Exception: %@", e);
-        return FALSE;
-    }
-    
-    if ([self isLoggedIn]) {
-        
-        NSString *successfulLoginName = [[[NSString alloc] initWithString:user] retain];
-		username = successfulLoginName;
-        
+   	session_key = [[result objectForKey:@"data"] valueForKey:@"session"];
+	NSLog(@"session_key = %@.", session_key);
+	uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
+	if ([self isLoggedIn]) {
+		username = user;
+        NSLog(@"Login set");
 		return TRUE;
-	} else username = nil;
+	}
 	
 	return FALSE;
 }
 
-- (bool) upload:(UIImage *)picture toExperiment:(NSNumber *)exp_id forSession:(NSNumber *)ses_id withName:(NSString *)name andDescription:(NSString *)description {
+//- (bool) upload:(NSFile)Picture toExperiment:(NSNumber *)exp_id withName:(NSString *)name andDescirption:(NSString *)description {
+//}
 
-    if ([self isLoggedIn]) {
-        
-        /*NSData *dataForImage = UIImagePNGRepresentation(picture);
-        NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:
-                                                  @"method=uploadImageToSession&image=%@&eid=%@&sid=%@&img_name=%@&img_description=%@&session_key=%@",
-                                                  dataForImage, exp_id, ses_id, name, description, session_key]];
-        NSArray *data = [result objectForKey:@"data"];
-        
-        // possible data could be: {"status":552,"data":{"msg":"The image type you attempted to upload is not supported"}}
-        // so add a check that this showed up, in which case, return false.  else there's a few more to check - i.e., the lack
-        // of some parameters.  so check things like: {"status":551,"data":{"msg":"Missing session key parameter"}}
-        if (data) {
-            return true;
-        }*/
-        
-        // -------- ATTEMPT 2 --------- stackoverflow.com/questions/8564833/ios-upload-image-and-text-using-http-post
-        
-        /*
-        // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
-        NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-        [_params setObject:[NSString stringWithString:@"1.0"] forKey:[NSString stringWithString:@"ver"]];
-        [_params setObject:[NSString stringWithString:@"en"] forKey:[NSString stringWithString:@"lan"]];
-        [_params setObject:[NSString stringWithFormat:@"%d", userId] forKey:[NSString stringWithString:@"userId"]];
-        [_params setObject:[NSString stringWithFormat:@"%@",title] forKey:[NSString stringWithString:@"title"]];
-        
-        // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
-        NSString *BoundaryConstant = [NSString stringWithString:@"----------V2ymHFg03ehbqgZCaKO6jy"];
-        
-        // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
-        NSString* FileParamConstant = [NSString stringWithString:@"file"];
-        
-        // the server url to which the image (or the media) is uploaded. Use your server url here
-        NSURL* requestURL = [NSURL URLWithString:@""];
-        
-        
-        // create request
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-        [request setHTTPShouldHandleCookies:NO];
-        [request setTimeoutInterval:30];
-        [request setHTTPMethod:@"POST"];
-        
-        // set Content-Type in HTTP header
-        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-        [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
-        
-        // post body
-        NSMutableData *body = [NSMutableData data];
-        
-        // add params (all params are strings)
-        for (NSString *param in _params) {
-            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"%@\r\n", [_params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
-        }
-        
-        // add image data
-        NSData *imageData = UIImageJPEGRepresentation(imageToPost, 1.0);
-        if (imageData) {
-            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithString:@"Content-Type: image/jpeg\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:imageData];
-            [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-        }
-        
-        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        // setting the body of the post to the reqeust
-        [request setHTTPBody:body];
-        
-        // set the content-length
-        NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        
-        // set URL
-        [request setURL:requestURL];
-        */
-        
-    }
-	
-	return false;
-}
-
-/*
- * Use this function to access experiments and their data.
- * 
- * Exp_id: The experiment id you want to get data from.
- */
 - (Experiment *) getExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiment&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	Experiment *e = [[Experiment new] autorelease];
 	
-	if (data) {
+	if (data) {	
 		[e setExperiment_id:[data valueForKey:@"experiment_id"]];
 		[e setOwner_id:[data valueForKey:@"owner_id"]];
 		[e setName:[data valueForKey:@"name"]];
@@ -277,27 +165,14 @@ static iSENSE *_iSENSE = nil;
 		[e setRating:[data valueForKey:@"rating"]];
 		[e setRating_votes:[data valueForKey:@"rating_votes"]];
 		[e setHidden:[data valueForKey:@"hidden"]];
-        [e setActivity:[data valueForKey:@"activity"]];
-        [e setActivity_for:[data valueForKey:@"activity_for"]];
-        [e setReq_name:[data valueForKey:@"req_name"]];
-        [e setReq_procedure:[data valueForKey:@"req_procedure"]];
-        [e setReq_location:[data valueForKey:@"req_location"]];
-        [e setName_prefix:[data valueForKey:@"name_prefix"]];
-        [e setLocation:[data valueForKey:@"location"]];
-        [e setClosed:[data valueForKey:@"closed"]];
-        [e setExp_image:[data valueForKey:@"exp_image"]];
-        [e setRecommended:[data valueForKey:@"recommended"]];
-        [e setDefault_vis:[data valueForKey:@"default_vis"]];
 		[e setFirstname:[data valueForKey:@"firstname"]];
-        [e setLastname:[data valueForKey:@"lastname"]];
-        [e setSrate:[data valueForKey:@"srate"]];
+		[e setLastname:[data valueForKey:@"lastname"]];
 	}
 	
 	return e;
     
 }
 
-// Use this method to access the data belonging to a given session.
 - (NSMutableArray *) sessionData:(NSString *)sessions {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=sessiondata&sessions=%@", sessions]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -334,7 +209,6 @@ static iSENSE *_iSENSE = nil;
 	return sessiondata;
 }
 
-// Use this method to go through iSENSE users.
 - (NSMutableArray *) getPeople:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=getPeople&page=%@&limit=%@&action=%@&query=%@", fromPage, limit, action, query]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -380,7 +254,6 @@ static iSENSE *_iSENSE = nil;
 	return people;
 }
 
-// Use this method to retrieve specific user data.
 - (Item *) getProfile:(NSNumber *)user_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getUserProfile&user=%@", user_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -448,21 +321,8 @@ static iSENSE *_iSENSE = nil;
 	
 }
 
-/*
- * Returns an array of experiment objects.
- *
- * Limit: How many results do you want returned. Defaults to 10.
- * Page: Depends on limit.  Assuming a limit of 10,  page 2 would yield results 11-20.
- * Query: Use this to search for experiments by keyword.
- * Sort: Sort results like on iSENSE.  Accepts "recent", "rating", "activity", and "popularity".
- */
-- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
-    NSLog(@"fromPage: %@", fromPage);
-    NSLog(@"withPage: %@", limit);
-    NSLog(@"withQuery: %@", query);
-    NSLog(@"andSort: %@", sort);
-    
-	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
+- (NSMutableArray *) getExperiments:(NSNumber *)fromPage withPageSize:(NSNumber *)limit withAction:(NSString *)action andQuery:(NSString *)query {
+	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&action=%@&query=%@", fromPage, limit, action, query]];
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *experiments = [[NSMutableArray new] autorelease];
@@ -472,7 +332,6 @@ static iSENSE *_iSENSE = nil;
 		id object;
 		while (object = [e nextObject]) {
 			NSDictionary *meta = [object objectForKey:@"meta"];
-            NSDictionary *obj = (NSDictionary *)object;
 			Experiment *exp = [[Experiment new] autorelease];
 			
 			[exp setExperiment_id:[meta objectForKey:@"experiment_id"]];
@@ -488,25 +347,9 @@ static iSENSE *_iSENSE = nil;
 			[exp setRating_votes:[meta objectForKey:@"rating_votes"]];
 			[exp setHidden:[meta objectForKey:@"hidden"]];
 			[exp setFirstname:[meta objectForKey:@"firstname"]];
-            [exp setActivity:[meta objectForKey:@"activity"]];
-            [exp setActivity_for:[meta objectForKey:@"activity_for"]];
-            [exp setReq_name:[meta objectForKey:@"req_name"]];
-            [exp setReq_procedure:[meta objectForKey:@"req_procedure"]];
-            [exp setReq_location:[meta objectForKey:@"req_location"]];
-            [exp setName_prefix:[meta objectForKey:@"name_prefix"]];
-            [exp setLocation:[meta objectForKey:@"location"]];
-            [exp setClosed:[meta objectForKey:@"closed"]];
-            [exp setExp_image:[meta objectForKey:@"exp_image"]];
-            [exp setRecommended:[meta objectForKey:@"recommended"]];
-            [exp setSrate:[meta objectForKey:@"srate"]];
-            [exp setDefault_vis:[meta objectForKey:@"default_vis"]];
-            [exp setRating_comp:[meta objectForKey:@"rating_comp"]];
-            [exp setTags:[obj objectForKey:@"tags"]];
-            [exp setRelevancy:[obj objectForKey:@"relevancy"]];
-            [exp setContrib_count:[obj objectForKey:@"contrib_count"]];
-            [exp setSession_count:[obj objectForKey:@"session_count"]];
-            
-            [experiments addObject:exp];
+			[exp setLastname:[meta objectForKey:@"lastname"]];
+			
+			[experiments addObject:exp];
 		}
 	}
 	
@@ -514,13 +357,13 @@ static iSENSE *_iSENSE = nil;
 	
 }
 
-// Use this method to retrieve images associated with an experiment (may be deprecated).
 - (NSMutableArray *) getExperimentImages:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentImages&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	
 	NSMutableArray *images = [[NSMutableArray new] autorelease];
-    if (data && data != (id)[NSNull null]) {
+	
+	if (data) {
 		NSEnumerator *e = [data objectEnumerator];
 		id object;
 		while (object = [e nextObject]) {
@@ -541,7 +384,6 @@ static iSENSE *_iSENSE = nil;
 	return images;
 }
 
-// Use this method to retrieve videos associated with an experiment (may be deprecated).
 - (NSMutableArray *) getExperimentVideos:(NSNumber *)exp_id {
 	return [[NSMutableArray new] autorelease];
 }
@@ -563,28 +405,14 @@ static iSENSE *_iSENSE = nil;
 	return tags;
 }
 
-/*
- * Use this method to get the experiment fields associated with an expiriment.
- * Please note that we don't store the experiment id belonging to the field, as we already know which experiment it belongs to.
- *
- * Exp_id: The experiment id whose fields who want.
- */
 - (NSMutableArray *) getExperimentFields:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperimentFields&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
 	
-	NSMutableArray *fields = [NSMutableArray new];
+	NSMutableArray *fields = [[NSMutableArray new] autorelease];
 	
 	if (data) {
-        NSEnumerator *e;
-        @try {
-            e = [data objectEnumerator];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"Empty array returned");
-            return fields;
-        }
-
+		NSEnumerator *e = [data objectEnumerator];
 		id object;
 		while (object = [e nextObject]) {
 			ExperimentField *expField = [[ExperimentField new] autorelease];
@@ -601,10 +429,9 @@ static iSENSE *_iSENSE = nil;
 		}
 	}
 	
-	return [fields autorelease];
+	return fields;
 }
 
-// Use this method to retrieve sessions associated with an experiment (may be deprecated).
 - (NSMutableArray *) getSessions:(NSNumber *)exp_id {
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getSessions&experiment=%@", exp_id]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -640,35 +467,27 @@ static iSENSE *_iSENSE = nil;
 	return sessions;
 }
 
-// Use this method to create a session and receive its session number (may be deprecated).
-// The API specification actually contains 'state' as opposed to 'country,' but historically we've always used country
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id {
-    if ([self isLoggedIn]) {
-        NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
-        NSNumber *sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
-        return sid;
-    }
-	return NULL;
+	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
+	NSNumber *sid = [[NSNumber alloc] autorelease];
+	
+	sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
+	
+	return sid;
 }
 
-// Use this method to add data to a session (may be deprecated).
-- (bool) putSessionData:(NSData *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
-    if ([self isLoggedIn]) {
-        
-        NSString *dataAsString = [[[NSString alloc] initWithData:dataJSON encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Session Key: = %@", session_key);
-        NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=putSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataAsString]];
-        NSArray *data = [result objectForKey:@"data"];
-        
-        if (data) {
-            return true;
-        }
-    }
+- (bool) putSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
+	NSLog(@"%@", session_id);
+	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=putSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataJSON]];
+	NSArray *data = [result objectForKey:@"data"];
+	
+	if (data) {
+		return true;
+	}
 	
 	return false;
 }
 
-// Use this method to add data to a session (may be deprecated). Duplicated of putSessionData.
 - (bool) updateSessionData:(NSString *)dataJSON forSession:(NSNumber *)session_id inExperiment:(NSNumber *)exp_id {
 	NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:@"method=updateSessionData&session_key=%@&sid=%@&eid=%@&data=%@", session_key, session_id, exp_id, dataJSON]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -680,32 +499,17 @@ static iSENSE *_iSENSE = nil;
 	return false;
 }
 
-// Use this method to toggle between using iSENSE and iSENSE dev
 - (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
 		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
-	} else {
+		NSLog(@"Switched to dev.");
+	} else {	
 		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
+		NSLog(@"Switched to iSENSE.");
+        
 	}
 }
 
-// Use this method to set the current experiment number
-- (void) setCurrentExp:(int)expNum {
-    
-    currentExp = [NSNumber numberWithInt:expNum];
-    [currentExp retain];
-}
-
-// Use this method to get the current experiment number
-- (int) getCurrentExp {
-    if (!currentExp)
-        return 0;
-    
-    if (currentExp == nil)
-        return 0;
-    
-    return currentExp.intValue;
-}
 
 
 @end

@@ -19,4 +19,5 @@
 	@synthesize type_name;
 	@synthesize unit_abbreviation;
 	@synthesize unit_name;
+
 @end
