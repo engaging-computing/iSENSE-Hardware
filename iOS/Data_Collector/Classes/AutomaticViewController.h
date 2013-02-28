@@ -12,6 +12,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreMotion/CoreMotion.h>
 #import "ExperimentBrowseViewController.h"
+#import "AutomaticConstants.h"
 
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>  {

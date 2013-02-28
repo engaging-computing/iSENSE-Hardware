@@ -139,6 +139,7 @@
 		399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources-iPad/MainWindow~ipad.xib"; sourceTree = "<group>"; };
 		399D31EB169E02FD005F9D51 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		39A1CE6816DFEABF008A99A6 /* button_light_long.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_light_long.png; path = "Resources-iPad/button_light_long.png"; sourceTree = "<group>"; };
+		39A1CE7A16DFEF41008A99A6 /* AutomaticConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutomaticConstants.h; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
@@ -470,6 +471,7 @@
 			children = (
 				399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */,
 				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.m */,
+				39A1CE7A16DFEF41008A99A6 /* AutomaticConstants.h */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";

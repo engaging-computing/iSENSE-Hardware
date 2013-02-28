@@ -11,6 +11,7 @@
 #import "ExperimentBlock.h"
 #import "ISenseSearch.h"
 #import "StringGrabber.h"
+#import "AutomaticConstants.h"
 
 @interface ExperimentBrowseViewController : UIViewController <UISearchBarDelegate, UIScrollViewDelegate> {
     iSENSE *isenseAPI;
