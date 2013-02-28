@@ -21,9 +21,11 @@
 #define OPTION_BROWSE_EXPERIMENTS 2
 #define OPTION_SCAN_QR_CODE 3
 
+#define NAVIGATION_CONTROLLER_HEIGHT 44
+
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, elapsedTime;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -47,8 +49,17 @@
             [self setIsRecording:TRUE];
             motionManager = [[self recordData] retain];
             
+            // Update elapsed time
+            elapsedTime = 0;
+            [self updateElapsedTime];
+            timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
+            
         // Stop Recording
         } else {
+            // Stop Timer
+            [timer invalidate];
+            [timer release];
+            
             // Back to red mode
             startStopButton.image = [UIImage imageNamed:@"red_button.png"];
             mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
@@ -99,7 +110,7 @@
     UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
-        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
         mainView.backgroundColor = [UIColor blackColor];
         self.view = mainView;
         [mainView release];
@@ -144,11 +155,19 @@
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
+        // Add the elapsedTime counter at the bottom
+        elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50)];
+        elapsedTimeView.textAlignment = NSTextAlignmentCenter;
+        elapsedTimeView.font = [elapsedTimeView.font fontWithSize:18];
+        elapsedTimeView.textColor = [UIColor whiteColor];
+        elapsedTimeView.backgroundColor = [UIColor clearColor];
+        
         // Add all the subviews to main view
         [self.view addSubview:expNumStatus];
         [self.view addSubview:loginStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
+        [self.view addSubview:elapsedTimeView];
         
         // Add a menu button
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
@@ -163,7 +182,7 @@
     } else {
         
         // Bound, allocate, and customize the main view
-        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
         mainView.backgroundColor = [UIColor blackColor];
         self.view = mainView;
         [mainView release];
@@ -208,11 +227,19 @@
         expNumStatus.backgroundColor = [UIColor clearColor];
         expNumStatus.font = [UIFont fontWithName:@"Arial" size:12];
         
+        // Add the elapsedTime counter at the bottom
+        elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25)];
+        elapsedTimeView.textAlignment = NSTextAlignmentCenter;
+        elapsedTimeView.font = [elapsedTimeView.font fontWithSize:12];
+        elapsedTimeView.textColor = [UIColor whiteColor];
+        elapsedTimeView.backgroundColor = [UIColor clearColor];
+        
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
         [self.view addSubview:expNumStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
+        [self.view addSubview:elapsedTimeView];
         
         // Add a menu button
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
@@ -276,32 +303,36 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-            self.view.frame = CGRectMake(0, 0, 1024, 768);
+            self.view.frame = CGRectMake(0, 0, 1024, 768 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(5, 5, 502, 125 );
             containerForMainButton.frame = CGRectMake(517, 184, 400, 400);
             loginStatus.frame = CGRectMake(5, 135, 502, 40);
             expNumStatus.frame = CGRectMake(5, 175, 502, 40);
+            elapsedTimeView.frame = CGRectMake(5, 550, 502, 40);
         } else {
-            self.view.frame = CGRectMake(0, 0, 768, 1024);
+            self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(20, 5, 728, 150);
+            containerForMainButton.frame = CGRectMake(174, 300, 400, 400);
             loginStatus.frame = CGRectMake(0, 160, 768, 40);
             expNumStatus.frame = CGRectMake(0, 200, 768, 40);
-            containerForMainButton.frame = CGRectMake(174, 300, 400, 400);
+            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50);
         }
     } else {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-            self.view.frame = CGRectMake(0, 0, 480, 320);
+            self.view.frame = CGRectMake(0, 0, 480, 320 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(15, 5, 180, 40);
             containerForMainButton.frame = CGRectMake(220, 5, 250, 250);
             loginStatus.frame = CGRectMake(5, 50, 200, 20);
             expNumStatus.frame = CGRectMake(5, 65, 200, 20);
+            elapsedTimeView.frame = CGRectMake(5, 220, 200, 20);
         } else {
-            self.view.frame = CGRectMake(0, 0, 320, 480);
+            self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
             containerForMainButton.frame = CGRectMake(35, 130, 250, 250);
             loginStatus.frame = CGRectMake(0, 85, 320, 20);
             expNumStatus.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
+            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25);
         }
     }
 }
@@ -501,7 +532,6 @@
             [message release];
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
-            /* Code that shouldn't work yet */
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNum;
@@ -529,4 +559,11 @@
         
     }
 }
+
+- (void)updateElapsedTime {
+    if (elapsedTime == 1) elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d second", elapsedTime];
+    else elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d seconds", elapsedTime];
+    elapsedTime++;
+}
+
 @end

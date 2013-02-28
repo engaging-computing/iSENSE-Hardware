@@ -16,14 +16,6 @@
 		39088254169B689F00BEE04F /* UIImageTint.m in Sources */ = {isa = PBXBuildFile; fileRef = 39088253169B689F00BEE04F /* UIImageTint.m */; };
 		391B093D16BAE99700FB8DF3 /* button_experiment_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */; };
 		391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */; };
-		39521F2916949AA60076A9CA /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2016949AA60076A9CA /* iSENSE.m */; };
-		39521F2A16949AA60076A9CA /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2216949AA60076A9CA /* Experiment.m */; };
-		39521F2B16949AA60076A9CA /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2316949AA60076A9CA /* ExperimentField.m */; };
-		39521F2C16949AA60076A9CA /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2416949AA60076A9CA /* Image.m */; };
-		39521F2D16949AA60076A9CA /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2516949AA60076A9CA /* Item.m */; };
-		39521F2E16949AA60076A9CA /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2616949AA60076A9CA /* Person.m */; };
-		39521F2F16949AA60076A9CA /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2716949AA60076A9CA /* Session.m */; };
-		39521F3016949AA60076A9CA /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39521F2816949AA60076A9CA /* SessionData.m */; };
 		3963689E169725AA00631268 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3963689D169725AA00631268 /* Toast.m */; };
 		397DD9FD169761C90065DBD3 /* bluecheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 397DD9FB169761C90065DBD3 /* bluecheck.png */; };
 		397DD9FE169761C90065DBD3 /* red_x.png in Resources */ = {isa = PBXBuildFile; fileRef = 397DD9FC169761C90065DBD3 /* red_x.png */; };
@@ -34,6 +26,7 @@
 		399D31E1169DFFCB005F9D51 /* SplashView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52572BC61691FBC6009037A7 /* SplashView-iPad.xib */; };
 		399D31EA169E02DF005F9D51 /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */; };
 		399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 399D31EB169E02FD005F9D51 /* MainWindow.xib */; };
+		39A1CC2516DFB44300B1979F /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */; };
 		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
@@ -80,6 +73,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3987713916DFB2F300DBDE56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39FF25E016DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
+		};
+		39A1CC2316DFB43F00B1979F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
+		};
 		B7DD76CC16B86543000B0CCF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
@@ -117,18 +124,11 @@
 		39088253169B689F00BEE04F /* UIImageTint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageTint.m; sourceTree = "<group>"; };
 		391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_experiment_clean.png; path = "Resources-iPad/button_experiment_clean.png"; sourceTree = "<group>"; };
 		391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_experiment_dark.png; path = "Resources-iPad/button_experiment_dark.png"; sourceTree = "<group>"; };
-		39521F2016949AA60076A9CA /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
-		39521F2216949AA60076A9CA /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
-		39521F2316949AA60076A9CA /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
-		39521F2416949AA60076A9CA /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
-		39521F2516949AA60076A9CA /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
-		39521F2616949AA60076A9CA /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
-		39521F2716949AA60076A9CA /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
-		39521F2816949AA60076A9CA /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
 		3963689C169725AA00631268 /* Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toast.h; sourceTree = "<group>"; };
 		3963689D169725AA00631268 /* Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toast.m; sourceTree = "<group>"; };
 		397DD9FB169761C90065DBD3 /* bluecheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluecheck.png; sourceTree = "<group>"; };
 		397DD9FC169761C90065DBD3 /* red_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_x.png; sourceTree = "<group>"; };
+		3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		399787A916B2FDED005F147B /* ExperimentBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBlock.h; sourceTree = "<group>"; };
 		399787AA16B2FDED005F147B /* ExperimentBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBlock.m; sourceTree = "<group>"; };
 		399B39D216A089B0000564D9 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -139,14 +139,6 @@
 		399D31EB169E02FD005F9D51 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
-		39A9E9F816921EFA003D2EBB /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
-		39A9E9F916921EFA003D2EBB /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
-		39A9E9FA16921EFA003D2EBB /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		39A9E9FB16921EFA003D2EBB /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
-		39A9E9FC16921EFA003D2EBB /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
-		39A9E9FD16921EFA003D2EBB /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
-		39A9E9FE16921EFA003D2EBB /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
-		39A9E9FF16921EFA003D2EBB /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
 		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
 		39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBrowseViewController.m; sourceTree = "<group>"; };
 		39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView~ipad.xib"; sourceTree = "<group>"; };
@@ -210,6 +202,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39A1CC2516DFB44300B1979F /* libiSENSE_API.a in Frameworks */,
 				B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */,
 				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
 				B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */,
@@ -233,7 +226,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				39A9E9F616921EFA003D2EBB /* iSenseApiLib */,
+				398770F216DFB02100DBDE56 /* iSENSE_API */,
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
 				52572B6F1691F6E9009037A7 /* Manual */,
@@ -317,29 +310,6 @@
 			name = UIImageTint;
 			sourceTree = "<group>";
 		};
-		39521F1F16949AA60076A9CA /* iSenseApiSrc */ = {
-			isa = PBXGroup;
-			children = (
-				39521F2016949AA60076A9CA /* iSENSE.m */,
-				39521F2116949AA60076A9CA /* Objects */,
-			);
-			path = iSenseApiSrc;
-			sourceTree = "<group>";
-		};
-		39521F2116949AA60076A9CA /* Objects */ = {
-			isa = PBXGroup;
-			children = (
-				39521F2216949AA60076A9CA /* Experiment.m */,
-				39521F2316949AA60076A9CA /* ExperimentField.m */,
-				39521F2416949AA60076A9CA /* Image.m */,
-				39521F2516949AA60076A9CA /* Item.m */,
-				39521F2616949AA60076A9CA /* Person.m */,
-				39521F2716949AA60076A9CA /* Session.m */,
-				39521F2816949AA60076A9CA /* SessionData.m */,
-			);
-			path = Objects;
-			sourceTree = "<group>";
-		};
 		3963689A1697258700631268 /* Toast */ = {
 			isa = PBXGroup;
 			children = (
@@ -347,6 +317,22 @@
 				3963689D169725AA00631268 /* Toast.m */,
 			);
 			name = Toast;
+			sourceTree = "<group>";
+		};
+		398770F216DFB02100DBDE56 /* iSENSE_API */ = {
+			isa = PBXGroup;
+			children = (
+				3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */,
+			);
+			name = iSENSE_API;
+			sourceTree = "<group>";
+		};
+		3987713616DFB2F300DBDE56 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		399787A716B2FDA6005F147B /* ExperimentBlock */ = {
@@ -365,31 +351,6 @@
 				39A752EF16C18EFB00914BBE /* ISenseSearch.m */,
 			);
 			name = ISenseSearch;
-			sourceTree = "<group>";
-		};
-		39A9E9F616921EFA003D2EBB /* iSenseApiLib */ = {
-			isa = PBXGroup;
-			children = (
-				39521F1F16949AA60076A9CA /* iSenseApiSrc */,
-				39A9E9F716921EFA003D2EBB /* Headers */,
-			);
-			name = iSenseApiLib;
-			path = ../../iSENSE_API/iSenseApiLib;
-			sourceTree = "<group>";
-		};
-		39A9E9F716921EFA003D2EBB /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-				39A9E9F816921EFA003D2EBB /* Experiment.h */,
-				39A9E9F916921EFA003D2EBB /* ExperimentField.h */,
-				39A9E9FA16921EFA003D2EBB /* Image.h */,
-				39A9E9FB16921EFA003D2EBB /* iSENSE.h */,
-				39A9E9FC16921EFA003D2EBB /* Item.h */,
-				39A9E9FD16921EFA003D2EBB /* Person.h */,
-				39A9E9FE16921EFA003D2EBB /* Session.h */,
-				39A9E9FF16921EFA003D2EBB /* SessionData.h */,
-			);
-			path = Headers;
 			sourceTree = "<group>";
 		};
 		39DA66D016B6F840001EE336 /* ExperimentBrowser */ = {
@@ -601,6 +562,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				39A1CC2416DFB43F00B1979F /* PBXTargetDependency */,
 				B7DD76D216B86550000B0CCF /* PBXTargetDependency */,
 			);
 			name = Data_Collector;
@@ -630,6 +592,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 3987713616DFB2F300DBDE56 /* Products */;
+					ProjectRef = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+				},
+				{
 					ProductGroup = B7DD76C816B86543000B0CCF /* Products */;
 					ProjectRef = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
 				},
@@ -642,6 +608,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libiSENSE_API.a;
+			remoteRef = 3987713916DFB2F300DBDE56 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		B7DD76CD16B86543000B0CCF /* libZXingWidget.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -711,14 +684,6 @@
 				52572B951691F796009037A7 /* GuideView.m in Sources */,
 				52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */,
 				52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */,
-				39521F2916949AA60076A9CA /* iSENSE.m in Sources */,
-				39521F2A16949AA60076A9CA /* Experiment.m in Sources */,
-				39521F2B16949AA60076A9CA /* ExperimentField.m in Sources */,
-				39521F2C16949AA60076A9CA /* Image.m in Sources */,
-				39521F2D16949AA60076A9CA /* Item.m in Sources */,
-				39521F2E16949AA60076A9CA /* Person.m in Sources */,
-				39521F2F16949AA60076A9CA /* Session.m in Sources */,
-				39521F3016949AA60076A9CA /* SessionData.m in Sources */,
 				39F8AF9A1694C20C00E5E4C2 /* StringGrabber.m in Sources */,
 				39F8AF9E1694C23800E5E4C2 /* CameraUsage.m in Sources */,
 				3963689E169725AA00631268 /* Toast.m in Sources */,
@@ -735,6 +700,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		39A1CC2416DFB43F00B1979F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API;
+			targetProxy = 39A1CC2316DFB43F00B1979F /* PBXContainerItemProxy */;
+		};
 		B7DD76D216B86550000B0CCF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ZXingWidget;
@@ -756,12 +726,12 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../zxing/iphone/ZXingWidget/Classes/**",
 					"$(PROJECT_DIR)/../zxing/cpp/core/src",
+					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
 				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
 					"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos",
@@ -784,12 +754,12 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../zxing/iphone/ZXingWidget/Classes/**",
 					"$(PROJECT_DIR)/../zxing/cpp/core/src",
+					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
 				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../iSENSE_API/iSenseApiLib\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/Data_Collector-fnsxxoruxpqptrczssdokvyhsoca/Build/Products/Debug-iphoneos\"",
 					"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos",
