@@ -129,13 +129,17 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Upload</string>
 						<reference key="IBUIHighlightedTitleColor" ref="51363907"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						<object class="NSColor" key="IBUINormalTitleColor" id="255472718">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MAA</bytes>
 						</object>
 						<object class="NSColor" key="IBUINormalTitleShadowColor" id="297494511">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="362097943">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">button_light_long.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="1062733964">
 							<string key="name">Helvetica-Bold</string>
@@ -163,11 +167,9 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Clear</string>
 						<reference key="IBUIHighlightedTitleColor" ref="51363907"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
-						</object>
+						<reference key="IBUINormalTitleColor" ref="255472718"/>
 						<reference key="IBUINormalTitleShadowColor" ref="297494511"/>
+						<reference key="IBUINormalBackgroundImage" ref="362097943"/>
 						<reference key="IBUIFontDescription" ref="1062733964"/>
 						<reference key="IBUIFont" ref="770718651"/>
 					</object>
@@ -184,15 +186,13 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<reference key="IBUIHighlightedTitleColor" ref="51363907"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
-						</object>
+						<reference key="IBUINormalTitleColor" ref="255472718"/>
 						<reference key="IBUINormalTitleShadowColor" ref="297494511"/>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">media_icon.png</string>
 						</object>
+						<reference key="IBUINormalBackgroundImage" ref="362097943"/>
 						<reference key="IBUIFontDescription" ref="1062733964"/>
 						<reference key="IBUIFont" ref="770718651"/>
 					</object>
@@ -234,7 +234,6 @@
 						<string key="NSFrame">{{20, 295}, {984, 433}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -244,10 +243,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="1065332922"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MAA</bytes>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="255472718"/>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
@@ -543,6 +539,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="button_light_long.png">{500, 200}</string>
 			<string key="logo_manual.png">{640, 160}</string>
 			<string key="media_icon.png">{96, 96}</string>
 		</dictionary>
