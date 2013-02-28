@@ -197,6 +197,7 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualConstants.h; sourceTree = "<group>"; };
 		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -503,6 +504,7 @@
 		52572B6F1691F6E9009037A7 /* Manual */ = {
 			isa = PBXGroup;
 			children = (
+				B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */,
 				52572B971691F7B1009037A7 /* ManualViewController.h */,
 				52572B981691F7B1009037A7 /* ManualViewController.mm */,
 			);

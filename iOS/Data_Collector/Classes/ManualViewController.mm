@@ -8,29 +8,8 @@
 //
 
 #import "ManualViewController.h"
+#import "ManualConstants.h"
 #import "Data_CollectorAppDelegate.h"
-
-#define MENU_UPLOAD                   0
-#define MENU_EXPERIMENT               1
-#define MENU_LOGIN                    2
-#define EXPERIMENT_MANUAL_ENTRY       3
-#define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define CLEAR_FIELDS_DIALOG           5
-
-#define OPTION_CANCELED                0
-#define OPTION_ENTER_EXPERIMENT_NUMBER 1
-#define OPTION_BROWSE_EXPERIMENTS      2
-#define OPTION_SCAN_QR_CODE            3
-
-#define TYPE_DEFAULT   0
-#define TYPE_LATITUDE  1
-#define TYPE_LONGITUDE 2
-#define TYPE_TIME      3
-
-#define SCROLLVIEW_Y_OFFSET     50
-#define SCROLLVIEW_OBJ_INCR     30
-#define SCROLLVIEW_LABEL_HEIGHT 20
-#define SCROLLVIEW_TEXT_HEIGHT  35
 
 @implementation ManualViewController
 
@@ -69,7 +48,7 @@
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
         [self fillDataFieldEntryList:[iapi getCurrentExp]];
     } else
-        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"]; 
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
     
     // scrollview
     [self.view sendSubviewToBack:scrollView];
@@ -594,17 +573,20 @@
     
     UILabel *fieldName;
     if (objNum == 0) {
-        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
+        fieldName = [[UILabel alloc] initWithFrame:[self setScrollViewItem:UI_FIELDNAME toSizeWithY:Y_FIELDNAME]];
+        //fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
     } else {
         Y_FIELDNAME += (SCROLLVIEW_OBJ_INCR * objNum);
         Y_FIELDCONTENTS += (SCROLLVIEW_OBJ_INCR * objNum);
-        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
+        fieldName = [[UILabel alloc] initWithFrame:[self setScrollViewItem:UI_FIELDNAME toSizeWithY:Y_FIELDNAME]];
+        //fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
     }
     fieldName.backgroundColor = [UIColor blackColor];
     fieldName.textColor = [UIColor whiteColor];
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
-    UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
+    //UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
+    UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
     fieldContents.delegate = self;
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
@@ -640,6 +622,42 @@
     [fieldContents release];
     
     return (int) Y_FIELDCONTENTS;
+}
+
+- (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y {
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    // if needed, check orientation == 0 for a failsafe (should be true if it's portrait)
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            if (type == UI_FIELDNAME) {
+               return CGRectMake(0, y, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+               return CGRectMake(0, y, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        } else {
+            if (type == UI_FIELDNAME) {
+                return CGRectMake(0, y, IPAD_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+                return CGRectMake(0, y, IPAD_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        }
+    } else {
+        if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            if (type == UI_FIELDNAME) {
+                return CGRectMake(0, y, IPHONE_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+                return CGRectMake(0, y, IPHONE_WIDTH_PORTRAIT, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        } else {
+            if (type == UI_FIELDNAME) {
+                return CGRectMake(0, y, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+                return CGRectMake(0, y, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        }
+    }
 }
 
 - (void) getDataFromFields {
