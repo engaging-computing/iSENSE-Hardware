@@ -58,14 +58,14 @@
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
-						<object class="NSColor" key="IBUINormalTitleColor" id="927718707">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MCAwIDAAA</bytes>
-							<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
-						</object>
+						<reference key="IBUINormalTitleColor" ref="345865000"/>
 						<object class="NSColor" key="IBUINormalTitleShadowColor" id="969612212">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="24095507">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">button_dark.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="611053294">
 							<string key="name">Helvetica-Bold</string>
@@ -92,15 +92,16 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Manual</string>
 						<reference key="IBUIHighlightedTitleColor" ref="345865000"/>
-						<reference key="IBUINormalTitleColor" ref="927718707"/>
+						<reference key="IBUINormalTitleColor" ref="345865000"/>
 						<reference key="IBUINormalTitleShadowColor" ref="969612212"/>
+						<reference key="IBUINormalBackgroundImage" ref="24095507"/>
 						<reference key="IBUIFontDescription" ref="611053294"/>
 						<reference key="IBUIFont" ref="892686010"/>
 					</object>
 					<object class="IBUIImageView" id="439929432">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{26, 171}, {268, 47}}</string>
+						<string key="NSFrame">{{26, 154}, {268, 67}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="12175194"/>
@@ -108,7 +109,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">data_collector_logo.png</string>
+							<string key="NSResourceName">logo_datacollector_dark.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="12175194">
@@ -151,7 +152,11 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<string key="IBUIText">Welcome to:</string>
-						<reference key="IBUITextColor" ref="927718707"/>
+						<object class="NSColor" key="IBUITextColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MCAwIDAAA</bytes>
+							<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
+						</object>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">0</int>
 						<object class="IBUIFontDescription" key="IBUIFontDescription">
@@ -263,8 +268,8 @@
 							<reference ref="966147450"/>
 							<reference ref="12175194"/>
 							<reference ref="1023948734"/>
-							<reference ref="439929432"/>
 							<reference ref="318646209"/>
+							<reference ref="439929432"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -463,12 +468,14 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>data_collector_logo.png</string>
+				<string>button_dark.png</string>
+				<string>logo_datacollector_dark.png</string>
 				<string>logo_manual.png</string>
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>{716, 145}</string>
+				<string>{300, 200}</string>
+				<string>{500, 100}</string>
 				<string>{640, 160}</string>
 			</object>
 		</object>
