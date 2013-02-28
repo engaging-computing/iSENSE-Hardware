@@ -38,7 +38,6 @@
 		52572B7D1691F742009037A7 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		52572B7E1691F742009037A7 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
 		52572B7F1691F742009037A7 /* spinner_orb.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B761691F742009037A7 /* spinner_orb.png */; };
-		52572B801691F742009037A7 /* data_collector_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B771691F742009037A7 /* data_collector_logo.png */; };
 		52572B811691F742009037A7 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B781691F742009037A7 /* icon.png */; };
 		52572B821691F742009037A7 /* green_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B791691F742009037A7 /* green_button.png */; };
 		52572B831691F742009037A7 /* logo_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7A1691F742009037A7 /* logo_red.png */; };
@@ -67,6 +66,9 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B7B2284216DFA81100874980 /* data_collector_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B7B2284116DFA81100874980 /* data_collector_logo.png */; };
+		B7B2284416DFA8E300874980 /* logo_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B7B2284316DFA8E300874980 /* logo_black.png */; };
+		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
 		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -150,7 +152,6 @@
 		52572B741691F742009037A7 /* media_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_icon.png; sourceTree = "<group>"; };
 		52572B751691F742009037A7 /* logo_manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_manual.png; sourceTree = "<group>"; };
 		52572B761691F742009037A7 /* spinner_orb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spinner_orb.png; sourceTree = "<group>"; };
-		52572B771691F742009037A7 /* data_collector_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = data_collector_logo.png; sourceTree = "<group>"; };
 		52572B781691F742009037A7 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		52572B791691F742009037A7 /* green_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_button.png; sourceTree = "<group>"; };
 		52572B7A1691F742009037A7 /* logo_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_red.png; sourceTree = "<group>"; };
@@ -189,6 +190,10 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B7B2284116DFA81100874980 /* data_collector_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = data_collector_logo.png; sourceTree = "<group>"; };
+		B7B2284316DFA8E300874980 /* logo_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_black.png; sourceTree = "<group>"; };
+		B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualConstants.h; sourceTree = "<group>"; };
+		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -378,6 +383,8 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				B7B2284316DFA8E300874980 /* logo_black.png */,
+				B7B2284116DFA81100874980 /* data_collector_logo.png */,
 				39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */,
 				391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */,
 				391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */,
@@ -387,7 +394,6 @@
 				52572B741691F742009037A7 /* media_icon.png */,
 				52572B751691F742009037A7 /* logo_manual.png */,
 				52572B761691F742009037A7 /* spinner_orb.png */,
-				52572B771691F742009037A7 /* data_collector_logo.png */,
 				52572B781691F742009037A7 /* icon.png */,
 				52572B791691F742009037A7 /* green_button.png */,
 				52572B7A1691F742009037A7 /* logo_red.png */,
@@ -410,6 +416,7 @@
 			children = (
 				399D31EB169E02FD005F9D51 /* MainWindow.xib */,
 				39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */,
+				B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */,
 				52572B8F1691F788009037A7 /* AboutView.xib */,
 				52572B941691F796009037A7 /* GuideView.xib */,
 				52572B8A1691F77D009037A7 /* SplashView.xib */,
@@ -464,6 +471,7 @@
 		52572B6F1691F6E9009037A7 /* Manual */ = {
 			isa = PBXGroup;
 			children = (
+				B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */,
 				52572B971691F7B1009037A7 /* ManualViewController.h */,
 				52572B981691F7B1009037A7 /* ManualViewController.mm */,
 			);
@@ -631,7 +639,6 @@
 				52572B7D1691F742009037A7 /* media_icon.png in Resources */,
 				52572B7E1691F742009037A7 /* logo_manual.png in Resources */,
 				52572B7F1691F742009037A7 /* spinner_orb.png in Resources */,
-				52572B801691F742009037A7 /* data_collector_logo.png in Resources */,
 				52572B811691F742009037A7 /* icon.png in Resources */,
 				52572B821691F742009037A7 /* green_button.png in Resources */,
 				52572B831691F742009037A7 /* logo_red.png in Resources */,
@@ -657,6 +664,9 @@
 				B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */,
 				B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */,
 				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
+				B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */,
+				B7B2284216DFA81100874980 /* data_collector_logo.png in Resources */,
+				B7B2284416DFA8E300874980 /* logo_black.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

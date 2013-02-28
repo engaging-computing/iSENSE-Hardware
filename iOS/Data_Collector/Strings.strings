@@ -62,17 +62,13 @@ AUTOMATIC ENTRY:
 
 You\’ll know when you’re in the automatic application when you see a lot of red: a red iSENSE logo, button colors, borders, and more.  We\’ll get more into what this red means later.  The initial screen displays our logo, three textboxes where you can enter a session name, sample interval, and recording length, a large button that states \“Start\”, and a label for time elapsed.
 
-Where do we begin?  Take a look at the automatic application\'s menu bar.  There are 5 options, which include \"Experiment\", \"Upload\", \"Login\", \"Media\",and \"Sync Time\".  I will talk to you about each of these menu options individually.
-
-Experiment: Selecting an experiment using this menu option is necessary to record data.  Without a proper experiment, your data has no where to go on iSENSE!  To select an experiment, you may manually enter the experiment\'s number, browse experiments and select an experiment from there, or scan the experiment\'s QR code.  After selecting a valid experiment to upload your data to, you will be brought to a Sensor Selection screen where you can see the experiment\'s fields that can be recorded by your device.  If your device cannot record any of the experiment\'s fields or if the experiment is invalid, you will be brought back to the experiment selection dialog where you must choose another experiment to record and upload data to.
+Where do we begin?  Take a look at the automatic application\'s menu bar.  There are 5 options, which include \"Upload\", \"Experiment\", and \"Login\".  I will talk to you about each of these menu options individually.
 
 Upload: Upload is not the generic \"upload my data\" button.  This feature is useful for any data sets that you have recorded that fail to upload to iSENSE.  After you have finished recording data, you will be prompted to upload the data.  If the upload succeeds, nothing will show up in the Upload menu option and you will be informed that there is no additional data that needs to be uploaded.  However, if an upload fails for whatever reason, it will be added to this menu option which will then allow you to try uploading the data or media again later.
 
+Experiment: Selecting an experiment using this menu option is necessary to record data.  Without a proper experiment, your data has no where to go on iSENSE!  To select an experiment, you may manually enter the experiment\'s number, browse experiments and select an experiment from there, or scan the experiment\'s QR code.  After selecting a valid experiment to upload your data to, you will be brought to a Sensor Selection screen where you can see the experiment\'s fields that can be recorded by your device.  If your device cannot record any of the experiment\'s fields or if the experiment is invalid, you will be brought back to the experiment selection dialog where you must choose another experiment to record and upload data to.
+
 Login: Another essential step in uploading data to iSENSE is logging in.  This menu option is the stereotypical dialog that prompts for your username and password to the iSENSE website and attempts to log you in.  You will be informed if your login information was or cannot be validated.
-
-Media: Want to associate some pictures with your data?  You can!  With this menu option, you will be able to take pictures and videos that will all save to your SD Card.  Since iSENSE supports pictures, these pictures will also be uploaded with you newly recorded data set.
-
-Sync Time: This menu option is relatively complex and thus has instructions built-in to it upon being clicked.
 
 Now back to the main screen. There are three text boxes that you can fill out prior to recording data.  Only one of them is necessary: Session Name.  We will explain which each of these three mean.
 
