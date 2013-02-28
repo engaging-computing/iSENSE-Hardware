@@ -729,7 +729,7 @@
 					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
 				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -757,7 +757,7 @@
 					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
 				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
