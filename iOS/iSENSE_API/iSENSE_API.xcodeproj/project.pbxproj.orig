@@ -297,7 +297,10 @@
 				DSTROOT = /tmp/iSENSE_API.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+<<<<<<< HEAD
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+=======
+>>>>>>> upstream/master
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
