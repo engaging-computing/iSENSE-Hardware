@@ -40,6 +40,7 @@
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
 		39F8AF9A1694C20C00E5E4C2 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F8AF991694C20C00E5E4C2 /* StringGrabber.m */; };
 		39F8AF9E1694C23800E5E4C2 /* CameraUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F8AF9D1694C23800E5E4C2 /* CameraUsage.m */; };
+		39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */; };
 		52572B651691F671009037A7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52572B641691F671009037A7 /* AudioToolbox.framework */; };
 		52572B7D1691F742009037A7 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		52572B7E1691F742009037A7 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
@@ -60,6 +61,11 @@
 		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UILongClickButton.m */; };
+		B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */; };
+		B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */; };
+		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
+		B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */; };
+		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -68,6 +74,7 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
 		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -147,6 +154,7 @@
 		39F8AF991694C20C00E5E4C2 /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		39F8AF9C1694C23800E5E4C2 /* CameraUsage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraUsage.h; sourceTree = "<group>"; };
 		39F8AF9D1694C23800E5E4C2 /* CameraUsage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraUsage.m; sourceTree = "<group>"; };
+		39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = noimagedata_normal.png; path = "Resources-iPad/noimagedata_normal.png"; sourceTree = "<group>"; };
 		52572B641691F671009037A7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		52572B741691F742009037A7 /* media_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_icon.png; sourceTree = "<group>"; };
 		52572B751691F742009037A7 /* logo_manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_manual.png; sourceTree = "<group>"; };
@@ -174,6 +182,12 @@
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UILongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape-ipad.xib"; sourceTree = "<group>"; };
+		B7115C1E16D6AA800033AAA1 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
+		B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
+		B7115C2116D6ACD80033AAA1 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape.xib"; sourceTree = "<group>"; };
+		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
@@ -184,6 +198,8 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualConstants.h; sourceTree = "<group>"; };
+		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -404,6 +420,7 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */,
 				391B093E16BAF74200FB8DF3 /* button_experiment_dark.png */,
 				391B093C16BAE99700FB8DF3 /* button_experiment_clean.png */,
 				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
@@ -435,9 +452,11 @@
 			children = (
 				399D31EB169E02FD005F9D51 /* MainWindow.xib */,
 				39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */,
+				B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */,
 				52572B8F1691F788009037A7 /* AboutView.xib */,
 				52572B941691F796009037A7 /* GuideView.xib */,
 				52572B8A1691F77D009037A7 /* SplashView.xib */,
+				B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -447,7 +466,9 @@
 			children = (
 				399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */,
 				39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */,
+				B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */,
 				52572BC61691FBC6009037A7 /* SplashView-iPad.xib */,
+				B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -456,6 +477,7 @@
 			isa = PBXGroup;
 			children = (
 				52572B9E1691F816009037A7 /* Strings.strings */,
+				B7115C2116D6ACD80033AAA1 /* Fields.strings */,
 			);
 			name = Strings;
 			sourceTree = "<group>";
@@ -485,6 +507,7 @@
 		52572B6F1691F6E9009037A7 /* Manual */ = {
 			isa = PBXGroup;
 			children = (
+				B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */,
 				52572B971691F7B1009037A7 /* ManualViewController.h */,
 				52572B981691F7B1009037A7 /* ManualViewController.mm */,
 			);
@@ -494,6 +517,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				B7115C1D16D6AA490033AAA1 /* DataFieldManager */,
 				B72DC21716C19A2900999C7E /* HexColor */,
 				39A5AA7816C29555005862E7 /* ISenseSearch */,
 				B74A1EEC16B8623B00F0E9EE /* ZXing */,
@@ -523,6 +547,15 @@
 				52572BEF1691FD71009037A7 /* UILongClickButton.m */,
 			);
 			name = UILongClickButton;
+			sourceTree = "<group>";
+		};
+		B7115C1D16D6AA490033AAA1 /* DataFieldManager */ = {
+			isa = PBXGroup;
+			children = (
+				B7115C1E16D6AA800033AAA1 /* DataFieldManager.h */,
+				B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */,
+			);
+			name = DataFieldManager;
 			sourceTree = "<group>";
 		};
 		B72DC21716C19A2900999C7E /* HexColor */ = {
@@ -651,6 +684,12 @@
 				399D31EC169E02FD005F9D51 /* MainWindow.xib in Resources */,
 				391B093D16BAE99700FB8DF3 /* button_experiment_clean.png in Resources */,
 				391B093F16BAF74200FB8DF3 /* button_experiment_dark.png in Resources */,
+				B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */,
+				39FA5BC916D6AC7C00F56C51 /* noimagedata_normal.png in Resources */,
+				B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */,
+				B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */,
+				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
+				B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -685,6 +724,7 @@
 				39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */,
 				B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */,
 				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
+				B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

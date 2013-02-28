@@ -25,8 +25,6 @@
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum;
 
-
-
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
     
@@ -120,6 +118,14 @@
         loginStatus.numberOfLines = 1;
         loginStatus.backgroundColor = [UIColor clearColor];
         
+        // Create a label for experiment number
+        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 200, 768, 40)];
+        expNumStatus.textColor = [UIColor whiteColor];
+        expNumStatus.textAlignment = NSTextAlignmentCenter;
+        expNumStatus.numberOfLines = 1;
+        expNumStatus.backgroundColor = [UIColor clearColor];
+        expNumStatus.font = [UIFont fontWithName:@"Arial" size:24];
+        
         // Allocate space and initialize the main button
         startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
         startStopButton.image = [UIImage imageNamed:@"red_button.png"];
@@ -139,6 +145,7 @@
         [containerForMainButton addSubview:startStopLabel];
         
         // Add all the subviews to main view
+        [self.view addSubview:expNumStatus];
         [self.view addSubview:loginStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
@@ -151,6 +158,7 @@
         isenseAPI = [iSENSE getInstance];
         [isenseAPI toggleUseDev:YES];
         [self updateLoginStatus];
+        [self updateExpNumStatus];
         
     } else {
         
@@ -188,12 +196,21 @@
         startStopLabel.backgroundColor =[UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 120, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
+        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 130, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
+        // Create a label for experiment number
+        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 25)];
+        expNumStatus.textColor = [UIColor whiteColor];
+        expNumStatus.textAlignment = NSTextAlignmentCenter;
+        expNumStatus.numberOfLines = 1;
+        expNumStatus.backgroundColor = [UIColor clearColor];
+        expNumStatus.font = [UIFont fontWithName:@"Arial" size:12];
+        
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
+        [self.view addSubview:expNumStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
         
@@ -201,13 +218,21 @@
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
         self.navigationItem.rightBarButtonItem = menuButton;
         
-        
         // Prepare isenseAPI and set login status
         isenseAPI = [iSENSE getInstance];
         [isenseAPI toggleUseDev:YES];
         [self updateLoginStatus];
         
     }
+}
+
+// Is called every time AutomaticView appears
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // UpdateExperimentNumber status
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    [self updateExpNumStatus];
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -228,8 +253,17 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
         loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber grabString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
         loginStatus.textColor = [UIColor yellowColor];
+    }
+}
+
+// Set your expNumStatus to show you the last experiment chosen.
+- (void) updateExpNumStatus {
+    if (expNum && expNumStatus) {
+        NSString *update = [[NSString alloc] initWithFormat:@"Experiment Number: %d", expNum];
+        expNumStatus.text = update;
+        [update release];
     }
 }
 
@@ -239,7 +273,6 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"Rotate Initiated!");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
@@ -247,10 +280,12 @@
             mainLogo.frame = CGRectMake(5, 5, 502, 125 );
             containerForMainButton.frame = CGRectMake(517, 184, 400, 400);
             loginStatus.frame = CGRectMake(5, 135, 502, 40);
+            expNumStatus.frame = CGRectMake(5, 175, 502, 40);
         } else {
             self.view.frame = CGRectMake(0, 0, 768, 1024);
             mainLogo.frame = CGRectMake(20, 5, 728, 150);
             loginStatus.frame = CGRectMake(0, 160, 768, 40);
+            expNumStatus.frame = CGRectMake(0, 200, 768, 40);
             containerForMainButton.frame = CGRectMake(174, 300, 400, 400);
         }
     } else {
@@ -260,11 +295,13 @@
             mainLogo.frame = CGRectMake(15, 5, 180, 40);
             containerForMainButton.frame = CGRectMake(220, 5, 250, 250);
             loginStatus.frame = CGRectMake(5, 50, 200, 20);
+            expNumStatus.frame = CGRectMake(5, 65, 200, 20);
         } else {
             self.view.frame = CGRectMake(0, 0, 320, 480);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
+            containerForMainButton.frame = CGRectMake(35, 130, 250, 250);
             loginStatus.frame = CGRectMake(0, 85, 320, 20);
-            containerForMainButton.frame = CGRectMake(35, 120, 250, 250);
+            expNumStatus.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
         }
     }
 }
@@ -273,6 +310,16 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
     return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
 }
 
 
@@ -457,6 +504,7 @@
             /* Code that shouldn't work yet */
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNum;
             [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
             
@@ -470,9 +518,9 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
+            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
             [isenseAPI setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
-            NSLog(@"ExperimentNum = %@", expNum);
+            [self updateExpNumStatus];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {

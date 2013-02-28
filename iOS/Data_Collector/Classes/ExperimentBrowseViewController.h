@@ -21,17 +21,23 @@
     NSThread *experimentInfoThread;
     UIView *experimentInfo;
     UIButton *chooseExperiment;
+    UISearchBar *searchBar;
+    UITextView *additionalInfo;
+    UIImageView *imageView;
+    UILabel *experimentTitle;
+    UIView *bottomSpinnerBlock;
 }
 
-- (IBAction)onExperimentButtonClicked:(id)caller;
+- (IBAction) onExperimentButtonClicked:(id)caller;
 - (void) updateScrollView:(ISenseSearch *)iSS;
 - (void) loadExperimentInfomationForIPad;
 
 @property (nonatomic, assign) int currentPage;
-@property (nonatomic, assign) NSString *currentQuery;
+@property (nonatomic, retain) NSString *currentQuery;
 @property (nonatomic, assign) int scrollHeight;
+@property (nonatomic, assign) int *chosenExperiment;
 @property (nonatomic, assign) int contentHeight;
-@property (nonatomic, assign) ExperimentBlock *lastExperimentClicked;
+@property (nonatomic, retain) ExperimentBlock *lastExperimentClicked;
 
 @end
 

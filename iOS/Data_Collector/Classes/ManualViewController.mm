@@ -8,29 +8,8 @@
 //
 
 #import "ManualViewController.h"
+#import "ManualConstants.h"
 #import "Data_CollectorAppDelegate.h"
-
-#define MENU_UPLOAD                   0
-#define MENU_EXPERIMENT               1
-#define MENU_LOGIN                    2
-#define EXPERIMENT_MANUAL_ENTRY       3
-#define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define CLEAR_FIELDS_DIALOG           5
-
-#define OPTION_CANCELED                0
-#define OPTION_ENTER_EXPERIMENT_NUMBER 1
-#define OPTION_BROWSE_EXPERIMENTS      2
-#define OPTION_SCAN_QR_CODE            3
-
-#define TYPE_DEFAULT   0
-#define TYPE_LATITUDE  1
-#define TYPE_LONGITUDE 2
-#define TYPE_TIME      3
-
-#define SCROLLVIEW_Y_OFFSET     50
-#define SCROLLVIEW_OBJ_INCR     30
-#define SCROLLVIEW_LABEL_HEIGHT 20
-#define SCROLLVIEW_TEXT_HEIGHT  35
 
 @implementation ManualViewController
 
@@ -39,46 +18,63 @@
 
 
 - (void) viewDidLoad {
-	 [super viewDidLoad];
-	 
-	 [self.view sendSubviewToBack:scrollView];
-	 
-	 [self.sessionNameInput addTarget:self
-                               action:@selector(textFieldFinished:)
-                     forControlEvents:UIControlEventEditingDidEndOnExit];
-     sessionNameInput.delegate = self;
-	 sessionNameInput.enablesReturnKeyAutomatically = NO;
-     sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
-	 
-	 UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];          
-	 self.navigationItem.rightBarButtonItem = menuButton;
-	 [menuButton release];
-	 
-	 iapi = [iSENSE getInstance];
-     [iapi toggleUseDev:YES];
-	 
-	 [self initLocations];
-	 
-     if ([iapi isLoggedIn]) {
-         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
-     } else {
-         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
-     }
-     
-     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-     
-     expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
-     
-     UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-     tapGestureM.cancelsTouchesInView = NO;
-     [self.view addGestureRecognizer:tapGestureM];
-     [tapGestureM release];
-
+    [super viewDidLoad];
+    
+    // allocations
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(displayMenu:)];
+    self.navigationItem.rightBarButtonItem = menuButton;
+    [menuButton release];
+    
+    UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(hideKeyboard)];
+    tapGestureM.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGestureM];
+    [tapGestureM release];
+    
+    [self initLocations];
+    
+    // iSENSE API
+    iapi = [iSENSE getInstance];
+    [iapi toggleUseDev:YES];
+    if ([iapi isLoggedIn])
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+    else
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
+    
+    if ([iapi getCurrentExp] != 0) {
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
+        [self fillDataFieldEntryList:[iapi getCurrentExp]];
+    } else
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+    
+    // scrollview
+    [self.view sendSubviewToBack:scrollView];
+    scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    // session name
+    [self.sessionNameInput addTarget:self
+                              action:@selector(textFieldFinished:)
+                    forControlEvents:UIControlEventEditingDidEndOnExit];
+    sessionNameInput.delegate = self;
+    sessionNameInput.enablesReturnKeyAutomatically = NO;
+    sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
+    
+    /////Try to upload an image//////
+    
+    /*UIImage *image = [UIImage imageNamed:@"logo_manual.png"];
+    [iapi login:@"sor" with:@"sor"];
+    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:281] forSession:[NSNumber numberWithInt:6352] withName:@"Name" andDescription:@"Description"];
+    NSLog(@"Image success = %d", success);*/
+    
+    /////////////////////////////////
 }
 
 - (IBAction) textFieldFinished:(id)sender {}
- 
+
 
 - (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -89,6 +85,10 @@
     [super viewDidUnload];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+}
 
 - (void) dealloc {
 	[logo release];
@@ -106,22 +106,67 @@
     [widController release];
     
     [locationManager release];
+    locationManager = nil;
     
 	[super dealloc];
 }
 
 - (void) initLocations {
-	locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [locationManager startUpdatingLocation];
+    if (!locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.distanceFilter = kCLDistanceFilterNone;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [locationManager startUpdatingLocation];
+    }
 }
 
 // method not called on real device - don't assign a location to a global variable here
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation *location = [locations lastObject];
     NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    }
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
@@ -156,19 +201,19 @@
 }
 
 - (IBAction) displayMenu:(id)sender {
-	UIActionSheet *popupQuery = [[UIActionSheet alloc] 
-				  initWithTitle:nil 
-			           delegate:self
-	          cancelButtonTitle:@"Cancel" 
-	     destructiveButtonTitle:nil 
-			  otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
+	UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                 initWithTitle:nil
+                                 delegate:self
+                                 cancelButtonTitle:@"Cancel"
+                                 destructiveButtonTitle:nil
+                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-
+    
 	UIAlertView *message;
     
 	switch (buttonIndex) {
@@ -229,10 +274,10 @@
         if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
             
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -246,7 +291,7 @@
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
             if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-               
+                
                 widController = [[ZXingWidgetController alloc] initWithDelegate:self
                                                                      showCancel:YES
                                                                        OneDMode:NO];
@@ -280,12 +325,12 @@
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
-            
+
             [iapi setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
             
-            [self fillDataFieldEntryList:[iapi getCurrentExp]];            
+            [self fillDataFieldEntryList:[iapi getCurrentExp]];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
@@ -359,17 +404,16 @@
 
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-        [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
-   
+    
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
     [message show];
-    [message release];
-    
+        
     dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
     dispatch_async(queue, ^{
         BOOL success = [iapi login:usernameInput with:passwordInput];
@@ -402,24 +446,23 @@
 - (void) upload:(NSMutableArray *)results {
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
     [message show];
-    [message release];
-    
+      
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
         short uploadSuccess = -1;
         
-        if ([iapi getCurrentExp] == 0) 
+        if ([iapi getCurrentExp] == 0)
             exp = FALSE;
-           
+        
         else
-            if (!([iapi isLoggedIn])) 
+            if (!([iapi isLoggedIn]))
                 loggedIn = FALSE;
         
-            else 
-                if ([[sessionNameInput text] isEqualToString:@""]) 
+            else
+                if ([[sessionNameInput text] isEqualToString:@""])
                     hasSessionName = FALSE;
-                    
+        
                 else {
                     
                     NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
@@ -439,9 +482,9 @@
                         uploadSuccess = FALSE;
                     
                 }
-                   
-        dispatch_async(dispatch_get_main_queue(), ^{
         
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
             if (!exp)
                 [self.view makeToast:@"Please Enter an Experiment # First"
                             duration:3.5
@@ -470,20 +513,18 @@
                                    image:@"check"];
             }
             
-           
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
     });
 }
 
 - (void) fillDataFieldEntryList:(int)eid {
-
+    
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving experiment fields..."];
     [message show];
-    [message release];
-    
+        
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         
@@ -509,7 +550,7 @@
                 }
                 
                 ++objNumber;
-
+                
             }
             
             [fieldOrder release];
@@ -542,17 +583,20 @@
     
     UILabel *fieldName;
     if (objNum == 0) {
-        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
+        fieldName = [[UILabel alloc] initWithFrame:[self setScrollViewItem:UI_FIELDNAME toSizeWithY:Y_FIELDNAME]];
+        //fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
     } else {
         Y_FIELDNAME += (SCROLLVIEW_OBJ_INCR * objNum);
         Y_FIELDCONTENTS += (SCROLLVIEW_OBJ_INCR * objNum);
-        fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
+        fieldName = [[UILabel alloc] initWithFrame:[self setScrollViewItem:UI_FIELDNAME toSizeWithY:Y_FIELDNAME]];
+        //fieldName = [[UILabel alloc] initWithFrame:CGRectMake(0, Y_FIELDNAME, 730, SCROLLVIEW_LABEL_HEIGHT)];
     }
     fieldName.backgroundColor = [UIColor blackColor];
     fieldName.textColor = [UIColor whiteColor];
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
-    UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
+    //UITextField *fieldContents = [[UITextField alloc] initWithFrame:CGRectMake(0, Y_FIELDCONTENTS, 730, SCROLLVIEW_TEXT_HEIGHT)];
+    UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
     fieldContents.delegate = self;
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
@@ -590,6 +634,42 @@
     return (int) Y_FIELDCONTENTS;
 }
 
+- (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y {
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    // if needed, check orientation == 0 for a failsafe (should be true if it's portrait)
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            if (type == UI_FIELDNAME) {
+               return CGRectMake(0, y, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+               return CGRectMake(0, y, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        } else {
+            if (type == UI_FIELDNAME) {
+                return CGRectMake(0, y, IPAD_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+                return CGRectMake(0, y, IPAD_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        }
+    } else {
+        if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            if (type == UI_FIELDNAME) {
+                return CGRectMake(0, y, IPHONE_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+                return CGRectMake(0, y, IPHONE_WIDTH_PORTRAIT, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        } else {
+            if (type == UI_FIELDNAME) {
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+            } else {
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+            }
+        }
+    }
+}
+
 - (void) getDataFromFields {
     NSMutableArray *data = [[NSMutableArray alloc] init];
     int count = 0;
@@ -602,7 +682,7 @@
                 double lat  = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
                 [data addObject:latitude];
-
+                
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
@@ -647,15 +727,16 @@
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
-                                         message:nil
-                                        delegate:self
-                               cancelButtonTitle:nil
-                               otherButtonTitles:nil];
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     spinner.center = CGPointMake(139.5, 75.5); // .5 so it doesn't blur
     [message addSubview:spinner];
     [spinner startAnimating];
-    return message;
+    [spinner release];
+    return [message autorelease];
 }
 
 @end
