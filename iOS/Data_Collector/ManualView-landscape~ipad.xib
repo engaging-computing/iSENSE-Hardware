@@ -193,17 +193,8 @@
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">media_icon.png</string>
 						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription">
-							<string key="name">Helvetica-Bold</string>
-							<string key="family">Helvetica</string>
-							<int key="traits">2</int>
-							<double key="pointSize">15</double>
-						</object>
-						<object class="NSFont" key="IBUIFont">
-							<string key="NSName">Helvetica-Bold</string>
-							<double key="NSSize">15</double>
-							<int key="NSfFlags">16</int>
-						</object>
+						<reference key="IBUIFontDescription" ref="1062733964"/>
+						<reference key="IBUIFont" ref="770718651"/>
 					</object>
 					<object class="IBUITextField" id="438642380">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -243,6 +234,7 @@
 						<string key="NSFrame">{{20, 295}, {984, 433}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
