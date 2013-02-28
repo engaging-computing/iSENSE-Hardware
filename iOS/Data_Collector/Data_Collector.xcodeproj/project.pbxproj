@@ -74,6 +74,7 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
 		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -198,6 +199,7 @@
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		B7EBFB2E16DF9CCE00125169 /* ManualConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualConstants.h; sourceTree = "<group>"; };
+		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -450,6 +452,7 @@
 			children = (
 				399D31EB169E02FD005F9D51 /* MainWindow.xib */,
 				39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */,
+				B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */,
 				52572B8F1691F788009037A7 /* AboutView.xib */,
 				52572B941691F796009037A7 /* GuideView.xib */,
 				52572B8A1691F77D009037A7 /* SplashView.xib */,
@@ -686,6 +689,7 @@
 				B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */,
 				B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */,
 				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
+				B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -155,7 +155,17 @@
             [self viewDidLoad];
         }
     } else {
-        
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
     }
 }
 
@@ -652,9 +662,9 @@
             }
         } else {
             if (type == UI_FIELDNAME) {
-                return CGRectMake(0, y, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
             } else {
-                return CGRectMake(0, y, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
             }
         }
     }
