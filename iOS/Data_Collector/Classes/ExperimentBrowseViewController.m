@@ -38,6 +38,8 @@
         // Prepare choose experiment button
         chooseExperiment = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
         chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
+        [chooseExperiment setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [chooseExperiment setBackgroundImage:[UIImage imageNamed:@"button_light_long.png"] forState:UIControlStateNormal];
         [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
         [chooseExperiment addTarget:self action:@selector(experimentChosen) forControlEvents:UIControlEventTouchUpInside];
 
