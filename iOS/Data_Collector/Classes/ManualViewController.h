@@ -54,6 +54,7 @@
 - (void) fillDataFieldEntryList:(int)eid;
 - (int)  addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
 - (void) hideKeyboard;
+- (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 
