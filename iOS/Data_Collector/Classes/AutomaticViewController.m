@@ -535,7 +535,6 @@
         if (buttonIndex != OPTION_CANCELED) {
             
             expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
-            [isenseAPI setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
             [self updateExpNumStatus];
         }
         

@@ -68,9 +68,7 @@ static iSENSE *_iSENSE = nil;
         session_key = [[NSString alloc] init];
         username = [[NSString alloc] init];
         uid = [[NSNumber alloc] initWithInt:-1];
-        currentExp = [[NSNumber alloc] initWithInt:0];
         
-        //currentExp = nil;
         username = nil;
         session_key = nil;
         uid = nil;
@@ -676,24 +674,5 @@ static iSENSE *_iSENSE = nil;
 		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 	}
 }
-
-// Use this method to set the current experiment number
-- (void) setCurrentExp:(int)expNum {
-    
-    currentExp = [NSNumber numberWithInt:expNum];
-
-}
-
-// Use this method to get the current experiment number
-- (int) getCurrentExp {
-    if (!currentExp)
-        return 0;
-    
-    if (currentExp == nil)
-        return 0;
-    
-    return currentExp.intValue;
-}
-
 
 @end

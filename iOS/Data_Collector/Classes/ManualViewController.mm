@@ -44,12 +44,6 @@
     else
         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
     
-    if ([iapi getCurrentExp] != 0) {
-        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
-        [self fillDataFieldEntryList:[iapi getCurrentExp]];
-    } else
-        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
-    
     // scrollview
     [self.view sendSubviewToBack:scrollView];
     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -62,6 +56,13 @@
     sessionNameInput.delegate = self;
     sessionNameInput.enablesReturnKeyAutomatically = NO;
     sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
+    
+    // experiment number
+    if (expNum && expNum != 0) {
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
+        [self fillDataFieldEntryList:expNum];
+    } else
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
     
     /////Try to upload an image//////
     
@@ -88,6 +89,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    [self updateExpNumLabel];
 }
 
 - (void) dealloc {
@@ -101,7 +103,6 @@
 	[scrollView release];
 	
 	[sessionName release];
-    [expNum release];
     [qrResults release];
     [widController release];
     
@@ -127,20 +128,22 @@
     NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
 }
 
+// pre-iOS6 rotating options
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
-// iOS6
+// iOS6 rotating options
 - (BOOL)shouldAutorotate {
     return YES;
 }
 
-// iOS6
+// iOS6 interface orientations
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
 }
 
+// displays the correct xib based on orientation and device type
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
@@ -169,6 +172,7 @@
     }
 }
 
+// overridden to keep soft keyboard off screen when not editting a text field
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
@@ -230,7 +234,7 @@
 			break;
             
 		case MENU_EXPERIMENT:
-            message = [[UIAlertView alloc] initWithTitle:@"Experiment Selection"
+            message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
@@ -287,6 +291,11 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
+            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNum;
+            [self.navigationController pushViewController:browseView animated:YES];
+            [browseView release];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
@@ -326,11 +335,11 @@
         
         if (buttonIndex != OPTION_CANCELED) {
 
-            [iapi setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
+            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
-                                                                    with:[NSString stringWithFormat:@"%d", [iapi getCurrentExp]]];
+                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
             
-            [self fillDataFieldEntryList:[iapi getCurrentExp]];
+            [self fillDataFieldEntryList:expNum];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
@@ -370,9 +379,8 @@
                     position:@"bottom"
                        image:@"red_x"];
     } else {
-        expNum = [NSNumber numberWithInt:[[split objectAtIndex:1] intValue]];
-        [iapi setCurrentExp:[expNum intValue]];
-        [self fillDataFieldEntryList:[expNum intValue]];
+        expNum = [[split objectAtIndex:1] intValue];
+        [self fillDataFieldEntryList:expNum];
     }
 }
 
@@ -443,6 +451,18 @@
                    image:@"red_x"];
 }
 
+- (void) updateExpNumLabel {
+    if (expNum && expNumLabel) {
+        NSString *update = [[NSString alloc] initWithString:
+                            [StringGrabber concatenateHardcodedString:@"exp_num"
+                                                                 with:[NSString stringWithFormat:@"%d", expNum]]];
+        expNumLabel.text = update;
+        [update release];
+        
+        [self fillDataFieldEntryList:expNum];
+    }
+}
+
 - (void) upload:(NSMutableArray *)results {
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
     [message show];
@@ -452,7 +472,7 @@
         BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
         short uploadSuccess = -1;
         
-        if ([iapi getCurrentExp] == 0)
+        if (expNum == 0)
             exp = FALSE;
         
         else
@@ -470,7 +490,7 @@
                     NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
                     NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
                     NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
-                    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:[iapi getCurrentExp]] autorelease];
+                    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:expNum] autorelease];
                     NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
                     NSError  *error = nil;
                     NSData   *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
