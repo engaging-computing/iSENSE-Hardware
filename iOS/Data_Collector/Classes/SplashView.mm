@@ -1,9 +1,9 @@
 //
-//  SplashView.m
-//  Splash
+//  SplashView.mm
+//  iOS Data Collector
 //
 //  Created by Mike Stowell on 12/28/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
@@ -18,25 +18,20 @@
     
 }
 
-// Is called every time SplashView appears
+// Called every time SplashView appears
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Spin the orb!
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     [self runSpinAnimationOnView:orb duration:1 rotations:1 repeat:FLT_MAX];
 }
 
 - (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc. that aren't in use.
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 
@@ -68,5 +63,49 @@
     
     [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
 }
+
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-landscape-ipad", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-iPad", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@-landscape", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"%@", NSStringFromClass([self class])]
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    }
+}
+
 
 @end

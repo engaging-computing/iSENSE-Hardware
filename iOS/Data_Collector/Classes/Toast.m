@@ -26,8 +26,8 @@
 #define kDefaultLength 3.0
 #define kDefaultPosition @"bottom"
 
-#define kImageWidth 20.0 // @@@@@@@@@@@@@ 80.0
-#define kImageHeight 20.0 // @@@@@@@@@@@@@ 80.0
+#define kImageWidth 20.0
+#define kImageHeight 20.0
 
 #define kActivityWidth 100.0
 #define kActivityHeight 100.0
@@ -68,26 +68,26 @@ static NSString *kDurationKey = @"CSToastDurationKey";
 
 - (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image {
     UIImage *display;
+    
     if (image == @"check") {
-        display = [[[UIImage alloc] init] autorelease];
         display = [UIImage imageNamed:@"bluecheck"];
     } else {
-        display = [[[UIImage alloc] init] autorelease];
         display = [UIImage imageNamed:@"red_x"];
     }
+    
     UIView *toast = [self makeViewForMessage:message title:nil image:display];
     [self showToast:toast duration:interval position:position];
 }
 
 - (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image {
     UIImage *display;
+    
     if (image == @"check") {
-        display = [[[UIImage alloc] init] autorelease];
         display = [UIImage imageNamed:@"bluecheck"];
     } else {
-        display = [[[UIImage alloc] init] autorelease];
         display = [UIImage imageNamed:@"red_x"];
     }
+    
     UIView *toast = [self makeViewForMessage:message title:title image:display];
     [self showToast:toast duration:interval position:position];
 }
@@ -256,10 +256,10 @@ static NSString *kDurationKey = @"CSToastDurationKey";
     [wrapperView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
     [wrapperView.layer setCornerRadius:kCornerRadius];
     if (kDisplayShadow) {
-        [wrapperView.layer setShadowColor:[UIColor whiteColor].CGColor];  //@@@@@@@@@@@@@@@@@@@@@@@ blackColor
+        [wrapperView.layer setShadowColor:[UIColor whiteColor].CGColor];
         [wrapperView.layer setShadowOpacity:0.8];
-        [wrapperView.layer setShadowRadius:8.0];					// @@@@@@@@@@@@@@@@@@@@ 6.0
-        [wrapperView.layer setShadowOffset:CGSizeMake(0.0, 0.0)]; // @@@@@@@@@@@@@@@@@@@@@@@@@ 4.0, 4.0
+        [wrapperView.layer setShadowRadius:8.0];
+        [wrapperView.layer setShadowOffset:CGSizeMake(0.0, 0.0)];
     }
 	
     [wrapperView setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:kOpacity]];

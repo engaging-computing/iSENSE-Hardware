@@ -1,9 +1,9 @@
 //
 //  SplashView.h
-//  Splash
+//  iOS Data Collector
 //
 //  Created by Mike Stowell on 12/28/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
@@ -21,7 +21,7 @@
 
 - (IBAction) loadAutomatic:(id)sender;
 - (IBAction) loadManual:(id)sender;
-- (void)viewDidAppear:(BOOL)animated;
+- (void) viewDidAppear:(BOOL)animated;
 - (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat; 
 
 @property (nonatomic, retain) IBOutlet UIImageView *dataCollectorLogo;

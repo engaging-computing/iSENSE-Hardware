@@ -1,9 +1,10 @@
 //
 //  ISenseSearch.h
-//  Data_Collector
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 2/5/13.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import <Foundation/Foundation.h>
@@ -15,7 +16,7 @@ typedef enum BuildType { NEW = 0, APPEND = 1 } BuildType;
 }
 
 @property (nonatomic, assign) SearchType searchType;
-@property (nonatomic, assign) NSString *query;
+@property (nonatomic, retain) NSString *query;
 @property (nonatomic, assign) BuildType buildType;
 @property (nonatomic, assign) int page;
 

@@ -1,9 +1,10 @@
 //
 //  AutomaticViewController.m
-//  Data_Collector
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 1/10/13.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "AutomaticViewController.h"
@@ -20,11 +21,11 @@
 #define OPTION_BROWSE_EXPERIMENTS 2
 #define OPTION_SCAN_QR_CODE 3
 
+#define NAVIGATION_CONTROLLER_HEIGHT 44
+
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum;
-
-
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, elapsedTime;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -41,19 +42,28 @@
             // Switch to green mode
             startStopButton.image = [UIImage imageNamed:@"green_button.png"];
             mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
-            startStopLabel.text = [StringGrabber getString:@"stop_button_text"];
+            startStopLabel.text = [StringGrabber grabString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
             // Record Data
             [self setIsRecording:TRUE];
             motionManager = [[self recordData] retain];
             
+            // Update elapsed time
+            elapsedTime = 0;
+            [self updateElapsedTime];
+            timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
+            
         // Stop Recording
         } else {
+            // Stop Timer
+            [timer invalidate];
+            [timer release];
+            
             // Back to red mode
             startStopButton.image = [UIImage imageNamed:@"red_button.png"];
             mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-            startStopLabel.text = [StringGrabber getString:@"start_button_text"];
+            startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
             NSMutableArray *results = [self stopRecording:motionManager];
@@ -97,11 +107,13 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
-    
+    UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
-        self.view.backgroundColor = [UIColor blackColor];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
+        mainView.backgroundColor = [UIColor blackColor];
+        self.view = mainView;
+        [mainView release];
         
         // Initialize isRecording to false
         [self setIsRecording:FALSE];
@@ -117,28 +129,45 @@
         loginStatus.numberOfLines = 1;
         loginStatus.backgroundColor = [UIColor clearColor];
         
+        // Create a label for experiment number
+        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 200, 768, 40)];
+        expNumStatus.textColor = [UIColor whiteColor];
+        expNumStatus.textAlignment = NSTextAlignmentCenter;
+        expNumStatus.numberOfLines = 1;
+        expNumStatus.backgroundColor = [UIColor clearColor];
+        expNumStatus.font = [UIFont fontWithName:@"Arial" size:24];
+        
         // Allocate space and initialize the main button
         startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
         startStopButton.image = [UIImage imageNamed:@"red_button.png"];
         
         // Allocate space and add the label to the main button
         startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, startStopButton.bounds.size.width, startStopButton.bounds.size.height)];
-        startStopLabel.text = [StringGrabber getString:@"start_button_text"];
+        startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
         startStopLabel.textAlignment = NSTextAlignmentCenter;
         startStopLabel.textColor = [UIColor whiteColor];
         startStopLabel.font = [startStopLabel.font fontWithSize:25];
         startStopLabel.numberOfLines = 2;
-        startStopLabel.backgroundColor =[UIColor clearColor];
+        startStopLabel.backgroundColor = [UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
         containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
+        // Add the elapsedTime counter at the bottom
+        elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50)];
+        elapsedTimeView.textAlignment = NSTextAlignmentCenter;
+        elapsedTimeView.font = [elapsedTimeView.font fontWithSize:18];
+        elapsedTimeView.textColor = [UIColor whiteColor];
+        elapsedTimeView.backgroundColor = [UIColor clearColor];
+        
         // Add all the subviews to main view
+        [self.view addSubview:expNumStatus];
         [self.view addSubview:loginStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
+        [self.view addSubview:elapsedTimeView];
         
         // Add a menu button
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
@@ -148,12 +177,15 @@
         isenseAPI = [iSENSE getInstance];
         [isenseAPI toggleUseDev:YES];
         [self updateLoginStatus];
+        [self updateExpNumStatus];
         
     } else {
         
         // Bound, allocate, and customize the main view
-        self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-        self.view.backgroundColor = [UIColor blackColor];
+        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
+        mainView.backgroundColor = [UIColor blackColor];
+        self.view = mainView;
+        [mainView release];
         
         // Initialize isRecording to false
         [self setIsRecording:FALSE];
@@ -175,7 +207,7 @@
         
         // Allocate space and add the label to the main button
         startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, startStopButton.bounds.size.width, startStopButton.bounds.size.height)];
-        startStopLabel.text = [StringGrabber getString:@"start_button_text"];
+        startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
         startStopLabel.textAlignment = NSTextAlignmentCenter;
         startStopLabel.textColor = [UIColor whiteColor];
         startStopLabel.font = [startStopLabel.font fontWithSize:25];
@@ -183,19 +215,35 @@
         startStopLabel.backgroundColor =[UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 120, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
+        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 130, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
+        // Create a label for experiment number
+        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 25)];
+        expNumStatus.textColor = [UIColor whiteColor];
+        expNumStatus.textAlignment = NSTextAlignmentCenter;
+        expNumStatus.numberOfLines = 1;
+        expNumStatus.backgroundColor = [UIColor clearColor];
+        expNumStatus.font = [UIFont fontWithName:@"Arial" size:12];
+        
+        // Add the elapsedTime counter at the bottom
+        elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25)];
+        elapsedTimeView.textAlignment = NSTextAlignmentCenter;
+        elapsedTimeView.font = [elapsedTimeView.font fontWithSize:12];
+        elapsedTimeView.textColor = [UIColor whiteColor];
+        elapsedTimeView.backgroundColor = [UIColor clearColor];
+        
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
+        [self.view addSubview:expNumStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
+        [self.view addSubview:elapsedTimeView];
         
         // Add a menu button
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
         self.navigationItem.rightBarButtonItem = menuButton;
-        
         
         // Prepare isenseAPI and set login status
         isenseAPI = [iSENSE getInstance];
@@ -203,6 +251,15 @@
         [self updateLoginStatus];
         
     }
+}
+
+// Is called every time AutomaticView appears
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // UpdateExperimentNumber status
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    [self updateExpNumStatus];
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -223,8 +280,17 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
         loginStatus.textColor = [UIColor greenColor];
     } else {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"]; //[StringGrabber getString:@"login_status_not_logged_in"];
+        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
         loginStatus.textColor = [UIColor yellowColor];
+    }
+}
+
+// Set your expNumStatus to show you the last experiment chosen.
+- (void) updateExpNumStatus {
+    if (expNum && expNumStatus) {
+        NSString *update = [[NSString alloc] initWithFormat:@"Experiment Number: %d", expNum];
+        expNumStatus.text = update;
+        [update release];
     }
 }
 
@@ -234,32 +300,39 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"Rotate Initiated!");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-            self.view.frame = CGRectMake(0, 0, 1024, 768);
+            self.view.frame = CGRectMake(0, 0, 1024, 768 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(5, 5, 502, 125 );
             containerForMainButton.frame = CGRectMake(517, 184, 400, 400);
             loginStatus.frame = CGRectMake(5, 135, 502, 40);
+            expNumStatus.frame = CGRectMake(5, 175, 502, 40);
+            elapsedTimeView.frame = CGRectMake(5, 550, 502, 40);
         } else {
-            self.view.frame = CGRectMake(0, 0, 768, 1024);
+            self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(20, 5, 728, 150);
-            loginStatus.frame = CGRectMake(0, 160, 768, 40);
             containerForMainButton.frame = CGRectMake(174, 300, 400, 400);
+            loginStatus.frame = CGRectMake(0, 160, 768, 40);
+            expNumStatus.frame = CGRectMake(0, 200, 768, 40);
+            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50);
         }
     } else {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-            self.view.frame = CGRectMake(0, 0, 480, 320);
+            self.view.frame = CGRectMake(0, 0, 480, 320 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(15, 5, 180, 40);
             containerForMainButton.frame = CGRectMake(220, 5, 250, 250);
             loginStatus.frame = CGRectMake(5, 50, 200, 20);
+            expNumStatus.frame = CGRectMake(5, 65, 200, 20);
+            elapsedTimeView.frame = CGRectMake(5, 220, 200, 20);
         } else {
-            self.view.frame = CGRectMake(0, 0, 320, 480);
+            self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
+            containerForMainButton.frame = CGRectMake(35, 130, 250, 250);
             loginStatus.frame = CGRectMake(0, 85, 320, 20);
-            containerForMainButton.frame = CGRectMake(35, 120, 250, 250);
+            expNumStatus.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
+            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25);
         }
     }
 }
@@ -268,6 +341,16 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
     return YES;
+}
+
+// iOS6
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
 }
 
 
@@ -376,8 +459,7 @@
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	BOOL showMsg = YES;
-	UIAlertView *message = [UIAlertView alloc];
+	UIAlertView *message;
     
 	switch (buttonIndex) {
 		case MENU_UPLOAD:
@@ -388,8 +470,8 @@
                                        otherButtonTitles:@"Okay", nil];
             
             message.tag = MENU_UPLOAD;
-            //[message setAlertViewStyle:UIAlertViewStyleDefault];
-            
+            [message show];
+            [message release];
 			break;
             
 		case MENU_EXPERIMENT:
@@ -400,7 +482,8 @@
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
             
             message.tag = MENU_EXPERIMENT;
-            
+            [message show];
+            [message release];
 			break;
             
 		case MENU_LOGIN:
@@ -412,18 +495,16 @@
             
             message.tag = MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-            
+            [message show];
+            [message release];
             break;
             
 		default:
-			showMsg = NO;
 			break;
 	}
 	
-	if (showMsg)
-		[message show];
 	
-    [message release];
+    
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -451,9 +532,9 @@
             [message release];
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
-            /* Code that shouldn't work yet */
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNum;
             [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
             
@@ -467,9 +548,9 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            expNum = [NSNumber numberWithInt: [[[actionSheet textFieldAtIndex:0] text] intValue]];
+            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
             [isenseAPI setCurrentExp:[[[actionSheet textFieldAtIndex:0] text] intValue]];
-            NSLog(@"ExperimentNum = %@", expNum);
+            [self updateExpNumStatus];
         }
         
     } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
@@ -478,4 +559,11 @@
         
     }
 }
+
+- (void)updateElapsedTime {
+    if (elapsedTime == 1) elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d second", elapsedTime];
+    else elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d seconds", elapsedTime];
+    elapsedTime++;
+}
+
 @end

@@ -1,9 +1,9 @@
 //
 //  ManualView.h
-//  Splash
+//  iOS Data Collector
 //
 //  Created by Mike Stowell on 12/28/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
@@ -15,33 +15,34 @@
 @interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
 	
 	// UI Elements
-	UIImageView *logo;
-	UILabel *loggedInAsLabel;
-	UILabel *expNumLabel;
-	UIButton *upload;
-	UIButton *clear;
-	UITextField *sessionNameInput;
-	UIButton *media;
+	UIImageView  *logo;
+	UILabel      *loggedInAsLabel;
+	UILabel      *expNumLabel;
+	UIButton     *upload;
+	UIButton     *clear;
+	UITextField  *sessionNameInput;
+	UIButton     *media;
 	UIScrollView *scrollView;
 	
 	// Non-UI Elements
-	iSENSE *iapi;
+	iSENSE   *iapi;
 	NSString *sessionName;
 	NSNumber *expNum;
     
     NSString *qrResults;
     ZXingWidgetController *widController;
     
-    CLLocation *location;
     CLLocationManager *locationManager;
     
 }
 
+// Storyboard functions
 - (IBAction) uploadOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
 
+// Programmatic functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (void) experiment;
 - (void) upload:(NSMutableArray *)results;
@@ -51,23 +52,27 @@
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
 
 - (void) fillDataFieldEntryList:(int)eid;
-- (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (int)  addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
 - (void) hideKeyboard;
+- (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
+
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 
 // UI Properties
-@property (nonatomic, retain) IBOutlet UIImageView *logo;
-@property (nonatomic, retain) IBOutlet UILabel *loggedInAsLabel;
-@property (nonatomic, retain) IBOutlet UILabel *expNumLabel;
-@property (nonatomic, retain) IBOutlet UIButton *upload;
-@property (nonatomic, retain) IBOutlet UIButton *clear;
-@property (nonatomic, retain) IBOutlet UITextField *sessionNameInput;
-@property (nonatomic, retain) IBOutlet UIButton *media;
+@property (nonatomic, retain) IBOutlet UIImageView  *logo;
+@property (nonatomic, retain) IBOutlet UILabel      *loggedInAsLabel;
+@property (nonatomic, retain) IBOutlet UILabel      *expNumLabel;
+@property (nonatomic, retain) IBOutlet UIButton     *upload;
+@property (nonatomic, retain) IBOutlet UIButton     *clear;
+@property (nonatomic, retain) IBOutlet UITextField  *sessionNameInput;
+@property (nonatomic, retain) IBOutlet UIButton     *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 // Non-UI Properties
-@property (nonatomic, copy) NSString *sessionName;
-@property (nonatomic, copy) NSString *qrResults;
+@property (nonatomic, copy)   NSString *sessionName;
+@property (nonatomic, copy)   NSString *qrResults;
 @property (nonatomic, strong) NSNumber *expNum;
+@property (nonatomic, retain) CLLocationManager *locationManager;
 
 @end
 

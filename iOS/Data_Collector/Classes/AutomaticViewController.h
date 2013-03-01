@@ -1,9 +1,10 @@
 //
 //  AutomaticViewController.h
-//  Data_Collector
+//  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 1/10/13.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "UILongClickButton.h"
@@ -22,7 +23,9 @@
     UIImageView *mainLogo;
     UILabel *startStopLabel;
     UILabel *loginStatus;
+    UILabel *expNumStatus;
     UIBarButtonItem *menuButton;
+    UILabel *elapsedTimeView;
 }
 
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
@@ -37,8 +40,10 @@
 - (void) getExperiments;
 
 @property (nonatomic) BOOL isRecording;
+@property (nonatomic) int elapsedTime;
+@property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
 @property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
-@property (nonatomic, assign) NSNumber *expNum;
+@property (nonatomic, assign) int expNum;
 
 @end

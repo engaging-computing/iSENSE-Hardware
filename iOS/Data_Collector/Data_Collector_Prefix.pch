@@ -8,6 +8,6 @@
     #import "StringGrabber.h"
     #import "CameraUsage.h"
     #import "Toast.h"
-    #import "iSENSE.h"
+    #import <iSENSE.h>
     #import "HexColor.h"
 #endif

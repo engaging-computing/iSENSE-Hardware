@@ -34,12 +34,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "../iSENSE_API/iSenseApiLib/iSenseApiSrc/iSENSE.m"
-         timestampString = "381955801.297718"
+         timestampString = "383165825.130969"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "608"
-         endingLineNumber = "608"
-         landmarkName = "-setCurrentExp:"
+         startingLineNumber = "700"
+         endingLineNumber = "700"
+         landmarkName = "-getCurrentExp"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

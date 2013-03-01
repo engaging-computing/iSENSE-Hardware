@@ -1,0 +1,350 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
+		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
+		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
+		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (); }; };
+		39A1CC2C16DFB48700B1979F /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261516DFA86B0062C3DC /* Item.h */; };
+		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
+		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
+		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
+		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
+		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
+		39FF262416DFA8760062C3DC /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
+		39FF262516DFA8760062C3DC /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261D16DFA8760062C3DC /* ExperimentField.m */; };
+		39FF262616DFA8760062C3DC /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261E16DFA8760062C3DC /* Image.m */; };
+		39FF262716DFA8760062C3DC /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261F16DFA8760062C3DC /* Item.m */; };
+		39FF262816DFA8760062C3DC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
+		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
+		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		39FF25DE16DFA28A0062C3DC /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		39FF25E316DFA28A0062C3DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API-Prefix.pch"; sourceTree = "<group>"; };
+		39FF261116DFA86B0062C3DC /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		39FF261216DFA86B0062C3DC /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		39FF261316DFA86B0062C3DC /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		39FF261416DFA86B0062C3DC /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		39FF261516DFA86B0062C3DC /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		39FF261616DFA86B0062C3DC /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		39FF261716DFA86B0062C3DC /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		39FF261816DFA86B0062C3DC /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		39FF261A16DFA8760062C3DC /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
+		39FF261C16DFA8760062C3DC /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
+		39FF261D16DFA8760062C3DC /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
+		39FF261E16DFA8760062C3DC /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		39FF261F16DFA8760062C3DC /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		39FF262016DFA8760062C3DC /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		39FF25DD16DFA28A0062C3DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		39FF25D516DFA28A0062C3DC = {
+			isa = PBXGroup;
+			children = (
+				39FF25E516DFA28A0062C3DC /* iSENSE_API */,
+				39FF25E216DFA28A0062C3DC /* Frameworks */,
+				39FF25E116DFA28A0062C3DC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		39FF25E116DFA28A0062C3DC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39FF25E216DFA28A0062C3DC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39FF25E316DFA28A0062C3DC /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261916DFA8760062C3DC /* src */,
+				39FF261016DFA86B0062C3DC /* headers */,
+				39FF25E616DFA28A0062C3DC /* Supporting Files */,
+			);
+			path = iSENSE_API;
+			sourceTree = "<group>";
+		};
+		39FF25E616DFA28A0062C3DC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		39FF261016DFA86B0062C3DC /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261116DFA86B0062C3DC /* Experiment.h */,
+				39FF261216DFA86B0062C3DC /* ExperimentField.h */,
+				39FF261316DFA86B0062C3DC /* Image.h */,
+				39FF261416DFA86B0062C3DC /* iSENSE.h */,
+				39FF261516DFA86B0062C3DC /* Item.h */,
+				39FF261616DFA86B0062C3DC /* Person.h */,
+				39FF261716DFA86B0062C3DC /* Session.h */,
+				39FF261816DFA86B0062C3DC /* SessionData.h */,
+			);
+			path = headers;
+			sourceTree = "<group>";
+		};
+		39FF261916DFA8760062C3DC /* src */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261A16DFA8760062C3DC /* iSENSE.m */,
+				39FF261B16DFA8760062C3DC /* Objects */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		39FF261B16DFA8760062C3DC /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261C16DFA8760062C3DC /* Experiment.m */,
+				39FF261D16DFA8760062C3DC /* ExperimentField.m */,
+				39FF261E16DFA8760062C3DC /* Image.m */,
+				39FF261F16DFA8760062C3DC /* Item.m */,
+				39FF262016DFA8760062C3DC /* Person.m */,
+				39FF262116DFA8760062C3DC /* Session.m */,
+				39FF262216DFA8760062C3DC /* SessionData.m */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		39A1CC2616DFB47000B1979F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39A1CC2816DFB48700B1979F /* Experiment.h in Headers */,
+				39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */,
+				39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */,
+				39A1CC2A16DFB48700B1979F /* Image.h in Headers */,
+				39A1CC2C16DFB48700B1979F /* Item.h in Headers */,
+				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
+				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
+				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		39FF25DF16DFA28A0062C3DC /* iSENSE_API */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39FF25EE16DFA28A0062C3DC /* Build configuration list for PBXNativeTarget "iSENSE_API" */;
+			buildPhases = (
+				39FF25DC16DFA28A0062C3DC /* Sources */,
+				39FF25DD16DFA28A0062C3DC /* Frameworks */,
+				39FF25DE16DFA28A0062C3DC /* Copy Files */,
+				39A1CC2616DFB47000B1979F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iSENSE_API;
+			productName = iSENSE_API;
+			productReference = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		39FF25D716DFA28A0062C3DC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Jeremy Poulin";
+			};
+			buildConfigurationList = 39FF25DA16DFA28A0062C3DC /* Build configuration list for PBXProject "iSENSE_API" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 39FF25D516DFA28A0062C3DC;
+			productRefGroup = 39FF25E116DFA28A0062C3DC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				39FF25DF16DFA28A0062C3DC /* iSENSE_API */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		39FF25DC16DFA28A0062C3DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FF262316DFA8760062C3DC /* iSENSE.m in Sources */,
+				39FF262416DFA8760062C3DC /* Experiment.m in Sources */,
+				39FF262516DFA8760062C3DC /* ExperimentField.m in Sources */,
+				39FF262616DFA8760062C3DC /* Image.m in Sources */,
+				39FF262716DFA8760062C3DC /* Item.m in Sources */,
+				39FF262816DFA8760062C3DC /* Person.m in Sources */,
+				39FF262916DFA8760062C3DC /* Session.m in Sources */,
+				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		39FF25EC16DFA28A0062C3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		39FF25ED16DFA28A0062C3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		39FF25EF16DFA28A0062C3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+<<<<<<< HEAD
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+=======
+>>>>>>> upstream/master
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		39FF25F016DFA28A0062C3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		39FF25DA16DFA28A0062C3DC /* Build configuration list for PBXProject "iSENSE_API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39FF25EC16DFA28A0062C3DC /* Debug */,
+				39FF25ED16DFA28A0062C3DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		39FF25EE16DFA28A0062C3DC /* Build configuration list for PBXNativeTarget "iSENSE_API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39FF25EF16DFA28A0062C3DC /* Debug */,
+				39FF25F016DFA28A0062C3DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 39FF25D716DFA28A0062C3DC /* Project object */;
+}

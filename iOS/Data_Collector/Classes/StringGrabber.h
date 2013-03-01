@@ -3,7 +3,7 @@
 //  Data_Collector
 //
 //  Created by Mike Stowell on 12/28/12.
-//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
@@ -12,7 +12,8 @@
 
 @interface StringGrabber : NSObject {}    
 
-+ (NSString *) getString:(NSString *)label;
++ (NSString *) grabString:(NSString *)label;
++ (NSString *) grabField: (NSString *)label;
 + (NSString *) concatenateHardcodedString:(NSString *)label with:(NSString *)string;
 + (NSString *) concatenate:(NSString*)string withHardcodedString:(NSString *)label;
 
