@@ -133,13 +133,18 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Upload</string>
 						<reference key="IBUIHighlightedTitleColor" ref="474914697"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
+						<object class="NSColor" key="IBUINormalTitleColor" id="771361926">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+							<bytes key="NSRGB">MCAwIDAAA</bytes>
+							<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
 						</object>
 						<object class="NSColor" key="IBUINormalTitleShadowColor" id="24772301">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="244691313">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">button_light_long.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="962484081">
 							<string key="name">Helvetica-Bold</string>
@@ -167,18 +172,16 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Clear</string>
 						<reference key="IBUIHighlightedTitleColor" ref="474914697"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
-						</object>
+						<reference key="IBUINormalTitleColor" ref="771361926"/>
 						<reference key="IBUINormalTitleShadowColor" ref="24772301"/>
+						<reference key="IBUINormalBackgroundImage" ref="244691313"/>
 						<reference key="IBUIFontDescription" ref="962484081"/>
 						<reference key="IBUIFont" ref="340531862"/>
 					</object>
 					<object class="IBUIButton" id="461281461">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{677, 326}, {71, 61}}</string>
+						<string key="NSFrame">{{663, 326}, {85, 61}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="342473595"/>
@@ -196,6 +199,10 @@
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">media_icon.png</string>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">button_light.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription">
 							<string key="name">Helvetica-Bold</string>
@@ -265,11 +272,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="577549214"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">1</int>
-					<bytes key="NSRGB">MCAwIDAAA</bytes>
-					<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="771361926"/>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
@@ -399,10 +402,10 @@
 							<reference ref="342473595"/>
 							<reference ref="629172999"/>
 							<reference ref="237952213"/>
-							<reference ref="906180905"/>
 							<reference ref="858506443"/>
 							<reference ref="461281461"/>
 							<reference ref="216401851"/>
+							<reference ref="906180905"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -650,10 +653,6 @@
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1536" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
 			<integer value="3000" key="NS.object.0"/>
@@ -664,11 +663,15 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>button_light.png</string>
+				<string>button_light_long.png</string>
 				<string>logo_manual.png</string>
 				<string>media_icon.png</string>
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>{300, 200}</string>
+				<string>{500, 200}</string>
 				<string>{640, 160}</string>
 				<string>{96, 96}</string>
 			</object>

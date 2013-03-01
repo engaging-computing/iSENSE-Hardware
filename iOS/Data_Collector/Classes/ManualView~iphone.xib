@@ -71,6 +71,10 @@
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">media_icon.png</string>
 						</object>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">button_light.png</string>
+						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="752401752">
 							<string key="name">Helvetica-Bold</string>
 							<string key="family">Helvetica</string>
@@ -160,11 +164,15 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Upload</string>
 						<reference key="IBUIHighlightedTitleColor" ref="142880060"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						<object class="NSColor" key="IBUINormalTitleColor" id="320562697">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MAA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="1036659793"/>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="807575171">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">button_light_long.png</string>
+						</object>
 						<reference key="IBUIFontDescription" ref="752401752"/>
 						<reference key="IBUIFont" ref="709838475"/>
 					</object>
@@ -241,11 +249,9 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Clear</string>
 						<reference key="IBUIHighlightedTitleColor" ref="142880060"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
-						</object>
+						<reference key="IBUINormalTitleColor" ref="320562697"/>
 						<reference key="IBUINormalTitleShadowColor" ref="1036659793"/>
+						<reference key="IBUINormalBackgroundImage" ref="807575171"/>
 						<reference key="IBUIFontDescription" ref="752401752"/>
 						<reference key="IBUIFont" ref="709838475"/>
 					</object>
@@ -630,10 +636,6 @@
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1536" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
 			<integer value="3000" key="NS.object.0"/>
@@ -644,11 +646,15 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>button_light.png</string>
+				<string>button_light_long.png</string>
 				<string>logo_manual.png</string>
 				<string>media_icon.png</string>
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>{300, 200}</string>
+				<string>{500, 200}</string>
 				<string>{640, 160}</string>
 				<string>{96, 96}</string>
 			</object>

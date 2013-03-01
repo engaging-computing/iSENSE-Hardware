@@ -3,11 +3,14 @@
 //
 
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-    #import "StringGrabber.h"
-    #import "CameraUsage.h"
-    #import "Toast.h"
-    #import <iSENSE.h>
-    #import "HexColor.h"
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "StringGrabber.h"
+#import "CameraUsage.h"
+#import "Toast.h"
+#import <iSENSE.h>
+#import "HexColor.h"
+#import "ExperimentBrowseViewController.h"
+
 #endif
