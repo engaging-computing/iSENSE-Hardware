@@ -8,13 +8,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Fields.h"
 
-@interface DataFieldManager : NSObject {
-
-
-}
+@interface DataFieldManager : NSObject {}
 
 - (NSMutableArray *) getFieldOrderOfExperiment:(int)exp;
-- (NSMutableArray *) putData;
+- (NSMutableArray *) orderDataFromFields:(Fields *)f;
+
+@property (nonatomic, retain) NSMutableArray *order;
+@property (nonatomic, retain) NSMutableArray *data;
 
 @end
