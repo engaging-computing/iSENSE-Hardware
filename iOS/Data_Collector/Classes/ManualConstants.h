@@ -15,8 +15,7 @@
 #define MENU_EXPERIMENT               1
 #define MENU_LOGIN                    2
 #define EXPERIMENT_MANUAL_ENTRY       3
-#define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define CLEAR_FIELDS_DIALOG           5
+#define CLEAR_FIELDS_DIALOG           4
 
 // options for action sheet
 #define OPTION_CANCELED                0
