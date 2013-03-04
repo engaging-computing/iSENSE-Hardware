@@ -342,13 +342,6 @@
             [self fillDataFieldEntryList:expNum];
         }
         
-    } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            
-            // TODO - get Jeremy's experiment browsing code when he's done
-        }
-        
     } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -412,7 +405,8 @@
 
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-    [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
+        [[NSCharacterSet characterSetWithCharactersInString:
+        [StringGrabber grabString:@"accepted_chars"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
@@ -442,13 +436,6 @@
         });
     });
     
-}
-
-- (void) experiment {
-	[self.view makeToast:@"Experiment!"
-				duration:2.0
-				position:@"bottom"
-                   image:@"red_x"];
 }
 
 - (void) updateExpNumLabel {
@@ -696,7 +683,7 @@
             if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
-                double lat  = lc2d.latitude;
+                double lat = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
                 [data addObject:latitude];
                 
@@ -749,7 +736,7 @@
                                             cancelButtonTitle:nil
                                             otherButtonTitles:nil];
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.center = CGPointMake(139.5, 75.5); // .5 so it doesn't blur
+    spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
     [spinner release];
