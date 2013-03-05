@@ -43,7 +43,6 @@
 
 // Programmatic functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
-- (void) updateExpNumLabel;
 - (void) upload:(NSMutableArray *)results;
 
 - (void) getDataFromFields;

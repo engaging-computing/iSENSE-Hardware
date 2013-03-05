@@ -89,7 +89,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    [self updateExpNumLabel];
+    //[self updateExpNumLabel];
 }
 
 - (void) dealloc {
@@ -210,7 +210,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -221,18 +221,6 @@
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_UPLOAD:
-			message = [[UIAlertView alloc] initWithTitle:@"Upload"
-                                                 message:@"Would you like to upload your data to iSENSE?"
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
-            message.tag = MENU_UPLOAD;
-            [message show];
-            [message release];
-            
-			break;
-            
 		case MENU_EXPERIMENT:
             message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
@@ -328,8 +316,6 @@
             }
             
         }
-        
-    } else if (actionSheet.tag == MENU_UPLOAD) {
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
@@ -438,18 +424,6 @@
     
 }
 
-- (void) updateExpNumLabel {
-    if (expNum && expNumLabel) {
-        NSString *update = [[NSString alloc] initWithString:
-                            [StringGrabber concatenateHardcodedString:@"exp_num"
-                                                                 with:[NSString stringWithFormat:@"%d", expNum]]];
-        expNumLabel.text = update;
-        [update release];
-        
-        [self fillDataFieldEntryList:expNum];
-    }
-}
-
 - (void) upload:(NSMutableArray *)results {
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
     [message show];
@@ -527,6 +501,7 @@
 
 - (void) fillDataFieldEntryList:(int)eid {
     
+    NSLog(@"Called!");
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving experiment fields..."];
@@ -714,6 +689,8 @@
     
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
     [dataEncapsulator addObject:data];
+    
+    NSLog(@"data:\n%@", dataEncapsulator);
     [self upload:dataEncapsulator];
     
     [data release];
