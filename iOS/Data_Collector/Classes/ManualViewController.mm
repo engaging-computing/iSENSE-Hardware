@@ -379,6 +379,32 @@
         
 	} else {
         
+        if (textField.tag == TAG_NUMERIC) {
+            if (![self containsAcceptedNumbers:string])
+                return NO;
+        
+            // ensure we have only 1 decimal and only 1 negative sign (correctly placed)
+            if ([string isEqualToString:@"-"] || [string isEqualToString:@"."]) {
+                NSString *currString = [textField text];
+                NSString *resultStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+                NSArray *components = [currString componentsSeparatedByString:@"-"];
+                NSUInteger count = [components count] - 1 + ([string isEqualToString:@"-"] ? 1 : 0);
+                if (count > 1) return NO;
+                if (count == 1) {
+                    if ([[textField text] length] == 0)
+                        return YES;
+                    else {
+                        NSString *firstChar = [resultStr substringToIndex:1];
+                        if (![firstChar isEqualToString:@"-"]) return NO;
+                    }
+                }
+                components = [currString componentsSeparatedByString:@"."];
+                count = [components count] - 1 + ([string isEqualToString:@"."] ? 1 : 0);
+                if (count > 1) return NO;
+            }
+            
+        }
+            
         NSUInteger newLength = [textField.text length] + [string length] - range.length;
         if (newLength > 25)
             return NO;
@@ -393,6 +419,14 @@
     NSCharacterSet *unwantedCharacters =
         [[NSCharacterSet characterSetWithCharactersInString:
         [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) containsAcceptedNumbers:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_numbers"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
@@ -597,9 +631,11 @@
     
     if (expField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
+        fieldContents.tag = TAG_TEXT;
         // TODO - restrict amount of chars to 60, restrict digits
     } else {
         fieldContents.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        fieldContents.tag = TAG_NUMERIC;
         // TODO - restrict # to 20 chars, restrict nums
     }
     [fieldContents setReturnKeyType:UIReturnKeyDone];

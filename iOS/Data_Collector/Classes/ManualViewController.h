@@ -48,6 +48,7 @@
 - (void) getDataFromFields;
 - (void) initLocations;
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
+- (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
 - (void)   fillDataFieldEntryList:(int)eid;
 - (int)    addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;

@@ -40,4 +40,8 @@
 #define IPHONE_WIDTH_PORTRAIT   280
 #define IPHONE_WIDTH_LANDSCAPE  200
 
+// tags for types of UITextFields
+#define TAG_TEXT    100
+#define TAG_NUMERIC 101
+
 #endif
