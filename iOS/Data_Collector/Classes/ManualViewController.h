@@ -67,6 +67,8 @@
 @property (nonatomic, retain) IBOutlet UIButton     *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
+@property (nonatomic, assign) UIView                *activeField;
+
 // Non-UI Properties
 @property (nonatomic, copy)   NSString              *sessionName;
 @property (nonatomic, copy)   NSString              *qrResults;
