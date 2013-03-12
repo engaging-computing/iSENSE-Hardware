@@ -64,15 +64,6 @@
     } else
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
     
-    /////Try to upload an image//////
-    
-    /*UIImage *image = [UIImage imageNamed:@"logo_manual.png"];
-    [iapi login:@"sor" with:@"sor"];
-    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:281] forSession:[NSNumber numberWithInt:6352] withName:@"Name" andDescription:@"Description"];
-    NSLog(@"Image success = %d", success);*/
-    
-    /////////////////////////////////
-    
     [self registerForKeyboardNotifications];
     
 }
@@ -195,8 +186,8 @@
 
 // method not called on real device - don't assign a location to a global variable here
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation *location = [locations lastObject];
-    NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    //CLLocation *location = [locations lastObject];
+    //NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
 }
 
 // pre-iOS6 rotating options
@@ -250,7 +241,12 @@
 }
 
 - (IBAction) uploadOnClick:(id)sender {
-    [self getDataFromFields];
+    //[self getDataFromFields];  // TODO - rewire upload to do this, not the image thing. although images are awesome
+    
+    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
+    [iapi login:@"sor" with:@"sor"];
+    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
+    NSLog(@"Image success = %d", success);
 }
 
 - (IBAction) clearOnClick:(id)sender {
