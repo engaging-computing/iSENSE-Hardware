@@ -355,7 +355,6 @@
 						<string key="automatic">UIButton</string>
 						<string key="dataCollectorLogo">UIImageView</string>
 						<string key="manual">UIButton</string>
-						<string key="orb">UIImageView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="automatic">
@@ -369,10 +368,6 @@
 						<object class="IBToOneOutletInfo" key="manual">
 							<string key="name">manual</string>
 							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="orb">
-							<string key="name">orb</string>
-							<string key="candidateClassName">UIImageView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

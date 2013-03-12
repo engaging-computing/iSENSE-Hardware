@@ -16,9 +16,38 @@
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField;
 @synthesize sessionName, expNum, qrResults, locationManager;
 
+// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        }
+    }
+}
 
-- (void) viewDidLoad {
-    [super viewDidLoad];
+// substitute for viewDidLoad - allocates memory and sets up main UI
+- (void) viewHasLoaded {
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -65,7 +94,10 @@
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
     
     [self registerForKeyboardNotifications];
-    
+}
+
+- (void) viewDidLoad {
+    [super viewDidLoad];
 }
 
 // Sets up listeners for keyboard
@@ -203,35 +235,6 @@
 // iOS6 interface orientations
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
-}
-
-// displays the correct xib based on orientation and device type
--(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
-        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~ipad"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        } else {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView~ipad"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        }
-    } else {
-        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~iphone"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        } else {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView~iphone"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        }
-    }
 }
 
 // overridden to keep soft keyboard off screen when not editting a text field

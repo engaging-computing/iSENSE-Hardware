@@ -14,7 +14,6 @@
 
 @interface SplashView : UIViewController {
 	UIImageView *dataCollectorLogo;
-	UIImageView *orb;
 	UIButton *automatic;
 	UIButton *manual;
 }
@@ -22,10 +21,8 @@
 - (IBAction) loadAutomatic:(id)sender;
 - (IBAction) loadManual:(id)sender;
 - (void) viewDidAppear:(BOOL)animated;
-- (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat; 
 
 @property (nonatomic, retain) IBOutlet UIImageView *dataCollectorLogo;
-@property (nonatomic, retain) IBOutlet UIImageView *orb;
 @property (nonatomic, retain) IBOutlet UIButton *automatic;
 @property (nonatomic, retain) IBOutlet UIButton *manual;
 
