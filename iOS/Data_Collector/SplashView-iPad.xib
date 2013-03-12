@@ -413,14 +413,12 @@
 							<string>automatic</string>
 							<string>dataCollectorLogo</string>
 							<string>manual</string>
-							<string>orb</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIButton</string>
 							<string>UIImageView</string>
 							<string>UIButton</string>
-							<string>UIImageView</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -430,7 +428,6 @@
 							<string>automatic</string>
 							<string>dataCollectorLogo</string>
 							<string>manual</string>
-							<string>orb</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -445,10 +442,6 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">manual</string>
 								<string key="candidateClassName">UIButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">orb</string>
-								<string key="candidateClassName">UIImageView</string>
 							</object>
 						</object>
 					</object>
