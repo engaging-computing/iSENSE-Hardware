@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -20,12 +21,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class SyncTime extends Activity {
 
 	private static Context mContext;
-	
+
 	private static final int TIME_SENT_REQUESTED = 100;
 	private static final int TIME_RECEIVED_REQUESTED = 101;
 	private static final int TIME_FAILED_REQUESTED = 102;
@@ -49,6 +52,8 @@ public class SyncTime extends Activity {
 	boolean success = false;
 
 	private ProgressDialog dia;
+	private RestAPI rapi;
+	private Waffle w;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -57,10 +62,17 @@ public class SyncTime extends Activity {
 		setContentView(R.layout.synctime);
 
 		mContext = this;
-		
+
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
+		w = new Waffle(this);
+
 		if (android.os.Build.VERSION.SDK_INT > 9) {
-		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		      StrictMode.setThreadPolicy(policy);	
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
 		}
 
 		String dummyTime = "" + System.currentTimeMillis();
@@ -75,16 +87,23 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				sendPack();
 
-				receivePack();
+				if (rapi.isConnectedToInternet()) {
 
-				String timeSent = convertTimeStamp(timeReceived);
-				
-				Intent iSent = new Intent(SyncTime.this, TimeSent.class);
-				iSent.putExtra("timeSent", timeSent);
-				iSent.putExtra("timeOffset", timeOffset);
-				startActivityForResult(iSent, TIME_SENT_REQUESTED);
+					sendPack();
+
+					receivePack();
+
+					String timeSent = convertTimeStamp(timeReceived);
+
+					Intent iSent = new Intent(SyncTime.this, TimeSent.class);
+					iSent.putExtra("timeSent", timeSent);
+					iSent.putExtra("timeOffset", timeOffset);
+					startActivityForResult(iSent, TIME_SENT_REQUESTED);
+
+				} else {
+					w.make("No internet connection found.", Waffle.IMAGE_X);
+				}
 
 			}
 		});
@@ -93,7 +112,11 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				new ReceiveTask().execute();
+				if (rapi.isConnectedToInternet()) {
+					new ReceiveTask().execute();
+				} else {
+					w.make("No internet connection found.", Waffle.IMAGE_X);
+				}
 			}
 		});
 
@@ -129,7 +152,7 @@ public class SyncTime extends Activity {
 			e.printStackTrace();
 			return -2;
 		}
-		
+
 		try {
 			mSocket.setSoTimeout(10000);
 
@@ -156,9 +179,9 @@ public class SyncTime extends Activity {
 
 		initSocket();
 		preInit = true;
-		
+
 		prepForBroadcast();
-		
+
 		try {
 			currentTime = "" + System.currentTimeMillis();
 			byteMessage = currentTime.getBytes();
@@ -168,14 +191,15 @@ public class SyncTime extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	// attempts to receive packet
 	private void receivePack() {
-	
-		if (!preInit) initSocket();
-		
+
+		if (!preInit)
+			initSocket();
+
 		DatagramPacket newPack = new DatagramPacket(receivedMessage,
 				byteMessage.length);
 		try {
@@ -204,10 +228,10 @@ public class SyncTime extends Activity {
 				.get(Calendar.SECOND), millis = date.get(Calendar.MILLISECOND);
 		String minuteSt, secondSt, millisSt;
 
-		minuteSt = (minute < 10)  ? "0" + minute   : "" + minute;
-		secondSt = (second < 10)  ? "0" + second   : "" + second;
-		millisSt = (millis < 100) ? "0" + millis   : "" + millis;
-		millisSt = (millis < 10)  ? "0" + millisSt : millisSt;
+		minuteSt = (minute < 10) ? "0" + minute : "" + minute;
+		secondSt = (second < 10) ? "0" + second : "" + second;
+		millisSt = (millis < 100) ? "0" + millis : "" + millis;
+		millisSt = (millis < 10) ? "0" + millisSt : millisSt;
 
 		return (date.get(Calendar.MONTH) + 1) + "/"
 				+ date.get(Calendar.DAY_OF_MONTH) + "/"
@@ -218,7 +242,6 @@ public class SyncTime extends Activity {
 
 	private class ReceiveTask extends AsyncTask<Void, Integer, Void> {
 
-		
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(SyncTime.this);
@@ -271,7 +294,7 @@ public class SyncTime extends Activity {
 	@Override
 	protected void onStop() {
 		if (mSocket != null)
-			if (mSocket.isConnected())							
+			if (mSocket.isConnected())
 				mSocket.close();
 		super.onStop();
 	}
@@ -293,7 +316,7 @@ public class SyncTime extends Activity {
 
 		return ipString;
 	}
-	
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
@@ -310,7 +333,8 @@ public class SyncTime extends Activity {
 		} else if (requestCode == TIME_FAILED_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				new ReceiveTask().execute();
-			} 
+			}
 		}
 	}
+
 }
