@@ -158,38 +158,29 @@ static iSENSE *_iSENSE = nil;
 
     if ([self isLoggedIn]) {
         
-        /*NSData *dataForImage = UIImagePNGRepresentation(picture);
-        NSDictionary *result = [self isenseQuery:[NSString stringWithFormat:
-                                                  @"method=uploadImageToSession&image=%@&eid=%@&sid=%@&img_name=%@&img_description=%@&session_key=%@",
-                                                  dataForImage, exp_id, ses_id, name, description, session_key]];
-        NSArray *data = [result objectForKey:@"data"];
+        // reference: stackoverflow.com/questions/8564833/ios-upload-image-and-text-using-http-post
         
-        // possible data could be: {"status":552,"data":{"msg":"The image type you attempted to upload is not supported"}}
-        // so add a check that this showed up, in which case, return false.  else there's a few more to check - i.e., the lack
-        // of some parameters.  so check things like: {"status":551,"data":{"msg":"Missing session key parameter"}}
-        if (data) {
-            return true;
-        }*/
+        // fix strings to remove spaces
+        name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+        description = [description stringByReplacingOccurrencesOfString:@" " withString:@"+"];
         
-        // -------- ATTEMPT 2 --------- stackoverflow.com/questions/8564833/ios-upload-image-and-text-using-http-post
-        
-        /*
         // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
         NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-        [_params setObject:[NSString stringWithString:@"1.0"] forKey:[NSString stringWithString:@"ver"]];
-        [_params setObject:[NSString stringWithString:@"en"] forKey:[NSString stringWithString:@"lan"]];
-        [_params setObject:[NSString stringWithFormat:@"%d", userId] forKey:[NSString stringWithString:@"userId"]];
-        [_params setObject:[NSString stringWithFormat:@"%@",title] forKey:[NSString stringWithString:@"title"]];
+        [_params setObject:@"uploadImageToSession"  forKey:@"method"];
+        [_params setObject:session_key              forKey:@"session_key"];
+        [_params setObject:exp_id                   forKey:@"eid"];
+        [_params setObject:ses_id                   forKey:@"sid"];
+        [_params setObject:name                     forKey:@"img_name"];
+        [_params setObject:description              forKey:@"img_description"];
         
         // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
-        NSString *BoundaryConstant = [NSString stringWithString:@"----------V2ymHFg03ehbqgZCaKO6jy"];
+        NSString *BoundaryConstant = @"*****";
         
-        // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
-        NSString* FileParamConstant = [NSString stringWithString:@"file"];
+        // string constant for the post parameter 'image'
+        NSString* FileParamConstant = @"image";
         
-        // the server url to which the image (or the media) is uploaded. Use your server url here
-        NSURL* requestURL = [NSURL URLWithString:@""];
-        
+        // the server url to which the image (or the media) is uploaded.
+        NSURL* requestURL = [NSURL URLWithString:baseURL];
         
         // create request
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -199,7 +190,7 @@ static iSENSE *_iSENSE = nil;
         [request setHTTPMethod:@"POST"];
         
         // set Content-Type in HTTP header
-        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
         [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
         
         // post body
@@ -213,16 +204,16 @@ static iSENSE *_iSENSE = nil;
         }
         
         // add image data
-        NSData *imageData = UIImageJPEGRepresentation(imageToPost, 1.0);
+        NSData *imageData = UIImageJPEGRepresentation(picture, 1.0);
         if (imageData) {
-            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithString:@"Content-Type: image/jpeg\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:imageData];
             [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
         }
         
-        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
         
         // setting the body of the post to the reqeust
         [request setHTTPBody:body];
@@ -233,7 +224,13 @@ static iSENSE *_iSENSE = nil;
         
         // set URL
         [request setURL:requestURL];
-        */
+        
+        // submit request and receive response
+        NSURLResponse *resp = nil;
+        NSError *err = nil;
+        NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:&resp error:&err];
+        NSString * theString = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+        NSLog(@"response: %@", theString);
         
     }
 	
