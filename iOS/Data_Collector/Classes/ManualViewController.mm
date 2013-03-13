@@ -13,12 +13,41 @@
 
 @implementation ManualViewController
 
-@synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView;
+@synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField;
 @synthesize sessionName, expNum, qrResults, locationManager;
 
+// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ManualView~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewHasLoaded];
+        }
+    }
+}
 
-- (void) viewDidLoad {
-    [super viewDidLoad];
+// substitute for viewDidLoad - allocates memory and sets up main UI
+- (void) viewHasLoaded {
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -64,15 +93,78 @@
     } else
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
     
-    /////Try to upload an image//////
-    
-    /*UIImage *image = [UIImage imageNamed:@"logo_manual.png"];
-    [iapi login:@"sor" with:@"sor"];
-    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:281] forSession:[NSNumber numberWithInt:6352] withName:@"Name" andDescription:@"Description"];
-    NSLog(@"Image success = %d", success);*/
-    
-    /////////////////////////////////
+    [self registerForKeyboardNotifications];
 }
+
+- (void) viewDidLoad {
+    [super viewDidLoad];
+}
+
+// Sets up listeners for keyboard
+- (void) registerForKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+// Unregisters listeners for keyboard
+- (void) unregisterKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:UIKeyboardWillHideNotification
+                                                  object:nil];
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    
+    if (activeField.tag == TAG_TEXT || activeField.tag == TAG_NUMERIC) {
+        NSDictionary* info = [aNotification userInfo];
+    
+        CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+
+    
+        CGRect aRect = self.view.frame;
+        aRect.size.height -= kbSize.height;
+        CGPoint origin = activeField.frame.origin;
+        //origin.y -= scrollView.contentOffset.y;
+        if (!CGRectContainsPoint(aRect, origin) ) {
+            if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+                //[scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height+30)];
+                self.view.frame = CGRectMake(0.0, (aRect.size.height+30), self.view.frame.size.width, self.view.frame.size.height);
+            }
+        }
+        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)
+            self.view.frame = CGRectMake(0.0, -(self.view.frame.size.height - aRect.size.height), self.view.frame.size.width, self.view.frame.size.height);
+    }
+    
+    [scrollView setScrollEnabled:YES];
+}
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+    //[scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height-30)];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    activeField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    activeField = nil;
+}
+
 
 - (IBAction) textFieldFinished:(id)sender {}
 
@@ -89,7 +181,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    [self updateExpNumLabel];
+    //[self updateExpNumLabel];
 }
 
 - (void) dealloc {
@@ -109,6 +201,8 @@
     [locationManager release];
     locationManager = nil;
     
+    [self unregisterKeyboardNotifications];
+    
 	[super dealloc];
 }
 
@@ -124,8 +218,8 @@
 
 // method not called on real device - don't assign a location to a global variable here
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation *location = [locations lastObject];
-    NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
+    //CLLocation *location = [locations lastObject];
+    //NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
 }
 
 // pre-iOS6 rotating options
@@ -143,35 +237,6 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-// displays the correct xib based on orientation and device type
--(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
-        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~ipad"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        } else {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView~ipad"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        }
-    } else {
-        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView-landscape~iphone"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        } else {
-            [[NSBundle mainBundle] loadNibNamed:@"ManualView~iphone"
-                                          owner:self
-                                        options:nil];
-            [self viewDidLoad];
-        }
-    }
-}
-
 // overridden to keep soft keyboard off screen when not editting a text field
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
@@ -179,7 +244,12 @@
 }
 
 - (IBAction) uploadOnClick:(id)sender {
-    [self getDataFromFields];
+    //[self getDataFromFields];  // TODO - rewire upload to do this, not the image thing. although images are awesome
+    
+    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
+    [iapi login:@"sor" with:@"sor"];
+    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
+    NSLog(@"Image success = %d", success);
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -210,7 +280,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -221,18 +291,6 @@
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_UPLOAD:
-			message = [[UIAlertView alloc] initWithTitle:@"Upload"
-                                                 message:@"Would you like to upload your data to iSENSE?"
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
-            message.tag = MENU_UPLOAD;
-            [message show];
-            [message release];
-            
-			break;
-            
 		case MENU_EXPERIMENT:
             message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
@@ -329,8 +387,6 @@
             
         }
         
-    } else if (actionSheet.tag == MENU_UPLOAD) {
-        
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -340,13 +396,6 @@
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             
             [self fillDataFieldEntryList:expNum];
-        }
-        
-    } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            
-            // TODO - get Jeremy's experiment browsing code when he's done
         }
         
     } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
@@ -400,6 +449,32 @@
         
 	} else {
         
+        if (textField.tag == TAG_NUMERIC) {
+            if (![self containsAcceptedNumbers:string])
+                return NO;
+        
+            // ensure we have only 1 decimal and only 1 negative sign (correctly placed)
+            if ([string isEqualToString:@"-"] || [string isEqualToString:@"."]) {
+                NSString *currString = [textField text];
+                NSString *resultStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+                NSArray *components = [currString componentsSeparatedByString:@"-"];
+                NSUInteger count = [components count] - 1 + ([string isEqualToString:@"-"] ? 1 : 0);
+                if (count > 1) return NO;
+                if (count == 1) {
+                    if ([[textField text] length] == 0)
+                        return YES;
+                    else {
+                        NSString *firstChar = [resultStr substringToIndex:1];
+                        if (![firstChar isEqualToString:@"-"]) return NO;
+                    }
+                }
+                components = [currString componentsSeparatedByString:@"."];
+                count = [components count] - 1 + ([string isEqualToString:@"."] ? 1 : 0);
+                if (count > 1) return NO;
+            }
+            
+        }
+            
         NSUInteger newLength = [textField.text length] + [string length] - range.length;
         if (newLength > 25)
             return NO;
@@ -412,7 +487,16 @@
 
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-    [[NSCharacterSet characterSetWithCharactersInString:[StringGrabber grabString:@"accepted_chars"]] invertedSet];
+        [[NSCharacterSet characterSetWithCharactersInString:
+        [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) containsAcceptedNumbers:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_numbers"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
@@ -442,25 +526,6 @@
         });
     });
     
-}
-
-- (void) experiment {
-	[self.view makeToast:@"Experiment!"
-				duration:2.0
-				position:@"bottom"
-                   image:@"red_x"];
-}
-
-- (void) updateExpNumLabel {
-    if (expNum && expNumLabel) {
-        NSString *update = [[NSString alloc] initWithString:
-                            [StringGrabber concatenateHardcodedString:@"exp_num"
-                                                                 with:[NSString stringWithFormat:@"%d", expNum]]];
-        expNumLabel.text = update;
-        [update release];
-        
-        [self fillDataFieldEntryList:expNum];
-    }
 }
 
 - (void) upload:(NSMutableArray *)results {
@@ -577,7 +642,7 @@
             
             scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
             CGFloat scrollWidth = scrollView.frame.size.width;
-            [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight)];
+            [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight+40/* +40 for troll in keyboard code*/)];
             
             if (scrollView.subviews.count == 0) {
                 
@@ -635,9 +700,11 @@
     
     if (expField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
+        fieldContents.tag = TAG_TEXT;
         // TODO - restrict amount of chars to 60, restrict digits
     } else {
         fieldContents.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        fieldContents.tag = TAG_NUMERIC;
         // TODO - restrict # to 20 chars, restrict nums
     }
     [fieldContents setReturnKeyType:UIReturnKeyDone];
@@ -696,7 +763,7 @@
             if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
-                double lat  = lc2d.latitude;
+                double lat = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
                 [data addObject:latitude];
                 
@@ -727,6 +794,7 @@
     
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
     [dataEncapsulator addObject:data];
+    
     [self upload:dataEncapsulator];
     
     [data release];
@@ -749,7 +817,7 @@
                                             cancelButtonTitle:nil
                                             otherButtonTitles:nil];
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.center = CGPointMake(139.5, 75.5); // .5 so it doesn't blur
+    spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
     [spinner release];

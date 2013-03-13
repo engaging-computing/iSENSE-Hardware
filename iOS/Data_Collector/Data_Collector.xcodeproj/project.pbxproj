@@ -60,6 +60,7 @@
 		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
 		B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */; };
 		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
+		B71A2DD916E4D91E009A441F /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A2DD816E4D91E009A441F /* Fields.m */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -185,6 +186,8 @@
 		B7115C2116D6ACD80033AAA1 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape.xib"; sourceTree = "<group>"; };
 		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B71A2DD716E4D91E009A441F /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
+		B71A2DD816E4D91E009A441F /* Fields.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fields.m; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
@@ -489,6 +492,7 @@
 		52572B711691F6F5009037A7 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				B71A2DD616E4D8EF009A441F /* Fields */,
 				B7115C1D16D6AA490033AAA1 /* DataFieldManager */,
 				B72DC21716C19A2900999C7E /* HexColor */,
 				39A5AA7816C29555005862E7 /* ISenseSearch */,
@@ -528,6 +532,15 @@
 				B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */,
 			);
 			name = DataFieldManager;
+			sourceTree = "<group>";
+		};
+		B71A2DD616E4D8EF009A441F /* Fields */ = {
+			isa = PBXGroup;
+			children = (
+				B71A2DD716E4D91E009A441F /* Fields.h */,
+				B71A2DD816E4D91E009A441F /* Fields.m */,
+			);
+			name = Fields;
 			sourceTree = "<group>";
 		};
 		B72DC21716C19A2900999C7E /* HexColor */ = {
@@ -702,6 +715,7 @@
 				B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */,
 				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
 				B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */,
+				B71A2DD916E4D91E009A441F /* Fields.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

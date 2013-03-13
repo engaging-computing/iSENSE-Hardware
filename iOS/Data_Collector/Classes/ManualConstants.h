@@ -11,12 +11,10 @@
 #define Data_Collector_ManualConstants_h
 
 // constants for dialogs
-#define MENU_UPLOAD                   0
-#define MENU_EXPERIMENT               1
-#define MENU_LOGIN                    2
-#define EXPERIMENT_MANUAL_ENTRY       3
-#define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define CLEAR_FIELDS_DIALOG           5
+#define MENU_EXPERIMENT               0
+#define MENU_LOGIN                    1
+#define EXPERIMENT_MANUAL_ENTRY       2
+#define CLEAR_FIELDS_DIALOG           3
 
 // options for action sheet
 #define OPTION_CANCELED                0
@@ -41,5 +39,9 @@
 #define IPAD_WIDTH_LANDSCAPE    980
 #define IPHONE_WIDTH_PORTRAIT   280
 #define IPHONE_WIDTH_LANDSCAPE  200
+
+// tags for types of UITextFields
+#define TAG_TEXT    100
+#define TAG_NUMERIC 101
 
 #endif

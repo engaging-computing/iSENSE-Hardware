@@ -43,13 +43,12 @@
 
 // Programmatic functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
-- (void) experiment;
-- (void) updateExpNumLabel;
 - (void) upload:(NSMutableArray *)results;
 
 - (void) getDataFromFields;
 - (void) initLocations;
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
+- (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
 - (void)   fillDataFieldEntryList:(int)eid;
 - (int)    addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
@@ -67,6 +66,8 @@
 @property (nonatomic, retain) IBOutlet UITextField  *sessionNameInput;
 @property (nonatomic, retain) IBOutlet UIButton     *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+
+@property (nonatomic, assign) UIView                *activeField;
 
 // Non-UI Properties
 @property (nonatomic, copy)   NSString              *sessionName;

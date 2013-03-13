@@ -11,7 +11,7 @@
 
 @implementation SplashView
 
-@synthesize dataCollectorLogo, orb, automatic, manual;
+@synthesize dataCollectorLogo, automatic, manual;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -23,7 +23,6 @@
     [super viewDidAppear:animated];
     
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    [self runSpinAnimationOnView:orb duration:1 rotations:1 repeat:FLT_MAX];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,18 +51,6 @@
 	[self.navigationController pushViewController:manualViewController animated:YES];
 	[manualViewController release];
 }
-
-- (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat {
-    CABasicAnimation* rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 /* full rotation */ * rotations * duration ];
-    rotationAnimation.duration = duration;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = repeat;
-    
-    [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-}
-
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
