@@ -11,11 +11,12 @@
 #import "UIImageTint.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreMotion/CoreMotion.h>
+#import <CoreLocation/CoreLocation.h>
 #import "ExperimentBrowseViewController.h"
 #import "AutomaticConstants.h"
 
 
-@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>  {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
@@ -32,7 +33,7 @@
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
 -(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
--(CMMotionManager *) recordData;
+-(void) recordData;
 -(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)password;
@@ -43,8 +44,10 @@
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
 @property (nonatomic, assign) NSTimer *timer;
+@property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
 @property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, assign) int expNum;
+@property (nonatomic, assign) CLLocationManager *locationManager;
 
 @end

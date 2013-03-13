@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, elapsedTime;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -25,6 +25,18 @@
         // Start Recording
         if (![self isRecording]) {
             
+            // Check for a chosen experiment
+            if (!expNum) {
+                [self.view makeToast:@"No experiment chosen." duration:1 position:@"bottom" image:@"red_x"];
+                return;
+            }
+            
+            // Check for login
+            if (![isenseAPI isLoggedIn]) {
+                [self.view makeToast:@"Not Logged In" duration:1 position:@"bottom" image:@"red_x"];
+                return;
+            }
+            
             // Switch to green mode
             startStopButton.image = [UIImage imageNamed:@"green_button.png"];
             mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
@@ -33,7 +45,7 @@
             
             // Record Data
             [self setIsRecording:TRUE];
-            motionManager = [[self recordData] retain];
+            [self recordData];
             
             // Update elapsed time
             elapsedTime = 0;
@@ -42,9 +54,11 @@
             
         // Stop Recording
         } else {
-            // Stop Timer
+            // Stop Timers
             [timer invalidate];
             [timer release];
+            [recordDataTimer invalidate];
+            [recordDataTimer release];
             
             // Back to red mode
             startStopButton.image = [UIImage imageNamed:@"red_button.png"];
@@ -54,28 +68,10 @@
             
             NSMutableArray *results = [self stopRecording:motionManager];
             NSLog(@"Received %d results.", [results count]);
+            [self uploadData:results];
             
             [self setIsRecording:FALSE];
             
-            // Create a session on iSENSE/dev.
-            /*
-             NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
-             NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
-             NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
-             NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
-             NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
-             NSNumber *exp_num = [[[NSNumber alloc] initWithInt:518] autorelease];
-             
-             NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
-             
-             // Upload to iSENSE (pass me JSON data)
-             NSError *error = nil;
-             NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-             [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-             
-            
-            [self getExperiments];
-             */
         }
         
         // Make the beep sound
@@ -88,6 +84,30 @@
         AudioServicesPlaySystemSound(soundID);
         
     }
+    
+}
+
+- (void) uploadData:(NSMutableArray *)results {
+    
+    if (![isenseAPI isLoggedIn]) {
+        [self.view makeToast:@"Not Logged In" duration:1 position:@"bottom" image:@"red_x"];
+        return;
+    }
+    
+    // Create a session on iSENSE/dev.
+    NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
+    NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
+    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
+    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
+    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
+    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:expNum] autorelease];
+    
+    NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+    
+    // Upload to iSENSE (pass me JSON data)
+    NSError *error = nil;
+    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+    [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
     
 }
 
@@ -237,6 +257,8 @@
         [self updateLoginStatus];
         
     }
+    
+    [self initLocations];
 }
 
 // Is called every time AutomaticView appears
@@ -383,25 +405,71 @@
 }
 
 // Record the data and return the NSMutable array to be JSONed
-- (CMMotionManager *) recordData {
-    CMMotionManager *newMotionManager = [[CMMotionManager alloc] init];
-    NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
-    dataToBeJSONed = [[NSMutableArray alloc] init];
-    
-    CMAccelerometerHandler accelerationHandler = ^(CMAccelerometerData *data, NSError *error) {
-        NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
-        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].x * 9.80665] autorelease]];
-        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].y * 9.80665] autorelease]];
-        [temp addObject:[[[NSNumber alloc] initWithDouble:[data acceleration].z * 9.80665] autorelease]];
-        
-        [dataToBeJSONed addObject:temp];
-    };
+- (void) recordData {
+    motionManager = [[CMMotionManager alloc] init];
     
     // Set the accelerometer update interval to reccomended sample interval, and start updates
-    newMotionManager.accelerometerUpdateInterval = .5;
-    [newMotionManager startAccelerometerUpdatesToQueue:queue withHandler:accelerationHandler];
+    motionManager.accelerometerUpdateInterval = .5;
+    motionManager.magnetometerUpdateInterval = .5;
+    motionManager.gyroUpdateInterval = .5;
+    [motionManager startAccelerometerUpdates];
+    [motionManager startMagnetometerUpdates];
+    if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
     
-    return [newMotionManager autorelease];
+    // New JSON array to hold data
+    dataToBeJSONed = [[NSMutableArray alloc] init];
+    
+    // Start the new timer
+    recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:.5 target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
+
+}
+
+// Fill dataToBeJSONed with a row of data
+- (void) buildRowOfData {
+    NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+    
+    // Fill a new row of data
+    double time = [[NSDate date] timeIntervalSince1970];
+    
+    // acceleration in meters per second squared
+    [temp addObject:[[[NSNumber alloc] initWithDouble:time * 1000] autorelease]];
+    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease]];
+    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease]];
+    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease]];
+    
+    // latitude and longitude coordinates
+    CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+    double latitude  = lc2d.latitude;
+    double longitude = lc2d.longitude;
+    [temp addObject:[[[NSNumber alloc] initWithDouble:latitude] autorelease]];
+    [temp addObject:[[[NSNumber alloc] initWithDouble:longitude] autorelease]];
+    
+    // magnetic field in microTesla
+    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease]];
+    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease]];
+    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease]];
+    
+    // rotation rate in radians per second
+    if (motionManager.gyroAvailable) {
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease]];
+        [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease]];
+    }
+    
+    // Update parent JSON object
+    [dataToBeJSONed addObject:temp];
+
+}
+
+// This inits locations
+- (void) initLocations {
+    if (!locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.distanceFilter = kCLDistanceFilterNone;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [locationManager startUpdatingLocation];
+    }
 }
 
 // Stops the recording and returns the actual data recorded :)
@@ -427,20 +495,10 @@
 // Fetch the experiments from iSENSE
 - (void) getExperiments {
     NSMutableArray *results = [isenseAPI getExperiments:[NSNumber numberWithUnsignedInt:1] withLimit:[NSNumber numberWithUnsignedInt:10] withQuery:@"" andSort:@"recent"];
-    if ([results count] == 0) NSLog(@"No results found");
-    for (int i = 0; i < [results count]; i++) {
-        NSLog(@"Experiment %d: %@", i + 1, ((Experiment *)results[i]).name);
-        NSLog(@"Session Count: %@", ((Experiment *)results[i]).session_count);
-    }
-    
-    Experiment *myExperiment = [isenseAPI getExperiment:[NSNumber numberWithUnsignedInt:514]];
-    NSLog(@"My experiment name is %@.", myExperiment.name);
+    if ([results count] == 0) NSLog(@"No experiments found.");
     
     NSMutableArray *resultsFields = [isenseAPI getExperimentFields:[NSNumber numberWithUnsignedInt:514]];
-    if ([resultsFields count] == 0) NSLog(@"No results found");
-    for (int i = 0; i < [resultsFields count]; i++) {
-        NSLog(@"Experiment Field %d: %@", i + 1, ((ExperimentField*)resultsFields[i]).field_name);
-    }
+    if ([resultsFields count] == 0) NSLog(@"No experiment fields found.");
     
 }
 
@@ -488,8 +546,6 @@
 		default:
 			break;
 	}
-	
-	
     
 }
 
