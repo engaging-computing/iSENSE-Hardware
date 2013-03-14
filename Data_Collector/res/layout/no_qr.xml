@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/qr_prompt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:background="@android:color/transparent" />
 
         <LinearLayout
@@ -33,9 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/cancel"
-                android:textColor="@android:color/white" />
+                android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/no_qr_visit"
@@ -43,9 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/visit"
-                android:textColor="@android:color/white" />
+                android:text="@string/visit" />
         </LinearLayout>
     </LinearLayout>
 

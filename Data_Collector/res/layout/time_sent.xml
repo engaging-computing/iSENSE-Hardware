@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:background="@android:color/transparent" />
 
         <Button
@@ -25,9 +25,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/colorless"
-            android:text="@string/done"
-            android:textColor="@android:color/white" />
+            android:text="@string/done" />
     </LinearLayout>
 
 </ScrollView>

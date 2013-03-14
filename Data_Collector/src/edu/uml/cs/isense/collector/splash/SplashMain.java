@@ -16,7 +16,7 @@ public class SplashMain extends Activity {
 
 		final TextView appName = (FontFitTextView) findViewById(R.id.title_text);
 		final Typeface tf1 = Typeface
-				.createFromAsset(getAssets(), "facets.otf");
+				.createFromAsset(getAssets(), "BorisBlackBloxx.ttf");
 		appName.setTypeface(tf1);
 
 	}
