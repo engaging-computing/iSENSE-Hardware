@@ -17,8 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/instructions"
-            android:textColor="#FFFF00"
-            android:textSize="20dp" />
+            android:textColor="#00FFFF"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <ScrollView
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/syncTime"
-                android:textSize="18dp" >
+                android:textSize="18sp" >
 
                 <requestFocus />
             </TextView>

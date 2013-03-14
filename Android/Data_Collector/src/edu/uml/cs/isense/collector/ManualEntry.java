@@ -126,7 +126,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-
+		rapi.useDev(true);
+		
 		initLocations();
 
 		loginPrefs = new ObscuredSharedPreferences(Splash.mContext,

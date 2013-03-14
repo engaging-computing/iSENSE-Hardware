@@ -95,10 +95,6 @@
             android:label="Data Recording Halted"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".dialogs.RecordingStopped"
-            android:label="Data Recording Timed Out"
-            android:theme="@style/theme_dialog_black" />
-        <activity
             android:name=".dialogs.Description"
             android:label="Enter Session Description"
             android:theme="@style/theme_dialog_black" />
@@ -122,22 +118,6 @@
             android:name=".dialogs.ExperimentDialog"
             android:label="Experiment ID"
             android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueLayout"
-            android:label="Upload Data"
-            android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueAlter"
-            android:label="Alter Data Set"
-            android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueEditData"
-            android:label="Edit Data"
-            android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueEditRename"
-            android:label="Rename Data Set"
-            android:theme="@style/theme_dialog_black" />
     </application>
 
 </manifest>

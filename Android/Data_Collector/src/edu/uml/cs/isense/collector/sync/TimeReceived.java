@@ -16,7 +16,7 @@ public class TimeReceived extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.time_received);
 		
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		getWindow().setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		Bundle extras = getIntent().getExtras();
 		String timeRec = extras.getString("timeReceived");

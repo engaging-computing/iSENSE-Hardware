@@ -15,7 +15,7 @@ public class TimeFailed extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.time_fail);
 		
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		getWindow().setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		final Button retry = (Button) findViewById(R.id.time_fail_retry);
 		retry.setOnClickListener(new OnClickListener() {

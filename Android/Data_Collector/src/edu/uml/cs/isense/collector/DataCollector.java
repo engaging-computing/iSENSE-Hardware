@@ -1255,6 +1255,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		rapi.useDev(true);
 
 		uq = new UploadQueue("datacollector", mContext, rapi);
 		uq.buildQueueFromFile();
