@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/description_prompt"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:background="@android:color/transparent" />
 
         <EditText
@@ -28,7 +28,6 @@
             android:hint="@string/description_hint"
             android:imeOptions="actionDone"
             android:maxLength="150"
-            android:background="@drawable/edit_text_background"
             android:digits="@string/digits_restriction" />
 
         <LinearLayout
@@ -43,9 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/cancel"
-                android:textColor="@android:color/white" />
+                android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/description_upload"
@@ -53,9 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/upload"
-                android:textColor="@android:color/white" />
+                android:text="@string/upload" />
         </LinearLayout>
     </LinearLayout>
 

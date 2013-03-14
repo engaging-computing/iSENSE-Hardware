@@ -84,8 +84,7 @@
                 android:id="@+id/manual_session_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight=".2"
                 android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
                 android:gravity="left"
@@ -93,8 +92,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLength="150"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:singleLine="true" />
 
             <ImageButton
                 android:id="@+id/manual_media_button"

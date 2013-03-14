@@ -44,7 +44,7 @@
             android:singleLine="true"
             android:textColor="#FFFFFF"
             android:textColorHint="#999999"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,7 +104,7 @@
             android:background="@drawable/colorless"
             android:text="@+string/startString"
             android:textColor="@android:color/white"
-            android:textSize="30dip" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -122,7 +122,7 @@
             android:background="@android:color/transparent"
             android:text="@+string/timeElapsed"
             android:textColor="@android:color/white"
-            android:textSize="14dip"
+            android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 

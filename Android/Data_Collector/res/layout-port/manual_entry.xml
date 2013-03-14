@@ -38,7 +38,7 @@
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/experimentLabel" >
 
         <Button
@@ -69,8 +69,7 @@
             android:id="@+id/manual_session_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"    
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="10dp"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
             android:gravity="left"
             android:hint="@string/enterSessionName"
@@ -78,7 +77,6 @@
             android:inputType="text"
             android:maxLength="150"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_weight=".2" />
 
         <ImageButton
