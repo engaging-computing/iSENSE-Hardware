@@ -22,14 +22,15 @@
     NSMutableArray *fields = [iapi getExperimentFields:[NSNumber numberWithInt:exp]];
     
     for (ExperimentField *field in fields) {
+        NSLog(@"%d, %@", field.type_id.intValue, field.field_name);
         switch (field.type_id.intValue) {
             // Temperature (1)
             case TEMPERATURE:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"f"].location == NSNotFound)) {
+                if (!([field.field_name.lowercaseString rangeOfString:@"f"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"temperature_f"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"c"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"c"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"temperature_c"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"k"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"k"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"temperature_k"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
@@ -39,7 +40,7 @@
             // Potential Altitude (2, 3)
             case LENGTH:
             case DISTANCE:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
+                if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"altitude"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
@@ -60,9 +61,9 @@
                 
             // Angle (10)
             case ANGLE:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"deg"].location == NSNotFound)) {
+                if (!([field.field_name.lowercaseString rangeOfString:@"deg"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"heading_deg"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"rad"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"rad"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"heading_rad"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
@@ -71,9 +72,9 @@
                 
             // Geospacial (19)
             case GEOSPACIAL:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"lat"].location == NSNotFound)) {
+                if (!([field.field_name.lowercaseString rangeOfString:@"lat"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"latitude"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"lon"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"lon"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"longitude"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
@@ -83,18 +84,28 @@
             // Numeric/Custom (21, 22)
             case NUMERIC:
             case CUSTOM:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"mag"].location == NSNotFound)) {
-                    if (!([field.unit_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
+                if (!([field.field_name.lowercaseString rangeOfString:@"mag"].location == NSNotFound)) {
+                    if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"magnetic_x"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"magnetic_y"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"magnetic_z"]];
                     } else {
                         [order addObject:[StringGrabber grabField:@"magnetic_total"]];
                     }
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"altitude"]];
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"gyro"].location == NSNotFound)
+                           || !([field.field_name.lowercaseString rangeOfString:@"rotation"].location == NSNotFound)) {
+                
+                    if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
+                        [order addObject:[StringGrabber grabField:@"gyroscope_x"]];
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
+                        [order addObject:[StringGrabber grabField:@"gyroscope_y"]];
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
+                        [order addObject:[StringGrabber grabField:@"gyroscope_z"]];
+                    } 
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
                 }
@@ -102,12 +113,12 @@
                 
             // Acceleration (25)
             case ACCELERATION:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"accel"].location == NSNotFound)) {
-                    if (!([field.unit_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
+                if (!([field.field_name.lowercaseString rangeOfString:@"accel"].location == NSNotFound)) {
+                    if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"accel_x"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"accel_y"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"accel_z"]];
                     } else {
                         [order addObject:[StringGrabber grabField:@"accel_total"]];
@@ -217,8 +228,21 @@
             [data addObject:[f pressure]];
             continue;
         }
+        if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
+            [data addObject:[f gyro_x]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
+            [data addObject:[f gyro_y]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
+            [data addObject:[f gyro_z]];
+            continue;
+        }
+
         
-        [data addObject:nil];
+        [data addObject:[NSNull null]];
     }
     
     return data;    

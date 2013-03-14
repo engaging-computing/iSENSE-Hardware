@@ -8,7 +8,7 @@
 //
 
 #import "ManualViewController.h"
-#import "ManualConstants.h"
+#import "Constants.h"
 #import "Data_CollectorAppDelegate.h"
 
 @implementation ManualViewController

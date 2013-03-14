@@ -28,6 +28,9 @@
 "pressure"          = "Pressure";
 "altitude"          = "Altitude";
 "luminous_flux"     = "Luminous Flux";
+"gyroscope_x"       = "Gyroscope-X";
+"gyroscope_y"       = "Gyroscope-Y";
+"gyroscope_z"       = "Gyroscope-Z";
 
 "temperature_f"     = "Temperature-F";
 "temperature_k"     = "Temperature-K";
