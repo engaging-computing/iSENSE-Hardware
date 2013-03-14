@@ -9,8 +9,6 @@
 
 #import "ExperimentBrowseViewController.h"
 
-#define NAVIGATION_CONTROLLER_HEIGHT 44
-
 @implementation ExperimentBrowseViewController
 
 @synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastExperimentClicked;

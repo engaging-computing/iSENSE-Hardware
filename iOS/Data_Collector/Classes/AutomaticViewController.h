@@ -11,10 +11,15 @@
 #import "UIImageTint.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreMotion/CoreMotion.h>
+#import <CoreLocation/CoreLocation.h>
+#import "ZXingWidgetController.h"
+#import "QRCodeReader.h"
 #import "ExperimentBrowseViewController.h"
+#import "Constants.h"
+#import "DataFieldManager.h"
 
 
-@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate>  {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
@@ -23,7 +28,7 @@
     UIImageView *mainLogo;
     UILabel *startStopLabel;
     UILabel *loginStatus;
-    UILabel *expNumStatus;
+    UILabel *expNumLabel;
     UIBarButtonItem *menuButton;
     UILabel *elapsedTimeView;
 }
@@ -31,7 +36,7 @@
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
 -(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
--(CMMotionManager *) recordData;
+-(void) recordData;
 -(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)password;
@@ -42,8 +47,14 @@
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
 @property (nonatomic, assign) NSTimer *timer;
+@property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
 @property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, assign) int expNum;
+@property (nonatomic, assign) CLLocationManager *locationManager;
+@property (nonatomic, assign) DataFieldManager *dfm;
+@property (nonatomic, assign) NSString *qrResults;
+@property (nonatomic, assign) ZXingWidgetController *widController;
+
 
 @end
