@@ -72,7 +72,7 @@ public class Splash extends TabActivity {
 		for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
 			TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i)
 					.findViewById(android.R.id.title);
-			tv.setTextColor(Color.parseColor("#333333"));
+			tv.setTextColor(Color.parseColor("#666666"));
 		}
 
 		// Set listeners for the "Continue" and "Exit" buttons

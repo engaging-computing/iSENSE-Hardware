@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_toRightOf="@id/usernameLabel"
-        android:background="@drawable/edit_text_background"
         android:digits="@string/digits_restriction"
         android:inputType="textEmailAddress"
         android:singleLine="true" />
@@ -45,7 +44,6 @@
         android:layout_below="@id/usernameInput"
         android:layout_margin="5dp"
         android:layout_toRightOf="@id/passwordLabel"
-        android:background="@drawable/edit_text_background"
         android:digits="@string/digits_restriction"
         android:inputType="textPassword"
         android:paddingLeft="6dip"
@@ -68,9 +66,7 @@
             android:layout_margin="2dp"
             android:layout_marginLeft="2dp"
             android:layout_weight="1"
-            android:background="@drawable/colorless"
-            android:text="@string/cancel"
-            android:textColor="@android:color/white" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/login_ok"
@@ -79,9 +75,7 @@
             android:layout_margin="2dp"
             android:layout_marginRight="2dp"
             android:layout_weight="1"
-            android:background="@drawable/colorless"
-            android:text="@string/login"
-            android:textColor="@android:color/white" />
+            android:text="@string/login" />
     </LinearLayout>
 
 </RelativeLayout>

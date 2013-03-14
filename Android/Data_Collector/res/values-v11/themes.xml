@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="theme_dialog_black" parent="@android:style/Theme.Dialog">
+	
+    <style name="theme_dialog_black" parent="@android:style/Theme.Holo.Dialog">
         <item name="android:background">@drawable/background_no_stroke</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
-
-    <style name="theme_loading" parent="@android:style/Theme.Black">
+    
+    <style name="theme_loading" parent="@android:style/Theme.Holo">
         <item name="android:background">@drawable/loading_background</item>
     </style>
 

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/gpsString"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:background="@android:color/transparent" />
 
         <LinearLayout
@@ -26,6 +26,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@android:color/transparent" >
+            
+            <Button
+                android:id="@+id/no_gps_no"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="@string/no" />
 
             <Button
                 android:id="@+id/no_gps_yes"
@@ -33,19 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/yes"
-                android:textColor="@android:color/white" />
+                android:text="@string/yes" />
 
-            <Button
-                android:id="@+id/no_gps_no"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/colorless"
-                android:text="@string/no"
-                android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
 
