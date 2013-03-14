@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -42,6 +42,10 @@
             mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
             startStopLabel.text = [StringGrabber grabString:@"stop_button_text"];
             [containerForMainButton updateImage:startStopButton];
+            
+            // Get Field Order
+            [dfm getFieldOrderOfExperiment:expNum];
+            NSLog(@"%@", [dfm order]);
             
             // Record Data
             [self setIsRecording:TRUE];
@@ -136,12 +140,12 @@
         loginStatus.backgroundColor = [UIColor clearColor];
         
         // Create a label for experiment number
-        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 200, 768, 40)];
-        expNumStatus.textColor = [UIColor whiteColor];
-        expNumStatus.textAlignment = NSTextAlignmentCenter;
-        expNumStatus.numberOfLines = 1;
-        expNumStatus.backgroundColor = [UIColor clearColor];
-        expNumStatus.font = [UIFont fontWithName:@"Arial" size:24];
+        expNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 200, 768, 40)];
+        expNumLabel.textColor = [UIColor whiteColor];
+        expNumLabel.textAlignment = NSTextAlignmentCenter;
+        expNumLabel.numberOfLines = 1;
+        expNumLabel.backgroundColor = [UIColor clearColor];
+        expNumLabel.font = [UIFont fontWithName:@"Arial" size:24];
         
         // Allocate space and initialize the main button
         startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
@@ -169,7 +173,7 @@
         elapsedTimeView.backgroundColor = [UIColor clearColor];
         
         // Add all the subviews to main view
-        [self.view addSubview:expNumStatus];
+        [self.view addSubview:expNumLabel];
         [self.view addSubview:loginStatus];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
@@ -183,7 +187,7 @@
         isenseAPI = [iSENSE getInstance];
         [isenseAPI toggleUseDev:YES];
         [self updateLoginStatus];
-        [self updateExpNumStatus];
+        [self updateexpNumLabel];
         
     } else {
         
@@ -226,12 +230,12 @@
         [containerForMainButton addSubview:startStopLabel];
         
         // Create a label for experiment number
-        expNumStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 25)];
-        expNumStatus.textColor = [UIColor whiteColor];
-        expNumStatus.textAlignment = NSTextAlignmentCenter;
-        expNumStatus.numberOfLines = 1;
-        expNumStatus.backgroundColor = [UIColor clearColor];
-        expNumStatus.font = [UIFont fontWithName:@"Arial" size:12];
+        expNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 25)];
+        expNumLabel.textColor = [UIColor whiteColor];
+        expNumLabel.textAlignment = NSTextAlignmentCenter;
+        expNumLabel.numberOfLines = 1;
+        expNumLabel.backgroundColor = [UIColor clearColor];
+        expNumLabel.font = [UIFont fontWithName:@"Arial" size:12];
         
         // Add the elapsedTime counter at the bottom
         elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25)];
@@ -242,7 +246,7 @@
         
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
-        [self.view addSubview:expNumStatus];
+        [self.view addSubview:expNumLabel];
         [self.view addSubview:mainLogo];
         [self.view addSubview:containerForMainButton];
         [self.view addSubview:elapsedTimeView];
@@ -259,6 +263,7 @@
     }
     
     [self initLocations];
+    dfm = [DataFieldManager alloc];
 }
 
 // Is called every time AutomaticView appears
@@ -267,19 +272,19 @@
     
     // UpdateExperimentNumber status
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    [self updateExpNumStatus];
+    [self updateexpNumLabel];
 }
 
 - (IBAction) displayMenu:(id)sender {
-    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+	UIActionSheet *popupQuery = [[UIActionSheet alloc]
                                  initWithTitle:nil
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
-    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    [popupQuery showInView:self.view];
-    [popupQuery release];
+                                 otherButtonTitles:@"Experiment", @"Login", nil];
+	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+	[popupQuery showInView:self.view];
+	[popupQuery release];
 }
 
 // Set your login status to your username to not logged in as necessary
@@ -293,11 +298,11 @@
     }
 }
 
-// Set your expNumStatus to show you the last experiment chosen.
-- (void) updateExpNumStatus {
-    if (expNum && expNumStatus) {
+// Set your expNumLabel to show you the last experiment chosen.
+- (void) updateexpNumLabel {
+    if (expNum && expNumLabel) {
         NSString *update = [[NSString alloc] initWithFormat:@"Experiment Number: %d", expNum];
-        expNumStatus.text = update;
+        expNumLabel.text = update;
         [update release];
     }
 }
@@ -315,14 +320,14 @@
             mainLogo.frame = CGRectMake(5, 5, 502, 125 );
             containerForMainButton.frame = CGRectMake(517, 184, 400, 400);
             loginStatus.frame = CGRectMake(5, 135, 502, 40);
-            expNumStatus.frame = CGRectMake(5, 175, 502, 40);
+            expNumLabel.frame = CGRectMake(5, 175, 502, 40);
             elapsedTimeView.frame = CGRectMake(5, 550, 502, 40);
         } else {
             self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(20, 5, 728, 150);
             containerForMainButton.frame = CGRectMake(174, 300, 400, 400);
             loginStatus.frame = CGRectMake(0, 160, 768, 40);
-            expNumStatus.frame = CGRectMake(0, 200, 768, 40);
+            expNumLabel.frame = CGRectMake(0, 200, 768, 40);
             elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50);
         }
     } else {
@@ -332,14 +337,14 @@
             mainLogo.frame = CGRectMake(15, 5, 180, 40);
             containerForMainButton.frame = CGRectMake(220, 5, 250, 250);
             loginStatus.frame = CGRectMake(5, 50, 200, 20);
-            expNumStatus.frame = CGRectMake(5, 65, 200, 20);
+            expNumLabel.frame = CGRectMake(5, 65, 200, 20);
             elapsedTimeView.frame = CGRectMake(5, 220, 200, 20);
         } else {
             self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
             containerForMainButton.frame = CGRectMake(35, 130, 250, 250);
             loginStatus.frame = CGRectMake(0, 85, 320, 20);
-            expNumStatus.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
+            expNumLabel.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
             elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25);
         }
     }
@@ -426,38 +431,48 @@
 
 // Fill dataToBeJSONed with a row of data
 - (void) buildRowOfData {
-    NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+    //NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
+    Fields *fieldsRow = [[Fields alloc] autorelease];
     
-    // Fill a new row of data
+    // Fill a new row of data starting with time
     double time = [[NSDate date] timeIntervalSince1970];
+    fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
     
     // acceleration in meters per second squared
-    [temp addObject:[[[NSNumber alloc] initWithDouble:time * 1000] autorelease]];
-    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease]];
-    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease]];
-    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease]];
+    fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
+    fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
+    fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
+    fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
+                              sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
+                                   + pow(fieldsRow.accel_y.doubleValue, 2)
+                                   + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
     
     // latitude and longitude coordinates
     CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
     double latitude  = lc2d.latitude;
     double longitude = lc2d.longitude;
-    [temp addObject:[[[NSNumber alloc] initWithDouble:latitude] autorelease]];
-    [temp addObject:[[[NSNumber alloc] initWithDouble:longitude] autorelease]];
+    fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
+    fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
     
     // magnetic field in microTesla
-    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease]];
-    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease]];
-    [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease]];
+    fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
+    fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
+    fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
+    fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
+                              sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
+                                   + pow(fieldsRow.mag_y.doubleValue, 2)
+                                   + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
     
     // rotation rate in radians per second
     if (motionManager.gyroAvailable) {
-        [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease]];
-        [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease]];
-        [temp addObject:[[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease]];
+        fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
+        fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
+        fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
     }
     
     // Update parent JSON object
-    [dataToBeJSONed addObject:temp];
+    [dfm orderDataFromFields:fieldsRow];
+    [dataToBeJSONed addObject:dfm.data];
 
 }
 
@@ -502,32 +517,21 @@
     
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_UPLOAD:
-			message = [[UIAlertView alloc] initWithTitle:@"Upload"
-                                                 message:@"Would you like to upload your data to iSENSE?"
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
-            
-            message.tag = MENU_UPLOAD;
-            [message show];
-            [message release];
-			break;
-            
 		case MENU_EXPERIMENT:
-            message = [[UIAlertView alloc] initWithTitle:@"Experiment Selection"
+            message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            
             message.tag = MENU_EXPERIMENT;
             [message show];
             [message release];
+            
 			break;
             
 		case MENU_LOGIN:
@@ -536,20 +540,20 @@
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Okay", nil];
-            
             message.tag = MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             [message show];
             [message release];
+            
             break;
             
 		default:
 			break;
 	}
-    
+	
 }
 
-- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -570,10 +574,12 @@
             
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             [message show];
             [message release];
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNum;
@@ -582,29 +588,73 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+                
+                widController = [[ZXingWidgetController alloc] initWithDelegate:self
+                                                                     showCancel:YES
+                                                                       OneDMode:NO];
+                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
+                
+                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
+                widController.readers = readers;
+                
+                [self presentModalViewController:widController animated:YES];
+                [qRCodeReader release];
+                [readers release];
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
+            
         }
-        
-    } else if (actionSheet.tag == MENU_UPLOAD) {
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
             expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
-            [self updateExpNumStatus];
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
         }
-        
-    } else if (actionSheet.tag == EXPERIMENT_BROWSE_EXPERIMENTS) {
-        
-    } else if (actionSheet.tag == EXPERIMENT_SCAN_QR_CODE) {
         
     }
 }
+
 
 - (void)updateElapsedTime {
     if (elapsedTime == 1) elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d second", elapsedTime];
     else elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d seconds", elapsedTime];
     elapsedTime++;
 }
+
+- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+    [widController.view removeFromSuperview];
+    
+    qrResults = [result retain];
+    NSArray *split = [qrResults componentsSeparatedByString:@"="];
+    if ([split count] != 2) {
+        [self.view makeToast:@"Invalid QR code scanned"
+                    duration:3.0
+                    position:@"bottom"
+                       image:@"red_x"];
+    } else {
+        expNum = [[split objectAtIndex:1] intValue];
+    }
+}
+
+- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
+    [widController.view removeFromSuperview];
+}
+
 
 @end
