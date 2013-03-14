@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -93,6 +94,11 @@ public class QueueEditData extends Activity {
 			
 			TextView label = (TextView) dataRow.findViewById(R.id.edit_row_label);
 			label.setText(ef.field_name);
+			label.setBackgroundColor(Color.TRANSPARENT);
+			label.setPadding(0, 10, 0, 0);
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) label.getLayoutParams();
+			params.setMargins(0, 0, 0, -10);
+			label.setLayoutParams(params);
 
 			EditText data = (EditText) dataRow.findViewById(R.id.edit_row_text);
 			data.setText(fieldData[i]);
