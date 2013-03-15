@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleRate, geoCoder, city, address, country;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -102,12 +102,8 @@
     NSString *name = [[[NSString alloc] initWithString:@"Session From Mobile"] autorelease];
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
     NSString *description = [[[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."] autorelease];
-    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
-    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
-    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
     NSNumber *exp_num = [[[NSNumber alloc] initWithInt:expNum] autorelease];
-    
-    NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
+    NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
     
     // Upload to iSENSE (pass me JSON data)
     NSError *error = nil;
@@ -303,6 +299,9 @@
     
     [self initLocations];
     dfm = [DataFieldManager alloc];
+    city = @"N/a";
+    country = @"N/a";
+    address = @"N/a";
 }
 
 // Is called every time AutomaticView appears
@@ -351,6 +350,7 @@
     [super viewDidLoad];
 }
 
+// Resizes all views during rotation
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
@@ -412,12 +412,12 @@
     return YES;
 }
 
-// iOS6
+// iOS6 enable rotation
 - (BOOL)shouldAutorotate {
     return YES;
 }
 
-// iOS6
+// iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
 }
@@ -487,7 +487,6 @@
 
 // Fill dataToBeJSONed with a row of data
 - (void) buildRowOfData {
-    //NSMutableArray *temp = [[[NSMutableArray alloc] init] autorelease];
     Fields *fieldsRow = [[Fields alloc] autorelease];
     
     // Fill a new row of data starting with time
@@ -540,6 +539,7 @@
         locationManager.distanceFilter = kCLDistanceFilterNone;
         locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         [locationManager startUpdatingLocation];
+        geoCoder = [[CLGeocoder alloc] init];
     }
 }
 
@@ -686,7 +686,6 @@
     }
 }
 
-
 - (void)updateElapsedTime {
     if (elapsedTime == 1) elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d second", elapsedTime];
     else elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d seconds", elapsedTime];
@@ -708,9 +707,27 @@
     }
 }
 
+// Finds the associated address from a GPS location.
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    if (geoCoder) {
+        [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+            if ([placemarks count] > 0) {
+                city = [[placemarks objectAtIndex:0] locality];
+                country = [[placemarks objectAtIndex:0] country];
+                NSString *subThoroughFare = [[placemarks objectAtIndex:0] subThoroughfare];
+                NSString *thoroughFare = [[placemarks objectAtIndex:0] thoroughfare];
+                address = [NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare];
+            } else {
+                city = @"N/a";
+                country = @"N/a";
+                address = @"N/a";
+            }
+        }];
+    }
+}
+
 - (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
     [widController.view removeFromSuperview];
 }
-
 
 @end

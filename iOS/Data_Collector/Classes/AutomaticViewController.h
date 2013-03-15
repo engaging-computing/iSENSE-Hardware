@@ -46,6 +46,7 @@
 
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
+@property (nonatomic) int recommendedSampleRate;
 @property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
@@ -57,6 +58,9 @@
 @property (nonatomic, assign) ZXingWidgetController *widController;
 @property (nonatomic, assign) UITextField *sessionTitle;
 @property (nonatomic, assign) UILabel *sessionTitleLabel;
-
+@property (nonatomic, assign) CLGeocoder *geoCoder;
+@property (nonatomic, copy) NSString *city;
+@property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) NSString *country;
 
 @end
