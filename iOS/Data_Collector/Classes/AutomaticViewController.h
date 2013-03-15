@@ -19,7 +19,7 @@
 #import "DataFieldManager.h"
 
 
-@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate>  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate, UITextFieldDelegate>  {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
@@ -55,6 +55,8 @@
 @property (nonatomic, assign) DataFieldManager *dfm;
 @property (nonatomic, assign) NSString *qrResults;
 @property (nonatomic, assign) ZXingWidgetController *widController;
+@property (nonatomic, assign) UITextField *sessionTitle;
+@property (nonatomic, assign) UILabel *sessionTitleLabel;
 
 
 @end

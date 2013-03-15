@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -99,8 +99,9 @@
     }
     
     // Create a session on iSENSE/dev.
-    NSString *name = [[[NSString alloc] initWithString:@"Automatic Test"] autorelease];
-    NSString *description = [[[NSString alloc] initWithString:@"Automated Session Test from API"] autorelease];
+    NSString *name = [[[NSString alloc] initWithString:@"Session From Mobile"] autorelease];
+    if (sessionTitle.text.length != 0) name = sessionTitle.text;
+    NSString *description = [[[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."] autorelease];
     NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
     NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
     NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
@@ -161,7 +162,7 @@
         startStopLabel.backgroundColor = [UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(174, 300, 400, 400) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
+        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(180, 350, 400, 400) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
@@ -172,10 +173,29 @@
         elapsedTimeView.textColor = [UIColor whiteColor];
         elapsedTimeView.backgroundColor = [UIColor clearColor];
         
+        // Session Title EditText
+        sessionTitle = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 25, 262, 200, 35)];
+        sessionTitle.background = [UIImage imageNamed:@"underline.png"];
+        sessionTitle.textAlignment = NSTextAlignmentCenter;
+        sessionTitle.font = [sessionTitle.font fontWithSize:24];
+        sessionTitle.textColor = [UIColor whiteColor];
+        sessionTitle.backgroundColor = [UIColor clearColor];
+        sessionTitle.delegate = self;
+        
+        // Session Title Label
+        sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 260, 175, 35)];
+        sessionTitleLabel.textAlignment = NSTextAlignmentCenter;
+        sessionTitleLabel.font = [sessionTitle.font fontWithSize:24];
+        sessionTitleLabel.textColor = [UIColor whiteColor];
+        sessionTitleLabel.backgroundColor = [UIColor clearColor];
+        sessionTitleLabel.text = @"Session Title:";
+        
         // Add all the subviews to main view
         [self.view addSubview:expNumLabel];
         [self.view addSubview:loginStatus];
         [self.view addSubview:mainLogo];
+        [self.view addSubview:sessionTitle];
+        [self.view addSubview:sessionTitleLabel];
         [self.view addSubview:containerForMainButton];
         [self.view addSubview:elapsedTimeView];
         
@@ -205,14 +225,14 @@
         mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
         
         // Create a label for login status
-        loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 85, 320, 20)];
+        loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 320, 20)];
         loginStatus.textAlignment = NSTextAlignmentCenter;
         loginStatus.font = [UIFont fontWithName:@"Arial" size:12];
         loginStatus.numberOfLines = 1;
         loginStatus.backgroundColor = [UIColor clearColor];
         
         // Allocate space and initialize the main button
-        startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 250)];
+        startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 225, 225)];
         startStopButton.image = [UIImage imageNamed:@"red_button.png"];
         
         // Allocate space and add the label to the main button
@@ -225,12 +245,12 @@
         startStopLabel.backgroundColor =[UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(35, 130, 250, 250) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
+        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(50, 150, 220, 220) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
         // Create a label for experiment number
-        expNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 25)];
+        expNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 95, self.view.frame.size.width, 25)];
         expNumLabel.textColor = [UIColor whiteColor];
         expNumLabel.textAlignment = NSTextAlignmentCenter;
         expNumLabel.numberOfLines = 1;
@@ -244,10 +264,29 @@
         elapsedTimeView.textColor = [UIColor whiteColor];
         elapsedTimeView.backgroundColor = [UIColor clearColor];
         
+        // Session Title EditText
+        sessionTitle = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2, 122, 80, 20)];
+        sessionTitle.background = [UIImage imageNamed:@"underline.png"];
+        sessionTitle.textAlignment = NSTextAlignmentCenter;
+        sessionTitle.font = [sessionTitle.font fontWithSize:12];
+        sessionTitle.textColor = [UIColor whiteColor];
+        sessionTitle.backgroundColor = [UIColor clearColor];
+        sessionTitle.delegate = self;
+        
+        // Session Title Label
+        sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20)];
+        sessionTitleLabel.textAlignment = NSTextAlignmentCenter;
+        sessionTitleLabel.font = [sessionTitle.font fontWithSize:12];
+        sessionTitleLabel.textColor = [UIColor whiteColor];
+        sessionTitleLabel.backgroundColor = [UIColor clearColor];
+        sessionTitleLabel.text = @"Session Title:";
+        
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
         [self.view addSubview:expNumLabel];
         [self.view addSubview:mainLogo];
+        [self.view addSubview:sessionTitle];
+        [self.view addSubview:sessionTitleLabel];
         [self.view addSubview:containerForMainButton];
         [self.view addSubview:elapsedTimeView];
         
@@ -322,32 +361,49 @@
             loginStatus.frame = CGRectMake(5, 135, 502, 40);
             expNumLabel.frame = CGRectMake(5, 175, 502, 40);
             elapsedTimeView.frame = CGRectMake(5, 550, 502, 40);
+            sessionTitle.frame = CGRectMake(225, 262, 200, 35);
+            sessionTitleLabel.frame = CGRectMake(50, 260, 175, 35);
+            
         } else {
             self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(20, 5, 728, 150);
-            containerForMainButton.frame = CGRectMake(174, 300, 400, 400);
+            containerForMainButton.frame = CGRectMake(180, 350, 400, 400);
             loginStatus.frame = CGRectMake(0, 160, 768, 40);
             expNumLabel.frame = CGRectMake(0, 200, 768, 40);
             elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50);
+            sessionTitle.frame = CGRectMake(self.view.frame.size.width/2 - 25, 262, 200, 35);
+            sessionTitleLabel.frame = CGRectMake(self.view.frame.size.width/2 - 200, 260, 175, 35);
+            
         }
     } else {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
             self.view.frame = CGRectMake(0, 0, 480, 320 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(15, 5, 180, 40);
-            containerForMainButton.frame = CGRectMake(220, 5, 250, 250);
+            containerForMainButton.frame = CGRectMake(240, 10, 220, 220);
             loginStatus.frame = CGRectMake(5, 50, 200, 20);
             expNumLabel.frame = CGRectMake(5, 65, 200, 20);
             elapsedTimeView.frame = CGRectMake(5, 220, 200, 20);
+            sessionTitle.frame = CGRectMake(100, 122, 80, 20);
+            sessionTitleLabel.frame = CGRectMake(25, 120, 75, 20);
         } else {
             self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
-            containerForMainButton.frame = CGRectMake(35, 130, 250, 250);
-            loginStatus.frame = CGRectMake(0, 85, 320, 20);
-            expNumLabel.frame = CGRectMake(0, 100, self.view.frame.size.width, 20);
-            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25);
+            containerForMainButton.frame = CGRectMake(50, 150, 220, 220);
+            loginStatus.frame = CGRectMake(0, 80, 320, 20);
+            expNumLabel.frame = CGRectMake(0, 95, self.view.frame.size.width, 20);
+            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 45, self.view.frame.size.width, 25);
+            sessionTitle.frame = CGRectMake(self.view.frame.size.width / 2, 122, 80, 20);
+            sessionTitleLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20);
+
         }
     }
+}
+
+// Dismisses keyboard for sessionTitle
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return NO;
 }
 
 // Allows the device to rotate as necessary.
