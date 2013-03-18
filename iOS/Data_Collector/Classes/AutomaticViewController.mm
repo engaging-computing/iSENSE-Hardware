@@ -390,6 +390,10 @@
     [loginStatus release];
     [startStopLabel release];
     [startStopButton release];
+    [qrResults release];
+    [widController release];
+    [locationManager release];
+    locationManager = nil;
     [super dealloc];
     
 }
