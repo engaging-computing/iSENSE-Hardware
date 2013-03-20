@@ -7,6 +7,7 @@
 
     <TextView
         android:id="@+id/usernameLabel"
+        android:layout_alignBottom="@+id/usernameInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -15,7 +16,7 @@
         android:text="@string/username" />
 
     <EditText
-        android:id="@+id/usernameInput"
+        android:id="@id/usernameInput"
         android:imeOptions="actionNext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -27,17 +28,16 @@
 
     <TextView
         android:id="@+id/passwordLabel"
+        android:layout_alignBottom="@+id/passwordInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/usernameInput"
         android:layout_margin="5dp"
-        android:layout_marginTop="5dip"
         android:background="@android:color/transparent"
         android:text="@string/password" />
 
     <EditText
-        android:id="@+id/passwordInput"
+        android:id="@id/passwordInput"
         android:imeOptions="actionDone"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
