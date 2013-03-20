@@ -361,8 +361,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private void uploadFields() {
 		throughUploadButton = true;
-		if (!rapi.isLoggedIn()) {
-
+		/*if (!rapi.isLoggedIn()) {
+// TODO - upload without needing to be logged in
 			boolean success = false;
 			if (loginPrefs.getString("username", "").equals(""))
 				success = false;
@@ -374,9 +374,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 				manageUploadQueue();
 			else
 				w.make("Not logged in.", Waffle.IMAGE_X);
-		} else {
+		} else {*/
 			manageUploadQueue();
-		}
+		//}
 
 	}
 
