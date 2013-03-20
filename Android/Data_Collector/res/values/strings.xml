@@ -59,7 +59,11 @@
     <string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
     <string name="force_stop">You exited the app while data was still being recorded.  Data has stopped recording.</string>
     <string name="description_hint">Enter Description Here&#8230;</string>
-    <string name="description_prompt">Enter a session description (or leave blank if you\'d like an automatically generated description).</string>
+    <string name="description_prompt">
+        Enter a session description (or leave blank if you\'d like an automatically generated description) and press
+        \"Upload\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
+       	\"Delete\".
+        </string>
     <string name="visit">Visit</string>
     <string name="qr_prompt">
         Your device does not have the proper Barcode Scanner application installed
@@ -337,7 +341,7 @@
     <string name="qmark">\&#63;</string>
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
-	<string name="session_name">Session Name</string>
+	<string name="session_name">Session Name (required)</string>
 	<string name="queue_alter">What would you like to do with this data set?</string>
 	<string name="rename">Rename</string>
 	<string name="change_data">Change Data</string>
