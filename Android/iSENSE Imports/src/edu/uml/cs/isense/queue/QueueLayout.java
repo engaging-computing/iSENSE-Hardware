@@ -273,8 +273,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				case QueueAlter.DELETE:
 					uq.queue.remove(lastDataSetLongClicked);
 					uq.mirrorQueue.remove(lastDataSetLongClicked);
-					scrollQueue.removeView(lastViewLongClicked);
 					uq.storeAndReRetrieveQueue(true);
+					scrollQueue.removeView(lastViewLongClicked);
 
 					break;
 
