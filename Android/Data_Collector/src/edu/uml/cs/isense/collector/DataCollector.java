@@ -1159,7 +1159,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void getEnabledFields() {
-		for (String s : acceptedFields) {
+
+		try {
+			for (String s : acceptedFields) { if (s.length() != 0) break; }
+		} catch (NullPointerException e) {
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+		}
+		
+		for (String s : acceptedFields) { // TODO - NPE?
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[TIME] = true;
 
