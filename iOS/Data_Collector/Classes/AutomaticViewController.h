@@ -31,6 +31,8 @@
     UILabel *expNumLabel;
     UIBarButtonItem *menuButton;
     UILabel *elapsedTimeView;
+    UILabel *sampleIntervalLabel;
+    UITextField *sampleInterval;
 }
 
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
@@ -46,7 +48,7 @@
 
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
-@property (nonatomic) int recommendedSampleRate;
+@property (nonatomic) int recommendedSampleInterval;
 @property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;

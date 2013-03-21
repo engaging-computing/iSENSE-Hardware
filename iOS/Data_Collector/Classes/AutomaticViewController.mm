@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleRate, geoCoder, city, address, country;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -99,16 +99,19 @@
     }
     
     // Create a session on iSENSE/dev.
-    NSString *name = [[[NSString alloc] initWithString:@"Session From Mobile"] autorelease];
+    NSString *name = [[NSString alloc] initWithString:@"Session From Mobile"];
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
-    NSString *description = [[[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."] autorelease];
-    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:expNum] autorelease];
+    NSString *description = [[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."];
+    NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
     
     // Upload to iSENSE (pass me JSON data)
     NSError *error = nil;
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
     [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+    [name release];
+    [exp_num release];
+    [description release];
     
 }
 
@@ -169,7 +172,7 @@
         elapsedTimeView.textColor = [UIColor whiteColor];
         elapsedTimeView.backgroundColor = [UIColor clearColor];
         
-        // Session Title EditText
+        // Session Title TextField
         sessionTitle = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 25, 262, 200, 35)];
         sessionTitle.background = [UIImage imageNamed:@"underline.png"];
         sessionTitle.textAlignment = NSTextAlignmentCenter;
@@ -180,11 +183,28 @@
         
         // Session Title Label
         sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 260, 175, 35)];
-        sessionTitleLabel.textAlignment = NSTextAlignmentCenter;
+        sessionTitleLabel.textAlignment = NSTextAlignmentLeft;
         sessionTitleLabel.font = [sessionTitle.font fontWithSize:24];
         sessionTitleLabel.textColor = [UIColor whiteColor];
         sessionTitleLabel.backgroundColor = [UIColor clearColor];
         sessionTitleLabel.text = @"Session Title:";
+        
+        // Recommended Sample Rate TextField
+        sampleInterval = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2, 762, 150, 35)];
+        sampleInterval.background = [UIImage imageNamed:@"underline.png"];
+        sampleInterval.textAlignment = NSTextAlignmentCenter;
+        sampleInterval.font = [sampleInterval.font fontWithSize:24];
+        sampleInterval.textColor = [UIColor whiteColor];
+        sampleInterval.backgroundColor = [UIColor clearColor];
+        sampleInterval.delegate = self;
+        
+        // Session Title Label
+        sampleIntervalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 760, 225, 35)];
+        sampleIntervalLabel.textAlignment = NSTextAlignmentLeft;
+        sampleIntervalLabel.font = [sampleIntervalLabel.font fontWithSize:24];
+        sampleIntervalLabel.textColor = [UIColor whiteColor];
+        sampleIntervalLabel.backgroundColor = [UIColor clearColor];
+        sampleIntervalLabel.text = @"Sample Interval:";
         
         // Add all the subviews to main view
         [self.view addSubview:expNumLabel];
@@ -192,6 +212,8 @@
         [self.view addSubview:mainLogo];
         [self.view addSubview:sessionTitle];
         [self.view addSubview:sessionTitleLabel];
+        [self.view addSubview:sampleInterval];
+        [self.view addSubview:sampleIntervalLabel];
         [self.view addSubview:containerForMainButton];
         [self.view addSubview:elapsedTimeView];
         
@@ -203,7 +225,7 @@
         isenseAPI = [iSENSE getInstance];
         [isenseAPI toggleUseDev:YES];
         [self updateLoginStatus];
-        [self updateexpNumLabel];
+        [self updateExpNumLabel];
         
     } else {
         
@@ -241,7 +263,7 @@
         startStopLabel.backgroundColor =[UIColor clearColor];
         
         // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(50, 150, 220, 220) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
+        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(50, 145, 220, 220) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
         [containerForMainButton addSubview:startStopButton];
         [containerForMainButton addSubview:startStopLabel];
         
@@ -271,11 +293,28 @@
         
         // Session Title Label
         sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20)];
-        sessionTitleLabel.textAlignment = NSTextAlignmentCenter;
+        sessionTitleLabel.textAlignment = NSTextAlignmentLeft;
         sessionTitleLabel.font = [sessionTitle.font fontWithSize:12];
         sessionTitleLabel.textColor = [UIColor whiteColor];
         sessionTitleLabel.backgroundColor = [UIColor clearColor];
         sessionTitleLabel.text = @"Session Title:";
+        
+        // Recommended Sample Rate TextField
+        sampleInterval = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 + 15, self.view.frame.size.height - 32, 50, 20)];
+        sampleInterval.background = [UIImage imageNamed:@"underline.png"];
+        sampleInterval.textAlignment = NSTextAlignmentCenter;
+        sampleInterval.font = [sampleInterval.font fontWithSize:12];
+        sampleInterval.textColor = [UIColor whiteColor];
+        sampleInterval.backgroundColor = [UIColor clearColor];
+        sampleInterval.delegate = self;
+        
+        // Session Title Label
+        sampleIntervalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, self.view.frame.size.height - 35, 150, 20)];
+        sampleIntervalLabel.textAlignment = NSTextAlignmentLeft;
+        sampleIntervalLabel.font = [sampleIntervalLabel.font fontWithSize:12];
+        sampleIntervalLabel.textColor = [UIColor whiteColor];
+        sampleIntervalLabel.backgroundColor = [UIColor clearColor];
+        sampleIntervalLabel.text = @"Sample Interval:";
         
         // Add all the subviews to main view
         [self.view addSubview:loginStatus];
@@ -285,6 +324,8 @@
         [self.view addSubview:sessionTitleLabel];
         [self.view addSubview:containerForMainButton];
         [self.view addSubview:elapsedTimeView];
+        [self.view addSubview:sampleInterval];
+        [self.view addSubview:sampleIntervalLabel];
         
         // Add a menu button
         menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
@@ -308,9 +349,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // UpdateExperimentNumber status
+    // Update ExperimentNumber status
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    [self updateexpNumLabel];
+    [self updateExpNumLabel];
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -337,11 +378,14 @@
 }
 
 // Set your expNumLabel to show you the last experiment chosen.
-- (void) updateexpNumLabel {
+- (void) updateExpNumLabel {
     if (expNum && expNumLabel) {
         NSString *update = [[NSString alloc] initWithFormat:@"Experiment Number: %d", expNum];
         expNumLabel.text = update;
         [update release];
+    }
+    if (recommendedSampleInterval) {
+        sampleInterval.text = [NSString stringWithFormat:@"%d", recommendedSampleInterval];
     }
 }
 
@@ -363,6 +407,8 @@
             elapsedTimeView.frame = CGRectMake(5, 550, 502, 40);
             sessionTitle.frame = CGRectMake(225, 262, 200, 35);
             sessionTitleLabel.frame = CGRectMake(50, 260, 175, 35);
+            sampleInterval.frame = CGRectMake(235, 312, 150, 35);
+            sampleIntervalLabel.frame = CGRectMake(50, 310, 225, 35);
             
         } else {
             self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
@@ -373,6 +419,8 @@
             elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50);
             sessionTitle.frame = CGRectMake(self.view.frame.size.width/2 - 25, 262, 200, 35);
             sessionTitleLabel.frame = CGRectMake(self.view.frame.size.width/2 - 200, 260, 175, 35);
+            sampleInterval.frame = CGRectMake(self.view.frame.size.width / 2, 762, 150, 35);
+            sampleIntervalLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 200, 760, 225, 35);
             
         }
     } else {
@@ -386,15 +434,19 @@
             elapsedTimeView.frame = CGRectMake(5, 220, 200, 20);
             sessionTitle.frame = CGRectMake(100, 122, 80, 20);
             sessionTitleLabel.frame = CGRectMake(25, 120, 75, 20);
+            sampleInterval.frame = CGRectMake(115, 142, 50, 20);
+            sampleIntervalLabel.frame = CGRectMake(25, 140, 150, 20);
         } else {
             self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
             mainLogo.frame = CGRectMake(10, 5, 300, 70);
-            containerForMainButton.frame = CGRectMake(50, 150, 220, 220);
+            containerForMainButton.frame = CGRectMake(50, 145, 220, 220);
             loginStatus.frame = CGRectMake(0, 80, 320, 20);
             expNumLabel.frame = CGRectMake(0, 95, self.view.frame.size.width, 20);
-            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 45, self.view.frame.size.width, 25);
+            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 20);
             sessionTitle.frame = CGRectMake(self.view.frame.size.width / 2, 122, 80, 20);
             sessionTitleLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20);
+            sampleInterval.frame = CGRectMake(self.view.frame.size.width / 2 + 15, self.view.frame.size.height - 32, 50, 20);
+            sampleIntervalLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 80, self.view.frame.size.height - 35, 150, 20);
 
         }
     }
@@ -474,9 +526,9 @@
     motionManager = [[CMMotionManager alloc] init];
     
     // Set the accelerometer update interval to reccomended sample interval, and start updates
-    motionManager.accelerometerUpdateInterval = .5;
-    motionManager.magnetometerUpdateInterval = .5;
-    motionManager.gyroUpdateInterval = .5;
+    motionManager.accelerometerUpdateInterval = recommendedSampleInterval/1000;
+    motionManager.magnetometerUpdateInterval = recommendedSampleInterval/1000;
+    motionManager.gyroUpdateInterval = recommendedSampleInterval/1000;
     [motionManager startAccelerometerUpdates];
     [motionManager startMagnetometerUpdates];
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
