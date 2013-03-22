@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 
@@ -57,6 +56,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,7 +73,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.dialogs.ChooseSensorDialog;
 import edu.uml.cs.isense.collector.dialogs.Description;
-import edu.uml.cs.isense.collector.dialogs.ForceStop;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
@@ -161,7 +160,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static EditText recordingLength;
 
 	// Buttons
-	private Button startStop;
+	private static Button startStop;
 
 	// Menu Items
 	private Menu mMenu;
@@ -206,7 +205,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	/** Data Recording Specific Components */
 
 	// Recording status trigger
-	private Boolean running = false;
+	private static Boolean running = false;
 
 	// Start/stop vibrator and beeper
 	private Vibrator vibrator;
@@ -315,8 +314,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Fields f;
 	public static SensorCompatibility sc;
 
-	/** \Additional Objects */
-
+	/** \Additional Objects */	
+	
+	
 	/* \Global Variables * */
 
 	@Override
@@ -337,10 +337,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		// This block useful for if onBackPressed - retains some things from
 		// previous session
-		if (running) {
+		
+		// TODO - keep this commented? yes? no?
+		/*if (running) {
 			Intent iForceStop = new Intent(mContext, ForceStop.class);
 			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
-		}
+		}*/
 
 	}
 
@@ -427,7 +429,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		inPausedState = true;
 
 	}
-
+	
+	
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -467,10 +470,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 
-		if (running) {
+		/*if (running) {	// TODO - onResume, you too!?
 			Intent iForceStop = new Intent(mContext, ForceStop.class);
 			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
-		}
+		}*/
 		// Will call the login dialogue if necessary
 		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -965,7 +968,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Updates time on main UI
-	public void setTime(int seconds) {
+	public static void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
 
@@ -1330,6 +1333,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
+	
+	public static void serviceHasStopped() {
+		running = false;
+		w.make("All done, bro.");
+		setTime(0);
+		// update all other UI pieces
+		
+		/* or ya know, simulate a stop
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				startStop.performLongClick();
+			}
+		});*/
+	}
+	
+	public void description() {
+		
+	}
 
 	// All the code for the main button!
 	public void setStartStopListener() {
@@ -1337,8 +1359,24 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
+				// TODO - make me work!
+				
+				if (!running) {
+					Log.d("lol", "running");
+					Intent intent = new Intent(mContext, DataCollectorService.class);
+					startService(intent);
+				
+					running = true; 
+					return running;
+				} else {
+					Log.d("lol", "stopping");
+					stopService(new Intent(mContext, DataCollectorService.class));
+					
+					running = false;
+					return running;
+				}
 
-				boolean numbersReady = true;
+				/*boolean numbersReady = true;
 				if (!sampleInterval.getText().toString().equals("")) {
 					try {
 						int sInterval = Integer.parseInt(sampleInterval
@@ -1584,7 +1622,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				}
 				running = false;
-				return running;
+				return running;*/
 			}
 
 		});
