@@ -134,6 +134,7 @@
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_black" />
+        <service android:name="edu.uml.cs.isense.collector.DataCollectorService"></service>
     </application>
 
 </manifest>
