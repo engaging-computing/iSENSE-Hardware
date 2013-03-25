@@ -38,6 +38,7 @@
 		39A1CE7716DFEB8C008A99A6 /* spinner_orb.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B761691F742009037A7 /* spinner_orb.png */; };
 		39A1CE7816DFEB8E008A99A6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B781691F742009037A7 /* icon.png */; };
 		39A1CE7916DFEB91008A99A6 /* green_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B791691F742009037A7 /* green_button.png */; };
+		39A6405D16F380680058A382 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A6405C16F380680058A382 /* underline.png */; };
 		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
@@ -140,6 +141,7 @@
 		399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources-iPad/MainWindow~ipad.xib"; sourceTree = "<group>"; };
 		399D31EB169E02FD005F9D51 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		39A1CE6816DFEABF008A99A6 /* button_light_long.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_light_long.png; path = "Resources-iPad/button_light_long.png"; sourceTree = "<group>"; };
+		39A6405C16F380680058A382 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = underline.png; path = "Resources-iPad/underline.png"; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				39A6405C16F380680058A382 /* underline.png */,
 				39A1CE6816DFEABF008A99A6 /* button_light_long.png */,
 				391A959016DFE98F00C0943B /* button_light.png */,
 				B70D384A16DFE55C00D6B3CD /* button_dark.png */,
@@ -686,6 +689,7 @@
 				39A1CE7716DFEB8C008A99A6 /* spinner_orb.png in Resources */,
 				39A1CE7816DFEB8E008A99A6 /* icon.png in Resources */,
 				39A1CE7916DFEB91008A99A6 /* green_button.png in Resources */,
+				39A6405D16F380680058A382 /* underline.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
