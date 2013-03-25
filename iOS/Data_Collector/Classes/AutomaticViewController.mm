@@ -103,12 +103,17 @@
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
     NSString *description = [[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."];
     NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
+    NSLog(@"%@", address);
+    NSLog(@"%@", city);
+    NSLog(@"%@", country);
+
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
     
     // Upload to iSENSE (pass me JSON data)
     NSError *error = nil;
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
     [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+    
     [name release];
     [exp_num release];
     [description release];
@@ -340,9 +345,8 @@
     
     [self initLocations];
     dfm = [DataFieldManager alloc];
-    city = @"N/a";
-    country = @"N/a";
-    address = @"N/a";
+    [self resetAddressFields];
+    recommendedSampleInterval = -1;
 }
 
 // Is called every time AutomaticView appears
@@ -386,6 +390,11 @@
     }
     if (recommendedSampleInterval) {
         sampleInterval.text = [NSString stringWithFormat:@"%d", recommendedSampleInterval];
+        Experiment *experiment = [isenseAPI getExperiment:[NSNumber numberWithInt:expNum]];
+        NSLog(@"srate = %@", experiment.srate);
+        if ((NSNull *)experiment.srate != [NSNull null]) {
+            sampleInterval.text = [NSString stringWithFormat:@"%d", experiment.srate.intValue];
+        }
     }
 }
 
@@ -523,12 +532,18 @@
 
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
+    recommendedSampleInterval = [[NSString stringWithString:[sampleInterval text]] floatValue];
     motionManager = [[CMMotionManager alloc] init];
     
+    // Make a new float
+    float rate = .5;
+    if (recommendedSampleInterval > 0) rate = recommendedSampleInterval / 1000;
+    NSLog(@"Rate: %f", rate);
+    
     // Set the accelerometer update interval to reccomended sample interval, and start updates
-    motionManager.accelerometerUpdateInterval = recommendedSampleInterval/1000;
-    motionManager.magnetometerUpdateInterval = recommendedSampleInterval/1000;
-    motionManager.gyroUpdateInterval = recommendedSampleInterval/1000;
+    motionManager.accelerometerUpdateInterval = rate;
+    motionManager.magnetometerUpdateInterval = rate;
+    motionManager.gyroUpdateInterval = rate;
     [motionManager startAccelerometerUpdates];
     [motionManager startMagnetometerUpdates];
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
@@ -537,7 +552,7 @@
     dataToBeJSONed = [[NSMutableArray alloc] init];
     
     // Start the new timer
-    recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:.5 target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
+    recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
 
 }
 
@@ -768,18 +783,28 @@
     if (geoCoder) {
         [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             if ([placemarks count] > 0) {
-                city = [[placemarks objectAtIndex:0] locality];
-                country = [[placemarks objectAtIndex:0] country];
+                city = [[[placemarks objectAtIndex:0] locality] retain];
+                country = [[[placemarks objectAtIndex:0] country] retain];
                 NSString *subThoroughFare = [[placemarks objectAtIndex:0] subThoroughfare];
                 NSString *thoroughFare = [[placemarks objectAtIndex:0] thoroughfare];
-                address = [NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare];
+                address = [[NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare] retain];
+                
+                if (!address || !city || !country)
+                    [self resetAddressFields];
+                
+                if ((NSNull *)address == [NSNull null] || (NSNull *)city == [NSNull null] || (NSNull *)country == [NSNull null])
+                    [self resetAddressFields];
             } else {
-                city = @"N/a";
-                country = @"N/a";
-                address = @"N/a";
+                [self resetAddressFields];
             }
         }];
     }
+}
+
+- (void)resetAddressFields {
+    city = [[NSString alloc] initWithString:@"N/a"];
+    country = [[NSString alloc] initWithString:@"N/a"];
+    address = [[NSString alloc] initWithString:@"N/a"];
 }
 
 - (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {

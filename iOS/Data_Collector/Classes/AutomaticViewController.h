@@ -48,7 +48,7 @@
 
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
-@property (nonatomic) int recommendedSampleInterval;
+@property (nonatomic) float recommendedSampleInterval;
 @property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
