@@ -19,7 +19,7 @@
 #import "DataFieldManager.h"
 
 
-@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate>  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate, UITextFieldDelegate>  {
 	// Fuctionality
     UILongClickButton *containerForMainButton;
     iSENSE *isenseAPI;
@@ -31,6 +31,8 @@
     UILabel *expNumLabel;
     UIBarButtonItem *menuButton;
     UILabel *elapsedTimeView;
+    UILabel *sampleIntervalLabel;
+    UITextField *sampleInterval;
 }
 
 -(IBAction) onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer;
@@ -46,6 +48,7 @@
 
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
+@property (nonatomic) float recommendedSampleInterval;
 @property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
@@ -55,6 +58,11 @@
 @property (nonatomic, assign) DataFieldManager *dfm;
 @property (nonatomic, assign) NSString *qrResults;
 @property (nonatomic, assign) ZXingWidgetController *widController;
-
+@property (nonatomic, assign) UITextField *sessionTitle;
+@property (nonatomic, assign) UILabel *sessionTitleLabel;
+@property (nonatomic, assign) CLGeocoder *geoCoder;
+@property (nonatomic, copy) NSString *city;
+@property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) NSString *country;
 
 @end
