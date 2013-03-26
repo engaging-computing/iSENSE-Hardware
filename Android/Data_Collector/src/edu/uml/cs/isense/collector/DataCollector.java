@@ -244,8 +244,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static LinkedList<String> acceptedFields;
 	public static UploadQueue uq;
 
-	// public static Queue<DataSet> uploadQueue;
-
 	// Booleans
 	public static boolean inPausedState = false;
 
@@ -373,6 +371,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				beginWrite = false;
 			} catch (IOException e) {
 				sdCardError = true;
+			} catch (Exception e) {
+				sdCardError = true;
 			}
 
 			break;
@@ -381,6 +381,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			try {
 				out.append(data);
 			} catch (IOException e) {
+				sdCardError = true;
+			} catch (Exception e) {
 				sdCardError = true;
 			}
 
@@ -794,9 +796,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				nameOfSession = sessionName.getText().toString();
-				w.make("Data not uploaded.", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_X);
-				showSummary();
+				w.make("Data set deleted.", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 			}
 
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
@@ -1158,7 +1159,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void getEnabledFields() {
-		for (String s : acceptedFields) {
+
+		try {
+			for (String s : acceptedFields) { if (s.length() != 0) break; }
+		} catch (NullPointerException e) {
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+		}
+		
+		for (String s : acceptedFields) { // TODO - NPE?
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[TIME] = true;
 
@@ -1255,6 +1265,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		rapi.useDev(true);
 
 		uq = new UploadQueue("datacollector", mContext, rapi);
 		uq.buildQueueFromFile();

@@ -27,7 +27,6 @@
 	// Non-UI Elements
 	iSENSE   *iapi;
 	NSString *sessionName;
-	NSNumber *expNum;
     
     NSString *qrResults;
     ZXingWidgetController *widController;
@@ -44,16 +43,16 @@
 
 // Programmatic functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
-- (void) experiment;
 - (void) upload:(NSMutableArray *)results;
 
 - (void) getDataFromFields;
 - (void) initLocations;
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
+- (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
-- (void) fillDataFieldEntryList:(int)eid;
-- (int)  addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
-- (void) hideKeyboard;
+- (void)   fillDataFieldEntryList:(int)eid;
+- (int)    addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (void)   hideKeyboard;
 - (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
@@ -68,11 +67,13 @@
 @property (nonatomic, retain) IBOutlet UIButton     *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
+@property (nonatomic, assign) UIView                *activeField;
+
 // Non-UI Properties
-@property (nonatomic, copy)   NSString *sessionName;
-@property (nonatomic, copy)   NSString *qrResults;
-@property (nonatomic, strong) NSNumber *expNum;
-@property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic, copy)   NSString              *sessionName;
+@property (nonatomic, copy)   NSString              *qrResults;
+@property (nonatomic, retain) CLLocationManager     *locationManager;
+@property (nonatomic, assign) int                    expNum;
 
 @end
 

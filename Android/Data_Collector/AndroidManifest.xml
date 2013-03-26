@@ -95,10 +95,6 @@
             android:label="Data Recording Halted"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".dialogs.RecordingStopped"
-            android:label="Data Recording Timed Out"
-            android:theme="@style/theme_dialog_black" />
-        <activity
             android:name=".dialogs.Description"
             android:label="Enter Session Description"
             android:theme="@style/theme_dialog_black" />

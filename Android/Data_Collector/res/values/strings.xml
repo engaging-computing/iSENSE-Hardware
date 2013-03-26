@@ -59,7 +59,11 @@
     <string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
     <string name="force_stop">You exited the app while data was still being recorded.  Data has stopped recording.</string>
     <string name="description_hint">Enter Description Here&#8230;</string>
-    <string name="description_prompt">	    Enter a session description (or leave blank if you\'d like an automatically generated description).</string>
+    <string name="description_prompt">
+        Enter a session description (or leave blank if you\'d like an automatically generated description) and press
+        \"Upload\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
+       	\"Delete\".
+        </string>
     <string name="visit">Visit</string>
     <string name="qr_prompt">
         Your device does not have the proper Barcode Scanner application installed
@@ -269,7 +273,7 @@
 		your SD Card.  Since iSENSE supports pictures, these pictures will also be
 		uploaded and associated with the next data set you hit Save for.
 		
-		\n\nIf you choosen a valid experiment with fields, you will see a
+		\n\nIf you have chosen a valid experiment with fields, you will see a
 		scrollable list of fields and text boxes for you to begin entering data
 		into.  This is where your data is entered.  Once all the fields you want
 		to fill out are filled in, you may hit Save, and these values will be
@@ -319,7 +323,7 @@
 		his or her experiment and login information and he or she is ready to go.
 
 		\n\nIn order to use this application, you must have an account on 
-		isenseproject.org.  You must also accept our End User License Agreement.</string>
+		isenseproject.org.\n\n</string>
     <string name="menu_login">Login</string>
     <string name="menu_media">Media</string>
     <string name="menu_sync">Sync Time</string>
@@ -333,11 +337,11 @@
     <string name="clear">Clear</string>
     <string name="auto">Automatic</string>
     <string name="manual">Manual</string>
-    <string name="splashPrompt">Select your data collecting mode (manual or automatic).</string>
+    <string name="splashPrompt">Select your data collecting mode (automatic or manual).</string>
     <string name="qmark">\&#63;</string>
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
-	<string name="session_name">Session Name</string>
+	<string name="session_name">Session Name (required)</string>
 	<string name="queue_alter">What would you like to do with this data set?</string>
 	<string name="rename">Rename</string>
 	<string name="change_data">Change Data</string>

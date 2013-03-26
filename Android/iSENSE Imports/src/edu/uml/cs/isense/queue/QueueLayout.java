@@ -54,6 +54,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private Runnable sdUploader;
 	private static UploadQueue uq;
 	private boolean uploadSuccess = true;
+	private static String parentName = "";
 
 	protected static DataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
@@ -74,7 +75,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 						getApplicationContext());
 
 		Bundle extras = getIntent().getExtras();
-		String parentName = extras.getString(PARENT_NAME);
+		parentName = extras.getString(PARENT_NAME);
 		if (parentName == null || parentName.equals("")) {
 			w.make("Parent name not passed!", Waffle.IMAGE_X);
 		}
@@ -272,8 +273,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				case QueueAlter.DELETE:
 					uq.queue.remove(lastDataSetLongClicked);
 					uq.mirrorQueue.remove(lastDataSetLongClicked);
-					scrollQueue.removeView(lastViewLongClicked);
 					uq.storeAndReRetrieveQueue(true);
+					scrollQueue.removeView(lastViewLongClicked);
 
 					break;
 
@@ -358,9 +359,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = data;
+					boolean isFromDataCollector = (parentName.equals("datacollector"));
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
-					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, true);
+					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, !isFromDataCollector);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;

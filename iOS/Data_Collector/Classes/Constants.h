@@ -1,22 +1,21 @@
 //
-//  ManualView.h
+//  Constants.h
 //  iOS Data Collector
 //
-//  Created by Mike Stowell on 2/28/13.
+//  Created by Mike Stowell and Jeremy Poulin on 2/28/13.
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-#ifndef Data_Collector_ManualConstants_h
-#define Data_Collector_ManualConstants_h
+#ifndef Constants_h
+#define Constants_h
 
 // constants for dialogs
-#define MENU_UPLOAD                   0
-#define MENU_EXPERIMENT               1
-#define MENU_LOGIN                    2
-#define EXPERIMENT_MANUAL_ENTRY       3
-#define EXPERIMENT_BROWSE_EXPERIMENTS 4
-#define CLEAR_FIELDS_DIALOG           5
+#define MENU_EXPERIMENT               0
+#define MENU_LOGIN                    1
+#define EXPERIMENT_MANUAL_ENTRY       2
+#define CLEAR_FIELDS_DIALOG           3
+#define MENU_UPLOAD                   4
 
 // options for action sheet
 #define OPTION_CANCELED                0
@@ -41,5 +40,13 @@
 #define IPAD_WIDTH_LANDSCAPE    980
 #define IPHONE_WIDTH_PORTRAIT   280
 #define IPHONE_WIDTH_LANDSCAPE  200
+
+// tags for types of UITextFields
+#define TAG_TEXT    100
+#define TAG_NUMERIC 101
+
+// Nav Controller Height
+#define NAVIGATION_CONTROLLER_HEIGHT 64
+
 
 #endif

@@ -11,100 +11,114 @@
 
 @implementation DataFieldManager
 
+@synthesize order, data;
+
 - (NSMutableArray *) getFieldOrderOfExperiment:(int)exp {
     
-    NSMutableArray *order = [[NSMutableArray alloc] init];
+    if (order) [order release];
+    order = [[NSMutableArray alloc] init];
     
     iSENSE *iapi = [iSENSE getInstance];
     NSMutableArray *fields = [iapi getExperimentFields:[NSNumber numberWithInt:exp]];
     
     for (ExperimentField *field in fields) {
+        NSLog(@"%d, %@", field.type_id.intValue, field.field_name);
         switch (field.type_id.intValue) {
-            // Temperature
-            case 1:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"f"].location == NSNotFound)) {
+            // Temperature (1)
+            case TEMPERATURE:
+                if (!([field.field_name.lowercaseString rangeOfString:@"f"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"temperature_f"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"c"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"c"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"temperature_c"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"k"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"k"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"temperature_k"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
                 }
                 break;
             
-            // Potential Altitude
-            case 2:
-            case 3:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
+            // Potential Altitude (2, 3)
+            case LENGTH:
+            case DISTANCE:
+                if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"altitude"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
                 }
                 break;
                 
-            // Time
-            case 7:
+            // Time (7)
+            case TIME:
                 [order addObject:[StringGrabber grabField:@"time"]];
                 break;
                 
-            // Light
-            case 8:
-            case 9:
-            case 29:
+            // Light (8, 9, 29)
+            case LUMINOUS_FLUX:
+            case LUMINOUS_INTENSITY:
+            case LIGHT:
                 [order addObject:[StringGrabber grabField:@"luminous_flux"]];
                 break;
                 
-            // Angle
-            case 10:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"deg"].location == NSNotFound)) {
+            // Angle (10)
+            case ANGLE:
+                if (!([field.field_name.lowercaseString rangeOfString:@"deg"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"heading_deg"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"rad"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"rad"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"heading_rad"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
                 }
                 break;
                 
-            // Geospacial
-            case 19:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"lat"].location == NSNotFound)) {
+            // Geospacial (19)
+            case GEOSPACIAL:
+                if (!([field.field_name.lowercaseString rangeOfString:@"lat"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"latitude"]];
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"lon"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"lon"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"longitude"]];
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
                 }
                 break;
                 
-            // Numeric/Custom
-            case 21:
-            case 22:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"mag"].location == NSNotFound)) {
-                    if (!([field.unit_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
+            // Numeric/Custom (21, 22)
+            case NUMERIC:
+            case CUSTOM:
+                if (!([field.field_name.lowercaseString rangeOfString:@"mag"].location == NSNotFound)) {
+                    if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"magnetic_x"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"magnetic_y"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"magnetic_z"]];
                     } else {
                         [order addObject:[StringGrabber grabField:@"magnetic_total"]];
                     }
-                } else if (!([field.unit_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
                     [order addObject:[StringGrabber grabField:@"altitude"]];
+                } else if (!([field.field_name.lowercaseString rangeOfString:@"gyro"].location == NSNotFound)
+                           || !([field.field_name.lowercaseString rangeOfString:@"rotation"].location == NSNotFound)) {
+                
+                    if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
+                        [order addObject:[StringGrabber grabField:@"gyroscope_x"]];
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
+                        [order addObject:[StringGrabber grabField:@"gyroscope_y"]];
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
+                        [order addObject:[StringGrabber grabField:@"gyroscope_z"]];
+                    } 
                 } else {
                     [order addObject:[StringGrabber grabField:@"null_string"]];
                 }
                 break;
                 
-            // Acceleration
-            case 25:
-                if (!([field.unit_name.lowercaseString rangeOfString:@"accel"].location == NSNotFound)) {
-                    if (!([field.unit_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
+            // Acceleration (25)
+            case ACCELERATION:
+                if (!([field.field_name.lowercaseString rangeOfString:@"accel"].location == NSNotFound)) {
+                    if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"accel_x"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"accel_y"]];
-                    } else if (!([field.unit_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
+                    } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
                         [order addObject:[StringGrabber grabField:@"accel_z"]];
                     } else {
                         [order addObject:[StringGrabber grabField:@"accel_total"]];
@@ -114,8 +128,8 @@
                 }
                 break;
                 
-            // Pressure
-            case 27:
+            // Pressure (27)
+            case PRESSURE:
                 [order addObject:[StringGrabber grabField:@"pressure"]];
                 break;
                 
@@ -126,116 +140,118 @@
         }
     }
     
-    return [order autorelease];
+    return order;
 }
 
 
-- (NSMutableArray *) putData {
+- (NSMutableArray *) orderDataFromFields:(Fields *)f {
     
-    NSMutableArray *data = [[NSMutableArray alloc] init];
+    if (data) [data release];
+    data = [[NSMutableArray alloc] init];
     
-    /*
-     
-     
-     
-     JSONArray dataJSON = new JSONArray();
-     
-     for (String s : this.order) {
-     try {
-     if (s.equals(mContext.getString(R.string.accel_x))) {
-     dataJSON.put(f.accel_x);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.accel_y))) {
-     dataJSON.put(f.accel_y);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.accel_z))) {
-     dataJSON.put(f.accel_z);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.accel_total))) {
-     dataJSON.put(f.accel_total);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.temperature_c))) {
-     dataJSON.put(f.temperature_c);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.temperature_f))) {
-     dataJSON.put(f.temperature_f);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.temperature_k))) {
-     dataJSON.put(f.temperature_k);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.time))) {
-     dataJSON.put(f.timeMillis);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.luminous_flux))) {
-     dataJSON.put(f.lux);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.heading_deg))) {
-     dataJSON.put(f.angle_deg);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.heading_rad))) {
-     dataJSON.put(f.angle_rad);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.latitude))) {
-     dataJSON.put(f.latitude);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.longitude))) {
-     dataJSON.put(f.longitude);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.magnetic_x))) {
-     dataJSON.put(f.mag_x);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.magnetic_y))) {
-     dataJSON.put(f.mag_y);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.magnetic_z))) {
-     dataJSON.put(f.mag_z);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.magnetic_total))) {
-     dataJSON.put(f.mag_total);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.altitude))) {
-     dataJSON.put(f.altitude);
-     continue;
-     }
-     if (s.equals(mContext.getString(R.string.pressure))) {
-     dataJSON.put(f.pressure);
-     continue;
-     }
-     dataJSON.put(null);
-     } catch (JSONException e) {
-     e.printStackTrace();
-     }
-     }
-     
-     return dataJSON;
+    if (!order) return data;
+    
+    for (NSString *s in order) {
+        if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
+            [data addObject:[f accel_x]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
+            [data addObject:[f accel_y]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
+            [data addObject:[f accel_z]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
+            [data addObject:[f accel_total]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
+            [data addObject:[f temperature_c]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
+            [data addObject:[f temperature_f]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
+            [data addObject:[f temperature_k]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
+            [data addObject:[f time_millis]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
+            [data addObject:[f lux]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
+            [data addObject:[f angle_deg]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
+            [data addObject:[f angle_rad]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
+            [data addObject:[f latitude]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
+            [data addObject:[f longitude]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
+            [data addObject:[f mag_x]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
+            [data addObject:[f mag_y]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
+            [data addObject:[f mag_z]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
+            [data addObject:[f mag_total]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
+            [data addObject:[f altitude]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
+            [data addObject:[f pressure]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
+            [data addObject:[f gyro_x]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
+            [data addObject:[f gyro_y]];
+            continue;
+        }
+        if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
+            [data addObject:[f gyro_z]];
+            continue;
+        }
 
-     
-     
-     
-     
-     
-     
-     
-     */
+        
+        [data addObject:[NSNull null]];
+    }
     
-    return [data autorelease];
+    return data;    
+}
+
+- (void) dealloc {
+    [order release];
+    [data  release];
+    [super dealloc];
 }
 
 

@@ -31,7 +31,7 @@ public class Splash extends TabActivity {
 		setContentView(R.layout.splash);
 
 		mContext = this;
-		
+
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
@@ -63,17 +63,17 @@ public class Splash extends TabActivity {
 		Intent iGuide = new Intent(mContext, SplashGuide.class);
 		guideSpec.setContent(iGuide);
 
-		// Change tab text colors
-		for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-			TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i)
-					.findViewById(android.R.id.title);
-			tv.setTextColor(Color.parseColor("#FFFFFF"));
-		}
-
 		// Add specs to host
 		tabHost.addTab(mainSpec);
 		tabHost.addTab(aboutSpec);
 		tabHost.addTab(guideSpec);
+
+		// Change tab text colors
+		for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+			TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i)
+					.findViewById(android.R.id.title);
+			tv.setTextColor(Color.parseColor("#666666"));
+		}
 
 		// Set listeners for the "Continue" and "Exit" buttons
 		final Button cont = (Button) findViewById(R.id.splash_auto);
@@ -109,9 +109,9 @@ public class Splash extends TabActivity {
 		if (!w.isDisplaying)
 			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_CHECK);
-		else if (w.canPerformTask) 
+		else if (w.canPerformTask)
 			super.onBackPressed();
-		
+
 	}
 
 }
