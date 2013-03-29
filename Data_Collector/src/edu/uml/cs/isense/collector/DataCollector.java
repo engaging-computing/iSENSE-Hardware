@@ -27,10 +27,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -54,6 +54,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
@@ -73,6 +74,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.dialogs.ChooseSensorDialog;
 import edu.uml.cs.isense.collector.dialogs.Description;
+import edu.uml.cs.isense.collector.dialogs.ForceStop;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
@@ -101,8 +103,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final String activityName = "datacollector";
 
 	// Numerical constants
-	private static final int INTERVAL = 50;
-	private static final int TEST_LENGTH = 600;
+	static final int INTERVAL = 50;
+	static final int TEST_LENGTH = 600;
 	private static long srate = INTERVAL;
 	private static int recLength = TEST_LENGTH;
 
@@ -184,7 +186,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	/** Formatters */
 
-	private final DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
+	private final static DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
 	/** \Formatters */
 
@@ -194,7 +196,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
 
-	private Location loc;
+	private static Location loc;
 	private Location roughLoc;
 
 	// Sensor Components
@@ -211,29 +213,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private Vibrator vibrator;
 	private MediaPlayer mMediaPlayer;
 
-	// Timer Objects
-	private Timer timeTimer;
-	private Timer timeElapsedTimer;
-
 	/** \Data Recording Specific Components */
 
 	/** Data Variables */
 
 	// Implemented into data variables
-	private String data;
+	private static String data;
 
-	private int dataPointCount = 0;
+	private static int dataPointCount = 0;
 
 	// Raw data variables
-	private String temperature = "";
-	private String pressure = "";
-	private String light = "";
+	private static String temperature = "";
+	private static String pressure = "";
+	private static String light = "";
 
 	private float rawAccel[];
 	private float rawMag[];
-	private float accel[];
-	private float mag[];
-	private float orientation[];
+	private static float accel[];
+	private static float mag[];
+	private static float orientation[];
 
 	/** \Data Variables */
 
@@ -245,6 +243,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Booleans
 	public static boolean inPausedState = false;
+	public static boolean terminateThroughPowerOff = false;
 
 	// Strings
 	public static String textToSession = "";
@@ -260,15 +259,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Integers
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
-	private int elapsedMillis = 0;
-	private int totalMillis = 0;
-
-	private int secondsElapsed = 0;
+	private static int elapsedMillis = 0;
+	private static int totalMillis = 0;
 
 	private static int rotation = 0;
 
 	// Longs
-	private long currentTime = 0;
+	private static long currentTime = 0;
 	private long timeOffset = 0;
 
 	// Strings
@@ -299,13 +296,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private Animation rotateInPlace;
 	private static Handler mHandler;
 
-	private File SDFile;
-	private FileWriter gpxwriter;
-	private BufferedWriter out;
+	private static File SDFile;
+	private static FileWriter gpxwriter;
+	private static BufferedWriter out;
 
 	public static JSONArray dataSet;
 
 	public static Context mContext;
+	
+	private PowerManager pm;
 
 	// Custom
 	public static RestAPI rapi;
@@ -325,6 +324,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		setContentView(R.layout.loading);
 
 		OrientationManager.disableRotation(DataCollector.this);
+		
+		
 
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
 		ImageView spinner = (ImageView) findViewById(R.id.spinner);
@@ -348,7 +349,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// (s)tarts, (u)pdates, and (f)inishes writing the .csv to the SD Card
 	// containing "data"
-	public void writeToSDCard(String data, char code) {
+	public static void writeToSDCard(String data, char code) {
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
@@ -411,48 +412,46 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mLocationManager != null)
-			mLocationManager.removeUpdates(DataCollector.this);
+		
+		if (running) {
+			if (!pm.isScreenOn()) {
+				startStop.performLongClick();
+				Intent iForceStop = new Intent(mContext, ForceStop.class);
+				startActivity(iForceStop);
+			}
+		} else {
+			if (mLocationManager != null)
+				mLocationManager.removeUpdates(DataCollector.this);
 
-		if (mRoughLocManager != null)
-			mRoughLocManager.removeUpdates(DataCollector.this);
+			if (mRoughLocManager != null)
+				mRoughLocManager.removeUpdates(DataCollector.this);
 
-		if (mSensorManager != null)
-			mSensorManager.unregisterListener(DataCollector.this);
-
-		if (timeTimer != null)
-			timeTimer.cancel();
-
-		if (timeElapsedTimer != null)
-			timeElapsedTimer.cancel();
+			if (mSensorManager != null)
+				mSensorManager.unregisterListener(DataCollector.this);
+		}
 
 		inPausedState = true;
 
 	}
-	
 	
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (mLocationManager != null)
-			mLocationManager.removeUpdates(DataCollector.this);
+		if (!running) {
+			if (mLocationManager != null)
+				mLocationManager.removeUpdates(DataCollector.this);
 
-		if (mRoughLocManager != null)
-			mRoughLocManager.removeUpdates(DataCollector.this);
+			if (mRoughLocManager != null)
+				mRoughLocManager.removeUpdates(DataCollector.this);
 
-		if (mSensorManager != null)
-			mSensorManager.unregisterListener(DataCollector.this);
-
-		if (timeTimer != null)
-			timeTimer.cancel();
-
-		if (timeElapsedTimer != null)
-			timeElapsedTimer.cancel();
+			if (mSensorManager != null)
+				mSensorManager.unregisterListener(DataCollector.this);
+		}
 
 		inPausedState = true;
 
 	}
-
+	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -469,11 +468,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		/*if (running) {	// TODO - onResume, you too!?
-			Intent iForceStop = new Intent(mContext, ForceStop.class);
-			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
-		}*/
+		
 		// Will call the login dialogue if necessary
 		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -488,6 +483,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		if (uq != null)
 			uq.buildQueueFromFile();
+		
+		// keeps menu buttons disabled while running
+		if (running)
+			setMenuStatus(false);
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -1059,7 +1058,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Calculates Altitude from Temperature and Pressure if Possible
-	private String calcAltitude() {
+	private static String calcAltitude() {
 		if ((dfm.enabledFields[TEMPERATURE_C]
 				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
 				&& dfm.enabledFields[PRESSURE]) {
@@ -1282,6 +1281,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		w = new Waffle(this);
 		f = new Fields();
 
+		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
@@ -1334,49 +1335,131 @@ public class DataCollector extends Activity implements SensorEventListener,
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 	}
 	
+	// Simulates a stop if the service finishes
 	public static void serviceHasStopped() {
-		running = false;
-		w.make("All done, bro.");
-		setTime(0);
-		// update all other UI pieces
-		
-		/* or ya know, simulate a stop
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				startStop.performLongClick();
+				if (running)
+					startStop.performLongClick();
 			}
-		});*/
+		});
 	}
 	
-	public void description() {
+	// Displays description dialog when data is done recording
+	public void displayDescription() {
+		Log.d("lol", "descripting");
 		
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"MM-dd-yyyy, HH:mm:ss", Locale.US);
+		Date dt = new Date();
+		dateString = sdf.format(dt);
+		nameOfSession += " - " + dateString;
+		
+		setTime(0); // TODO - this is in case the service just suddenly stops
+
+		Intent iDescription = new Intent(mContext,
+				Description.class);
+		startActivityForResult(iDescription,
+				DESCRIPTION_REQUESTED);
+		
+		if (terminateThroughPowerOff) {
+			Log.e("TOADNULLS", "ARE TOADNULLS");
+			startStop.performLongClick();
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivity(iForceStop);
+		}
+	}
+	
+	// Code for registering sensors and preparing to poll data TODO
+	public void setUpSensorsForRecording() {
+		initDfm();
+		registerSensors();
+
+		rotation = getRotation(mContext);
+		dataSet = new JSONArray();
+		elapsedMillis = 0;
+		totalMillis = 0;
+		dataPointCount = 0;
+		beginWrite = true;
+		sdCardError = false;
+
+		currentTime = getUploadTime();
+	}
+	
+	// Code for polling sensors for data periodically.  Will be called by service TODO
+	public static void pollForData() {
+		dataPointCount++;
+		elapsedMillis += srate;
+		totalMillis = elapsedMillis;
+
+		if (dfm.enabledFields[ACCEL_X])
+			f.accel_x = toThou.format(accel[0]);
+		if (dfm.enabledFields[ACCEL_Y])
+			f.accel_y = toThou.format(accel[1]);
+		if (dfm.enabledFields[ACCEL_Z])
+			f.accel_z = toThou.format(accel[2]);
+		if (dfm.enabledFields[ACCEL_TOTAL])
+			f.accel_total = toThou.format(accel[3]);
+		if (dfm.enabledFields[LATITUDE])
+			f.latitude = loc.getLatitude();
+		if (dfm.enabledFields[LONGITUDE])
+			f.longitude = loc.getLongitude();
+		if (dfm.enabledFields[HEADING_DEG])
+			f.angle_deg = toThou.format(orientation[0]);
+		if (dfm.enabledFields[HEADING_RAD])
+			f.angle_rad = ""
+					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+		if (dfm.enabledFields[MAG_X])
+			f.mag_x = mag[0];
+		if (dfm.enabledFields[MAG_Y])
+			f.mag_y = mag[1];
+		if (dfm.enabledFields[MAG_Z])
+			f.mag_z = mag[2];
+		if (dfm.enabledFields[MAG_TOTAL])
+			f.mag_total = Math.sqrt(Math
+					.pow(f.mag_x, 2)
+					+ Math.pow(f.mag_y, 2)
+					+ Math.pow(f.mag_z, 2));
+		if (dfm.enabledFields[TIME])
+			f.timeMillis = currentTime + elapsedMillis;
+		if (dfm.enabledFields[TEMPERATURE_C])
+			f.temperature_c = temperature;
+		if (dfm.enabledFields[TEMPERATURE_F])
+			f.temperature_f = ""
+					+ ((Double.parseDouble(temperature) * 1.8) + 32);
+		if (dfm.enabledFields[TEMPERATURE_K])
+			f.temperature_k = ""
+					+ (Double.parseDouble(temperature) + 273.15);
+		if (dfm.enabledFields[PRESSURE])
+			f.pressure = pressure;
+		if (dfm.enabledFields[ALTITUDE])
+			f.altitude = calcAltitude();
+		if (dfm.enabledFields[LIGHT])
+			f.lux = light;
+
+		dataSet.put(dfm.putData());
+		data = dfm.writeSdCardLine();
+
+		if (beginWrite) {
+			String header = dfm.writeHeaderLine();
+			writeToSDCard(header, 's');
+			writeToSDCard(data, 'u');
+		} else {
+			writeToSDCard(data, 'u');
+		}
 	}
 
 	// All the code for the main button!
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
+			@SuppressLint("Wakelock")
 			@Override
 			public boolean onLongClick(View arg0) {
 				// TODO - make me work!
 				
-				if (!running) {
-					Log.d("lol", "running");
-					Intent intent = new Intent(mContext, DataCollectorService.class);
-					startService(intent);
-				
-					running = true; 
-					return running;
-				} else {
-					Log.d("lol", "stopping");
-					stopService(new Intent(mContext, DataCollectorService.class));
-					
-					running = false;
-					return running;
-				}
-
-				/*boolean numbersReady = true;
+				boolean numbersReady = true;
 				if (!sampleInterval.getText().toString().equals("")) {
 					try {
 						int sInterval = Integer.parseInt(sampleInterval
@@ -1424,7 +1507,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				} else if (!numbersReady) {
 
-					// Not ready. Do nothing.
+					// Not ready to record data yet.  Do nothing.
 
 				} else {
 
@@ -1448,31 +1531,60 @@ public class DataCollector extends Activity implements SensorEventListener,
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
-
-					if (running) {
+				
+					if (!running) {
+						running = true;
+						Log.d("lol", "running");
+						
+						OrientationManager.disableRotation((Activity) mContext);
+						
+						getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+						
+						sessionName.setEnabled(false);
+						recordingLength.setEnabled(false);
+						sampleInterval.setEnabled(false);
+						
+						setMenuStatus(false);
+						
+						startStop.setText(R.string.stopString);
+						
+						startStop.getBackground().setColorFilter(0xFF00FF00,
+								PorterDuff.Mode.MULTIPLY);
+						mScreen.setBackgroundResource(R.drawable.background_running);
+						isenseLogo.setImageResource(R.drawable.logo_green);
+						
+						// may be wonky here ...
+						setUpSensorsForRecording();
+						
+						Intent iService = new Intent(mContext, DataCollectorService.class);
+						iService.putExtra(DataCollectorService.SRATE, srate);
+						iService.putExtra(DataCollectorService.REC_LENGTH, recLength);
+						//iService.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // TODO ?needed? probs not. remove
+						startService(iService);
+				 
+						return running;
+						
+					} else {
+						running = false;
+						Log.d("lol", "stopping");
+						
+						getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+						
+						stopService(new Intent(mContext, DataCollectorService.class));
+						
+						// TODO - do we lose any data here if we return in a new orientation? if so, just
+						// re-enable orientation when a description is set/data set deleted
 						OrientationManager.enableRotation((Activity) mContext);
-
+						
 						sessionName.setEnabled(true);
 						recordingLength.setEnabled(true);
 						sampleInterval.setEnabled(true);
 
 						writeToSDCard(null, 'f');
 						setMenuStatus(true);
-
-						mSensorManager.unregisterListener(DataCollector.this);
-						running = false;
+						
 						startStop.setText(R.string.startString);
-						time.setText(R.string.timeElapsed);
-
-						// Date
-						SimpleDateFormat sdf = new SimpleDateFormat(
-								"MM-dd-yyyy, HH:mm:ss", Locale.US);
-						Date dt = new Date();
-						dateString = sdf.format(dt);
-						nameOfSession += " - " + dateString;
-
-						timeTimer.cancel();
-						timeElapsedTimer.cancel();
+						setTime(0);
 
 						startStop.getBackground().setColorFilter(0xFFFF0000,
 								PorterDuff.Mode.MULTIPLY);
@@ -1484,33 +1596,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (sdCardError)
 							w.make("Could not write file to SD Card.",
 									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+						
+						displayDescription();
+						
+						return running;
+					}
+				}
+				
+				running = false;
+				return running;
+			}
 
-						Intent iDescription = new Intent(mContext,
-								Description.class);
-						startActivityForResult(iDescription,
-								DESCRIPTION_REQUESTED);
+		});
+	}
+
+				
+
+				/*
+					if (running) {
+						// done
 
 					} else {
 
-						initDfm();
-						registerSensors();
-
-						OrientationManager.disableRotation((Activity) mContext);
-
-						sessionName.setEnabled(false);
-						recordingLength.setEnabled(false);
-						sampleInterval.setEnabled(false);
-
-						rotation = getRotation(mContext);
-						dataSet = new JSONArray();
-						secondsElapsed = 0;
-						elapsedMillis = 0;
-						totalMillis = 0;
-						dataPointCount = 0;
-						beginWrite = true;
-						sdCardError = false;
-
-						currentTime = getUploadTime();
+						// most stuff done
 
 						try {
 							Thread.sleep(100);
@@ -1520,31 +1628,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							e.printStackTrace();
 						}
 
-						setMenuStatus(false);
-
-						running = true;
-						startStop.setText(R.string.stopString);
-
-						timeElapsedTimer = new Timer();
-						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
-							public void run() {
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										if (secondsElapsed > (recLength - 1)) {
-											mHandler.post(new Runnable() {
-												@Override
-												public void run() {
-													startStop
-															.performLongClick();
-												}
-											});
-										}
-										setTime(secondsElapsed++);
-									}
-								});
-							}
-						}, 0, 1000);
+						
 
 						timeTimer = new Timer();
 						timeTimer.scheduleAtFixedRate(new TimerTask() {
@@ -1623,10 +1707,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 				running = false;
 				return running;*/
-			}
 
-		});
-	}
 
 	// Used to adjust for sensor data
 	public int getRotation(Context context) {

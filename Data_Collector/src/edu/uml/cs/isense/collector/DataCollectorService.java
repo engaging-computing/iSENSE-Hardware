@@ -5,25 +5,32 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
-import android.widget.Toast;
 
 // http://developer.android.com/guide/components/bound-services.html
 public class DataCollectorService extends Service {
 	private Looper mServiceLooper;
 	private ServiceHandler mServiceHandler;
 	private boolean terminate = false;
+	private Timer timeElapsedTimer;
+	private BroadcastReceiver mReceiver;
 
 	// Hardcoded constant of Process.THREAD_PRIORITY_BACKGROUND
 	private static final int PROCESS_THREAD_PRIORITY_BACKGROUND = 10;
 
 	// Objects sent in from the DataCollector class
+	public static final String SRATE = "srate";
+	private static long srate     = DataCollector.INTERVAL;
+	public static final String REC_LENGTH = "rec_length";
+	private static int  recLength = DataCollector.TEST_LENGTH;
 
 	// Handler that receives messages from the thread
 	private final static class ServiceHandler extends Handler {
@@ -51,7 +58,7 @@ public class DataCollectorService extends Service {
 	public void handleMessage(Message msg) {
 		// Update the main UI timer
 		final Handler handlerTime = new Handler(Looper.getMainLooper());
-		Timer timeElapsedTimer = new Timer();
+		timeElapsedTimer = new Timer();
 		timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
 			int secondsElapsed = 0;
 
@@ -60,32 +67,30 @@ public class DataCollectorService extends Service {
 					@Override
 					public void run() {
 						DataCollector.setTime(secondsElapsed++);
+						if (terminate) timeElapsedTimer.cancel();
 					}
 				});
 			}
 		}, 0, 1000);
 
-		long endTime = System.currentTimeMillis() + 10 * 1000;
+		long endTime = System.currentTimeMillis() + recLength * 1000;
 		while (System.currentTimeMillis() < endTime) {
 			synchronized (this) {
 				try {
 					// Terminate the service if client set the terminate
 					// parameter
-					if (terminate) {
-						terminate = false;
-						if (timeElapsedTimer != null)
-							timeElapsedTimer.cancel();
+					if (terminate)
 						break;
-					}
 
 					// Get current execution time
 					long curExecution = System.currentTimeMillis();
 
 					// Execute main body at rate of srate
-					Log.w("lol", "frognull");
+					DataCollector.pollForData();
 
 					// Wait for a period of srate - execution time
-					wait(1000 - (System.currentTimeMillis() - curExecution));
+					//Log.w("lol", "Wait = " + (srate - (System.currentTimeMillis() - curExecution)) + ", endtime = " + endTime);
+					wait(srate - (System.currentTimeMillis() - curExecution));
 
 				} catch (Exception e) {
 				}
@@ -111,6 +116,7 @@ public class DataCollectorService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
 		// Start up the thread running the service. Note that we create a
 		// separate thread because the service normally runs in the process's
 		// main thread, which we don't want to block. We also make it
@@ -122,11 +128,28 @@ public class DataCollectorService extends Service {
 		// Get the HandlerThread's Looper and use it for our Handler
 		mServiceLooper = thread.getLooper();
 		mServiceHandler = new ServiceHandler(this, mServiceLooper);
+		
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        mReceiver = new ScreenReceiver();
+        registerReceiver(mReceiver, filter);
 	}
-
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+		
+		boolean screenOff = intent.getBooleanExtra("screen_state", false);
+        if (screenOff) {
+        	DataCollector.terminateThroughPowerOff = true;
+            terminateRecording();
+        }
+		
+		// Get client's passed-in values necessary for execution
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
+			srate = extras.getLong(SRATE);
+			recLength = extras.getInt(REC_LENGTH);
+		}
 
 		// For each start request, send a message to start a job and deliver the
 		// start ID so we know which request we're stopping when we finish the
@@ -148,14 +171,18 @@ public class DataCollectorService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
 		terminate = true;
+		if (timeElapsedTimer != null) timeElapsedTimer.cancel();
+		unregisterReceiver(mReceiver);
 		// Do not call super.onDestroy(); Doing so will result in terminate
 		// not being set and while the service will return, it will not stop.
 	}
 
 	// Function set by client class to stop the service manually
+	// Is functionally similar to onDestroy, which can only be called by the
+	// service itself
 	public void terminateRecording() {
+		if (timeElapsedTimer != null) timeElapsedTimer.cancel();
 		terminate = true;
 	}
 }
