@@ -131,9 +131,7 @@ public class DataFieldManager extends Application {
 					order.add(mContext.getString(R.string.accel_y));
 				} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
 					order.add(mContext.getString(R.string.accel_z));
-				} else if ((field.field_name.toLowerCase(Locale.US).contains("total"))
-						|| (field.field_name.toLowerCase(Locale.US).contains("average"))
-						|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
+				} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
 					order.add(mContext.getString(R.string.accel_total));
 				} else {
 					order.add(mContext.getString(R.string.null_string));
