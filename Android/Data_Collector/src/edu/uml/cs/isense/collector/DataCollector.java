@@ -1847,6 +1847,31 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menuLogin.setEnabled(enabled);
 			menuMedia.setEnabled(enabled);
 			menuSync.setEnabled(enabled);
+			if (enabled) {
+				MenuItem item= mMenu.findItem(R.id.menu_item_setup);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_upload);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_login);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_media);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_sync);
+		    	item.setVisible(true);
+		    	super.onPrepareOptionsMenu(mMenu);
+			} else {
+				MenuItem item= mMenu.findItem(R.id.menu_item_setup);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_upload);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_login);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_media);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_sync);
+		    	item.setVisible(false);
+		    	super.onPrepareOptionsMenu(mMenu);
+			}
 		}
 	}
 
