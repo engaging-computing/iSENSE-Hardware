@@ -54,7 +54,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
@@ -303,8 +302,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static JSONArray dataSet;
 
 	public static Context mContext;
-	
-	private PowerManager pm;
 
 	// Custom
 	public static RestAPI rapi;
@@ -413,13 +410,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onPause() {
 		super.onPause();
 		
-		if (running) {
-			if (!pm.isScreenOn()) {
-				startStop.performLongClick();
-				Intent iForceStop = new Intent(mContext, ForceStop.class);
-				startActivity(iForceStop);
-			}
-		} else {
+		if (!running) {
 			if (mLocationManager != null)
 				mLocationManager.removeUpdates(DataCollector.this);
 
@@ -1280,8 +1271,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		w = new Waffle(this);
 		f = new Fields();
-
-		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		
 		accel = new float[4];
 		orientation = new float[3];
@@ -1365,7 +1354,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		
 		if (terminateThroughPowerOff) {
 			Log.e("TOADNULLS", "ARE TOADNULLS");
-			startStop.performLongClick();
+			terminateThroughPowerOff = false;
 			Intent iForceStop = new Intent(mContext, ForceStop.class);
 			startActivity(iForceStop);
 		}
@@ -1553,7 +1542,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						mScreen.setBackgroundResource(R.drawable.background_running);
 						isenseLogo.setImageResource(R.drawable.logo_green);
 						
-						// may be wonky here ...
 						setUpSensorsForRecording();
 						
 						Intent iService = new Intent(mContext, DataCollectorService.class);
