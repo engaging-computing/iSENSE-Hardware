@@ -5,15 +5,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PowerManager;
 
 // http://developer.android.com/guide/components/bound-services.html
 public class DataCollectorService extends Service {
@@ -21,7 +21,7 @@ public class DataCollectorService extends Service {
 	private ServiceHandler mServiceHandler;
 	private boolean terminate = false;
 	private Timer timeElapsedTimer;
-	private BroadcastReceiver mReceiver;
+	private PowerManager pm;
 
 	// Hardcoded constant of Process.THREAD_PRIORITY_BACKGROUND
 	private static final int PROCESS_THREAD_PRIORITY_BACKGROUND = 10;
@@ -75,13 +75,19 @@ public class DataCollectorService extends Service {
 
 		long endTime = System.currentTimeMillis() + recLength * 1000;
 		while (System.currentTimeMillis() < endTime) {
+			if (!pm.isScreenOn()) {
+				DataCollector.terminateThroughPowerOff = true;
+				terminate = true;
+				break;
+			}
+			
 			synchronized (this) {
 				try {
 					// Terminate the service if client set the terminate
 					// parameter
 					if (terminate)
 						break;
-
+					
 					// Get current execution time
 					long curExecution = System.currentTimeMillis();
 
@@ -128,22 +134,13 @@ public class DataCollectorService extends Service {
 		// Get the HandlerThread's Looper and use it for our Handler
 		mServiceLooper = thread.getLooper();
 		mServiceHandler = new ServiceHandler(this, mServiceLooper);
-		
-		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
+        
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		
-		boolean screenOff = intent.getBooleanExtra("screen_state", false);
-        if (screenOff) {
-        	DataCollector.terminateThroughPowerOff = true;
-            terminateRecording();
-        }
-		
+				
 		// Get client's passed-in values necessary for execution
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
@@ -173,7 +170,6 @@ public class DataCollectorService extends Service {
 	public void onDestroy() {
 		terminate = true;
 		if (timeElapsedTimer != null) timeElapsedTimer.cancel();
-		unregisterReceiver(mReceiver);
 		// Do not call super.onDestroy(); Doing so will result in terminate
 		// not being set and while the service will return, it will not stop.
 	}
