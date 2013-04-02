@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
 
     <application
         android:allowBackup="false"
@@ -134,6 +135,7 @@
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_black" />
+        <service android:name="edu.uml.cs.isense.collector.DataCollectorService"></service>
     </application>
 
 </manifest>
