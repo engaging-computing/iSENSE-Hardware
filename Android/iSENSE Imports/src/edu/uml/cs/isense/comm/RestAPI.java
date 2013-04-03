@@ -1805,10 +1805,13 @@ public class RestAPI {
 				JSONObject obj = o.getJSONObject("data");
 
 				String msg = obj.optString("msg");
-				if (msg.compareToIgnoreCase("Experiment Closed") == 0) {
+				if (msg.compareToIgnoreCase("Experiment Closed") == 0)
 					// Experiment has been closed
 					sid = -400;
-				} else
+				else if (msg.compareToIgnoreCase("Not logged in") == 0)
+					// Not logged in
+					sid = -1;
+				else
 					sid = obj.getInt("sessionId");
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

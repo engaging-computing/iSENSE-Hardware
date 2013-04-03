@@ -40,8 +40,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 	 * serializable file with the same name as the string passed to it.
 	 */
 	public static final String PARENT_NAME = "parentName";
+	public static final String LOGIN_CONTEXT ="logincontext";
 
-	private static final int ALTER_DATASET_REQUESTED = 9001;
+	private static final int ALTER_DATASET_REQUESTED   = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
 
@@ -136,6 +137,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
+				
+			if (!rapi.isLoggedIn()) {
+				w.make("Login information not found - please login again");
+				return;
+			}
+			
 			lastSID = -1;
 			if (uq.mirrorQueue.isEmpty()) {
 				uq.storeAndReRetrieveQueue(true);
@@ -205,7 +212,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 						Waffle.IMAGE_CHECK);
 			else {
 				uq.addDataSetToQueue(uploadSet);
-				w.make("Upload failed.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				w.make("Upload Failed - experiment may be closed or not logged in", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
 			if (dialogShow)
@@ -271,9 +278,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					break;
 
 				case QueueAlter.DELETE:
-					uq.queue.remove(lastDataSetLongClicked);
-					uq.mirrorQueue.remove(lastDataSetLongClicked);
-					uq.storeAndReRetrieveQueue(true);
+					
+					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
 
 					break;
@@ -289,10 +295,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 				String newName = data.getStringExtra("new_name");
 				if (!newName.equals("")) {
 					DataSet alter = lastDataSetLongClicked;
-					alter.setName(newName);
+					alter.setName(newName); 
 
-					uq.queue.remove(lastDataSetLongClicked);
-					uq.mirrorQueue.remove(lastDataSetLongClicked);
+					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
 
 					uq.addDataSetToQueue(alter);
@@ -305,8 +310,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				DataSet alter = QueueEditData.alter;
 			
-				uq.queue.remove(lastDataSetLongClicked);
-				uq.mirrorQueue.remove(lastDataSetLongClicked);
+				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
 				
 				uq.addDataSetToQueue(alter);

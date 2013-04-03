@@ -174,6 +174,22 @@ public class UploadQueue implements Serializable {
 		}
 	}
 	
+	// removes the dataset with the associated key: true if removed, false if not found
+	protected boolean removeItemWithKey(long keyVal) {
+		LinkedList<DataSet> backup = new LinkedList<DataSet>();
+		backup.addAll(queue);
+		for (DataSet ds : backup) {
+			if (ds.key == keyVal) {
+				queue.remove(ds);
+				mirrorQueue.remove(ds);
+				storeAndReRetrieveQueue(true);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Rebuilds the UploadQueue from the serializable file it
 	 * is saved on.

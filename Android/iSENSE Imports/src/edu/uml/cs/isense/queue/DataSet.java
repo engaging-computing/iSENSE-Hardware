@@ -2,6 +2,7 @@ package edu.uml.cs.isense.queue;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +73,8 @@ public class DataSet implements Serializable {
 	private String eid;
 	
 	private boolean rdyForUpload = true;
+	
+	protected long key;
 
 	// Data Only
 	/**
@@ -140,6 +143,7 @@ public class DataSet implements Serializable {
 		this.state = state;
 		this.country = country;
 		this.addr = addr;
+		this.key = new Random().nextLong();
 	}
 
 	/** 
@@ -163,6 +167,7 @@ public class DataSet implements Serializable {
 								addr, city + ", " + state, country);
 					}
 
+					// Failure to create session or not logged in
 					if (sid == -1) {
 						success = false;
 						break;
