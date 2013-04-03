@@ -95,7 +95,6 @@ public class DataCollectorService extends Service {
 					DataCollector.pollForData();
 
 					// Wait for a period of srate - execution time
-					//Log.w("lol", "Wait = " + (srate - (System.currentTimeMillis() - curExecution)) + ", endtime = " + endTime);
 					wait(srate - (System.currentTimeMillis() - curExecution));
 
 				} catch (Exception e) {

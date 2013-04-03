@@ -30,7 +30,6 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -56,7 +55,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -1318,7 +1316,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	
 	// Displays description dialog when data is done recording
 	public void displayDescription() {
-		Log.d("lol", "descripting");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				"MM-dd-yyyy, HH:mm:ss", Locale.US);
@@ -1335,7 +1332,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				DESCRIPTION_REQUESTED);
 		
 		if (terminateThroughPowerOff) {
-			Log.e("TOADNULLS", "ARE TOADNULLS");
 			terminateThroughPowerOff = false;
 			Intent iForceStop = new Intent(mContext, ForceStop.class);
 			startActivity(iForceStop);
@@ -1425,152 +1421,155 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void setStartStopListener() {
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
-			@SuppressLint("Wakelock")
 			@Override
 			public boolean onLongClick(View arg0) {
-				// TODO - more efficient to check for if(running) first, then do these checks
-				boolean numbersReady = true;
-				if (!sampleInterval.getText().toString().equals("")) {
-					try {
-						int sInterval = Integer.parseInt(sampleInterval
-								.getText().toString());
-						if (sInterval < 50) {
-							sampleInterval
-									.setError("Enter an interval >= 50 ms");
+				if (!running) {
+					boolean numbersReady = true;
+					if (!sampleInterval.getText().toString().equals("")) {
+						try {
+							int sInterval = Integer.parseInt(sampleInterval
+									.getText().toString());
+							if (sInterval < 50) {
+								sampleInterval
+										.setError("Enter an interval >= 50 ms");
+								numbersReady = false;
+							}
+
+						} catch (NumberFormatException nfe) {
+							sampleInterval.setError("Enter an interval >= 50 ms");
 							numbersReady = false;
 						}
-
-					} catch (NumberFormatException nfe) {
-						sampleInterval.setError("Enter an interval >= 50 ms");
-						numbersReady = false;
 					}
-				}
-				if (!recordingLength.getText().toString().equals("")) {
-					try {
-						int testLength = Integer.parseInt(recordingLength
-								.getText().toString());
-						if (testLength < 0) {
+					if (!recordingLength.getText().toString().equals("")) {
+						try {
+							int testLength = Integer.parseInt(recordingLength
+									.getText().toString());
+							if (testLength < 0) {
+								recordingLength
+										.setError("Enter a positive test length");
+								numbersReady = false;
+							}
+
+						} catch (NumberFormatException nfe) {
 							recordingLength
 									.setError("Enter a positive test length");
 							numbersReady = false;
 						}
-
-					} catch (NumberFormatException nfe) {
-						recordingLength
-								.setError("Enter a positive test length");
-						numbersReady = false;
 					}
-				}
 
-				SharedPreferences expPrefs = getSharedPreferences("EID", 0);
+					SharedPreferences expPrefs = getSharedPreferences("EID", 0);
 
-				if (expPrefs.getString("experiment_id", "").equals("")) {
+					if (expPrefs.getString("experiment_id", "").equals("")) {
 
-					w.make("Choose an experiment first.", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_X);
-					Intent iSetup = new Intent(DataCollector.this, Setup.class);
-					startActivityForResult(iSetup, SETUP_REQUESTED);
+						w.make("Choose an experiment first.", Waffle.LENGTH_LONG,
+								Waffle.IMAGE_X);
+						Intent iSetup = new Intent(DataCollector.this, Setup.class);
+						startActivityForResult(iSetup, SETUP_REQUESTED);
 
-				} else if (sessionName.getText().toString().equals("")) {
+					} else if (sessionName.getText().toString().equals("")) {
 
-					sessionName.setError("Enter a session name");
+						sessionName.setError("Enter a session name");
 
-				} else if (!numbersReady) {
+					} else if (!numbersReady) {
 
-					// Not ready to record data yet.  Do nothing.
+						// Not ready to record data yet.  Do nothing.
 
-				} else {
+					} else {
 
-					nameOfSession = sessionName.getText().toString();
-					sessionName.setError(null);
-					recordingLength.setError(null);
-					sampleInterval.setError(null);
+						nameOfSession = sessionName.getText().toString();
+						sessionName.setError(null);
+						recordingLength.setError(null);
+						sampleInterval.setError(null);
 
-					if (!sampleInterval.getText().toString().equals(""))
-						srate = Integer.parseInt(sampleInterval.getText()
-								.toString());
-					else
-						srate = INTERVAL;
+						if (!sampleInterval.getText().toString().equals(""))
+							srate = Integer.parseInt(sampleInterval.getText()
+									.toString());
+						else
+							srate = INTERVAL;
 
-					if (!recordingLength.getText().toString().equals(""))
-						recLength = Integer.parseInt(recordingLength.getText()
-								.toString());
-					else
-						recLength = TEST_LENGTH;
+						if (!recordingLength.getText().toString().equals(""))
+							recLength = Integer.parseInt(recordingLength.getText()
+									.toString());
+						else
+							recLength = TEST_LENGTH;
 
-					vibrator.vibrate(300);
-					mMediaPlayer.setLooping(false);
-					mMediaPlayer.start();
-				
-					if (!running) {
+						vibrator.vibrate(300);
+						mMediaPlayer.setLooping(false);
+						mMediaPlayer.start();
+					
+						// start running task
 						running = true;
-						Log.d("lol", "running");
-						
+							
 						OrientationManager.disableRotation((Activity) mContext);
-						
+							
 						getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-						
+							
 						sessionName.setEnabled(false);
 						recordingLength.setEnabled(false);
 						sampleInterval.setEnabled(false);
-						
+							
 						setMenuStatus(false);
-						
+							
 						startStop.setText(R.string.stopString);
-						
+							
 						startStop.getBackground().setColorFilter(0xFF00FF00,
-								PorterDuff.Mode.MULTIPLY);
+									PorterDuff.Mode.MULTIPLY);
 						mScreen.setBackgroundResource(R.drawable.background_running);
 						isenseLogo.setImageResource(R.drawable.logo_green);
-						
+							
 						setUpSensorsForRecording();
-						
+							
 						Intent iService = new Intent(mContext, DataCollectorService.class);
 						iService.putExtra(DataCollectorService.SRATE, srate);
 						iService.putExtra(DataCollectorService.REC_LENGTH, recLength);
 						startService(iService);
-				 
+					 
 						return running;
-						
-					} else {
-						running = false;
-						Log.d("lol", "stopping");
-						
-						getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-						
-						stopService(new Intent(mContext, DataCollectorService.class));
-						
-						OrientationManager.enableRotation((Activity) mContext);
-						
-						sessionName.setEnabled(true);
-						recordingLength.setEnabled(true);
-						sampleInterval.setEnabled(true);
-
-						writeToSDCard(null, 'f');
-						setMenuStatus(true);
-						
-						startStop.setText(R.string.startString);
-						setTime(0);
-
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
-						mScreen.setBackgroundResource(R.drawable.background);
-						isenseLogo.setImageResource(R.drawable.logo_red);
-
-						choiceViaMenu = false;
-
-						if (sdCardError)
-							w.make("Could not write file to SD Card.",
-									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-						
-						displayDescription();
-						
-						return running;
+							
 					}
+					
+					running = false;
+					return running;
+					
+				} else {
+					vibrator.vibrate(300);
+					mMediaPlayer.setLooping(false);
+					mMediaPlayer.start();
+					
+					running = false;
+					
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+					
+					stopService(new Intent(mContext, DataCollectorService.class));
+					
+					OrientationManager.enableRotation((Activity) mContext);
+					
+					sessionName.setEnabled(true);
+					recordingLength.setEnabled(true);
+					sampleInterval.setEnabled(true);
+
+					writeToSDCard(null, 'f');
+					setMenuStatus(true);
+					
+					startStop.setText(R.string.startString);
+					setTime(0);
+
+					startStop.getBackground().setColorFilter(0xFFFF0000,
+							PorterDuff.Mode.MULTIPLY);
+					mScreen.setBackgroundResource(R.drawable.background);
+					isenseLogo.setImageResource(R.drawable.logo_red);
+
+					choiceViaMenu = false;
+
+					if (sdCardError)
+						w.make("Could not write file to SD Card.",
+								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					
+					displayDescription();
+					
+					return running;
 				}
 				
-				running = false;
-				return running;
 			}
 
 		});
