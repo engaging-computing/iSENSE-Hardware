@@ -257,8 +257,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void loadExperimentData(String eidString) {
-		if (dataFieldEntryList != null)
-			dataFieldEntryList.removeAllViews();
 
 		if (eidString != null) {
 			new LoadExperimentFieldsTask().execute();
@@ -266,6 +264,20 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int eid) {
+		
+		if (fieldOrder.size() == 0) {
+			w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			return;
+		}
+		
+		if (dataFieldEntryList != null)
+			dataFieldEntryList.removeAllViews();
+		else
+			return;
+		
+		experimentLabel.setText(getResources().getString(
+				R.string.usingExperiment)
+				+ eid);
 
 		for (ExperimentField expField : fieldOrder) {
 
@@ -561,9 +573,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			if (!error) {
 				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
-				experimentLabel.setText(getResources().getString(
-						R.string.usingExperiment)
-						+ eid);
 
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
