@@ -7,6 +7,10 @@
         <item name="android:layout_width">wrap_content</item>
     </style>
     
+    <style name="theme_queue_layout" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
     <style name="theme_loading" parent="@android:style/Theme.Holo">
         <item name="android:background">@drawable/loading_background</item>
     </style>

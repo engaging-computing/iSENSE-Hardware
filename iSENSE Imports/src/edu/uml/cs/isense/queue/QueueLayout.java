@@ -223,8 +223,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 			if (dialogShow)
 				dia.dismiss();
 
-			OrientationManager.enableRotation(QueueLayout.this);
-
 			if (uq.mirrorQueue.isEmpty()) {
 				uq.storeAndReRetrieveQueue(true);
 				setResultAndFinish(RESULT_OK);
@@ -233,6 +231,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				if (uploadSuccess)
 					continueUploading();
 			}
+			
+			OrientationManager.enableRotation(QueueLayout.this);
 		}
 	}
 
