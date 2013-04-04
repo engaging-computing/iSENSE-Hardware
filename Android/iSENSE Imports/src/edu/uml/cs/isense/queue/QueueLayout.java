@@ -139,7 +139,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 		if (id == R.id.upload) {
 				
 			if (!rapi.isLoggedIn()) {
-				w.make("Login information not found - please login again");
+				w.make("Login information not found - please login again", Waffle.IMAGE_X);
+				return;
+			}
+			
+			if (!rapi.isConnectedToInternet()) {
+				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
 			
@@ -212,7 +217,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 						Waffle.IMAGE_CHECK);
 			else {
 				uq.addDataSetToQueue(uploadSet);
-				w.make("Upload Failed - experiment may be closed or not logged in", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Upload Failed - experiment may be closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
 			if (dialogShow)

@@ -88,6 +88,10 @@ public class QueueEditData extends Activity {
 		String rawFieldData = alter.getData().replace("[", "").replace("]", "").replace("\"", "");
 		String[] fieldData = rawFieldData.split(",");
 		
+		// if the data is a space, remove the spaces
+		for (int j = 0; j < fieldData.length; j++)
+			if (fieldData[j].equalsIgnoreCase(" ")) fieldData[j] = "";
+
 		for (ExperimentField ef : fieldOrder) {
 			
 			final View dataRow = View.inflate(mContext, R.layout.edit_row, null);
@@ -120,7 +124,10 @@ public class QueueEditData extends Activity {
 			
 			View v = editDataList.getChildAt(i);
 			EditText dataText = (EditText) v.findViewById(R.id.edit_row_text);
-			row.put(dataText.getText().toString());
+			if (dataText.getText().toString().length() != 0)
+				row.put(dataText.getText().toString());
+			else
+				row.put(" ");
 		}
 		
 		data.put(row);

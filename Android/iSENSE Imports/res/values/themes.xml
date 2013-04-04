@@ -5,5 +5,9 @@
         <item name="android:background">@drawable/background_no_stroke</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    
+    <style name="main_activity_black" parent="@android:style/Theme.Dialog">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
 </resources>
