@@ -10,7 +10,7 @@
     <activity
         android:name="edu.uml.cs.isense.queue.QueueLayout"
         android:label="Upload Data"
-        android:theme="@style/theme_dialog_black" />
+        android:theme="@style/main_activity_black" />
     <activity
         android:name="edu.uml.cs.isense.queue.QueueAlter"
         android:label="Alter Data Set"
