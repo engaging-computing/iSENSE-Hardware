@@ -141,9 +141,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 				+ loginPrefs.getString("username", ""));
 
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		experimentLabel.setText(getResources().getString(
-				R.string.usingExperiment)
-				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
+		//experimentLabel.setText(getResources().getString(
+		//		R.string.usingExperiment)
+		//		+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
 
 		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
@@ -257,8 +257,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void loadExperimentData(String eidString) {
-		if (dataFieldEntryList != null)
-			dataFieldEntryList.removeAllViews();
 
 		if (eidString != null) {
 			new LoadExperimentFieldsTask().execute();
@@ -266,6 +264,20 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int eid) {
+		
+		if (fieldOrder.size() == 0) {
+			w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			return;
+		}
+		
+		if (dataFieldEntryList != null)
+			dataFieldEntryList.removeAllViews();
+		else
+			return;
+		
+		experimentLabel.setText(getResources().getString(
+				R.string.usingExperiment)
+				+ eid);
 
 		for (ExperimentField expField : fieldOrder) {
 
@@ -372,7 +384,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (success)
 				manageUploadQueue();
 			else
-				w.make("Not logged in.", Waffle.IMAGE_X);
+				w.make("Not logged in - if you think you are logged in, please try again.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 		} else {
 			manageUploadQueue();
 		}
@@ -471,7 +483,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 					row.put("-1");
 				}
 			} else {
-				row.put(dataFieldContents.getText().toString());
+				if (dataFieldContents.getText().toString().length() != 0)
+					row.put(dataFieldContents.getText().toString());
+				else
+					// if no data, put a space as a place holder
+					row.put(" ");
 			}
 		}
 
@@ -561,9 +577,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			if (!error) {
 				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
-				experimentLabel.setText(getResources().getString(
-						R.string.usingExperiment)
-						+ eid);
 
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
