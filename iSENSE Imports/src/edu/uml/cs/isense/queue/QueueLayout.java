@@ -217,7 +217,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 						Waffle.IMAGE_CHECK);
 			else {
 				uq.addDataSetToQueue(uploadSet);
-				w.make("Upload Failed - experiment may be closed or not logged in", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Upload Failed - experiment may be closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
 			if (dialogShow)

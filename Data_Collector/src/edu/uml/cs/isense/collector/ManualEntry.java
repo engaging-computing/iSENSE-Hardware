@@ -141,9 +141,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 				+ loginPrefs.getString("username", ""));
 
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		experimentLabel.setText(getResources().getString(
-				R.string.usingExperiment)
-				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
+		//experimentLabel.setText(getResources().getString(
+		//		R.string.usingExperiment)
+		//		+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
 
 		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
@@ -384,7 +384,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (success)
 				manageUploadQueue();
 			else
-				w.make("Not logged in.", Waffle.IMAGE_X);
+				w.make("Not logged in - if you think you are logged in, please try again.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 		} else {
 			manageUploadQueue();
 		}
@@ -483,7 +483,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 					row.put("-1");
 				}
 			} else {
-				row.put(dataFieldContents.getText().toString());
+				if (dataFieldContents.getText().toString().length() != 0)
+					row.put(dataFieldContents.getText().toString());
+				else
+					// if no data, put a space as a place holder
+					row.put(" ");
 			}
 		}
 
