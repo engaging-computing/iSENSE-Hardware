@@ -3,20 +3,15 @@
 
     <item 
         android:id="@+id/menu_item_options"
-        android:icon="@drawable/ic_menu_settings"
-        android:title="@string/options"
-        android:showAsAction="ifRoom|withText"/>
-        
+        android:title="@string/options" />        
     <item
         android:id="@+id/menu_item_experiment"
-        android:icon="@drawable/ic_menu_experiment"
         android:title="@string/experiment"
         android:showAsAction="ifRoom|withText" />
     
     
     <item
         android:id="@+id/menu_item_login"
-        android:icon="@drawable/ic_menu_login"
         android:title="@string/login"
         android:showAsAction="ifRoom|withText" />  
     
