@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Require-Bundle: org.eclipse.platform,org.eclipse.equinox.app,org.eclip
+ se.ui.intro
+Bundle-Vendor: The Android Open Source Project
+Bundle-Version: 21.0.1.2012-12-6-2-58
+Bundle-Name: ADT Package
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.android.ide.eclipse.adt.package;singleton:=tr
+ ue
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+

@@ -3,28 +3,23 @@
 
     <item
         android:id="@+id/menu_item_setup"
-        android:icon="@drawable/ic_menu_setup"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText|ifRoom"
         android:title="@string/menu_experiment"/>
     <item
         android:id="@+id/menu_item_upload"
-        android:icon="@drawable/ic_menu_upload"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText|ifRoom"
         android:title="@string/menu_upload"/>
     <item
         android:id="@+id/menu_item_login"
-        android:icon="@drawable/ic_menu_login"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText|ifRoom"
         android:title="@string/menu_login"/>
     <item
         android:id="@+id/menu_item_media"
-        android:icon="@drawable/ic_menu_media"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText|ifRoom"
         android:title="@string/menu_media"/>
     <item
         android:id="@+id/menu_item_sync"
-        android:icon="@drawable/ic_menu_synctime"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText|ifRoom"
         android:title="@string/menu_sync"/>
 
 </menu>
