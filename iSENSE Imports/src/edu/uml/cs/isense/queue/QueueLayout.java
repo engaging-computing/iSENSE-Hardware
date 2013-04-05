@@ -177,20 +177,24 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private class UploadSDTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean dialogShow = true;
-		ProgressDialog dia;
+		ProgressDialog dia = null;
 		DataSet uploadSet;
+		boolean doThings = true;
 
 		@Override
 		protected void onPreExecute() {
 
 			uploadSet = uq.mirrorQueue.remove();
+			if (!uploadSet.isUploadable())
+				doThings = false;
+			
 			createRunnable(uploadSet);
 
 			OrientationManager.disableRotation(QueueLayout.this);
 
 			dia = new ProgressDialog(QueueLayout.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while data set \"" + uploadSet.getName() + "\" is uploaded...");
 			dia.setCancelable(false);
 			try {
 				dia.show();
@@ -203,8 +207,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			sdUploader.run();
-			dia.setProgress(100);
+			if (doThings)
+				sdUploader.run();
+			
+			if (dia != null)
+				dia.setProgress(100);
+			
 			return null;
 		}
 
@@ -212,15 +220,19 @@ public class QueueLayout extends Activity implements OnClickListener {
 		protected void onPostExecute(Void voids) {
 			Waffle w = new Waffle(mContext);
 
-			if (uploadSuccess)
-				w.make("Upload Success", Waffle.LENGTH_SHORT,
+			if (!doThings) {
+				w.make("\"" + uploadSet.getName() + "\" chosen not to upload", Waffle.LENGTH_SHORT);
+				uq.queue.add(uploadSet);
+				uq.storeAndReRetrieveQueue(false);
+			} else if (uploadSuccess)
+				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
 				uq.addDataSetToQueue(uploadSet);
 				w.make("Upload Failed - experiment may be closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
-			if (dialogShow)
+			if (dialogShow && dia != null)
 				dia.dismiss();
 
 			if (uq.mirrorQueue.isEmpty()) {
