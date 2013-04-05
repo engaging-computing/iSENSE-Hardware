@@ -2,11 +2,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="theme_dialog_black" parent="@android:style/Theme.Dialog">
-        <item name="android:background">@drawable/background_no_stroke</item>
+        <item name="android:background">@drawable/background_lack_of_stroke</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     
-    <style name="main_activity_black" parent="@android:style/Theme.Dialog">
+    <style name="theme_queue_layout" parent="@android:style/Theme.Dialog">
         <item name="android:layout_height">wrap_content</item>
     </style>
 
