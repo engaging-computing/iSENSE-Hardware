@@ -353,9 +353,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			try {
 				out.append(data);
 			} catch (IOException e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
+				
 			} catch (Exception e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
 			}
 
 			break;
@@ -759,7 +762,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else if ((experimentInput.length() >= 0)
 						&& !rapi.isLoggedIn()) {
 
-					w.make("Could not upload data - saving instead.",
+					w.make("Not logged in - saving data instead.",
 							Waffle.IMAGE_X);
 					new UploadTask().execute();
 				} else {
@@ -924,8 +927,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
-				w.make("An error occured during upload.  Please check internet connectivity.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				if (rapi.isLoggedIn())
+					w.make("An error occured during upload.  Please check internet connectivity.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
 				w.make("Upload Success", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
