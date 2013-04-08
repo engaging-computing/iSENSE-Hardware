@@ -3,4 +3,7 @@
     <style name="AppTheme" parent="android:Theme.Light" />
     <style name="DialogTheme" parent="android:Theme.Dialog" />
 
+    <color name="cyan">#C6F4FF</color>
+	<color name="orange">#FFCA95</color>
+
 </resources>

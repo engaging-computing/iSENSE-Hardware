@@ -99,7 +99,7 @@
     }
     
     // Create a session on iSENSE/dev.
-    NSString *name = [[NSString alloc] initWithString:@"Session From Mobile"];
+    NSString *name = @"Session From Mobile";
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
     NSString *description = [[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."];
     NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
@@ -113,11 +113,27 @@
     NSError *error = nil;
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
     [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-    
-    [name release];
+
     [exp_num release];
     [description release];
     
+}
+
+- (BOOL) containsAcceptedNumbers:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_numbers"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+	if (textField == sampleInterval) {
+		if (![self containsAcceptedNumbers:string])
+            return NO;
+	}
+    return YES;
 }
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
@@ -389,7 +405,7 @@
         [update release];
     }
     if (recommendedSampleInterval) {
-        sampleInterval.text = [NSString stringWithFormat:@"%d", recommendedSampleInterval];
+        sampleInterval.text = [NSString stringWithFormat:@"%f", recommendedSampleInterval];
         Experiment *experiment = [isenseAPI getExperiment:[NSNumber numberWithInt:expNum]];
         NSLog(@"srate = %@", experiment.srate);
         if ((NSNull *)experiment.srate != [NSNull null]) {

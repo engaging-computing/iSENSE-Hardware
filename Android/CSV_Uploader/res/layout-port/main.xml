@@ -2,25 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background" >
-
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="2dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/isense_logo_desc"
-        android:scaleType="center"
-        android:src="@drawable/isense_logo" />
+    android:background="@android:color/white" >
 
     <TextView
         android:id="@+id/loginLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/image_view"
-        android:layout_marginLeft="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="5dp"
         android:paddingTop="8dp"
         android:text="@string/loggedInAs"
         android:textSize="16sp" />
@@ -30,8 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginLabel"
-        android:layout_marginLeft="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:paddingBottom="8dp"
+        android:paddingLeft="5dp"
         android:text="@string/usingExperiment"
         android:textSize="16sp" />
 
@@ -45,7 +37,9 @@
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/header_background"
             android:text="@string/refresh"
             android:textSize="20sp" />
 
@@ -53,7 +47,9 @@
             android:id="@+id/upload"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
+            android:background="@drawable/header_background"
             android:text="@string/upload"
             android:textSize="20sp" />
     </LinearLayout>
@@ -62,12 +58,13 @@
         android:id="@+id/listAndTextLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/back_image"
         android:layout_alignLeft="@+id/experimentLabel"
         android:layout_below="@+id/buttonLayout"
-        android:layout_above="@+id/back_image"
-        android:paddingBottom="10dp"
-        android:paddingTop="8dp" >
-        
+        android:layout_margin="5dp"
+        android:background="@drawable/background"
+        android:padding="5dp" >
+
         <TextView
             android:id="@+id/cur_dir"
             android:layout_width="match_parent"
@@ -87,6 +84,20 @@
                 android:orientation="vertical" />
         </ScrollView>
 
+        <ScrollView
+            android:id="@+id/scrollWrapper2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cur_dir"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:id="@+id/dataView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
         <TextView
             android:id="@+id/noItems"
             android:layout_width="wrap_content"
@@ -95,18 +106,18 @@
             android:text="@string/needData"
             android:textSize="18sp" />
     </RelativeLayout>
-    
+
     <ImageView
         android:id="@+id/back_image"
-        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/isense_logo_desc"
         android:scaleType="center"
-        android:layout_centerInParent="true"
         android:src="@drawable/back_button" />
 
 </RelativeLayout>
