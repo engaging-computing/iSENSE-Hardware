@@ -91,24 +91,25 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/resetButton"
+                android:id="@+id/buttonGoBack"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/buttons_sync_time"
-                android:text="@string/reset"
+                android:text="@string/cancel"
                 android:textColor="#FFFFFF" />
-
+            
             <Button
-                android:id="@+id/buttonGoBack"
+                android:id="@+id/resetButton"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/buttons_sync_time"
-                android:text="@string/cancel"
+                android:text="@string/reset"
                 android:textColor="#FFFFFF" />
+
         </LinearLayout>
     </LinearLayout>
 
