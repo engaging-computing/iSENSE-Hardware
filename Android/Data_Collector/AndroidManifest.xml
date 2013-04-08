@@ -117,6 +117,10 @@
             android:label="Connection Timed Out"
             android:theme="@style/theme_dialog_black" />
         <activity
+            android:name=".sync.TimeReset"
+            android:label="Time Reset"
+            android:theme="@style/theme_dialog_black" />
+        <activity
             android:name=".dialogs.ExperimentDialog"
             android:label="Experiment ID"
             android:theme="@style/DialogTheme" />
