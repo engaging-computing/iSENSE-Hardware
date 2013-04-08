@@ -55,7 +55,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -343,10 +342,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				out.write(data);
 				beginWrite = false;
 			} catch (IOException e) {
-				Log.w("sd", "IOException on s");
 				sdCardError = true;
 			} catch (Exception e) {
-				Log.w("sd", "Exception on s");
 				sdCardError = true;
 			}
 
@@ -373,14 +370,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if (gpxwriter != null)
 					gpxwriter.close();
 			} catch (IOException e) {
-				Log.w("sd", "IOException on f");
 				sdCardError = true;
 			}
 
 			break;
 
 		default:
-			Log.w("sd", "Default case");
 			sdCardError = true;
 			break;
 		}
