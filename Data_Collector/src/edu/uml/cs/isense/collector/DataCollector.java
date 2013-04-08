@@ -55,6 +55,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -342,8 +343,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 				out.write(data);
 				beginWrite = false;
 			} catch (IOException e) {
+				Log.w("sd", "IOException on s");
 				sdCardError = true;
 			} catch (Exception e) {
+				Log.w("sd", "Exception on s");
 				sdCardError = true;
 			}
 
@@ -353,9 +356,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			try {
 				out.append(data);
 			} catch (IOException e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
+				
 			} catch (Exception e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
 			}
 
 			break;
@@ -367,12 +373,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if (gpxwriter != null)
 					gpxwriter.close();
 			} catch (IOException e) {
+				Log.w("sd", "IOException on f");
 				sdCardError = true;
 			}
 
 			break;
 
 		default:
+			Log.w("sd", "Default case");
 			sdCardError = true;
 			break;
 		}
@@ -759,7 +767,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else if ((experimentInput.length() >= 0)
 						&& !rapi.isLoggedIn()) {
 
-					w.make("Could not upload data - saving instead.",
+					w.make("Not logged in - saving data instead.",
 							Waffle.IMAGE_X);
 					new UploadTask().execute();
 				} else {
@@ -924,8 +932,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
-				w.make("An error occured during upload.  Please check internet connectivity.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				if (rapi.isLoggedIn())
+					w.make("An error occured during upload.  Please check internet connectivity.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
 				w.make("Upload Success", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);

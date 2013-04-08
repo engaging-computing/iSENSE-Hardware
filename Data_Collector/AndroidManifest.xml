@@ -82,6 +82,7 @@
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.Summary"
+            android:label="Data Summary"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.NoIsense"
