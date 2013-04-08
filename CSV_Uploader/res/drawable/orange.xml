@@ -7,8 +7,8 @@
     </item>
     <item android:bottom="1.5dp">
         <shape>
-            <solid android:color="@color/cyan" />
+            <solid android:color="@color/orange" />
         </shape>
     </item>
-    
+
 </layer-list>
