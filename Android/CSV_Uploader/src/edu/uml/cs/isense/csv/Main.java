@@ -34,7 +34,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -77,6 +76,9 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String rootDirectory;
 	private static String previousDirectory;
 	private static String currentDirectory;
+	
+	private static String PREV_DIR = "previousDirectory";
+	private static String CURR_DIR = "currentDirectory";
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
 
@@ -180,12 +182,24 @@ public class Main extends Activity implements SimpleGestureListener {
 		scrollWrapper2.setVisibility(View.VISIBLE);
 
 		rootDirectory = "/mnt";
-		previousDirectory = rootDirectory;
-		currentDirectory = rootDirectory;
+		
+		/* Restore current view upon rotation, or initialize the view to /mnt */
+		if (savedInstanceState != null) {
+			if (savedInstanceState.containsKey(PREV_DIR) && savedInstanceState.containsKey(CURR_DIR)) {
+				previousDirectory = savedInstanceState.getString(PREV_DIR);
+				currentDirectory = savedInstanceState.getString(CURR_DIR);
+			} else {
+				previousDirectory = rootDirectory;
+				currentDirectory = rootDirectory;
+			}
+		} else {
+			previousDirectory = rootDirectory;
+			currentDirectory = rootDirectory;
+		}
 
 		boolean success;
 		try {
-			success = getFiles(new File(rootDirectory), backgroundLayout());
+			success = getFiles(new File(currentDirectory), backgroundLayout());
 		} catch (Exception e) {
 			e.printStackTrace();
 			success = false;
@@ -288,18 +302,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		if (currentDirectory != null && activeLayout() != null) {
-			try {
-				getFiles(new File(currentDirectory), activeLayout());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
@@ -307,6 +309,13 @@ public class Main extends Activity implements SimpleGestureListener {
 		inflater.inflate(R.menu.menu, menu);
 
 		return true;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putString(CURR_DIR, currentDirectory);
+		outState.putString(PREV_DIR, previousDirectory);
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
