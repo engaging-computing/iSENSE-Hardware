@@ -1305,6 +1305,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
+		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
 	
 	// Simulates a stop if the service finishes
