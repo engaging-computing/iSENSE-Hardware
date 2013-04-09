@@ -32,6 +32,7 @@ public class SyncTime extends Activity {
 	private static final int TIME_SENT_REQUESTED = 100;
 	private static final int TIME_RECEIVED_REQUESTED = 101;
 	private static final int TIME_FAILED_REQUESTED = 102;
+	private static final int TIME_RESET_REQUESTED = 103;
 
 	private static long timeOffset = 0;
 	private static long myTime = 0;
@@ -81,6 +82,7 @@ public class SyncTime extends Activity {
 
 		Button send = (Button) findViewById(R.id.sendButton);
 		Button receive = (Button) findViewById(R.id.receiveButton);
+		Button reset = (Button) findViewById(R.id.resetButton);
 		Button cancel = (Button) findViewById(R.id.buttonGoBack);
 
 		send.setOnClickListener(new OnClickListener() {
@@ -117,6 +119,15 @@ public class SyncTime extends Activity {
 				} else {
 					w.make("No internet connection found.", Waffle.IMAGE_X);
 				}
+			}
+		});
+		
+		reset.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent iReset = new Intent(SyncTime.this, TimeReset.class);
+				startActivityForResult(iReset, TIME_RESET_REQUESTED);
 			}
 		});
 
@@ -334,6 +345,12 @@ public class SyncTime extends Activity {
 			if (resultCode == RESULT_OK) {
 				new ReceiveTask().execute();
 			}
+		} else if (requestCode == TIME_RESET_REQUESTED) {
+			timeOffset = 0;
+			Intent retIntent = new Intent();
+			retIntent.putExtra("offset", timeOffset);
+			setResult(RESULT_OK, retIntent);
+			finish();
 		}
 	}
 

@@ -6,4 +6,5 @@
         <ignore path="res/drawable/red_x.png" />
         <ignore path="res/drawable/red_x.png" />
     </issue>
+    <issue id="UnusedResources" severity="ignore" />
 </lint>

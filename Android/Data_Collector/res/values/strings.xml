@@ -357,5 +357,6 @@
 	<string name="numbers_restriction">
 	    1234567890.-
 	</string>
+	<string name="reset">Reset</string>
 	
 </resources>
