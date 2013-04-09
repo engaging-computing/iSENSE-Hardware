@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/header_background"
+            android:background="@drawable/button_background"
             android:text="@string/refresh"
             android:textSize="20sp" />
 
@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/header_background"
+            android:background="@drawable/button_background"
             android:text="@string/upload"
             android:textSize="20sp" />
     </LinearLayout>
