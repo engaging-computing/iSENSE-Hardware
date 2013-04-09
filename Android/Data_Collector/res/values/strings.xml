@@ -5,12 +5,12 @@
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
     <string name="syncTime">
-        Synchronizing time is useful when using multiple devices on a ride at the
+        Synchronizing time is useful when using multiple devices to record data at the
 	    same time.  By default, many Android devices\' clocks will not match one
 	    another\'s, thus making recording data at similar times difficult.  However,
 	    you have a choice to fix this issue by setting a device as a \"host\".
 	    This can be done by hitting the \"Send\" button.  Upon hitting \"Send\", 
-	    the time from that particular Android device will be broadcasted as a timeframe
+	    the time from that particular Android device will be broadcasted as a \"timeframe\"
 	    that all other phones in the local network can receive.  However, in order for
 	    a phone to receive a broadcasted time, that phone must be currently in 
 	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
@@ -18,16 +18,16 @@
 	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
 	    broadcasted, should you be the host).  After pressing either \"Send\" or 
 	    \"Receive\", a dialog box will tell you the time that has been received from
-	    the host, along with the millisecond offset between 
+	    the host, along with the millisecond offset between
 	    the received time and your Android device\'s actual clock.  If you do choose 
-	    to synchronize time, recording data will now use the received time as a label 
-	    for data points, rather than using your local time.  This now allows 
-	    simultaneous data recording across multiple devices on the same ride at the 
+	    to synchronize time, recording data will now work off of the host\'s timeframe.
+	    This now allows for simultaneous data recording across multiple devices at the 
 	    same time.  Please note: synchronizing time will only work if all the Android
 	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
 	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
-	    WiFi networks.</string>
+	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
+	    can use the \"Reset\" button.</string>
     <string name="search">Search</string>
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
@@ -56,7 +56,7 @@
 	</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="gpsString">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
+    <string name="gpsString">Enabling GPS satellite communication is recommended for this application.  Would you like to enable GPS?</string>
     <string name="force_stop">
         You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
         such as the accelerometer to stop collecting data.  Therefore, we have stopped the data collection process for
