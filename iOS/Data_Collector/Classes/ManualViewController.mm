@@ -13,7 +13,7 @@
 
 @implementation ManualViewController
 
-@synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField;
+@synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
 @synthesize sessionName, expNum, qrResults, locationManager;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -130,35 +130,78 @@
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     
     if (activeField.tag == TAG_TEXT || activeField.tag == TAG_NUMERIC) {
+        
         NSDictionary* info = [aNotification userInfo];
     
         CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-
     
         CGRect aRect = self.view.frame;
         aRect.size.height -= kbSize.height;
         CGPoint origin = activeField.frame.origin;
-        //origin.y -= scrollView.contentOffset.y;
         if (!CGRectContainsPoint(aRect, origin) ) {
             if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
-                //[scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height+30)];
-                self.view.frame = CGRectMake(0.0, (aRect.size.height+30), self.view.frame.size.width, self.view.frame.size.height);
+                self.view.frame = CGRectMake(0.0, (aRect.size.height + RECT_HEIGHT_OFFSET), self.view.frame.size.width, self.view.frame.size.height);
             }
         }
         if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)
             self.view.frame = CGRectMake(0.0, -(self.view.frame.size.height - aRect.size.height), self.view.frame.size.width, self.view.frame.size.height);
+        
+        // adjust for scrollview and frame drawing oddities across devices and orientations
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            } else {
+                if (keyboardDismissProper)
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_LAND_IPAD)];
+            }
+        } else {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                if (keyboardDismissProper)
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_PORT_IPHONE)];
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_PORT_IPHONE,
+                                              self.view.frame.size.width, self.view.frame.size.height);
+            } else {
+                if (keyboardDismissProper)
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_LAND_IPHONE)];
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_LAND_IPHONE,
+                                             self.view.frame.size.width, self.view.frame.size.height);
+            }
+        }
+        
     }
     
     [scrollView setScrollEnabled:YES];
+    keyboardDismissProper = false;
 }
+
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-    //[scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height-30)];
+    if (lastField.tag == TAG_TEXT || lastField.tag == TAG_NUMERIC) {
+        self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+   
+        // adjust for scrollview and frame drawing oddities across devices and orientations
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            } else {
+                if(!keyboardDismissProper)
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPAD)];
+            }
+        } else {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                if(!keyboardDismissProper)
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_PORT_IPHONE)];
+            } else {
+                if(!keyboardDismissProper)
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
+            }
+        }
+    }
+    keyboardDismissProper = true;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    activeField = textField;
+    lastField = activeField = textField;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -244,7 +287,7 @@
 }
 
 - (IBAction) uploadOnClick:(id)sender {
-    [self getDataFromFields];  // TODO - rewire upload to do this, not the image thing. although images are awesome
+    [self getDataFromFields];
     
     /*UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
     [iapi login:@"sor" with:@"sor"];
@@ -512,13 +555,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.view makeToast:@"Login Successful!"
-                            duration:2.0
+                            duration:TOAST_LENGTH_SHORT
                             position:@"bottom"
                                image:@"check"];
                 loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
             } else {
                 [self.view makeToast:@"Login Failed!"
-                            duration:2.0
+                            duration:TOAST_LENGTH_SHORT
                             position:@"bottom"
                                image:@"red_x"];
             }
@@ -572,28 +615,28 @@
             
             if (!exp)
                 [self.view makeToast:@"Please Enter an Experiment # First"
-                            duration:3.5
+                            duration:TOAST_LENGTH_LONG
                             position:@"bottom"
                                image:@"red_x"];
             if (!loggedIn)
                 [self.view makeToast:@"Please Login First"
-                            duration:3.5
+                            duration:TOAST_LENGTH_LONG
                             position:@"bottom"
                                image:@"red_x"];
             if (!hasSessionName)
                 [self.view makeToast:@"Please Enter a Session Name First"
-                            duration:3.5
+                            duration:TOAST_LENGTH_LONG
                             position:@"bottom"
                                image:@"red_x"];
             if (uploadSuccess != -1) {
                 if (uploadSuccess)
                     [self.view makeToast:@"Upload Success!"
-                                duration:2.0
+                                duration:TOAST_LENGTH_SHORT
                                 position:@"bottom"
                                    image:@"check"];
                 else
                     [self.view makeToast:@"Upload Failed!"
-                                duration:2.0
+                                duration:TOAST_LENGTH_SHORT
                                 position:@"bottom"
                                    image:@"check"];
             }
@@ -642,17 +685,17 @@
             
             scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
             CGFloat scrollWidth = scrollView.frame.size.width;
-            [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight+40/* +40 for troll in keyboard code*/)];
+            [scrollView setContentSize:CGSizeMake(scrollWidth, scrollHeight + KEY_HEIGHT_OFFSET)];
             
             if (scrollView.subviews.count == 0) {
                 
-                UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, 730, SCROLLVIEW_LABEL_HEIGHT)];
+                UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT)];
                 noFields.text = @"Invalid experiment.";
                 noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
                 noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
                 [scrollView addSubview: noFields];
                 [noFields release];
-            } else { // adjust a few scrollview oddities
+            } else {
                 // adjust scrollview's bottom bit
                 UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
                 if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
