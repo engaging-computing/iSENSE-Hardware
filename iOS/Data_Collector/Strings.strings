@@ -12,23 +12,25 @@
 // --- constants ---
 // -----------------
 
+// "Label"                      = "Value" //
 
-"logged_in_as" = "Logged in as: ";
-"exp_num" = "Experiment #: ";
-"choose_experiment" = "This is my experiment.";
 
-"stop_button_text" = "STOP\n(Press and Hold)";
-"start_button_text" = "START\n(Press and Hold)";
-"login_status_not_logged_in" = "Login Status: NOT LOGGED IN";
+"logged_in_as"                  = "Logged in as: ";
+"exp_num"                       = "Experiment #: ";
+"choose_experiment"             = "This is my experiment.";
 
-"colon" = ":";
+"stop_button_text"              = "STOP\n(Press and Hold)";
+"start_button_text"             = "START\n(Press and Hold)";
+"login_status_not_logged_in"    = "Login Status: NOT LOGGED IN";
 
-"accepted_numbers" = "1234567890.-";
-"accepted_chars" = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:01234567879()[]@";
+"colon"                         = ":";
 
-"auto_time" = "(Auto-fill for time)";
-"auto_lat"  = "(Auto-fill for latitude)";
-"auto_long" = "(Auto-fill for longitude)";
+"accepted_numbers"              = "1234567890.-";
+"accepted_chars"                = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:01234567879()[]@";
+
+"auto_time"                     = "(Auto-fill for time)";
+"auto_lat"                      = "(Auto-fill for latitude)";
+"auto_long"                     = "(Auto-fill for longitude)";
 
 
 // ------------------------------
