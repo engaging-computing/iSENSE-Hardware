@@ -68,12 +68,14 @@
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 @property (nonatomic, assign) UIView                *activeField;
+@property (nonatomic, assign) UIView                *lastField;
 
 // Non-UI Properties
 @property (nonatomic, copy)   NSString              *sessionName;
 @property (nonatomic, copy)   NSString              *qrResults;
 @property (nonatomic, retain) CLLocationManager     *locationManager;
 @property (nonatomic, assign) int                    expNum;
+@property (nonatomic, assign) bool                   keyboardDismissProper;
 
 @end
 

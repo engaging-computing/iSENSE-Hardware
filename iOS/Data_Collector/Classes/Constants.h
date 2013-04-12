@@ -39,7 +39,7 @@
 #define IPAD_WIDTH_PORTRAIT     725
 #define IPAD_WIDTH_LANDSCAPE    980
 #define IPHONE_WIDTH_PORTRAIT   280
-#define IPHONE_WIDTH_LANDSCAPE  400
+#define IPHONE_WIDTH_LANDSCAPE  415
 
 // manual scrollview oddity patches
 #define PORTRAIT_BOTTOM_CUT         40
