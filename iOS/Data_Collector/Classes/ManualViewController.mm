@@ -244,12 +244,12 @@
 }
 
 - (IBAction) uploadOnClick:(id)sender {
-    //[self getDataFromFields];  // TODO - rewire upload to do this, not the image thing. although images are awesome
+    [self getDataFromFields];  // TODO - rewire upload to do this, not the image thing. although images are awesome
     
-    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
+    /*UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
     [iapi login:@"sor" with:@"sor"];
     bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
-    NSLog(@"Image success = %d", success);
+    NSLog(@"Image success = %d", success);*/
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -652,6 +652,24 @@
                 noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
                 [scrollView addSubview: noFields];
                 [noFields release];
+            } else { // adjust a few scrollview oddities
+                // adjust scrollview's bottom bit
+                UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+                if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT)];
+                } else {
+                    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - LANDSCAPE_BOTTOM_CUT_IPAD)];
+                    else
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - LANDSCAPE_BOTTOM_CUT_IPHONE)];
+                }
+                
+                // adjust scrollview's top overlap
+                if(!([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad))
+                    if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                        [scrollView setFrame:CGRectMake(scrollView.frame.origin.x, scrollView.frame.origin.y + TOP_ELEMENT_ADJUSTMENT,
+                                                        scrollView.frame.size.width, scrollView.frame.size.height - TOP_ELEMENT_ADJUSTMENT)];
+                    }
             }
             
             [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -665,6 +683,26 @@
     
     CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
+
+    // initial scrollview element starting point adjustments
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;        
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            Y_FIELDNAME -= START_Y_PORTRAIT_IPAD;
+            Y_FIELDCONTENTS -= START_Y_PORTRAIT_IPAD;
+        } else {
+            Y_FIELDNAME -= START_Y_LANDSCAPE_IPAD;
+            Y_FIELDCONTENTS -= START_Y_LANDSCAPE_IPAD;
+        }
+    } else {
+        if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            Y_FIELDNAME -= START_Y_PORTRAIT_IPHONE;
+            Y_FIELDCONTENTS -= START_Y_PORTRAIT_IPHONE;
+        } else {
+            Y_FIELDNAME -= START_Y_LANDSCAPE_IPHONE;
+            Y_FIELDCONTENTS -= START_Y_LANDSCAPE_IPHONE;
+        }
+    }
     
     UILabel *fieldName;
     if (objNum == 0) {

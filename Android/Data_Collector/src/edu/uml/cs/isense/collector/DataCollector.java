@@ -27,8 +27,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 
@@ -95,15 +93,13 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
-	/* Global Variables * */
-
-	/** Constants */
+	/* Constants */
 
 	public static final String activityName = "datacollector";
 
 	// Numerical constants
-	private static final int INTERVAL = 50;
-	private static final int TEST_LENGTH = 600;
+	static final int INTERVAL = 50;
+	static final int TEST_LENGTH = 600;
 	private static long srate = INTERVAL;
 	private static int recLength = TEST_LENGTH;
 
@@ -148,9 +144,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static final int TEMPERATURE_F = 17;
 	private static final int TEMPERATURE_K = 18;
 
-	/** \Constants */
-
-	/** UI Objects */
+	
+	/* UI Objects */
 
 	// TextView
 	private static TextView time;
@@ -161,7 +156,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static EditText recordingLength;
 
 	// Buttons
-	private Button startStop;
+	private static Button startStop;
 
 	// Menu Items
 	private Menu mMenu;
@@ -181,64 +176,55 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// ImageViews
 	private ImageView isenseLogo;
 
-	/** \UI Objects */
 
-	/** Formatters */
+	/* Formatters */
 
-	private final DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
+	private final static DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
-	/** \Formatters */
 
-	/** GeoSpacial and Sensor Components */
+	/* GeoSpacial and Sensor Components */
 
 	// GeoSpacial Components
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
 
-	private Location loc;
+	private static Location loc;
 	private Location roughLoc;
 
 	// Sensor Components
 	private SensorManager mSensorManager;
 
-	/** \GeoSpacial and Sensor Components */
 
-	/** Data Recording Specific Components */
+	/* Data Recording Specific Components */
 
 	// Recording status trigger
-	private Boolean running = false;
+	private static Boolean running = false;
 
 	// Start/stop vibrator and beeper
 	private Vibrator vibrator;
 	private MediaPlayer mMediaPlayer;
 
-	// Timer Objects
-	private Timer timeTimer;
-	private Timer timeElapsedTimer;
 
-	/** \Data Recording Specific Components */
-
-	/** Data Variables */
+	/* Data Variables */
 
 	// Implemented into data variables
-	private String data;
+	private static String data;
 
-	private int dataPointCount = 0;
+	private static int dataPointCount = 0;
 
 	// Raw data variables
-	private String temperature = "";
-	private String pressure = "";
-	private String light = "";
+	private static String temperature = "";
+	private static String pressure = "";
+	private static String light = "";
 
 	private float rawAccel[];
 	private float rawMag[];
-	private float accel[];
-	private float mag[];
-	private float orientation[];
+	private static float accel[];
+	private static float mag[];
+	private static float orientation[];
 
-	/** \Data Variables */
 
-	/** Publicized Variables */
+	/* Publicized Variables */
 
 	// Lists and Queues
 	public static LinkedList<String> acceptedFields;
@@ -246,39 +232,34 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Booleans
 	public static boolean inPausedState = false;
+	public static boolean terminateThroughPowerOff = false;
 
 	// Strings
 	public static String textToSession = "";
 	public static String toSendOut = "";
 	public static String sdFileName = "";
-
 	public static String nameOfSession = "";
 
-	/** \Publicized Variables */
 
-	/** Additional Private Variables */
+	/* Additional Private Variables */
 
 	// Integers
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
-	private int elapsedMillis = 0;
-	private int totalMillis = 0;
-
-	private int secondsElapsed = 0;
+	private static int elapsedMillis = 0;
+	private static int totalMillis = 0;
 
 	private static int rotation = 0;
 
 	// Longs
-	private long currentTime = 0;
+	private static long currentTime = 0;
 	private long timeOffset = 0;
 
 	// Strings
 	private String dateString;
-
 	private String s_elapsedMinutes;
 	private String s_elapsedSeconds;
 	private String s_elapsedMillis;
-
 	private String sessionDescription = "";
 
 	// Booleans
@@ -292,17 +273,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean showGpsDialog = true;
 	private static boolean throughUploadMenuItem = false;
 
-	/** \Additional Private Variables */
 
-	/** Additional Objects */
+	/* Additional Objects */
 
 	// Built-In
 	private Animation rotateInPlace;
 	private static Handler mHandler;
 
-	private File SDFile;
-	private FileWriter gpxwriter;
-	private BufferedWriter out;
+	private static File SDFile;
+	private static FileWriter gpxwriter;
+	private static BufferedWriter out;
 
 	public static JSONArray dataSet;
 
@@ -315,9 +295,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Fields f;
 	public static SensorCompatibility sc;
 
-	/** \Additional Objects */
-
-	/* \Global Variables * */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -335,18 +312,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		new LoadingMainTask().execute();
 
-		// This block useful for if onBackPressed - retains some things from
-		// previous session
-		if (running) {
-			Intent iForceStop = new Intent(mContext, ForceStop.class);
-			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
-		}
-
 	}
 
 	// (s)tarts, (u)pdates, and (f)inishes writing the .csv to the SD Card
 	// containing "data"
-	public void writeToSDCard(String data, char code) {
+	public static void writeToSDCard(String data, char code) {
 		switch (code) {
 		case 's':
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
@@ -381,9 +351,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			try {
 				out.append(data);
 			} catch (IOException e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
+				
 			} catch (Exception e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
 			}
 
 			break;
@@ -406,50 +379,46 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Activity paused
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mLocationManager != null)
-			mLocationManager.removeUpdates(DataCollector.this);
+		
+		if (!running) {
+			if (mLocationManager != null)
+				mLocationManager.removeUpdates(DataCollector.this);
 
-		if (mRoughLocManager != null)
-			mRoughLocManager.removeUpdates(DataCollector.this);
+			if (mRoughLocManager != null)
+				mRoughLocManager.removeUpdates(DataCollector.this);
 
-		if (mSensorManager != null)
-			mSensorManager.unregisterListener(DataCollector.this);
-
-		if (timeTimer != null)
-			timeTimer.cancel();
-
-		if (timeElapsedTimer != null)
-			timeElapsedTimer.cancel();
+			if (mSensorManager != null)
+				mSensorManager.unregisterListener(DataCollector.this);
+		}
 
 		inPausedState = true;
 
 	}
-
+	
+	// Activity stopped
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (mLocationManager != null)
-			mLocationManager.removeUpdates(DataCollector.this);
+		if (!running) {
+			if (mLocationManager != null)
+				mLocationManager.removeUpdates(DataCollector.this);
 
-		if (mRoughLocManager != null)
-			mRoughLocManager.removeUpdates(DataCollector.this);
+			if (mRoughLocManager != null)
+				mRoughLocManager.removeUpdates(DataCollector.this);
 
-		if (mSensorManager != null)
-			mSensorManager.unregisterListener(DataCollector.this);
-
-		if (timeTimer != null)
-			timeTimer.cancel();
-
-		if (timeElapsedTimer != null)
-			timeElapsedTimer.cancel();
+			if (mSensorManager != null)
+				mSensorManager.unregisterListener(DataCollector.this);
+		}
 
 		inPausedState = true;
 
 	}
-
+	
+	// Called when activity rotates
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -463,14 +432,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		assignVars();
 	}
 
+	// Activity resuming
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		if (running) {
-			Intent iForceStop = new Intent(mContext, ForceStop.class);
-			startActivityForResult(iForceStop, FORCE_STOP_REQUESTED);
-		}
+		
 		// Will call the login dialogue if necessary
 		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -485,6 +451,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		if (uq != null)
 			uq.buildQueueFromFile();
+		
+		// keeps menu buttons disabled while running
+		if (running)
+			setMenuStatus(false);
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -505,6 +475,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	// Create menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -528,6 +499,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// Prepare the menu (enable/disable properly)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (!preLoad)
@@ -552,6 +524,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return true;
 	}
 
+	// Handle all menu item selections
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -787,7 +760,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else if ((experimentInput.length() >= 0)
 						&& !rapi.isLoggedIn()) {
 
-					w.make("Could not upload data - saving instead.",
+					w.make("Not logged in - saving data instead.",
 							Waffle.IMAGE_X);
 					new UploadTask().execute();
 				} else {
@@ -952,8 +925,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
-				w.make("An error occured during upload.  Please check internet connectivity.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				if (rapi.isLoggedIn())
+					w.make("An error occured during upload.  Please check internet connectivity.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
 				w.make("Upload Success", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
@@ -965,7 +939,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Updates time on main UI
-	public void setTime(int seconds) {
+	public static void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
 
@@ -1056,7 +1030,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Calculates Altitude from Temperature and Pressure if Possible
-	private String calcAltitude() {
+	private static String calcAltitude() {
 		if ((dfm.enabledFields[TEMPERATURE_C]
 				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
 				&& dfm.enabledFields[PRESSURE]) {
@@ -1168,7 +1142,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			getFieldsFromPrefsString(fields);
 		}
 		
-		for (String s : acceptedFields) { // TODO - NPE?
+		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[TIME] = true;
 
@@ -1278,7 +1252,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		w = new Waffle(this);
 		f = new Fields();
-
+		
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
@@ -1329,6 +1303,121 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
+		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
+	}
+	
+	// Simulates a stop if the service finishes
+	public static void serviceHasStopped() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (running)
+					startStop.performLongClick();
+			}
+		});
+	}
+	
+	// Displays description dialog when data is done recording
+	public void displayDescription() {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"MM-dd-yyyy, HH:mm:ss", Locale.US);
+		Date dt = new Date();
+		dateString = sdf.format(dt);
+		nameOfSession += " - " + dateString;
+		
+		// absolutely ensure the timer resets to 0
+		setTime(0);
+
+		Intent iDescription = new Intent(mContext,
+				Description.class);
+		startActivityForResult(iDescription,
+				DESCRIPTION_REQUESTED);
+		
+		if (terminateThroughPowerOff) {
+			terminateThroughPowerOff = false;
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivity(iForceStop);
+		}
+	}
+	
+	// Code for registering sensors and preparing to poll data
+	public void setUpSensorsForRecording() {
+		initDfm();
+		registerSensors();
+
+		rotation = getRotation(mContext);
+		dataSet = new JSONArray();
+		elapsedMillis = 0;
+		totalMillis = 0;
+		dataPointCount = 0;
+		beginWrite = true;
+		sdCardError = false;
+
+		currentTime = getUploadTime();
+	}
+	
+	// Code for polling sensors for data periodically - called by service
+	public static void pollForData() {
+		dataPointCount++;
+		elapsedMillis += srate;
+		totalMillis = elapsedMillis;
+
+		if (dfm.enabledFields[ACCEL_X])
+			f.accel_x = toThou.format(accel[0]);
+		if (dfm.enabledFields[ACCEL_Y])
+			f.accel_y = toThou.format(accel[1]);
+		if (dfm.enabledFields[ACCEL_Z])
+			f.accel_z = toThou.format(accel[2]);
+		if (dfm.enabledFields[ACCEL_TOTAL])
+			f.accel_total = toThou.format(accel[3]);
+		if (dfm.enabledFields[LATITUDE])
+			f.latitude = loc.getLatitude();
+		if (dfm.enabledFields[LONGITUDE])
+			f.longitude = loc.getLongitude();
+		if (dfm.enabledFields[HEADING_DEG])
+			f.angle_deg = toThou.format(orientation[0]);
+		if (dfm.enabledFields[HEADING_RAD])
+			f.angle_rad = ""
+					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+		if (dfm.enabledFields[MAG_X])
+			f.mag_x = mag[0];
+		if (dfm.enabledFields[MAG_Y])
+			f.mag_y = mag[1];
+		if (dfm.enabledFields[MAG_Z])
+			f.mag_z = mag[2];
+		if (dfm.enabledFields[MAG_TOTAL])
+			f.mag_total = Math.sqrt(Math
+					.pow(f.mag_x, 2)
+					+ Math.pow(f.mag_y, 2)
+					+ Math.pow(f.mag_z, 2));
+		if (dfm.enabledFields[TIME])
+			f.timeMillis = currentTime + elapsedMillis;
+		if (dfm.enabledFields[TEMPERATURE_C])
+			f.temperature_c = temperature;
+		if (dfm.enabledFields[TEMPERATURE_F])
+			f.temperature_f = ""
+					+ ((Double.parseDouble(temperature) * 1.8) + 32);
+		if (dfm.enabledFields[TEMPERATURE_K])
+			f.temperature_k = ""
+					+ (Double.parseDouble(temperature) + 273.15);
+		if (dfm.enabledFields[PRESSURE])
+			f.pressure = pressure;
+		if (dfm.enabledFields[ALTITUDE])
+			f.altitude = calcAltitude();
+		if (dfm.enabledFields[LIGHT])
+			f.lux = light;
+
+		dataSet.put(dfm.putData());
+		data = dfm.writeSdCardLine();
+
+		if (beginWrite) {
+			String header = dfm.writeHeaderLine();
+			writeToSDCard(header, 's');
+			writeToSDCard(data, 'u');
+		} else {
+			writeToSDCard(data, 'u');
+		}
 	}
 
 	// All the code for the main button!
@@ -1337,254 +1426,153 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
+				if (!running) {
+					boolean numbersReady = true;
+					if (!sampleInterval.getText().toString().equals("")) {
+						try {
+							int sInterval = Integer.parseInt(sampleInterval
+									.getText().toString());
+							if (sInterval < 50) {
+								sampleInterval
+										.setError("Enter an interval >= 50 ms");
+								numbersReady = false;
+							}
 
-				boolean numbersReady = true;
-				if (!sampleInterval.getText().toString().equals("")) {
-					try {
-						int sInterval = Integer.parseInt(sampleInterval
-								.getText().toString());
-						if (sInterval < 50) {
-							sampleInterval
-									.setError("Enter an interval >= 50 ms");
+						} catch (NumberFormatException nfe) {
+							sampleInterval.setError("Enter an interval >= 50 ms");
 							numbersReady = false;
 						}
-
-					} catch (NumberFormatException nfe) {
-						sampleInterval.setError("Enter an interval >= 50 ms");
-						numbersReady = false;
 					}
-				}
-				if (!recordingLength.getText().toString().equals("")) {
-					try {
-						int testLength = Integer.parseInt(recordingLength
-								.getText().toString());
-						if (testLength < 0) {
+					if (!recordingLength.getText().toString().equals("")) {
+						try {
+							int testLength = Integer.parseInt(recordingLength
+									.getText().toString());
+							if (testLength < 0) {
+								recordingLength
+										.setError("Enter a positive test length");
+								numbersReady = false;
+							}
+
+						} catch (NumberFormatException nfe) {
 							recordingLength
 									.setError("Enter a positive test length");
 							numbersReady = false;
 						}
-
-					} catch (NumberFormatException nfe) {
-						recordingLength
-								.setError("Enter a positive test length");
-						numbersReady = false;
 					}
-				}
 
-				SharedPreferences expPrefs = getSharedPreferences("EID", 0);
+					SharedPreferences expPrefs = getSharedPreferences("EID", 0);
 
-				if (expPrefs.getString("experiment_id", "").equals("")) {
+					if (expPrefs.getString("experiment_id", "").equals("")) {
 
-					w.make("Choose an experiment first.", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_X);
-					Intent iSetup = new Intent(DataCollector.this, Setup.class);
-					startActivityForResult(iSetup, SETUP_REQUESTED);
+						w.make("Choose an experiment first.", Waffle.LENGTH_LONG,
+								Waffle.IMAGE_X);
+						Intent iSetup = new Intent(DataCollector.this, Setup.class);
+						startActivityForResult(iSetup, SETUP_REQUESTED);
 
-				} else if (sessionName.getText().toString().equals("")) {
+					} else if (sessionName.getText().toString().equals("")) {
 
-					sessionName.setError("Enter a session name");
+						sessionName.setError("Enter a session name");
 
-				} else if (!numbersReady) {
+					} else if (!numbersReady) {
 
-					// Not ready. Do nothing.
-
-				} else {
-
-					nameOfSession = sessionName.getText().toString();
-					sessionName.setError(null);
-					recordingLength.setError(null);
-					sampleInterval.setError(null);
-
-					if (!sampleInterval.getText().toString().equals(""))
-						srate = Integer.parseInt(sampleInterval.getText()
-								.toString());
-					else
-						srate = INTERVAL;
-
-					if (!recordingLength.getText().toString().equals(""))
-						recLength = Integer.parseInt(recordingLength.getText()
-								.toString());
-					else
-						recLength = TEST_LENGTH;
-
-					vibrator.vibrate(300);
-					mMediaPlayer.setLooping(false);
-					mMediaPlayer.start();
-
-					if (running) {
-						OrientationManager.enableRotation((Activity) mContext);
-
-						sessionName.setEnabled(true);
-						recordingLength.setEnabled(true);
-						sampleInterval.setEnabled(true);
-
-						writeToSDCard(null, 'f');
-						setMenuStatus(true);
-
-						mSensorManager.unregisterListener(DataCollector.this);
-						running = false;
-						startStop.setText(R.string.startString);
-						time.setText(R.string.timeElapsed);
-
-						// Date
-						SimpleDateFormat sdf = new SimpleDateFormat(
-								"MM-dd-yyyy, HH:mm:ss", Locale.US);
-						Date dt = new Date();
-						dateString = sdf.format(dt);
-						nameOfSession += " - " + dateString;
-
-						timeTimer.cancel();
-						timeElapsedTimer.cancel();
-
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
-						mScreen.setBackgroundResource(R.drawable.background);
-						isenseLogo.setImageResource(R.drawable.logo_red);
-
-						choiceViaMenu = false;
-
-						if (sdCardError)
-							w.make("Could not write file to SD Card.",
-									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-
-						Intent iDescription = new Intent(mContext,
-								Description.class);
-						startActivityForResult(iDescription,
-								DESCRIPTION_REQUESTED);
+						// Not ready to record data yet.  Do nothing.
 
 					} else {
 
-						initDfm();
-						registerSensors();
+						nameOfSession = sessionName.getText().toString();
+						sessionName.setError(null);
+						recordingLength.setError(null);
+						sampleInterval.setError(null);
 
+						if (!sampleInterval.getText().toString().equals(""))
+							srate = Integer.parseInt(sampleInterval.getText()
+									.toString());
+						else
+							srate = INTERVAL;
+
+						if (!recordingLength.getText().toString().equals(""))
+							recLength = Integer.parseInt(recordingLength.getText()
+									.toString());
+						else
+							recLength = TEST_LENGTH;
+
+						vibrator.vibrate(300);
+						mMediaPlayer.setLooping(false);
+						mMediaPlayer.start();
+					
+						// start running task
+						running = true;
+							
 						OrientationManager.disableRotation((Activity) mContext);
-
+							
+						getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+							
 						sessionName.setEnabled(false);
 						recordingLength.setEnabled(false);
 						sampleInterval.setEnabled(false);
-
-						rotation = getRotation(mContext);
-						dataSet = new JSONArray();
-						secondsElapsed = 0;
-						elapsedMillis = 0;
-						totalMillis = 0;
-						dataPointCount = 0;
-						beginWrite = true;
-						sdCardError = false;
-
-						currentTime = getUploadTime();
-
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							w.make("Data recording interrupted! Time values may be inconsistent.",
-									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-							e.printStackTrace();
-						}
-
+							
 						setMenuStatus(false);
-
-						running = true;
+							
 						startStop.setText(R.string.stopString);
-
-						timeElapsedTimer = new Timer();
-						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
-							public void run() {
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										if (secondsElapsed > (recLength - 1)) {
-											mHandler.post(new Runnable() {
-												@Override
-												public void run() {
-													startStop
-															.performLongClick();
-												}
-											});
-										}
-										setTime(secondsElapsed++);
-									}
-								});
-							}
-						}, 0, 1000);
-
-						timeTimer = new Timer();
-						timeTimer.scheduleAtFixedRate(new TimerTask() {
-							public void run() {
-
-								dataPointCount++;
-								elapsedMillis += srate;
-								totalMillis = elapsedMillis;
-
-								if (dfm.enabledFields[ACCEL_X])
-									f.accel_x = toThou.format(accel[0]);
-								if (dfm.enabledFields[ACCEL_Y])
-									f.accel_y = toThou.format(accel[1]);
-								if (dfm.enabledFields[ACCEL_Z])
-									f.accel_z = toThou.format(accel[2]);
-								if (dfm.enabledFields[ACCEL_TOTAL])
-									f.accel_total = toThou.format(accel[3]);
-								if (dfm.enabledFields[LATITUDE])
-									f.latitude = loc.getLatitude();
-								if (dfm.enabledFields[LONGITUDE])
-									f.longitude = loc.getLongitude();
-								if (dfm.enabledFields[HEADING_DEG])
-									f.angle_deg = toThou.format(orientation[0]);
-								if (dfm.enabledFields[HEADING_RAD])
-									f.angle_rad = ""
-											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-								if (dfm.enabledFields[MAG_X])
-									f.mag_x = mag[0];
-								if (dfm.enabledFields[MAG_Y])
-									f.mag_y = mag[1];
-								if (dfm.enabledFields[MAG_Z])
-									f.mag_z = mag[2];
-								if (dfm.enabledFields[MAG_TOTAL])
-									f.mag_total = Math.sqrt(Math
-											.pow(f.mag_x, 2)
-											+ Math.pow(f.mag_y, 2)
-											+ Math.pow(f.mag_z, 2));
-								if (dfm.enabledFields[TIME])
-									f.timeMillis = currentTime + elapsedMillis;
-								if (dfm.enabledFields[TEMPERATURE_C])
-									f.temperature_c = temperature;
-								if (dfm.enabledFields[TEMPERATURE_F])
-									f.temperature_f = ""
-											+ ((Double.parseDouble(temperature) * 1.8) + 32);
-								if (dfm.enabledFields[TEMPERATURE_K])
-									f.temperature_k = ""
-											+ (Double.parseDouble(temperature) + 273.15);
-								if (dfm.enabledFields[PRESSURE])
-									f.pressure = pressure;
-								if (dfm.enabledFields[ALTITUDE])
-									f.altitude = calcAltitude();
-								if (dfm.enabledFields[LIGHT])
-									f.lux = light;
-
-								// would be more efficient to only write header once (during "beginWrite")
-								dataSet.put(dfm.putData());
-								String header = dfm.writeHeaderLine();
-								data = dfm.writeSdCardLine();
-
-								if (beginWrite) {
-									writeToSDCard(header, 's');
-									writeToSDCard(data, 'u');
-								} else {
-									writeToSDCard(data, 'u');
-								}
-
-							}
-						}, 0, srate);
+							
 						startStop.getBackground().setColorFilter(0xFF00FF00,
-								PorterDuff.Mode.MULTIPLY);
+									PorterDuff.Mode.MULTIPLY);
 						mScreen.setBackgroundResource(R.drawable.background_running);
 						isenseLogo.setImageResource(R.drawable.logo_green);
+							
+						setUpSensorsForRecording();
+							
+						Intent iService = new Intent(mContext, DataCollectorService.class);
+						iService.putExtra(DataCollectorService.SRATE, srate);
+						iService.putExtra(DataCollectorService.REC_LENGTH, recLength);
+						startService(iService);
+					 
+						return running;
+							
 					}
+					
+					running = false;
 					return running;
+					
+				} else {
+					vibrator.vibrate(300);
+					mMediaPlayer.setLooping(false);
+					mMediaPlayer.start();
+					
+					running = false;
+					
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+					
+					stopService(new Intent(mContext, DataCollectorService.class));
+					
+					OrientationManager.enableRotation((Activity) mContext);
+					
+					sessionName.setEnabled(true);
+					recordingLength.setEnabled(true);
+					sampleInterval.setEnabled(true);
 
+					writeToSDCard(null, 'f');
+					setMenuStatus(true);
+					
+					startStop.setText(R.string.startString);
+					setTime(0);
+
+					startStop.getBackground().setColorFilter(0xFFFF0000,
+							PorterDuff.Mode.MULTIPLY);
+					mScreen.setBackgroundResource(R.drawable.background);
+					isenseLogo.setImageResource(R.drawable.logo_red);
+
+					choiceViaMenu = false;
+
+					if (sdCardError)
+						w.make("Could not write file to SD Card.",
+								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					
+					displayDescription();
+					
+					return running;
 				}
-				running = false;
-				return running;
+				
 			}
 
 		});
@@ -1728,6 +1716,31 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menuLogin.setEnabled(enabled);
 			menuMedia.setEnabled(enabled);
 			menuSync.setEnabled(enabled);
+			if (enabled) {
+				MenuItem item= mMenu.findItem(R.id.menu_item_setup);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_upload);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_login);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_media);
+		    	item.setVisible(true);
+		    	item= mMenu.findItem(R.id.menu_item_sync);
+		    	item.setVisible(true);
+		    	super.onPrepareOptionsMenu(mMenu);
+			} else {
+				MenuItem item= mMenu.findItem(R.id.menu_item_setup);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_upload);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_login);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_media);
+		    	item.setVisible(false);
+		    	item= mMenu.findItem(R.id.menu_item_sync);
+		    	item.setVisible(false);
+		    	super.onPrepareOptionsMenu(mMenu);
+			}
 		}
 	}
 

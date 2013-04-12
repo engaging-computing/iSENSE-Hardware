@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.collector"
     android:versionCode="10"
-    android:versionName="1.8.1" >
+    android:versionName="1.8.1" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
 
     <application
         android:allowBackup="false"
@@ -81,6 +82,7 @@
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.Summary"
+            android:label="Data Summary"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.NoIsense"
@@ -115,25 +117,34 @@
             android:label="Connection Timed Out"
             android:theme="@style/theme_dialog_black" />
         <activity
+            android:name=".sync.TimeReset"
+            android:label="Time Reset"
+            android:theme="@style/theme_dialog_black" />
+        <activity
             android:name=".dialogs.ExperimentDialog"
             android:label="Experiment ID"
             android:theme="@style/DialogTheme" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_queue_layout" 
+            tools:ignore="MissingRegistered"/>
         <activity
             android:name="edu.uml.cs.isense.queue.QueueAlter"
             android:label="Alter Data Set"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_dialog_black" 
+            tools:ignore="MissingRegistered"/>
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditData"
             android:label="Edit Data"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_dialog_black" 
+            tools:ignore="MissingRegistered"/>
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_dialog_black"
+            tools:ignore="MissingRegistered" />
+        <service android:name="edu.uml.cs.isense.collector.DataCollectorService"></service>
     </application>
 
 </manifest>

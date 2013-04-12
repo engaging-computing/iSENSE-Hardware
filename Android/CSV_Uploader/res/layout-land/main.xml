@@ -2,94 +2,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    android:baselineAligned="false" >
+    android:background="@android:color/white"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:weightSum="4" >
 
-    <RelativeLayout
-        android:id="@+id/leftSide"
+    <LinearLayout
+        android:id="@+id/left_side"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".6" >
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="2dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/isense_logo_desc"
-            android:scaleType="center"
-            android:src="@drawable/isense_logo" />
-
-        <TextView
-            android:id="@+id/loginLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/image_view"
-            android:layout_marginLeft="2dp"
-            android:paddingTop="8dp"
-            android:text="@string/loggedInAs"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/experimentLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/loginLabel"
-            android:layout_marginLeft="2dp"
-            android:paddingBottom="8dp"
-            android:text="@string/usingExperiment"
-            android:textSize="16sp" />
+        android:layout_weight="3"
+        android:baselineAligned="true"
+        android:orientation="vertical" >
 
         <LinearLayout
+            android:id="@+id/informationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/loginLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:text="@string/loggedInAs"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/experimentLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:paddingBottom="16dp"
+                android:text="@string/usingExperiment"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RelativeLayout
             android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/experimentLabel"
+            android:layout_margin="3dp"
             android:orientation="vertical" >
 
             <Button
                 android:id="@+id/refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:background="@drawable/button_background"
                 android:text="@string/refresh"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/upload"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:background="@drawable/button_background"
+                android:layout_below="@id/refresh"
                 android:text="@string/upload"
                 android:textSize="20sp" />
-        </LinearLayout>
-    </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/back_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/upload"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/isense_logo_desc"
+                android:scaleType="center"
+                android:src="@drawable/back_button" />
+
+        </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rightSide"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".4" >
-        
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background"
+        android:padding="5dp" >
+
         <TextView
             android:id="@+id/cur_dir"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
 
         <ScrollView
             android:id="@+id/scrollWrapper"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/cur_dir"
-            android:layout_above="@+id/back_image" >
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cur_dir" >
 
             <LinearLayout
                 android:id="@+id/dataView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/scrollWrapper2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cur_dir"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:id="@+id/dataView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
@@ -102,19 +132,6 @@
             android:layout_centerInParent="true"
             android:text="@string/needData"
             android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/back_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/isense_logo_desc"
-            android:scaleType="center"
-            android:src="@drawable/back_button" />
     </RelativeLayout>
 
 </LinearLayout>

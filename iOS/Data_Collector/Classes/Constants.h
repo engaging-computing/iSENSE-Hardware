@@ -29,7 +29,7 @@
 #define TYPE_LONGITUDE 2
 #define TYPE_TIME      3
 
-// scrollview drawing constants
+// manual scrollview drawing constants
 #define SCROLLVIEW_Y_OFFSET     50
 #define SCROLLVIEW_OBJ_INCR     30
 #define SCROLLVIEW_LABEL_HEIGHT 20
@@ -39,7 +39,17 @@
 #define IPAD_WIDTH_PORTRAIT     725
 #define IPAD_WIDTH_LANDSCAPE    980
 #define IPHONE_WIDTH_PORTRAIT   280
-#define IPHONE_WIDTH_LANDSCAPE  200
+#define IPHONE_WIDTH_LANDSCAPE  400
+
+// manual scrollview oddity patches
+#define PORTRAIT_BOTTOM_CUT         40
+#define LANDSCAPE_BOTTOM_CUT_IPAD   30
+#define LANDSCAPE_BOTTOM_CUT_IPHONE 80
+#define TOP_ELEMENT_ADJUSTMENT      30
+#define START_Y_PORTRAIT_IPAD       20
+#define START_Y_PORTRAIT_IPHONE     50
+#define START_Y_LANDSCAPE_IPAD      5
+#define START_Y_LANDSCAPE_IPHONE    0
 
 // tags for types of UITextFields
 #define TAG_TEXT    100

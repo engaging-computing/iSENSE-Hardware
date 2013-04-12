@@ -40,8 +40,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 	 * serializable file with the same name as the string passed to it.
 	 */
 	public static final String PARENT_NAME = "parentName";
+	public static final String LOGIN_CONTEXT ="logincontext";
 
-	private static final int ALTER_DATASET_REQUESTED = 9001;
+	private static final int ALTER_DATASET_REQUESTED   = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
 
@@ -136,6 +137,17 @@ public class QueueLayout extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
+				
+			if (!rapi.isLoggedIn()) {
+				w.make("Login information not found - please login again", Waffle.IMAGE_X);
+				return;
+			}
+			
+			if (!rapi.isConnectedToInternet()) {
+				w.make("No internet connection found", Waffle.IMAGE_X);
+				return;
+			}
+			
 			lastSID = -1;
 			if (uq.mirrorQueue.isEmpty()) {
 				uq.storeAndReRetrieveQueue(true);
@@ -165,20 +177,24 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private class UploadSDTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean dialogShow = true;
-		ProgressDialog dia;
+		ProgressDialog dia = null;
 		DataSet uploadSet;
+		boolean doThings = true;
 
 		@Override
 		protected void onPreExecute() {
 
 			uploadSet = uq.mirrorQueue.remove();
+			if (!uploadSet.isUploadable())
+				doThings = false;
+			
 			createRunnable(uploadSet);
 
 			OrientationManager.disableRotation(QueueLayout.this);
 
 			dia = new ProgressDialog(QueueLayout.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while data set \"" + uploadSet.getName() + "\" is uploaded...");
 			dia.setCancelable(false);
 			try {
 				dia.show();
@@ -191,8 +207,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			sdUploader.run();
-			dia.setProgress(100);
+			if (doThings)
+				sdUploader.run();
+			
+			if (dia != null)
+				dia.setProgress(100);
+			
 			return null;
 		}
 
@@ -200,18 +220,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 		protected void onPostExecute(Void voids) {
 			Waffle w = new Waffle(mContext);
 
-			if (uploadSuccess)
-				w.make("Upload Success", Waffle.LENGTH_SHORT,
+			if (!doThings) {
+				w.make("\"" + uploadSet.getName() + "\" chosen not to upload", Waffle.LENGTH_SHORT);
+				uq.queue.add(uploadSet);
+				uq.storeAndReRetrieveQueue(false);
+			} else if (uploadSuccess)
+				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
 				uq.addDataSetToQueue(uploadSet);
-				w.make("Upload failed.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				w.make("Upload Failed - experiment may be closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
-			if (dialogShow)
+			if (dialogShow && dia != null)
 				dia.dismiss();
-
-			OrientationManager.enableRotation(QueueLayout.this);
 
 			if (uq.mirrorQueue.isEmpty()) {
 				uq.storeAndReRetrieveQueue(true);
@@ -221,6 +243,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				if (uploadSuccess)
 					continueUploading();
 			}
+			
+			OrientationManager.enableRotation(QueueLayout.this);
 		}
 	}
 
@@ -271,9 +295,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					break;
 
 				case QueueAlter.DELETE:
-					uq.queue.remove(lastDataSetLongClicked);
-					uq.mirrorQueue.remove(lastDataSetLongClicked);
-					uq.storeAndReRetrieveQueue(true);
+					
+					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
 
 					break;
@@ -289,10 +312,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 				String newName = data.getStringExtra("new_name");
 				if (!newName.equals("")) {
 					DataSet alter = lastDataSetLongClicked;
-					alter.setName(newName);
+					alter.setName(newName); 
 
-					uq.queue.remove(lastDataSetLongClicked);
-					uq.mirrorQueue.remove(lastDataSetLongClicked);
+					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
 
 					uq.addDataSetToQueue(alter);
@@ -305,8 +327,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				DataSet alter = QueueEditData.alter;
 			
-				uq.queue.remove(lastDataSetLongClicked);
-				uq.mirrorQueue.remove(lastDataSetLongClicked);
+				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
 				
 				uq.addDataSetToQueue(alter);

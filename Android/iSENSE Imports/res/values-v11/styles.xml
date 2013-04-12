@@ -1,8 +1,8 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="AppTheme" parent="android:Theme.Holo.Light" />
 
-    <style name="PDTheme" parent="@android:style/Theme.Dialog">
+    <style name="PDTheme" parent="@android:style/Theme.Holo.Dialog">
         <item name="android:alertDialogStyle">@style/CustomProgressDialogStyle</item>
         <item name="android:textColorPrimary">#000000</item>
     </style>

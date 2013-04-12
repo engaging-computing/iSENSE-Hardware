@@ -106,7 +106,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private LinearLayout dataFieldEntryList;
 
 	private LocationManager mLocationManager;
+	private LocationManager mRoughLocManager;
 	private Location loc;
+	private Location roughLoc;
 
 	public static UploadQueue uq;
 	private static boolean throughUploadButton = false;
@@ -141,9 +143,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 				+ loginPrefs.getString("username", ""));
 
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		experimentLabel.setText(getResources().getString(
-				R.string.usingExperiment)
-				+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
+		//experimentLabel.setText(getResources().getString(
+		//		R.string.usingExperiment)
+		//		+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
 
 		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
@@ -257,8 +259,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void loadExperimentData(String eidString) {
-		if (dataFieldEntryList != null)
-			dataFieldEntryList.removeAllViews();
 
 		if (eidString != null) {
 			new LoadExperimentFieldsTask().execute();
@@ -266,6 +266,20 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int eid) {
+		
+		if (fieldOrder.size() == 0) {
+			w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			return;
+		}
+		
+		if (dataFieldEntryList != null)
+			dataFieldEntryList.removeAllViews();
+		else
+			return;
+		
+		experimentLabel.setText(getResources().getString(
+				R.string.usingExperiment)
+				+ eid);
 
 		for (ExperimentField expField : fieldOrder) {
 
@@ -361,8 +375,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private void uploadFields() {
 		throughUploadButton = true;
-		/*if (!rapi.isLoggedIn()) {
-// TODO - upload without needing to be logged in
+		if (!rapi.isLoggedIn()) {
 			boolean success = false;
 			if (loginPrefs.getString("username", "").equals(""))
 				success = false;
@@ -373,10 +386,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (success)
 				manageUploadQueue();
 			else
-				w.make("Not logged in.", Waffle.IMAGE_X);
-		} else {*/
+				w.make("Not logged in - if you think you are logged in, please try again.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+		} else {
 			manageUploadQueue();
-		//}
+		}
 
 	}
 
@@ -436,6 +449,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onPause();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
+		if (mRoughLocManager != null)
+			mRoughLocManager.removeUpdates(ManualEntry.this);
 
 	}
 
@@ -444,6 +459,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onStop();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
+		if (mRoughLocManager != null)
+			mRoughLocManager.removeUpdates(ManualEntry.this);
 	}
 
 	private String getJSONData() {
@@ -472,7 +489,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 					row.put("-1");
 				}
 			} else {
-				row.put(dataFieldContents.getText().toString());
+				if (dataFieldContents.getText().toString().length() != 0)
+					row.put(dataFieldContents.getText().toString());
+				else
+					// if no data, put a space as a place holder
+					row.put(" ");
 			}
 		}
 
@@ -486,14 +507,19 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public void initLocations() {
 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+				&& mRoughLocManager
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
 					ManualEntry.this);
+			mRoughLocManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, ManualEntry.this);
 		} else {
 			if (showGpsDialog) {
 				Intent iNoGps = new Intent(mContext, NoGps.class);
@@ -503,6 +529,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
+		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
 
 	// Prompts the user to upload the rest of their content
@@ -562,9 +589,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			if (!error) {
 				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
-				experimentLabel.setText(getResources().getString(
-						R.string.usingExperiment)
-						+ eid);
 
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
@@ -607,8 +631,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			try {
 				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(loc.getLatitude(),
-						loc.getLongitude(), 1);
+						Locale.getDefault()).getFromLocation(roughLoc.getLatitude(),
+						roughLoc.getLongitude(), 1);
 				if (address.size() > 0) {
 					city = address.get(0).getLocality();
 					state = address.get(0).getAdminArea();
@@ -654,6 +678,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
+		roughLoc = location;
 	}
 
 	@Override
@@ -706,8 +731,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String city = "", state = "", country = "", addr = "";
 			try {
 				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(loc.getLatitude(),
-						loc.getLongitude(), 1);
+						Locale.getDefault()).getFromLocation(roughLoc.getLatitude(),
+						roughLoc.getLongitude(), 1);
 				if (address.size() > 0) {
 					city = address.get(0).getLocality();
 					state = address.get(0).getAdminArea();

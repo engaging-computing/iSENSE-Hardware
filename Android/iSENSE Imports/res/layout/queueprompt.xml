@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    android:background="@android:color/transparent" >
-
+    android:background="@drawable/background_lack_of_stroke" >
+    
     <TextView
         android:id="@+id/prompt"
         android:layout_width="match_parent"
