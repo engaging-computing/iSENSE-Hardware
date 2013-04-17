@@ -30,7 +30,9 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp"
                 android:text="@string/loggedInAs"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
+                
 
             <TextView
                 android:id="@+id/experimentLabel"
@@ -39,7 +41,9 @@
                 android:layout_marginLeft="2dp"
                 android:paddingBottom="16dp"
                 android:text="@string/usingExperiment"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
+                
         </LinearLayout>
 
         <RelativeLayout
