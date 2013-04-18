@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize sessionName, expNum, qrResults, locationManager;
+@synthesize sessionName, expNum, qrResults, locationManager, browsing;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -85,19 +85,51 @@
     sessionNameInput.delegate = self;
     sessionNameInput.enablesReturnKeyAutomatically = NO;
     sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
+    sessionNameInput.tag = TAG_DEFAULT;
+    
+    if (rds == nil) {
+        rds = new RotationDataSaver;
+        rds->doesHaveName = false;
+        rds->doesHaveData = false;
+        rds->sesName = [[[NSString alloc] init] retain];
+        rds->data = [[[NSMutableArray alloc] init] retain];
+        for (NSInteger i = 0; i < 100; ++i)
+            [rds->data addObject:[NSNull null]];
+        
+    } else {
+        if (rds->doesHaveName)
+            sessionNameInput.text = rds->sesName;
+    }
     
     // experiment number
     if (expNum && expNum != 0) {
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
-        [self fillDataFieldEntryList:expNum];
+        if (browsing == YES) {
+            browsing = NO;
+            [self cleanRDSData];
+            [self fillDataFieldEntryList:expNum withData:nil];
+        } else {
+            if (rds != nil && rds->doesHaveData)
+                [self fillDataFieldEntryList:expNum withData:rds->data];
+            else
+                [self fillDataFieldEntryList:expNum withData:nil];
+        }
     } else
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
     
     [self registerForKeyboardNotifications];
+    
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+}
+
+- (void) cleanRDSData {
+    rds->doesHaveData = false;
+    [rds->data removeAllObjects];
+    for (NSInteger i = 0; i < 100; ++i)
+        [rds->data addObject:[NSNull null]];
 }
 
 // Sets up listeners for keyboard
@@ -129,7 +161,7 @@
 // Called when the UIKeyboardDidShowNotification is sent.
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     
-    if (activeField.tag == TAG_TEXT || activeField.tag == TAG_NUMERIC) {
+    if (activeField.tag >= TAG_TEXT) {
         
         NSDictionary* info = [aNotification userInfo];
     
@@ -176,36 +208,64 @@
 
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    if (lastField.tag == TAG_TEXT || lastField.tag == TAG_NUMERIC) {
-        self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-   
-        // adjust for scrollview and frame drawing oddities across devices and orientations
-        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
-            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+
+    @try {
+        if (activeField != nil && activeField.tag >= TAG_TEXT) {
+            self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+    
+            // adjust for scrollview and frame drawing oddities across devices and orientations
+            UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+            if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+                if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                } else {
+                    if(!keyboardDismissProper)
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPAD)];
+                }
             } else {
-                if(!keyboardDismissProper)
-                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPAD)];
-            }
-        } else {
-            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                if(!keyboardDismissProper)
-                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_PORT_IPHONE)];
-            } else {
-                if(!keyboardDismissProper)
-                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
+                if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                    if(!keyboardDismissProper)
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_PORT_IPHONE)];
+                } else {
+                    if(!keyboardDismissProper)
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
+                }
             }
         }
+    } @catch (NSException *e) {
+        // couldn't check activeField - so ignore it
     }
+    
     keyboardDismissProper = true;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    lastField = activeField = textField;
+    lastField   = textField;
+    activeField = textField;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
+
     activeField = nil;
+
+    if (textField.tag >= TAG_TEXT) {
+        if (textField.text.length > 0) {
+            int TAG_VAL = (lastField.tag >= TAG_NUMERIC) ? TAG_NUMERIC : TAG_TEXT;
+            NSString *text = lastField.text;
+            [text retain];
+            rds->doesHaveData = true;
+            [rds->data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:text];
+        } else {
+            int TAG_VAL = (lastField.tag >= TAG_NUMERIC) ? TAG_NUMERIC : TAG_TEXT;
+            [rds->data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:[NSNull null]];
+        }
+    } else {
+        if (sessionNameInput.text.length > 0) {
+            rds->doesHaveName = true;
+            rds->sesName = [[sessionNameInput text] retain];
+        } else {
+            rds->doesHaveName = false;
+        }
+    }
 }
 
 
@@ -246,6 +306,8 @@
     
     [self unregisterKeyboardNotifications];
     
+    //[rds release];
+    
 	[super dealloc];
 }
 
@@ -262,7 +324,6 @@
 // method not called on real device - don't assign a location to a global variable here
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     //CLLocation *location = [locations lastObject];
-    //NSLog(@"lat: %f - lon: %f", location.coordinate.latitude, location.coordinate.longitude);
 }
 
 // pre-iOS6 rotating options
@@ -289,10 +350,11 @@
 - (IBAction) uploadOnClick:(id)sender {
     [self getDataFromFields];
     
-    /*UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
+    /*
+    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
     [iapi login:@"sor" with:@"sor"];
     bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
-    NSLog(@"Image success = %d", success);*/
+    */
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -395,6 +457,7 @@
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNum;
+            browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
             
@@ -434,17 +497,22 @@
         
         if (buttonIndex != OPTION_CANCELED) {
 
+            [self cleanRDSData];
+            
             expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             
-            [self fillDataFieldEntryList:expNum];
+            [self fillDataFieldEntryList:expNum withData:nil];
         }
         
     } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
         
         if (buttonIndex != OPTION_CANCELED) {
             sessionNameInput.text = @"";
+            
+            rds->doesHaveName = false;
+            [self cleanRDSData];
             
             for (UIView *element in scrollView.subviews) {
                 if ([element isKindOfClass:[UITextField class]]) {
@@ -471,8 +539,10 @@
                     position:@"bottom"
                        image:@"red_x"];
     } else {
+        rds->doesHaveData = false;
+        
         expNum = [[split objectAtIndex:1] intValue];
-        [self fillDataFieldEntryList:expNum];
+        [self fillDataFieldEntryList:expNum withData:nil];
     }
 }
 
@@ -646,7 +716,7 @@
     });
 }
 
-- (void) fillDataFieldEntryList:(int)eid {
+- (void) fillDataFieldEntryList:(int)eid withData:(NSMutableArray *)data {
     
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -667,14 +737,28 @@
                 
                 if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
                     if (expField.unit_id.intValue == UNIT_LATITUDE) {
-                        scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber];
+                        //if (data == nil)
+                            scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
+                        //else
+                        //    scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     } else if (expField.unit_id.intValue == UNIT_LONGITUDE) {
-                        scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber];
+                        //if (data == nil)
+                            scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
+                        //else
+                        //    scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     } else /* Time */ {
-                        scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber];
+                        //if (data == nil)
+                            scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
+                        //else
+                        //    scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 } else {
-                    scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber];
+                    if (data == nil)
+                        scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
+                    else {
+                        [data retain];
+                        scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                    }
                 }
                 
                 ++objNumber;
@@ -722,7 +806,7 @@
     });
 }
 
-- (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum {
+- (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
     
     CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
@@ -764,7 +848,11 @@
     fieldContents.backgroundColor = [UIColor whiteColor];
     fieldContents.font = [UIFont systemFontOfSize:24];
     fieldContents.borderStyle = UITextBorderStyleRoundedRect;
-    
+    if (data != nil && !([data isKindOfClass:[NSNull class]])) {
+        NSString *tmp = [NSString stringWithString:data];
+        fieldContents.text = [tmp retain];
+    }
+        
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;
         if (type == TYPE_LATITUDE) {
@@ -781,12 +869,10 @@
     
     if (expField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
-        fieldContents.tag = TAG_TEXT;
-        // TODO - restrict amount of chars to 60, restrict digits
+        fieldContents.tag = TAG_TEXT + objNum;
     } else {
         fieldContents.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-        fieldContents.tag = TAG_NUMERIC;
-        // TODO - restrict # to 20 chars, restrict nums
+        fieldContents.tag = TAG_NUMERIC + objNum;
     }
     [fieldContents setReturnKeyType:UIReturnKeyDone];
     
