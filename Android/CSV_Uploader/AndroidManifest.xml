@@ -48,7 +48,7 @@
         <activity
             android:name=".ViewData"
             android:label="View Data on iSENSE"
-            android:theme="@style/DialogTheme" />
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
             android:name=".experiment.Experiment"
             android:label="Experiment #"
