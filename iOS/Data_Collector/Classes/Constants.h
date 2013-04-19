@@ -62,8 +62,9 @@
 
 
 // tags for types of UITextFields
-#define TAG_TEXT    100
-#define TAG_NUMERIC 101
+#define TAG_DEFAULT 1000
+#define TAG_TEXT    5000
+#define TAG_NUMERIC 6000
 
 // nav controller height
 #define NAVIGATION_CONTROLLER_HEIGHT 64
