@@ -28,18 +28,20 @@
 
         <TextView
             android:id="@+id/experimentid"
+            android:textIsSelectable="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:background="@android:color/transparent" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textIsSelectable="false"
             android:layout_weight="1"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:background="@android:color/transparent" />
     </LinearLayout>
 

@@ -3,75 +3,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    
+
     <TextView
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="16sp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/chooseExperiment"
-        android:gravity="center" />
-    
+        android:textSize="16sp" />
+
     <EditText
         android:id="@+id/experimentInput"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:digits="1234567890"
-        android:maxLength="6"
-        android:gravity="center"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
-        android:imeOptions="actionDone" />
-    
+        android:layout_marginTop="10dp"
+        android:digits="1234567890"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        android:inputType="phone"
+        android:maxLength="6" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp" >        
-        
-    	<Button
-    	    android:id="@+id/experiment_browse"
-    	    android:layout_height="wrap_content"
-    	    android:layout_width="match_parent"
-    	    android:layout_weight="1"
-    	    android:text="@string/browse"
-    	    android:textSize="18sp"
-    	    android:layout_marginLeft="5dp" />  
-    	    
-    	<Button
-    	    android:id="@+id/experiment_qr"
-    	    android:layout_height="wrap_content"
-    	    android:layout_width="match_parent"
-    	    android:layout_weight="1"
-    	    android:text="@string/qr"
-    	    android:textSize="18sp" 
-    	    android:layout_marginRight="5dp" /> 
-        
+        android:layout_marginTop="2dp" >
+
+        <Button
+            android:id="@+id/experiment_browse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/blue_button"
+            android:text="@string/browse"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/experiment_qr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/blue_button"
+            android:text="@string/qr"
+            android:textSize="18sp" />
     </LinearLayout>
-    
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
-        android:layout_width="match_parent"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" >        
-        
-    	<Button
-    	    android:id="@+id/experiment_cancel"
-    	    android:layout_height="wrap_content"
-    	    android:layout_width="match_parent"
-    	    android:layout_weight="1"
-    	    android:text="@string/cancel"
-    	    android:textSize="18sp" />  
-    	    
-    	<Button
-    	    android:id="@+id/experiment_ok"
-    	    android:layout_height="wrap_content"
-    	    android:layout_width="match_parent"
-    	    android:layout_weight="1"
-    	    android:text="@string/okay"
-    	    android:textSize="18sp" /> 
-        
+        android:measureWithLargestChild="true"
+        android:orientation="horizontal"
+        android:paddingLeft="2dip"
+        android:paddingRight="2dip"
+        android:paddingTop="0dip" >
+
+        <Button
+            android:id="@+id/experiment_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/experiment_ok"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
     </LinearLayout>
-    
 
 </LinearLayout>

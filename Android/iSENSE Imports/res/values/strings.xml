@@ -2,12 +2,10 @@
     
     <string name="contentDesc"></string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
-    <string name="cancel">Cancel</string>
     <string name="upload">Upload</string>
     <string name="digits_restriction">
 	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
 	</string>
-    <string name="okay">Okay</string>
     <string name="queue_rename">Enter a new name for your data set:</string>
     <string name="queue_alter">What would you like to do with this data set?</string>
 	<string name="rename">Rename</string>
