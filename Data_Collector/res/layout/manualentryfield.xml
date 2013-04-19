@@ -10,14 +10,15 @@
         android:id="@+id/manual_dataFieldName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textIsSelectable="false" />
 
     <EditText
         android:id="@+id/manual_dataFieldContents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:hint="@string/qmark"
-        android:digits="@string/digits_restriction" />
+        android:digits="@string/digits_restriction"
+        android:hint="@string/qmark" />
 
 </LinearLayout>
