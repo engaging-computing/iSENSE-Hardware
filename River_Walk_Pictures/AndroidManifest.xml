@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.uml.cs.isense.riverwalk"
+    android:versionCode="3"
+    android:versionName="1.2" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".Main"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".experiments.BrowseExperiments"
+            android:label="@string/app_name_experiments"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".dialogs.LoginActivity"
+            android:label="Login"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.NoGps"
+            android:label="No GPS Found"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.NoConnectivity"
+            android:label="No Connectivity"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.ReadyUpload"
+            android:label="Ready To Upload"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".experiments.ExperimentDialog"
+            android:label="Experiment ID"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.NoQR"
+            android:label="No Barcode Scanner Found"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.Description"
+            android:label="Describe Photo"
+            android:theme="@style/DialogTheme" />
+        
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueLayout"
+            android:label="Upload Data"
+            android:theme="@style/DialogThemeDark" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueAlter"
+            android:label="Alter Data Set"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditData"
+            android:label="Edit Data"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/theme_dialog_black" />
+    </application>
+
+</manifest>

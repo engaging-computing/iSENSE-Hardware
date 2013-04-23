@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.genpics;
+package edu.uml.cs.isense.riverwalk;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.Menu;
@@ -44,14 +43,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.genpics.dialogs.LoginActivity;
-import edu.uml.cs.isense.genpics.dialogs.NoGps;
-import edu.uml.cs.isense.genpics.experiments.ExperimentDialog;
-import edu.uml.cs.isense.genpics.objects.DataFieldManager;
-import edu.uml.cs.isense.genpics.objects.Fields;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.riverwalk.dialogs.Description;
+import edu.uml.cs.isense.riverwalk.dialogs.LoginActivity;
+import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
+import edu.uml.cs.isense.riverwalk.experiments.ExperimentDialog;
+import edu.uml.cs.isense.riverwalk.objects.DataFieldManager;
+import edu.uml.cs.isense.riverwalk.objects.Fields;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -62,6 +62,7 @@ public class Main extends Activity implements LocationListener {
 	private static final int NO_GPS_REQUESTED = 103;
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
+	private static final int DESCRIPTION_REQUESTED = 106;
 
 	private static final int MENU_ITEM_BROWSE = 0;
 	private static final int MENU_ITEM_LOGIN = 1;
@@ -70,6 +71,9 @@ public class Main extends Activity implements LocationListener {
 	private static final int TIMER_LOOP = 1000;
 
 	private LocationManager mLocationManager;
+	private LocationManager mRoughLocManager;
+	private Location loc;
+	private Location roughLoc;
 
 	private Uri imageUri;
 
@@ -77,7 +81,7 @@ public class Main extends Activity implements LocationListener {
 	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
 
-	private static boolean gpsWorking = false;
+	// private static boolean gpsWorking = false;
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
 	public static boolean initialLoginStatus = true;
@@ -85,7 +89,6 @@ public class Main extends Activity implements LocationListener {
 
 	private EditText name;
 	private TextView experimentLabel;
-	private Vibrator vibrator;
 	private Timer mTimer = null;
 	private Handler mHandler;
 	private TextView latLong;
@@ -94,6 +97,7 @@ public class Main extends Activity implements LocationListener {
 	private static final double DEFAULT_LONG = -71.3533;
 	private long curTime;
 	private static int waitingCounter = 0;
+	private static String descriptionStr = "";
 
 	public static Context mContext;
 
@@ -101,9 +105,8 @@ public class Main extends Activity implements LocationListener {
 	private File picture;
 	public static Button takePicture;
 	static boolean useMenu = true;
-	
+
 	private ProgressDialog dia;
-	private Location loc;
 	private DataFieldManager dfm;
 	private Fields f;
 
@@ -115,43 +118,29 @@ public class Main extends Activity implements LocationListener {
 		mContext = this;
 
 		w = new Waffle(mContext);
-		
+
 		f = new Fields();
 
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		uq = new UploadQueue("generalpictures", mContext, rapi);
-		
+
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		if (mPrefs.getString("experiment_id", "").equals("")) {
 			if (dfm == null) {
-				dfm = new DataFieldManager(
-						Integer.parseInt(mPrefs.getString("experiment_id", "-1")),
-						rapi, mContext, f);
+				dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+						"experiment_id", "-1")), rapi, mContext, f);
 				dfm.getOrder();
 			}
-		}
-
-		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-		final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
-				mContext, getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
-
-		if (loginPrefs.getString("username", "").equals("")) {
-			startActivityForResult(new Intent(getApplicationContext(),
-					LoginActivity.class), LOGIN_REQUESTED);
 		}
 
 		experimentLabel = (TextView) findViewById(R.id.ExperimentLabel);
 		experimentLabel.setText(getResources().getString(R.string.experiment)
 				+ mPrefs.getString("experiment_id", "None Set"));
-
-		// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mHandler = new Handler();
 
@@ -161,7 +150,7 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		takePicture = (Button) findViewById(R.id.takePicture);
-		takePicture.getBackground().setColorFilter(0xFFFFFF33,
+		takePicture.getBackground().setColorFilter(0xFF99CCFF,
 				PorterDuff.Mode.MULTIPLY);
 		takePicture.setOnClickListener(new OnClickListener() {
 
@@ -274,16 +263,15 @@ public class Main extends Activity implements LocationListener {
 
 		// Rebuilds uploadQueue from saved info
 		uq.buildQueueFromFile();
-		queueCount.setText("Queue Count: " + uq.queueSize());
-
-		// Check to see if now is the right time to try to upload information.
-		// manageUploadQueue();
+		queueCount.setText(getResources().getString(R.string.queueCount)
+				+ uq.queueSize());
 	}
 
 	private void manageUploadQueue() {
 
 		if (!(rapi.isConnectedToInternet())) {
-			w.make("Must be connected to the internet to upload.", Waffle.IMAGE_X);
+			w.make("Must be connected to the internet to upload.",
+					Waffle.IMAGE_X);
 			return;
 		}
 
@@ -307,8 +295,8 @@ public class Main extends Activity implements LocationListener {
 	protected void onStart() {
 		super.onStart();
 
-		if (!gpsWorking)
-			initLocManager();
+		initLocManager();
+
 		if (mTimer == null)
 			waitingForGPS();
 	}
@@ -391,46 +379,16 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		public void run() {
 
-			boolean useDefaultLocation = false;
-
-			final SharedPreferences loginPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences("USER_INFO",
-							Context.MODE_PRIVATE));
-
-			boolean success = false;
-			
-			if (rapi.isConnectedToInternet()) {
-				if (rapi.isLoggedIn()) {
-					success = true;
-				} else {
-					success = rapi.login(loginPrefs.getString("username", ""),
-							loginPrefs.getString("password", ""));
-				}
-			} else {
-				success = true;
-			}
-
-			if (!success) {
-				uploadError = true;
-				postRunnableWaffleError("Must be logged in to upload pictures");
-				return;
-			}
-
-			if ((loc.getLatitude() == 0) || (loc.getLongitude() == 0))
-				useDefaultLocation = true;
-			else
-				useDefaultLocation = false;
-
 			// Location
 			List<Address> address = null;
 			String city = "", state = "", country = "", addr = "";
 
 			try {
-				if (loc != null) {
+				if (roughLoc != null) {
 
 					address = new Geocoder(Main.this, Locale.getDefault())
-							.getFromLocation(loc.getLatitude(),
-									loc.getLongitude(), 1);
+							.getFromLocation(roughLoc.getLatitude(),
+									roughLoc.getLongitude(), 1);
 
 					if (address.size() > 0) {
 						city = address.get(0).getLocality();
@@ -452,86 +410,44 @@ public class Main extends Activity implements LocationListener {
 				postRunnableWaffleError("No experiment selected to upload pictures to");
 				return;
 			}
-			
+
 			if (dfm == null)
 				initDfm();
 
 			JSONArray dataJSON = new JSONArray();
 			JSONArray dataRow = new JSONArray();
-			if (useDefaultLocation) {
-				f.time = curTime;
-				f.lat = DEFAULT_LAT;
-				f.lon = DEFAULT_LONG;
-				dataRow = dfm.putData();
-				//dataRow.put(curTime);
-				//dataRow.put(DEFAULT_LAT);
-				//dataRow.put(DEFAULT_LONG);
-			} else {
+			if (loc.getLatitude() != 0) {
 				f.time = curTime;
 				f.lat = loc.getLatitude();
 				f.lon = loc.getLongitude();
+				f.text = descriptionStr;
 				dataRow = dfm.putData();
-				//dataRow.put(curTime);
-				//dataRow.put(loc.getLatitude());
-				//dataRow.put(loc.getLongitude());
+			} else {
+				f.time = curTime;
+				f.lat = DEFAULT_LAT;
+				f.lon = DEFAULT_LONG;
+				f.text = descriptionStr;
+				dataRow = dfm.putData();
 			}
 			dataJSON.put(dataRow);
 
-			int sessionId = -1;
-			if (address == null || address.size() <= 0) {
-				sessionId = rapi.createSession(experimentNum, name.getText()
-						.toString(), makeThisDatePretty(curTime), "", "", "");
-			} else {
-				sessionId = rapi.createSession(experimentNum, name.getText()
-						.toString(), makeThisDatePretty(curTime), addr, city
-						+ ", " + state, country);
-			}
+			DataSet ds;
+			if (address != null && address.size() > 0)
+				ds = new DataSet(DataSet.Type.BOTH, name.getText().toString()
+						+ ": " + descriptionStr, makeThisDatePretty(curTime),
+						experimentNum, dataJSON.toString(), picture, -1, city,
+						state, country, addr);
+			else
+				ds = new DataSet(DataSet.Type.BOTH, name.getText().toString()
+						+ ": " + descriptionStr, makeThisDatePretty(curTime),
+						experimentNum, dataJSON.toString(), picture, -1,
+						"Lowell", "MA", "USA", "Pawtucket Blvd.");
 
-			if (sessionId == -1) {
-				uploadError = true;
-				postRunnableWaffleError("Encountered upload problem: could not create session");
-				// Add new DataSet to Queue
-				DataSet ds = new DataSet(DataSet.Type.BOTH, name.getText()
-						.toString(), makeThisDatePretty(curTime),
-						experimentNum, dataJSON.toString(), picture, sessionId,
-						city, state, country, addr);
-				uq.addDataSetToQueue(ds);
-				return;
-			}
+			uq.addDataSetToQueue(ds);
 
-			// Experiment Closed Checker
-			if (sessionId == -400) {
-				status400 = true;
-				return;
-			} else {
-				status400 = false;
-				if (!rapi.updateSessionData(sessionId, experimentNum, dataJSON)) {
-					uploadError = true;
-					postRunnableWaffleError("Encountered upload problem: could not add picture");
-					// Add new DataSet to Queue
-					DataSet ds = new DataSet(DataSet.Type.DATA, name.getText()
-							.toString(), makeThisDatePretty(curTime),
-							experimentNum, dataJSON.toString(), null,
-							sessionId, city, state, country, addr);
-					uq.addDataSetToQueue(ds);
-					return;
-				}
-
-				if (!rapi.uploadPictureToSession(picture, experimentNum,
-						sessionId, name.getText().toString(),
-						"No description provided.")) {
-					uploadError = true;
-					// Add new DataSet to Queue
-					DataSet ds = new DataSet(DataSet.Type.PIC, name.getText()
-							.toString(), makeThisDatePretty(curTime),
-							experimentNum, null, picture, sessionId, city,
-							state, country, addr);
-					uq.addDataSetToQueue(ds);
-				}
-			}
 		}
 	};
-	
+
 	private void initDfm() {
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		String experimentInput = mPrefs.getString("experiment_id", "");
@@ -553,9 +469,11 @@ public class Main extends Activity implements LocationListener {
 				takePicture.setEnabled(true);
 
 				uq.buildQueueFromFile();
-				queueCount.setText("Queue Count: " + uq.queueSize());
+				queueCount.setText(getResources()
+						.getString(R.string.queueCount) + uq.queueSize());
 
-				new UploadTask().execute();
+				Intent iDesc = new Intent(Main.this, Description.class);
+				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
 
 			}
 
@@ -566,12 +484,14 @@ public class Main extends Activity implements LocationListener {
 				experimentLabel.setText(getResources().getString(
 						R.string.experiment)
 						+ eidString);
-				
-				//SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				//SharedPreferences.Editor mEdit = mPrefs.edit();
-				//mEdit.putInt("experiment_id", Integer.parseInt(eidString)).commit();
-				
-				dfm = new DataFieldManager(Integer.parseInt(eidString), rapi, mContext, f);
+
+				// SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+				// SharedPreferences.Editor mEdit = mPrefs.edit();
+				// mEdit.putInt("experiment_id",
+				// Integer.parseInt(eidString)).commit();
+
+				dfm = new DataFieldManager(Integer.parseInt(eidString), rapi,
+						mContext, f);
 				dfm.getOrder();
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
@@ -587,6 +507,32 @@ public class Main extends Activity implements LocationListener {
 				startActivity(new Intent(
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
+		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			int selection = data.getIntExtra(Description.RADIO_SELECTION, -1);
+
+			switch (selection) {
+			case 1:
+				descriptionStr = getResources().getString(
+						R.string.ecosystemChanges_short);
+				break;
+			case 2:
+				descriptionStr = getResources().getString(
+						R.string.foodwebElements_short);
+				break;
+			case 3:
+				descriptionStr = getResources().getString(
+						R.string.habitat_short);
+				break;
+			case 4:
+				descriptionStr = getResources().getString(
+						R.string.invasiveSpecies_short);
+				break;
+			default:
+				descriptionStr = getResources().getString(R.string.other);
+				break;
+			}
+
+			new UploadTask().execute();
 		}
 
 	}
@@ -594,24 +540,14 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		if ((location.getLatitude() != 0) && (location.getLongitude() != 0)) {
-			if (gpsWorking == false) {
-				vibrator.vibrate(100);
-			}
-			gpsWorking = true;
-		} else {
-			gpsWorking = false;
-		}
+		roughLoc = location;
 	}
 
 	@Override
-	public void onProviderDisabled(String provider) {
-		gpsWorking = false;
-	}
+	public void onProviderDisabled(String provider) {}
 
 	@Override
-	public void onProviderEnabled(String provider) {
-	}
+	public void onProviderEnabled(String provider) {}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -625,7 +561,7 @@ public class Main extends Activity implements LocationListener {
 
 			dia = new ProgressDialog(Main.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Uploading Picture...");
+			dia.setMessage("Saving picture...");
 			dia.setCancelable(false);
 			dia.show();
 		}
@@ -653,11 +589,11 @@ public class Main extends Activity implements LocationListener {
 				// Do nothing - postRunnableWaffleError takes care of this
 				// Waffle
 			} else {
-				w.make("Upload successful", Waffle.LENGTH_LONG,
-						Waffle.IMAGE_CHECK);
+				w.make("Picture saved!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 			}
 
-			queueCount.setText("Queue Count: " + uq.queueSize());
+			queueCount.setText(getResources().getString(R.string.queueCount)
+					+ uq.queueSize());
 			uq.buildQueueFromFile();
 
 			uploadError = false;
@@ -692,11 +628,17 @@ public class Main extends Activity implements LocationListener {
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		loc = new Location(mLocationManager.getBestProvider(c, true));
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+				&& mRoughLocManager
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0, Main.this);
-			new Location(mLocationManager.getBestProvider(c, true));
+			mRoughLocManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, Main.this);
+
 		} else {
 			if (showGpsDialog) {
 				Intent iNoGps = new Intent(mContext, NoGps.class);
@@ -705,17 +647,23 @@ public class Main extends Activity implements LocationListener {
 			}
 		}
 
+		loc = new Location(mLocationManager.getBestProvider(c, true));
+		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
 
 	@Override
 	protected void onStop() {
-		mLocationManager.removeUpdates(Main.this);
-		gpsWorking = false;
+		super.onStop();
+
+		if (mLocationManager != null)
+			mLocationManager.removeUpdates(Main.this);
+
+		if (mRoughLocManager != null)
+			mRoughLocManager.removeUpdates(Main.this);
+
 		if (mTimer != null)
 			mTimer.cancel();
 		mTimer = null;
-
-		super.onStop();
 	}
 
 	private void waitingForGPS() {
@@ -728,11 +676,11 @@ public class Main extends Activity implements LocationListener {
 					@Override
 					public void run() {
 
-						if (gpsWorking)
+						if (loc.getLatitude() != 0)
 							latLong.setText("Lat: " + loc.getLatitude()
 									+ "\nLong: " + loc.getLongitude());
 						else {
-							switch (waitingCounter % 5) {
+							switch (waitingCounter % 4) {
 							case (0):
 								latLong.setText(R.string.noLocation0);
 								break;
@@ -744,9 +692,6 @@ public class Main extends Activity implements LocationListener {
 								break;
 							case (3):
 								latLong.setText(R.string.noLocation3);
-								break;
-							case (4):
-								latLong.setText(R.string.noLocation4);
 								break;
 							}
 							waitingCounter++;
@@ -763,7 +708,8 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	private String makeThisDatePretty(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy", Locale.US);
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy",
+				Locale.US);
 		return sdf.format(time);
 	}
 
