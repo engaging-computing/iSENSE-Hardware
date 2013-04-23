@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">River Walk</string>
+    <string name="experiments_no_items">No experiments were found.</string>
+    <string name="app_name_experiments">Experiments</string>
+    <string name="prompt">Would you like to try uploading any of the following?</string>
+    <string name="upload">Upload</string>
+    
+    <string name="firstName">Group Name: \0</string>
+    <string name="takePic">Press Here to Take a Picture</string>
+    <string name="iSlogo">iSENSE Logo</string>
+    <string name="queueCount">Picture Count: \0</string>
+    
+    <string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
+	<string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
+	<string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
+	<string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
+	
+	<string name="experiment">Experiment: \0</string>
+	
+	<string name="loading">Loading &#8230;</string>
+	<string name="search">Search</string>
+	
+	<string name="username">Username : \0</string>
+    <string name="password">Password  : \0</string>
+	<string name="cancel">Cancel</string>
+    <string name="okay">Okay</string>
+    <string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="gpsString">
+	    Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?
+	</string>
+	<string name="ready_upload_prompt">
+	    Now that there is a connection to iSENSE, would you like to upload your pictures?
+	</string>
+	<string name="qr_prompt">	    
+	    Your device does not have the proper Barcode Scanner application installed
+		to use this feature.  However, you may visit the Google Play store to download 
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
+	<string name="visit">Visit</string>
+	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
+	<string name="browse">Browse &#8230;</string>
+	<string name="scan_qr">Scan QR Code</string>
+	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
+	<string name="time">field_time</string>
+	
+	<string name="latitude">field_latitude</string>
+	<string name="longitude">field_longitude</string>
+	<string name="null_string">field_null</string>
+	<string name="text_field">field_text</string>
+	
+	<string name="describe">Please describe your photo:</string>
+	
+    <string name="ecosystemChanges">Ecosystem Changes\n\t-automobile chemicals\n\t-point source pollution\n\t-storm water runoff</string>
+    <string name="ecosystemChanges_short">Ecosystem Changes</string>
+    
+    <string name="foodwebElements">Foodweb Elements\n\t-aquatic plants\n\t-insect larvae\n\t-larger animals\n\t-waterfowl</string>
+    <string name="foodwebElements_short">Foodweb Elements</string>
+    
+	<string name="habitat">Habitat\n\t-habitat disruption\n\t-natural habitat</string>
+	<string name="habitat_short">Habitat</string>
+	
+	<string name="invasiveSpecies">Invasive Species\n\t-pigeons\n\t-norway maple\n\t-turfgrass</string>
+	<string name="invasiveSpecies_short">Invasive Species</string>
+	
+	<string name="other">Other</string>
+    
+	
+	
+</resources>
