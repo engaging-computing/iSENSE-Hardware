@@ -867,6 +867,7 @@
         }
     }
     
+    NSLog(@"type id = %d", expField.type_id.intValue);
     if (expField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
         fieldContents.tag = TAG_TEXT + objNum;

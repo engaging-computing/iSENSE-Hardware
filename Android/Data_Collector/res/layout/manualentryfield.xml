@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:digits="@string/digits_restriction"
-        android:hint="@string/qmark" />
+        android:hint="@string/qmark"
+        android:inputType="textCapWords" />
 
 </LinearLayout>

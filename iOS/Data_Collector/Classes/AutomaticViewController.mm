@@ -362,7 +362,7 @@
     [self initLocations];
     dfm = [DataFieldManager alloc];
     [self resetAddressFields];
-    recommendedSampleInterval = -1;
+    recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
 }
 
 // Is called every time AutomaticView appears
