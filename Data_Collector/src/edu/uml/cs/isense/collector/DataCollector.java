@@ -330,7 +330,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, nameOfSession + " - " + csvDateString
+			SDFile = new File(folder, nameOfSession + "--" + csvDateString
 					+ ".csv");
 			sdFileName = nameOfSession + " - " + csvDateString;
 

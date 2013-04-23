@@ -3,7 +3,11 @@
       package="edu.uml.cs.isense.pictures3"
       android:versionCode="5"
       android:versionName="3.1">
+<<<<<<< HEAD:Android/River_Walk_Old/AndroidManifest.xml
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="17"/>
+=======
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8"/>
+>>>>>>> upstream/master:Android/River_Walk/bin/AndroidManifest.xml
     <uses-permission android:name="android.permission.VIBRATE"/>
 	<uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>

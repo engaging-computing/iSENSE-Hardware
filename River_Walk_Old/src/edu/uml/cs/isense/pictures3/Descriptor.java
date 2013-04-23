@@ -2,6 +2,7 @@
 
 package edu.uml.cs.isense.pictures3;
 
+import android.R;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;

@@ -2,59 +2,67 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:background="@drawable/background_lack_of_stroke" >
-    
+    android:background="@drawable/background_lack_of_stroke"
+    android:padding="10dp" >
+
     <TextView
         android:id="@+id/prompt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
         android:padding="5dp"
-        android:text="@string/prompt"
-        android:background="@android:color/transparent" />
+        android:text="@string/prompt" />
 
     <ScrollView
+        android:id="@+id/queueprompt_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
         android:layout_below="@+id/prompt"
-        android:padding="5dp"
-        android:scrollbars="vertical"
         android:background="@android:color/transparent"
-        android:scrollbarThumbVertical="@drawable/grey_scroll" >
+        android:padding="5dp"
+        android:scrollbarThumbVertical="@drawable/grey_scroll"
+        android:scrollbars="vertical" >
 
         <LinearLayout
             android:id="@+id/scrollqueue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@android:color/transparent" >
+            android:background="@android:color/transparent"
+            android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/queueprompt_scroll"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
         android:id="@+id/buttons"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:background="@android:color/transparent" >
+        android:weightSum="2" >
 
         <Button
             android:id="@+id/cancel"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@android:string/cancel" />
 
         <Button
             android:id="@+id/upload"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
             android:layout_weight="1"
             android:text="@string/upload" />
     </LinearLayout>

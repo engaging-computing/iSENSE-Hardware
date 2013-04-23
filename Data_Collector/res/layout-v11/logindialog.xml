@@ -2,23 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent" >
 
     <TextView
         android:id="@+id/usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/usernameInput"
         android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
+        android:background="@android:color/transparent"
         android:text="@string/username" />
 
     <EditText
-        android:id="@+id/usernameInput"
+        android:id="@id/usernameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_toRightOf="@id/usernameLabel"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:;[]01234567879()@"
+        android:digits="@string/digits_restriction"
         android:imeOptions="actionNext"
         android:inputType="textEmailAddress"
         android:singleLine="true" />
@@ -27,36 +30,38 @@
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/passwordInput"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/usernameInput"
         android:layout_margin="5dp"
-        android:layout_marginTop="5dip"
+        android:background="@android:color/transparent"
         android:text="@string/password" />
 
     <EditText
-        android:id="@+id/passwordInput"
+        android:id="@id/passwordInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameInput"
         android:layout_margin="5dp"
         android:layout_toRightOf="@id/passwordLabel"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:;[]01234567879()@"
+        android:digits="@string/digits_restriction"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:paddingLeft="6dip"
         android:singleLine="true" />
 
     <View
-        android:layout_below="@id/passwordInput"
-    	android:layout_width="fill_parent"
-    	android:layout_height="1dip"
-    	android:background="?android:attr/dividerVertical" />    
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:id="@+id/okAndCancelButtons"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/passwordInput"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:weightSum="2" >
 
@@ -66,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@android:string/cancel" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/login_ok"
