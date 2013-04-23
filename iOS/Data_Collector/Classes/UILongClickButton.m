@@ -31,7 +31,7 @@
     originalImageCopy = [[UIImageView alloc] initWithImage:image.image];
     
 	recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:target action:selector];
-	recognizer.MinimumPressDuration = 1;
+	recognizer.MinimumPressDuration = 0.5;
     recognizer.numberOfTouchesRequired = 1;
     recognizer.allowableMovement = 50;
     

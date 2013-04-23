@@ -322,16 +322,30 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setFocusableInTouchMode(false);
 			fieldContents.setTextColor(Color.GRAY);
 		}
-
+		
+		/*InputFilter filter = new InputFilter() { 
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end, 
+					Spanned dest, int dstart, int dend) { 
+				if ((dend - dstart) > 20) return "";
+				for (int i = start; i < end; i++) { 
+					if (!(getResources().getString(R.string.digits_restriction).contains("" + source.charAt(i)))) {
+						return "";
+					}
+				} 
+				return null; 
+			}
+		};
+		fieldContents.setFilters(new InputFilter[]{filter});
+		*/
 		if (expField.type_id == expField.TEXT) {
+
 			// keyboard to text
 			fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
 			fieldContents
 					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
 							60) });
-			fieldContents.setKeyListener(DigitsKeyListener
-					.getInstance(getResources().getString(
-							R.string.digits_restriction)));
+
 		} else {
 			// keyboard to nums
 			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -341,7 +355,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setKeyListener(DigitsKeyListener
 					.getInstance(getResources().getString(
 							R.string.numbers_restriction)));
-
 		}
 
 		dataFieldEntryList.addView(dataField);
