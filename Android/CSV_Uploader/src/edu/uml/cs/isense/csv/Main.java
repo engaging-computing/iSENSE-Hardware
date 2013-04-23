@@ -41,6 +41,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -76,9 +77,10 @@ public class Main extends Activity implements SimpleGestureListener {
 	private static String rootDirectory;
 	private static String previousDirectory;
 	private static String currentDirectory;
-	
+
 	private static String PREV_DIR = "previousDirectory";
 	private static String CURR_DIR = "currentDirectory";
+	public static String CHOSEN_FILE = "chosenFile";
 
 	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
 
@@ -136,7 +138,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(false);
+		rapi.useDev(true);
 
 		optionPrefs = getSharedPreferences("options", 0);
 
@@ -199,7 +201,7 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		boolean success;
 		try {
-			success = getFiles(new File(currentDirectory), backgroundLayout());
+			success = getFiles(new File(currentDirectory), activeLayout());
 		} catch (Exception e) {
 			e.printStackTrace();
 			success = false;
@@ -214,7 +216,7 @@ public class Main extends Activity implements SimpleGestureListener {
 				boolean success;
 				try {
 					success = getFiles(new File(currentDirectory),
-							backgroundLayout());
+							activeLayout());
 				} catch (Exception e) {
 					w.make(e.toString(), Waffle.IMAGE_X);
 					success = false;
@@ -264,6 +266,39 @@ public class Main extends Activity implements SimpleGestureListener {
 					new UploadTask().execute();
 			}
 		});
+		
+		Log.e("CSV", "going to test for chosen_file");
+		
+		Intent i = getIntent();
+		Bundle b = i.getExtras();
+		
+		if (b != null) {
+			if (b.containsKey(CHOSEN_FILE)) {
+				Log.e("CSV", "found chosen_file key" );
+				String chosenFile = b.getString(CHOSEN_FILE);
+				int nameStartPoint = chosenFile.lastIndexOf("/");
+				String directoryName = chosenFile.substring(0, nameStartPoint);
+				Log.e("CSV", chosenFile.substring(nameStartPoint));
+				String specificFileName = chosenFile.substring(nameStartPoint);
+				
+				try {
+					success = getFiles(new File(directoryName), activeLayout());
+				} catch (Exception e) {
+					e.printStackTrace();
+					success = false;
+				}
+				didGetFiles(success, true, SlideType.NO_SLIDE);
+				
+				for (int j = 0 ; j < activeLayout().getChildCount() ; j++ ) {
+						CheckedTextView ctv = (CheckedTextView) activeLayout().getChildAt(j);
+						if (ctv.getText().equals(specificFileName)) {
+								ctv.callOnClick();
+								break;
+						}
+				}
+			}
+		}
+		
 
 	}
 
@@ -559,13 +594,10 @@ public class Main extends Activity implements SimpleGestureListener {
 			curDir.setVisibility(View.VISIBLE);
 
 			// No transition, just swap visible view
-			if (st == SlideType.NO_SLIDE)
-				toggleVisibleScrollView();
-
-			// Transtion and swap visible view
-			else
+			if (!(st == SlideType.NO_SLIDE)) {
 				new AnimateViews().execute(st);
-
+			}
+			
 			if (currentDirectory.equals(rootDirectory)) {
 				backImage.setVisibility(View.GONE);
 				canSwipe = false;
@@ -695,8 +727,8 @@ public class Main extends Activity implements SimpleGestureListener {
 			if (eid.equals("-1"))
 				return false;
 
-			int sid = rapi.createSession(eid, getUploadTime(),
-					"Automated .csv upload from Android", "Lowell", "MA", "US");
+			int sid = rapi.createSession(eid, sdFile.getName(),
+					"Automated .csv upload from Android.  Uploaded at " + getUploadTime() + ".", "Lowell", "MA", "US");
 			if (sid <= 0)
 				return false;
 

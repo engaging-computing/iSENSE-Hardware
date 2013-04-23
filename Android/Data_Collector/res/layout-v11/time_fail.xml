@@ -2,49 +2,46 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:scrollbarThumbVertical="@drawable/grey_scroll" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="@android:color/transparent" >
 
         <TextView
             android:id="@+id/no_qr_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="@string/qr_prompt"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="?android:attr/dividerVertical" />
+            android:text="@string/timeFailed"
+            android:textSize="18sp"
+            android:background="@android:color/transparent" />
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:background="@android:color/transparent" >
 
             <Button
-                android:id="@+id/no_qr_cancel"
-                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/time_fail_cancel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="@android:string/cancel" />
+                android:text="@string/cancel" />
 
             <Button
-                android:id="@+id/no_qr_visit"
-                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/time_fail_retry"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="@string/visit" />
+                android:text="@string/retry" />
         </LinearLayout>
     </LinearLayout>
 

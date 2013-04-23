@@ -13,6 +13,7 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
