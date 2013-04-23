@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_lack_of_stroke"
-    android:padding="10dp" >
+    android:background="@drawable/background_lack_of_stroke" >
 
     <TextView
         android:id="@+id/prompt"

@@ -50,6 +50,7 @@
         android:singleLine="true" />
 
     <View
+        android:layout_below="@id/passwordInput"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:background="?android:attr/dividerVertical" />
@@ -60,7 +61,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/passwordInput"
-        android:layout_marginTop="5dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:weightSum="2" >
