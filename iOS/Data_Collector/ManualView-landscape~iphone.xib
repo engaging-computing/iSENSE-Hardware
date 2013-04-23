@@ -42,7 +42,7 @@
 					<object class="IBUIButton" id="352350226">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{369, 51}, {70, 30}}</string>
+						<string key="NSFrame">{{394, 48}, {45, 33}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="155897543"/>
@@ -89,7 +89,7 @@
 					<object class="IBUITextField" id="558146370">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{24, 51}, {181, 31}}</string>
+						<string key="NSFrame">{{24, 51}, {186, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="775253626"/>
@@ -142,7 +142,7 @@
 					<object class="IBUIButton" id="775253626">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{213, 51}, {70, 30}}</string>
+						<string key="NSFrame">{{218, 48}, {80, 33}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="360206526"/>
@@ -165,7 +165,7 @@
 					<object class="IBUILabel" id="176905017">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{213, 6}, {277, 21}}</string>
+						<string key="NSFrame">{{213, 3}, {277, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="846241962"/>
@@ -200,7 +200,7 @@
 					<object class="IBUILabel" id="846241962">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{213, 22}, {277, 21}}</string>
+						<string key="NSFrame">{{213, 19}, {277, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="558146370"/>
@@ -224,7 +224,7 @@
 					<object class="IBUIButton" id="360206526">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{291, 51}, {70, 30}}</string>
+						<string key="NSFrame">{{306, 48}, {80, 33}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="352350226"/>
@@ -252,7 +252,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</array>
-				<string key="NSFrame">{{0, 20}, {568, 300}}</string>
+				<string key="NSFrame">{{0, 20}, {480, 300}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="995162521"/>
@@ -271,13 +271,13 @@
 							<integer value="3"/>
 						</array>
 						<array key="dict.values">
-							<string>{320, 568}</string>
-							<string>{568, 320}</string>
+							<string>{320, 480}</string>
+							<string>{480, 320}</string>
 						</array>
 					</object>
 					<string key="IBUITargetRuntime">IBCocoaTouchFramework</string>
-					<string key="IBUIDisplayName">Retina 4 Full Screen</string>
-					<int key="IBUIType">2</int>
+					<string key="IBUIDisplayName">Retina 3.5 Full Screen</string>
+					<int key="IBUIType">0</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
@@ -398,12 +398,12 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="995162521"/>
 							<reference ref="155897543"/>
+							<reference ref="558146370"/>
 							<reference ref="176905017"/>
 							<reference ref="846241962"/>
-							<reference ref="558146370"/>
-							<reference ref="775253626"/>
-							<reference ref="360206526"/>
 							<reference ref="352350226"/>
+							<reference ref="360206526"/>
+							<reference ref="775253626"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>

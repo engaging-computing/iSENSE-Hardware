@@ -39,7 +39,7 @@
 #define IPAD_WIDTH_PORTRAIT     725
 #define IPAD_WIDTH_LANDSCAPE    980
 #define IPHONE_WIDTH_PORTRAIT   280
-#define IPHONE_WIDTH_LANDSCAPE  400
+#define IPHONE_WIDTH_LANDSCAPE  415
 
 // manual scrollview oddity patches
 #define PORTRAIT_BOTTOM_CUT         40
@@ -51,12 +51,27 @@
 #define START_Y_LANDSCAPE_IPAD      5
 #define START_Y_LANDSCAPE_IPHONE    0
 
-// tags for types of UITextFields
-#define TAG_TEXT    100
-#define TAG_NUMERIC 101
+// manual scrollview keyboard and other offset values
+#define KEY_OFFSET_SCROLL_LAND_IPAD     40
+#define KEY_OFFSET_SCROLL_PORT_IPHONE   18
+#define KEY_OFFSET_FRAME_PORT_IPHONE    18
+#define KEY_OFFSET_SCROLL_LAND_IPHONE   60
+#define KEY_OFFSET_FRAME_LAND_IPHONE    90
+#define KEY_HEIGHT_OFFSET               40
+#define RECT_HEIGHT_OFFSET              30
 
-// Nav Controller Height
+
+// tags for types of UITextFields
+#define TAG_DEFAULT 1000
+#define TAG_TEXT    5000
+#define TAG_NUMERIC 6000
+
+// nav controller height
 #define NAVIGATION_CONTROLLER_HEIGHT 64
+
+// toast duration constants
+#define TOAST_LENGTH_SHORT  2.0
+#define TOAST_LENGTH_LONG   3.5
 
 
 #endif

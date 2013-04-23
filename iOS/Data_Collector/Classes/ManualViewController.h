@@ -12,6 +12,13 @@
 #import <ZXingWidgetController.h>
 #import <QRCodeReader.h>
 
+typedef struct _RotationDataSaver {
+    NSString *sesName;
+    NSMutableArray *data;
+    bool doesHaveName;
+    bool doesHaveData;
+} RotationDataSaver;
+
 @interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
 	
 	// UI Elements
@@ -27,6 +34,7 @@
 	// Non-UI Elements
 	iSENSE   *iapi;
 	NSString *sessionName;
+    RotationDataSaver *rds;
     
     NSString *qrResults;
     ZXingWidgetController *widController;
@@ -50,10 +58,11 @@
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
 - (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
-- (void)   fillDataFieldEntryList:(int)eid;
-- (int)    addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum;
+- (void)   fillDataFieldEntryList:(int)eid withData:(NSMutableArray *) data;
+- (int)    addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
 - (void)   hideKeyboard;
 - (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
+- (void)   cleanRDSData;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 
@@ -67,13 +76,16 @@
 @property (nonatomic, retain) IBOutlet UIButton     *media;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
-@property (nonatomic, assign) UIView                *activeField;
+@property (nonatomic, retain) UITextField           *activeField;
+@property (nonatomic, retain) UITextField           *lastField;
 
 // Non-UI Properties
 @property (nonatomic, copy)   NSString              *sessionName;
 @property (nonatomic, copy)   NSString              *qrResults;
 @property (nonatomic, retain) CLLocationManager     *locationManager;
 @property (nonatomic, assign) int                    expNum;
+@property (nonatomic, assign) bool                   keyboardDismissProper;
+@property (nonatomic, assign) BOOL                   browsing;
 
 @end
 

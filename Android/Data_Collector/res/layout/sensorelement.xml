@@ -3,29 +3,30 @@
     android:id="@+id/check_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/listelement_bkgd"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
     android:padding="5dp"
-    android:weightSum="2"
-    android:background="@drawable/listelement_bkgd" >
+    android:weightSum="2" >
 
     <CheckedTextView
         android:id="@+id/sensorlabel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:checkMark="@drawable/bluecheck"
         android:checked="true"
-        android:textSize="14sp"
-        android:background="@android:color/transparent" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/subsensorlabel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="12sp"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        android:textIsSelectable="false"
+        android:textSize="12sp" />
 
 </LinearLayout>
