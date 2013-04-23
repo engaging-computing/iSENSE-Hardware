@@ -122,7 +122,7 @@ public class Main extends Activity implements LocationListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(false);
+		rapi.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, rapi);
 		

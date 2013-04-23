@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/makeSelection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/describePhoto"
+        android:textSize="18sp" >
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/selectOK"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingTop="16dip"
+            android:text="@string/okay"
+            android:textSize="16sp" >
+        </Button>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="top"
+                android:text="@string/ecosystemChanges"
+                android:textSize="20sp" >
+            </CheckBox>
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="top"
+                android:text="@string/foodwebElements"
+                android:textSize="20sp" >
+            </CheckBox>
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="top"
+                android:text="@string/habitat"
+                android:textSize="20sp" >
+            </CheckBox>
+
+            <CheckBox
+                android:id="@+id/checkBox4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="top"
+                android:text="@string/invasiveSpecies"
+                android:textSize="20sp" >
+            </CheckBox>
+
+            <CheckBox
+                android:id="@+id/checkBox5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="top"
+                android:text="@string/other"
+                android:textSize="20sp" >
+            </CheckBox>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
