@@ -586,8 +586,6 @@
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
     
-    NSLog(@"Update fields");
-    
     // acceleration in meters per second squared
     fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
     fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
@@ -603,9 +601,6 @@
     double longitude = lc2d.longitude;
     fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
     fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
-    
-    NSLog(@"Update fields 2");
-
     
     // magnetic field in microTesla
     fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
@@ -623,25 +618,14 @@
         fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
     }
     
-    NSLog(@"Update fields 3");
-    
-    if (fieldsRow) NSLog(@"Trap!! %@", fieldsRow);
-    if (dfm) NSLog(@"Nah i lied");
-    
     // Update parent JSON object
     [dfm orderDataFromFields:fieldsRow];
-    NSLog(@"Looking for nil");
     
-    
-    NSLog(@"%@", dfm.data);
-    NSLog(@"%@", dataToBeJSONed);
     if (dfm.data != nil || dataToBeJSONed != nil)
         [dataToBeJSONed addObject:dfm.data];
     else {
         NSLog(@"something is wrong");
     }
-    
-    NSLog(@"UpdateF fields 4");
 
 }
 
