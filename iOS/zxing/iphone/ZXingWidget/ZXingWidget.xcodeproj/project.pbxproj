@@ -1553,10 +1553,7 @@
 				PRODUCT_NAME = ZXingWidget;
 				SEPARATE_STRIP = NO;
 				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-				);
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -1574,10 +1571,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ZXingWidget;
 				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-				);
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};

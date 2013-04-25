@@ -22,7 +22,7 @@
     NSMutableArray *fields = [iapi getExperimentFields:[NSNumber numberWithInt:exp]];
     
     for (ExperimentField *field in fields) {
-        NSLog(@"%d, %@", field.type_id.intValue, field.field_name);
+
         switch (field.type_id.intValue) {
             // Temperature (1)
             case TEMPERATURE:
@@ -148,103 +148,168 @@
     
     if (data) [data release];
     data = [[NSMutableArray alloc] init];
-    
+
     if (!order) return data;
     
     for (NSString *s in order) {
         if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
-            [data addObject:[f accel_x]];
+            if (!([f accel_x] == nil))
+                [data addObject:[f accel_x]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
-            [data addObject:[f accel_y]];
+            if (!([f accel_y] == nil))
+                [data addObject:[f accel_y]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
-            [data addObject:[f accel_z]];
+            if (!([f accel_z] == nil))
+                [data addObject:[f accel_z]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
-            [data addObject:[f accel_total]];
+            if (!([f accel_total] == nil))
+                [data addObject:[f accel_total]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
-            [data addObject:[f temperature_c]];
+            if (!([f temperature_c] == nil))
+                [data addObject:[f temperature_c]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
-            [data addObject:[f temperature_f]];
+            if (!([f temperature_f] == nil))
+                [data addObject:[f temperature_f]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
-            [data addObject:[f temperature_k]];
+            if (!([f temperature_k] == nil))
+                [data addObject:[f temperature_k]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
-            [data addObject:[f time_millis]];
+            if (!([f time_millis] == nil))
+                [data addObject:[f time_millis]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
-            [data addObject:[f lux]];
+            if (!([f lux] == nil))
+                [data addObject:[f lux]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
-            [data addObject:[f angle_deg]];
+            if (!([f angle_deg] == nil))
+                [data addObject:[f angle_deg]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
-            [data addObject:[f angle_rad]];
+            if (!([f angle_rad] == nil))
+                [data addObject:[f angle_rad]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
-            [data addObject:[f latitude]];
+            if (!([f latitude] == nil))
+                [data addObject:[f latitude]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
-            [data addObject:[f longitude]];
+            if (!([f longitude] == nil))
+                [data addObject:[f longitude]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
-            [data addObject:[f mag_x]];
+            if (!([f mag_x] == nil))
+                [data addObject:[f mag_x]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
-            [data addObject:[f mag_y]];
+            if (!([f mag_y] == nil))
+                [data addObject:[f mag_y]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
-            [data addObject:[f mag_z]];
+            if (!([f mag_z] == nil))
+                [data addObject:[f mag_z]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
-            [data addObject:[f mag_total]];
+            if (!([f mag_total] == nil))
+                [data addObject:[f mag_total]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
-            [data addObject:[f altitude]];
+            if (!([f altitude] == nil))
+                [data addObject:[f altitude]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
-            [data addObject:[f pressure]];
+            if (!([f pressure] == nil))
+                [data addObject:[f pressure]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
-            [data addObject:[f gyro_x]];
+            if (!([f gyro_x] == nil))
+                [data addObject:[f gyro_x]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
-            [data addObject:[f gyro_y]];
+            if (!([f gyro_y] == nil))
+                [data addObject:[f gyro_y]];
+            else
+                [data addObject:@""];
             continue;
         }
         if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
-            [data addObject:[f gyro_z]];
+            if (!([f gyro_z] == nil))
+                [data addObject:[f gyro_z]];
+            else
+                [data addObject:@""];
             continue;
         }
 
-        
-        [data addObject:[NSNull null]];
+        [data addObject:@""];
     }
-    
+
     return data;    
 }
 

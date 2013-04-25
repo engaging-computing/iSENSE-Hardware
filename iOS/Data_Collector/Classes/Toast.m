@@ -69,7 +69,7 @@ static NSString *kDurationKey = @"CSToastDurationKey";
 - (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image {
     UIImage *display;
     
-    if (image == @"check") {
+    if ([image isEqual: @"check"]) {
         display = [UIImage imageNamed:@"bluecheck"];
     } else {
         display = [UIImage imageNamed:@"red_x"];
@@ -82,7 +82,7 @@ static NSString *kDurationKey = @"CSToastDurationKey";
 - (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image {
     UIImage *display;
     
-    if (image == @"check") {
+    if ([image isEqual: @"check"]) {
         display = [UIImage imageNamed:@"bluecheck"];
     } else {
         display = [UIImage imageNamed:@"red_x"];
