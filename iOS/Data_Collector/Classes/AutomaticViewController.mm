@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -202,6 +202,7 @@
         sessionTitle.textColor = [UIColor whiteColor];
         sessionTitle.backgroundColor = [UIColor clearColor];
         sessionTitle.delegate = self;
+        sessionTitle.tag = TAG_AUTOMATIC_SESSION_TITLE;
         
         // Session Title Label
         sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 260, 175, 35)];
@@ -219,6 +220,7 @@
         sampleInterval.textColor = [UIColor whiteColor];
         sampleInterval.backgroundColor = [UIColor clearColor];
         sampleInterval.delegate = self;
+        sampleInterval.tag = TAG_AUTOMATIC_SAMPLE_INTERVAL;
         
         // Session Title Label
         sampleIntervalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 760, 225, 35)];
@@ -311,6 +313,7 @@
         sessionTitle.textColor = [UIColor whiteColor];
         sessionTitle.backgroundColor = [UIColor clearColor];
         sessionTitle.delegate = self;
+        sessionTitle.tag = TAG_AUTOMATIC_SESSION_TITLE;
         
         // Session Title Label
         sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20)];
@@ -328,6 +331,7 @@
         sampleInterval.textColor = [UIColor whiteColor];
         sampleInterval.backgroundColor = [UIColor clearColor];
         sampleInterval.delegate = self;
+        sampleInterval.tag = TAG_AUTOMATIC_SAMPLE_INTERVAL;
         
         // Session Title Label
         sampleIntervalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, self.view.frame.size.height - 35, 150, 20)];
@@ -363,6 +367,7 @@
     dfm = [DataFieldManager alloc];
     [self resetAddressFields];
     recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
+    [self registerForKeyboardNotifications];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
@@ -600,8 +605,6 @@
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
     
-    NSLog(@"Update fields");
-    
     // acceleration in meters per second squared
     fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
     fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
@@ -617,9 +620,6 @@
     double longitude = lc2d.longitude;
     fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
     fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
-    
-    NSLog(@"Update fields 2");
-
     
     // magnetic field in microTesla
     fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
@@ -637,25 +637,14 @@
         fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
     }
     
-    NSLog(@"Update fields 3");
-    
-    if (fieldsRow) NSLog(@"Trap!! %@", fieldsRow);
-    if (dfm) NSLog(@"Nah I lied");
-    
     // Update parent JSON object
     [dfm orderDataFromFields:fieldsRow];
-    NSLog(@"Looking for nil");
     
-    
-    NSLog(@"%@", dfm.data);
-    NSLog(@"%@", dataToBeJSONed);
     if (dfm.data != nil || dataToBeJSONed != nil)
         [dataToBeJSONed addObject:dfm.data];
     else {
         NSLog(@"something is wrong");
     }
-    
-    NSLog(@"UpdateF fields 4");
 
 }
 
@@ -867,5 +856,103 @@
 - (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
     [widController.view removeFromSuperview];
 }
+
+// Sets up listeners for keyboard
+- (void) registerForKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+// Unregisters listeners for keyboard
+- (void) unregisterKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    
+    if (activeField.tag == TAG_AUTOMATIC_SESSION_TITLE) {
+        
+        // adjust UI depending on field being editted
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                
+            } else {
+               
+            }
+        } else {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                
+            } else {
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SESSION_LAND_IPHONE,
+                                             self.view.frame.size.width, self.view.frame.size.height);
+            }
+        }
+        
+    } else if (activeField.tag == TAG_AUTOMATIC_SAMPLE_INTERVAL) {
+        // adjust UI depending on field being editted
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SAMPLE_PORT_IPAD,
+                                             self.view.frame.size.width, self.view.frame.size.height);
+            } else {
+                
+            }
+        } else {
+            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SAMPLE_PORT_IPHONE,
+                                             self.view.frame.size.width, self.view.frame.size.height);
+            } else {
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SAMPLE_LAND_IPHONE,
+                                             self.view.frame.size.width, self.view.frame.size.height);
+            }
+        }
+    }
+    
+    keyboardDismissProper = false;
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    
+    @try {
+        if (activeField != nil && (activeField.tag == TAG_AUTOMATIC_SESSION_TITLE || activeField.tag == TAG_AUTOMATIC_SAMPLE_INTERVAL)) {
+            self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+        }
+    } @catch (NSException *e) {
+        // couldn't check activeField - so ignore it
+    }
+    
+    keyboardDismissProper = true;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    lastField   = textField;
+    activeField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    activeField = nil;
+}
+
+- (IBAction) textFieldFinished:(id)sender {}
+
 
 @end
