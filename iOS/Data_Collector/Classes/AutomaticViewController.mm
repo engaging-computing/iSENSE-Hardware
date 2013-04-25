@@ -54,7 +54,9 @@
             // Update elapsed time
             elapsedTime = 0;
             [self updateElapsedTime];
+            NSLog(@"updated Time");
             timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
+            NSLog(@"timer was launched");
             
         // Stop Recording
         } else {
@@ -142,7 +144,6 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
-        mainView.backgroundColor = [UIColor blackColor];
         self.view = mainView;
         [mainView release];
         
@@ -252,7 +253,6 @@
         
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
-        mainView.backgroundColor = [UIColor blackColor];
         self.view = mainView;
         [mainView release];
         
@@ -405,11 +405,15 @@
         [update release];
     }
     if (recommendedSampleInterval) {
-        sampleInterval.text = [NSString stringWithFormat:@"%f", recommendedSampleInterval];
+        if (recommendedSampleInterval == -1) sampleInterval.text = @"";
+        else {
+                sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
+        }
         Experiment *experiment = [isenseAPI getExperiment:[NSNumber numberWithInt:expNum]];
         NSLog(@"srate = %@", experiment.srate);
         if ((NSNull *)experiment.srate != [NSNull null]) {
             sampleInterval.text = [NSString stringWithFormat:@"%d", experiment.srate.intValue];
+
         }
     }
 }
@@ -569,6 +573,8 @@
     
     // Start the new timer
     recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
+    
+    NSLog(@"End Record Data");
 
 }
 
@@ -579,6 +585,8 @@
     // Fill a new row of data starting with time
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
+    
+    NSLog(@"Update fields");
     
     // acceleration in meters per second squared
     fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
@@ -596,6 +604,9 @@
     fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
     fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
     
+    NSLog(@"Update fields 2");
+
+    
     // magnetic field in microTesla
     fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
     fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
@@ -612,9 +623,25 @@
         fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
     }
     
+    NSLog(@"Update fields 3");
+    
+    if (fieldsRow) NSLog(@"Trap!! %@", fieldsRow);
+    if (dfm) NSLog(@"Nah i lied");
+    
     // Update parent JSON object
     [dfm orderDataFromFields:fieldsRow];
-    [dataToBeJSONed addObject:dfm.data];
+    NSLog(@"Looking for nil");
+    
+    
+    NSLog(@"%@", dfm.data);
+    NSLog(@"%@", dataToBeJSONed);
+    if (dfm.data != nil || dataToBeJSONed != nil)
+        [dataToBeJSONed addObject:dfm.data];
+    else {
+        NSLog(@"something is wrong");
+    }
+    
+    NSLog(@"UpdateF fields 4");
 
 }
 
