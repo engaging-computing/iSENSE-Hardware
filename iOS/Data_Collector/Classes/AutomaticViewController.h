@@ -64,5 +64,8 @@
 @property (nonatomic, copy) NSString *city;
 @property (nonatomic, copy) NSString *address;
 @property (nonatomic, copy) NSString *country;
+@property (nonatomic, retain) UITextField *activeField;
+@property (nonatomic, retain) UITextField *lastField;
+@property (nonatomic, assign) bool keyboardDismissProper;
 
 @end
