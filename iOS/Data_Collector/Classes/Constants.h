@@ -32,6 +32,12 @@
 #define TYPE_LONGITUDE 2
 #define TYPE_TIME      3
 
+// ipad and iphone dimensions
+#define IPAD_WIDTH_PORTRAIT     725
+#define IPAD_WIDTH_LANDSCAPE    980
+#define IPHONE_WIDTH_PORTRAIT   280
+#define IPHONE_WIDTH_LANDSCAPE  415
+
 // manual scrollview drawing constants
 #define SCROLLVIEW_Y_OFFSET     50
 #define SCROLLVIEW_OBJ_INCR     30
@@ -39,10 +45,6 @@
 #define SCROLLVIEW_TEXT_HEIGHT  35
 #define UI_FIELDNAME            0
 #define UI_FIELDCONTENTS        1
-#define IPAD_WIDTH_PORTRAIT     725
-#define IPAD_WIDTH_LANDSCAPE    980
-#define IPHONE_WIDTH_PORTRAIT   280
-#define IPHONE_WIDTH_LANDSCAPE  415
 
 // manual scrollview oddity patches
 #define PORTRAIT_BOTTOM_CUT         40
@@ -64,10 +66,20 @@
 #define RECT_HEIGHT_OFFSET              30
 
 
-// tags for types of UITextFields
+// tags for types of UITextFields in Manual
 #define TAG_DEFAULT 1000
 #define TAG_TEXT    5000
 #define TAG_NUMERIC 6000
+
+// tags for the UITextFields in Automatic
+#define TAG_AUTOMATIC_SESSION_TITLE   9001
+#define TAG_AUTOMATIC_SAMPLE_INTERVAL 9002
+
+// constants for moving Automatic's view up when keyboard present
+#define KEY_OFFSET_SESSION_LAND_IPHONE  75
+#define KEY_OFFSET_SAMPLE_LAND_IPHONE   75
+#define KEY_OFFSET_SAMPLE_PORT_IPHONE   230
+#define KEY_OFFSET_SAMPLE_PORT_IPAD     155
 
 // nav controller height
 #define NAVIGATION_CONTROLLER_HEIGHT 64
