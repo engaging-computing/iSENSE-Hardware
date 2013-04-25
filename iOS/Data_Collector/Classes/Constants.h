@@ -10,6 +10,9 @@
 #ifndef Constants_h
 #define Constants_h
 
+// default sample interval
+#define DEFAULT_SAMPLE_INTERVAL      50
+
 // constants for dialogs
 #define MENU_EXPERIMENT               0
 #define MENU_LOGIN                    1
