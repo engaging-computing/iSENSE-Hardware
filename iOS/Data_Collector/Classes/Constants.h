@@ -11,7 +11,7 @@
 #define Constants_h
 
 // default sample interval
-#define DEFAULT_SAMPLE_INTERVAL      50
+#define DEFAULT_SAMPLE_INTERVAL      125
 
 // constants for dialogs
 #define MENU_EXPERIMENT               0

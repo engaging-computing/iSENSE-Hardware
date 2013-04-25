@@ -363,6 +363,19 @@
     dfm = [DataFieldManager alloc];
     [self resetAddressFields];
     recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(sampleIntervalUpdated)
+     name:UITextFieldTextDidEndEditingNotification
+     object:sampleInterval];
+}
+
+- (void) sampleIntervalUpdated {
+    if (sampleInterval.text.intValue >= 125)recommendedSampleInterval = sampleInterval.text.intValue;
+    else {
+        sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
+    }
 }
 
 // Is called every time AutomaticView appears
@@ -405,15 +418,16 @@
         [update release];
     }
     if (recommendedSampleInterval) {
-        if (recommendedSampleInterval == -1) sampleInterval.text = @"";
+        if (recommendedSampleInterval <= 125) sampleInterval.text = @"125";
         else {
-                sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
+            sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
         }
         Experiment *experiment = [isenseAPI getExperiment:[NSNumber numberWithInt:expNum]];
-        NSLog(@"srate = %@", experiment.srate);
         if ((NSNull *)experiment.srate != [NSNull null]) {
-            sampleInterval.text = [NSString stringWithFormat:@"%d", experiment.srate.intValue];
-
+            if (experiment.srate.intValue > 125) {
+                sampleInterval.text = [NSString stringWithFormat:@"%d", experiment.srate.intValue];
+                recommendedSampleInterval = experiment.srate.intValue;
+            }
         }
     }
 }
@@ -556,7 +570,7 @@
     motionManager = [[CMMotionManager alloc] init];
     
     // Make a new float
-    float rate = .5;
+    float rate = .125;
     if (recommendedSampleInterval > 0) rate = recommendedSampleInterval / 1000;
     NSLog(@"Rate: %f", rate);
     
@@ -626,7 +640,7 @@
     NSLog(@"Update fields 3");
     
     if (fieldsRow) NSLog(@"Trap!! %@", fieldsRow);
-    if (dfm) NSLog(@"Nah i lied");
+    if (dfm) NSLog(@"Nah I lied");
     
     // Update parent JSON object
     [dfm orderDataFromFields:fieldsRow];
