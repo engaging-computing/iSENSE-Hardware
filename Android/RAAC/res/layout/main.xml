@@ -19,25 +19,54 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/raaclogo" />
 
-        <ImageButton
-            android:id="@+id/pinpoint_select_btn"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/lastPptLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/nopptbtn" />
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/btn_stateselector"
+            android:clickable="true"
+            android:padding="10dp" >
 
-        <ImageView
-            android:id="@+id/mySpin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/pinpoint_select_btn"
-            android:layout_alignLeft="@+id/pinpoint_select_btn"
-            android:layout_marginBottom="-113dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/superspin"
-            android:visibility="gone" />
+            <ImageButton
+                android:id="@+id/pinpoint_select_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/nopptbtn" />
+
+            <ImageView
+                android:id="@+id/mySpin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-113dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/superspin"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/launchStatusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/pinpoint_select_btn"
+                android:text="@string/launch_reconnect"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/lastPptName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/launchStatusTxt"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/pinpoint_select_btn"
+                android:text="PINPoint +1413"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -61,7 +90,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/custombtn"
                 android:text="@string/retrieve_data" />
-            
 
             <TextView
                 android:id="@+id/statusField"
@@ -105,9 +133,9 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:layout_weight=".50"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:inputType="textCapWords"
                     android:maxLength="20"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
@@ -133,14 +161,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
-                
-                <TextView 
-                  		android:id="@+id/onlyTenPoints"
-                    	android:layout_width="match_parent"
-                    	android:layout_height="wrap_content"
-                    	android:text="@string/tenPoints"
-                    	android:visibility="invisible"
-                    	android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/onlyTenPoints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tenPoints"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:visibility="invisible" />
             </LinearLayout>
         </ScrollView>
 
@@ -230,7 +258,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:inputType="none"
-                    android:lines="1"/>
+                    android:lines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -257,7 +285,6 @@
                     android:inputType="none"
                     android:lines="1" />
             </LinearLayout>
-            
         </LinearLayout>
     </LinearLayout>
 

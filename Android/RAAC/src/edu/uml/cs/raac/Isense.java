@@ -91,11 +91,11 @@ public class Isense extends Activity implements OnClickListener {
 	boolean showConnectOption = false, showTimeOption = false, showSensorOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE;
 	ScrollView dataScroller;
-	ImageButton pinpointBtn;
-	ImageView spinner;
-	RelativeLayout launchLayout;
+	ImageButton pinpointBtn, pinpointBtnOther;
+	ImageView spinner, spinner2;
+	RelativeLayout launchLayout, lastPptLayout, otherPptLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, btStatus, sensorHead;
+	TextView minField, maxField, aveField, medField, btStatus, sensorHead, launchStatusA, lastPptName;
 	LinearLayout dataLayout;
 	TextView tenPoints;
 	EditText nameField;
@@ -123,6 +123,8 @@ public class Isense extends Activity implements OnClickListener {
 	String defaultMac = "";
 	String groupName = "";
 
+	boolean pressedRecent = true;
+
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
 
@@ -131,7 +133,7 @@ public class Isense extends Activity implements OnClickListener {
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE = 1;
-	private static final int REQUEST_CONNECT_DEVICE_2 = 3;
+	private static final int REQUEST_CONNECT_DEVICE_MAIN = 3;
 	private static final int SENSOR_CHANGE = 2;
 	private static final int REQUEST_ENABLE_BT = 4;
 	private static final int REQUEST_VIEW_DATA = 5;
@@ -158,11 +160,11 @@ public class Isense extends Activity implements OnClickListener {
 		//Show name selection dialog		
 		Intent i =  new Intent(this, SetName.class);
 		startActivityForResult(i, GROUP_NAME_BOX);
-		
+
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		//Get the MAC address of the default PINPoint
 		defaultMac = prefs.getString("defaultPpt", "");
-		
+
 		initializeLayout();
 		pinpointBtn.setImageResource(R.drawable.nopptbtn);
 
@@ -199,6 +201,7 @@ public class Isense extends Activity implements OnClickListener {
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
 		pushToISENSE = (Button) findViewById(R.id.btn_pushToISENSE);
 		pinpointBtn = (ImageButton) findViewById(R.id.pinpoint_select_btn);
+		pinpointBtnOther = (ImageButton) findViewById(R.id.otherpinpoint_select_btn);
 		launchLayout = (RelativeLayout) findViewById(R.id.launchlayout);
 		minField = (TextView) findViewById(R.id.et_min);
 		maxField = (TextView) findViewById(R.id.et_max);
@@ -206,6 +209,7 @@ public class Isense extends Activity implements OnClickListener {
 		medField = (TextView) findViewById(R.id.et_medi);
 		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
+		spinner2 = (ImageView) findViewById(R.id.mySpinOther);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
 		tenPoints = (TextView) findViewById(R.id.onlyTenPoints);
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
@@ -213,9 +217,20 @@ public class Isense extends Activity implements OnClickListener {
 
 		nameField.setText(groupName);
 
-		pinpointBtn.setOnClickListener(this);
+		launchStatusA = (TextView) findViewById(R.id.launchStatusTxt);
+		lastPptName = (TextView) findViewById(R.id.lastPptName);
+		lastPptLayout = (RelativeLayout) findViewById(R.id.lastPptLayout);
+
+		otherPptLayout = (RelativeLayout) findViewById(R.id.otherPptLayout);
+
+		lastPptLayout.setOnClickListener(this);
+		otherPptLayout.setOnClickListener(this);
 		rcrdBtn.setOnClickListener(this);
 		pushToISENSE.setOnClickListener(this);
+
+		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String name = defPrefs.getString("defaultPptName","");
+		lastPptName.setText(name);
 
 		minField.setText(datMin);
 		maxField.setText(datMax);
@@ -329,7 +344,7 @@ public class Isense extends Activity implements OnClickListener {
 		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
 		super.onStart();
 	}
-	
+
 	private double applyFormula(int sensor, double x) {
 		if(sensor == 24) {
 			return (-0.0185*x)+13.769;
@@ -352,7 +367,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		if (item.getItemId() == R.id.menu_connect) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_2);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
 		} else if (item.getItemId() == R.id.menu_setTime) {
 			if(ppi.setRealTimeClock())
 				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
@@ -407,7 +422,7 @@ public class Isense extends Activity implements OnClickListener {
 		} else {
 			sensorHead.setText("BTA1: Vernier Temperature Probe");
 		}
-		
+
 		ppi.setContext(this);
 		final ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -477,13 +492,19 @@ public class Isense extends Activity implements OnClickListener {
 	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
-		if (v == pinpointBtn) {
-			if(!defaultMac.equals("") && autoConn == true) {
+		if (v == lastPptLayout) {
+			pressedRecent = true;
+			if(!defaultMac.equals("")) {
 				connectToBluetooth(defaultMac);
 			} else {
 				Intent serverIntent = new Intent(this, DeviceListActivity.class);
 				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 			}
+		}
+		if (v == otherPptLayout) {
+			pressedRecent = false;
+			Intent serverIntent = new Intent(this, DeviceListActivity.class);
+			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 		}
 		if (v == rcrdBtn) {
 			getRecords();
@@ -505,7 +526,7 @@ public class Isense extends Activity implements OnClickListener {
 				switch(x) {
 				case 1:  timeData.add(fmtData(str));           																break;
 				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
-						 data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 						break;
+				data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 						break;
 				default:                                        															break;
 				}
 			}
@@ -674,7 +695,7 @@ public class Isense extends Activity implements OnClickListener {
 		return true;
 	}
 
-	// The Handler that gets information back from the BluetoothChatService
+	// The Handler that gets information back from the BluetoothService
 	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -682,12 +703,19 @@ public class Isense extends Activity implements OnClickListener {
 			case BluetoothService.MESSAGE_STATE_CHANGE:
 				switch (msg.arg1) {
 				case BluetoothService.STATE_CONNECTED:
-					spinner.clearAnimation();
-					spinner.setVisibility(View.GONE);
-					pinpointBtn.setImageResource(R.drawable.pptbtn);
+					if(pressedRecent) {
+						spinner.clearAnimation();
+						spinner.setVisibility(View.GONE);
+						pinpointBtn.setImageResource(R.drawable.pptbtn);
+					} else {
+						spinner2.clearAnimation();
+						spinner2.setVisibility(View.GONE);
+						pinpointBtnOther.setImageResource(R.drawable.pptbtn);
+					}
 					ppi = new pinpointInterface(mChatService);
 					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
+					pinpointBtnOther.setEnabled(false);
 					btStatNum = 1;
 					setBtStatus();
 					//Sleep thread to allow near-future communications to succeed
@@ -720,17 +748,29 @@ public class Isense extends Activity implements OnClickListener {
 					}
 					break;
 				case BluetoothService.STATE_CONNECTING:
-					pinpointBtn.setImageResource(R.drawable.pptbtntry);
-					spinner.setVisibility(View.VISIBLE);
-					spinner.startAnimation(rotateInPlace);
+					if(pressedRecent) {
+						pinpointBtn.setImageResource(R.drawable.pptbtntry);
+						spinner.setVisibility(View.VISIBLE);
+						spinner.startAnimation(rotateInPlace);
+					} else {
+						pinpointBtnOther.setImageResource(R.drawable.pptbtntry);
+						spinner2.setVisibility(View.VISIBLE);
+						spinner2.startAnimation(rotateInPlace);
+					}
 					btStatNum = 2;
 					setBtStatus();
 					break;
 				case BluetoothService.STATE_LISTEN:
 				case BluetoothService.STATE_NONE:
-					spinner.clearAnimation();
-					spinner.setVisibility(View.GONE);
-					pinpointBtn.setImageResource(R.drawable.nopptbtn);
+					if(pressedRecent) {
+						spinner.clearAnimation();
+						spinner.setVisibility(View.GONE);
+						pinpointBtn.setImageResource(R.drawable.nopptbtn);
+					} else {
+						spinner2.clearAnimation();
+						spinner2.setVisibility(View.GONE);
+						pinpointBtnOther.setImageResource(R.drawable.nopptbtn);
+					}
 					showSensorOption = false;
 					if(Build.VERSION.SDK_INT >= 11) {
 						invalidateOptionsMenu();
@@ -770,24 +810,30 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				if(defaultMac.equals("")) {
-					defEditor.putString("defaultPpt", address);
-					defEditor.commit();
-				}
+				String name = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_NAME);
+				defEditor.putString("defaultPpt", address);
+				defEditor.putString("defaultPptName", name);
+				defEditor.commit();
+
+				lastPptName.setText(name);
+
 				connectToBluetooth(address);
 			}
 			break;
-		case REQUEST_CONNECT_DEVICE_2:
+		case REQUEST_CONNECT_DEVICE_MAIN:
 			connectFromSplash = false;
 			// When DeviceListActivity returns with a device to connect
 			if (resultCode == Activity.RESULT_OK) {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				if(defaultMac.equals("")) {
-					defEditor.putString("defaultPpt", address);
-					defEditor.commit();
-				}
+				String name = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_NAME);
+				defEditor.putString("defaultPpt", address);
+				defEditor.putString("defaultPptName", name);
+				defEditor.commit();
+
+				lastPptName.setText(name);
+
 				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
