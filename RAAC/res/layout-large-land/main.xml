@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ViewFlipper
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/flipper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -11,25 +10,54 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_launch" >
 
-        <ImageButton
-            android:id="@+id/pinpoint_select_btn"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/lastPptLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/nopptbtn" />
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/btn_stateselector"
+            android:clickable="true"
+            android:padding="10dp" >
 
-        <ImageView
-            android:id="@+id/mySpin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/pinpoint_select_btn"
-            android:layout_alignLeft="@+id/pinpoint_select_btn"
-            android:layout_marginBottom="-114dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/superspin" android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/pinpoint_select_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/nopptbtn" />
 
+            <ImageView
+                android:id="@+id/mySpin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-113dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/superspin"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/launchStatusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/pinpoint_select_btn"
+                android:text="@string/launch_reconnect"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/lastPptName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/launchStatusTxt"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/pinpoint_select_btn"
+                android:text="PINPoint +1413"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -63,36 +91,37 @@
                 android:layout_weight=".75"
                 android:text="Status: Not Connected"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-            
+
             <!-- additional buttons by jeremy -->
+
             <LinearLayout
-                android:layout_weight="1"
                 android:id="@+id/nameContainer"
-                android:layout_gravity="center"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content">
-        	    
-        	    <TextView 
-         	       android:id="@+id/namePrompt"
-          	  		android:layout_width="0dp"
-              	  	android:layout_height="wrap_content"
-                	android:layout_weight=".50"
-                	android:layout_marginRight="0dp"
-                	android:text="Group Name:"
-                	android:textAppearance="?android:attr/textAppearanceLarge" />
-            	
-            	<EditText 
-                	android:id="@+id/nameField"
-                	android:layout_width="0dp"
-                	android:layout_height="wrap_content"
-                	android:layout_marginLeft="0dp"
-                	android:layout_marginRight="25dp"
-	              	android:layout_weight="1"
-	              	android:layout_gravity="left"
-                	android:inputType="textCapWords"
-                	android:maxLength="20"
-                	android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                	android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/namePrompt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="0dp"
+                    android:layout_weight=".50"
+                    android:text="Group Name:"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <EditText
+                    android:id="@+id/nameField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight="1"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+                    android:inputType="textCapWords"
+                    android:maxLength="20"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
             </LinearLayout>
         </LinearLayout>
 
@@ -117,16 +146,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
-                    
-                    <TextView 
-                    	android:id="@+id/onlyTenPoints"
-                   	 	android:layout_width="match_parent"
-                    	android:layout_height="wrap_content"
-                    	android:text="@string/tenPoints"
-                    	android:textAppearance="?android:attr/textAppearanceMedium"
-                    	android:layout_gravity="center"
-                    	android:gravity="center"
-                    	android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/onlyTenPoints"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/tenPoints"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:visibility="invisible" />
                 </LinearLayout>
             </ScrollView>
 
@@ -168,7 +197,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:focusable="false"
-                        android:inputType="none" android:lines="1">
+                        android:inputType="none"
+                        android:lines="1" >
 
                         <requestFocus />
                     </EditText>
@@ -195,7 +225,8 @@
                         android:layout_weight="1"
                         android:clickable="false"
                         android:focusable="false"
-                        android:inputType="none" android:lines="1"/>
+                        android:inputType="none"
+                        android:lines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -219,7 +250,8 @@
                         android:layout_weight="1"
                         android:clickable="false"
                         android:focusable="false"
-                        android:inputType="none" android:lines="1"/>
+                        android:inputType="none"
+                        android:lines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -246,17 +278,17 @@
                         android:inputType="none"
                         android:lines="1" />
                 </LinearLayout>
-                
+
                 <Button
-       				android:id="@+id/btn_pushToISENSE"
-                	android:layout_width="match_parent"
-                	android:layout_height="wrap_content"
-                	android:layout_weight="1"
-                	android:layout_gravity="center"
-                	android:gravity="center"
-                	android:background="@drawable/custombtn"
-                	android:text="@string/upload"
-                	android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:id="@+id/btn_pushToISENSE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/custombtn"
+                    android:gravity="center"
+                    android:text="@string/upload"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
