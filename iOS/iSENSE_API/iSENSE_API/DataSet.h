@@ -30,8 +30,8 @@
 @property (nonatomic, copy) NSString *name_;
 @property (nonatomic, copy) NSString *description_;
 @property (nonatomic, assign) int eid_;
-@property (nonatomic, assign) NSArray *data_;
-@property (nonatomic, assign) NSArray *picturePaths_;
+@property (nonatomic, retain) NSArray *data_;
+@property (nonatomic, retain) NSArray *picturePaths_;
 @property (nonatomic, assign) int sid_;
 @property (nonatomic, copy) NSString *city_;
 @property (nonatomic, copy) NSString *state_;

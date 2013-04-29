@@ -14,6 +14,10 @@
 @interface NSMutableDictionary (QueueAdditions)
 - (id) dequeue;
 - (void) enqueue:(id)obj;
+
+@property (nonatomic, assign) int headKey;
+@property (nonatomic, assign) int tailKey;
+
 @end
 
 #endif /* defined(__iSENSE_API__queue__) */

@@ -8,13 +8,17 @@
 
 #include "Queue.h"
 
+
 @implementation NSMutableDictionary (QueueAdditions)
+@synthesize headKey, tailKey;
+
+
 // Queues are first-in-first-out, so we remove objects from the head
 - (id) dequeue {
-    id headObject = [self objectAtIndex:0];
+    id headObject = [self objectForKey:headKey];//[self objectAtIndex:0];
     if (headObject != nil) {
-        [[headObject retain] autorelease]; // so it isn't dealloc'ed on remove
-        [self removeObjectAtIndex:0];
+       // [[headObject retain] autorelease]; // so it isn't dealloc'ed on remove
+      [self removeObjectForKey:headKey];
     }
     return headObject;
 }
