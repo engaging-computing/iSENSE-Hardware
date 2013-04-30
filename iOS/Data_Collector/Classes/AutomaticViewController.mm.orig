@@ -392,13 +392,12 @@
     recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
     [self registerForKeyboardNotifications];
     
+<<<<<<< HEAD
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(sampleIntervalUpdated)
      name:UITextFieldTextDidEndEditingNotification
      object:sampleInterval];
-    
-    [message dismissWithClickedButtonIndex:nil animated:YES];
 }
 
 - (void) sampleIntervalUpdated {
@@ -406,6 +405,9 @@
     else {
         sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
     }
+=======
+    [message dismissWithClickedButtonIndex:nil animated:YES];
+>>>>>>> upstream/master
 }
 
 // Is called every time AutomaticView appears

@@ -266,6 +266,9 @@
             rds->doesHaveName = false;
         }
     }
+    /* should probably be a 
+     [test release];
+     here */
 }
 
 
@@ -374,9 +377,9 @@
         [CameraUsage useCamera];
     else
         [self.view makeToast:@"Please Enter a Session Name First"
-                    duration:3.0
-                    position:@"bottom"
-                       image:@"red_x"];
+                    duration:TOAST_LENGTH_LONG
+                    position:TOAST_BOTTOM
+                       image:TOAST_RED_X];
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -535,9 +538,9 @@
     NSArray *split = [qrResults componentsSeparatedByString:@"="];
     if ([split count] != 2) {
         [self.view makeToast:@"Invalid QR code scanned"
-                    duration:3.0
-                    position:@"bottom"
-                       image:@"red_x"];
+                    duration:TOAST_LENGTH_LONG
+                    position:TOAST_BOTTOM
+                       image:TOAST_RED_X];
     } else {
         rds->doesHaveData = false;
         
@@ -626,14 +629,14 @@
             if (success) {
                 [self.view makeToast:@"Login Successful!"
                             duration:TOAST_LENGTH_SHORT
-                            position:@"bottom"
-                               image:@"check"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_CHECKMARK];
                 loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
             } else {
                 [self.view makeToast:@"Login Failed!"
                             duration:TOAST_LENGTH_SHORT
-                            position:@"bottom"
-                               image:@"red_x"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_RED_X];
             }
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -686,29 +689,29 @@
             if (!exp)
                 [self.view makeToast:@"Please Enter an Experiment # First"
                             duration:TOAST_LENGTH_LONG
-                            position:@"bottom"
-                               image:@"red_x"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_RED_X];
             if (!loggedIn)
                 [self.view makeToast:@"Please Login First"
                             duration:TOAST_LENGTH_LONG
-                            position:@"bottom"
-                               image:@"red_x"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_RED_X];
             if (!hasSessionName)
                 [self.view makeToast:@"Please Enter a Session Name First"
                             duration:TOAST_LENGTH_LONG
-                            position:@"bottom"
-                               image:@"red_x"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_RED_X];
             if (uploadSuccess != -1) {
                 if (uploadSuccess)
                     [self.view makeToast:@"Upload Success!"
                                 duration:TOAST_LENGTH_SHORT
-                                position:@"bottom"
-                                   image:@"check"];
+                                position:TOAST_BOTTOM
+                                   image:TOAST_CHECKMARK];
                 else
                     [self.view makeToast:@"Upload Failed!"
                                 duration:TOAST_LENGTH_SHORT
-                                position:@"bottom"
-                                   image:@"check"];
+                                position:TOAST_BOTTOM
+                                   image:TOAST_RED_X];
             }
             
             [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -852,6 +855,10 @@
         NSString *tmp = [NSString stringWithString:data];
         fieldContents.text = [tmp retain];
     }
+    
+    /*
+     * [tmp release];
+     */
         
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;
