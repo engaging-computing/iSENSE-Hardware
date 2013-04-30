@@ -555,18 +555,30 @@
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
-    if ([isenseAPI login:usernameInput with:passwordInput]) {
-        [self.view makeToast:@"Login Successful!"
-                    duration:2.0
-                    position:@"bottom"
-                       image:@"check"];
-        [self updateLoginStatus];
-    } else {
-        [self.view makeToast:@"Login Failed!"
-                    duration:2.0
-                    position:@"bottom"
-                       image:@"red_x"];
-    }
+    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL success = [isenseAPI login:usernameInput with:passwordInput];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [self.view makeToast:@"Login Successful!"
+                            duration:TOAST_LENGTH_SHORT
+                            position:@"bottom"
+                               image:@"check"];
+                [self updateLoginStatus];
+            } else {
+                [self.view makeToast:@"Login Failed!"
+                            duration:TOAST_LENGTH_SHORT
+                            position:@"bottom"
+                               image:@"red_x"];
+            }
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+        });
+    });
+    
 }
 
 // Record the data and return the NSMutable array to be JSONed
@@ -728,7 +740,7 @@
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
-        
+
         if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
