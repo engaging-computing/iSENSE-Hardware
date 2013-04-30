@@ -78,10 +78,9 @@
             startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
-            [motionManager stopAccelerometerUpdates]; // TODO - should it stop other things like gyro/mag as well?
-            //NSMutableArray *results = [self stopRecording:motionManager];
-            //NSLog(@"Received %d results.", [results count]);
-            //[self uploadData:results];
+            [motionManager stopAccelerometerUpdates]; // TODO - is this all we need to stop updates for?
+            [motionManager stopMagnetometerUpdates];
+            if (motionManager.gyroAvailable) [motionManager stopGyroUpdates];
             
             [self setIsRecording:FALSE];
             
@@ -160,6 +159,10 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
+    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading..."];
+    [message show];
+    
     UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Bound, allocate, and customize the main view
@@ -388,6 +391,8 @@
     [self resetAddressFields];
     recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
     [self registerForKeyboardNotifications];
+    
+    [message dismissWithClickedButtonIndex:nil animated:YES];
 }
 
 // Is called every time AutomaticView appears
