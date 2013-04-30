@@ -34,6 +34,11 @@
 
 "description_or_delete"         = "Enter a session description or leave blank for a default description.  Then choose to Upload or Delete your data.";
 
+"key_username"                  = "username";
+"key_password"                  = "password";
+"key_exp_automatic"             = "expnum_automatic";
+"key_exp_manual"                = "expnum_manual";
+
 // ------------------------------ //
 // --- about application text --- //
 // ------------------------------ //
