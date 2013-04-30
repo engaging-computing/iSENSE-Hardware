@@ -27,13 +27,19 @@
             
             // Check for a chosen experiment
             if (!expNum) {
-                [self.view makeToast:@"No experiment chosen." duration:1 position:@"bottom" image:@"red_x"];
+                [self.view makeToast:@"No experiment chosen." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
                 return;
             }
             
             // Check for login
             if (![isenseAPI isLoggedIn]) {
-                [self.view makeToast:@"Not Logged In" duration:1 position:@"bottom" image:@"red_x"];
+                [self.view makeToast:@"Not Logged In" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+                return;
+            }
+            
+            // Check for a session title
+            if ([[sessionTitle text] length] == 0) {
+                [self.view makeToast:@"Enter a session title first" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
                 return;
             }
             
@@ -111,7 +117,7 @@
 - (bool) uploadData:(NSMutableArray *)results withDescription:(NSString *)description {
     
     if (![isenseAPI isLoggedIn]) {
-        [self.view makeToast:@"Not Logged In" duration:1 position:@"bottom" image:@"red_x"];
+        [self.view makeToast:@"Not Logged In" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
         return false;
     }
     
@@ -566,14 +572,14 @@
             if (success) {
                 [self.view makeToast:@"Login Successful!"
                             duration:TOAST_LENGTH_SHORT
-                            position:@"bottom"
-                               image:@"check"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_CHECKMARK];
                 [self updateLoginStatus];
             } else {
                 [self.view makeToast:@"Login Failed!"
                             duration:TOAST_LENGTH_SHORT
-                            position:@"bottom"
-                               image:@"red_x"];
+                            position:TOAST_BOTTOM
+                               image:TOAST_RED_X];
             }
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -678,17 +684,16 @@
     return dataToBeJSONed;
 }
 
-
+// TODO - be rid of these 2 useless functions...
 - (void) experiment {
     [self.view makeToast:@"Experiment!"
-                duration:2.0
-                position:@"bottom"];
+                duration:TOAST_LENGTH_SHORT
+                position:TOAST_BOTTOM];
 }
-
 - (void) upload {
     [self.view makeToast:@"Upload!"
-                duration:2.0
-                position:@"bottom"];
+                duration:TOAST_LENGTH_SHORT
+                position:TOAST_BOTTOM];
     
 }
 
@@ -833,13 +838,13 @@
                     if (success) {
                         [self.view makeToast:@"Upload success"
                                     duration:TOAST_LENGTH_SHORT
-                                    position:@"bottom"
-                                       image:@"check"];
+                                    position:TOAST_BOTTOM
+                                       image:TOAST_CHECKMARK];
                     } else {
                         [self.view makeToast:@"Upload failed"
                                     duration:TOAST_LENGTH_SHORT
-                                    position:@"bottom"
-                                       image:@"red_x"];
+                                    position:TOAST_BOTTOM
+                                       image:TOAST_RED_X];
                     }
                 
                     [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -848,7 +853,7 @@
             
         } else {
             
-            [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:@"bottom" image:@"check"];
+            [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_CHECKMARK];
        
         }
     }
@@ -867,9 +872,9 @@
     NSArray *split = [qrResults componentsSeparatedByString:@"="];
     if ([split count] != 2) {
         [self.view makeToast:@"Invalid QR code scanned"
-                    duration:3.0
-                    position:@"bottom"
-                       image:@"red_x"];
+                    duration:TOAST_LENGTH_LONG
+                    position:TOAST_BOTTOM
+                       image:TOAST_RED_X];
     } else {
         expNum = [[split objectAtIndex:1] intValue];
     }
