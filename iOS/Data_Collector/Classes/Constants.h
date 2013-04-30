@@ -19,6 +19,7 @@
 #define EXPERIMENT_MANUAL_ENTRY       2
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
+#define DESCRIPTION_AUTOMATIC         5
 
 // options for action sheet
 #define OPTION_CANCELED                0
@@ -84,9 +85,13 @@
 // nav controller height
 #define NAVIGATION_CONTROLLER_HEIGHT 64
 
-// toast duration constants
+// toast constants
 #define TOAST_LENGTH_SHORT  2.0
 #define TOAST_LENGTH_LONG   3.5
-
+#define TOAST_BOTTOM @"bottom"
+#define TOAST_TOP @"top"
+#define TOAST_CENTER @"center"
+#define TOAST_CHECKMARK @"check"
+#define TOAST_RED_X @"red_x"
 
 #endif
