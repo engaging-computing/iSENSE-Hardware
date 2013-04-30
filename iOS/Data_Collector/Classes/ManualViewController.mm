@@ -266,6 +266,9 @@
             rds->doesHaveName = false;
         }
     }
+    /* should probably be a 
+     [test release];
+     here */
 }
 
 
@@ -852,6 +855,10 @@
         NSString *tmp = [NSString stringWithString:data];
         fieldContents.text = [tmp retain];
     }
+    
+    /*
+     * [tmp release];
+     */
         
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;
