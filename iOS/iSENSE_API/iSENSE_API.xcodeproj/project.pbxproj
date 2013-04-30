@@ -15,8 +15,8 @@
 		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
-		39EFB9E7172AD6BC00A6BD2A /* Upload_Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* Upload_Queue.m */; };
-		39EFB9E8172AD6BC00A6BD2A /* Upload_Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* Upload_Queue.h */; };
+		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
+		39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
 		39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9EB172AD8F800A6BD2A /* Queue.h */; };
 		39EFB9F3172ADFE000A6BD2A /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9F1172ADFE000A6BD2A /* DataSet.m */; };
@@ -46,8 +46,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		39EFB9E5172AD6BC00A6BD2A /* Upload_Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Upload_Queue.m; sourceTree = "<group>"; };
-		39EFB9E6172AD6BC00A6BD2A /* Upload_Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Upload_Queue.h; sourceTree = "<group>"; };
+		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
+		39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSaver.h; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		39EFB9EB172AD8F800A6BD2A /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		39EFB9F1172ADFE000A6BD2A /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 		39EFB9E4172AD55700A6BD2A /* src_queue_saver */ = {
 			isa = PBXGroup;
 			children = (
-				39EFB9E5172AD6BC00A6BD2A /* Upload_Queue.m */,
+				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
 				39EFB9EF172ADE9F00A6BD2A /* objects */,
 			);
 			name = src_queue_saver;
@@ -107,7 +107,7 @@
 			children = (
 				39EFB9F2172ADFE000A6BD2A /* DataSet.h */,
 				39EFB9EB172AD8F800A6BD2A /* Queue.h */,
-				39EFB9E6172AD6BC00A6BD2A /* Upload_Queue.h */,
+				39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */,
 			);
 			name = queue_headers;
 			sourceTree = "<group>";
@@ -229,7 +229,7 @@
 				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
 				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
 				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
-				39EFB9E8172AD6BC00A6BD2A /* Upload_Queue.h in Headers */,
+				39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */,
 				39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */,
 				39EFB9F4172ADFE000A6BD2A /* DataSet.h in Headers */,
 			);
@@ -295,7 +295,7 @@
 				39FF262816DFA8760062C3DC /* Person.m in Sources */,
 				39FF262916DFA8760062C3DC /* Session.m in Sources */,
 				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
-				39EFB9E7172AD6BC00A6BD2A /* Upload_Queue.m in Sources */,
+				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				39EFB9F3172ADFE000A6BD2A /* DataSet.m in Sources */,
 			);
