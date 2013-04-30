@@ -128,7 +128,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(false);
+		rapi.useDev(true);
 		
 		initLocations();
 
