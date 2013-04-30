@@ -19,6 +19,7 @@
 #define EXPERIMENT_MANUAL_ENTRY       2
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
+#define DESCRIPTION_AUTOMATIC         5
 
 // options for action sheet
 #define OPTION_CANCELED                0

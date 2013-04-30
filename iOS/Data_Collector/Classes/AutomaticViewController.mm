@@ -72,11 +72,26 @@
             startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
-            NSMutableArray *results = [self stopRecording:motionManager];
-            NSLog(@"Received %d results.", [results count]);
-            [self uploadData:results];
+            [motionManager stopAccelerometerUpdates]; // TODO - should it stop other things like gyro/mag as well?
+            //NSMutableArray *results = [self stopRecording:motionManager];
+            //NSLog(@"Received %d results.", [results count]);
+            //[self uploadData:results];
             
             [self setIsRecording:FALSE];
+            
+            // Open up description dialog
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Delete"
+                                                    otherButtonTitles:@"Upload", nil];
+            
+            message.tag = DESCRIPTION_AUTOMATIC;
+            message.delegate = self;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message show];
+            [message release];
             
         }
         
@@ -93,17 +108,16 @@
     
 }
 
-- (void) uploadData:(NSMutableArray *)results {
+- (bool) uploadData:(NSMutableArray *)results withDescription:(NSString *)description {
     
     if (![isenseAPI isLoggedIn]) {
         [self.view makeToast:@"Not Logged In" duration:1 position:@"bottom" image:@"red_x"];
-        return;
+        return false;
     }
     
     // Create a session on iSENSE/dev.
     NSString *name = @"Session From Mobile";
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
-    NSString *description = [[NSString alloc] initWithString:@"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application."];
     NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
     NSLog(@"%@", address);
     NSLog(@"%@", city);
@@ -114,11 +128,11 @@
     // Upload to iSENSE (pass me JSON data)
     NSError *error = nil;
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-    [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+    bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
 
     [exp_num release];
-    [description release];
     
+    return success;
 }
 
 - (BOOL) containsAcceptedNumbers:(NSString *)mString {
@@ -786,6 +800,45 @@
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
         }
         
+    } else if (actionSheet.tag == DESCRIPTION_AUTOMATIC) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
+            [message show];
+            
+            dispatch_queue_t queue = dispatch_queue_create("automatic_upload_data", NULL);
+            dispatch_async(queue, ^{
+                
+                NSString *description = [[actionSheet textFieldAtIndex:0] text];
+                if ([description length] == 0) {
+                    description = @"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application.";
+                }
+                
+                bool success = [self uploadData:dataToBeJSONed withDescription:description];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (success) {
+                        [self.view makeToast:@"Upload success"
+                                    duration:TOAST_LENGTH_SHORT
+                                    position:@"bottom"
+                                       image:@"check"];
+                    } else {
+                        [self.view makeToast:@"Upload failed"
+                                    duration:TOAST_LENGTH_SHORT
+                                    position:@"bottom"
+                                       image:@"red_x"];
+                    }
+                
+                    [message dismissWithClickedButtonIndex:nil animated:YES];
+                });
+            });
+            
+        } else {
+            
+            [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:@"bottom" image:@"check"];
+       
+        }
     }
 }
 
@@ -939,6 +992,20 @@
 }
 
 - (IBAction) textFieldFinished:(id)sender {}
+
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    [spinner release];
+    return [message autorelease];
+}
 
 
 @end
