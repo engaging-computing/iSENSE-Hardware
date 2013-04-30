@@ -70,9 +70,23 @@
     [iapi toggleUseDev:YES];
     if ([iapi isLoggedIn])
         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
-    else
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
-    
+    else {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *username = [prefs stringForKey:[StringGrabber grabString:@"key_username"]];
+        NSString *password = [prefs stringForKey:[StringGrabber grabString:@"key_password"]];
+        if ([username length] != 0) {
+            bool success = [iapi login:username with:password];
+            if (success) {
+                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+            } else {
+                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
+            }
+        } else {
+            loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"];
+        }
+        
+    }
+        
     // scrollview
     [self.view sendSubviewToBack:scrollView];
     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -102,8 +116,11 @@
     }
     
     // experiment number
-    if (expNum && expNum != 0) {
+    if (expNum && expNum > 0) {
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+        
         if (browsing == YES) {
             browsing = NO;
             [self cleanRDSData];
@@ -114,9 +131,20 @@
             else
                 [self fillDataFieldEntryList:expNum withData:nil];
         }
-    } else
-        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
-    
+    } else {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        int exp = [prefs integerForKey:[StringGrabber grabString:@"key_exp_manual"]];
+        if (exp > 0) {
+            expNum = exp;
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
+            if (rds != nil) rds->doesHaveData = true;
+            [self fillDataFieldEntryList:expNum withData:nil];
+        } else {
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+        }
+    }
+
     [self registerForKeyboardNotifications];
     
 }
@@ -503,6 +531,9 @@
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+            
             [self fillDataFieldEntryList:expNum withData:nil];
         }
         
@@ -542,6 +573,10 @@
         rds->doesHaveData = false;
         
         expNum = [[split objectAtIndex:1] intValue];
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+        
         [self fillDataFieldEntryList:expNum withData:nil];
     }
 }
@@ -628,6 +663,13 @@
                             duration:TOAST_LENGTH_SHORT
                             position:TOAST_BOTTOM
                                image:TOAST_CHECKMARK];
+                
+                // save the username and password in prefs
+                NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs synchronize];
+                
                 loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
             } else {
                 [self.view makeToast:@"Login Failed!"

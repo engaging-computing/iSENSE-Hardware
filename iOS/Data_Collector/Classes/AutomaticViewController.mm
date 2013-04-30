@@ -27,13 +27,13 @@
             
             // Check for a chosen experiment
             if (!expNum) {
-                [self.view makeToast:@"No experiment chosen." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+                [self.view makeToast:@"No experiment chosen" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
                 return;
             }
             
             // Check for login
             if (![isenseAPI isLoggedIn]) {
-                [self.view makeToast:@"Not Logged In" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+                [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
                 return;
             }
             
@@ -116,7 +116,7 @@
 - (bool) uploadData:(NSMutableArray *)results withDescription:(NSString *)description {
     
     if (![isenseAPI isLoggedIn]) {
-        [self.view makeToast:@"Not Logged In" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+        [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
         return false;
     }
     
@@ -383,7 +383,7 @@
         isenseAPI = [iSENSE getInstance];
         [isenseAPI toggleUseDev:YES];
         [self updateLoginStatus];
-        
+        [self updateExpNumLabel]; // TODO - this wasn't here before but I'm assuming it should be since it's in the iPad code as well
     }
     
     [self initLocations];
@@ -422,6 +422,21 @@
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
         loginStatus.textColor = [UIColor greenColor];
     } else {
+        // see if anything is saved in shared preferences
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *username = [prefs stringForKey:[StringGrabber grabString:@"key_username"]];
+        NSString *password = [prefs stringForKey:[StringGrabber grabString:@"key_password"]];
+        if ([username length] != 0) {
+            bool success = [isenseAPI login:username with:password];
+            if (success) {
+                loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
+                loginStatus.textColor = [UIColor greenColor];
+            } else {
+                loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
+                loginStatus.textColor = [UIColor yellowColor];
+            }
+        }
+        
         loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
         loginStatus.textColor = [UIColor yellowColor];
     }
@@ -429,10 +444,22 @@
 
 // Set your expNumLabel to show you the last experiment chosen.
 - (void) updateExpNumLabel {
-    if (expNum && expNumLabel) {
-        NSString *update = [[NSString alloc] initWithFormat:@"Experiment Number: %d", expNum];
-        expNumLabel.text = update;
-        [update release];
+    if (expNumLabel) {
+        if (expNum && expNum > 0) {
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        } else {
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            int exp = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            if (exp > 0) {
+                expNum = exp;
+                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+                                                                        with:[NSString stringWithFormat:@"%d", expNum]];
+            }
+        }
+
     }
     if (recommendedSampleInterval) {
         if (recommendedSampleInterval == -1) sampleInterval.text = @"";
@@ -579,6 +606,13 @@
                             duration:TOAST_LENGTH_SHORT
                             position:TOAST_BOTTOM
                                image:TOAST_CHECKMARK];
+                
+                // save the username and password in prefs
+                NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs synchronize];
+                
                 [self updateLoginStatus];
             } else {
                 [self.view makeToast:@"Login Failed!"
@@ -818,6 +852,10 @@
         if (buttonIndex != OPTION_CANCELED) {
             
             expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
+            
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
         }
