@@ -8,9 +8,9 @@
 //
 
 
-// -----------------
-// --- constants ---
-// -----------------
+// ----------------- //
+// --- constants --- //
+// ----------------- //
 
 // "Label"                      = "Value" //
 
@@ -32,10 +32,11 @@
 "auto_lat"                      = "(Auto-fill for latitude)";
 "auto_long"                     = "(Auto-fill for longitude)";
 
+"description_or_delete"         = "Enter a session description or leave blank for a default description.  Then choose to Upload or Delete your data.";
 
-// ------------------------------
-// --- about application text ---
-// ------------------------------
+// ------------------------------ //
+// --- about application text --- //
+// ------------------------------ //
 
 
 "about_text" =
