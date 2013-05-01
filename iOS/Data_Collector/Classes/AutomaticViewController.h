@@ -17,7 +17,8 @@
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
 #import "DataFieldManager.h"
-
+#import "DataSet.h"
+#import "DataSaver.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate, UITextFieldDelegate>  {
 	// Fuctionality
