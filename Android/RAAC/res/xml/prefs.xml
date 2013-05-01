@@ -13,17 +13,5 @@
             android:summary="@string/prefs_auto_desc"
             android:title="@string/prefs_auto_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/prefs_label_conn" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="auto_connect"
-            android:summary="@string/prefs_auto2_desc"
-            android:title="@string/prefs_auto2_title" />
-
-        <EditTextPreference
-            android:key="defaultPpt"
-            android:summary="@string/prefs_defmac_desc"
-            android:title="@string/prefs_defmac_title" />
-    </PreferenceCategory>
 
 </PreferenceScreen>
