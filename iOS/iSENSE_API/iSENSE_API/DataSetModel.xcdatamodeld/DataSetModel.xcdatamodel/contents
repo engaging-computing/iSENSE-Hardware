@@ -8,7 +8,7 @@
         <attribute name="data_description" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="eid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="picturePaths" optional="YES" syncable="YES"/>
+        <attribute name="picturePaths" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="sid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
