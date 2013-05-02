@@ -19,7 +19,7 @@ static iSENSE *_iSENSE = nil;
 -(NSDictionary *)isenseQuery:(NSString*)target {
     
 	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-	NSLog(@"Sent to iSENSE: %@", final_target);
+	NSLog(@"Sending to iSENSE: %@", final_target);
 	NSError *requestError = nil;
     
     /* Post request to allow for longer request */
@@ -32,11 +32,15 @@ static iSENSE *_iSENSE = nil;
     [request setValue:length forHTTPHeaderField:@"Content-Length"];
     
     NSURLResponse *serverResponse;
-    NSData *dataJSON = [NSURLConnection sendSynchronousRequest:request returningResponse:&serverResponse error:&requestError];
-    
-    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
-    NSLog(@"Error Returning Dictionary: %@", requestError);
-    return jsonDictionary;
+    @try {
+        NSData *dataJSON = [NSURLConnection sendSynchronousRequest:request returningResponse:&serverResponse error:&requestError];
+        NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataJSON options:NSJSONReadingMutableContainers error:&requestError];
+        NSLog(@"Error Returning Dictionary: %@", requestError);
+        return jsonDictionary;
+    } @catch (NSException *e) {
+        NSLog(@"Exception: %@", e);
+        return nil;
+    }
 }
 
 +(iSENSE*)getInstance {   

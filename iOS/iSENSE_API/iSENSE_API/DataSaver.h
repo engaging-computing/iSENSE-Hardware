@@ -22,6 +22,8 @@
 -(void)editDataSetWithKey:(int)key;
 -(bool)upload;
 
+@property (nonatomic, assign) int count;
+
 @end
 
 
