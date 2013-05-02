@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper, dataSaver;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -135,6 +135,14 @@
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
     bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
 
+    if (!success) {
+        DataSet *ds = [[DataSet alloc] initWithName:name andDescription:description andEID:expNum andData:results andPicturePaths:nil andSessionId:session_num.intValue andCity:city andCountry:country andAddress:address];
+        
+        [dataSaver addDataSet:ds];
+        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+        [ds release];
+        
+    }
     [exp_num release];
     
     return success;
@@ -397,6 +405,8 @@
      selector:@selector(sampleIntervalUpdated)
      name:UITextFieldTextDidEndEditingNotification
      object:sampleInterval];
+    
+    dataSaver = [[DataSaver alloc] init];
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
 }

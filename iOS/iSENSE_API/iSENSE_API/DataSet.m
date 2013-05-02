@@ -10,7 +10,7 @@
 
 @implementation DataSet
 
-@synthesize name_, description_, eid_, sid_, picturePaths_, data_, city_, country_, state_, address_, uploadable_;
+@synthesize name_, description_, eid_, sid_, picturePaths_, data_, city_, country_, address_, uploadable_;
 
 
 -(id) init {
@@ -23,7 +23,6 @@
         picturePaths_ = [picturePaths_ init];
         city_ = @"";
         country_ = @"";
-        state_ = @"";
         address_ = @"";
         uploadable_ = [self canBeUploaded];
     }
@@ -93,17 +92,8 @@
     return self;
 }
 
-- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andState:(NSString *)state {
+- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andCountry:(NSString *)country {
     self = [self initWithName:name andDescription:description andEID:eid andData:data andPicturePaths:picturePaths andSessionId:sid andCity:city];
-    if (self) {
-        state_ = state;
-        uploadable_ = [self canBeUploaded];
-    }
-    return self;
-}
-
-- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andState:(NSString *)state andCountry:(NSString *)country {
-    self = [self initWithName:name andDescription:description andEID:eid andData:data andPicturePaths:picturePaths andSessionId:sid andCity:city andState:state];
     if (self) {
         country_ = country;
         uploadable_ = [self canBeUploaded];
@@ -111,8 +101,8 @@
     return self;
 }
 
-- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andState:(NSString *)state andCountry:(NSString *)country andAddress:(NSString *)address {
-    self = [self initWithName:name andDescription:description andEID:eid andData:data andPicturePaths:picturePaths andSessionId:sid andCity:city andState:state andCountry:country];
+- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andCountry:(NSString *)country andAddress:(NSString *)address {
+    self = [self initWithName:name andDescription:description andEID:eid andData:data andPicturePaths:picturePaths andSessionId:sid andCity:city andCountry:country];
     if (self) {
         address_ = address;
         uploadable_ = [self canBeUploaded];

@@ -10,17 +10,18 @@
 		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
-		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (); }; };
+		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39A1CC2C16DFB48700B1979F /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261516DFA86B0062C3DC /* Item.h */; };
 		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
-		39EFB9E7172AD6BC00A6BD2A /* Upload_Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* Upload_Queue.m */; };
-		39EFB9E8172AD6BC00A6BD2A /* Upload_Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* Upload_Queue.h */; };
+		39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */; };
+		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
+		39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
-		39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9EB172AD8F800A6BD2A /* Queue.h */; };
+		39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9EB172AD8F800A6BD2A /* Queue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39EFB9F3172ADFE000A6BD2A /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9F1172ADFE000A6BD2A /* DataSet.m */; };
-		39EFB9F4172ADFE000A6BD2A /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9F2172ADFE000A6BD2A /* DataSet.h */; };
+		39EFB9F4172ADFE000A6BD2A /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9F2172ADFE000A6BD2A /* DataSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
 		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
 		39FF262416DFA8760062C3DC /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
@@ -46,8 +47,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		39EFB9E5172AD6BC00A6BD2A /* Upload_Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Upload_Queue.m; sourceTree = "<group>"; };
-		39EFB9E6172AD6BC00A6BD2A /* Upload_Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Upload_Queue.h; sourceTree = "<group>"; };
+		39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
+		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
+		39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSaver.h; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		39EFB9EB172AD8F800A6BD2A /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		39EFB9F1172ADFE000A6BD2A /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
@@ -88,8 +90,9 @@
 		39EFB9E4172AD55700A6BD2A /* src_queue_saver */ = {
 			isa = PBXGroup;
 			children = (
-				39EFB9E5172AD6BC00A6BD2A /* Upload_Queue.m */,
+				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
 				39EFB9EF172ADE9F00A6BD2A /* objects */,
+				39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */,
 			);
 			name = src_queue_saver;
 			sourceTree = "<group>";
@@ -107,7 +110,7 @@
 			children = (
 				39EFB9F2172ADFE000A6BD2A /* DataSet.h */,
 				39EFB9EB172AD8F800A6BD2A /* Queue.h */,
-				39EFB9E6172AD6BC00A6BD2A /* Upload_Queue.h */,
+				39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */,
 			);
 			name = queue_headers;
 			sourceTree = "<group>";
@@ -229,7 +232,7 @@
 				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
 				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
 				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
-				39EFB9E8172AD6BC00A6BD2A /* Upload_Queue.h in Headers */,
+				39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */,
 				39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */,
 				39EFB9F4172ADFE000A6BD2A /* DataSet.h in Headers */,
 			);
@@ -295,9 +298,10 @@
 				39FF262816DFA8760062C3DC /* Person.m in Sources */,
 				39FF262916DFA8760062C3DC /* Session.m in Sources */,
 				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
-				39EFB9E7172AD6BC00A6BD2A /* Upload_Queue.m in Sources */,
+				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				39EFB9F3172ADFE000A6BD2A /* DataSet.m in Sources */,
+				39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +412,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */,
+			);
+			currentVersion = 39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */;
+			path = DataSetModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 39FF25D716DFA28A0062C3DC /* Project object */;
 }
