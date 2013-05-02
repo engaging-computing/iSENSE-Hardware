@@ -10,10 +10,13 @@
 
 @implementation DataSaver
 
+@synthesize count;
+
 -(id) init {
     self = [super init];
     if (self) {
         dataQueue = [dataQueue init];
+        count = 0;
     }
     return self;
 }
@@ -21,9 +24,11 @@
 -(void)addDataSet:(DataSet *)dataSet {
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
+    count++;
 }
 
 -(id)removeDataSet:(int)key {
+    count--;
     return [dataQueue removeFromQueueWithKey:key];
 }
 

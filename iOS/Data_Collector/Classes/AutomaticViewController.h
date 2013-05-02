@@ -17,8 +17,8 @@
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
 #import "DataFieldManager.h"
-#import "DataSet.h"
-#import "DataSaver.h"
+#import <iSENSE_API/DataSaver.h>
+#import <iSENSE_API/DataSet.h>
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate, UITextFieldDelegate>  {
 	// Fuctionality
@@ -68,5 +68,6 @@
 @property (nonatomic, retain) UITextField *activeField;
 @property (nonatomic, retain) UITextField *lastField;
 @property (nonatomic, assign) bool keyboardDismissProper;
+@property (nonatomic, retain) DataSaver *dataSaver;
 
 @end
