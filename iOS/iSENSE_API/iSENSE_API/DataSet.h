@@ -1,5 +1,5 @@
 //
-//  Dataset.h
+//  DataSet.h
 //  iSENSE_API
 //
 //  Created by Jeremy Poulin on 4/26/13.
@@ -22,9 +22,8 @@
 - (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths;
 - (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid;
 - (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city;
-- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andState:(NSString *)state;
-- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andState:(NSString *)state andCountry:(NSString *)country;
-- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andState:(NSString *)state andCountry:(NSString *)country andAddress:(NSString *)address;
+- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andCountry:(NSString *)country;
+- (id) initWithName:(NSString *)name andDescription:(NSString *)description andEID:(int)eid andData:(NSArray *)data andPicturePaths:(NSArray *)picturePaths andSessionId:(int)sid andCity:(NSString *)city andCountry:(NSString *)country andAddress:(NSString *)address;
 
 
 @property (nonatomic, copy) NSString *name_;
@@ -34,7 +33,6 @@
 @property (nonatomic, retain) NSArray *picturePaths_;
 @property (nonatomic, assign) int sid_;
 @property (nonatomic, copy) NSString *city_;
-@property (nonatomic, copy) NSString *state_;
 @property (nonatomic, copy) NSString *country_;
 @property (nonatomic, copy) NSString *address_;
 @property (nonatomic, assign) BOOL uploadable_;
