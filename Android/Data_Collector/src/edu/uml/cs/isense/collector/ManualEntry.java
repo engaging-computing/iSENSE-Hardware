@@ -82,7 +82,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int EXPERIMENT_REQUESTED = 101;
-	private static final int NO_GPS_REQUESTED = 102;
+	private static final int GPS_REQUESTED = 102;
 	private static final int QUEUE_UPLOAD_REQUESTED = 103;
 	private static final int MEDIA_REQUESTED = 104;
 
@@ -106,9 +106,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private LinearLayout dataFieldEntryList;
 
 	private LocationManager mLocationManager;
-	private LocationManager mRoughLocManager;
 	private Location loc;
-	private Location roughLoc;
 
 	public static UploadQueue uq;
 	private static boolean throughUploadButton = false;
@@ -237,7 +235,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			} else {
 				// they may not have fields on screen now
 			}
-		} else if (requestCode == NO_GPS_REQUESTED) {
+		} else if (requestCode == GPS_REQUESTED) {
 			showGpsDialog = true;
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
@@ -458,13 +456,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		if (mLocationManager != null)
-			mLocationManager.removeUpdates(ManualEntry.this);
-		if (mRoughLocManager != null)
-			mRoughLocManager.removeUpdates(ManualEntry.this);
-
+	protected void onStart() {
+		initLocations();
+		super.onStart();
 	}
 
 	@Override
@@ -472,8 +466,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onStop();
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(ManualEntry.this);
-		if (mRoughLocManager != null)
-			mRoughLocManager.removeUpdates(ManualEntry.this);
 	}
 
 	private String getJSONData() {
@@ -520,29 +512,23 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public void initLocations() {
 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
 					ManualEntry.this);
-			mRoughLocManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, ManualEntry.this);
 		} else {
 			if (showGpsDialog) {
 				Intent iNoGps = new Intent(mContext, NoGps.class);
-				startActivityForResult(iNoGps, NO_GPS_REQUESTED);
+				startActivityForResult(iNoGps, GPS_REQUESTED);
 				showGpsDialog = false;
 			}
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
-		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
 
 	// Prompts the user to upload the rest of their content
@@ -644,8 +630,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			try {
 				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(roughLoc.getLatitude(),
-						roughLoc.getLongitude(), 1);
+						Locale.getDefault()).getFromLocation(loc.getLatitude(),
+								loc.getLongitude(), 1);
 				if (address.size() > 0) {
 					city = address.get(0).getLocality();
 					state = address.get(0).getAdminArea();
@@ -691,7 +677,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		roughLoc = location;
 	}
 
 	@Override
@@ -744,8 +729,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String city = "", state = "", country = "", addr = "";
 			try {
 				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(roughLoc.getLatitude(),
-						roughLoc.getLongitude(), 1);
+						Locale.getDefault()).getFromLocation(loc.getLatitude(),
+						loc.getLongitude(), 1);
 				if (address.size() > 0) {
 					city = address.get(0).getLocality();
 					state = address.get(0).getAdminArea();

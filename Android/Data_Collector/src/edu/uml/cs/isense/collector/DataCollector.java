@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -119,7 +120,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int SETUP_REQUESTED = 4;
 	public static final int LOGIN_REQUESTED = 5;
 	public static final int NO_ISENSE_REQUESTED = 6;
-	public static final int NO_GPS_REQUESTED = 7;
+	public static final int GPS_REQUESTED = 7;
 	public static final int FORCE_STOP_REQUESTED = 8;
 	public static final int RECORDING_STOPPED_REQUESTED = 9;
 	public static final int DESCRIPTION_REQUESTED = 10;
@@ -186,10 +187,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// GeoSpacial Components
 	private LocationManager mLocationManager;
-	private LocationManager mRoughLocManager;
-
 	private static Location loc;
-	private Location roughLoc;
 
 	// Sensor Components
 	private SensorManager mSensorManager;
@@ -384,17 +382,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onPause() {
 		super.onPause();
 		
-		if (!running) {
-			if (mLocationManager != null)
-				mLocationManager.removeUpdates(DataCollector.this);
-
-			if (mRoughLocManager != null)
-				mRoughLocManager.removeUpdates(DataCollector.this);
-
-			if (mSensorManager != null)
-				mSensorManager.unregisterListener(DataCollector.this);
-		}
-
 		inPausedState = true;
 
 	}
@@ -406,9 +393,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!running) {
 			if (mLocationManager != null)
 				mLocationManager.removeUpdates(DataCollector.this);
-
-			if (mRoughLocManager != null)
-				mRoughLocManager.removeUpdates(DataCollector.this);
 
 			if (mSensorManager != null)
 				mSensorManager.unregisterListener(DataCollector.this);
@@ -655,7 +639,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		roughLoc = location;
 	}
 
 	@Override
@@ -733,7 +716,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (!choiceViaMenu)
 				showSummary();
 
-		} else if (requestCode == NO_GPS_REQUESTED) {
+		} else if (requestCode == GPS_REQUESTED) {
 			showGpsDialog = true;
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
@@ -796,10 +779,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			List<Address> address = null;
 
 			try {
-				if (roughLoc != null) {
+				if (loc != null) {
 					address = new Geocoder(DataCollector.this,
 							Locale.getDefault()).getFromLocation(
-							roughLoc.getLatitude(), roughLoc.getLongitude(), 1);
+							loc.getLatitude(), loc.getLongitude(), 1);
 					if (address.size() > 0) {
 						city = address.get(0).getLocality();
 						state = address.get(0).getAdminArea();
@@ -976,6 +959,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Registers Sensors
+	@SuppressLint("InlinedApi")
 	private void registerSensors() {
 
 		if (mSensorManager != null) {
@@ -1248,7 +1232,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		w = new Waffle(this);
 		f = new Fields();
@@ -1262,6 +1245,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		initLocations();
+	}
+
+	@Override
+	protected void onStart() {
+		if(mLocationManager != null)
+			initLocations();
+		super.onStart();
 	}
 
 	// Everything that needs to be assigned in onCreate()
@@ -1286,26 +1276,21 @@ public class DataCollector extends Activity implements SensorEventListener,
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
 					DataCollector.this);
-			mRoughLocManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, DataCollector.this);
 		} else {
 			if (showGpsDialog) {
 				Intent iNoGps = new Intent(mContext, NoGps.class);
-				startActivityForResult(iNoGps, NO_GPS_REQUESTED);
+				startActivityForResult(iNoGps, GPS_REQUESTED);
 				showGpsDialog = false;
 			}
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
-		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
-	
+
 	// Simulates a stop if the service finishes
 	public static void serviceHasStopped() {
 		mHandler.post(new Runnable() {
