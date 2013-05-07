@@ -11,6 +11,7 @@
         android:background="@drawable/bg_launch" >
 
         <LinearLayout
+            android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -68,10 +69,10 @@
                 android:id="@+id/otherPptLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/btn_stateselector"
                 android:clickable="true"
-                android:padding="10dp"
-                android:layout_marginTop="15dp" >
+                android:padding="10dp" >
 
                 <ImageButton
                     android:id="@+id/otherpinpoint_select_btn"
@@ -98,6 +99,44 @@
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
             </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" 
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="15dp"
+            android:background="@drawable/card">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/name_label"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_marginRight="10dp"
+                android:hint="@string/name_label"
+                android:inputType="text" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/namebtn_label" />
+
         </LinearLayout>
     </RelativeLayout>
 
