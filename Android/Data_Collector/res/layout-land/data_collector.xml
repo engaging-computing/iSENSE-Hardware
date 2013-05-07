@@ -20,106 +20,131 @@
         <ImageView
             android:id="@+id/ImageViewLogo"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="10dp"
-            android:layout_weight=".75"
+            android:layout_weight=".2"
             android:background="@android:color/transparent"
             android:contentDescription="@string/iSENSELogo"
             android:scaleType="fitCenter"
             android:src="@drawable/logo_red"
             tools:ignore="NestedWeights" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/layoutBelowImageEncapsulator"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_weight=".25"
-            android:gravity="center" >
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true" >
-
-                <EditText
-                    android:id="@+id/sessionName"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edit_text_holo"
-                    android:ellipsize="end"
-                    android:gravity="center_horizontal"
-                    android:hint="@string/session_name"
-                    android:imeOptions="actionDone"
-                    android:maxLength="50"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#999999"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/sampleInterval"
-                    android:digits=".1234567890"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/edit_text_holo"
-                    android:ellipsize="end"
-                    android:gravity="center_horizontal"
-                    android:hint="@string/sample_rate"
-                    android:inputType="phone"
-                    android:imeOptions="actionDone"
-                    android:maxLength="8"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#999999" />
-
-                <EditText
-                    android:id="@+id/testLength"
-                    android:digits=".1234567890"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/edit_text_holo"
-                    android:ellipsize="end"
-                    android:gravity="center_horizontal"
-                    android:hint="@string/record_length"
-                    android:inputType="phone"
-                    android:imeOptions="actionDone"
-                    android:maxLength="7"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#999999" />
-            </LinearLayout>
+            android:layout_weight=".7"
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/sessionNameLabel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:background="@android:color/transparent"
-                android:gravity="center_horizontal"
-                android:text="@+string/timeElapsed"
+                android:gravity="left|center_vertical"
+                android:text="@string/session_name"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-        </RelativeLayout>
+
+            <EditText
+                android:id="@+id/sessionName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/edit_text_holo"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:hint="@string/required"
+                android:imeOptions="actionDone"
+                android:maxLength="50"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#999999"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/sampleIntervalLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="left|center_vertical"
+                android:text="@string/sample_rate"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/sampleInterval"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/edit_text_holo"
+                android:digits=".1234567890"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:hint="@string/sample_default"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                android:maxLength="8"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#999999" />
+
+            <TextView
+                android:id="@+id/testLengthLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="left|center_vertical"
+                android:text="@string/record_length"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/testLength"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/edit_text_holo"
+                android:digits=".1234567890"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:hint="@string/record_default"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                android:maxLength="7"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#999999" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:text="@string/timeElapsed"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -137,7 +162,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/colorless"
-            android:text="@+string/startString"
+            android:text="@string/startString"
             android:textColor="@android:color/white"
             android:textSize="30sp" />
     </LinearLayout>

@@ -77,7 +77,8 @@
     <string name="done">Done</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
-    <string name="sample_rate">Interval (ms)</string>
+    <string name="sample_rate">Sample Interval (ms)</string>
+    <string name="sample_default">(default 50ms)</string>
     <string name="login">Login</string>
     <string name="guide_text">	    
         This is a guide designed to help explain to you how to use our iSENSE Data 
@@ -334,6 +335,7 @@
     <string name="menu_upload">Upload</string>
     <string name="menu_experiment">Experiment</string>
     <string name="record_length">Test Length (s)</string>
+    <string name="record_default">(default 10000s)</string>
     <string name="blank_desc"></string>
     <string name="loggedInAs">Logged In As: \0</string>
     <string name="usingExperiment">Uploading To Experiment #: \0</string>
@@ -341,11 +343,12 @@
     <string name="clear">Clear</string>
     <string name="auto">Automatic</string>
     <string name="manual">Manual</string>
-    <string name="splashPrompt">Select your data collecting mode (automatic or manual).</string>
+    <string name="splashPrompt">Select \"Automatic\" to record sensor data, or select \"Manual\" to manually key in data.</string>
     <string name="qmark">\&#63;</string>
 	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
-	<string name="session_name">Session Name (required)</string>
+	<string name="session_name">Session Name</string>
+	<string name="required">(required)</string>
 	<string name="queue_alter">What would you like to do with this data set?</string>
 	<string name="rename">Rename</string>
 	<string name="change_data">Change Data</string>
