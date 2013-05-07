@@ -760,7 +760,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else if ((experimentInput.length() >= 0)
 						&& !rapi.isLoggedIn()) {
 
-					w.make("Not logged in - saving data instead.",
+					w.make("Not logged in - saving data instead",
 							Waffle.IMAGE_X);
 					new UploadTask().execute();
 				} else {
@@ -769,7 +769,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				nameOfSession = sessionName.getText().toString();
-				w.make("Data set deleted.", Waffle.LENGTH_SHORT,
+				w.make("Data set deleted", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			}
 
@@ -929,7 +929,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					w.make("An error occured during upload.  Please check internet connectivity.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Upload Success", Waffle.LENGTH_SHORT,
+				w.make("Upload success", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 				manageUploadQueue();
 			}
@@ -1215,7 +1215,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			if (throughUploadMenuItem) {
 				throughUploadMenuItem = false;
-				w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+				w.make("There is no data to upload", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}
@@ -1464,7 +1464,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					if (expPrefs.getString("experiment_id", "").equals("")) {
 
-						w.make("Choose an experiment first.", Waffle.LENGTH_LONG,
+						w.make("Please select an experiment", Waffle.LENGTH_LONG,
 								Waffle.IMAGE_X);
 						Intent iSetup = new Intent(DataCollector.this, Setup.class);
 						startActivityForResult(iSetup, SETUP_REQUESTED);
@@ -1565,7 +1565,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					choiceViaMenu = false;
 
 					if (sdCardError)
-						w.make("Could not write file to SD Card.",
+						w.make("Could not write file to SD Card",
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					
 					displayDescription();
