@@ -384,5 +384,8 @@
 	    subapplications by clicking on the \"Guide\" tab in the top-right corner on the next screen.  When you are ready, select
 	    either the \"Automatic\" or \"Manual\" button to access one of the two subapplications and begin your data collection experience.
 	</string>
+	<string name="select_fields_for">
+	    Please select the fields you would like to record for experiment #
+	</string>
 	
 </resources>
