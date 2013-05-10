@@ -70,15 +70,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.uml.cs.isense.collector.dialogs.CanLogin;
+import edu.uml.cs.isense.collector.dialogs.CanRecord;
 import edu.uml.cs.isense.collector.dialogs.ChooseSensorDialog;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
+import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.NoIsense;
 import edu.uml.cs.isense.collector.dialogs.Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
+import edu.uml.cs.isense.collector.dialogs.UploadFailSave;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
 import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
@@ -124,6 +128,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int FORCE_STOP_REQUESTED = 8;
 	public static final int RECORDING_STOPPED_REQUESTED = 9;
 	public static final int DESCRIPTION_REQUESTED = 10;
+	public static final int CAN_LOGIN_REQUESTED = 11;
 
 	private static final int TIME = 0;
 	private static final int ACCEL_X = 1;
@@ -231,6 +236,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Booleans
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
+	private static boolean performExpNumCheckOnReturn = false;
 
 	// Strings
 	public static String textToSession = "";
@@ -514,6 +520,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (item.getItemId()) {
 		case R.id.menu_item_setup:
 			startStop.setEnabled(false);
+			if (!rapi.isConnectedToInternet()) {
+				w.make("No internet connectivity - searching only cached experiments", 
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			}
 			Intent iSetup = new Intent(DataCollector.this, Setup.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
@@ -709,7 +719,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else {
 					// should never get here
 				}
-
+			}
+			
+			if (performExpNumCheckOnReturn) {
+				performExpNumCheckOnReturn = false;
+				checkExpNumCredentials();
 			}
 
 		} else if (requestCode == NO_ISENSE_REQUESTED) {
@@ -763,8 +777,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
 			}
 
+		} else if (requestCode == CAN_LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				performExpNumCheckOnReturn = true;
+				Intent iLogin = new Intent(mContext, LoginActivity.class);
+				startActivityForResult(iLogin, LOGIN_REQUESTED);
+			} else if (resultCode == RESULT_CANCELED) {
+				checkExpNumCredentials();
+			}
 		}
-
 	}
 
 	// Calls the rapi primitives for actual uploading
@@ -909,8 +930,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
 				if (rapi.isLoggedIn())
-					w.make("An error occured during upload.  Please check internet connectivity.",
+					w.make("Data not uploaded - saved instead",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				SharedPreferences mPrefs = getSharedPreferences("save_dialog", 0);
+				boolean seenDialog = mPrefs.getBoolean("seen_dialog", false);
+				if (!seenDialog) {
+					Intent iUploadFailSave = new Intent(mContext, UploadFailSave.class);
+					startActivity(iUploadFailSave);
+					SharedPreferences.Editor mEdit = mPrefs.edit();
+					mEdit.putBoolean("seen_dialog", true);
+					mEdit.commit();
+				}
 			} else {
 				w.make("Upload success", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
@@ -1093,7 +1123,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		String fields = mPrefs.getString("accepted_fields", "");
 		if (fields.equals("")) {
 			// launch intent to setup fields
-			w.make("Please re-select fields");
+			w.make("Please re-select fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			Intent iChooseSensor = new Intent(DataCollector.this,
 					ChooseSensorDialog.class);
 			startActivityForResult(iChooseSensor, CHOOSE_SENSORS_REQUESTED);
@@ -1224,6 +1254,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
+		
+		performCredentialChecks();
 
 		uq = new UploadQueue("datacollector", mContext, rapi);
 		uq.buildQueueFromFile();
@@ -1245,6 +1277,70 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		initLocations();
+	}
+	
+	private void performCredentialChecks() {
+		if (rapi.isConnectedToInternet()) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					DataCollector.mContext,
+					DataCollector.mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+
+			if (!(mPrefs.getString("username", "").equals(""))) {
+				login();
+				checkExpNumCredentials();
+			} else {
+				Intent iCanLogin = new Intent(mContext, CanLogin.class);
+				startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
+			}
+		} else {
+			checkExpNumCredentials();
+		}
+	}
+	
+	private void checkExpNumCredentials() {
+		if (rapi.isConnectedToInternet())
+			checkExpNumCredentialsWithConnectivity();
+		else
+			checkExpNumCredentialsWithoutConnectivity();
+	}
+	
+	private void checkExpNumCredentialsWithConnectivity() {
+		SharedPreferences expPrefs = getSharedPreferences("EID", 0);
+		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			String fields = mPrefs.getString("accepted_fields", "");
+			if (!(fields.equals(""))) {
+				if (dfm == null) initDfm();
+				getEnabledFields();
+			} else {
+				new SensorCheckTask().execute();
+			}
+		} else {
+			Intent iSetup = new Intent(DataCollector.this, Setup.class);
+			startActivityForResult(iSetup, SETUP_REQUESTED);
+		}
+	}
+	
+	private void checkExpNumCredentialsWithoutConnectivity() {
+		SharedPreferences expPrefs = getSharedPreferences("EID", 0);
+		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
+			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			String fields = mPrefs.getString("accepted_fields", "");
+			// TODO - can we really expect the field prefs to match the exp here?
+			if (!(fields.equals(""))) {
+				if (dfm == null) initDfm();
+				getEnabledFields();
+				Intent iCanRecord = new Intent(mContext, CanRecord.class);
+				startActivity(iCanRecord);
+			} else {
+				Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
+				startActivity(iNeedConnectivity);
+			}
+		} else {
+			Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
+			startActivity(iNeedConnectivity);
+		}
 	}
 
 	@Override
@@ -1412,6 +1508,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 				if (!running) {
+					SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 					boolean numbersReady = true;
 					if (!sampleInterval.getText().toString().equals("")) {
 						try {
@@ -1446,16 +1543,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 					}
 
 					SharedPreferences expPrefs = getSharedPreferences("EID", 0);
-
 					if (expPrefs.getString("experiment_id", "").equals("")) {
+						
+						if (rapi.isConnectedToInternet()) {
 
-						w.make("Please select an experiment", Waffle.LENGTH_LONG,
-								Waffle.IMAGE_X);
-						Intent iSetup = new Intent(DataCollector.this, Setup.class);
-						startActivityForResult(iSetup, SETUP_REQUESTED);
+							w.make("Please select an experiment", Waffle.LENGTH_LONG,
+									Waffle.IMAGE_X);
+							Intent iSetup = new Intent(DataCollector.this, Setup.class);
+							startActivityForResult(iSetup, SETUP_REQUESTED);
+						} else {
+							Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
+							startActivity(iNeedConnectivity);
+						}
 
+					} else if (mPrefs.getString("accepted_fields", "").equals("")) {
+
+						w.make("Please select fields to record", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						Intent iChooseSensor = new Intent(DataCollector.this,
+								ChooseSensorDialog.class);
+						startActivityForResult(iChooseSensor, CHOOSE_SENSORS_REQUESTED);
+							 
 					} else if (sessionName.getText().toString().equals("")) {
 
+						w.make("Please enter a session name first", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 						sessionName.setError("Enter a session name");
 
 					} else if (!numbersReady) {
