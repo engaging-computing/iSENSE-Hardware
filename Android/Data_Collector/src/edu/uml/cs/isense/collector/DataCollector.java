@@ -88,6 +88,7 @@ import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -1104,10 +1105,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 
-			Intent i = new Intent(mContext, ChooseSensorDialog.class);
-			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
+			chooseSensorIntent();
 
 		}
+	}
+	
+	private void chooseSensorIntent() {
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		String expNum = mPrefs.getString("experiment_id", "");
+		Intent i = new Intent(mContext, ChooseSensorDialog.class);
+		Experiment e = rapi.getExperiment(Integer.parseInt(expNum));
+		i.putExtra("expnum", expNum);
+		i.putExtra("expname", e.name);
+		startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
+		
 	}
 
 	private void initDfm() {
@@ -1124,9 +1135,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (fields.equals("")) {
 			// launch intent to setup fields
 			w.make("Please re-select fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-			Intent iChooseSensor = new Intent(DataCollector.this,
-					ChooseSensorDialog.class);
-			startActivityForResult(iChooseSensor, CHOOSE_SENSORS_REQUESTED);
+			chooseSensorIntent();
 		} else {
 			getFieldsFromPrefsString(fields);
 		}
@@ -1350,13 +1359,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		super.onStart();
 	}
 
-	@Override
-	protected void onStart() {
-		if(mLocationManager != null)
-			initLocations();
-		super.onStart();
-	}
-
 	// Everything that needs to be assigned in onCreate()
 	private void assignVars() {
 		// Set all the login info
@@ -1566,9 +1568,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else if (mPrefs.getString("accepted_fields", "").equals("")) {
 
 						w.make("Please select fields to record", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-						Intent iChooseSensor = new Intent(DataCollector.this,
-								ChooseSensorDialog.class);
-						startActivityForResult(iChooseSensor, CHOOSE_SENSORS_REQUESTED);
+						chooseSensorIntent();
 							 
 					} else if (sessionName.getText().toString().equals("")) {
 
