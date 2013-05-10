@@ -138,13 +138,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.upload) {
 				
-			if (!rapi.isLoggedIn()) {
-				w.make("Login information not found - please login again", Waffle.IMAGE_X);
+			if (!rapi.isConnectedToInternet()) {
+				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
 			
-			if (!rapi.isConnectedToInternet()) {
-				w.make("No internet connection found", Waffle.IMAGE_X);
+			if (!rapi.isLoggedIn()) {
+				w.make("Login information not found - please login again", Waffle.IMAGE_X);
 				return;
 			}
 			
