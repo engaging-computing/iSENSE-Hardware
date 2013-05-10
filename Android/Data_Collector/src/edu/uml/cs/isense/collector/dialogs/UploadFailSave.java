@@ -7,33 +7,23 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.collector.R;
 
-public class NoGps extends Activity {
+public class UploadFailSave extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.no_gps);
+		setContentView(R.layout.upload_fail_save);
 		
 		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
-		final Button yes = (Button) findViewById(R.id.no_gps_yes);
-		yes.setOnClickListener(new OnClickListener() {
+		final Button ok = (Button) findViewById(R.id.upload_fail_save_ok);
+		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_OK);
 				finish();
 			}
 		});
-		
-		final Button no = (Button) findViewById(R.id.no_gps_no);
-		no.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-		
 	}
 	
 	@Override
