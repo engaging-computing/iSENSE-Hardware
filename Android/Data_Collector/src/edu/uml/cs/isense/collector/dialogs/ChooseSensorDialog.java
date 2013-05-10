@@ -33,6 +33,16 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choosesensor);
+		
+		String expNum = "", expName = "";
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			expNum  = extras.getString("expnum");
+			expName = extras.getString("expname");
+		}
+		
+		TextView tvtext = (TextView) findViewById(R.id.choose_sensor_text);
+		tvtext.setText(getResources().getString(R.string.select_fields_for) + expNum + ", " + expName + ".");
 
 		compatible = true;
 		Context mContext = this;
