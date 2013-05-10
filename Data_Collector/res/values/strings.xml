@@ -361,5 +361,28 @@
 	    1234567890.-
 	</string>
 	<string name="reset">Reset</string>
+	<string name="no_thanks">No Thanks</string>
+	<string name="can_login_string">
+	    You have internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
+	    data later.  However, you do not need to log in to record and save data.  Would you like login now?
+	</string>
+	<string name="need_connectivity_string">
+	    You need internet connectivity in order to use this application.  It is required to choose an experiment and begin recording data,
+	    as well as logging in and uploading data.  Since you do not have an experiment number saved in our system, you cannot record data
+	    until you choose an experiment with internet connectivity.
+	</string>
+	<string name="can_record_string">
+	    You need internet connectivity in order to upload data, but you can still record data.  We will save the data sets for you
+	    to upload later once you have internet connectivity.
+	</string>
+	<string name="upload_fail_save_string">
+	    Your data failed to upload, but we will save it for you.  You may upload it later by selecting the \"Upload\" option in the
+	    menu bar when you have internet connectivity.
+	</string>
+	<string name="first_time_use_string">
+	    Welcome!  Is this your first time using the iSENSE Data Collector application?  If so, read the guide for how to use the two
+	    subapplications by clicking on the \"Guide\" tab in the top-right corner on the next screen.  When you are ready, select
+	    either the \"Automatic\" or \"Manual\" button to access one of the two subapplications and begin your data collection experience.
+	</string>
 	
 </resources>
