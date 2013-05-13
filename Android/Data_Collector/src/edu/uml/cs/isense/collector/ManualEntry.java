@@ -386,6 +386,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private void uploadFields() {
 		throughUploadButton = true;
+		boolean connection = rapi.isConnectedToInternet();
+		if (!connection) {
+			w.make("No internet connectivity found - can not upload data yet", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+		}
+		
 		if (!rapi.isLoggedIn()) {
 			boolean success = false;
 			if (loginPrefs.getString("username", "").equals(""))
@@ -397,7 +402,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (success)
 				manageUploadQueue();
 			else
-				w.make("Not logged in - if you think you are logged in, please try again.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				if (connection)
+					w.make("Can not find login credentials - please login again before uploading", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 		} else {
 			manageUploadQueue();
 		}
