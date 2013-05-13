@@ -15,14 +15,15 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:orientation="vertical" >
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal" >
 
             <RelativeLayout
                 android:id="@+id/lastPptLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_stateselector"
                 android:clickable="true"
                 android:padding="10dp" >
@@ -66,12 +67,13 @@
 
             <RelativeLayout
                 android:id="@+id/otherPptLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_stateselector"
                 android:clickable="true"
-                android:padding="10dp"
-                android:layout_marginTop="15dp" >
+                android:layout_marginLeft="10dp"
+                android:padding="10dp" >
 
                 <ImageButton
                     android:id="@+id/otherpinpoint_select_btn"
@@ -99,15 +101,16 @@
                     android:textSize="20sp" />
             </RelativeLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" 
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:padding="15dp"
-            android:background="@drawable/card">
+            android:layout_marginTop="10dp"
+            android:background="@drawable/card"
+            android:padding="15dp" >
 
             <TextView
                 android:layout_width="0dp"
@@ -136,7 +139,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/namebtn_label" />
-
         </LinearLayout>
     </RelativeLayout>
 
