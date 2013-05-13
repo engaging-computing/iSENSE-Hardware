@@ -2,30 +2,35 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
     android:orientation="vertical"
+    android:background="@android:color/transparent"
     android:scrollbarThumbVertical="@drawable/grey_scroll" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="@android:color/transparent" >
 
         <TextView
-            android:id="@+id/summary_text"
+            android:id="@+id/need_connectivity_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="@string/need_connectivity_string"
             android:layout_margin="5dp"
-            android:background="@android:color/transparent"
-            android:textIsSelectable="false"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:background="@android:color/transparent" />
+        
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
 
         <Button
-            android:id="@+id/summary_ok"
+            android:id="@+id/no_connectivity_ok"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@android:string/ok" />
     </LinearLayout>
 
