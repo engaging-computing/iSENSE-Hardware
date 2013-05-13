@@ -119,7 +119,7 @@ public class ExperimentDialog extends Activity {
 				try {
 					eid.setText(split[1]);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					w.make("Invalid QR Code!", Waffle.LENGTH_LONG,
+					w.make("Invalid QR code scanned", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
 				}
 

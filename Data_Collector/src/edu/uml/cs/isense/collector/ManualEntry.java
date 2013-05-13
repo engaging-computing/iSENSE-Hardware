@@ -184,7 +184,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				sessionName.setError(null);
 
 			if (exp.equals("")) {
-				w.make("Invalid or no selected experiment.");
+				w.make("Invalid or no selected experiment.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			} else if (sessionName.getText().toString().length() == 0) {
 				sessionName.setError("Enter a session name");
 			} else {
@@ -386,28 +386,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private void uploadFields() {
 		throughUploadButton = true;
-		boolean connection = rapi.isConnectedToInternet();
-		if (!connection) {
-			w.make("No internet connectivity found - can not upload data yet", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-		}
-		
-		if (!rapi.isLoggedIn()) {
-			boolean success = false;
-			if (loginPrefs.getString("username", "").equals(""))
-				success = false;
-			else
-				success = rapi.login(loginPrefs.getString("username", ""),
-						loginPrefs.getString("password", ""));
-
-			if (success)
-				manageUploadQueue();
-			else
-				if (connection)
-					w.make("Can not find login credentials - please login again before uploading", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-		} else {
-			manageUploadQueue();
-		}
-
+		manageUploadQueue();
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -416,8 +395,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public void onBackPressed() {
 
 		if (!w.isDisplaying)
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-					Waffle.IMAGE_CHECK);
+			w.make("Double press \"Back\" to exit");
 		else if (w.canPerformTask)
 			super.onBackPressed();
 
@@ -542,6 +520,22 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void manageUploadQueue() {
 
 		if (!uq.emptyQueue()) {
+			if (!rapi.isConnectedToInternet())  {
+				w.make("No internet connectivity found - can not upload data yet", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			} else {
+				if (!rapi.isLoggedIn()) {
+					boolean success = false;
+					if (loginPrefs.getString("username", "").equals(""))
+						success = false;
+					else
+						success = rapi.login(loginPrefs.getString("username", ""),
+								loginPrefs.getString("password", ""));
+
+					if (!success)
+						w.make("Can not find login credentials - please login again before uploading", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				} 
+			}
+			
 			throughUploadButton = false;
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
 			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
@@ -668,7 +662,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
 
 			} else {
-				w.make("Fatal error in saving data!!!", Waffle.IMAGE_X);
+				w.make("Fatal error in saving data!", Waffle.IMAGE_X);
 			}
 
 			dia.dismiss();
