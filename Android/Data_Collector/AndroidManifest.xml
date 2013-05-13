@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="12"
-    android:versionName="2.1" xmlns:tools="http://schemas.android.com/tools">
+    android:versionCode="13"
+    android:versionName="2.1.1" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="8"
