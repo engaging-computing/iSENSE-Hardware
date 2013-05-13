@@ -119,19 +119,21 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
-                android:id="@+id/editText1"
+                android:id="@+id/et_groupName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:layout_marginRight="10dp"
+                android:layout_weight="2"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                 android:hint="@string/name_label"
-                android:inputType="text" >
+                android:inputType="textCapWords"
+                android:maxLength="20" >
 
                 <requestFocus />
             </EditText>
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/btn_setName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
