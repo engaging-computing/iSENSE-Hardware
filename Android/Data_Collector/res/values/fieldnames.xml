@@ -30,7 +30,10 @@
     <string name="invalidExperiment">No fields found for this experiment. 
         This experiment may have been deleted, or may not exist at all. There is also a
         chance that you are simply not connected to the internet and thus cannot currently
-        get experiment fields. (Hitting \"Okay\" 
-        will return you to the configuration menu to select a new experiment.)</string>
+        get experiment fields.  The only experiments that may be available while not connected
+        to the internet are ones you have used in the past with internet connectivity
+        available. (Hitting \"Okay\" will return you to the configuration menu to select 
+        a new experiment.)
+    </string>
     
 </resources>

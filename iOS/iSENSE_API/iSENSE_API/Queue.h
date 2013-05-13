@@ -14,6 +14,8 @@
 @interface NSMutableDictionary (QueueAdditions)
 - (id) dequeue;
 - (void) enqueue:(id)anObject withKey:(int)key;
+- (id) removeFromQueueWithKey:(int)key;
+
 
 @property (nonatomic, assign) int headKey;
 @property (nonatomic, assign) int tailKey;

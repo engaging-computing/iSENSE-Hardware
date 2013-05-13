@@ -756,6 +756,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../zxing/iphone/ZXingWidget/Classes/**",
 					"$(PROJECT_DIR)/../zxing/cpp/core/src",
+					"$(PROJECT_DIR)/../iSENSE_API",
 					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
 				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
@@ -783,6 +784,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../zxing/iphone/ZXingWidget/Classes/**",
 					"$(PROJECT_DIR)/../zxing/cpp/core/src",
+					"$(PROJECT_DIR)/../iSENSE_API",
 					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
 				);
 				INFOPLIST_FILE = "Data_Collector-Info.plist";
@@ -807,7 +809,9 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PLIST_FILE_OUTPUT_FORMAT = binary;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -820,8 +824,10 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PLIST_FILE_OUTPUT_FORMAT = binary;
 				SDKROOT = iphoneos;
 			};
 			name = Release;
