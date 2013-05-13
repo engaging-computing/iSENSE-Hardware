@@ -18,79 +18,139 @@
             android:id="@+id/ImageViewLogo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="2dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/iSENSELogo"
             android:scaleType="center"
             android:src="@drawable/logo_red" />
 
-        <EditText
-            android:id="@+id/sessionName"
-            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_holo"
-            android:ellipsize="end"
-            android:gravity="center_horizontal"
-            android:hint="@string/session_name"
-            android:imeOptions="actionDone"
-            android:maxLength="50"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#999999"
-            android:textSize="18sp" />
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/sessionNameLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:paddingTop="7dp"
+                android:text="@string/session_name"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_weight="0.4" />
+
+            <EditText
+                android:id="@+id/sessionName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/edit_text_holo"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:hint="@string/required"
+                android:imeOptions="actionDone"
+                android:maxLength="50"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#999999"
+                android:textSize="18sp"
+                android:layout_weight="0.6" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:weightSum="1" >
+            
+            <TextView 
+                android:id="@+id/sampleIntervalLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:paddingTop="7dp"
+                android:text="@string/sample_rate"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_weight="0.4" />
 
             <EditText
                 android:id="@+id/sampleInterval"
-                android:digits=".1234567890"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="3dp"
-                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/edit_text_holo"
+                android:digits=".1234567890"
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
-                android:hint="@string/sample_rate"
-                android:inputType="phone"
+                android:hint="@string/sample_default"
                 android:imeOptions="actionDone"
+                android:inputType="phone"
                 android:maxLength="8"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#999999" />
+                android:textColorHint="#999999"
+                android:layout_weight="0.6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            android:weightSum="1" >
+            
+            <TextView
+                android:id="@+id/testLengthLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:paddingTop="7dp"
+                android:text="@string/record_length"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_weight="0.4" />
 
             <EditText
                 android:id="@+id/testLength"
-                android:digits=".1234567890"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
                 android:background="@drawable/edit_text_holo"
+                android:digits=".1234567890"
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
-                android:hint="@string/record_length"
-                android:inputType="phone"
+                android:hint="@string/record_default"
                 android:imeOptions="actionDone"
+                android:inputType="phone"
                 android:maxLength="7"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#999999" />
+                android:textColorHint="#999999"
+                android:layout_weight="0.6" />
         </LinearLayout>
 
         <Button
@@ -102,7 +162,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/colorless"
-            android:text="@+string/startString"
+            android:text="@string/startString"
             android:textColor="@android:color/white"
             android:textSize="30sp" />
     </LinearLayout>
@@ -120,7 +180,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@android:color/transparent"
-            android:text="@+string/timeElapsed"
+            android:text="@string/timeElapsed"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:textStyle="bold" />
