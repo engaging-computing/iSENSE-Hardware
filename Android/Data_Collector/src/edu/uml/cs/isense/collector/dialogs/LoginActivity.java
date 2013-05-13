@@ -35,8 +35,6 @@ public class LoginActivity extends Activity {
 
 	private static final String unknownUser    = "Connection to internet has been found, but the username or password was incorrect.  Please try again.";
 	private static final String noConnection   = "No connection to internet through either wifi or mobile found.  Please enable one to continue, then try again."; 
-	private static final String defaultMessage = "Was your username and password correct?\nAre you connected to the internet?\nPlease try again.";
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,17 +95,17 @@ public class LoginActivity extends Activity {
 	
 	private void showFailure() {
 		
-		if(rapi.connection == "NONE") {     
+		//if(rapi.connection == "NONE") {     
+		//	message = noConnection;
+		//}
+		//else if(rapi.connection == "600") {
+		//	message = unknownUser;
+		//}
+		
+		if (rapi.isConnectedToInternet()) {
+			message = unknownUser;
+		} else {
 			message = noConnection;
-		}
-		else if(rapi.connection == "600") {
-			message = unknownUser;
-		}
-		else if(rapi.connection == "") {
-			message = unknownUser;
-		}
-		else {
-			message = defaultMessage;
 		}
 		
 		returnCode = "Failed";

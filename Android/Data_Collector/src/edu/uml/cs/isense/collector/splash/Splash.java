@@ -118,8 +118,7 @@ public class Splash extends TabActivity {
 	public void onBackPressed() {
 
 		if (!w.isDisplaying)
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-					Waffle.IMAGE_CHECK);
+			w.make("Double press \"Back\" to exit");
 		else if (w.canPerformTask)
 			super.onBackPressed();
 

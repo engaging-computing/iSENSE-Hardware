@@ -44,7 +44,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/okay" />
+            android:text="@android:string/ok" />
     </LinearLayout>
 
 </LinearLayout>

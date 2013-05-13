@@ -72,6 +72,10 @@ public class Waffle {
 	 * ID for a red "x" image to be displayed on a Waffle message.
 	 */
 	public static short IMAGE_X = 1;
+	/**
+	 * ID for a yellow "warning" image to be displayed on a Waffle message.
+	 */
+	public static short IMAGE_WARN = 2;
 
 	/**
 	 * Default constructor for the Waffle object.
@@ -96,8 +100,8 @@ public class Waffle {
 	 *            Duration of the message (Waffle.LENGTH_SHORT or
 	 *            Waffle.LENGTH_LONG).
 	 * @param image_id
-	 *            ID of the image to display in the view (Waffle.IMAGE_CHECK
-	 *            or Waffle.IMAGE_X).           
+	 *            ID of the image to display in the view (Waffle.IMAGE_CHECK,
+	 *            Waffle.IMAGE_X, or Waffle.IMAGE_WARN).           
 	 * @param background_id
 	 *            Resource ID of the background drawable to be used as the
 	 *            background of the Waffle message (e.g. R.drawable.my_background).
@@ -113,10 +117,28 @@ public class Waffle {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			View layout = null;
-			if (image_id != 1)
+			switch (image_id) {
+			case 0:
 				layout = inflater.inflate(R.layout.toast_layout_check, null);
-			else
+				break;
+				
+			case 1:
 				layout = inflater.inflate(R.layout.toast_layout_x, null);
+				break;
+				
+			case 2:
+				layout = inflater.inflate(R.layout.toast_layout_warning, null);
+				break;
+				
+			default:
+				layout = inflater.inflate(R.layout.toast_layout_check, null);
+				ImageView image = (ImageView) layout
+						.findViewById(R.id.waffle_check);
+				image.setVisibility(View.GONE);
+				LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
+				background.setBackgroundResource(R.drawable.toast_background_default);
+				break;
+			}
 
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);
@@ -162,10 +184,28 @@ public class Waffle {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			View layout = null;
-			if (image_id != 1)
+			switch (image_id) {
+			case 0:
 				layout = inflater.inflate(R.layout.toast_layout_check, null);
-			else
+				break;
+				
+			case 1:
 				layout = inflater.inflate(R.layout.toast_layout_x, null);
+				break;
+				
+			case 2:
+				layout = inflater.inflate(R.layout.toast_layout_warning, null);
+				break;
+				
+			default:
+				layout = inflater.inflate(R.layout.toast_layout_check, null);
+				ImageView image = (ImageView) layout
+						.findViewById(R.id.waffle_check);
+				image.setVisibility(View.GONE);
+				LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
+				background.setBackgroundResource(R.drawable.toast_background_default);
+				break;
+			}
 
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);
@@ -259,10 +299,28 @@ public class Waffle {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			View layout = null;
-			if (image_id != 1)
+			switch (image_id) {
+			case 0:
 				layout = inflater.inflate(R.layout.toast_layout_check, null);
-			else
+				break;
+				
+			case 1:
 				layout = inflater.inflate(R.layout.toast_layout_x, null);
+				break;
+				
+			case 2:
+				layout = inflater.inflate(R.layout.toast_layout_warning, null);
+				break;
+				
+			default:
+				layout = inflater.inflate(R.layout.toast_layout_check, null);
+				ImageView image = (ImageView) layout
+						.findViewById(R.id.waffle_check);
+				image.setVisibility(View.GONE);
+				LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
+				background.setBackgroundResource(R.drawable.toast_background_default);
+				break;
+			}
 
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);
@@ -348,10 +406,28 @@ public class Waffle {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			View layout = null;
-			if (image_id != 1)
+			switch (image_id) {
+			case 0:
 				layout = inflater.inflate(R.layout.toast_layout_check, null);
-			else
+				break;
+				
+			case 1:
 				layout = inflater.inflate(R.layout.toast_layout_x, null);
+				break;
+				
+			case 2:
+				layout = inflater.inflate(R.layout.toast_layout_warning, null);
+				break;
+				
+			default:
+				layout = inflater.inflate(R.layout.toast_layout_check, null);
+				ImageView image = (ImageView) layout
+						.findViewById(R.id.waffle_check);
+				image.setVisibility(View.GONE);
+				LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
+				background.setBackgroundResource(R.drawable.toast_background_default);
+				break;
+			}
 
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);

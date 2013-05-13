@@ -458,8 +458,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_CHECK);
+				w.make("Double press \"Back\" to exit.");
 
 		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
@@ -523,7 +522,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startStop.setEnabled(false);
 			if (!rapi.isConnectedToInternet()) {
 				w.make("No internet connectivity - searching only cached experiments", 
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			}
 			Intent iSetup = new Intent(DataCollector.this, Setup.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
@@ -759,7 +758,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						&& !rapi.isLoggedIn()) {
 
 					w.make("Not logged in - saving data instead",
-							Waffle.IMAGE_X);
+							Waffle.IMAGE_WARN);
 					new UploadTask().execute();
 				} else {
 					Intent iNoIsense = new Intent(mContext, NoIsense.class);
@@ -932,7 +931,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else if (!uploadSuccess) {
 				if (rapi.isLoggedIn())
 					w.make("Data not uploaded - saved instead",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				SharedPreferences mPrefs = getSharedPreferences("save_dialog", 0);
 				boolean seenDialog = mPrefs.getBoolean("seen_dialog", false);
 				if (!seenDialog) {
@@ -1134,7 +1133,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		String fields = mPrefs.getString("accepted_fields", "");
 		if (fields.equals("")) {
 			// launch intent to setup fields
-			w.make("Please re-select fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			w.make("Please re-select fields", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			chooseSensorIntent();
 		} else {
 			getFieldsFromPrefsString(fields);
@@ -1557,7 +1556,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (rapi.isConnectedToInternet()) {
 
 							w.make("Please select an experiment", Waffle.LENGTH_LONG,
-									Waffle.IMAGE_X);
+									Waffle.IMAGE_WARN);
 							Intent iSetup = new Intent(DataCollector.this, Setup.class);
 							startActivityForResult(iSetup, SETUP_REQUESTED);
 						} else {
@@ -1567,12 +1566,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					} else if (mPrefs.getString("accepted_fields", "").equals("")) {
 
-						w.make("Please select fields to record", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						w.make("Please select fields to record", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 						chooseSensorIntent();
 							 
 					} else if (sessionName.getText().toString().equals("")) {
 
-						w.make("Please enter a session name first", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						w.make("Please enter a session name first", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 						sessionName.setError("Enter a session name");
 
 					} else if (!numbersReady) {

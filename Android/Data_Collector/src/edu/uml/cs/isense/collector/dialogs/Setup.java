@@ -142,10 +142,10 @@ public class Setup extends Activity implements OnClickListener {
 					eidInput.setText(split[1]);
 					Integer.parseInt(split[1]);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					w.make("Invalid QR Code!", Waffle.LENGTH_LONG,
+					w.make("Invalid QR code scanned", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
 				} catch (NumberFormatException nfe) {
-					w.make("Invalid QR Code!", Waffle.LENGTH_LONG,
+					w.make("Invalid QR code scanned", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
 				}
 
