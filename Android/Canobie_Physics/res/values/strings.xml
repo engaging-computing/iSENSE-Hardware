@@ -39,13 +39,16 @@
     <string-array name="canobie_array">
     	<item>Unknown</item>
     	<item>Alpine Swing</item>
+    	<item>Antique Carousel</item>
         <item>Antique Cars</item>
         <item>Canobie 500</item>
         <item>Caterpillar</item>
         <item>Corkscrew</item>
+        <item>Crazy Cups</item>
         <item>daVinvi\'s Dream</item>
         <item>Dodgems</item>
         <item>Dragon Coaster</item>
+        <item>Equinox</item>
         <item>Giant Sky Wheel</item>
         <item>Jungle Bounce</item>
         <item>Junior Sports Cars</item>
@@ -54,7 +57,7 @@
         <item>Pirata</item>
         <item>Psychodrome</item>
         <item>Skater</item>
-        <item>StarBlaster</item>
+        <item>Star Blaster</item>
         <item>Turkish Twist</item>
         <item>Twist and Shout</item>
         <item>Untamed</item>
@@ -243,7 +246,7 @@
 		
 	</string>
 	
-	<string name="xyz">X: , Y: , Z:</string>
+	<string name="xyz">X:\nY:\nZ:</string>
 	<string name="startString">START\n(Press and Hold)</string>
 	<string name="stopString">STOP\n(Press and Hold)</string>
 	<string name="notLoggedIn"> Not Logged In</string>
