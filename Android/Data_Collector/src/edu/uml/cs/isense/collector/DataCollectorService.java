@@ -22,6 +22,7 @@ public class DataCollectorService extends Service {
 	private boolean terminate = false;
 	private Timer timeElapsedTimer;
 	private PowerManager pm;
+	private PowerManager.WakeLock wl;
 
 	// Hardcoded constant of Process.THREAD_PRIORITY_BACKGROUND
 	private static final int PROCESS_THREAD_PRIORITY_BACKGROUND = 10;
@@ -56,6 +57,10 @@ public class DataCollectorService extends Service {
 	// Main service class message handler function to prevent potential static
 	// memory leak
 	public void handleMessage(Message msg) {
+		// Acquire a wakelock
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "data_collector_service_wakelock");
+		wl.acquire();
+		
 		// Update the main UI timer
 		final Handler handlerTime = new Handler(Looper.getMainLooper());
 		timeElapsedTimer = new Timer();
@@ -169,6 +174,10 @@ public class DataCollectorService extends Service {
 	public void onDestroy() {
 		terminate = true;
 		if (timeElapsedTimer != null) timeElapsedTimer.cancel();
+		
+		// Disable the wakelock
+		if (wl != null) wl.release();
+		
 		// Do not call super.onDestroy(); Doing so will result in terminate
 		// not being set and while the service will return, it will not stop.
 	}
