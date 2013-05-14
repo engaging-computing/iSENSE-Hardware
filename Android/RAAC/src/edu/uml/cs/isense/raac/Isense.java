@@ -70,6 +70,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -157,10 +158,6 @@ public class Isense extends Activity implements OnClickListener {
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
 		rapi.useDev(false);
 
-		//Show name selection dialog		
-		Intent i =  new Intent(this, SetName.class);
-		startActivityForResult(i, GROUP_NAME_BOX);
-
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		//Get the MAC address of the default PINPoint
 		defaultMac = prefs.getString("defaultPpt", "");
@@ -216,11 +213,11 @@ public class Isense extends Activity implements OnClickListener {
 		nameField = (EditText) findViewById(R.id.nameField);	
 		splashNameField = (EditText) findViewById(R.id.et_groupName);
 		btnSetName = (Button) findViewById(R.id.btn_setName);
-		
+
 		nameField.setText(groupName);
 		splashNameField.setText(groupName);
 		btnSetName.setOnClickListener(this);
-		
+
 		launchStatusA = (TextView) findViewById(R.id.launchStatusTxt);
 		lastPptName = (TextView) findViewById(R.id.lastPptName);
 		lastPptLayout = (RelativeLayout) findViewById(R.id.lastPptLayout);
@@ -372,6 +369,7 @@ public class Isense extends Activity implements OnClickListener {
 		if (item.getItemId() == R.id.menu_connect) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
+			//flipper.showPrevious();
 		} else if (item.getItemId() == R.id.menu_setTime) {
 			if(ppi.setRealTimeClock())
 				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
@@ -497,18 +495,26 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v == lastPptLayout) {
-			pressedRecent = true;
-			if(!defaultMac.equals("")) {
-				connectToBluetooth(defaultMac);
+			if(!groupName.equals("")) {
+				pressedRecent = true;
+				if(!defaultMac.equals("")) {
+					connectToBluetooth(defaultMac);
+				} else {
+					Intent serverIntent = new Intent(this, DeviceListActivity.class);
+					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+				}
 			} else {
-				Intent serverIntent = new Intent(this, DeviceListActivity.class);
-				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+				Toast.makeText(this, "Please enter a group name first!", Toast.LENGTH_SHORT).show();
 			}
 		}
 		if (v == otherPptLayout) {
-			pressedRecent = false;
-			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			if(!groupName.equals("")) {
+				pressedRecent = false;
+				Intent serverIntent = new Intent(this, DeviceListActivity.class);
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			} else {
+				Toast.makeText(this, "Please enter a group name first!", Toast.LENGTH_SHORT).show();
+			}
 		}
 		if (v == rcrdBtn) {
 			getRecords();
@@ -520,7 +526,11 @@ public class Isense extends Activity implements OnClickListener {
 			String name = splashNameField.getText().toString();
 			if(!name.equals("")) {
 				groupName = name;
+				nameField.setText(groupName);
 				Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
+				InputMethodManager imm = (InputMethodManager)getSystemService(
+						Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
 			} else {
 				Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
 			}
