@@ -149,10 +149,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	private static final int SAVE_DATA = 5;
 	private static final int DIALOG_CHOICE = 6;
-	private static final int DIALOG_NO_ISENSE = 7;
-	private static final int RECORDING_STOPPED = 8;
-	private static final int DIALOG_NO_GPS = 9;
-	private static final int DIALOG_FORCE_STOP = 10;
+	private static final int RECORDING_STOPPED = 7;
+	private static final int DIALOG_NO_GPS = 8;
+	private static final int DIALOG_FORCE_STOP = 9;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
@@ -231,7 +230,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static boolean choiceViaMenu = false;
 	private static boolean canobieIsChecked = true;
 	private static boolean canobieBackup = true;
-	private static boolean successLogin = false;
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
@@ -267,8 +265,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Initialize everything you're going to need
 		initVars();
 
-		// This block useful for if onBackPressed - retains some things from
-		// previous session
 		if (running)
 			showDialog(DIALOG_FORCE_STOP);
 
@@ -285,7 +281,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					startStop.setEnabled(false);
 					showDialog(MENU_ITEM_SETUP);
 					w.make("You must setup before recording data.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 
 				} else {
 
@@ -301,8 +297,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						mSensorManager.unregisterListener(AmusementPark.this);
 						running = false;
-						startStop.setText(R.string.startString);
-						time.setText(R.string.timeElapsed);
+						startStop.setText(getResources().getString(R.string.startString));
+						time.setText(getResources().getString(R.string.timeElapsed));
 						rideName.setText("Ride/St#: NOT SET");
 
 						timeTimer.cancel();
@@ -363,10 +359,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 											SensorManager.SENSOR_DELAY_FASTEST);
 						}
 
-						data = "X Acceleration, Y Acceleration, Z Acceleration, Acceleration, "
-								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
+						data = "Accel-X, Accel-Y, Accel-Z, Accel-Total, Mag-X, Mag-Y, Mag-Z, Mag-Total"
+								+ "Latitude, Longitude, Time\n";
 						running = true;
-						startStop.setText(R.string.stopString);
+						startStop.setText(getResources().getString(R.string.stopString));
 
 						timeElapsedTimer = new Timer();
 						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
@@ -519,7 +515,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			try {
 				out.append(data);
 			} catch (IOException e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
+			} catch (Exception e) {
+				if (running)
+					sdCardError = true;
 			}
 
 			break;
@@ -605,10 +605,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (!w.isDisplaying) {
 			if (running)
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			else
-				w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_CHECK);
+				w.make("Double press \"Back\" to exit.");
 
 		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
@@ -681,7 +680,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
 					|| dfm.enabledFields[ACCEL_Z]
@@ -697,12 +696,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
 				if (count == 0) {
-					values.setText("X: " + xPrepend + oneDigit.format(accel[0])
-							+ ", Y: " + yPrepend + oneDigit.format(accel[1])
-							+ ", Z: " + zPrepend + oneDigit.format(accel[2]));
+					values.setText("X: " + xPrepend + threeDigit.format(accel[0])
+							+ "\nY: " + yPrepend + threeDigit.format(accel[1])
+							+ "\nZ: " + zPrepend + threeDigit.format(accel[2]));
 				}
 
-				// was: FloatMath.sqrt... -- now: Math.sqrt...
 				accel[3] = (float) Math.sqrt((float) ((Math.pow(accel[0],
 						2) + Math.pow(accel[1], 2) + Math.pow(accel[2], 2))));
 
@@ -819,14 +817,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						loginInfo.setText(" "
 								+ mPrefs.getString("username", ""));
 						loginInfo.setTextColor(Color.GREEN);
-						successLogin = true;
 						w.make("Login successful", Waffle.LENGTH_LONG,
 								Waffle.IMAGE_CHECK);
 						break;
 					case LoginActivity.LOGIN_CANCELED:
 						break;
 					case LoginActivity.LOGIN_FAILED:
-						successLogin = false;
 						showDialog(MENU_ITEM_LOGIN);
 						break;
 					}
@@ -874,18 +870,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 												Waffle.LENGTH_LONG,
 												Waffle.IMAGE_X);
 									else {
-
-										String isValid = experimentInput
-												.getText().toString();
-										if (successLogin
-												&& (isValid.length() > 0)) {
-											// executeIsenseTask = true;
-											dialoginterface.dismiss();
-											new Task().execute();
-										} else {
-											showDialog(DIALOG_NO_ISENSE);
-										}
-
+										new Task().execute();
 									}
 								}
 							})
@@ -894,28 +879,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
 
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showSummary();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_ISENSE:
-
-			builder.setTitle("Cannot Upload to iSENSE")
-					.setMessage(
-							"You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to. "
-									+ "You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in "
-									+ "to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if "
-									+ "you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.")
-					.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
 									if (!choiceViaMenu)
 										showSummary();
@@ -1296,6 +1259,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String eid = mPrefs.getString("experiment_id", "");
+			
+			rapi.login("physics", "physics");
 
 			if (address == null || address.size() <= 0) {
 				sessionId = rapi.createSession(eid, nameOfSession, description,
@@ -1393,8 +1358,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else if (!uploadSuccess) {
-				w.make("An error occured during upload.  Please check internet connectivity.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Data was not uploaded - saved instead",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			} else {
 				w.make("Upload Success", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
@@ -1427,12 +1392,27 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		Display deviceDisplay = getWindowManager().getDefaultDisplay();
 		mwidth = deviceDisplay.getWidth();
+		
+		loginInfo = (TextView) findViewById(R.id.loginInfo);
+		//loginInfo.setText(getResources().getString(R.string.notLoggedIn));
+		//loginInfo.setTextColor(Color.RED);
 
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(false);
+		rapi.login("physics", "physics");
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				AmusementPark.mContext,
+				AmusementPark.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+		final SharedPreferences.Editor mEdit = mPrefs.edit();
+		mEdit.putString("username", "physics");
+		mEdit.putString("password", "physics");
+		mEdit.commit();
+		loginInfo.setText("Logged in as: Physics Student");
+		loginInfo.setTextColor(Color.GREEN);
 
 		uq = new UploadQueue("canobielake", mContext, rapi);
 
@@ -1446,10 +1426,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		rideName = (TextView) findViewById(R.id.ridename);
 
 		rideName.setText("Ride/St#: " + rideNameString);
-
-		loginInfo = (TextView) findViewById(R.id.loginInfo);
-		loginInfo.setText(R.string.notLoggedIn);
-		loginInfo.setTextColor(Color.RED);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -1522,7 +1498,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (success) {
 			loginInfo.setText(" " + mPrefs.getString("username", ""));
 			loginInfo.setTextColor(Color.GREEN);
-			successLogin = true;
 		}
 	}
 
