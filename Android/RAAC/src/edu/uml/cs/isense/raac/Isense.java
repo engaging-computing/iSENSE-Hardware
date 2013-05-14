@@ -70,6 +70,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -216,11 +217,11 @@ public class Isense extends Activity implements OnClickListener {
 		nameField = (EditText) findViewById(R.id.nameField);	
 		splashNameField = (EditText) findViewById(R.id.et_groupName);
 		btnSetName = (Button) findViewById(R.id.btn_setName);
-		
+
 		nameField.setText(groupName);
 		splashNameField.setText(groupName);
 		btnSetName.setOnClickListener(this);
-		
+
 		launchStatusA = (TextView) findViewById(R.id.launchStatusTxt);
 		lastPptName = (TextView) findViewById(R.id.lastPptName);
 		lastPptLayout = (RelativeLayout) findViewById(R.id.lastPptLayout);
@@ -521,6 +522,9 @@ public class Isense extends Activity implements OnClickListener {
 			if(!name.equals("")) {
 				groupName = name;
 				Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
+				InputMethodManager imm = (InputMethodManager)getSystemService(
+						Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
 			} else {
 				Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
 			}
