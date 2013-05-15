@@ -944,9 +944,9 @@ public class Isense extends Activity implements OnClickListener {
 
 			String nameOfSession = nameField.getText().toString();
 			if(ppi.getSetting(PinComm.BTA1) == 24) {
-				nameOfSession += " - pH";
+				experimentId = "0";
 			} else {
-				nameOfSession += " - Temp";
+				experimentId = "0";
 			}
 			
 			if (!loggedIn && rapi.isConnectedToInternet())
