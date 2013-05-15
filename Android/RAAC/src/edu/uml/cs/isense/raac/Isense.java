@@ -52,6 +52,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
@@ -942,7 +943,12 @@ public class Isense extends Activity implements OnClickListener {
 		public void run() {
 
 			String nameOfSession = nameField.getText().toString();
-
+			if(ppi.getSetting(PinComm.BTA1) == 24) {
+				nameOfSession += " - pH";
+			} else {
+				nameOfSession += " - Temp";
+			}
+			
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
 
@@ -1000,8 +1006,9 @@ public class Isense extends Activity implements OnClickListener {
 			dia.cancel();
 
 			if (!(sessionUrl.equals(baseSessionUrl))) {
-				Intent i = new Intent(Isense.this, ViewData.class);
-				startActivityForResult(i, REQUEST_VIEW_DATA);  
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(sessionUrl));
+				startActivity(i);  
 			} else {
 				Toast.makeText(Isense.this, "Upload failed. Check your internet connection, and make sure the experiment is not closed.", Toast.LENGTH_LONG).show();
 				dataRdy = true;
