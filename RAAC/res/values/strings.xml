@@ -46,8 +46,8 @@
     <string name="prefs_cleardef_desc">Removes default PINPoint from settings.</string>
     
     <string name="namediag_label">Please enter a group name</string>
-    <string name="name_label">Group Name</string>
-    <string name="namebtn_label">Set Name</string>
+    <string name="name_label">Your First Names</string>
+    <string name="namebtn_label">Set Names</string>
     
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
