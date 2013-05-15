@@ -127,7 +127,9 @@
                 android:layout_weight="2"
                 android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                 android:hint="@string/name_label"
+                android:imeOptions="actionDone"
                 android:inputType="textCapWords"
+                android:singleLine="true" 
                 android:maxLength="100" >
 
                 <requestFocus />
