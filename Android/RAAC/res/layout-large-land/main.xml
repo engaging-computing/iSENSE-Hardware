@@ -128,7 +128,7 @@
                 android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                 android:hint="@string/name_label"
                 android:inputType="textCapWords"
-                android:maxLength="20" >
+                android:maxLength="100" >
 
                 <requestFocus />
             </EditText>
@@ -202,7 +202,7 @@
                     android:layout_weight="1"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
                     android:inputType="textCapWords"
-                    android:maxLength="20"
+                    android:maxLength="100"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
             </LinearLayout>
         </LinearLayout>
