@@ -63,6 +63,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -71,6 +72,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,6 +82,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.RestAPI;
@@ -217,6 +220,17 @@ public class Isense extends Activity implements OnClickListener {
 
 		nameField.setText(groupName);
 		splashNameField.setText(groupName);
+		splashNameField.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if(actionId == EditorInfo.IME_ACTION_DONE) {
+					setNameThing();
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 		btnSetName.setOnClickListener(this);
 
 		launchStatusA = (TextView) findViewById(R.id.launchStatusTxt);
@@ -524,19 +538,23 @@ public class Isense extends Activity implements OnClickListener {
 			uploadData();
 		}
 		if (v == btnSetName ) {
-			String name = splashNameField.getText().toString();
-			if(!name.equals("")) {
-				groupName = name;
-				nameField.setText(groupName);
-				Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
-				InputMethodManager imm = (InputMethodManager)getSystemService(
-						Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
-			} else {
-				Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
-			}
+			setNameThing();
 		}
 
+	}
+	
+	public void setNameThing() {
+		String name = splashNameField.getText().toString();
+		if(!name.equals("")) {
+			groupName = name;
+			nameField.setText(groupName);
+			Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
+			InputMethodManager imm = (InputMethodManager)getSystemService(
+					Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
+		} else {
+			Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public void prepDataForUpload() {
@@ -948,7 +966,7 @@ public class Isense extends Activity implements OnClickListener {
 			} else {
 				experimentId = "0";
 			}
-			
+
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
 
