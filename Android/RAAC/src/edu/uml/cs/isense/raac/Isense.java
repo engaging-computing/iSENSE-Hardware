@@ -255,7 +255,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		setBtStatus();
 	}
-
+	
 	//Override to make sure that the correct layout file is used when the screen orientation changes
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -384,7 +384,6 @@ public class Isense extends Activity implements OnClickListener {
 		if (item.getItemId() == R.id.menu_connect) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
-			//flipper.showPrevious();
 		} else if (item.getItemId() == R.id.menu_setTime) {
 			if(ppi.setRealTimeClock())
 				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
@@ -401,9 +400,13 @@ public class Isense extends Activity implements OnClickListener {
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
+		} else if (item.getItemId() == android.R.id.home) {
+//			flipper.setDisplayedChild(0);
+//			if (ppi != null)
+//				ppi.disconnect();
+			
 		}
 		return true;
-
 	}
 
 	@Override
