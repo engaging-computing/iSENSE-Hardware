@@ -112,8 +112,9 @@
 
 -(BOOL) canBeUploaded {
     if ( ( name_.length > 0 ) && ( eid_ > 0 ) ) {
-        if ( data_.count != 0 ) return true;
-        else if ( picturePaths_.count != 0 ) return true;
+        //if ( data_.count != 0 ) return true;
+        //else if ( picturePaths_.count != 0 ) return true;
+        return true;
     }
     
     return false;

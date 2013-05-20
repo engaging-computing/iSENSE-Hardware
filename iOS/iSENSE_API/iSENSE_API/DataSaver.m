@@ -41,9 +41,65 @@
 }
 
 -(bool)upload {
-    /*
-     * Do uploading code here!
-     */
+    iSENSE *isenseAPI = [iSENSE getInstance];
+    if (![isenseAPI isLoggedIn]) {
+        NSLog(@"Not logged in.");
+        return false;
+    }
+    DataSet *currentDS;
+    while (count) {
+        // get the next dataset
+        currentDS = [self removeDataSet:dataQueue.headKey];
+        
+        // check if the session is uploadable
+        if ([currentDS uploadable_]) {
+            
+            // create a session
+            if (currentDS.sid_ == -1) {
+                int sessionID = [isenseAPI createSession:currentDS.name_ withDescription:currentDS.description_ Street:currentDS.address_ City:currentDS.city_ Country:currentDS.country_ toExperiment:[NSNumber numberWithInt:currentDS.eid_]];
+                if (sessionID == -1) {
+                    [self addDataSet:currentDS];
+                    continue;
+                } else {
+                    currentDS.sid_ = sessionID;
+                }
+            }
+            
+            // Upload to iSENSE (pass me JSON data so we can putSessionData)
+            if (currentDS.data_.count) {
+                NSError *error = nil;
+                NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data_ options:0 error:&error];
+                if (error != nil) {
+                    [self addDataSet:currentDS];
+                    NSLog(@"%@", error);
+                    return false;
+                }
+                
+                if (![isenseAPI putSessionData:dataJSON forSession:[NSNumber numberWithInt:currentDS.sid_] inExperiment:[NSNumber numberWithInt:currentDS.eid_]]) {
+                    [self addDataSet:currentDS];
+                    continue;
+                }
+            }
+            
+            // Upload pictures to iSENSE
+            if (currentDS.picturePaths_.count) {
+                /* blah blah blah TODO */
+                for (int i = 0; i < currentDS.picturePaths_.count; i++) {
+                    if (![isenseAPI upload:currentDS.picturePaths_[i] toExperiment:[NSNumber numberWithInt:currentDS.eid_] forSession:[NSNumber numberWithInt:currentDS.sid_] withName:currentDS.name_ andDescription:currentDS.description_]) {
+                        [self addDataSet:currentDS];
+                        continue;
+                    }
+
+                }
+            }
+            
+        } else {
+            [self addDataSet:currentDS];
+        }
+        
+        
+    }
+    
     return true;
 }
 

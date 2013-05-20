@@ -129,22 +129,28 @@
     NSLog(@"%@", country);
 
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
+    if ([session_num intValue] == -1) {
+        [dataSaver addDataSet:[[[DataSet alloc] initWithName:name andDescription:description andEID:exp_num.intValue andData:nil andPicturePaths:nil andSessionId:-1 andCity:city andCountry:country andAddress:address] autorelease]];
+        return false;
+    }
     
     // Upload to iSENSE (pass me JSON data)
     NSError *error = nil;
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+    if (error != nil) {
+        NSLog(@"%@", error);
+        return false;
+    }
+    
     bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-
     if (!success) {
         DataSet *ds = [[DataSet alloc] initWithName:name andDescription:description andEID:expNum andData:results andPicturePaths:nil andSessionId:session_num.intValue andCity:city andCountry:country andAddress:address];
         
         [dataSaver addDataSet:ds];
         NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
         [ds release];
-        
     }
     [exp_num release];
-    
     return success;
 }
 

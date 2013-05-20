@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import "DataSet.h"
 #import "Queue.h"
+#import "iSENSE.h"
 
 @interface DataSaver : NSObject {
     NSMutableDictionary *dataQueue;
