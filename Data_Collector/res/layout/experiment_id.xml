@@ -49,6 +49,16 @@
             android:text="@string/scan_qr"
             android:textSize="18sp" />
     </LinearLayout>
+    
+    <Button
+        android:id="@+id/experiment_no_exp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/no_experiment_now"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

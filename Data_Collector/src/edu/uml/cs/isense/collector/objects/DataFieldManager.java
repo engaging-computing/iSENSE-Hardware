@@ -38,118 +38,139 @@ public class DataFieldManager extends Application {
 	}
 
 	public void getOrder() {
-		expFields = rapi.getExperimentFields(eid);
+		if (eid == -1) {
+			order.add(mContext.getString(R.string.time));
+			order.add(mContext.getString(R.string.accel_x));
+			order.add(mContext.getString(R.string.accel_y));
+			order.add(mContext.getString(R.string.accel_z));
+			order.add(mContext.getString(R.string.accel_total));
+			order.add(mContext.getString(R.string.latitude));
+			order.add(mContext.getString(R.string.longitude));
+			order.add(mContext.getString(R.string.magnetic_x));
+			order.add(mContext.getString(R.string.magnetic_y));
+			order.add(mContext.getString(R.string.magnetic_z));
+			order.add(mContext.getString(R.string.magnetic_total));
+			order.add(mContext.getString(R.string.heading_deg));
+			order.add(mContext.getString(R.string.heading_rad));
+			order.add(mContext.getString(R.string.temperature_c));
+			order.add(mContext.getString(R.string.pressure));
+			order.add(mContext.getString(R.string.altitude));
+			order.add(mContext.getString(R.string.luminous_flux));
+			order.add(mContext.getString(R.string.temperature_f));
+			order.add(mContext.getString(R.string.temperature_k));
+		} else {
+		
+			expFields = rapi.getExperimentFields(eid);
 
-		for (ExperimentField field : expFields) {
-			switch (field.type_id) {
-
-			// Temperature
-			case 1:
-				if (field.unit_name.toLowerCase(Locale.US).contains("f"))
-					order.add(mContext.getString(R.string.temperature_f));
-				else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
-					order.add(mContext.getString(R.string.temperature_c));
-				} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
-					order.add(mContext.getString(R.string.temperature_k));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
+			for (ExperimentField field : expFields) {
+				switch (field.type_id) {
 				
-			// Potential Altitude
-			case 2:
-			case 3:
-				if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
-					order.add(mContext.getString(R.string.altitude));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
-
-			// Time
-			case 7:
-				order.add(mContext.getString(R.string.time));
-				break;
-
-			// Light
-			case 8:
-			case 9:
-			case 29:
-				order.add(mContext.getString(R.string.luminous_flux));
-				break;
-
-			// Angle
-			case 10:
-				if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
-					order.add(mContext.getString(R.string.heading_deg));
-				} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
-					order.add(mContext.getString(R.string.heading_rad));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
-
-			// Geospacial
-			case 19:
-				if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
-					order.add(mContext.getString(R.string.latitude));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
-					order.add(mContext.getString(R.string.longitude));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
-
-			// Numeric/Custom
-			case 21:
-			case 22:
-				if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
-					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
-						order.add(mContext.getString(R.string.magnetic_x));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
-						order.add(mContext.getString(R.string.magnetic_y));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
-						order.add(mContext.getString(R.string.magnetic_z));
-					} else if ((field.field_name.toLowerCase(Locale.US)
-							.contains("total"))
-							|| (field.field_name.toLowerCase(Locale.US)
-									.contains("average"))
-							|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
-						order.add(mContext.getString(R.string.magnetic_total));
+				// Temperature
+				case 1:
+					if (field.unit_name.toLowerCase(Locale.US).contains("f"))
+						order.add(mContext.getString(R.string.temperature_f));
+					else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
+						order.add(mContext.getString(R.string.temperature_c));
+					} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
+						order.add(mContext.getString(R.string.temperature_k));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
 					}
-				} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
-					order.add(mContext.getString(R.string.altitude));
-				} else
-					order.add(mContext.getString(R.string.null_string));
-				break;
+					break;
+				
+				// Potential Altitude
+				case 2:
+				case 3:
+					if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
+						order.add(mContext.getString(R.string.altitude));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
 
-			// Acceleration
-			case 25:
-				if (field.field_name.toLowerCase(Locale.US).contains("x")) {
-					order.add(mContext.getString(R.string.accel_x));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
-					order.add(mContext.getString(R.string.accel_y));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
-					order.add(mContext.getString(R.string.accel_z));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
-					order.add(mContext.getString(R.string.accel_total));
-				} else {
+				// Time
+				case 7:
+					order.add(mContext.getString(R.string.time));
+					break;
+
+				// Light
+				case 8:
+				case 9:
+				case 29:
+					order.add(mContext.getString(R.string.luminous_flux));
+					break;
+
+				// Angle
+				case 10:
+					if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
+						order.add(mContext.getString(R.string.heading_deg));
+					} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
+						order.add(mContext.getString(R.string.heading_rad));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
+
+				// Geospacial
+				case 19:
+					if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
+						order.add(mContext.getString(R.string.latitude));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
+						order.add(mContext.getString(R.string.longitude));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
+
+				// Numeric/Custom
+				case 21:
+				case 22:
+					if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
+						if (field.field_name.toLowerCase(Locale.US).contains("x")) {
+							order.add(mContext.getString(R.string.magnetic_x));
+						} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
+							order.add(mContext.getString(R.string.magnetic_y));
+						} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
+							order.add(mContext.getString(R.string.magnetic_z));
+						} else if ((field.field_name.toLowerCase(Locale.US).contains("total"))
+								|| (field.field_name.toLowerCase(Locale.US).contains("average"))
+								|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
+							order.add(mContext.getString(R.string.magnetic_total));
+						}
+					} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
+						order.add(mContext.getString(R.string.altitude));
+					} else
+						order.add(mContext.getString(R.string.null_string));
+					break;
+
+				// Acceleration
+				case 25:
+					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
+						order.add(mContext.getString(R.string.accel_x));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
+						order.add(mContext.getString(R.string.accel_y));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
+						order.add(mContext.getString(R.string.accel_z));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
+						order.add(mContext.getString(R.string.accel_total));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
+
+				// Pressure
+				case 27:
+					order.add(mContext.getString(R.string.pressure));
+					break;
+
+				// No match (Just about every other category)
+				default:
 					order.add(mContext.getString(R.string.null_string));
+					break;
+
 				}
-				break;
-
-			// Pressure
-			case 27:
-				order.add(mContext.getString(R.string.pressure));
-				break;
-
-			// No match (Just about every other category)
-			default:
-				order.add(mContext.getString(R.string.null_string));
-				break;
 
 			}
-
 		}
 
 	}

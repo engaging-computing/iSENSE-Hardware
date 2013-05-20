@@ -125,7 +125,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 		ctv.setText(ds.getName() + " - " + ds.getType());
 
 		TextView eid = (TextView) view.findViewById(R.id.experimentid);
-		eid.setText(ds.getEID());
+		if (ds.getEID().equals("-1"))
+			eid.setText("No Exp.");
+		else
+			eid.setText(ds.getEID());
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());
@@ -384,6 +387,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, !isFromDataCollector);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, lastDataSetLongClicked.getEID().equals("-1"));
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
