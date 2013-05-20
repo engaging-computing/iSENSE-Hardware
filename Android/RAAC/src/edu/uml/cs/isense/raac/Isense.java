@@ -52,6 +52,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
@@ -62,6 +63,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -70,6 +72,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +82,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.RestAPI;
@@ -216,6 +220,17 @@ public class Isense extends Activity implements OnClickListener {
 
 		nameField.setText(groupName);
 		splashNameField.setText(groupName);
+		splashNameField.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if(actionId == EditorInfo.IME_ACTION_DONE) {
+					setNameThing();
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 		btnSetName.setOnClickListener(this);
 
 		launchStatusA = (TextView) findViewById(R.id.launchStatusTxt);
@@ -240,7 +255,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		setBtStatus();
 	}
-
+	
 	//Override to make sure that the correct layout file is used when the screen orientation changes
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -369,7 +384,6 @@ public class Isense extends Activity implements OnClickListener {
 		if (item.getItemId() == R.id.menu_connect) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
-			//flipper.showPrevious();
 		} else if (item.getItemId() == R.id.menu_setTime) {
 			if(ppi.setRealTimeClock())
 				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
@@ -386,9 +400,13 @@ public class Isense extends Activity implements OnClickListener {
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
+		} else if (item.getItemId() == android.R.id.home) {
+//			flipper.setDisplayedChild(0);
+//			if (ppi != null)
+//				ppi.disconnect();
+			
 		}
 		return true;
-
 	}
 
 	@Override
@@ -523,19 +541,23 @@ public class Isense extends Activity implements OnClickListener {
 			uploadData();
 		}
 		if (v == btnSetName ) {
-			String name = splashNameField.getText().toString();
-			if(!name.equals("")) {
-				groupName = name;
-				nameField.setText(groupName);
-				Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
-				InputMethodManager imm = (InputMethodManager)getSystemService(
-						Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
-			} else {
-				Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
-			}
+			setNameThing();
 		}
 
+	}
+	
+	public void setNameThing() {
+		String name = splashNameField.getText().toString();
+		if(!name.equals("")) {
+			groupName = name;
+			nameField.setText(groupName);
+			Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
+			InputMethodManager imm = (InputMethodManager)getSystemService(
+					Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
+		} else {
+			Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public void prepDataForUpload() {
@@ -942,6 +964,11 @@ public class Isense extends Activity implements OnClickListener {
 		public void run() {
 
 			String nameOfSession = nameField.getText().toString();
+			if(ppi.getSetting(PinComm.BTA1) == 24) {
+				experimentId = "0";
+			} else {
+				experimentId = "0";
+			}
 
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
@@ -1000,8 +1027,9 @@ public class Isense extends Activity implements OnClickListener {
 			dia.cancel();
 
 			if (!(sessionUrl.equals(baseSessionUrl))) {
-				Intent i = new Intent(Isense.this, ViewData.class);
-				startActivityForResult(i, REQUEST_VIEW_DATA);  
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(sessionUrl));
+				startActivity(i);  
 			} else {
 				Toast.makeText(Isense.this, "Upload failed. Check your internet connection, and make sure the experiment is not closed.", Toast.LENGTH_LONG).show();
 				dataRdy = true;
