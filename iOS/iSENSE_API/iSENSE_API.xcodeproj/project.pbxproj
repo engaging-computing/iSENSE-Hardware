@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		39194CAF174AA547002D69D7 /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39194CAD174AA547002D69D7 /* DataSet.h */; };
+		39194CB0174AA547002D69D7 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 39194CAE174AA547002D69D7 /* DataSet.m */; };
 		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
@@ -20,8 +22,8 @@
 		39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
 		39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9EB172AD8F800A6BD2A /* Queue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		39EFB9F3172ADFE000A6BD2A /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9F1172ADFE000A6BD2A /* DataSet.m */; };
-		39EFB9F4172ADFE000A6BD2A /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9F2172ADFE000A6BD2A /* DataSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39EFB9F3172ADFE000A6BD2A /* DataSetQ.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */; };
+		39EFB9F4172ADFE000A6BD2A /* DataSetQ.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
 		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
 		39FF262416DFA8760062C3DC /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
@@ -47,13 +49,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		39194CAD174AA547002D69D7 /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
+		39194CAE174AA547002D69D7 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
 		39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSaver.h; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		39EFB9EB172AD8F800A6BD2A /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
-		39EFB9F1172ADFE000A6BD2A /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
-		39EFB9F2172ADFE000A6BD2A /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
+		39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSetQ.m; sourceTree = "<group>"; };
+		39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSetQ.h; sourceTree = "<group>"; };
 		39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FF25E316DFA28A0062C3DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API-Prefix.pch"; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
 				39EFB9EF172ADE9F00A6BD2A /* objects */,
 				39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */,
+				39194CAD174AA547002D69D7 /* DataSet.h */,
+				39194CAE174AA547002D69D7 /* DataSet.m */,
 			);
 			name = src_queue_saver;
 			sourceTree = "<group>";
@@ -108,7 +114,7 @@
 		39EFB9EE172ADA1F00A6BD2A /* queue_headers */ = {
 			isa = PBXGroup;
 			children = (
-				39EFB9F2172ADFE000A6BD2A /* DataSet.h */,
+				39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */,
 				39EFB9EB172AD8F800A6BD2A /* Queue.h */,
 				39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */,
 			);
@@ -127,7 +133,7 @@
 		39EFB9F0172ADF8F00A6BD2A /* dataset */ = {
 			isa = PBXGroup;
 			children = (
-				39EFB9F1172ADFE000A6BD2A /* DataSet.m */,
+				39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */,
 			);
 			name = dataset;
 			sourceTree = "<group>";
@@ -234,7 +240,8 @@
 				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
 				39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */,
 				39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */,
-				39EFB9F4172ADFE000A6BD2A /* DataSet.h in Headers */,
+				39EFB9F4172ADFE000A6BD2A /* DataSetQ.h in Headers */,
+				39194CAF174AA547002D69D7 /* DataSet.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,8 +307,9 @@
 				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
 				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
-				39EFB9F3172ADFE000A6BD2A /* DataSet.m in Sources */,
+				39EFB9F3172ADFE000A6BD2A /* DataSetQ.m in Sources */,
 				39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */,
+				39194CB0174AA547002D69D7 /* DataSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

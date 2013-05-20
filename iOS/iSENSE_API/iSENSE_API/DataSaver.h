@@ -10,7 +10,7 @@
 #define __iSENSE_API__DataSaver__
 
 #import <Foundation/Foundation.h>
-#import "DataSet.h"
+#import "DataSetQ.h"
 #import "Queue.h"
 #import "iSENSE.h"
 

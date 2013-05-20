@@ -83,13 +83,26 @@
             
             // Upload pictures to iSENSE
             if (currentDS.picturePaths_.count) {
-                /* blah blah blah TODO */
+                NSMutableArray *newPicturePaths = [NSMutableArray alloc];
+                bool failedAtLeastOnce = false;
+                
+                // Loop through all the images and try to upload them
                 for (int i = 0; i < currentDS.picturePaths_.count; i++) {
+                    
+                    // Track the images that fail to upload
                     if (![isenseAPI upload:currentDS.picturePaths_[i] toExperiment:[NSNumber numberWithInt:currentDS.eid_] forSession:[NSNumber numberWithInt:currentDS.sid_] withName:currentDS.name_ andDescription:currentDS.description_]) {
-                        [self addDataSet:currentDS];
+                        failedAtLeastOnce = true;
+                        [newPicturePaths addObject:currentDS.picturePaths_[i]];
                         continue;
                     }
 
+                }
+                
+                // Add back the images that need to be uploaded
+                if (failedAtLeastOnce) {
+                    currentDS.picturePaths_ = newPicturePaths;
+                    [self addDataSet:currentDS];
+                    continue;
                 }
             }
             
