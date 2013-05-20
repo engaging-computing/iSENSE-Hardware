@@ -24,6 +24,7 @@ public class Setup extends Activity implements OnClickListener {
 	private Button cancel;
 	private Button qrCode;
 	private Button browse;
+	private Button noExp;
 
 	private Context mContext;
 	private Waffle w;
@@ -60,6 +61,9 @@ public class Setup extends Activity implements OnClickListener {
 
 		browse = (Button) findViewById(R.id.experiment_browse);
 		browse.setOnClickListener(this);
+		
+		noExp = (Button) findViewById(R.id.experiment_no_exp);
+		noExp.setOnClickListener(this);
 
 	}
 
@@ -121,6 +125,13 @@ public class Setup extends Activity implements OnClickListener {
 
 			startActivityForResult(experimentIntent, EXPERIMENT_CODE);
 
+			break;
+			
+		case R.id.experiment_no_exp:
+			Intent iRet = new Intent();
+			iRet.putExtra("no_exp", true);
+			setResult(RESULT_OK, iRet);
+			finish();
 			break;
 		}
 

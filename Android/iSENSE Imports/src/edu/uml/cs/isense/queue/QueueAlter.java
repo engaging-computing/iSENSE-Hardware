@@ -17,10 +17,11 @@ import edu.uml.cs.isense.R;
  */
 public class QueueAlter extends Activity {
 	
-	private Button rename, changeData, delete, cancel;
+	private Button rename, changeData, selectExp, delete, cancel;
 	
 	protected final static String RETURN_CODE = "return_code";
 	protected final static String IS_ALTERABLE = "is_alterable";
+	protected final static String SELECT_EXP = "select_experiment";
 	
 	protected final static int RENAME = 100;
 	protected final static int CHANGE_DATA = 101;
@@ -33,6 +34,7 @@ public class QueueAlter extends Activity {
 		
 		rename     = (Button) findViewById(R.id.queuealter_rename     );
 		changeData = (Button) findViewById(R.id.queuealter_change_data);
+		selectExp  = (Button) findViewById(R.id.queuealter_choose_exp );
 		delete     = (Button) findViewById(R.id.queuealter_delete     );
 		cancel     = (Button) findViewById(R.id.queuealter_cancel     );
 		
@@ -42,6 +44,11 @@ public class QueueAlter extends Activity {
 			boolean isAlterable = extras.getBoolean(IS_ALTERABLE);
 			if (!isAlterable) {
 				changeData.setVisibility(View.GONE);
+			}
+			
+			boolean showSelectExp = extras.getBoolean(SELECT_EXP);
+			if (!showSelectExp) {
+				selectExp.setVisibility(View.GONE);
 			}
 		}
 		

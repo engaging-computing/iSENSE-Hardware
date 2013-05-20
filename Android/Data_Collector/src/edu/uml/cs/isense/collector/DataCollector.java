@@ -697,8 +697,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+				if (data != null) {
+					boolean noExp = data.getBooleanExtra("no_exp", false);
+					if (noExp == true) {
+						setUpDFMWithAllFields();
+						startStop.setEnabled(true);
+					} else {
+						new SensorCheckTask().execute();
+					}
+				} else {
+					new SensorCheckTask().execute();
+				}
 
-				new SensorCheckTask().execute();
 			} else if (resultCode == RESULT_CANCELED) {
 
 				startStop.setEnabled(true);
@@ -1064,6 +1074,43 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else
 			return "";
 	}
+	
+	// TODO - done?
+	private void setUpDFMWithAllFields() {
+		w.make("hi");
+		
+		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		mEdit.putString("experiment_id", "-1").commit();
+
+		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString("experiment_id", "-1")), rapi, mContext, f);
+		dfm.getOrder();
+		
+		for (int i = 0; i < TEMPERATURE_K; i++)
+			dfm.enabledFields[i] = true;
+		
+		String acceptedFields = getResources().getString(R.string.time) + "," +
+						getResources().getString(R.string.accel_x) + "," +
+						getResources().getString(R.string.accel_y) + "," +
+						getResources().getString(R.string.accel_z) + "," +
+						getResources().getString(R.string.accel_total) + "," +
+						getResources().getString(R.string.latitude) + "," +
+						getResources().getString(R.string.longitude) + "," +
+						getResources().getString(R.string.magnetic_x) + "," +
+						getResources().getString(R.string.magnetic_y) + "," +
+						getResources().getString(R.string.magnetic_z) + "," +
+						getResources().getString(R.string.magnetic_total) + "," +
+						getResources().getString(R.string.heading_deg) + "," +
+						getResources().getString(R.string.heading_rad) + "," +
+						getResources().getString(R.string.temperature_c) + "," +
+						getResources().getString(R.string.pressure) + "," +
+						getResources().getString(R.string.altitude) + "," +
+						getResources().getString(R.string.luminous_flux) + "," +
+						getResources().getString(R.string.temperature_f) + "," +
+						getResources().getString(R.string.temperature_k);
+	
+		mEdit.putString("accepted_fields", acceptedFields).commit();
+	}
 
 	// Task for checking sensor availability along with enabling/disabling
 	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
@@ -1335,7 +1382,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String fields = mPrefs.getString("accepted_fields", "");
-			// TODO - can we really expect the field prefs to match the exp here?
 			if (!(fields.equals(""))) {
 				if (dfm == null) initDfm();
 				getEnabledFields();

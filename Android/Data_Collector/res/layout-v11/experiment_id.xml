@@ -53,6 +53,17 @@
             tools:ignore="ButtonStyle" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/experiment_no_exp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/no_experiment_now"
+        android:textSize="18sp"
+        tools:ignore="ButtonStyle" />
+    
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
