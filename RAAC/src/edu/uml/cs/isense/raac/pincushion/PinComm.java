@@ -411,11 +411,11 @@ public class PinComm {
 			spi.writeByte(sByte);
 			spi.writeByte((byte) (value & 0xFF));
 			spi.clearBuff();
-			try {
-				spi.readByte();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				spi.readByte();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 		} else {
 			throw new NoConnectionException();
 		}
