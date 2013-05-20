@@ -1,106 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/main_background"
-    android:keepScreenOn="true">
-    
-    <TextView android:id="@+id/loginInfo"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:background="#000000"
-    	android:text="@+string/notLoggedIn"
-    	android:textColor="#FFFFFF"
-    	android:textSize="12sp"
-    />
-    
-    <LinearLayout android:orientation="vertical"
-    	android:layout_width="fill_parent"
-    	android:layout_height="0dip"
-    	android:layout_weight="1">
-    
+    android:keepScreenOn="true"
+    android:orientation="vertical" >
 
-			<ImageView android:id="@+id/ImageViewLogo"
-			    android:contentDescription="@string/contentDesc"
-				android:layout_width="fill_parent" 
-				android:background="@android:color/transparent" 
-				android:src="@drawable/logo"
-				android:layout_height="wrap_content"
-				android:scaleType="center"/>
+    <TextView
+        android:id="@+id/loginInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:text="@string/notLoggedIn"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp" />
 
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/ridename"
-				android:text="@string/rideAndSeat"
-				android:textSize="18dip"
-				android:background="@android:color/black"
-				android:textColor="@android:color/white"
-				android:layout_gravity="center_horizontal"
-				android:gravity="center_horizontal"/>
-	
-		<LinearLayout android:orientation="vertical"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:background="@android:color/black">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/values"
-				android:text="@string/xyz"
-				android:textSize="18dip"
-				android:textStyle="bold"
-				android:background="@android:color/black"
-				android:textColor="@android:color/white"
-				android:layout_gravity="center_horizontal"/>
-			
-		</LinearLayout>
-		
-		<LinearLayout android:orientation="vertical"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:background="@android:color/black">
+        <ImageView
+            android:id="@+id/ImageViewLogo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/contentDesc"
+            android:scaleType="center"
+            android:src="@drawable/logo" />
 
-			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/time"
-				android:text="@+string/timeElapsed"
-				android:textSize="14dip"
-				android:textStyle="bold"
-				android:background="@android:color/black"
-				android:textColor="@android:color/white"
-				android:layout_gravity="center_horizontal"/>
-			
-		</LinearLayout>
-		
-		<Button android:text="@+string/startString" 
-			android:textSize="30dip"
-			android:id="@+id/startStop" 
-			android:layout_width="fill_parent" 
-			android:layout_height="fill_parent"
-			android:layout_marginLeft="20dp"
-			android:layout_marginRight="20dp"
-			android:layout_marginTop="20dp"
-			android:layout_marginBottom="20dp"
-			/>
-			
-	</LinearLayout>
-	
-	<LinearLayout android:orientation="vertical"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:layout_marginBottom="20dp">
-			
-		<TextView android:id="@+id/menuPrompt"
-			android:layout_height="wrap_content"
-			android:layout_width = "fill_parent"
-			android:layout_gravity="center_horizontal"
-			android:gravity="center"
-			android:textSize="15sp"
-			android:text="@string/menuDirections"
-			android:textColor="@android:color/black"/>		
-		
-	</LinearLayout>
-	
-	
+        <TextView
+            android:id="@+id/ridename"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/black"
+            android:gravity="center_horizontal"
+            android:text="@string/rideAndSeat"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/black"
+                android:text="@string/xyz"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/black"
+                android:text="@string/timeElapsed"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/startStop"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/startString"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/menuPrompt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/menuDirections"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+    </LinearLayout>
+
 </LinearLayout>
