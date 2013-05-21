@@ -401,10 +401,9 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
 		} else if (item.getItemId() == android.R.id.home) {
-//			flipper.setDisplayedChild(0);
-//			if (ppi != null)
-//				ppi.disconnect();
-			
+			Intent intent = getIntent();
+			finish();
+			startActivity(intent);
 		}
 		return true;
 	}
