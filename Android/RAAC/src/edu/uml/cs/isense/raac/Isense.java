@@ -791,6 +791,7 @@ public class Isense extends Activity implements OnClickListener {
 					} else {
 						Toast.makeText(Isense.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
 					}
+					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
 					
 					if(autoRun) {
 						getRecords();
