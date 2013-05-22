@@ -231,7 +231,7 @@ public class BluetoothService {
 		// Send a failure message back to the Activity
 		Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
 		Bundle bundle = new Bundle();
-		bundle.putString(TOAST, "Device connection was lost");
+		bundle.putString(TOAST, "Finished communicating with the PINPoint");
 		msg.setData(bundle);
 		mHandler.sendMessage(msg);
 	}

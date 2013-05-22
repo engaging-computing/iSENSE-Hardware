@@ -401,10 +401,9 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
 		} else if (item.getItemId() == android.R.id.home) {
-//			flipper.setDisplayedChild(0);
-//			if (ppi != null)
-//				ppi.disconnect();
-			
+			Intent intent = getIntent();
+			finish();
+			startActivity(intent);
 		}
 		return true;
 	}
@@ -765,7 +764,7 @@ public class Isense extends Activity implements OnClickListener {
 					setBtStatus();
 					//Sleep thread to allow near-future communications to succeed
 					try {
-						Thread.sleep(500);
+						Thread.sleep(600);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -783,11 +782,17 @@ public class Isense extends Activity implements OnClickListener {
 						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
 					}
 					//Set the time on the PINPoint's internal clock
-					if(ppi.setRealTimeClock()) {
+					int tries = 0;
+					while(!ppi.setRealTimeClock() && tries < 10) {
+						tries ++;
+					}
+					if(tries < 10) {
 						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 					} else {
-						Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(Isense.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
 					}
+					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
+					
 					if(autoRun) {
 						getRecords();
 					}
@@ -937,14 +942,12 @@ public class Isense extends Activity implements OnClickListener {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
 				dataJSON.put(bta1Data.get(i));
-				dataJSON.put("");
 				dataSet.put(dataJSON);
 			}
 		else if (ppi.getSetting(PinComm.BTA1) == 24) { //PINPoint is set to use pH Sensor
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
-				dataJSON.put("");
 				dataJSON.put(bta1Data.get(i));
 				dataSet.put(dataJSON);
 			}
@@ -964,11 +967,6 @@ public class Isense extends Activity implements OnClickListener {
 		public void run() {
 
 			String nameOfSession = nameField.getText().toString();
-			if(ppi.getSetting(PinComm.BTA1) == 24) {
-				experimentId = "0";
-			} else {
-				experimentId = "0";
-			}
 
 			if (!loggedIn && rapi.isConnectedToInternet())
 				new PerformLogin().execute();
