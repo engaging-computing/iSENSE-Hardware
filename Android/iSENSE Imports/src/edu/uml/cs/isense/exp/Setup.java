@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -66,6 +67,9 @@ public class Setup extends Activity implements OnClickListener {
 			boolean enableNoExpButton = extras.getBoolean("enable_no_exp_button");
 			if (!enableNoExpButton) {
 				noExp.setVisibility(View.GONE);
+			} else {
+				TextView t = (TextView) findViewById(R.id.experimentText);
+				t.setText(getResources().getString(R.string.chooseExperimentAlt));
 			}
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {

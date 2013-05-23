@@ -17,31 +17,37 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="@string/timeFailed"
+            android:text="@string/qr_prompt"
             android:textSize="18sp"
             android:background="@android:color/transparent" />
+        
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@android:color/transparent" >
 
             <Button
-                android:id="@+id/time_fail_cancel"
+                android:id="@+id/no_qr_cancel"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="@android:string/cancel" />
 
             <Button
-                android:id="@+id/time_fail_retry"
+                android:id="@+id/no_qr_visit"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="@string/retry" />
+                android:text="@string/visit" />
         </LinearLayout>
     </LinearLayout>
 
