@@ -80,7 +80,6 @@ import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.NoIsense;
-import edu.uml.cs.isense.collector.dialogs.Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.dialogs.UploadFailSave;
 import edu.uml.cs.isense.collector.objects.DataFieldManager;
@@ -88,6 +87,7 @@ import edu.uml.cs.isense.collector.objects.Fields;
 import edu.uml.cs.isense.collector.objects.SensorCompatibility;
 import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
@@ -525,6 +525,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			}
 			Intent iSetup = new Intent(DataCollector.this, Setup.class);
+			iSetup.putExtra("enable_no_exp_button", true);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case R.id.menu_item_login:
@@ -684,10 +685,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
 					startStop.setEnabled(false);
 					Intent iSetup = new Intent(DataCollector.this, Setup.class);
+					iSetup.putExtra("enable_no_exp_button", true);
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else if (!ChooseSensorDialog.compatible) {
 					startStop.setEnabled(false);
 					Intent iSetup = new Intent(DataCollector.this, Setup.class);
+					iSetup.putExtra("enable_no_exp_button", true);
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else {
 					acceptedFields = ChooseSensorDialog.acceptedFields;
@@ -1162,7 +1165,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 		Intent i = new Intent(mContext, ChooseSensorDialog.class);
 		Experiment e = rapi.getExperiment(Integer.parseInt(expNum));
 		i.putExtra("expnum", expNum);
-		i.putExtra("expname", e.name);
+		if (e != null)
+			i.putExtra("expname", e.name);
+		else
+			i.putExtra("expname", "");
 		startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
 		
 	}
@@ -1373,6 +1379,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else {
 			Intent iSetup = new Intent(DataCollector.this, Setup.class);
+			iSetup.putExtra("enable_no_exp_button", true);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 		}
 	}
@@ -1604,6 +1611,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 							w.make("Please select an experiment", Waffle.LENGTH_LONG,
 									Waffle.IMAGE_WARN);
 							Intent iSetup = new Intent(DataCollector.this, Setup.class);
+							iSetup.putExtra("enable_no_exp_button", true);
 							startActivityForResult(iSetup, SETUP_REQUESTED);
 						} else {
 							Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);

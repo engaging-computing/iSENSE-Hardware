@@ -26,6 +26,7 @@ public class QueueAlter extends Activity {
 	protected final static int RENAME = 100;
 	protected final static int CHANGE_DATA = 101;
 	protected final static int DELETE = 102;
+	protected final static int SELECT_EXPERIMENT = 103;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,15 @@ public class QueueAlter extends Activity {
 				setResult(RESULT_OK, iRet);
 				finish();
 			}	
+		});
+		
+		selectExp.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent iRet = new Intent(QueueAlter.this, QueueLayout.class);
+				iRet.putExtra(RETURN_CODE, SELECT_EXPERIMENT);
+				setResult(RESULT_OK, iRet);
+				finish();
+			}
 		});
 		
 		delete.setOnClickListener(new OnClickListener() {

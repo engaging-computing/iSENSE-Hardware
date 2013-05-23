@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">iSENSE Data Collector</string>
-    <string name="experiments_no_items">No experiments were found.</string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
     <string name="syncTime">
         Synchronizing time is useful when using multiple devices to record data at the
@@ -28,13 +27,11 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
 	    can use the \"Reset\" button.</string>
-    <string name="search">Search</string>
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="iSENSELogo">iSENSE Logo</string>
     <string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
     <string name="timeElapsed">Time Elapsed: 0:00</string>
-    <string name="browse">  Browse&#8230;  </string>
     <string name="takePic">Take Picture</string>
     <string name="takeVid">Take Video"</string>
     <string name="instructions"><u>Instructions:</u></string>
@@ -44,10 +41,8 @@
     <string name="back">Back</string>
     <string name="upload">Upload</string>
     <string name="media_desc">Select one of the following options:</string>
-    <string name="scan_qr">Scan QR Code</string>
     <string name="username">Username:&#160;&#160;</string>
     <string name="password">Password:&#160;&#160;&#160;</string>
-    <string name="loading">Loading&#x2026;</string>
     <string name="no_isense">
         You have not provided a valid Experiment ID to upload your data to.
 		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set 
@@ -67,12 +62,6 @@
         \"Upload\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
        	\"Delete\".
         </string>
-    <string name="visit">Visit</string>
-    <string name="qr_prompt">
-        Your device does not have the proper Barcode Scanner application installed
-		to use this feature.  However, you may visit the Google Play store to download 
-		this application (\"Barcode Scanner\" by the Zxing Team).
-	</string>
     <string name="done">Done</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
@@ -344,7 +333,6 @@
     <string name="manual">Manual</string>
     <string name="splashPrompt">Select \"Automatic\" to record sensor data, or select \"Manual\" to manually key in data.</string>
     <string name="qmark">\&#63;</string>
-	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
 	<string name="session_name">Session Name</string>
 	<string name="required">(required)</string>
@@ -386,6 +374,5 @@
 	<string name="select_fields_for">
 	    Please select the fields you would like to record for experiment #
 	</string>
-	<string name="no_experiment_now">No Experiment</string>
 	
 </resources>
