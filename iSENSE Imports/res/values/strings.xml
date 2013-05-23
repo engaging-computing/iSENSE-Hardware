@@ -19,7 +19,11 @@
 	<string name="no_experiment_now">No Experiment</string>
 	<string name="browse">  Browse&#8230;  </string>
 	<string name="scan_qr">Scan QR Code</string>
-	<string name="chooseExperiment">Enter or select an experiment you would like to upload to: </string>
+	<string name="chooseExperiment">Enter or select an experiment you would like to upload to.</string>
+	<string name="chooseExperimentAlt">
+	    Enter or select an experiment you would like to upload to.
+		Alternatively, select \"No Experiment\" to record all possible data and select an experiment later.    
+	</string>
     <string name="search">Search</string>
     <string name="experiments_no_items">No experiments were found.</string>
     <string name="visit">Visit</string>
