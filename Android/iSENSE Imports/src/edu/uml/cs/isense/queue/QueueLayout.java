@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -45,6 +47,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATASET_REQUESTED   = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
+	private static final int ALTER_DATA_EXP_REQUESTED  = 9004;
 
 	private static int QUEUE_PARENT = -1;
 
@@ -285,6 +288,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				switch (returnCode) {
 
 				case QueueAlter.RENAME:
+					
 					Intent iRename = new Intent(mContext, QueueEditRename.class);
 					startActivityForResult(iRename, ALTER_DATA_NAME_REQUESTED);
 
@@ -295,6 +299,14 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iData = new Intent(mContext, QueueEditData.class);
 					startActivityForResult(iData, ALTER_DATA_DATA_REQUESTED);
 
+					break;
+					
+				case QueueAlter.SELECT_EXPERIMENT:
+					
+					Intent iExp = new Intent(mContext, Setup.class);
+					iExp.putExtra("from_where", "queue");
+					startActivityForResult(iExp, ALTER_DATA_EXP_REQUESTED);
+					
 					break;
 
 				case QueueAlter.DELETE:
@@ -330,6 +342,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				DataSet alter = QueueEditData.alter;
 			
+				uq.removeItemWithKey(lastDataSetLongClicked.key);
+				scrollQueue.removeView(lastViewLongClicked);
+				
+				uq.addDataSetToQueue(alter);
+				addViewToScrollQueue(alter);
+				
+			}
+		} else if (requestCode == ALTER_DATA_EXP_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				SharedPreferences mPrefs = getSharedPreferences("EID_QUEUE", 0);
+				
+				DataSet alter = lastDataSetLongClicked;
+				alter.setExp(mPrefs.getString("experiment_id", "No Exp."));
+				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
 				
@@ -437,6 +463,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, false);
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
@@ -487,6 +514,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, lastDataSetLongClicked.getEID().equals("-1"));
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);

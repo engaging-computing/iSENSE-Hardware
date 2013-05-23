@@ -6,5 +6,13 @@
         <ignore path="res/drawable/red_x.png" />
         <ignore path="res/drawable/red_x.png" />
     </issue>
+    <issue id="Registered">
+        <ignore path="src/edu/uml/cs/isense/exp/NoQR.java" />
+        <ignore path="src/edu/uml/cs/isense/exp/Setup.java" />
+        <ignore path="src/edu/uml/cs/isense/queue/QueueAlter.java" />
+        <ignore path="src/edu/uml/cs/isense/queue/QueueEditData.java" />
+        <ignore path="src/edu/uml/cs/isense/queue/QueueEditRename.java" />
+        <ignore path="src/edu/uml/cs/isense/queue/QueueLayout.java" />
+    </issue>
     <issue id="UnusedResources" severity="ignore" />
 </lint>

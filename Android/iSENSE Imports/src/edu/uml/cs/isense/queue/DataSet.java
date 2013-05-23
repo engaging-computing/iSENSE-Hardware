@@ -289,6 +289,16 @@ public class DataSet implements Serializable {
 	public String getEID() {
 		return this.eid;
 	}
+	
+	/**
+	 * Setter for experiment ID.
+	 * 
+	 * @param eid
+	 * 		The experiment ID the session should be created under.
+	 */
+	public void setExp(String eid) {
+		this.eid = eid;
+	}
 
 	/**
 	 * Getter for description.
