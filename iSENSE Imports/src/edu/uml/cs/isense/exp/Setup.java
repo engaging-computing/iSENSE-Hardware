@@ -93,9 +93,10 @@ public class Setup extends Activity implements OnClickListener {
 		}
 		
 		mPrefs = getSharedPreferences(prefsString, 0);
+		String eid = mPrefs.getString("experiment_id", "").equals("-1") ? "" : mPrefs.getString("experiment_id", "");
 		
 		eidInput = (EditText) findViewById(R.id.experimentInput);
-		eidInput.setText(mPrefs.getString("experiment_id", ""));
+		eidInput.setText(eid);
 
 	}
 

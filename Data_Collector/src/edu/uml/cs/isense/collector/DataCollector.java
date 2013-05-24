@@ -56,7 +56,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -83,9 +82,9 @@ import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.NoIsense;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.dialogs.UploadFailSave;
-import edu.uml.cs.isense.collector.objects.DataFieldManager;
-import edu.uml.cs.isense.collector.objects.Fields;
-import edu.uml.cs.isense.collector.objects.SensorCompatibility;
+import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.exp.Setup;
@@ -345,7 +344,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				out = new BufferedWriter(gpxwriter);
 				out.write(data);
 				beginWrite = false;
-				Log.w("tag", "start");
 			} catch (IOException e) {
 				sdCardError = true;
 			} catch (Exception e) {
@@ -357,7 +355,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		case 'u':
 			try {
 				out.append(data);
-				Log.w("tag", "update");
 			} catch (IOException e) {
 				if (running)
 					sdCardError = true;
@@ -375,7 +372,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					out.close();
 				if (gpxwriter != null)
 					gpxwriter.close();
-				Log.w("tag", "finish");
 			} catch (IOException e) {
 				sdCardError = true;
 			}
@@ -1525,51 +1521,48 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (dfm.enabledFields[HEADING_DEG])
 			f.angle_deg = toThou.format(orientation[0]);
 		if (dfm.enabledFields[HEADING_RAD])
-			f.angle_rad = ""
-					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+			if (!f.angle_deg.equals(""))
+				f.angle_rad = toThou.format(
+						(Double.parseDouble(f.angle_deg) * (Math.PI / 180)));
+			else
+				f.angle_rad = "";
 		if (dfm.enabledFields[MAG_X])
-			f.mag_x = mag[0];
-		Log.w("uhhh...", ";");
+			f.mag_x = toThou.format(mag[0]);
 		if (dfm.enabledFields[MAG_Y])
-			f.mag_y = mag[1];
+			f.mag_y = toThou.format(mag[1]);
 		if (dfm.enabledFields[MAG_Z])
-			f.mag_z = mag[2];
+			f.mag_z = toThou.format(mag[2]);
 		if (dfm.enabledFields[MAG_TOTAL])
-			f.mag_total = Math.sqrt(Math
-					.pow(f.mag_x, 2)
-					+ Math.pow(f.mag_y, 2)
-					+ Math.pow(f.mag_z, 2));
-		Log.w("uhhh...", ";;");
+			f.mag_total = toThou.format(Math.sqrt(Math
+					.pow(mag[0], 2)
+					+ Math.pow(mag[1], 2)
+					+ Math.pow(mag[2], 2)));
 		if (dfm.enabledFields[TIME])
 			f.timeMillis = currentTime + elapsedMillis;
-		Log.w("uhhh...", "?!");
 		if (dfm.enabledFields[TEMPERATURE_C])
 			f.temperature_c = temperature;
-		Log.w("uhhh...", "temp = " + temperature);
 		if (dfm.enabledFields[TEMPERATURE_F])
 			if (!temperature.equals(""))
 				f.temperature_f = ""
 					+ ((Double.parseDouble(temperature) * 1.8) + 32);
 			else
 				f.temperature_f = "";
-		Log.w("uhhh...", "@!");
 		if (dfm.enabledFields[TEMPERATURE_K])
 			if (!temperature.equals(""))
 				f.temperature_k = ""
 						+ (Double.parseDouble(temperature) + 273.15);
 			else
 				f.temperature_k = "";
-		Log.w("uhhh...", "@@");
 		if (dfm.enabledFields[PRESSURE])
 			f.pressure = pressure;
 		if (dfm.enabledFields[ALTITUDE])
 			f.altitude = calcAltitude();
 		if (dfm.enabledFields[LIGHT])
 			f.lux = light;
-		Log.w("umm...", "honk?");
+		
 		dataSet.put(dfm.putData());
 		data = dfm.writeSdCardLine();
-		Log.w("umm...", "wort?");
+		
 		if (beginWrite) {
 			String header = dfm.writeHeaderLine();
 			writeToSDCard(header, 's');
@@ -1577,7 +1570,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			writeToSDCard(data, 'u');
 		}
-		Log.w("umm...", "sauce?");
 	}
 
 	// All the code for the main button!
@@ -1586,12 +1578,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
-				Log.v("event", "Pressed");
 				if (!running) {
 					SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 					boolean numbersReady = true;
 					if (!sampleInterval.getText().toString().equals("")) {
-						Log.v("event", "sample");
 						try {
 							int sInterval = Integer.parseInt(sampleInterval
 									.getText().toString());
@@ -1607,7 +1597,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 					}
 					if (!recordingLength.getText().toString().equals("")) {
-						Log.v("event", "rec len");
 						try {
 							int testLength = Integer.parseInt(recordingLength
 									.getText().toString());
@@ -1625,9 +1614,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					}
 
 					SharedPreferences expPrefs = getSharedPreferences("EID", 0);
-					if (expPrefs.getString("experiment_id", "").equals("")) {
-						Log.v("event", "exp prob");
-						
+					if (expPrefs.getString("experiment_id", "").equals("")) {						
 						if (rapi.isConnectedToInternet()) {
 
 							w.make("Please select an experiment", Waffle.LENGTH_LONG,
@@ -1641,24 +1628,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 						}
 
 					} else if (mPrefs.getString("accepted_fields", "").equals("")) {
-						Log.v("event", "accpt fields prob");
 
 						w.make("Please select fields to record", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 						chooseSensorIntent();
 							 
 					} else if (sessionName.getText().toString().equals("")) {
-						Log.v("event", "sess name prob");
+						
 						w.make("Please enter a session name first", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 						sessionName.setError("Enter a session name");
 
 					} else if (!numbersReady) {
-						Log.v("event", "no nums prob");
 						// Not ready to record data yet.  Do nothing.
-
 					} else {
 
-						Log.v("event", "good to go");
-						
 						nameOfSession = sessionName.getText().toString();
 						sessionName.setError(null);
 						recordingLength.setError(null);
@@ -1670,15 +1652,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 						else
 							srate = INTERVAL;
 						
-						Log.w("rate", "srate = " + srate);
-
 						if (!recordingLength.getText().toString().equals(""))
 							recLength = Integer.parseInt(recordingLength.getText()
 									.toString());
 						else
 							recLength = TEST_LENGTH;
-						
-						Log.w("len", "recLength = " + recLength);
 
 						vibrator.vibrate(300);
 						mMediaPlayer.setLooping(false);
@@ -1703,12 +1681,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 									PorterDuff.Mode.MULTIPLY);
 						mScreen.setBackgroundResource(R.drawable.background_running);
 						isenseLogo.setImageResource(R.drawable.logo_green);
-							
-						Log.v("event", "sensors");
 						
 						setUpSensorsForRecording();
-							
-						Log.v("event", "service");
 						
 						Intent iService = new Intent(mContext, DataCollectorService.class);
 						iService.putExtra(DataCollectorService.SRATE, srate);

@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.objects;
+package edu.uml.cs.isense.dfm;
 
 public class Fields {
 	public String accel_x, accel_y, accel_z, accel_total;
@@ -7,7 +7,7 @@ public class Fields {
 	public String lux;
 	public String angle_deg, angle_rad;
 	public double latitude, longitude;
-	public double mag_x, mag_y, mag_z, mag_total;
+	public String mag_x, mag_y, mag_z, mag_total;
 	public String altitude;
 	public String pressure;
 	
