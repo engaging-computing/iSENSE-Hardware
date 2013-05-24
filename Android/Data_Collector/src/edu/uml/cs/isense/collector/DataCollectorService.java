@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
-import android.util.Log;
 
 // http://developer.android.com/guide/components/bound-services.html
 public class DataCollectorService extends Service {
@@ -80,8 +79,6 @@ public class DataCollectorService extends Service {
 		}, 0, 1000);
 
 		long endTime = System.currentTimeMillis() + recLength * 1000;
-		Log.e("GO!", "start: " + System.currentTimeMillis());
-		Log.e("GO!", "end: " + endTime);
 		while (System.currentTimeMillis() < endTime) {
 			if (!pm.isScreenOn()) {
 				DataCollector.terminateThroughPowerOff = true;
@@ -100,13 +97,11 @@ public class DataCollectorService extends Service {
 					long curExecution = System.currentTimeMillis();
 
 					// Execute main body at rate of srate
-					Log.i("GO!", "pollin\'!");
 					DataCollector.pollForData();
 
-					Log.i("GO!", "before: " + System.currentTimeMillis());
 					// Wait for a period of srate - execution time
 					wait(srate - (System.currentTimeMillis() - curExecution));
-					Log.i("GO!", "after:  " + System.currentTimeMillis());
+
 				} catch (Exception e) {
 				}
 			}
@@ -153,12 +148,9 @@ public class DataCollectorService extends Service {
 		// Get client's passed-in values necessary for execution
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
-			Log.w("extras", "got em");
 			srate = extras.getLong(SRATE);
 			recLength = extras.getInt(REC_LENGTH);
 		}
-		Log.w("extras", "srate = " + srate);
-		Log.w("extras", "recLength = " + recLength);
 
 		// For each start request, send a message to start a job and deliver the
 		// start ID so we know which request we're stopping when we finish the

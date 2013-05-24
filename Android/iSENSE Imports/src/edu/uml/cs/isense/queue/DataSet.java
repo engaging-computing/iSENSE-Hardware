@@ -75,6 +75,8 @@ public class DataSet implements Serializable {
 	private boolean rdyForUpload = true;
 	
 	protected long key;
+	
+	private boolean hasInitialExperiment = true;
 
 	// Data Only
 	/**
@@ -144,6 +146,7 @@ public class DataSet implements Serializable {
 		this.country = country;
 		this.addr = addr;
 		this.key = new Random().nextLong();
+		this.hasInitialExperiment = eid.equals("-1") ? false : true;
 	}
 
 	/** 
@@ -152,6 +155,10 @@ public class DataSet implements Serializable {
 	 * @return if the upload was successful
 	 */
 	public boolean upload() {
+
+		if (!this.hasInitialExperiment)
+			reOrderData();
+			
 		boolean success = true;
 		if (this.rdyForUpload) {
 			switch (type) {
@@ -242,8 +249,31 @@ public class DataSet implements Serializable {
 		return success;
 	}
 
+	// TODO
+	private void reOrderData() {
+		JSONArray dataJSON = prepDataForUpload();
+		
+		JSONArray row;
+		int len = dataJSON.length();
+		for (int i = 0; i < len; i++) {
+			try {
+				row = dataJSON.getJSONArray(i);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
+		// If the string isn't a complete JSONArray, trim off the incomplete portion
+		if (!(this.data.charAt(this.data.length() -1) == ']')) {
+			int endIndex = this.data.lastIndexOf(']');
+			if (endIndex != -1)
+				this.data = this.data.substring(0, endIndex);
+				this.data = this.data + ']';
+		}
+		
 		JSONArray dataJSON = null;
 		try {
 			dataJSON = new JSONArray(data);
@@ -260,6 +290,14 @@ public class DataSet implements Serializable {
 
 	protected boolean isUploadable() {
 		return this.rdyForUpload;
+	}
+	
+	protected void setHasInitialExperiment(boolean hie) {
+		this.hasInitialExperiment = hie;
+	}
+	
+	protected boolean getHasInitialExperiment() {
+		return this.hasInitialExperiment;
 	}
 
 	/**
