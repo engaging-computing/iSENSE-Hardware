@@ -130,27 +130,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int RECORDING_STOPPED_REQUESTED = 9;
 	public static final int DESCRIPTION_REQUESTED = 10;
 	public static final int CAN_LOGIN_REQUESTED = 11;
-
-	private static final int TIME = 0;
-	private static final int ACCEL_X = 1;
-	private static final int ACCEL_Y = 2;
-	private static final int ACCEL_Z = 3;
-	private static final int ACCEL_TOTAL = 4;
-	private static final int LATITUDE = 5;
-	private static final int LONGITUDE = 6;
-	private static final int MAG_X = 7;
-	private static final int MAG_Y = 8;
-	private static final int MAG_Z = 9;
-	private static final int MAG_TOTAL = 10;
-	private static final int HEADING_DEG = 11;
-	private static final int HEADING_RAD = 12;
-	private static final int TEMPERATURE_C = 13;
-	private static final int PRESSURE = 14;
-	private static final int ALTITUDE = 15;
-	private static final int LIGHT = 16;
-	private static final int TEMPERATURE_F = 17;
-	private static final int TEMPERATURE_K = 18;
-
 	
 	/* UI Objects */
 
@@ -559,9 +538,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onSensorChanged(SensorEvent event) {
 
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
-					|| dfm.enabledFields[ACCEL_Z]
-					|| dfm.enabledFields[ACCEL_TOTAL]) {
+			if (dfm.enabledFields[Fields.ACCEL_X] || dfm.enabledFields[Fields.ACCEL_Y]
+					|| dfm.enabledFields[Fields.ACCEL_Z]
+					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 
 				rawAccel = event.values.clone();
 
@@ -593,10 +572,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
-					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
-					|| dfm.enabledFields[HEADING_DEG]
-					|| dfm.enabledFields[HEADING_RAD]) {
+			if (dfm.enabledFields[Fields.MAG_X] || dfm.enabledFields[Fields.MAG_Y]
+					|| dfm.enabledFields[Fields.MAG_Z] || dfm.enabledFields[Fields.MAG_TOTAL]
+					|| dfm.enabledFields[Fields.HEADING_DEG]
+					|| dfm.enabledFields[Fields.HEADING_RAD]) {
 
 				rawMag = event.values.clone();
 
@@ -634,15 +613,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-			if (dfm.enabledFields[TEMPERATURE_C]
-					|| dfm.enabledFields[TEMPERATURE_F]
-					|| dfm.enabledFields[TEMPERATURE_K])
+			if (dfm.enabledFields[Fields.TEMPERATURE_C]
+					|| dfm.enabledFields[Fields.TEMPERATURE_F]
+					|| dfm.enabledFields[Fields.TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
-			if (dfm.enabledFields[PRESSURE])
+			if (dfm.enabledFields[Fields.PRESSURE])
 				pressure = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-			if (dfm.enabledFields[LIGHT])
+			if (dfm.enabledFields[Fields.LIGHT])
 				light = toThou.format(event.values[0]);
 		}
 	}
@@ -1010,29 +989,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (dfm == null)
 				initDfm();
 
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
-					|| dfm.enabledFields[ACCEL_Z]
-					|| dfm.enabledFields[ACCEL_TOTAL]) {
+			if (dfm.enabledFields[Fields.ACCEL_X] || dfm.enabledFields[Fields.ACCEL_Y]
+					|| dfm.enabledFields[Fields.ACCEL_Z]
+					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
-					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
-					|| dfm.enabledFields[HEADING_DEG]
-					|| dfm.enabledFields[HEADING_RAD]) {
+			if (dfm.enabledFields[Fields.MAG_X] || dfm.enabledFields[Fields.MAG_Y]
+					|| dfm.enabledFields[Fields.MAG_Z] || dfm.enabledFields[Fields.MAG_TOTAL]
+					|| dfm.enabledFields[Fields.HEADING_DEG]
+					|| dfm.enabledFields[Fields.HEADING_RAD]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[TEMPERATURE_C]
-					|| dfm.enabledFields[TEMPERATURE_F]
-					|| dfm.enabledFields[TEMPERATURE_K]
-					|| dfm.enabledFields[ALTITUDE]) {
+			if (dfm.enabledFields[Fields.TEMPERATURE_C]
+					|| dfm.enabledFields[Fields.TEMPERATURE_F]
+					|| dfm.enabledFields[Fields.TEMPERATURE_K]
+					|| dfm.enabledFields[Fields.ALTITUDE]) {
 				mSensorManager
 						.registerListener(
 								DataCollector.this,
@@ -1041,13 +1020,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 								SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
+			if (dfm.enabledFields[Fields.PRESSURE] || dfm.enabledFields[Fields.ALTITUDE]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[LIGHT]) {
+			if (dfm.enabledFields[Fields.LIGHT]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 						SensorManager.SENSOR_DELAY_FASTEST);
@@ -1058,9 +1037,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Calculates Altitude from Temperature and Pressure if Possible
 	private static String calcAltitude() {
-		if ((dfm.enabledFields[TEMPERATURE_C]
-				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
-				&& dfm.enabledFields[PRESSURE]) {
+		if ((dfm.enabledFields[Fields.TEMPERATURE_C]
+				|| dfm.enabledFields[Fields.TEMPERATURE_F] || dfm.enabledFields[Fields.TEMPERATURE_K])
+				&& dfm.enabledFields[Fields.PRESSURE]) {
 
 			if (pressure.equals("") || temperature.equals("")) {
 				return "";
@@ -1087,7 +1066,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString("experiment_id", "-1")), rapi, mContext, f);
 		dfm.getOrder();
 		
-		for (int i = 0; i < TEMPERATURE_K; i++)
+		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
 			dfm.enabledFields[i] = true;
 		
 		String acceptedFields = getResources().getString(R.string.time) + "," +
@@ -1220,61 +1199,61 @@ public class DataCollector extends Activity implements SensorEventListener,
 		
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
-				dfm.enabledFields[TIME] = true;
+				dfm.enabledFields[Fields.TIME] = true;
 
 			if (s.equals(getString(R.string.accel_x)))
-				dfm.enabledFields[ACCEL_X] = true;
+				dfm.enabledFields[Fields.ACCEL_X] = true;
 
 			if (s.equals(getString(R.string.accel_y)))
-				dfm.enabledFields[ACCEL_Y] = true;
+				dfm.enabledFields[Fields.ACCEL_Y] = true;
 
 			if (s.equals(getString(R.string.accel_z)))
-				dfm.enabledFields[ACCEL_Z] = true;
+				dfm.enabledFields[Fields.ACCEL_Z] = true;
 
 			if (s.equals(getString(R.string.accel_total)))
-				dfm.enabledFields[ACCEL_TOTAL] = true;
+				dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
 
 			if (s.equals(getString(R.string.latitude)))
-				dfm.enabledFields[LATITUDE] = true;
+				dfm.enabledFields[Fields.LATITUDE] = true;
 
 			if (s.equals(getString(R.string.longitude)))
-				dfm.enabledFields[LONGITUDE] = true;
+				dfm.enabledFields[Fields.LONGITUDE] = true;
 
 			if (s.equals(getString(R.string.magnetic_x)))
-				dfm.enabledFields[MAG_X] = true;
+				dfm.enabledFields[Fields.MAG_X] = true;
 
 			if (s.equals(getString(R.string.magnetic_y)))
-				dfm.enabledFields[MAG_Y] = true;
+				dfm.enabledFields[Fields.MAG_Y] = true;
 
 			if (s.equals(getString(R.string.magnetic_z)))
-				dfm.enabledFields[MAG_Z] = true;
+				dfm.enabledFields[Fields.MAG_Z] = true;
 
 			if (s.equals(getString(R.string.magnetic_total)))
-				dfm.enabledFields[MAG_TOTAL] = true;
+				dfm.enabledFields[Fields.MAG_TOTAL] = true;
 
 			if (s.equals(getString(R.string.heading_deg)))
-				dfm.enabledFields[HEADING_DEG] = true;
+				dfm.enabledFields[Fields.HEADING_DEG] = true;
 
 			if (s.equals(getString(R.string.heading_rad)))
-				dfm.enabledFields[HEADING_RAD] = true;
+				dfm.enabledFields[Fields.HEADING_RAD] = true;
 
 			if (s.equals(getString(R.string.temperature_c)))
-				dfm.enabledFields[TEMPERATURE_C] = true;
+				dfm.enabledFields[Fields.TEMPERATURE_C] = true;
 
 			if (s.equals(getString(R.string.temperature_f)))
-				dfm.enabledFields[TEMPERATURE_F] = true;
+				dfm.enabledFields[Fields.TEMPERATURE_F] = true;
 
 			if (s.equals(getString(R.string.temperature_k)))
-				dfm.enabledFields[TEMPERATURE_K] = true;
+				dfm.enabledFields[Fields.TEMPERATURE_K] = true;
 
 			if (s.equals(getString(R.string.pressure)))
-				dfm.enabledFields[PRESSURE] = true;
+				dfm.enabledFields[Fields.PRESSURE] = true;
 
 			if (s.equals(getString(R.string.altitude)))
-				dfm.enabledFields[ALTITUDE] = true;
+				dfm.enabledFields[Fields.ALTITUDE] = true;
 
 			if (s.equals(getString(R.string.luminous_flux)))
-				dfm.enabledFields[LIGHT] = true;
+				dfm.enabledFields[Fields.LIGHT] = true;
 
 		}
 	}
@@ -1506,58 +1485,58 @@ public class DataCollector extends Activity implements SensorEventListener,
 		elapsedMillis += srate;
 		totalMillis = elapsedMillis;
 
-		if (dfm.enabledFields[ACCEL_X])
+		if (dfm.enabledFields[Fields.ACCEL_X])
 			f.accel_x = toThou.format(accel[0]);
-		if (dfm.enabledFields[ACCEL_Y])
+		if (dfm.enabledFields[Fields.ACCEL_Y])
 			f.accel_y = toThou.format(accel[1]);
-		if (dfm.enabledFields[ACCEL_Z])
+		if (dfm.enabledFields[Fields.ACCEL_Z])
 			f.accel_z = toThou.format(accel[2]);
-		if (dfm.enabledFields[ACCEL_TOTAL])
+		if (dfm.enabledFields[Fields.ACCEL_TOTAL])
 			f.accel_total = toThou.format(accel[3]);
-		if (dfm.enabledFields[LATITUDE])
+		if (dfm.enabledFields[Fields.LATITUDE])
 			f.latitude = loc.getLatitude();
-		if (dfm.enabledFields[LONGITUDE])
+		if (dfm.enabledFields[Fields.LONGITUDE])
 			f.longitude = loc.getLongitude();
-		if (dfm.enabledFields[HEADING_DEG])
+		if (dfm.enabledFields[Fields.HEADING_DEG])
 			f.angle_deg = toThou.format(orientation[0]);
-		if (dfm.enabledFields[HEADING_RAD])
+		if (dfm.enabledFields[Fields.HEADING_RAD])
 			if (!f.angle_deg.equals(""))
 				f.angle_rad = toThou.format(
 						(Double.parseDouble(f.angle_deg) * (Math.PI / 180)));
 			else
 				f.angle_rad = "";
-		if (dfm.enabledFields[MAG_X])
+		if (dfm.enabledFields[Fields.MAG_X])
 			f.mag_x = toThou.format(mag[0]);
-		if (dfm.enabledFields[MAG_Y])
+		if (dfm.enabledFields[Fields.MAG_Y])
 			f.mag_y = toThou.format(mag[1]);
-		if (dfm.enabledFields[MAG_Z])
+		if (dfm.enabledFields[Fields.MAG_Z])
 			f.mag_z = toThou.format(mag[2]);
-		if (dfm.enabledFields[MAG_TOTAL])
+		if (dfm.enabledFields[Fields.MAG_TOTAL])
 			f.mag_total = toThou.format(Math.sqrt(Math
 					.pow(mag[0], 2)
 					+ Math.pow(mag[1], 2)
 					+ Math.pow(mag[2], 2)));
-		if (dfm.enabledFields[TIME])
+		if (dfm.enabledFields[Fields.TIME])
 			f.timeMillis = currentTime + elapsedMillis;
-		if (dfm.enabledFields[TEMPERATURE_C])
+		if (dfm.enabledFields[Fields.TEMPERATURE_C])
 			f.temperature_c = temperature;
-		if (dfm.enabledFields[TEMPERATURE_F])
+		if (dfm.enabledFields[Fields.TEMPERATURE_F])
 			if (!temperature.equals(""))
 				f.temperature_f = ""
 					+ ((Double.parseDouble(temperature) * 1.8) + 32);
 			else
 				f.temperature_f = "";
-		if (dfm.enabledFields[TEMPERATURE_K])
+		if (dfm.enabledFields[Fields.TEMPERATURE_K])
 			if (!temperature.equals(""))
 				f.temperature_k = ""
 						+ (Double.parseDouble(temperature) + 273.15);
 			else
 				f.temperature_k = "";
-		if (dfm.enabledFields[PRESSURE])
+		if (dfm.enabledFields[Fields.PRESSURE])
 			f.pressure = pressure;
-		if (dfm.enabledFields[ALTITUDE])
+		if (dfm.enabledFields[Fields.ALTITUDE])
 			f.altitude = calcAltitude();
-		if (dfm.enabledFields[LIGHT])
+		if (dfm.enabledFields[Fields.LIGHT])
 			f.lux = light;
 		
 		dataSet.put(dfm.putData());

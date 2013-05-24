@@ -9,6 +9,7 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
@@ -35,6 +36,13 @@ public class DataFieldManager extends Application {
 		this.mContext = mContext;
 		this.dataSet = new JSONArray();
 		this.f = f;
+	}
+	
+	// Static class function strictly for getting the field order of any experiment
+	public static LinkedList<String> getOrder(int eid, RestAPI rapi, Context c) {
+		DataFieldManager d = new DataFieldManager(eid, rapi, c, null);
+		d.getOrder();
+		return d.order;
 	}
 
 	public void getOrder() {
@@ -482,6 +490,116 @@ public class DataFieldManager extends Application {
 		b.append("\n");
 		
 		return b.toString();
+	}
+
+	// For use if a clump of data was recorded and needs to be cut down and re-ordered
+	public static String reOrderData(JSONArray data, String eid, RestAPI rapi, Context c) {
+		JSONArray row, outData = new JSONArray(), outRow;
+		int len = data.length();
+		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(eid), rapi, c);
+		
+		for (int i = 0; i < len; i++) {
+			try {
+				row = data.getJSONArray(i);
+				outRow = new JSONArray();
+				//Log.w("row", row.toString());
+				for (String s : fieldOrder) {
+					try {
+						// Future TODO - I want to get the android R.string.accel_x for e.g. here but I need a context, so find a fix later
+						if (s.equals("Accel-X")) {
+							outRow.put(row.getString(Fields.ACCEL_X));
+							continue;
+						}
+						if (s.equals("Accel-Y")) {
+							outRow.put(row.getString(Fields.ACCEL_Y));
+							continue;
+						}
+						if (s.equals("Accel-Z")) {
+							outRow.put(row.getString(Fields.ACCEL_Z));
+							continue;
+						}
+						if (s.equals("Accel-Total")) {
+							outRow.put(row.getString(Fields.ACCEL_TOTAL));
+							continue;
+						}
+						if (s.equals("Temperature-C")) {
+							outRow.put(row.getString(Fields.TEMPERATURE_C));
+							continue;
+						}
+						if (s.equals("Temperature-F")) {
+							outRow.put(row.getString(Fields.TEMPERATURE_F));
+							continue;
+						}
+						if (s.equals("Temperature-K")) {
+							outRow.put(row.getString(Fields.TEMPERATURE_K));
+							continue;
+						}
+						if (s.equals("Time")) {
+							outRow.put(row.getLong(Fields.TIME));
+							continue;
+						}
+						if (s.equals("Luminous Flux")) {
+							outRow.put(row.getString(Fields.LIGHT));
+							continue;
+						}
+						if (s.equals("Heading-Deg")) {
+							outRow.put(row.getString(Fields.HEADING_DEG));
+							continue;
+						}
+						if (s.equals("Heading-Rad")) {
+							outRow.put(row.getString(Fields.HEADING_RAD));
+							continue;
+						}
+						if (s.equals("Latitude")) {
+							outRow.put(row.getDouble(Fields.LATITUDE));
+							continue;
+						}
+						if (s.equals("Longitude")) {
+							outRow.put(row.getDouble(Fields.LONGITUDE));
+							continue;
+						}
+						if (s.equals("Magnetic-X")) {
+							outRow.put(row.getString(Fields.MAG_X));
+							continue;
+						}
+						if (s.equals("Magnetic-Y")) {
+							outRow.put(row.getString(Fields.MAG_Y));
+							continue;
+						}
+						if (s.equals("Magnetic-Z")) {
+							outRow.put(row.getString(Fields.MAG_Z));
+							continue;
+						}
+						if (s.equals("Magnetic-Total")) {
+							outRow.put(row.getString(Fields.MAG_TOTAL));
+							continue;
+						}
+						if (s.equals("Altitude")) {
+							outRow.put(row.getString(Fields.ALTITUDE));
+							continue;
+						}
+						if (s.equals("Pressure")) {
+							outRow.put(row.getString(Fields.PRESSURE));
+							continue;
+						}
+						outRow.put(null);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				Log.w("out row", outRow.toString());
+				outData.put(outRow);
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		//Log.w("reorder", outData.toString());
+		
+		// backup plan - if nothing was re-ordered, just hand back the data as-is
+		// TODO ^^^
+		
+		return outData.toString();
 	}
 
 }

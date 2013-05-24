@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.dfm.DataFieldManager;
 
 /**
  * Class that contains all elements of an iSENSE data set and
@@ -148,6 +151,26 @@ public class DataSet implements Serializable {
 		this.key = new Random().nextLong();
 		this.hasInitialExperiment = eid.equals("-1") ? false : true;
 	}
+	
+	/**
+	 * Upload function specifically for when eid = -1 initially
+	 * In this scenario, you'll need to provide a RestAPI instance
+	 * along with a context.  Should really only be called by
+	 * 
+	 * @param rapi An instance of RestAPI
+	 * @param c The context of the calling class
+	 * 
+	 * @return if the upload was successful
+	 */
+	public boolean upload(RestAPI rapi, Context c) {
+		if (this.eid.equals("-1"))
+			return false;
+		
+		if (!this.hasInitialExperiment)
+			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, rapi, c);
+		
+		return upload();
+	}
 
 	/** 
 	 * Attempts to upload data with given information
@@ -155,10 +178,7 @@ public class DataSet implements Serializable {
 	 * @return if the upload was successful
 	 */
 	public boolean upload() {
-
-		if (!this.hasInitialExperiment)
-			reOrderData();
-			
+	
 		boolean success = true;
 		if (this.rdyForUpload) {
 			switch (type) {
@@ -247,21 +267,6 @@ public class DataSet implements Serializable {
 		}
 
 		return success;
-	}
-
-	// TODO
-	private void reOrderData() {
-		JSONArray dataJSON = prepDataForUpload();
-		
-		JSONArray row;
-		int len = dataJSON.length();
-		for (int i = 0; i < len; i++) {
-			try {
-				row = dataJSON.getJSONArray(i);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	// Creates a JSON array out of the parsed string
