@@ -338,7 +338,6 @@ public class Isense extends Activity implements OnClickListener {
 					//Get the Text
 					text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -446,6 +445,7 @@ public class Isense extends Activity implements OnClickListener {
 		final ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setMessage("Please wait, reading data from PINPoint");
+		progressDialog.setCancelable(false);
 		if(Build.VERSION.SDK_INT >= 11) {
 			progressDialog.setProgressNumberFormat(null);
 		}
@@ -454,11 +454,13 @@ public class Isense extends Activity implements OnClickListener {
 		final Runnable toastRun = new Runnable() { 
 			public void run() { 
 				Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
+				rcrdBtn.setEnabled(true);
 			}
 		};
 		final Runnable toastRun2 = new Runnable() { 
 			public void run() { 
 				Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
+				rcrdBtn.setEnabled(true);
 			}
 		};
 
@@ -485,6 +487,7 @@ public class Isense extends Activity implements OnClickListener {
 							runOnUiThread(toastRun2);
 						} catch (Exception e) {
 							e.printStackTrace();
+							rcrdBtn.setEnabled(true);
 						}
 
 						runOnUiThread(new Runnable(){
@@ -497,6 +500,7 @@ public class Isense extends Activity implements OnClickListener {
 								if (data != null) {
 									prepDataForUpload();
 									writeDataToScreen();
+									rcrdBtn.setEnabled(true);
 								}
 							}
 
@@ -534,6 +538,7 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 		if (v == rcrdBtn) {
+			rcrdBtn.setEnabled(false);
 			getRecords();
 		}
 		if (v == pushToISENSE) {
