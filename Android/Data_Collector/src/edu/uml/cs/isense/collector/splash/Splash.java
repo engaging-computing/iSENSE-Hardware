@@ -3,6 +3,7 @@ package edu.uml.cs.isense.collector.splash;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.collector.dialogs.FirstTimeUse;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -98,6 +100,15 @@ public class Splash extends TabActivity {
 
 			}
 		});
+		
+		SharedPreferences mPrefs = getSharedPreferences("first_time_use", 0);
+		if (mPrefs.getBoolean("first_use", false) == false) {
+			SharedPreferences.Editor mEdit = mPrefs.edit();
+			mEdit.putBoolean("first_use", true);
+			mEdit.commit();
+			Intent iFirstTimeUse = new Intent(Splash.this, FirstTimeUse.class);
+			startActivity(iFirstTimeUse);
+		}
 
 	}
 
@@ -107,8 +118,7 @@ public class Splash extends TabActivity {
 	public void onBackPressed() {
 
 		if (!w.isDisplaying)
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-					Waffle.IMAGE_CHECK);
+			w.make("Double press \"Back\" to exit");
 		else if (w.canPerformTask)
 			super.onBackPressed();
 

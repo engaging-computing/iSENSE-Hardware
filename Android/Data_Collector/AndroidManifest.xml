@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="11"
-    android:versionName="2.0" xmlns:tools="http://schemas.android.com/tools">
+    android:versionCode="13"
+    android:versionName="2.1.1" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -125,6 +125,27 @@
             android:label="Experiment ID"
             android:theme="@style/DialogTheme" />
         <activity
+            android:name=".dialogs.CanLogin"
+            android:label="Would You Like to Login?"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".dialogs.NeedConnectivity"
+            android:label="Connectivity Not Found"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".dialogs.CanRecord"
+            android:label="Connectivity Not Found"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".dialogs.UploadFailSave"
+            android:label="Upload Failed - Saving Instead"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".dialogs.FirstTimeUse"
+            android:label="iSENSE Data Collector"
+            android:theme="@style/theme_dialog_black" />
+        
+        <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
             android:theme="@style/theme_queue_layout" 
@@ -144,7 +165,9 @@
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_black"
             tools:ignore="MissingRegistered" />
+        
         <service android:name="edu.uml.cs.isense.collector.DataCollectorService"></service>
+        
     </application>
 
 </manifest>

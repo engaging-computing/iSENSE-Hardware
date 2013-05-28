@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import edu.uml.cs.isense.collector.R;
 
@@ -15,7 +14,7 @@ public class NoGps extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_gps);
 		
-		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		final Button yes = (Button) findViewById(R.id.no_gps_yes);
 		yes.setOnClickListener(new OnClickListener() {

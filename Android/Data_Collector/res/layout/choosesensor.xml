@@ -4,16 +4,26 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:background="@android:color/transparent" >
-
+    
+    <TextView
+        android:id="@+id/choose_sensor_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:textColor="#FFFFFF"
+        android:paddingBottom="10dp"
+        android:text="@string/select_fields_for" />
+        
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
-        android:layout_alignParentTop="true"
-        android:padding="5dp"
-        android:scrollbars="vertical"
+        android:layout_below="@id/choose_sensor_text"
         android:background="@android:color/transparent"
-        android:scrollbarThumbVertical="@drawable/grey_scroll" >
+        android:padding="5dp"
+        android:scrollbarThumbVertical="@drawable/grey_scroll"
+        android:scrollbars="vertical" >
 
         <LinearLayout
             android:id="@+id/sensorscrollview"
@@ -47,7 +57,7 @@
             android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:layout_weight="1"
-            android:text="@string/okay" />
+            android:text="@android:string/ok" />
     </LinearLayout>
 
 </RelativeLayout>
