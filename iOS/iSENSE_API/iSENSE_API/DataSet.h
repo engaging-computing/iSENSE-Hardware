@@ -2,7 +2,7 @@
 //  DataSet.h
 //  iSENSE_API
 //
-//  Created by Jeremy Poulin on 5/20/13.
+//  Created by Jeremy Poulin on 5/28/13.
 //  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
 //
 
@@ -21,5 +21,6 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) id picturePaths;
 @property (nonatomic, retain) NSNumber * sid;
+@property (nonatomic, retain) NSNumber * uploadable;
 
 @end

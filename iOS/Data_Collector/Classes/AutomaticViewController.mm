@@ -130,7 +130,28 @@
 
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
     if ([session_num intValue] == -1) {
-        [dataSaver addDataSet:[[[DataSet alloc] initWithName:name andDescription:description andEID:exp_num.intValue andData:nil andPicturePaths:nil andSessionId:-1 andCity:city andCountry:country andAddress:address] autorelease]];
+        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+        [ds setName:name];
+        [ds setData_description:description];
+        [ds setEid:exp_num];
+        [ds setData:nil];
+        [ds setPicturePaths:nil];
+        [ds setSid:[NSNumber numberWithInt:-1]];
+        [ds setCity:city];
+        [ds setCountry:country];
+        [ds setAddress:address];
+        [ds setUploadable:[NSNumber numberWithBool:true]];
+        // Add the new data set to the queue
+        [dataSaver addDataSet:ds];
+        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+        
+        // Commit the changes
+        NSError *error = nil;
+        if (![managedObjectContext save:&error]) {
+            // Handle the error.
+            NSLog(@"%@", error);
+        }
+        
         return false;
     }
     
@@ -144,11 +165,28 @@
     
     bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
     if (!success) {
-        DataSet *ds = [[DataSet alloc] initWithName:name andDescription:description andEID:expNum andData:results andPicturePaths:nil andSessionId:session_num.intValue andCity:city andCountry:country andAddress:address];
+        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+        [ds setName:name];
+        [ds setData_description:description];
+        [ds setEid:exp_num];
+        [ds setData:results];
+        [ds setPicturePaths:nil];
+        [ds setSid:session_num];
+        [ds setCity:city];
+        [ds setCountry:country];
+        [ds setAddress:address];
+        [ds setUploadable:[NSNumber numberWithBool:true]];
         
+        // Add the new data set to the queue
         [dataSaver addDataSet:ds];
         NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-        [ds release];
+        
+        // Commit the changes
+        NSError *error = nil;
+        if (![managedObjectContext save:&error]) {
+            // Handle the error.
+            NSLog(@"%@", error);
+        }
     }
     [exp_num release];
     return success;

@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		39194CAF174AA547002D69D7 /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39194CAD174AA547002D69D7 /* DataSet.h */; };
-		39194CB0174AA547002D69D7 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 39194CAE174AA547002D69D7 /* DataSet.m */; };
 		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
@@ -18,6 +16,9 @@
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
 		39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */; };
+		39AD183717553302002969FA /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39AD183517553301002969FA /* DataSet.h */; };
+		39AD183817553302002969FA /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 39AD183617553302002969FA /* DataSet.m */; };
+		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
 		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
 		39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
@@ -49,9 +50,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		39194CAD174AA547002D69D7 /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
-		39194CAE174AA547002D69D7 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
 		39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
+		39AD183517553301002969FA /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
+		39AD183617553302002969FA /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
+		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSaver.h; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39AD183A17553765002969FA /* CoreData.framework in Frameworks */,
 				39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,9 +99,6 @@
 			children = (
 				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
 				39EFB9EF172ADE9F00A6BD2A /* objects */,
-				39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */,
-				39194CAD174AA547002D69D7 /* DataSet.h */,
-				39194CAE174AA547002D69D7 /* DataSet.m */,
 			);
 			name = src_queue_saver;
 			sourceTree = "<group>";
@@ -114,6 +114,7 @@
 		39EFB9EE172ADA1F00A6BD2A /* queue_headers */ = {
 			isa = PBXGroup;
 			children = (
+				39AD183517553301002969FA /* DataSet.h */,
 				39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */,
 				39EFB9EB172AD8F800A6BD2A /* Queue.h */,
 				39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */,
@@ -133,6 +134,8 @@
 		39EFB9F0172ADF8F00A6BD2A /* dataset */ = {
 			isa = PBXGroup;
 			children = (
+				39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */,
+				39AD183617553302002969FA /* DataSet.m */,
 				39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */,
 			);
 			name = dataset;
@@ -158,6 +161,7 @@
 		39FF25E216DFA28A0062C3DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				39AD183917553765002969FA /* CoreData.framework */,
 				39FF25E316DFA28A0062C3DC /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -241,7 +245,7 @@
 				39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */,
 				39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */,
 				39EFB9F4172ADFE000A6BD2A /* DataSetQ.h in Headers */,
-				39194CAF174AA547002D69D7 /* DataSet.h in Headers */,
+				39AD183717553302002969FA /* DataSet.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +313,7 @@
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				39EFB9F3172ADFE000A6BD2A /* DataSetQ.m in Sources */,
 				39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */,
-				39194CB0174AA547002D69D7 /* DataSet.m in Sources */,
+				39AD183817553302002969FA /* DataSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

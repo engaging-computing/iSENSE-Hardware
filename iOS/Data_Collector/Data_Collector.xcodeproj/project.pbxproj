@@ -43,6 +43,7 @@
 		39A1CE7916DFEB91008A99A6 /* green_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B791691F742009037A7 /* green_button.png */; };
 		39A6405D16F380680058A382 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A6405C16F380680058A382 /* underline.png */; };
 		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
+		39AD183C175538AE002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183B175538AE002969FA /* CoreData.framework */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
@@ -147,6 +148,7 @@
 		39A6405C16F380680058A382 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = underline.png; path = "Resources-iPad/underline.png"; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
+		39AD183B175538AE002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
 		39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBrowseViewController.m; sourceTree = "<group>"; };
 		39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView~ipad.xib"; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39AD183C175538AE002969FA /* CoreData.framework in Frameworks */,
 				39A1CC2516DFB44300B1979F /* libiSENSE_API.a in Frameworks */,
 				B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */,
 				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
@@ -294,6 +297,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				39AD183B175538AE002969FA /* CoreData.framework */,
 				B7F534FE16CA941F007FBFCA /* CoreLocation.framework */,
 				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
 				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,

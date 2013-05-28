@@ -5,7 +5,7 @@
 //  Created by Jeremy Poulin on 4/26/13.
 //  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
 //
-
+/*
 #ifndef __iSENSE_API__DataSet__
 #define __iSENSE_API__DataSet__
 
@@ -39,4 +39,4 @@
 
 @end
 
-#endif /* defined(__iSENSE_API__Dataset__) */
+#endif */ /* defined(__iSENSE_API__Dataset__) */
