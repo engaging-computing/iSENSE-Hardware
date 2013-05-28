@@ -872,6 +872,7 @@ public class Isense extends Activity implements OnClickListener {
 				defEditor.commit();
 
 				lastPptName.setText(name);
+				dataLayout.removeAllViews();
 
 				connectToBluetooth(address);
 			}
@@ -889,6 +890,7 @@ public class Isense extends Activity implements OnClickListener {
 				defEditor.commit();
 
 				lastPptName.setText(name);
+				dataLayout.removeAllViews();
 
 				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
