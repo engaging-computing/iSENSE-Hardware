@@ -255,7 +255,7 @@ public class Isense extends Activity implements OnClickListener {
 
 		setBtStatus();
 	}
-	
+
 	//Override to make sure that the correct layout file is used when the screen orientation changes
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -430,6 +430,17 @@ public class Isense extends Activity implements OnClickListener {
 
 	@SuppressLint("NewApi")
 	public void getRecords() {
+
+		final ProgressDialog progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setMessage("Please wait, reading data from PINPoint");
+		progressDialog.setCancelable(false);
+		if(Build.VERSION.SDK_INT >= 11) {
+			progressDialog.setProgressNumberFormat(null);
+		}
+		progressDialog.show();
+		
+		ppi.setContext(this);
 		//Check PINPoint's BTA1 sensor setting
 		//and if it's not pH or temperature, set it to pH
 		if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
@@ -440,16 +451,6 @@ public class Isense extends Activity implements OnClickListener {
 		} else {
 			sensorHead.setText("BTA1: Vernier Temperature Probe");
 		}
-
-		ppi.setContext(this);
-		final ProgressDialog progressDialog = new ProgressDialog(this);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setMessage("Please wait, reading data from PINPoint");
-		progressDialog.setCancelable(false);
-		if(Build.VERSION.SDK_INT >= 11) {
-			progressDialog.setProgressNumberFormat(null);
-		}
-		progressDialog.show();
 
 		final Runnable toastRun = new Runnable() { 
 			public void run() { 
@@ -549,7 +550,7 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 	}
-	
+
 	public void setNameThing() {
 		String name = splashNameField.getText().toString();
 		if(!name.equals("")) {
@@ -797,7 +798,7 @@ public class Isense extends Activity implements OnClickListener {
 						Toast.makeText(Isense.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
 					}
 					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
-					
+
 					if(autoRun) {
 						getRecords();
 					}
