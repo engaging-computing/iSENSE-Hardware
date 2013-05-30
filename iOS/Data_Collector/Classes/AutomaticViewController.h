@@ -19,7 +19,7 @@
 #import "DataFieldManager.h"
 #import <iSENSE_API/DataSaver.h>
 #import <iSENSE_API/DataSet.h>
-#import <CoreData/CoreData.h>
+#import "Data_CollectorAppDelegate.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate, UITextFieldDelegate>  {
 	// Fuctionality
@@ -69,13 +69,8 @@
 @property (nonatomic, retain) UITextField *activeField;
 @property (nonatomic, retain) UITextField *lastField;
 @property (nonatomic, assign) bool keyboardDismissProper;
-@property (nonatomic, retain) DataSaver *dataSaver;
 
-// Core Data Stuffs
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-- (NSURL *)applicationDocumentsDirectory;
-- (void)saveContext;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) DataSaver *dataSaver;
 
 @end

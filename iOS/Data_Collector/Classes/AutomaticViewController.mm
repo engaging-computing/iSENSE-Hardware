@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper, dataSaver, managedObjectContext, managedObjectModel, persistentStoreCoordinator;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper, dataSaver, managedObjectContext;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -124,13 +124,10 @@
     NSString *name = @"Session From Mobile";
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
     NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
-    NSLog(@"%@", address);
-    NSLog(@"%@", city);
-    NSLog(@"%@", country);
 
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
     if ([session_num intValue] == -1) {
-        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSets" inManagedObjectContext:managedObjectContext];
         [ds setName:name];
         [ds setData_description:description];
         [ds setEid:exp_num];
@@ -165,7 +162,7 @@
     
     bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
     if (!success) {
-        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSets" inManagedObjectContext:managedObjectContext];
         [ds setName:name];
         [ds setData_description:description];
         [ds setEid:exp_num];
@@ -453,6 +450,40 @@
     dataSaver = [[DataSaver alloc] init];
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
+    
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // Fetch the old DataSets
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"DataSets" inManagedObjectContext:managedObjectContext];
+    if (entity) {
+        [request setEntity:entity];
+    
+        // Sort results for DataSets
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
+        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+        [request setSortDescriptors:sortDescriptors];
+    
+        // Actually make the request
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        if (mutableFetchResults == nil) {
+            // Handle the error.
+        }
+    
+        // fill dataSaver's DataSet Queue
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            [dataSaver addDataSet:mutableFetchResults[i]];
+        }
+
+        // release the fetched objects
+        [sortDescriptor release];
+        [sortDescriptors release];
+        [mutableFetchResults release];
+        [request release];
+    }
 }
 
 - (void) sampleIntervalUpdated {
@@ -1133,14 +1164,6 @@
     [spinner startAnimating];
     [spinner release];
     return [message autorelease];
-}
-
--(NSURL *) applicationDocumentsDirectory {
-    return 0;
-}
-
--(void) saveContext {
-    return;
 }
 
 @end

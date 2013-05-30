@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 
 
-@interface DataSet : NSManagedObject
+@interface DataSet : NSManagedObject {}
 
 @property (nonatomic, retain) NSString * address;
 @property (nonatomic, retain) NSString * city;
