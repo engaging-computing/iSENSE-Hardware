@@ -108,7 +108,7 @@ public class PinComm {
 
 	//Handshake
 	@SuppressWarnings("unused")
-	private boolean handshake() throws IOException, IncorrectDeviceException {
+	private boolean handshake() throws IOException, IncorrectDeviceException, NoConnectionException {
 		if (spi.isOpen()) {
 			byte reply = -1;
 			try {
@@ -277,7 +277,7 @@ public class PinComm {
 	 * @return int
 	 * @throws NoConnectionException
 	 */
-	private int getSetting(byte hByte, byte lByte)  {
+	private int getSetting(byte hByte, byte lByte) throws NoConnectionException {
 		short high = 0, low = 0;
 		if (spi.isOpen()) {
 			spi.clearBuff();
@@ -308,9 +308,9 @@ public class PinComm {
 			spi.clearBuff();
 
 			return ((high << 8) + low);
+		} else {
+			throw new NoConnectionException();
 		}
-		spi.clearBuff();
-		return -1;
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class PinComm {
 	 * @return int
 	 * @throws NoConnectionException
 	 */
-	private int getSetting(byte sByte) {
+	private int getSetting(byte sByte) throws NoConnectionException {
 		short high = 0;
 		if (spi.isOpen()) {
 			spi.clearBuff();
@@ -335,7 +335,7 @@ public class PinComm {
 			}
 			return high;
 		}
-		return -1;
+		throw new NoConnectionException();
 	}
 
 	/**
@@ -345,7 +345,7 @@ public class PinComm {
 	 * @return int
 	 * @throws NoConnectionException
 	 */
-	public int getSetting(int request) {
+	public int getSetting(int request) throws NoConnectionException {
 
 		switch (request) {
 		case SAMPLE_RATE:
@@ -476,7 +476,7 @@ public class PinComm {
 	 * @return HashMap<Integer,Integer>
 	 * @throws NoConnectionException
 	 */
-	public HashMap<Integer, Integer> GetSettings() {
+	public HashMap<Integer, Integer> GetSettings() throws NoConnectionException {
 
 		HashMap<Integer, Integer> settings = new HashMap<Integer, Integer>();
 
