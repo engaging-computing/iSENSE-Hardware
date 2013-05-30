@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.UUID;
 
 import edu.uml.cs.isense.raac.Isense;
+import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -186,7 +187,7 @@ public class BluetoothService {
 		mConnectedComm.close();
 	}
 
-	public void writeByte(byte out) {
+	public void writeByte(byte out) throws NoConnectionException {
 		byte[] b = new byte[1];
 		b[0] = out;
 		writeByte(b);
@@ -196,9 +197,10 @@ public class BluetoothService {
 	 * Write to the ConnectedThread in an unsynchronized manner
 	 * @param out The bytes to write
 	 * @param handler  The handler to send the response to
+	 * @throws NoConnectionException 
 	 * @see ConnectedThread#write(byte[])
 	 */
-	public void writeByte(byte[] out) {
+	public void writeByte(byte[] out) throws NoConnectionException {
 		if (mState != STATE_CONNECTED) return;
 		mConnectedComm.write(out);
 	}
@@ -447,12 +449,13 @@ public class BluetoothService {
 		 * Write to the connected OutStream.
 		 * @param buffer  The bytes to write
 		 */
-		public synchronized void write(byte[] message) {
+		public synchronized void write(byte[] message) throws NoConnectionException {
 			try {
 				mmOutStream.write(message);
 				wait(101);
 			} catch (IOException e) {
 				Log.e(TAG, "Exception during write", e);
+				throw new NoConnectionException();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
