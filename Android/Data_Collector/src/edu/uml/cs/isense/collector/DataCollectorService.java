@@ -29,9 +29,9 @@ public class DataCollectorService extends Service {
 
 	// Objects sent in from the DataCollector class
 	public static final String SRATE = "srate";
-	private static long srate     = DataCollector.INTERVAL;
+	private static long srate     = DataCollector.S_INTERVAL;
 	public static final String REC_LENGTH = "rec_length";
-	private static int  recLength = DataCollector.TEST_LENGTH;
+	private static long  recLength = DataCollector.TEST_LENGTH;
 
 	// Handler that receives messages from the thread
 	private final static class ServiceHandler extends Handler {
@@ -149,7 +149,7 @@ public class DataCollectorService extends Service {
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			srate = extras.getLong(SRATE);
-			recLength = extras.getInt(REC_LENGTH);
+			recLength = extras.getLong(REC_LENGTH);
 		}
 
 		// For each start request, send a message to start a job and deliver the

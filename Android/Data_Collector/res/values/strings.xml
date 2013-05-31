@@ -58,14 +58,14 @@
     <string name="description_hint">Enter Description Here&#8230;</string>
     <string name="description_prompt">
         Enter a session description (or leave blank if you\'d like an automatically generated description) and press
-        \"Upload\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
+        \"Save\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
        	\"Delete\".
         </string>
     <string name="done">Done</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
-    <string name="sample_rate">Sample Interval (ms)</string>
-    <string name="sample_default">(default 50ms)</string>
+    <string name="sample_interval">Sample Interval (ms)</string>
+    <string name="sample_default">Default Value = 50 ms</string>
     <string name="login">Login</string>
     <string name="guide_text">	    
         This is a guide designed to help explain to you how to use our iSENSE Data 
@@ -322,7 +322,7 @@
     <string name="menu_upload">Upload</string>
     <string name="menu_experiment">Experiment</string>
     <string name="record_length">Test Length (s)</string>
-    <string name="record_default">(default 10000s)</string>
+    <string name="record_default">Default Value = 600 s</string>
     <string name="blank_desc"></string>
     <string name="loggedInAs">Logged In As: \0</string>
     <string name="usingExperiment">Uploading To Experiment #: \0</string>
@@ -373,5 +373,10 @@
 	<string name="select_fields_for">
 	    Please select the fields you would like to record for experiment #
 	</string>
+	<string name="step1">Step 1: Setup Your Session</string>
+	<string name="step2">Step 2: Record a Data Set (Hold Down)</string>
+	<string name="step3">Step 3: Upload Data Sets</string>
+	<string name="select_exp">Select Experiment</string>
+	<string name="select_later">I\'ll select one later</string>
 	
 </resources>

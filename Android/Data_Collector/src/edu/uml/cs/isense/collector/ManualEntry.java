@@ -118,7 +118,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.manual_entry);
+		setContentView(R.layout.manual_concept);
 
 		mContext = this;
 

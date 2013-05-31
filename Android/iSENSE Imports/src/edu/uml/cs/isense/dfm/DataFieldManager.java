@@ -9,7 +9,6 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
@@ -502,7 +501,7 @@ public class DataFieldManager extends Application {
 			try {
 				row = data.getJSONArray(i);
 				outRow = new JSONArray();
-				//Log.w("row", row.toString());
+				
 				for (String s : fieldOrder) {
 					try {
 						// Future TODO - I want to get the android R.string.accel_x for e.g. here but I need a context, so find a fix later
@@ -587,19 +586,21 @@ public class DataFieldManager extends Application {
 						e.printStackTrace();
 					}
 				}
-				Log.w("out row", outRow.toString());
+
 				outData.put(outRow);
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		//Log.w("reorder", outData.toString());
 		
-		// backup plan - if nothing was re-ordered, just hand back the data as-is
-		// TODO ^^^
+		// TODO: backup plan - if nothing was re-ordered, just hand back the data as-is?
 		
 		return outData.toString();
+	}
+	
+	public void setContext(Context c) {
+		this.mContext = c;
 	}
 
 }

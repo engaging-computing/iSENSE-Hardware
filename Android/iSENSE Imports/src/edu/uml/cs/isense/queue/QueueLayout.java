@@ -200,7 +200,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			dia = new ProgressDialog(QueueLayout.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while data set \"" + uploadSet.getName() + "\" is uploaded...");
+			dia.setMessage("Please wait while \"" + uploadSet.getName() + "\" is uploaded...");
 			dia.setCancelable(false);
 			try {
 				dia.show();
@@ -234,8 +234,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
-				uq.addDataSetToQueue(uploadSet);
-				w.make("Upload Failed - experiment may be closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Upload failed - no experiment selected or experiment is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				uq.queue.add(uploadSet);
+				uq.storeAndReRetrieveQueue(false);
 			}
 
 			if (dialogShow && dia != null)
@@ -246,8 +247,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				setResultAndFinish(RESULT_OK);
 				return;
 			} else {
-				if (uploadSuccess)
-					continueUploading();
+				//if (uploadSuccess)
+				continueUploading();
 			}
 			
 			OrientationManager.enableRotation(QueueLayout.this);

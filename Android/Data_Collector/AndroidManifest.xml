@@ -49,7 +49,8 @@
         <activity
             android:name=".DataCollector"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ManualEntry"
             android:configChanges="keyboardHidden|orientation"
@@ -77,10 +78,6 @@
         <activity
             android:name=".dialogs.Summary"
             android:label="Data Summary"
-            android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name=".dialogs.NoIsense"
-            android:label="Upload Error"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.NoGps"
@@ -134,6 +131,11 @@
             android:name=".dialogs.FirstTimeUse"
             android:label="iSENSE Data Collector"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".dialogs.Step1Setup"
+            android:label="Step 1: Setup"
+            android:theme="@style/theme_dialog_black" />
+        
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"

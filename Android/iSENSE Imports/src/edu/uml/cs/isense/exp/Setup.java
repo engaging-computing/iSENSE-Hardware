@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -74,17 +73,13 @@ public class Setup extends Activity implements OnClickListener {
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
-					Log.w("hi", "yes, save manual");
 					prefsString = "EID_MANUAL";
 				} else if (fromWhere.equals("queue")) {
-					Log.w("hi", "yes, save queue");
 					prefsString = "EID_QUEUE";
 				} else {
-					Log.w("hi", "yes, save automatic");
 					prefsString = "EID";
 				}
 			} else {
-				Log.w("hi", "yes, save automatic");
 				prefsString = "EID";
 			}
 			
