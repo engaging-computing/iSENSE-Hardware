@@ -97,7 +97,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/buttons_sync_time"
-                android:text="@string/cancel"
+                android:text="@android:string/cancel"
                 android:textColor="#FFFFFF" />
             
             <Button

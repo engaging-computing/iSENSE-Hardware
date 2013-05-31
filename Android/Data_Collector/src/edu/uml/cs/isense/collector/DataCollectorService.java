@@ -22,15 +22,16 @@ public class DataCollectorService extends Service {
 	private boolean terminate = false;
 	private Timer timeElapsedTimer;
 	private PowerManager pm;
+	private PowerManager.WakeLock wl;
 
 	// Hardcoded constant of Process.THREAD_PRIORITY_BACKGROUND
 	private static final int PROCESS_THREAD_PRIORITY_BACKGROUND = 10;
 
 	// Objects sent in from the DataCollector class
 	public static final String SRATE = "srate";
-	private static long srate     = DataCollector.INTERVAL;
+	private static long srate     = DataCollector.S_INTERVAL;
 	public static final String REC_LENGTH = "rec_length";
-	private static int  recLength = DataCollector.TEST_LENGTH;
+	private static long  recLength = DataCollector.TEST_LENGTH;
 
 	// Handler that receives messages from the thread
 	private final static class ServiceHandler extends Handler {
@@ -56,6 +57,10 @@ public class DataCollectorService extends Service {
 	// Main service class message handler function to prevent potential static
 	// memory leak
 	public void handleMessage(Message msg) {
+		// Acquire a wakelock
+		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "data_collector_service_wakelock");
+		wl.acquire();
+		
 		// Update the main UI timer
 		final Handler handlerTime = new Handler(Looper.getMainLooper());
 		timeElapsedTimer = new Timer();
@@ -144,7 +149,7 @@ public class DataCollectorService extends Service {
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			srate = extras.getLong(SRATE);
-			recLength = extras.getInt(REC_LENGTH);
+			recLength = extras.getLong(REC_LENGTH);
 		}
 
 		// For each start request, send a message to start a job and deliver the
@@ -169,6 +174,10 @@ public class DataCollectorService extends Service {
 	public void onDestroy() {
 		terminate = true;
 		if (timeElapsedTimer != null) timeElapsedTimer.cancel();
+		
+		// Disable the wakelock
+		if (wl != null) wl.release();
+		
 		// Do not call super.onDestroy(); Doing so will result in terminate
 		// not being set and while the service will return, it will not stop.
 	}
