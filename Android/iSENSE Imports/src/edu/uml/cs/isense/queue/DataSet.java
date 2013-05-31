@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.dfm.DataFieldManager;
 
 /**
  * Class that contains all elements of an iSENSE data set and
@@ -75,6 +78,8 @@ public class DataSet implements Serializable {
 	private boolean rdyForUpload = true;
 	
 	protected long key;
+	
+	private boolean hasInitialExperiment = true;
 
 	// Data Only
 	/**
@@ -144,6 +149,27 @@ public class DataSet implements Serializable {
 		this.country = country;
 		this.addr = addr;
 		this.key = new Random().nextLong();
+		this.hasInitialExperiment = eid.equals("-1") ? false : true;
+	}
+	
+	/**
+	 * Upload function specifically for when eid = -1 initially
+	 * In this scenario, you'll need to provide a RestAPI instance
+	 * along with a context.  Should really only be called by
+	 * 
+	 * @param rapi An instance of RestAPI
+	 * @param c The context of the calling class
+	 * 
+	 * @return if the upload was successful
+	 */
+	public boolean upload(RestAPI rapi, Context c) {
+		if (this.eid.equals("-1"))
+			return false;
+		
+		if (!this.hasInitialExperiment)
+			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, rapi, c);
+		
+		return upload();
 	}
 
 	/** 
@@ -152,6 +178,7 @@ public class DataSet implements Serializable {
 	 * @return if the upload was successful
 	 */
 	public boolean upload() {
+	
 		boolean success = true;
 		if (this.rdyForUpload) {
 			switch (type) {
@@ -241,9 +268,17 @@ public class DataSet implements Serializable {
 
 		return success;
 	}
-
+	
 	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
+		// If the string isn't a complete JSONArray, trim off the incomplete portion
+		if (!(this.data.charAt(this.data.length() -1) == ']')) {
+			int endIndex = this.data.lastIndexOf(']');
+			if (endIndex != -1)
+				this.data = this.data.substring(0, endIndex);
+				this.data = this.data + ']';
+		}
+		
 		JSONArray dataJSON = null;
 		try {
 			dataJSON = new JSONArray(data);
@@ -260,6 +295,14 @@ public class DataSet implements Serializable {
 
 	protected boolean isUploadable() {
 		return this.rdyForUpload;
+	}
+	
+	protected void setHasInitialExperiment(boolean hie) {
+		this.hasInitialExperiment = hie;
+	}
+	
+	protected boolean getHasInitialExperiment() {
+		return this.hasInitialExperiment;
 	}
 
 	/**
@@ -288,6 +331,16 @@ public class DataSet implements Serializable {
 	 */
 	public String getEID() {
 		return this.eid;
+	}
+	
+	/**
+	 * Setter for experiment ID.
+	 * 
+	 * @param eid
+	 * 		The experiment ID the session should be created under.
+	 */
+	public void setExp(String eid) {
+		this.eid = eid;
 	}
 
 	/**

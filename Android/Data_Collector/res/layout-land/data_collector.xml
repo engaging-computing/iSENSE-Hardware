@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="left|center_vertical"
-                android:text="@string/sample_rate"
+                android:text="@string/sample_interval"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />

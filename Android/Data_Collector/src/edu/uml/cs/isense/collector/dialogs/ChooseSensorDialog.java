@@ -13,10 +13,9 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.collector.objects.SensorCompatibility;
-import edu.uml.cs.isense.collector.objects.SensorCompatibility.SensorTypes;
+import edu.uml.cs.isense.dfm.SensorCompatibility;
+import edu.uml.cs.isense.dfm.SensorCompatibility.SensorTypes;
 
 public class ChooseSensorDialog extends Activity implements OnClickListener {
 
@@ -47,9 +46,9 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		compatible = true;
 		Context mContext = this;
 
-		LinkedList<String> fields = DataCollector.dfm.order;
+		LinkedList<String> fields = Step1Setup.dfm.order;
 
-		sensors = DataCollector.sc;
+		sensors = Step1Setup.sc;
 
 		scrollViewLayout = (LinearLayout) findViewById(R.id.sensorscrollview);
 

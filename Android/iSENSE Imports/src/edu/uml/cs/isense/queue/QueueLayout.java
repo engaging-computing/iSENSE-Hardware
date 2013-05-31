@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -45,6 +47,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATASET_REQUESTED   = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
+	private static final int ALTER_DATA_EXP_REQUESTED  = 9004;
 
 	private static int QUEUE_PARENT = -1;
 
@@ -125,7 +128,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 		ctv.setText(ds.getName() + " - " + ds.getType());
 
 		TextView eid = (TextView) view.findViewById(R.id.experimentid);
-		eid.setText(ds.getEID());
+		if (ds.getEID().equals("-1"))
+			eid.setText("No Exp.");
+		else
+			eid.setText(ds.getEID());
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());
@@ -194,7 +200,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			dia = new ProgressDialog(QueueLayout.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while data set \"" + uploadSet.getName() + "\" is uploaded...");
+			dia.setMessage("Please wait while \"" + uploadSet.getName() + "\" is uploaded...");
 			dia.setCancelable(false);
 			try {
 				dia.show();
@@ -228,8 +234,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
-				uq.addDataSetToQueue(uploadSet);
-				w.make("Upload Failed - experiment may be closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Upload failed - no experiment selected or experiment is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				uq.queue.add(uploadSet);
+				uq.storeAndReRetrieveQueue(false);
 			}
 
 			if (dialogShow && dia != null)
@@ -240,8 +247,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				setResultAndFinish(RESULT_OK);
 				return;
 			} else {
-				if (uploadSuccess)
-					continueUploading();
+				//if (uploadSuccess)
+				continueUploading();
 			}
 			
 			OrientationManager.enableRotation(QueueLayout.this);
@@ -254,7 +261,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			public void run() {
 				if (ds.isUploadable()) {
-					uploadSuccess = ds.upload();
+					uploadSuccess = ds.upload(rapi, mContext);
 				} else {
 					uq.queue.add(ds);
 					uq.storeAndReRetrieveQueue(false);
@@ -282,6 +289,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				switch (returnCode) {
 
 				case QueueAlter.RENAME:
+					
 					Intent iRename = new Intent(mContext, QueueEditRename.class);
 					startActivityForResult(iRename, ALTER_DATA_NAME_REQUESTED);
 
@@ -292,6 +300,14 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iData = new Intent(mContext, QueueEditData.class);
 					startActivityForResult(iData, ALTER_DATA_DATA_REQUESTED);
 
+					break;
+					
+				case QueueAlter.SELECT_EXPERIMENT:
+					
+					Intent iExp = new Intent(mContext, Setup.class);
+					iExp.putExtra("from_where", "queue");
+					startActivityForResult(iExp, ALTER_DATA_EXP_REQUESTED);
+					
 					break;
 
 				case QueueAlter.DELETE:
@@ -327,6 +343,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				DataSet alter = QueueEditData.alter;
 			
+				uq.removeItemWithKey(lastDataSetLongClicked.key);
+				scrollQueue.removeView(lastViewLongClicked);
+				
+				uq.addDataSetToQueue(alter);
+				addViewToScrollQueue(alter);
+				
+			}
+		} else if (requestCode == ALTER_DATA_EXP_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				SharedPreferences mPrefs = getSharedPreferences("EID_QUEUE", 0);
+				
+				DataSet alter = lastDataSetLongClicked;
+				alter.setExp(mPrefs.getString("experiment_id", "No Exp."));
+				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
 				
@@ -384,6 +414,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, !isFromDataCollector);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, !lastDataSetLongClicked.getHasInitialExperiment());
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
@@ -433,6 +464,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, false);
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
@@ -483,6 +515,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, lastDataSetLongClicked.getEID().equals("-1"));
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);

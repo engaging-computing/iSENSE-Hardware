@@ -23,5 +23,16 @@
         android:name="edu.uml.cs.isense.queue.QueueEditRename"
         android:label="Rename Data Set"
         android:theme="@style/theme_dialog_black" />
-    
+    <activity
+        android:name="edu.uml.cs.isense.exp.BrowseExperiments"
+        android:label="Experiments" />
+    <activity
+        android:name="edu.uml.cs.isense.exp.NoQR"
+        android:label="No QR Code Scanner Found"
+        android:theme="@style/theme_dialog_black" />
+    <activity
+        android:name="edu.uml.cs.isense.exp.Setup"
+        android:label="Select an Experiment"
+        android:theme="@style/theme_dialog_black" />
+
 </manifest>

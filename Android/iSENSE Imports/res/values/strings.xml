@@ -14,7 +14,24 @@
     <string name="numbers_restriction">
 	    1234567890.-
 	</string>
+	<string name="select_exp">Select Experiment</string>
 	
-	
+	<string name="no_experiment_now">No Experiment</string>
+	<string name="browse">  Browse&#8230;  </string>
+	<string name="scan_qr">Scan QR Code</string>
+	<string name="chooseExperiment">Enter or select an experiment you would like to upload to.</string>
+	<string name="chooseExperimentAlt">
+	    Enter or select an experiment you would like to upload to.
+		Alternatively, select \"No Experiment\" to record all possible data and select an experiment later.    
+	</string>
+    <string name="search">Search</string>
+    <string name="experiments_no_items">No experiments were found.</string>
+    <string name="visit">Visit</string>
+    <string name="qr_prompt">
+        Your device does not have the proper Barcode Scanner application installed
+		to use this feature.  However, you may visit the Google Play store to download 
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
+	<string name="loading">Loading&#x2026;</string>
     
 </resources>

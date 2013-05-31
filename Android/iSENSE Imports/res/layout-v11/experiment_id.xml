@@ -5,12 +5,13 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/experimentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:text="@string/chooseExperiment"
-        android:textSize="16sp"
-        android:background="@android:color/transparent" />
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/experimentInput"
@@ -50,10 +51,25 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/experiment_no_exp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/no_experiment_now"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        style="?android:attr/buttonBarStyle"
         android:background="@android:color/transparent" >
 
         <Button
@@ -61,7 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="@android:string/cancel"
             android:textSize="18sp" />
 
         <Button
@@ -69,6 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@android:string/ok"
             android:textSize="18sp" />
     </LinearLayout>

@@ -83,7 +83,7 @@
                 android:layout_marginRight="5dp"
                 android:background="@android:color/transparent"
                 android:paddingTop="7dp"
-                android:text="@string/sample_rate"
+                android:text="@string/sample_interval"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"

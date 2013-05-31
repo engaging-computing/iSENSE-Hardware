@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -51,6 +51,17 @@
                 android:textSize="16sp" />
 
             <Button
+                android:id="@+id/queuealter_choose_exp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="@string/select_exp"
+                android:textSize="16sp" />
+
+            <Button
                 android:id="@+id/queuealter_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,6 +77,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
+        android:layout_marginTop="10dp"
         android:background="?android:attr/dividerVertical" />
 
     <LinearLayout

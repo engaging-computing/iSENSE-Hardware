@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.objects;
+package edu.uml.cs.isense.dfm;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,7 +9,7 @@ import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
-import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.objects.ExperimentField;
 
@@ -36,120 +36,148 @@ public class DataFieldManager extends Application {
 		this.dataSet = new JSONArray();
 		this.f = f;
 	}
+	
+	// Static class function strictly for getting the field order of any experiment
+	public static LinkedList<String> getOrder(int eid, RestAPI rapi, Context c) {
+		DataFieldManager d = new DataFieldManager(eid, rapi, c, null);
+		d.getOrder();
+		return d.order;
+	}
 
 	public void getOrder() {
-		expFields = rapi.getExperimentFields(eid);
+		if (eid == -1) {
+			order.add(mContext.getString(R.string.time));
+			order.add(mContext.getString(R.string.accel_x));
+			order.add(mContext.getString(R.string.accel_y));
+			order.add(mContext.getString(R.string.accel_z));
+			order.add(mContext.getString(R.string.accel_total));
+			order.add(mContext.getString(R.string.latitude));
+			order.add(mContext.getString(R.string.longitude));
+			order.add(mContext.getString(R.string.magnetic_x));
+			order.add(mContext.getString(R.string.magnetic_y));
+			order.add(mContext.getString(R.string.magnetic_z));
+			order.add(mContext.getString(R.string.magnetic_total));
+			order.add(mContext.getString(R.string.heading_deg));
+			order.add(mContext.getString(R.string.heading_rad));
+			order.add(mContext.getString(R.string.temperature_c));
+			order.add(mContext.getString(R.string.pressure));
+			order.add(mContext.getString(R.string.altitude));
+			order.add(mContext.getString(R.string.luminous_flux));
+			order.add(mContext.getString(R.string.temperature_f));
+			order.add(mContext.getString(R.string.temperature_k));
+		} else {
+		
+			expFields = rapi.getExperimentFields(eid);
 
-		for (ExperimentField field : expFields) {
-			switch (field.type_id) {
-
-			// Temperature
-			case 1:
-				if (field.unit_name.toLowerCase(Locale.US).contains("f"))
-					order.add(mContext.getString(R.string.temperature_f));
-				else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
-					order.add(mContext.getString(R.string.temperature_c));
-				} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
-					order.add(mContext.getString(R.string.temperature_k));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
+			for (ExperimentField field : expFields) {
+				switch (field.type_id) {
 				
-			// Potential Altitude
-			case 2:
-			case 3:
-				if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
-					order.add(mContext.getString(R.string.altitude));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
-
-			// Time
-			case 7:
-				order.add(mContext.getString(R.string.time));
-				break;
-
-			// Light
-			case 8:
-			case 9:
-			case 29:
-				order.add(mContext.getString(R.string.luminous_flux));
-				break;
-
-			// Angle
-			case 10:
-				if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
-					order.add(mContext.getString(R.string.heading_deg));
-				} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
-					order.add(mContext.getString(R.string.heading_rad));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
-
-			// Geospacial
-			case 19:
-				if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
-					order.add(mContext.getString(R.string.latitude));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
-					order.add(mContext.getString(R.string.longitude));
-				} else {
-					order.add(mContext.getString(R.string.null_string));
-				}
-				break;
-
-			// Numeric/Custom
-			case 21:
-			case 22:
-				if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
-					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
-						order.add(mContext.getString(R.string.magnetic_x));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
-						order.add(mContext.getString(R.string.magnetic_y));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
-						order.add(mContext.getString(R.string.magnetic_z));
-					} else if ((field.field_name.toLowerCase(Locale.US)
-							.contains("total"))
-							|| (field.field_name.toLowerCase(Locale.US)
-									.contains("average"))
-							|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
-						order.add(mContext.getString(R.string.magnetic_total));
+				// Temperature
+				case 1:
+					if (field.unit_name.toLowerCase(Locale.US).contains("f"))
+						order.add(mContext.getString(R.string.temperature_f));
+					else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
+						order.add(mContext.getString(R.string.temperature_c));
+					} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
+						order.add(mContext.getString(R.string.temperature_k));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
 					}
-				} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
-					order.add(mContext.getString(R.string.altitude));
-				} else
-					order.add(mContext.getString(R.string.null_string));
-				break;
+					break;
+				
+				// Potential Altitude
+				case 2:
+				case 3:
+					if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
+						order.add(mContext.getString(R.string.altitude));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
 
-			// Acceleration
-			case 25:
-				if (field.field_name.toLowerCase(Locale.US).contains("x")) {
-					order.add(mContext.getString(R.string.accel_x));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
-					order.add(mContext.getString(R.string.accel_y));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
-					order.add(mContext.getString(R.string.accel_z));
-				} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
-					order.add(mContext.getString(R.string.accel_total));
-				} else {
+				// Time
+				case 7:
+					order.add(mContext.getString(R.string.time));
+					break;
+
+				// Light
+				case 8:
+				case 9:
+				case 29:
+					order.add(mContext.getString(R.string.luminous_flux));
+					break;
+
+				// Angle
+				case 10:
+					if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
+						order.add(mContext.getString(R.string.heading_deg));
+					} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
+						order.add(mContext.getString(R.string.heading_rad));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
+
+				// Geospacial
+				case 19:
+					if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
+						order.add(mContext.getString(R.string.latitude));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
+						order.add(mContext.getString(R.string.longitude));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
+
+				// Numeric/Custom
+				case 21:
+				case 22:
+					if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
+						if (field.field_name.toLowerCase(Locale.US).contains("x")) {
+							order.add(mContext.getString(R.string.magnetic_x));
+						} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
+							order.add(mContext.getString(R.string.magnetic_y));
+						} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
+							order.add(mContext.getString(R.string.magnetic_z));
+						} else if ((field.field_name.toLowerCase(Locale.US).contains("total"))
+								|| (field.field_name.toLowerCase(Locale.US).contains("average"))
+								|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
+							order.add(mContext.getString(R.string.magnetic_total));
+						}
+					} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
+						order.add(mContext.getString(R.string.altitude));
+					} else
+						order.add(mContext.getString(R.string.null_string));
+					break;
+
+				// Acceleration
+				case 25:
+					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
+						order.add(mContext.getString(R.string.accel_x));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
+						order.add(mContext.getString(R.string.accel_y));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
+						order.add(mContext.getString(R.string.accel_z));
+					} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
+						order.add(mContext.getString(R.string.accel_total));
+					} else {
+						order.add(mContext.getString(R.string.null_string));
+					}
+					break;
+
+				// Pressure
+				case 27:
+					order.add(mContext.getString(R.string.pressure));
+					break;
+
+				// No match (Just about every other category)
+				default:
 					order.add(mContext.getString(R.string.null_string));
+					break;
+
 				}
-				break;
-
-			// Pressure
-			case 27:
-				order.add(mContext.getString(R.string.pressure));
-				break;
-
-			// No match (Just about every other category)
-			default:
-				order.add(mContext.getString(R.string.null_string));
-				break;
 
 			}
-
 		}
 
 	}
@@ -461,6 +489,118 @@ public class DataFieldManager extends Application {
 		b.append("\n");
 		
 		return b.toString();
+	}
+
+	// For use if a clump of data was recorded and needs to be cut down and re-ordered
+	public static String reOrderData(JSONArray data, String eid, RestAPI rapi, Context c) {
+		JSONArray row, outData = new JSONArray(), outRow;
+		int len = data.length();
+		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(eid), rapi, c);
+		
+		for (int i = 0; i < len; i++) {
+			try {
+				row = data.getJSONArray(i);
+				outRow = new JSONArray();
+				
+				for (String s : fieldOrder) {
+					try {
+						// Future TODO - I want to get the android R.string.accel_x for e.g. here but I need a context, so find a fix later
+						if (s.equals("Accel-X")) {
+							outRow.put(row.getString(Fields.ACCEL_X));
+							continue;
+						}
+						if (s.equals("Accel-Y")) {
+							outRow.put(row.getString(Fields.ACCEL_Y));
+							continue;
+						}
+						if (s.equals("Accel-Z")) {
+							outRow.put(row.getString(Fields.ACCEL_Z));
+							continue;
+						}
+						if (s.equals("Accel-Total")) {
+							outRow.put(row.getString(Fields.ACCEL_TOTAL));
+							continue;
+						}
+						if (s.equals("Temperature-C")) {
+							outRow.put(row.getString(Fields.TEMPERATURE_C));
+							continue;
+						}
+						if (s.equals("Temperature-F")) {
+							outRow.put(row.getString(Fields.TEMPERATURE_F));
+							continue;
+						}
+						if (s.equals("Temperature-K")) {
+							outRow.put(row.getString(Fields.TEMPERATURE_K));
+							continue;
+						}
+						if (s.equals("Time")) {
+							outRow.put(row.getLong(Fields.TIME));
+							continue;
+						}
+						if (s.equals("Luminous Flux")) {
+							outRow.put(row.getString(Fields.LIGHT));
+							continue;
+						}
+						if (s.equals("Heading-Deg")) {
+							outRow.put(row.getString(Fields.HEADING_DEG));
+							continue;
+						}
+						if (s.equals("Heading-Rad")) {
+							outRow.put(row.getString(Fields.HEADING_RAD));
+							continue;
+						}
+						if (s.equals("Latitude")) {
+							outRow.put(row.getDouble(Fields.LATITUDE));
+							continue;
+						}
+						if (s.equals("Longitude")) {
+							outRow.put(row.getDouble(Fields.LONGITUDE));
+							continue;
+						}
+						if (s.equals("Magnetic-X")) {
+							outRow.put(row.getString(Fields.MAG_X));
+							continue;
+						}
+						if (s.equals("Magnetic-Y")) {
+							outRow.put(row.getString(Fields.MAG_Y));
+							continue;
+						}
+						if (s.equals("Magnetic-Z")) {
+							outRow.put(row.getString(Fields.MAG_Z));
+							continue;
+						}
+						if (s.equals("Magnetic-Total")) {
+							outRow.put(row.getString(Fields.MAG_TOTAL));
+							continue;
+						}
+						if (s.equals("Altitude")) {
+							outRow.put(row.getString(Fields.ALTITUDE));
+							continue;
+						}
+						if (s.equals("Pressure")) {
+							outRow.put(row.getString(Fields.PRESSURE));
+							continue;
+						}
+						outRow.put(null);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+
+				outData.put(outRow);
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// TODO: backup plan - if nothing was re-ordered, just hand back the data as-is?
+		
+		return outData.toString();
+	}
+	
+	public void setContext(Context c) {
+		this.mContext = c;
 	}
 
 }

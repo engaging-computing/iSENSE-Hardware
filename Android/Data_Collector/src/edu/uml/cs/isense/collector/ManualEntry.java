@@ -55,12 +55,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.dialogs.ExperimentDialog;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.objects.ExperimentField;
 import edu.uml.cs.isense.queue.DataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
@@ -118,7 +118,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.manual_entry);
+		setContentView(R.layout.manual_concept);
 
 		mContext = this;
 
@@ -134,7 +134,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				Splash.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
-		expPrefs = getSharedPreferences("EID", 0);
+		expPrefs = getSharedPreferences("EID_MANUAL", 0);
 
 		loginLabel = (TextView) findViewById(R.id.loginLabel);
 		loginLabel.setText(getResources().getString(R.string.loggedInAs)
@@ -162,8 +162,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
 		if (exp.equals("")) {
-			Intent iGetExpId = new Intent(this, ExperimentDialog.class);
-			startActivityForResult(iGetExpId, EXPERIMENT_REQUESTED);
+			Intent iExperiment = new Intent(this, Setup.class);
+			iExperiment.putExtra("from_where", "manual");
+			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 		} else {
 			loadExperimentData(exp);
 		}
@@ -230,8 +231,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String eidString = data.getStringExtra("eid");
-				loadExperimentData(eidString);
+				SharedPreferences mPrefs = getSharedPreferences("EID_MANUAL", 0);
+				loadExperimentData(mPrefs.getString("experiment_id", ""));
 			} else {
 				// they may not have fields on screen now
 			}
@@ -266,7 +267,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void fillDataFieldEntryList(int eid) {
 		
 		if (fieldOrder.size() == 0) {
-			w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			if (rapi.isConnectedToInternet()) {
+				w.make("Experiment not found or has no fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			} else {
+				w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);	
+			}
 			return;
 		}
 		
@@ -423,7 +428,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			return true;
 
 		case R.id.menu_item_manual_experiment:
-			Intent iExperiment = new Intent(mContext, ExperimentDialog.class);
+			Intent iExperiment = new Intent(mContext, Setup.class);
+			iExperiment.putExtra("from_where", "manual");
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 
 			return true;

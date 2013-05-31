@@ -40,9 +40,9 @@
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/colorless"
+            android:background="@drawable/button_rsense"
             android:text="@string/auto"
-            android:textColor="@android:color/white" />
+            android:textColor="#0066FF" />
 
         <Button
             android:id="@+id/splash_manual"
@@ -50,9 +50,9 @@
             android:layout_height="47dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/colorless"
+            android:background="@drawable/button_rsense"
             android:text="@string/manual"
-            android:textColor="@android:color/white" />
+            android:textColor="#0066FF" />
     </LinearLayout>       
 
 </RelativeLayout>

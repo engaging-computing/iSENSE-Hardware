@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/experimentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
         android:gravity="center"
         android:text="@string/chooseExperiment"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:background="@android:color/transparent" />
 
     <EditText
         android:id="@+id/experimentInput"
@@ -39,8 +39,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:text="@string/browse"
-            android:textSize="18sp"
-            tools:ignore="ButtonStyle" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/experiment_qr"
@@ -49,33 +48,35 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:text="@string/scan_qr"
-            android:textSize="18sp"
-            tools:ignore="ButtonStyle" />
+            android:textSize="18sp" />
     </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="?android:attr/dividerVertical" />
-
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
+    
+    <Button
+        android:id="@+id/experiment_no_exp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/no_experiment_now"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="@android:color/transparent" >
 
         <Button
             android:id="@+id/experiment_cancel"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel"
+            android:text="@android:string/cancel"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/experiment_ok"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

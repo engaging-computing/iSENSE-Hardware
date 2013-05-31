@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/manual_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="2dp"
+        android:background="#000033"
+        android:contentDescription="@string/blank_desc"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:scaleType="center"
+        android:src="@drawable/rsense_logo" />
+
+    <TextView
+        android:id="@+id/loginLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/manual_logo"
+        android:layout_marginLeft="2dp"
+        android:paddingTop="8dp"
+        android:text="@string/loggedInAs"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/experimentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginLabel"
+        android:layout_marginLeft="2dp"
+        android:paddingBottom="8dp"
+        android:text="@string/usingExperiment"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/experimentLabel" >
+
+        <Button
+            android:id="@+id/manual_save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/save"
+            android:textColor="#0066FF"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/manual_clear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/clear"
+            android:textColor="#0066FF"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/session_name_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonLayout"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/manual_session_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight=".2"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+            android:gravity="left"
+            android:hint="@string/enterSessionName"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLength="150"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/manual_media_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight=".8"
+            android:background="@drawable/button_rsense"
+            android:contentDescription="@string/blank_desc"
+            android:src="@drawable/ic_menu_media" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/session_name_wrapper" >
+
+        <LinearLayout
+            android:id="@+id/field_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</RelativeLayout>
