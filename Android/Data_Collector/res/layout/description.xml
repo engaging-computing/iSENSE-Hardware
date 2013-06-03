@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="@string/upload" />
+                android:text="@string/save" />
         </LinearLayout>
     </LinearLayout>
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
     android:versionCode="13"
-    android:versionName="2.1.1" xmlns:tools="http://schemas.android.com/tools">
+    android:versionName="2.1.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -48,7 +49,8 @@
         <activity
             android:name=".DataCollector"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ManualEntry"
             android:configChanges="keyboardHidden|orientation"
@@ -58,9 +60,6 @@
             android:name=".dialogs.LoginActivity"
             android:label="Login"
             android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name=".experiment.BrowseExperiments"
-            android:label="Experiments" />
         <activity
             android:name=".sync.SyncTime"
             android:label="SyncTime" />
@@ -73,20 +72,12 @@
             android:label="Media Manager"
             android:theme="@style/theme_dialog_black" />
         <activity
-            android:name=".dialogs.Setup"
-            android:label="Select an Experiment"
-            android:theme="@style/theme_dialog_black" />
-        <activity
             android:name=".dialogs.LoginError"
             android:label="Login Failed"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.Summary"
             android:label="Data Summary"
-            android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name=".dialogs.NoIsense"
-            android:label="Upload Error"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".dialogs.NoGps"
@@ -99,10 +90,6 @@
         <activity
             android:name=".dialogs.Description"
             android:label="Enter Session Description"
-            android:theme="@style/theme_dialog_black" />
-        <activity
-            android:name=".dialogs.NoQR"
-            android:label="No QR Code Scanner Found"
             android:theme="@style/theme_dialog_black" />
         <activity
             android:name=".sync.TimeSent"
@@ -144,29 +131,45 @@
             android:name=".dialogs.FirstTimeUse"
             android:label="iSENSE Data Collector"
             android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".dialogs.Step1Setup"
+            android:label="Step 1: Setup"
+            android:theme="@style/theme_dialog_black" />
         
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
-            android:theme="@style/theme_queue_layout" 
-            tools:ignore="MissingRegistered"/>
+            android:theme="@style/theme_queue_layout"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueAlter"
             android:label="Alter Data Set"
-            android:theme="@style/theme_dialog_black" 
-            tools:ignore="MissingRegistered"/>
+            android:theme="@style/theme_dialog_black"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditData"
             android:label="Edit Data"
-            android:theme="@style/theme_dialog_black" 
-            tools:ignore="MissingRegistered"/>
+            android:theme="@style/theme_dialog_black"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_black"
             tools:ignore="MissingRegistered" />
-        
-        <service android:name="edu.uml.cs.isense.collector.DataCollectorService"></service>
+        <activity
+            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
+            android:label="Experiments" />
+        <activity
+            android:name="edu.uml.cs.isense.exp.NoQR"
+            android:label="No QR Code Scanner Found"
+            android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name="edu.uml.cs.isense.exp.Setup"
+            android:label="Select an Experiment"
+            android:theme="@style/theme_dialog_black" />
+
+        <service android:name="edu.uml.cs.isense.collector.DataCollectorService" >
+        </service>
         
     </application>
 
