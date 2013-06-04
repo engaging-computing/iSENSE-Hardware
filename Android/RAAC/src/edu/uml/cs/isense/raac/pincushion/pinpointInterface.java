@@ -89,8 +89,10 @@ public class pinpointInterface {
      * @throws NoDataException
      * @throws FileNotFoundException
      */
-    public ArrayList<String[]> getData( final ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException, IOException {
+    public ArrayList<String[]> getData( final ProgressDialog pdiag ) throws NoDataException, IncompatibleConversionException, BackingStoreException, IOException, NoConnectionException {
 
+    	
+    	
         HashMap<Integer, Integer> settings = null;
         System.out.println("Getting Records");
         ArrayList<String[]> records = new ArrayList<String[]>();
@@ -165,8 +167,9 @@ public class pinpointInterface {
      *
      * @param Setting
      * @return Integer
+     * @throws NoConnectionException 
      */
-    public int getSetting(int Setting) {
+    public int getSetting(int Setting) throws NoConnectionException {
         return pinpoint.getSetting(Setting);
     }
 
@@ -188,8 +191,9 @@ public class pinpointInterface {
 
     /**
      * Simply prints the settings stored on the EEPROM of the PINPoint.
+     * @throws NoConnectionException 
      */
-    public void printSettings() {
+    public void printSettings() throws NoConnectionException {
 
         System.out.println("Sample Rate : " + getSetting(PinComm.SAMPLE_RATE));
         System.out.println("BTA1 Type   : " + getSetting(PinComm.BTA1));
@@ -250,8 +254,9 @@ public class pinpointInterface {
      * Get all of the PINPoints settings in one call. 
      * 
      * @return HashMap<Integer,Integer>
+     * @throws NoConnectionException 
      */
-    public HashMap<Integer, Integer> GetSettings() {
+    public HashMap<Integer, Integer> GetSettings() throws NoConnectionException {
         return pinpoint.GetSettings();
     }
 

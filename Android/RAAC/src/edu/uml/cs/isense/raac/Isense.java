@@ -86,6 +86,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 import edu.uml.cs.isense.raac.exceptions.NoDataException;
 import edu.uml.cs.isense.raac.pincushion.BluetoothService;
 import edu.uml.cs.isense.raac.pincushion.PinComm;
@@ -185,7 +186,6 @@ public class Isense extends Activity implements OnClickListener {
 		}
 
 		rcrdBtn.setEnabled(false);
-		pushToISENSE.setEnabled(false);
 
 		launchLayout.setVisibility(View.VISIBLE);
 
@@ -255,7 +255,28 @@ public class Isense extends Activity implements OnClickListener {
 
 		setBtStatus();
 	}
-	
+
+	public void LostPinPoint() {
+		Toast.makeText(this, "Couldn't find the PINPoint! Press the Connect button and reconnect please.", Toast.LENGTH_LONG).show();
+		rcrdBtn.setEnabled(false);
+		showSensorOption = false;
+		showTimeOption = false;
+		invalidateOptionsMenu();
+		btStatNum = 0;
+		setBtStatus();
+		return;
+	}
+	public void FoundPinPoint() {
+		Toast.makeText(this, "Connected to PINPoint!", Toast.LENGTH_SHORT).show();
+		rcrdBtn.setEnabled(true);
+		showSensorOption = true;
+		showTimeOption = true;
+		invalidateOptionsMenu();
+		btStatNum = 1;
+		setBtStatus();
+		return;
+	}
+
 	//Override to make sure that the correct layout file is used when the screen orientation changes
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -266,8 +287,13 @@ public class Isense extends Activity implements OnClickListener {
 		flipper.setDisplayedChild(flipView);
 
 		if (data != null) {
-			prepDataForUpload();
-			writeDataToScreen();
+			try {
+				prepDataForUpload();
+				writeDataToScreen();
+			} catch (NoConnectionException e) {
+				LostPinPoint();
+				return;
+			}
 		}
 	}
 
@@ -338,11 +364,10 @@ public class Isense extends Activity implements OnClickListener {
 					//Get the Text
 					text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				connectToBluetooth(text);
+				connectToBluetooth(text, false);
 			}
 		}
 	}
@@ -415,7 +440,7 @@ public class Isense extends Activity implements OnClickListener {
 			ppi.disconnect();
 	}
 
-	public void connectToBluetooth(String macAddr) {
+	public void connectToBluetooth(String macAddr, boolean fromMain) {
 		System.out.println("conneting to "+macAddr);
 		try {
 			BluetoothDevice device = mBluetoothAdapter
@@ -425,27 +450,37 @@ public class Isense extends Activity implements OnClickListener {
 			e.printStackTrace();
 			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			if(!fromMain){
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+			} else {
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
+			}
 		}
 	}
 
 	@SuppressLint("NewApi")
 	public void getRecords() {
-		//Check PINPoint's BTA1 sensor setting
-		//and if it's not pH or temperature, set it to pH
-		if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
-			ppi.setSetting(PinComm.BTA1, 24);
-		}
-		if(ppi.getSetting(PinComm.BTA1)==24) {
-			sensorHead.setText("BTA1: Vernier pH Sensor");
-		} else {
-			sensorHead.setText("BTA1: Vernier Temperature Probe");
-		}
-
 		ppi.setContext(this);
+		//Check PINPoint's BTA1 sensor setting
+		//and if it's not pH or temperature, set it to temperature
+		try {
+			if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
+				ppi.setSetting(PinComm.BTA1, 1);
+			}
+			if(ppi.getSetting(PinComm.BTA1)==24) {
+				sensorHead.setText("BTA1: Vernier pH Sensor");
+			} else {
+				sensorHead.setText("BTA1: Vernier Temperature Probe");
+			}
+		} catch (NoConnectionException e) {
+			LostPinPoint();
+			return;
+		}
+		
 		final ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setMessage("Please wait, reading data from PINPoint");
+		progressDialog.setCancelable(false);
 		if(Build.VERSION.SDK_INT >= 11) {
 			progressDialog.setProgressNumberFormat(null);
 		}
@@ -454,11 +489,13 @@ public class Isense extends Activity implements OnClickListener {
 		final Runnable toastRun = new Runnable() { 
 			public void run() { 
 				Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
+				rcrdBtn.setEnabled(true);
 			}
 		};
 		final Runnable toastRun2 = new Runnable() { 
 			public void run() { 
 				Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
+				rcrdBtn.setEnabled(true);
 			}
 		};
 
@@ -485,6 +522,7 @@ public class Isense extends Activity implements OnClickListener {
 							runOnUiThread(toastRun2);
 						} catch (Exception e) {
 							e.printStackTrace();
+							rcrdBtn.setEnabled(true);
 						}
 
 						runOnUiThread(new Runnable(){
@@ -495,8 +533,14 @@ public class Isense extends Activity implements OnClickListener {
 									progressDialog.dismiss();
 								}
 								if (data != null) {
-									prepDataForUpload();
-									writeDataToScreen();
+									try {
+										prepDataForUpload();
+										writeDataToScreen();
+										rcrdBtn.setEnabled(true);
+									} catch (NoConnectionException e) {
+										LostPinPoint();
+										return;
+									}
 								}
 							}
 
@@ -515,7 +559,7 @@ public class Isense extends Activity implements OnClickListener {
 			if(!groupName.equals("")) {
 				pressedRecent = true;
 				if(!defaultMac.equals("")) {
-					connectToBluetooth(defaultMac);
+					connectToBluetooth(defaultMac, false);
 				} else {
 					Intent serverIntent = new Intent(this, DeviceListActivity.class);
 					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
@@ -534,17 +578,22 @@ public class Isense extends Activity implements OnClickListener {
 			}
 		}
 		if (v == rcrdBtn) {
+			rcrdBtn.setEnabled(false);
 			getRecords();
 		}
 		if (v == pushToISENSE) {
-			uploadData();
+			try {
+				uploadData();
+			} catch (NoConnectionException e) {
+				LostPinPoint();
+			}
 		}
 		if (v == btnSetName ) {
 			setNameThing();
 		}
 
 	}
-	
+
 	public void setNameThing() {
 		String name = splashNameField.getText().toString();
 		if(!name.equals("")) {
@@ -559,7 +608,7 @@ public class Isense extends Activity implements OnClickListener {
 		}
 	}
 
-	public void prepDataForUpload() {
+	public void prepDataForUpload() throws NoConnectionException {
 		int x = 0;
 		int sensorsetting = ppi.getSetting(PinComm.BTA1);
 		for (int i = 0; i < data.size(); i++) {
@@ -568,10 +617,12 @@ public class Isense extends Activity implements OnClickListener {
 			for (String str : strray) {
 				x++;
 				switch(x) {
-				case 1:  timeData.add(fmtData(str));           																break;
+				case 1:  timeData.add(formatTime(str)); 
+						 break;
 				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
-				data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 						break;
-				default:                                        															break;
+						 data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 
+						 break;
+				default: break;
 				}
 			}
 			x = 0;
@@ -583,7 +634,7 @@ public class Isense extends Activity implements OnClickListener {
 		}
 	}
 
-	public void writeDataToScreen() {
+	public void writeDataToScreen() throws NoConnectionException {
 		dataLayout.removeAllViews();
 
 		int i = 0;
@@ -732,6 +783,7 @@ public class Isense extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
 		menu.getItem(0).setEnabled(showConnectOption);
 		menu.getItem(1).setEnabled(showSensorOption);
 		menu.getItem(2).setEnabled(showTimeOption);
@@ -779,7 +831,7 @@ public class Isense extends Activity implements OnClickListener {
 						flipView = flipper.getDisplayedChild();
 						connectFromSplash = false;
 					} else {
-						Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
+						FoundPinPoint();
 					}
 					//Set the time on the PINPoint's internal clock
 					int tries = 0;
@@ -792,7 +844,7 @@ public class Isense extends Activity implements OnClickListener {
 						Toast.makeText(Isense.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
 					}
 					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
-					
+
 					if(autoRun) {
 						getRecords();
 					}
@@ -867,7 +919,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				lastPptName.setText(name);
 
-				connectToBluetooth(address);
+				connectToBluetooth(address, false);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_MAIN:
@@ -884,7 +936,7 @@ public class Isense extends Activity implements OnClickListener {
 
 				lastPptName.setText(name);
 
-				connectToBluetooth(address);
+				connectToBluetooth(address, true);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}
@@ -919,7 +971,7 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	//preps the JSONArray, and pushes time, temp and ph to iSENSE
-	private void uploadData() {
+	private void uploadData() throws NoConnectionException {
 		if (nameField.length() == 0) {
 			nameField.setText("SoR Group");
 		}
@@ -937,21 +989,13 @@ public class Isense extends Activity implements OnClickListener {
 		dataSet = new JSONArray();
 
 		JSONArray dataJSON;
-		if (ppi.getSetting(PinComm.BTA1) == 1) //PINPoint is set to use Temperature Probe
+		if (ppi.getSetting(PinComm.BTA1) == 1 ||  ppi.getSetting(PinComm.BTA1) == 24) //PINPoint is set to use Temperature Probe
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
 				dataJSON.put(bta1Data.get(i));
 				dataSet.put(dataJSON);
 			}
-		else if (ppi.getSetting(PinComm.BTA1) == 24) { //PINPoint is set to use pH Sensor
-			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put(bta1Data.get(i));
-				dataSet.put(dataJSON);
-			}
-		}
 		else {
 			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
 			return;
@@ -1037,25 +1081,23 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	//String formatter
-	public String fmtData(String temp) {
+	public String formatTime(String temp) {
 		String dataString = "";
-
-		long unixts = 0;
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SSS");
+		
+		long unixTs = 0;
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z");
 		Date parsed;
 
 		try {
-			parsed = format.parse(temp);
-			unixts = parsed.getTime();
+			parsed = format.parse(temp+" GMT");
+			unixTs = parsed.getTime();
 
-			dataString = "" + unixts;
-
+			dataString = "" + unixTs;
 			return dataString;
 		} catch (ParseException e) {
-			System.err.println("Error while parsing date.");
+			e.printStackTrace();
+			return "";
 		}
-
-		return "";
 	}
 
 	private class PerformLogin extends AsyncTask<Void, Integer, Void> {

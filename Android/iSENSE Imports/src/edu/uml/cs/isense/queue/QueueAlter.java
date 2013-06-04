@@ -1,12 +1,12 @@
 package edu.uml.cs.isense.queue;
 
+import edu.uml.cs.isense.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import edu.uml.cs.isense.R;
 
 /**
  * Activity that allows the alteration of data sets in the queue.

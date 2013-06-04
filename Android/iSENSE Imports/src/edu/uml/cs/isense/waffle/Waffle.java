@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.waffle;
 
+import edu.uml.cs.isense.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -10,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.R;
 
 /**
  * Class that creates custom-styled, visually-pleasing Toast messages, given a
