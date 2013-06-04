@@ -164,7 +164,7 @@ public class PinComm {
 				try {
 					temp[i] = spi.readByte();
 				} catch (IOException e) {
-					
+
 					e.printStackTrace();
 				}
 			}
@@ -240,14 +240,14 @@ public class PinComm {
 				System.out.println("Upload finished in " + ((FinishTime - StartTime) / 1000) + " seconds");
 
 				if (computedChecksum != readChecksum) {
-					
+
 					throw new ChecksumException();
 
 				} else {
-					
+
 					System.out.println("Finished uploading data");
 					return data;
-					
+
 				}
 
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -288,7 +288,7 @@ public class PinComm {
 			try {
 				high = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -301,8 +301,7 @@ public class PinComm {
 			try {
 				low = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				
-				e.printStackTrace();
+				throw new NoConnectionException();
 			}
 
 			spi.clearBuff();
@@ -332,6 +331,7 @@ public class PinComm {
 				high = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
 				e.printStackTrace();
+				throw new NoConnectionException();
 			}
 			return high;
 		}
@@ -387,7 +387,7 @@ public class PinComm {
 			try {
 				spi.readByte();
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 		} else {
@@ -411,11 +411,11 @@ public class PinComm {
 			spi.writeByte(sByte);
 			spi.writeByte((byte) (value & 0xFF));
 			spi.clearBuff();
-//			try {
-//				spi.readByte();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+			//			try {
+			//				spi.readByte();
+			//			} catch (IOException e) {
+			//				e.printStackTrace();
+			//			}
 		} else {
 			throw new NoConnectionException();
 		}
@@ -520,11 +520,11 @@ public class PinComm {
 			spi.writeByte((byte) WRITE_TIME);
 			spi.writeByte((byte) cal.get(Calendar.SECOND));
 			spi.writeByte((byte) cal.get(Calendar.MINUTE));
-			spi.writeByte((byte) cal.get(Calendar.HOUR));
+			spi.writeByte((byte) cal.get(Calendar.HOUR_OF_DAY));
 			spi.writeByte((byte) cal.get(Calendar.DAY_OF_WEEK));
 			spi.writeByte((byte) (cal.get(Calendar.DATE)));
 			spi.writeByte((byte) (cal.get(Calendar.MONTH) + 1));
-			
+
 			int date = (cal.get(Calendar.YEAR)) % 100;
 			spi.writeByte((byte) date);
 
@@ -614,7 +614,7 @@ public class PinComm {
 			try {
 				one = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -624,7 +624,7 @@ public class PinComm {
 			try {
 				two = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -634,7 +634,7 @@ public class PinComm {
 			try {
 				three = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -644,7 +644,7 @@ public class PinComm {
 			try {
 				four = (short) (spi.readByte() & 255);
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 
