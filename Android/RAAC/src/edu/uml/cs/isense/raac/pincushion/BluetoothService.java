@@ -453,12 +453,9 @@ public class BluetoothService {
 			try {
 				mmOutStream.write(message);
 				wait(101);
-			} catch (IOException e) {
-				Log.e(TAG, "Exception during write", e);
-				throw new NoConnectionException();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
+				throw new NoConnectionException();
 			}
 		}
 

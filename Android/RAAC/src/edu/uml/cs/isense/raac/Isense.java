@@ -257,11 +257,13 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	public void LostPinPoint() {
-		Toast.makeText(this, "Unable to connect to the PINPoint. Make sure it's turned on and within range of your tablet.", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Couldn't find the PINPoint! Press the Connect button and reconnect please.", Toast.LENGTH_LONG).show();
 		rcrdBtn.setEnabled(false);
 		showSensorOption = false;
 		showTimeOption = false;
 		invalidateOptionsMenu();
+		btStatNum = 0;
+		setBtStatus();
 		return;
 	}
 	public void FoundPinPoint() {
@@ -270,6 +272,8 @@ public class Isense extends Activity implements OnClickListener {
 		showSensorOption = true;
 		showTimeOption = true;
 		invalidateOptionsMenu();
+		btStatNum = 1;
+		setBtStatus();
 		return;
 	}
 
@@ -613,10 +617,12 @@ public class Isense extends Activity implements OnClickListener {
 			for (String str : strray) {
 				x++;
 				switch(x) {
-				case 1:  timeData.add(fmtData(str));           																break;
+				case 1:  timeData.add(formatTime(str)); 
+						 break;
 				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
-				data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 						break;
-				default:                                        															break;
+						 data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 
+						 break;
+				default: break;
 				}
 			}
 			x = 0;
@@ -912,8 +918,6 @@ public class Isense extends Activity implements OnClickListener {
 				defEditor.commit();
 
 				lastPptName.setText(name);
-				dataLayout.removeAllViews();
-				dataRdy = false;
 
 				connectToBluetooth(address, false);
 			}
@@ -985,21 +989,13 @@ public class Isense extends Activity implements OnClickListener {
 		dataSet = new JSONArray();
 
 		JSONArray dataJSON;
-		if (ppi.getSetting(PinComm.BTA1) == 1) //PINPoint is set to use Temperature Probe
+		if (ppi.getSetting(PinComm.BTA1) == 1 ||  ppi.getSetting(PinComm.BTA1) == 24) //PINPoint is set to use Temperature Probe
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
 				dataJSON.put(bta1Data.get(i));
 				dataSet.put(dataJSON);
 			}
-		else if (ppi.getSetting(PinComm.BTA1) == 24) { //PINPoint is set to use pH Sensor
-			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put(bta1Data.get(i));
-				dataSet.put(dataJSON);
-			}
-		}
 		else {
 			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
 			return;
@@ -1085,25 +1081,23 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	//String formatter
-	public String fmtData(String temp) {
+	public String formatTime(String temp) {
 		String dataString = "";
-
-		long unixts = 0;
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SSS");
+		
+		long unixTs = 0;
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z");
 		Date parsed;
 
 		try {
-			parsed = format.parse(temp);
-			unixts = parsed.getTime();
+			parsed = format.parse(temp+" GMT");
+			unixTs = parsed.getTime();
 
-			dataString = "" + unixts;
-
+			dataString = "" + unixTs;
 			return dataString;
 		} catch (ParseException e) {
-			System.err.println("Error while parsing date.");
+			e.printStackTrace();
+			return "";
 		}
-
-		return "";
 	}
 
 	private class PerformLogin extends AsyncTask<Void, Integer, Void> {
