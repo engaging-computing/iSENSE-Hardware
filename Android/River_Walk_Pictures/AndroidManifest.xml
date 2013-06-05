@@ -71,15 +71,15 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueAlter"
             android:label="Alter Data Set"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_dialog_white" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditData"
             android:label="Edit Data"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_dialog_white" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
-            android:theme="@style/theme_dialog_black" />
+            android:theme="@style/theme_dialog_white" />
     </application>
 
 </manifest>

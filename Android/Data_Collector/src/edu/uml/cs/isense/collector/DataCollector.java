@@ -68,10 +68,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import edu.uml.cs.isense.collector.dialogs.CanLogin;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
+import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
@@ -91,9 +93,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
 	/* Constants */
-
+	
+	// String constants
 	public static final String activityName = "datacollector";
-
+	public static final String STEP_1_SESSION_NAME = "session_name";
+	public static final String STEP_1_SAMPLE_INTERVAL = "sample_interval";
+	public static final String STEP_1_TEST_LENGTH = "test_length";
+	
 	// Numerical constants
 	static final int S_INTERVAL = 50;
 	static final int TEST_LENGTH = 600;
@@ -113,22 +119,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int FORCE_STOP_REQUESTED = 8;
 	public static final int RECORDING_STOPPED_REQUESTED = 9;
 	public static final int DESCRIPTION_REQUESTED = 10;
-	//public static final int CAN_LOGIN_REQUESTED = 11;
+	public static final int CAN_LOGIN_REQUESTED = 11;
 	public static final int STEP_1_SETUP_REQUESTED = 12;
 	
-	public static final String STEP_1_SESSION_NAME = "session_name";
-	public static final String STEP_1_SAMPLE_INTERVAL = "sample_interval";
-	public static final String STEP_1_TEST_LENGTH = "test_length";
 	
 	/* UI Objects */
-
-	// TextView
-	//private static TextView time;
-
-	// EditTexts
-	private static String sessionName;
-	private static long sampleInterval;
-	private static long recordingLength;
 
 	// Buttons
 	private static Button step1;
@@ -147,6 +142,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// ImageView
 	private ImageView isenseLogo;
+	
 	
 	/* Formatters */
 
@@ -177,9 +173,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Implemented into data variables
 	private static String data;
-
-	private static int dataPointCount = 0;
-
+	private static int 	  dataPointCount = 0;
+	
+	// Recording Credentials
+	private static String sessionName;
+	private static long   sampleInterval;
+	private static long   recordingLength;
+	
 	// Raw data variables
 	private static String temperature = "";
 	private static String pressure = "";
@@ -202,6 +202,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
 	//private static boolean performExpNumCheckOnReturn = false;
+	public static boolean manageUploadQueueAfterLogin = false;
 
 	// Strings
 	public static String textToSession = "";
@@ -406,9 +407,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// keeps menu buttons disabled while running
 		if (running)
 			setMenuStatus(false);
-		
-		if (step3 != null) // TODO - do I want this, or should we just waffle?
-			if (uq != null) if (uq.emptyQueue()) disableStep3(); else enableStep3();
+		else
+			if (step3 != null)
+				if (uq != null) if (uq.emptyQueue()) disableStep3(); else enableStep3();
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
@@ -628,6 +629,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					w.make("Login successful", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_CHECK);
+					
+					if (manageUploadQueueAfterLogin) { 
+						manageUploadQueueAfterLogin = false;
+						manageUploadQueue();
+					}
+					
 				} else if (returnCode.equals("Failed")) {
 
 					Intent i = new Intent(mContext, LoginActivity.class);
@@ -635,12 +642,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 				} else {
 					// should never get here
 				}
+				
+			} else if (resultCode == RESULT_CANCELED) {
+				if (manageUploadQueueAfterLogin) { 
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
+				}
 			}
-			
-			/*if (performExpNumCheckOnReturn) {
-				performExpNumCheckOnReturn = false;
-				checkExpNumCredentials();
-			}*/
 
 		} else if (requestCode == GPS_REQUESTED) {
 			showGpsDialog = true;
@@ -675,28 +683,24 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
 			}
 
-		} /*else if (requestCode == CAN_LOGIN_REQUESTED) {
+		} else if (requestCode == STEP_1_SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				performExpNumCheckOnReturn = true;
-				Intent iLogin = new Intent(mContext, LoginActivity.class);
-				startActivityForResult(iLogin, LOGIN_REQUESTED);
-			} else if (resultCode == RESULT_CANCELED) {
-				checkExpNumCredentials();
-			}
-		}*/ else if (requestCode == STEP_1_SETUP_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				
-				/*sc = Step1Setup.sc;
-				f = Step1Setup.f;
-				dfm = Step1Setup.dfm;
-				dfm.setContext(mContext);*/
-				// TODO - I think we can do without all the above since we init dfm before recording anyways
 				
 				if (data != null) {
 					sessionName = data.getStringExtra(STEP_1_SESSION_NAME);
 					sampleInterval = data.getLongExtra(STEP_1_SAMPLE_INTERVAL, Step1Setup.S_INTERVAL);
 					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH, Step1Setup.TEST_LENGTH);
 					enableStep2();
+				}
+			}
+		} else if (requestCode == CAN_LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				Intent iLogin = new Intent(mContext, LoginActivity.class);
+				startActivityForResult(iLogin, LOGIN_REQUESTED);
+			} else if (resultCode == RESULT_CANCELED) {
+				if (manageUploadQueueAfterLogin) { 
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
 				}
 			}
 		}
@@ -821,11 +825,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 			sec = "" + secInt;
 
 		step3.setText("Time Elapsed: " + min + ":" + sec + "\nData Point Count: " + dataPointCount);
-		//time.setText("Time Elapsed: " + min + ":" + sec);
 	}
 
 	// Deals with login and UI display
-	void login() {
+	boolean login() {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
@@ -836,6 +839,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (!success) {
 			// This is crazy, so Waffle me maybe?
 		}
+		
+		return success;
 	}
 
 	// Gets the milliseconds since Epoch
@@ -969,23 +974,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 					mContext, f);
 			dfm.getOrder();
 
-			sc = dfm.checkCompatibility(); // TODO - do we need this?
+			sc = dfm.checkCompatibility();
 
 			String fields = mPrefs.getString("accepted_fields", "");
-			/*if (fields.equals("")) {
-				// launch intent to setup again
-				w.make("Some data not found - please setup again", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-				Intent iSetup = new Intent(mContext, Step1Setup.class);
-				startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
-			} else {*/
-				getFieldsFromPrefsString(fields);
-			//}
-
+			getFieldsFromPrefsString(fields);
 			getEnabledFields();
+			
 		}
 	}
 	
-	// TODO - try to get only 1 of these, not 1 here and 1 in step1setup.. perhaps migrate code to DFM class in imports?
+	// (currently 2 of these methods exist - one also in step1setup)
 	private void getEnabledFields() {
 
 		try {
@@ -1106,8 +1104,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
-		
-		//performCredentialChecks(); TODO - remove?
 
 		uq = new UploadQueue("datacollector", mContext, rapi);
 		uq.buildQueueFromFile();
@@ -1215,7 +1211,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						Context.MODE_PRIVATE));
 
 		if (!(mPrefs.getString("username", "").equals("")))
-			login(); // TODO - is all this login stuff necessary here?
+			login();
 
 		// Add listener
 		setStepButtonListeners();
@@ -1390,7 +1386,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						mMediaPlayer.setLooping(false);
 						mMediaPlayer.start();
 						
-						// TODO - get rid of step 1 + step 2, add in the new textviews
 						setUpRecordingDescription();
 						
 						// start running task
@@ -1466,7 +1461,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				manageUploadQueue();
+				
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						DataCollector.mContext,
+						DataCollector.mContext.getSharedPreferences("USER_INFO",
+								Context.MODE_PRIVATE));
+				
+				if ((mPrefs.getString("username", "").equals(""))) {
+					if (rapi.isConnectedToInternet()) {
+						manageUploadQueueAfterLogin = true;
+						Intent iCanLogin = new Intent(mContext, CanLogin.class);
+						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
+					} else {
+						manageUploadQueue();
+						Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
+						startActivity(iNeedConnectivity);
+					}
+				} else {
+					manageUploadQueue();
+				}
 			}
 		});
 	}

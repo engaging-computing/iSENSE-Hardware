@@ -18,8 +18,8 @@
 	
 	<string name="no_experiment_now">No Experiment</string>
 	<string name="browse">  Browse&#8230;  </string>
-	<string name="scan_qr">Scan QR Code</string>
-	<string name="chooseExperiment">Enter or select an experiment you would like to upload to.</string>
+	<string name="scan_qr">Scan QR</string>
+	<string name="chooseExperiment">Uploading to experiment #:</string>
 	<string name="chooseExperimentAlt">
 	    Enter or select an experiment you would like to upload to.
 		Alternatively, select \"No Experiment\" to record all possible data and select an experiment later.    
@@ -33,5 +33,6 @@
 		this application (\"Barcode Scanner\" by the Zxing Team).
 	</string>
 	<string name="loading">Loading&#x2026;</string>
+	<string name="or">OR</string>
     
 </resources>
