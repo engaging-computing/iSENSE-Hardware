@@ -127,8 +127,8 @@
                 android:hint="@string/name_label"
                 android:imeOptions="actionDone"
                 android:inputType="textCapWords"
-                android:singleLine="true" 
-                android:maxLength="100" >
+                android:maxLength="100"
+                android:singleLine="true" >
 
                 <requestFocus />
             </EditText>
@@ -145,33 +145,44 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@color/lightgrey"
         android:clickable="false"
         android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp" >
-
-            <Button
-                android:id="@+id/btn_getRcrd"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight="1"
-                android:background="@drawable/custombtn"
-                android:text="@string/retrieve_data" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/card"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp" >
 
             <TextView
                 android:id="@+id/statusField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginRight="25dp"
                 android:layout_weight="1"
-                android:text="Status: Not Connected"
+                android:gravity="center"
+                android:text="@string/name_label"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/nameField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+                android:ems="10"
+                android:hint="@string/name_label"
+                android:inputType="textCapWords"
+                android:maxLength="100"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
@@ -181,50 +192,23 @@
             android:layout_height="50dp"
             android:layout_marginTop="20dp" >
 
-            <LinearLayout
-                android:id="@+id/nameContainer"
+            <Button
+                android:id="@+id/btn_getRcrd"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:id="@+id/namePrompt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:text="Group Name:"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <EditText
-                    android:id="@+id/nameField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="25dp"
-                    android:layout_weight=".50"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                    android:inputType="textCapWords"
-                    android:maxLength="100"
-                    android:textAppearance="?android:attr/textAppearanceLarge" >
-
-                    <requestFocus />
-                </EditText>
-            </LinearLayout>
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="@string/retrieve_data" />
 
             <Button
                 android:id="@+id/btn_pushToISENSE"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginRight="25dp"
-                android:layout_weight=".75"
-                android:background="@drawable/custombtn"
-                android:text="@string/upload"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_weight="1"
+                android:text="@string/upload" />
         </LinearLayout>
 
         <ScrollView
@@ -233,7 +217,10 @@
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:layout_weight="2" >
+            android:layout_weight="2"
+            android:background="@drawable/inner"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -247,6 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:padding="5dp"
                     android:text="@string/tenPoints"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:visibility="invisible" />
@@ -257,7 +245,9 @@
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="10dp"
             android:layout_weight="1.75"
+            android:background="@drawable/card"
             android:orientation="vertical"
             android:padding="20dp" >
 
@@ -368,8 +358,6 @@
                     android:inputType="none"
                     android:maxLines="1" />
             </LinearLayout>
-            <!-- additional buttons by jeremy -->
-
         </LinearLayout>
     </LinearLayout>
 
