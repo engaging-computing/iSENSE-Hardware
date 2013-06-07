@@ -494,12 +494,6 @@ public class Isense extends Activity implements OnClickListener {
 				rcrdBtn.setEnabled(true);
 			}
 		};
-		final Runnable toastRun2 = new Runnable() { 
-			public void run() { 
-				Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
-				rcrdBtn.setEnabled(true);
-			}
-		};
 
 		dataLayout.removeAllViews();
 		if( bta1Data != null || timeData != null ) {
@@ -513,18 +507,10 @@ public class Isense extends Activity implements OnClickListener {
 					public void run(){
 
 						try {
-
 							data = ppi.getData(progressDialog);
-
-						} catch (NoDataException e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun);
-						} catch (IOException e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun2);
 						} catch (Exception e) {
 							e.printStackTrace();
-							rcrdBtn.setEnabled(true);
+							runOnUiThread(toastRun);
 						}
 
 						runOnUiThread(new Runnable(){
