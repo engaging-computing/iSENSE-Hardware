@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import edu.uml.cs.isense.R;
 
 /**
  * Activity that allows the renaming of a data set.

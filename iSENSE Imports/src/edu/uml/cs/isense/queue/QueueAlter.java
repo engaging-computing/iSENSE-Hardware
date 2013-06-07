@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import edu.uml.cs.isense.R;
 
 /**
  * Activity that allows the alteration of data sets in the queue.

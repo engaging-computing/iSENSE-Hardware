@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
