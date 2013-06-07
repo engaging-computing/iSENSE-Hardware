@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Toast;
+import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 import edu.uml.cs.isense.raac.pincushion.PinComm;
 
 public class SensorSelector extends Activity implements OnClickListener {
@@ -20,7 +22,13 @@ public class SensorSelector extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sensors_selector);
 
-		int currentSensor = Isense.ppi.getSetting(PinComm.BTA1);
+		int currentSensor;
+		try {
+			currentSensor = Isense.ppi.getSetting(PinComm.BTA1);
+		} catch (NoConnectionException e) {
+			Toast.makeText(this, "Unable to find the PINPoint. Make sure it's turned on and within range of the tablet.", Toast.LENGTH_LONG).show();
+			return;
+		}
 		
 		tempBtn = (RadioButton) findViewById(R.id.radioTemp);
 		phBtn = (RadioButton) findViewById(R.id.radioPh);
