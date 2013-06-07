@@ -69,10 +69,10 @@
                 android:id="@+id/otherPptLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_stateselector"
                 android:clickable="true"
-                android:layout_marginLeft="10dp"
                 android:padding="10dp" >
 
                 <ImageButton
@@ -129,11 +129,8 @@
                 android:hint="@string/name_label"
                 android:imeOptions="actionDone"
                 android:inputType="textCapWords"
-                android:singleLine="true" 
-                android:maxLength="100" >
-
-                <requestFocus />
-            </EditText>
+                android:maxLength="100"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/btn_setName"
@@ -147,14 +144,17 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@color/lightgrey"
         android:clickable="false"
         android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp" >
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/card"
+            android:padding="15dp" >
 
             <Button
                 android:id="@+id/btn_getRcrd"
@@ -162,51 +162,33 @@
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_weight="0.75"
-                android:background="@drawable/custombtn"
+                android:layout_weight=".5"
+                android:background="@color/lightgrey"
                 android:text="@string/retrieve_data" />
 
             <TextView
-                android:id="@+id/statusField"
+                android:id="@+id/namePrompt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_weight=".75"
-                android:text="Status: Not Connected"
+                android:layout_marginRight="0dp"
+                android:layout_weight=".50"
+                android:gravity="right"
+                android:paddingRight="5dp"
+                android:text="@string/name_label"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <!-- additional buttons by jeremy -->
-
-            <LinearLayout
-                android:id="@+id/nameContainer"
+            <EditText
+                android:id="@+id/nameField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:id="@+id/namePrompt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="0dp"
-                    android:layout_weight=".50"
-                    android:text="Group Name:"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <EditText
-                    android:id="@+id/nameField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="25dp"
-                    android:layout_weight="1"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                    android:inputType="textCapWords"
-                    android:maxLength="100"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </LinearLayout>
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="25dp"
+                android:layout_weight="1"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+                android:ems="10"
+                android:inputType="textCapWords"
+                android:maxLength="100"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
         <LinearLayout
@@ -214,16 +196,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="0" >
 
             <ScrollView
                 android:id="@+id/scrollView1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1" >
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/inner" >
 
                 <LinearLayout
                     android:id="@+id/linearLayout1"
@@ -247,10 +230,12 @@
                 android:id="@+id/linearLayout3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:background="@drawable/card"
+                android:orientation="vertical"
+                android:padding="15dp" >
 
                 <TextView
                     android:id="@+id/sensorNameHeader"
@@ -282,10 +267,7 @@
                         android:layout_weight="1"
                         android:focusable="false"
                         android:inputType="none"
-                        android:lines="1" >
-
-                        <requestFocus />
-                    </EditText>
+                        android:lines="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -369,7 +351,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@drawable/custombtn"
                     android:gravity="center"
                     android:text="@string/upload"
                     android:textAppearance="?android:attr/textAppearanceMedium" />

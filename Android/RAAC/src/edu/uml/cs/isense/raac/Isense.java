@@ -63,6 +63,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,7 +102,7 @@ public class Isense extends Activity implements OnClickListener {
 	ImageView spinner, spinner2;
 	RelativeLayout launchLayout, lastPptLayout, otherPptLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, btStatus, sensorHead, launchStatusA, lastPptName;
+	TextView minField, maxField, aveField, medField, sensorHead, launchStatusA, lastPptName;
 	LinearLayout dataLayout;
 	TextView tenPoints;
 	EditText nameField, splashNameField;
@@ -133,6 +134,8 @@ public class Isense extends Activity implements OnClickListener {
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
+	
+	int lastKnownSensor = 0; //0 for temp, 24 pH
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -208,7 +211,6 @@ public class Isense extends Activity implements OnClickListener {
 		maxField = (TextView) findViewById(R.id.et_max);
 		aveField = (TextView) findViewById(R.id.et_ave);
 		medField = (TextView) findViewById(R.id.et_medi);
-		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		spinner2 = (ImageView) findViewById(R.id.mySpinOther);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
@@ -492,12 +494,6 @@ public class Isense extends Activity implements OnClickListener {
 				rcrdBtn.setEnabled(true);
 			}
 		};
-		final Runnable toastRun2 = new Runnable() { 
-			public void run() { 
-				Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
-				rcrdBtn.setEnabled(true);
-			}
-		};
 
 		dataLayout.removeAllViews();
 		if( bta1Data != null || timeData != null ) {
@@ -511,18 +507,10 @@ public class Isense extends Activity implements OnClickListener {
 					public void run(){
 
 						try {
-
 							data = ppi.getData(progressDialog);
-
-						} catch (NoDataException e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun);
-						} catch (IOException e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun2);
 						} catch (Exception e) {
 							e.printStackTrace();
-							rcrdBtn.setEnabled(true);
+							runOnUiThread(toastRun);
 						}
 
 						runOnUiThread(new Runnable(){
@@ -701,6 +689,8 @@ public class Isense extends Activity implements OnClickListener {
 					dataLayout.addView(newRow2);
 				}
 				LinearLayout newRow3 = new LinearLayout(getBaseContext());
+				newRow3.setPadding(5, 5, 5, 5);
+				newRow3.setGravity(Gravity.CENTER_VERTICAL);
 				newRow3.setOrientation(LinearLayout.HORIZONTAL);
 				if(i%2 != 0) {
 					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
@@ -773,10 +763,8 @@ public class Isense extends Activity implements OnClickListener {
 
 	public void setBtStatus() {
 		if (btStatNum == 0) {
-			btStatus.setText("Status: Disconnected");
 			rcrdBtn.setEnabled(false);
 		} else if (btStatNum == 1) {
-			btStatus.setText("Status: Connected");
 			rcrdBtn.setEnabled(true);
 		}
 	}
@@ -844,7 +832,13 @@ public class Isense extends Activity implements OnClickListener {
 						Toast.makeText(Isense.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
 					}
 					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
-
+					try {
+						lastKnownSensor = ppi.getSetting(PinComm.BTA1);
+					} catch (NoConnectionException e) {
+						LostPinPoint();
+						e.printStackTrace();
+					}
+					
 					if(autoRun) {
 						getRecords();
 					}
@@ -954,6 +948,12 @@ public class Isense extends Activity implements OnClickListener {
 			break;
 		case SENSOR_CHANGE:
 			// When the dialog for selecting sensors is closed
+			try {
+				lastKnownSensor = ppi.getSetting(PinComm.BTA1);
+			} catch (NoConnectionException e) {
+				LostPinPoint();
+				e.printStackTrace();
+			}
 			break;
 		case REQUEST_VIEW_DATA:
 			//When the data has been uploaded
@@ -989,7 +989,7 @@ public class Isense extends Activity implements OnClickListener {
 		dataSet = new JSONArray();
 
 		JSONArray dataJSON;
-		if (ppi.getSetting(PinComm.BTA1) == 1 ||  ppi.getSetting(PinComm.BTA1) == 24) //PINPoint is set to use Temperature Probe
+		if (lastKnownSensor == 1 || lastKnownSensor == 24) //PINPoint is set to use Temperature Probe or pH Sensor
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
