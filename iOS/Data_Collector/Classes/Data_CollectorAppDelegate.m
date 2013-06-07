@@ -88,39 +88,20 @@
  Returns the managed object model for the application.
  If the model doesn't already exist, it is created by merging all of the models found in the application bundle.
  */
-- (NSManagedObjectModel *)managedObjectModel {
-	
-    if (managedObjectModel != nil) {
-        return managedObjectModel;
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (!managedObjectModel)
+    {
+    	NSMutableSet *allBundles = [[[NSMutableSet alloc] init] autorelease];
+    	[allBundles addObjectsFromArray: [NSBundle allBundles]];
+    	[allBundles addObjectsFromArray: [NSBundle allFrameworks]];
+        
+    	managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles: [allBundles allObjects]] retain];
+        if (!managedObjectModel) {
+            NSLog(@"Problem");
+            abort();
+        }
     }
-   
-    NSEntityDescription *dsEntity = [[NSEntityDescription alloc] init];
-    [dsEntity setName:@"DataSets"];
-    [dsEntity setManagedObjectClassName:@"DataSet"];
-    
-    NSAttributeDescription *dateAttribute = [[NSAttributeDescription alloc] init];
-    [dateAttribute setName:@"date"];
-    [dateAttribute setAttributeType:NSDateAttributeType];
-    [dateAttribute setOptional:NO];
-    
-    NSAttributeDescription *idAttribute = [[NSAttributeDescription alloc] init];
-    [idAttribute setName:@"processID"];
-    [idAttribute setAttributeType:NSInteger64AttributeType];
-    [idAttribute setOptional:NO];
-    [idAttribute setDefaultValue:@(-1)];
-    
-    NSExpression *lhs = [NSExpression expressionForEvaluatedObject];
-    NSExpression *rhs = [NSExpression expressionForConstantValue:@0];
-    NSPredicate *validationPredicate = [NSComparisonPredicate predicateWithLeftExpression:lhs rightExpression:rhs modifier:NSDirectPredicateModifier type:NSGreaterThanPredicateOperatorType options:0];
-    
-    NSString *validationWarning = @"Process ID < 1";
-    [idAttribute setValidationPredicates:@[validationPredicate]
-                  withValidationWarnings:@[validationWarning]];
-    
-    [dsEntity setProperties:@[dateAttribute, idAttribute]];
-    
-    managedObjectModel = [[NSManagedObjectModel alloc] init];
-    [managedObjectModel setEntities:@[dsEntity]];
     
     return managedObjectModel;
 }

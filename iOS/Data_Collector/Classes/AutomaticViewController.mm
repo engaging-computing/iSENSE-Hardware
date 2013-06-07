@@ -127,9 +127,9 @@
 
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
     if ([session_num intValue] == -1) {
-        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSets" inManagedObjectContext:managedObjectContext];
+        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
         [ds setName:name];
-        [ds setData_description:description];
+        [ds setDataDescription:description];
         [ds setEid:exp_num];
         [ds setData:nil];
         [ds setPicturePaths:nil];
@@ -162,9 +162,9 @@
     
     bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
     if (!success) {
-        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSets" inManagedObjectContext:managedObjectContext];
+        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
         [ds setName:name];
-        [ds setData_description:description];
+        [ds setDataDescription:description];
         [ds setEid:exp_num];
         [ds setData:results];
         [ds setPicturePaths:nil];
@@ -457,7 +457,7 @@
     
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"DataSets" inManagedObjectContext:managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
     if (entity) {
         [request setEntity:entity];
     
