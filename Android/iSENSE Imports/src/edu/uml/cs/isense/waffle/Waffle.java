@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.waffle;
 
+import edu.uml.cs.isense.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;

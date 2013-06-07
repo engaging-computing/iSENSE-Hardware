@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.queue;
 
+import edu.uml.cs.isense.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
