@@ -1,16 +1,23 @@
 package edu.uml.cs.isense.collector.splash;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import edu.uml.cs.isense.collector.R;
 
-public class SplashGuide extends Activity {
+public class SplashGuide extends Fragment {
 	
-    public void onCreate(Bundle savedInstanceState) {
-    	
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash_guide);
-        
-    }
+	public SplashGuide() {	
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
+		View rootView = inflater.inflate(R.layout.splash_guide, container, false);
+		return rootView;
+		
+	}
     
 }
