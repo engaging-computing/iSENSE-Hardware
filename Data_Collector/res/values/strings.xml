@@ -350,12 +350,11 @@
 	<string name="no_thanks">No Thanks</string>
 	<string name="can_login_string">
 	    You have internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
-	    data later.  However, you do not need to log in to record and save data.  Would you like login now?
+	    data.  However, you can still view your data sets without logging in.  Would you like login now?
 	</string>
 	<string name="need_connectivity_string">
-	    You need internet connectivity in order to use this application.  It is required to choose an experiment and begin recording data,
-	    as well as logging in and uploading data.  Since you do not have an experiment number saved in our system, you cannot record data
-	    until you choose an experiment with internet connectivity.
+	    You need internet connectivity in order to login and upload data.  Since we cannot find any of your login credentials and there
+	    is no internet connectivity, you cannot upload data sets yet.  However, you may still view your data sets.
 	</string>
 	<string name="can_record_string">
 	    You need internet connectivity in order to upload data, but you can still record data.  We will save the data sets for you

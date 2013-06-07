@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -59,6 +60,9 @@ public class Step1Setup extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.step1setup);
+		
+		if (android.os.Build.VERSION.SDK_INT < 11)
+			getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
 		mContext = this;
 		w = new Waffle(this);
@@ -121,7 +125,7 @@ public class Step1Setup extends Activity {
 				if (!expCheck.isChecked()) {
 					String eid = mPrefs.getString("experiment_id", "");
 					String fields = mPrefs.getString("accepted_fields", "");
-					if (eid.equals("")) {
+					if (eid.equals("") || eid.equals("-1")) {
 						w.make("Please select an experiment", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 						ready = false;
 					} else if (fields.equals("")) {
