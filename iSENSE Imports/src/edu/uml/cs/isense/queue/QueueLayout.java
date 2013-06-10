@@ -395,7 +395,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					ctv.toggle();
 
 					if (ctv.isChecked())
-						ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+						ctv.setCheckMarkDrawable(R.drawable.checkmark);
 					else
 						ctv.setCheckMarkDrawable(R.drawable.red_x);
 
@@ -446,7 +446,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					ctv.toggle();
 
 					if (ctv.isChecked())
-						ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+						ctv.setCheckMarkDrawable(R.drawable.checkmark);
 					else
 						ctv.setCheckMarkDrawable(R.drawable.red_x);
 
@@ -497,7 +497,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					ctv.toggle();
 
 					if (ctv.isChecked())
-						ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+						ctv.setCheckMarkDrawable(R.drawable.checkmark);
 					else
 						ctv.setCheckMarkDrawable(R.drawable.red_x);
 
