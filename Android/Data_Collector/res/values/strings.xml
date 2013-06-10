@@ -67,7 +67,7 @@
     <string name="sample_interval">Sample Interval (ms)</string>
     <string name="sample_default">Default Value = 50 ms</string>
     <string name="login">Login</string>
-    <string name="guide_text">	    
+    <string name="guide_text">
         This is a guide designed to help explain to you how to use our iSENSE Data 
 	    Collector application.
 	    

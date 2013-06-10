@@ -8,7 +8,8 @@
     android:focusable="true"
     android:orientation="vertical"
     android:padding="5dp"
-    android:weightSum="2" >
+    android:weightSum="2"
+    android:layout_margin="1dp" >
 
     <CheckedTextView
         android:id="@+id/sensorlabel"
@@ -16,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@android:color/transparent"
-        android:checkMark="@drawable/bluecheck"
+        android:checkMark="@drawable/checkmark"
         android:checked="true"
         android:textSize="14sp" />
 
