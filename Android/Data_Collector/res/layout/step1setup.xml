@@ -66,6 +66,14 @@
             android:inputType="phone"
             android:maxLength="5"
             android:digits="1234567890" />
+        
+        <CheckBox
+            android:id="@+id/step1_remember"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/remember_setup"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/step1_exp_num_label"
