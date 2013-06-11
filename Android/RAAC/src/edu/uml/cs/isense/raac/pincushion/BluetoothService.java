@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-import edu.uml.cs.isense.raac.Isense;
+import edu.uml.cs.isense.raac.MainActivity;
 import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 
 import android.annotation.SuppressLint;

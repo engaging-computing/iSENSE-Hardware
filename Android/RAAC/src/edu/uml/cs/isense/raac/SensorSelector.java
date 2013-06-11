@@ -24,7 +24,7 @@ public class SensorSelector extends Activity implements OnClickListener {
 
 		int currentSensor;
 		try {
-			currentSensor = Isense.ppi.getSetting(PinComm.BTA1);
+			currentSensor = MainActivity.ppi.getSetting(PinComm.BTA1);
 		} catch (NoConnectionException e) {
 			Toast.makeText(this, "Unable to find the PINPoint. Make sure it's turned on and within range of the tablet.", Toast.LENGTH_LONG).show();
 			return;
@@ -56,9 +56,9 @@ public class SensorSelector extends Activity implements OnClickListener {
 			finish();
 		} else if(view==btnOk) {
 			if(tempBtn.isChecked()) {
-				Isense.ppi.setSetting(PinComm.BTA1, 1);
+				MainActivity.ppi.setSetting(PinComm.BTA1, 1);
 			} else {
-				Isense.ppi.setSetting(PinComm.BTA1, 24);
+				MainActivity.ppi.setSetting(PinComm.BTA1, 24);
 			}
 			finish();
 		}

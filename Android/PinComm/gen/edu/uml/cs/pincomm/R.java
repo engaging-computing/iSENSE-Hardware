@@ -325,18 +325,18 @@ containing a value of this type.
         /**  14 
          */
         public static final int altitude=0x7f050010;
-        public static final int app_name=0x7f05002f;
-        public static final int aveval=0x7f050045;
+        public static final int app_name=0x7f050030;
+        public static final int aveval=0x7f050046;
         public static final int browse=0x7f050024;
-        public static final int bt_not_enabled_leaving=0x7f050037;
-        public static final int btn_upload=0x7f050055;
-        public static final int button_backpage=0x7f05005b;
-        public static final int button_nextpage=0x7f05005c;
-        public static final int button_scan=0x7f050030;
-        public static final int cancel=0x7f05003a;
+        public static final int bt_not_enabled_leaving=0x7f050038;
+        public static final int btn_upload=0x7f050056;
+        public static final int button_backpage=0x7f05005c;
+        public static final int button_nextpage=0x7f05005d;
+        public static final int button_scan=0x7f050031;
+        public static final int cancel=0x7f05003b;
         public static final int change_data=0x7f05001f;
-        public static final int change_eid=0x7f050057;
-        public static final int changefield_prompt1=0x7f05005d;
+        public static final int change_eid=0x7f050058;
+        public static final int changefield_prompt1=0x7f05005e;
         public static final int chooseExperiment=0x7f050026;
         public static final int chooseExperimentAlt=0x7f050027;
         /**  18 
@@ -346,13 +346,13 @@ containing a value of this type.
         public static final int delete=0x7f050020;
         public static final int digits_restriction=0x7f05001b;
         public static final int experiments_no_items=0x7f050029;
-        public static final int expr_msg=0x7f050056;
-        public static final int finalize_city=0x7f050053;
-        public static final int finalize_geo=0x7f050054;
-        public static final int finalize_label=0x7f05004f;
-        public static final int finalize_msg=0x7f050050;
-        public static final int finalize_sessdesc=0x7f050051;
-        public static final int finalize_street=0x7f050052;
+        public static final int expr_msg=0x7f050057;
+        public static final int finalize_city=0x7f050054;
+        public static final int finalize_geo=0x7f050055;
+        public static final int finalize_label=0x7f050050;
+        public static final int finalize_msg=0x7f050051;
+        public static final int finalize_sessdesc=0x7f050052;
+        public static final int finalize_street=0x7f050053;
         /**  10 
          */
         public static final int heading_deg=0x7f05000c;
@@ -361,18 +361,18 @@ containing a value of this type.
         public static final int heading_rad=0x7f05000d;
         public static final int incompatible=0x7f050015;
         public static final int invalidExperiment=0x7f050017;
-        public static final int label_connect=0x7f050058;
-        public static final int label_fieldsbox=0x7f05005a;
-        public static final int label_sensor=0x7f050059;
+        public static final int label_connect=0x7f050059;
+        public static final int label_fieldsbox=0x7f05005b;
+        public static final int label_sensor=0x7f05005a;
         /**  4  
          */
         public static final int latitude=0x7f050006;
         public static final int loading=0x7f05002c;
-        public static final int login_button=0x7f05004e;
-        public static final int login_label=0x7f05004a;
-        public static final int login_msg=0x7f05004b;
-        public static final int login_passLbl=0x7f05004d;
-        public static final int login_usernameLbl=0x7f05004c;
+        public static final int login_button=0x7f05004f;
+        public static final int login_label=0x7f05004b;
+        public static final int login_msg=0x7f05004c;
+        public static final int login_passLbl=0x7f05004e;
+        public static final int login_usernameLbl=0x7f05004d;
         /**  5  
          */
         public static final int longitude=0x7f050007;
@@ -391,23 +391,24 @@ containing a value of this type.
         /**  8  
          */
         public static final int magnetic_z=0x7f05000a;
-        public static final int maxval=0x7f050044;
-        public static final int medval=0x7f050046;
-        public static final int menu_connect=0x7f05003d;
-        public static final int menu_experiment=0x7f050041;
-        public static final int menu_fields=0x7f050042;
-        public static final int menu_login=0x7f050040;
-        public static final int menu_setsensors=0x7f05003f;
-        public static final int menu_settime=0x7f05003e;
-        public static final int minval=0x7f050043;
-        public static final int no=0x7f05003c;
+        public static final int maxval=0x7f050045;
+        public static final int medval=0x7f050047;
+        public static final int menu_connect=0x7f05003e;
+        public static final int menu_experiment=0x7f050042;
+        public static final int menu_fields=0x7f050043;
+        public static final int menu_login=0x7f050041;
+        public static final int menu_setsensors=0x7f050040;
+        public static final int menu_settime=0x7f05003f;
+        public static final int minval=0x7f050044;
+        public static final int no=0x7f05003d;
         public static final int noCompatibleFields=0x7f050016;
         public static final int no_experiment_now=0x7f050023;
-        public static final int none_found=0x7f050036;
-        public static final int none_paired=0x7f050033;
+        public static final int none_found=0x7f050037;
+        public static final int none_paired=0x7f050034;
         public static final int null_string=0x7f050000;
         public static final int numbers_restriction=0x7f050021;
-        public static final int ok=0x7f050039;
+        public static final int ok=0x7f05003a;
+        public static final int or=0x7f05002d;
         /**  13 
          */
         public static final int pressure=0x7f05000f;
@@ -416,13 +417,13 @@ containing a value of this type.
         public static final int queue_alter=0x7f05001d;
         public static final int queue_rename=0x7f05001c;
         public static final int rename=0x7f05001e;
-        public static final int retrieve_data=0x7f050049;
+        public static final int retrieve_data=0x7f05004a;
         public static final int scan_qr=0x7f050025;
-        public static final int scanning=0x7f050034;
+        public static final int scanning=0x7f050035;
         public static final int search=0x7f050028;
-        public static final int select_device=0x7f050035;
+        public static final int select_device=0x7f050036;
         public static final int select_exp=0x7f050022;
-        public static final int sessionname=0x7f050038;
+        public static final int sessionname=0x7f050039;
         /**  12 
          */
         public static final int temperature_c=0x7f05000e;
@@ -432,16 +433,16 @@ containing a value of this type.
         /**  17 
          */
         public static final int temperature_k=0x7f050013;
-        public static final int tenPoints=0x7f050048;
+        public static final int tenPoints=0x7f050049;
         public static final int time=0x7f050001;
-        public static final int title_other_devices=0x7f050032;
-        public static final int title_paired_devices=0x7f050031;
+        public static final int title_other_devices=0x7f050033;
+        public static final int title_paired_devices=0x7f050032;
         public static final int upload=0x7f05001a;
-        public static final int view_page=0x7f050047;
+        public static final int view_page=0x7f050048;
         public static final int visit=0x7f05002a;
-        public static final int wifi_message=0x7f05002e;
-        public static final int wifi_page=0x7f05002d;
-        public static final int yes=0x7f05003b;
+        public static final int wifi_message=0x7f05002f;
+        public static final int wifi_page=0x7f05002e;
+        public static final int yes=0x7f05003c;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;
@@ -449,7 +450,7 @@ containing a value of this type.
         public static final int PDTheme=0x7f060001;
         public static final int Theme_MyDialogTheme=0x7f060006;
         public static final int Theme_MyTheme=0x7f060005;
-        public static final int theme_dialog_black=0x7f060003;
+        public static final int theme_dialog_white=0x7f060003;
         public static final int theme_queue_layout=0x7f060004;
     }
     public static final class styleable {
