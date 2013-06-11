@@ -324,8 +324,8 @@
     <string name="record_length">Test Length (s)</string>
     <string name="record_default">Default Value = 600 s</string>
     <string name="blank_desc"></string>
-    <string name="loggedInAs">Logged In As: \0</string>
-    <string name="usingExperiment">Uploading To Experiment #: \0</string>
+    <string name="loggedInAs">Logged in as: \0</string>
+    <string name="usingExperiment">Uploading to experiment #: \0</string>
     <string name="save">Save</string>
     <string name="clear">Clear</string>
     <string name="auto">Automatic</string>
