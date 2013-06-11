@@ -226,11 +226,9 @@ public class PinComm {
 					byte[] records = new byte[RECORD_SIZE];
 					for (int j = 0; j < RECORD_SIZE; j++) {
 						records[j] = spi.readByte();
-						System.out.print(records[j]);
 						computedChecksum = (byte) (computedChecksum + (byte) records[j]);
 					}
 					pDiag.setProgress(i);
-					System.out.println();
 					data.add(records);
 				}
 				System.out.println(data.size());
