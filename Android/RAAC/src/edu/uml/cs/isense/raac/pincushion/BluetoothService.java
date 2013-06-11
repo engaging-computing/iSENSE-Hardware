@@ -414,10 +414,7 @@ public class BluetoothService {
 			// Keep listening to the InputStream while connected
 			while (true) {
 				try {
-					// Read from the InputStream
-					if(mmInStream.available() >= 1) {
-						buffer.add( mmInStream.readByte() );
-					}
+					buffer.add( mmInStream.readByte() );
 					//System.out.println("buffer head: "+buffer.peek());
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);
