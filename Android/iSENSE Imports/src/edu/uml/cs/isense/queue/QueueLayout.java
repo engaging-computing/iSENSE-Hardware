@@ -371,6 +371,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private void addViewToScrollQueue(final DataSet ds) {
 
 		String previous = "";
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+			     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		layoutParams.setMargins(1, 1, 1, 1);
 
 		switch (ds.type) {
 		case DATA:
@@ -384,7 +388,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
-			scrollQueue.addView(data);
+			scrollQueue.addView(data, layoutParams);
 			ds.setUploadable(true);
 
 			data.setOnClickListener(new OnClickListener() {
@@ -435,7 +439,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
-			scrollQueue.addView(pic);
+			scrollQueue.addView(pic, layoutParams);
 			ds.setUploadable(true);
 
 			pic.setOnClickListener(new OnClickListener() {
@@ -486,7 +490,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
-			scrollQueue.addView(both);
+			scrollQueue.addView(both, layoutParams);
 			ds.setUploadable(true);
 
 			both.setOnClickListener(new OnClickListener() {
