@@ -3,7 +3,7 @@
     android:id="@+id/check_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/listelement_bkgd"
+    android:background="@drawable/listelement_bkgd_changer"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
