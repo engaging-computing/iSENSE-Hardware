@@ -842,10 +842,10 @@ public class MainActivity extends Activity implements OnClickListener {
 					}
 					//Set the time on the PINPoint's internal clock
 					int tries = 0;
-					while(!ppi.setRealTimeClock() && tries < 10) {
-						tries ++;
+					while(!ppi.setRealTimeClock() && tries++ < 10) {
+						continue;
 					}
-					if(tries < 10) {
+					if(tries <= 10) {
 						Toast.makeText(MainActivity.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 					} else {
 						Toast.makeText(MainActivity.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
