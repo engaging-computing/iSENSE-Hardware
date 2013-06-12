@@ -131,133 +131,149 @@ containing a value of this type.
         public static final int nopptbtn=0x7f02001d;
         public static final int pptbtn=0x7f02001e;
         public static final int pptbtntry=0x7f02001f;
-        public static final int raaclogo=0x7f020020;
-        public static final int red_x=0x7f020021;
-        public static final int sensordiagram=0x7f020022;
-        public static final int superspin=0x7f020023;
-        public static final int toast_background_check=0x7f020024;
-        public static final int toast_background_default=0x7f020025;
-        public static final int toast_background_warning=0x7f020026;
-        public static final int toast_background_x=0x7f020027;
-        public static final int warning_icon=0x7f020028;
+        public static final int progress_small=0x7f020020;
+        public static final int raaclogo=0x7f020021;
+        public static final int red_x=0x7f020022;
+        public static final int sensordiagram=0x7f020023;
+        public static final int spinner_1_black=0x7f020024;
+        public static final int superspin=0x7f020025;
+        public static final int toast_background_check=0x7f020026;
+        public static final int toast_background_default=0x7f020027;
+        public static final int toast_background_warning=0x7f020028;
+        public static final int toast_background_x=0x7f020029;
+        public static final int warning_icon=0x7f02002a;
     }
     public static final class id {
-        public static final int LinearLayout01=0x7f0a0039;
-        public static final int LinearLayout02=0x7f0a0036;
-        public static final int LinearLayout03=0x7f0a003c;
-        public static final int TextView01=0x7f0a003a;
-        public static final int TextView02=0x7f0a0037;
-        public static final int TextView03=0x7f0a003d;
-        public static final int bottomtext=0x7f0a001b;
-        public static final int btaLayout=0x7f0a005e;
-        public static final int btaSpin1=0x7f0a0055;
-        public static final int btaSpin2=0x7f0a0057;
-        public static final int btnCancel=0x7f0a006b;
-        public static final int btnUpload=0x7f0a006a;
-        public static final int btn_cancel=0x7f0a005d;
-        public static final int btn_geolocate=0x7f0a0067;
-        public static final int btn_getRcrd=0x7f0a002a;
-        public static final int btn_nextPage=0x7f0a002f;
-        public static final int btn_okay=0x7f0a005c;
-        public static final int btn_prevPage=0x7f0a002d;
-        public static final int btn_pushToISENSE=0x7f0a002c;
+        public static final int ExperimentSearchInput=0x7f0a0025;
+        public static final int LinearLayout01=0x7f0a0043;
+        public static final int LinearLayout02=0x7f0a0040;
+        public static final int LinearLayout03=0x7f0a0046;
+        public static final int TextView01=0x7f0a0044;
+        public static final int TextView02=0x7f0a0041;
+        public static final int TextView03=0x7f0a0047;
+        public static final int bottomtext=0x7f0a0022;
+        public static final int btaLayout=0x7f0a006c;
+        public static final int btaSpin1=0x7f0a0063;
+        public static final int btaSpin2=0x7f0a0065;
+        public static final int btnCancel=0x7f0a0079;
+        public static final int btnUpload=0x7f0a0078;
+        public static final int btn_cancel=0x7f0a006b;
+        public static final int btn_geolocate=0x7f0a0075;
+        public static final int btn_getRcrd=0x7f0a0034;
+        public static final int btn_nextPage=0x7f0a0039;
+        public static final int btn_okay=0x7f0a006a;
+        public static final int btn_prevPage=0x7f0a0037;
+        public static final int btn_pushToISENSE=0x7f0a0036;
         public static final int button_scan=0x7f0a0016;
-        public static final int buttons=0x7f0a0048;
-        public static final int cancel=0x7f0a0052;
-        public static final int check_layout=0x7f0a0044;
-        public static final int cityField=0x7f0a0069;
+        public static final int buttons=0x7f0a0056;
+        public static final int cancel=0x7f0a0060;
+        public static final int check_layout=0x7f0a0052;
+        public static final int cityField=0x7f0a0077;
         public static final int currPageInd=0x7f0a0005;
         public static final int datarow_layout=0x7f0a000d;
         public static final int datasubrow_layout=0x7f0a000f;
-        public static final int descField=0x7f0a0066;
-        public static final int description=0x7f0a0047;
+        public static final int descField=0x7f0a0074;
+        public static final int description=0x7f0a0055;
         public static final int edit_row_label=0x7f0a0017;
         public static final int edit_row_text=0x7f0a0018;
-        public static final int et_ave=0x7f0a003b;
-        public static final int et_max=0x7f0a0038;
-        public static final int et_medi=0x7f0a003e;
-        public static final int et_min=0x7f0a0035;
+        public static final int et_ave=0x7f0a0045;
+        public static final int et_max=0x7f0a0042;
+        public static final int et_medi=0x7f0a0048;
+        public static final int et_min=0x7f0a003f;
+        public static final int experimentInput=0x7f0a001a;
+        public static final int experimentText=0x7f0a0019;
         public static final int experiment_back=0x7f0a0004;
+        public static final int experiment_browse=0x7f0a001b;
         public static final int experiment_button_layout=0x7f0a0003;
+        public static final int experiment_cancel=0x7f0a001e;
         public static final int experiment_forward=0x7f0a0006;
+        public static final int experiment_no_exp=0x7f0a001d;
+        public static final int experiment_ok=0x7f0a001f;
         public static final int experiment_prompt=0x7f0a0000;
-        public static final int experimentid=0x7f0a0046;
+        public static final int experiment_qr=0x7f0a001c;
+        public static final int experimentid=0x7f0a0054;
         public static final int exprList=0x7f0a0002;
         public static final int exprScroll=0x7f0a0001;
-        public static final int exprow_layout=0x7f0a0019;
+        public static final int exprow_layout=0x7f0a0020;
         public static final int field_labels=0x7f0a0008;
         public static final int fields_button_layout=0x7f0a000a;
         public static final int fields_cancel=0x7f0a000c;
         public static final int fields_ok=0x7f0a000b;
         public static final int fields_prompt=0x7f0a0007;
-        public static final int flipper=0x7f0a0026;
-        public static final int imageView1=0x7f0a001d;
-        public static final int imageView2=0x7f0a0029;
+        public static final int flipper=0x7f0a0030;
+        public static final int imageView1=0x7f0a0026;
+        public static final int imageView2=0x7f0a0033;
+        public static final int itemContent=0x7f0a0024;
         public static final int label_data=0x7f0a0011;
         public static final int label_datapoint=0x7f0a000e;
         public static final int label_sensor=0x7f0a0010;
-        public static final int launchlayout=0x7f0a0027;
-        public static final int layout_root=0x7f0a001f;
-        public static final int linearLayout1=0x7f0a0021;
-        public static final int linearLayout2=0x7f0a0023;
-        public static final int linearLayout3=0x7f0a0031;
-        public static final int linearLayout4=0x7f0a0033;
-        public static final int linearLayout5=0x7f0a003f;
-        public static final int loginBtn=0x7f0a0025;
-        public static final int menu_connect=0x7f0a006e;
-        public static final int menu_experiment=0x7f0a0072;
-        public static final int menu_fields=0x7f0a0073;
-        public static final int menu_login=0x7f0a0071;
-        public static final int menu_setSensors=0x7f0a006f;
-        public static final int menu_setTime=0x7f0a0070;
-        public static final int miniLayout=0x7f0a005f;
-        public static final int miniSpin1=0x7f0a0059;
-        public static final int miniSpin2=0x7f0a005b;
-        public static final int modtext=0x7f0a001c;
-        public static final int mySpin=0x7f0a0028;
-        public static final int name=0x7f0a0045;
-        public static final int nameField=0x7f0a0065;
+        public static final int launchlayout=0x7f0a0031;
+        public static final int layout_root=0x7f0a0029;
+        public static final int linearLayout1=0x7f0a002b;
+        public static final int linearLayout2=0x7f0a002d;
+        public static final int linearLayout3=0x7f0a003b;
+        public static final int linearLayout4=0x7f0a003d;
+        public static final int linearLayout5=0x7f0a0049;
+        public static final int loginBtn=0x7f0a002f;
+        public static final int menu_connect=0x7f0a007c;
+        public static final int menu_experiment=0x7f0a0080;
+        public static final int menu_fields=0x7f0a0081;
+        public static final int menu_login=0x7f0a007f;
+        public static final int menu_setSensors=0x7f0a007d;
+        public static final int menu_setTime=0x7f0a007e;
+        public static final int miniLayout=0x7f0a006d;
+        public static final int miniSpin1=0x7f0a0067;
+        public static final int miniSpin2=0x7f0a0069;
+        public static final int modtext=0x7f0a0023;
+        public static final int mySpin=0x7f0a0032;
+        public static final int name=0x7f0a0053;
+        public static final int nameField=0x7f0a0073;
         public static final int new_devices=0x7f0a0015;
-        public static final int no=0x7f0a006d;
+        public static final int no=0x7f0a007b;
+        public static final int no_qr_cancel=0x7f0a004b;
+        public static final int no_qr_text=0x7f0a004a;
+        public static final int no_qr_visit=0x7f0a004c;
         public static final int paired_devices=0x7f0a0013;
-        public static final int passwordField=0x7f0a0024;
-        public static final int pinpoint_select_btn=0x7f0a001e;
-        public static final int prompt=0x7f0a0050;
-        public static final int queuealter_cancel=0x7f0a0043;
-        public static final int queuealter_change_data=0x7f0a0041;
-        public static final int queuealter_delete=0x7f0a0042;
-        public static final int queuealter_rename=0x7f0a0040;
-        public static final int queueedit_cancel=0x7f0a004e;
-        public static final int queueedit_data_cancel=0x7f0a004a;
-        public static final int queueedit_data_layout=0x7f0a0049;
-        public static final int queueedit_data_okay=0x7f0a004b;
-        public static final int queueedit_data_scroll=0x7f0a004c;
-        public static final int queueedit_edit=0x7f0a004d;
-        public static final int queueedit_okay=0x7f0a004f;
-        public static final int queueprompt_scroll=0x7f0a0054;
-        public static final int scrollView1=0x7f0a0030;
-        public static final int scrollqueue=0x7f0a0051;
-        public static final int sensorNameHeader=0x7f0a0032;
+        public static final int passwordField=0x7f0a002e;
+        public static final int pinpoint_select_btn=0x7f0a0027;
+        public static final int prompt=0x7f0a005e;
+        public static final int queuealter_cancel=0x7f0a0051;
+        public static final int queuealter_change_data=0x7f0a004e;
+        public static final int queuealter_choose_exp=0x7f0a004f;
+        public static final int queuealter_delete=0x7f0a0050;
+        public static final int queuealter_rename=0x7f0a004d;
+        public static final int queueedit_cancel=0x7f0a005c;
+        public static final int queueedit_data_cancel=0x7f0a0058;
+        public static final int queueedit_data_layout=0x7f0a0057;
+        public static final int queueedit_data_okay=0x7f0a0059;
+        public static final int queueedit_data_scroll=0x7f0a005a;
+        public static final int queueedit_edit=0x7f0a005b;
+        public static final int queueedit_okay=0x7f0a005d;
+        public static final int queueprompt_scroll=0x7f0a0062;
+        public static final int scrollView1=0x7f0a003a;
+        public static final int scrollqueue=0x7f0a005f;
+        public static final int sensorNameHeader=0x7f0a003c;
         public static final int sensor_spinners=0x7f0a0009;
-        public static final int statusField=0x7f0a002b;
-        public static final int streetfield=0x7f0a0068;
-        public static final int text=0x7f0a0062;
-        public static final int textView1=0x7f0a0034;
-        public static final int textView2=0x7f0a0056;
-        public static final int textView3=0x7f0a0058;
-        public static final int textView4=0x7f0a005a;
+        public static final int statusField=0x7f0a0035;
+        public static final int streetfield=0x7f0a0076;
+        public static final int text=0x7f0a0070;
+        public static final int textView1=0x7f0a003e;
+        public static final int textView2=0x7f0a0064;
+        public static final int textView3=0x7f0a0066;
+        public static final int textView4=0x7f0a0068;
         public static final int title_new_devices=0x7f0a0014;
         public static final int title_paired_devices=0x7f0a0012;
-        public static final int toast_layout_root=0x7f0a0060;
-        public static final int toptext=0x7f0a001a;
-        public static final int txt_message=0x7f0a0020;
-        public static final int txt_pageIndicator=0x7f0a002e;
-        public static final int upload=0x7f0a0053;
-        public static final int usernameField=0x7f0a0022;
-        public static final int waffle_check=0x7f0a0061;
-        public static final int waffle_warn=0x7f0a0063;
-        public static final int waffle_x=0x7f0a0064;
-        public static final int yes=0x7f0a006c;
+        public static final int toast_layout_root=0x7f0a006e;
+        public static final int toptext=0x7f0a0021;
+        public static final int trobber=0x7f0a0028;
+        public static final int txt_message=0x7f0a002a;
+        public static final int txt_pageIndicator=0x7f0a0038;
+        public static final int upload=0x7f0a0061;
+        public static final int usernameField=0x7f0a002c;
+        public static final int waffle_check=0x7f0a006f;
+        public static final int waffle_warn=0x7f0a0071;
+        public static final int waffle_x=0x7f0a0072;
+        public static final int yes=0x7f0a007a;
     }
     public static final class layout {
         public static final int change_experiment=0x7f030000;
@@ -267,87 +283,166 @@ containing a value of this type.
         public static final int device_list=0x7f030004;
         public static final int device_name=0x7f030005;
         public static final int edit_row=0x7f030006;
-        public static final int experiment_row=0x7f030007;
-        public static final int launch=0x7f030008;
-        public static final int loginbox=0x7f030009;
-        public static final int main=0x7f03000a;
-        public static final int queueblock_alter=0x7f03000b;
-        public static final int queueblock_data=0x7f03000c;
-        public static final int queueblock_pic=0x7f03000d;
-        public static final int queueedit_data=0x7f03000e;
-        public static final int queueedit_rename=0x7f03000f;
-        public static final int queueprompt=0x7f030010;
-        public static final int sensors_selector=0x7f030011;
-        public static final int toast_layout_check=0x7f030012;
-        public static final int toast_layout_warning=0x7f030013;
-        public static final int toast_layout_x=0x7f030014;
-        public static final int uploadfinalizebox=0x7f030015;
-        public static final int view_page=0x7f030016;
-        public static final int wifi_page=0x7f030017;
+        public static final int experiment_id=0x7f030007;
+        public static final int experiment_row=0x7f030008;
+        public static final int experimentrow=0x7f030009;
+        public static final int experiments=0x7f03000a;
+        public static final int launch=0x7f03000b;
+        public static final int loadrow=0x7f03000c;
+        public static final int loginbox=0x7f03000d;
+        public static final int main=0x7f03000e;
+        public static final int no_qr=0x7f03000f;
+        public static final int queueblock_alter=0x7f030010;
+        public static final int queueblock_data=0x7f030011;
+        public static final int queueblock_pic=0x7f030012;
+        public static final int queueedit_data=0x7f030013;
+        public static final int queueedit_rename=0x7f030014;
+        public static final int queueprompt=0x7f030015;
+        public static final int sensors_selector=0x7f030016;
+        public static final int toast_layout_check=0x7f030017;
+        public static final int toast_layout_warning=0x7f030018;
+        public static final int toast_layout_x=0x7f030019;
+        public static final int uploadfinalizebox=0x7f03001a;
+        public static final int view_page=0x7f03001b;
+        public static final int wifi_page=0x7f03001c;
     }
     public static final class menu {
         public static final int menu=0x7f090000;
     }
     public static final class string {
-        public static final int app_name=0x7f05000c;
-        public static final int aveval=0x7f050022;
-        public static final int bt_not_enabled_leaving=0x7f050014;
-        public static final int btn_upload=0x7f050032;
-        public static final int button_backpage=0x7f050038;
-        public static final int button_nextpage=0x7f050039;
-        public static final int button_scan=0x7f05000d;
-        public static final int cancel=0x7f050017;
-        public static final int change_data=0x7f050007;
-        public static final int change_eid=0x7f050034;
-        public static final int changefield_prompt1=0x7f05003a;
-        public static final int contentDesc=0x7f050000;
-        public static final int delete=0x7f050008;
-        public static final int digits_restriction=0x7f050003;
-        public static final int expr_msg=0x7f050033;
-        public static final int finalize_city=0x7f050030;
-        public static final int finalize_geo=0x7f050031;
-        public static final int finalize_label=0x7f05002c;
-        public static final int finalize_msg=0x7f05002d;
-        public static final int finalize_sessdesc=0x7f05002e;
-        public static final int finalize_street=0x7f05002f;
-        public static final int label_connect=0x7f050035;
-        public static final int label_fieldsbox=0x7f050037;
-        public static final int label_sensor=0x7f050036;
-        public static final int login_button=0x7f05002b;
-        public static final int login_label=0x7f050027;
-        public static final int login_msg=0x7f050028;
-        public static final int login_passLbl=0x7f05002a;
-        public static final int login_usernameLbl=0x7f050029;
-        public static final int maxval=0x7f050021;
-        public static final int medval=0x7f050023;
-        public static final int menu_connect=0x7f05001a;
-        public static final int menu_experiment=0x7f05001e;
-        public static final int menu_fields=0x7f05001f;
-        public static final int menu_login=0x7f05001d;
-        public static final int menu_setsensors=0x7f05001c;
-        public static final int menu_settime=0x7f05001b;
-        public static final int minval=0x7f050020;
-        public static final int no=0x7f050019;
-        public static final int none_found=0x7f050013;
-        public static final int none_paired=0x7f050010;
-        public static final int numbers_restriction=0x7f050009;
-        public static final int ok=0x7f050016;
-        public static final int prompt=0x7f050001;
-        public static final int queue_alter=0x7f050005;
-        public static final int queue_rename=0x7f050004;
-        public static final int rename=0x7f050006;
-        public static final int retrieve_data=0x7f050026;
-        public static final int scanning=0x7f050011;
-        public static final int select_device=0x7f050012;
-        public static final int sessionname=0x7f050015;
-        public static final int tenPoints=0x7f050025;
-        public static final int title_other_devices=0x7f05000f;
-        public static final int title_paired_devices=0x7f05000e;
-        public static final int upload=0x7f050002;
-        public static final int view_page=0x7f050024;
-        public static final int wifi_message=0x7f05000b;
-        public static final int wifi_page=0x7f05000a;
-        public static final int yes=0x7f050018;
+        /**  3  
+         */
+        public static final int accel_total=0x7f050005;
+        /**  0  
+         */
+        public static final int accel_x=0x7f050002;
+        /**  1  
+         */
+        public static final int accel_y=0x7f050003;
+        /**  2  
+         */
+        public static final int accel_z=0x7f050004;
+        /**  14 
+         */
+        public static final int altitude=0x7f050010;
+        public static final int app_name=0x7f050030;
+        public static final int aveval=0x7f050046;
+        public static final int browse=0x7f050024;
+        public static final int bt_not_enabled_leaving=0x7f050038;
+        public static final int btn_upload=0x7f050056;
+        public static final int button_backpage=0x7f05005c;
+        public static final int button_nextpage=0x7f05005d;
+        public static final int button_scan=0x7f050031;
+        public static final int cancel=0x7f05003b;
+        public static final int change_data=0x7f05001f;
+        public static final int change_eid=0x7f050058;
+        public static final int changefield_prompt1=0x7f05005e;
+        public static final int chooseExperiment=0x7f050026;
+        public static final int chooseExperimentAlt=0x7f050027;
+        /**  18 
+         */
+        public static final int compatible=0x7f050014;
+        public static final int contentDesc=0x7f050018;
+        public static final int delete=0x7f050020;
+        public static final int digits_restriction=0x7f05001b;
+        public static final int experiments_no_items=0x7f050029;
+        public static final int expr_msg=0x7f050057;
+        public static final int finalize_city=0x7f050054;
+        public static final int finalize_geo=0x7f050055;
+        public static final int finalize_label=0x7f050050;
+        public static final int finalize_msg=0x7f050051;
+        public static final int finalize_sessdesc=0x7f050052;
+        public static final int finalize_street=0x7f050053;
+        /**  10 
+         */
+        public static final int heading_deg=0x7f05000c;
+        /**  11 
+         */
+        public static final int heading_rad=0x7f05000d;
+        public static final int incompatible=0x7f050015;
+        public static final int invalidExperiment=0x7f050017;
+        public static final int label_connect=0x7f050059;
+        public static final int label_fieldsbox=0x7f05005b;
+        public static final int label_sensor=0x7f05005a;
+        /**  4  
+         */
+        public static final int latitude=0x7f050006;
+        public static final int loading=0x7f05002c;
+        public static final int login_button=0x7f05004f;
+        public static final int login_label=0x7f05004b;
+        public static final int login_msg=0x7f05004c;
+        public static final int login_passLbl=0x7f05004e;
+        public static final int login_usernameLbl=0x7f05004d;
+        /**  5  
+         */
+        public static final int longitude=0x7f050007;
+        /**  15 
+         */
+        public static final int luminous_flux=0x7f050011;
+        /**  9  
+         */
+        public static final int magnetic_total=0x7f05000b;
+        /**  6  
+         */
+        public static final int magnetic_x=0x7f050008;
+        /**  7  
+         */
+        public static final int magnetic_y=0x7f050009;
+        /**  8  
+         */
+        public static final int magnetic_z=0x7f05000a;
+        public static final int maxval=0x7f050045;
+        public static final int medval=0x7f050047;
+        public static final int menu_connect=0x7f05003e;
+        public static final int menu_experiment=0x7f050042;
+        public static final int menu_fields=0x7f050043;
+        public static final int menu_login=0x7f050041;
+        public static final int menu_setsensors=0x7f050040;
+        public static final int menu_settime=0x7f05003f;
+        public static final int minval=0x7f050044;
+        public static final int no=0x7f05003d;
+        public static final int noCompatibleFields=0x7f050016;
+        public static final int no_experiment_now=0x7f050023;
+        public static final int none_found=0x7f050037;
+        public static final int none_paired=0x7f050034;
+        public static final int null_string=0x7f050000;
+        public static final int numbers_restriction=0x7f050021;
+        public static final int ok=0x7f05003a;
+        public static final int or=0x7f05002d;
+        /**  13 
+         */
+        public static final int pressure=0x7f05000f;
+        public static final int prompt=0x7f050019;
+        public static final int qr_prompt=0x7f05002b;
+        public static final int queue_alter=0x7f05001d;
+        public static final int queue_rename=0x7f05001c;
+        public static final int rename=0x7f05001e;
+        public static final int retrieve_data=0x7f05004a;
+        public static final int scan_qr=0x7f050025;
+        public static final int scanning=0x7f050035;
+        public static final int search=0x7f050028;
+        public static final int select_device=0x7f050036;
+        public static final int select_exp=0x7f050022;
+        public static final int sessionname=0x7f050039;
+        /**  12 
+         */
+        public static final int temperature_c=0x7f05000e;
+        /**  16 
+         */
+        public static final int temperature_f=0x7f050012;
+        /**  17 
+         */
+        public static final int temperature_k=0x7f050013;
+        public static final int tenPoints=0x7f050049;
+        public static final int time=0x7f050001;
+        public static final int title_other_devices=0x7f050033;
+        public static final int title_paired_devices=0x7f050032;
+        public static final int upload=0x7f05001a;
+        public static final int view_page=0x7f050048;
+        public static final int visit=0x7f05002a;
+        public static final int wifi_message=0x7f05002f;
+        public static final int wifi_page=0x7f05002e;
+        public static final int yes=0x7f05003c;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;
@@ -355,7 +450,7 @@ containing a value of this type.
         public static final int PDTheme=0x7f060001;
         public static final int Theme_MyDialogTheme=0x7f060006;
         public static final int Theme_MyTheme=0x7f060005;
-        public static final int theme_dialog_black=0x7f060003;
+        public static final int theme_dialog_white=0x7f060003;
         public static final int theme_queue_layout=0x7f060004;
     }
     public static final class styleable {
