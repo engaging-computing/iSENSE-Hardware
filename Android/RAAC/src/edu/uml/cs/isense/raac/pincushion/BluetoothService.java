@@ -413,25 +413,31 @@ public class BluetoothService {
 
 			// Keep listening to the InputStream while connected
 			while (true) {
-				try {
-					buffer.add( mmInStream.readByte() );
-					//System.out.println("buffer head: "+buffer.peek());
-				} catch (IOException e) {
-					Log.e(TAG, "disconnected", e);
-					connectionLost();
-					break;
-				}
+//				try {
+//					if(mmInStream.available() > 0) {
+//						buffer.add( mmInStream.readByte() );
+//					} else {
+//						Thread.sleep(10);
+//					}
+//				} catch (IOException e) {
+//					Log.e(TAG, "disconnected", e);
+//					connectionLost();
+//					break;
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 		}
 
 		public byte read() throws IOException {
 			int i = 0;
 			try {
-				for(i = 0; i < 250; i++) {
-					if(!buffer.isEmpty()) {
-						return buffer.poll();
+				for(i = 0; i < 100; i++) {
+					if(mmInStream.available() > 0) {
+						return mmInStream.readByte();
 					} else {
-						Thread.sleep(55);
+						Thread.sleep(10);
 					}
 				}
 			} catch (InterruptedException e) {
@@ -457,7 +463,7 @@ public class BluetoothService {
 
 		public void clearBuffer() {
 			try {
-				buffer.clear();
+				mmInStream.skipBytes(mmInStream.available());
 				mmOutStream.flush();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
