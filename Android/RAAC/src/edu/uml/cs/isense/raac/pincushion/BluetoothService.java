@@ -389,7 +389,6 @@ public class BluetoothService {
 		private final BluetoothSocket mmSocket;
 		private final DataInputStream mmInStream;
 		private final OutputStream mmOutStream;
-		Queue<Byte> buffer = new LinkedList<Byte>();
 		public ConnectedComm(BluetoothSocket socket) {
 			Log.d(TAG, "create Connected");
 			mmSocket = socket;
@@ -408,36 +407,14 @@ public class BluetoothService {
 			mmOutStream = tmpOut;
 		}
 
-		public void run() {
-			Log.i(TAG, "BEGIN mConnectedThread");
-
-			// Keep listening to the InputStream while connected
-			while (true) {
-//				try {
-//					if(mmInStream.available() > 0) {
-//						buffer.add( mmInStream.readByte() );
-//					} else {
-//						Thread.sleep(10);
-//					}
-//				} catch (IOException e) {
-//					Log.e(TAG, "disconnected", e);
-//					connectionLost();
-//					break;
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-			}
-		}
-
 		public byte read() throws IOException {
 			int i = 0;
 			try {
-				for(i = 0; i < 100; i++) {
+				for(i = 0; i < 200; i++) {
 					if(mmInStream.available() > 0) {
 						return mmInStream.readByte();
 					} else {
-						Thread.sleep(10);
+						Thread.sleep(5);
 					}
 				}
 			} catch (InterruptedException e) {
@@ -473,6 +450,7 @@ public class BluetoothService {
 
 		public void close() {
 			try {
+				mmInStream.close();
 				mmOutStream.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
