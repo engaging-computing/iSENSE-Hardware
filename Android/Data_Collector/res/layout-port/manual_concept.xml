@@ -46,8 +46,8 @@
             android:id="@+id/manual_save"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_rsense"
             android:text="@string/save"
@@ -58,8 +58,8 @@
             android:id="@+id/manual_clear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_rsense"
             android:text="@string/clear"
@@ -92,7 +92,7 @@
             android:id="@+id/manual_media_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="3dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="1dp"
             android:layout_weight=".8"
             android:background="@drawable/button_rsense"
@@ -104,7 +104,8 @@
         android:id="@+id/scroll_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/session_name_wrapper" >
+        android:layout_below="@id/session_name_wrapper"
+        android:layout_margin="5dp" >
 
         <LinearLayout
             android:id="@+id/field_view"

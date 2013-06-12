@@ -64,10 +64,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import edu.uml.cs.isense.collector.dialogs.CanLogin;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
@@ -713,6 +716,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		public void run() {
 			int sessionId = -1;
 
+			// Try to obtain a location of upload
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
@@ -732,6 +736,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				e.printStackTrace();
 			}
 
+			// Prepare description for data set
 			String description;
 			if (sessionDescription.equals(""))
 				description = "Automated Submission Through Android Data Collection App";
@@ -741,28 +746,52 @@ public class DataCollector extends Activity implements SensorEventListener,
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String eid = mPrefs.getString("experiment_id", "");
 
+			// Reset the description
 			sessionDescription = "";
-				
-			// Saves data for later upload
-			DataSet ds = new DataSet(DataSet.Type.DATA, sessionName,
-					description, eid, dataSet.toString(), null,
-					sessionId, city, state, country, addr);
-			uq.addDataSetToQueue(ds);
-				
+			
+			// Start to upload media and data
 			int pic = MediaManager.pictureArray.size();
-			while (pic > 0) {
+			
+			// Check for media
+			if (pic != 0) {
+				
+				// Associates latest picture with data set, then associates rest to experiment
+				boolean firstSave = true;
+				
+				while (pic > 0) {
 					
-				// Saves pictures for later upload
-				DataSet dsp = new DataSet(DataSet.Type.PIC,
-						sessionName, description, eid, null,
-						MediaManager.pictureArray.get(pic - 1),
+					// First run through, save data with the picture
+					if (firstSave) {
+						DataSet ds = new DataSet(DataSet.Type.BOTH, sessionName,
+								description, eid, dataSet.toString(), 
+								MediaManager.pictureArray.get(pic - 1),
+								sessionId, city, state, country, addr);
+						uq.addDataSetToQueue(ds);
+						firstSave = false;
+						
+					// Next set of runs, save the remaining pictures
+					} else {
+						DataSet dsp = new DataSet(DataSet.Type.PIC,
+								sessionName, description, eid, null,
+								MediaManager.pictureArray.get(pic - 1),
+								sessionId, city, state, country, addr);
+						uq.addDataSetToQueue(dsp);
+					}
+						
+					pic--;
+				}
+				
+				// When finished, clear out the media array
+				MediaManager.pictureArray.clear();
+				
+			// Else if no pictures, just save data
+			} else {
+				DataSet ds = new DataSet(DataSet.Type.DATA, sessionName,
+						description, eid, dataSet.toString(), null,
 						sessionId, city, state, country, addr);
-				uq.addDataSetToQueue(dsp);
-					
-				pic--;
+				uq.addDataSetToQueue(ds);
 			}
-
-			MediaManager.pictureArray.clear();
+	
 		}
 
 	};
@@ -1382,10 +1411,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 					} else {
 
-						vibrator.vibrate(300);
-						mMediaPlayer.setLooping(false);
-						mMediaPlayer.start();
-						
 						setUpRecordingDescription();
 						
 						// start running task
@@ -1401,9 +1426,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 						step2.setTextColor(Color.parseColor("#008800"));
 						
 						setUpSensorsForRecording();
+
+						vibrator.vibrate(300);
+						mMediaPlayer.setLooping(false);
+						mMediaPlayer.start();
 						
 						isenseLogo.setImageResource(R.drawable.rsense_logo_recording);
 						isenseLogo.setBackgroundColor(Color.parseColor("#003300"));
+						
+						final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
+						ll.setAlpha(1.0f);
+						AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
+						flash.setDuration(500);
+						flash.setAnimationListener(new AnimationListener() {
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								ll.setAlpha(0.0f);
+							}
+							@Override
+							public void onAnimationRepeat(Animation animation) {}
+							@Override
+							public void onAnimationStart(Animation animation) {}
+						});
+						ll.startAnimation(flash);
 						
 						Intent iService = new Intent(mContext, DataCollectorService.class);
 						iService.putExtra(DataCollectorService.SRATE, sampleInterval);

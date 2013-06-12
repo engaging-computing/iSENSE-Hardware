@@ -33,7 +33,7 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class Step1Setup extends Activity {
 
 	private static Button cancel, ok, selExp;
-	private static CheckBox expCheck;
+	private static CheckBox expCheck, remember;
 	private static EditText sesName, sInterval, testLen;
 	private static TextView expLabel;
 
@@ -137,6 +137,14 @@ public class Step1Setup extends Activity {
 					if (expCheck.isChecked()) mEdit.putString("experiment_id", "-1").commit();
 					mEdit.putString("session_name", sesName.getText().toString()).commit();
 					
+					if (remember.isChecked()) {
+						mEdit.putString("s_interval", sInterval.getText().toString()).commit();
+						mEdit.putString("t_length", testLen.getText().toString()).commit();
+						mEdit.putBoolean("remember", true).commit();
+					} else {
+						mEdit.putBoolean("remember", false).commit();
+					}
+					
 					Intent iRet = new Intent();
 					iRet.putExtra(DataCollector.STEP_1_SESSION_NAME, sesName.getText().toString());
 					iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
@@ -196,6 +204,14 @@ public class Step1Setup extends Activity {
 			if (exp.equals("-1"))
 				expCheck.toggle();
 		}
+		
+		remember = (CheckBox) findViewById(R.id.step1_remember);
+		remember.setChecked(mPrefs.getBoolean("remember", false));
+		if (remember.isChecked()) {
+			sInterval.setText(mPrefs.getString("s_interval", ""));
+			testLen.setText(mPrefs.getString("t_length", ""));
+		}
+		
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -17,7 +17,7 @@
 	<string name="select_exp">Select Experiment</string>
 	
 	<string name="no_experiment_now">No Experiment</string>
-	<string name="browse">  Browse&#8230;  </string>
+	<string name="browse">Browse</string>
 	<string name="scan_qr">Scan QR</string>
 	<string name="chooseExperiment">Uploading to experiment #:</string>
 	<string name="chooseExperimentAlt">

@@ -199,7 +199,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				iMedia.putExtra("sessionName", sessionName.getText().toString());
 				startActivityForResult(iMedia, MEDIA_REQUESTED);
 			} else {
-				sessionName.setError("Enter a session name first");
+				sessionName.setError("Enter a session name");
 			}
 		}
 	}

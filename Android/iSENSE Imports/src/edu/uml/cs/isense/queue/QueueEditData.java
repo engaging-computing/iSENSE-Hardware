@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -106,6 +107,12 @@ public class QueueEditData extends Activity {
 
 			EditText data = (EditText) dataRow.findViewById(R.id.edit_row_text);
 			data.setText(fieldData[i]);
+			// See if data is a number.  If not, change input type to text
+			try {
+				Double.parseDouble(fieldData[i]);
+			} catch (NumberFormatException nfe) {
+				data.setInputType(InputType.TYPE_CLASS_TEXT);
+			}
 			
 			editDataList.addView(dataRow);
 			

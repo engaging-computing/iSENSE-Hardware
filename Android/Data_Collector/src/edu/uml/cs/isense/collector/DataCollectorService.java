@@ -56,6 +56,7 @@ public class DataCollectorService extends Service {
 
 	// Main service class message handler function to prevent potential static
 	// memory leak
+	@SuppressWarnings("deprecation")
 	public void handleMessage(Message msg) {
 		// Acquire a wakelock
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "data_collector_service_wakelock");
