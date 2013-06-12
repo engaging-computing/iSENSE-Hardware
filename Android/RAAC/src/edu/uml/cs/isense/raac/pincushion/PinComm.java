@@ -530,7 +530,6 @@ public class PinComm {
 			}
 
 			if (response == (byte) 0x06) {
-				System.out.println("Successfully set time");
 				return true;
 			}
 
