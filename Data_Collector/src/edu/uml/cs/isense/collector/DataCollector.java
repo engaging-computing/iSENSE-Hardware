@@ -64,10 +64,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import edu.uml.cs.isense.collector.dialogs.CanLogin;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
@@ -1430,6 +1433,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 						
 						isenseLogo.setImageResource(R.drawable.rsense_logo_recording);
 						isenseLogo.setBackgroundColor(Color.parseColor("#003300"));
+						
+						final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
+						ll.setAlpha(1.0f);
+						AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
+						flash.setDuration(500);
+						flash.setAnimationListener(new AnimationListener() {
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								ll.setAlpha(0.0f);
+							}
+							@Override
+							public void onAnimationRepeat(Animation animation) {}
+							@Override
+							public void onAnimationStart(Animation animation) {}
+						});
+						ll.startAnimation(flash);
 						
 						Intent iService = new Intent(mContext, DataCollectorService.class);
 						iService.putExtra(DataCollectorService.SRATE, sampleInterval);
