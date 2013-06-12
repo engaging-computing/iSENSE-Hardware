@@ -220,24 +220,18 @@ public class PinComm {
 			//Read each byte back from the serial line and place it into the raw storage.
 			try {
 				System.out.println("Recieving data...");
-				long StartTime = System.currentTimeMillis();
 				for (int i = 0; i < numRecords; i++) {
 					//Raw storage for the response.
 					byte[] records = new byte[RECORD_SIZE];
 					for (int j = 0; j < RECORD_SIZE; j++) {
 						records[j] = spi.readByte();
-						System.out.print(records[j]);
 						computedChecksum = (byte) (computedChecksum + (byte) records[j]);
 					}
 					pDiag.setProgress(i);
-					System.out.println();
 					data.add(records);
 				}
 				System.out.println(data.size());
 				byte readChecksum = spi.readByte();
-
-				long FinishTime = System.currentTimeMillis();
-				System.out.println("Upload finished in " + ((FinishTime - StartTime) / 1000) + " seconds");
 
 				if (computedChecksum != readChecksum) {
 
