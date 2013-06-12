@@ -1411,10 +1411,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 					} else {
 
-						vibrator.vibrate(300);
-						mMediaPlayer.setLooping(false);
-						mMediaPlayer.start();
-						
 						setUpRecordingDescription();
 						
 						// start running task
@@ -1430,6 +1426,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 						step2.setTextColor(Color.parseColor("#008800"));
 						
 						setUpSensorsForRecording();
+
+						vibrator.vibrate(300);
+						mMediaPlayer.setLooping(false);
+						mMediaPlayer.start();
 						
 						isenseLogo.setImageResource(R.drawable.rsense_logo_recording);
 						isenseLogo.setBackgroundColor(Color.parseColor("#003300"));

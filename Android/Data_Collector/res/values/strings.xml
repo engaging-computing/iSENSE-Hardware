@@ -132,7 +132,7 @@
 		QR code.  Once you are satisfied with your selection and select \"OK\", a list
 		of the data fields and associated sensors required to record such data is presented
 		in another dialog.  Here, based off of common devices running the version of
-		Android your device is running, we will guess as to which types of sensor data
+		Android your device is running, we will make a prediction as to which types of sensor data
 		are compatible with the sensors in your device.  You may select which sensory data
 		you would like to record here as well.  When finished with this step, you
 		will be brought back to the Step 1 dialog again.  Should you be unsure of which
@@ -191,11 +191,11 @@
 		\n\n<b>MANUAL ENTRY:</b>
 		
 		\n\nPerhaps you do not want to record data using Android\'s built-in sensors.
-		With the manual application, you will be able to fetch an experiment\'s fields,
+		With the manual subapplication, you will be able to fetch an experiment\'s fields,
 		manually enter data you recorded, and upload the data set to iSENSE.
 		
 		\n\nThe manual application will first ask you to select an experiment.  Just
-		as in the automatic application, you can either manually enter your experiment\'s
+		as in the Automatic subapplication, you can either manually enter your experiment\'s
 		number, browse experiments and locate yours, or scan a QR code.  Upon
 		selecting an experiment, the device will list off all of the experiment\'s data
 		fields for you to manually enter data.  Note: time, latitude, and longitude
@@ -203,12 +203,16 @@
 		
 		\n\nLet\'s start with the menu options.
 		
-		\n\n<i>Upload:</i> Unlike the automatic application, no data sets are
-		automatically uploaded.  Instead, you will be saving data sets in the manual
-		application and uploading them all via this menu option.  Upload will list off
+		\n\n<i>Upload:</i> This is similar to the \"Step 3\" button in the Automatic
+		subapplication.  The Upload menu option will list off
 		every data set and media captured that you may attempt to upload to iSENSE.
-		Any upload-failures will remain on this list.  However, you can choose to
-		press and hold a data set or picture and remove it from the list permanently.
+		Any upload failures will remain on this list.  However, you can choose to
+		press and hold a data set or picture and delete it from the list permanently.
+		Pressing and holding it will also allow you to rename your data set or change
+		the data saved within that data set. Performing
+		a single tap on these data sets and pictures will toggle the checkmark and \"X\"
+		icon in the upper right of the data set or picture, indicating whether or not
+		the application should attempt to upload it when you hit Upload.
 		
 		\n\n<i>Experiment:</i> This option lets you select a new experiment to
 		enter data into.  Again, once you select an experiment, the manual
@@ -224,7 +228,7 @@
 		Underneath the main iSENSE logo are two text fields that will let you know
 		who you are currently logged in as and what experiment you are currently
 		entering data for.  There are also 3 buttons and an additional text box
-		right above the list of experiment fields.  I will explain these.
+		right above the list of experiment fields.
 		
 		\n\n<i>Save:</i> This button is used to save your data set once you
 		enter data into your experiment\'s fields.  Every time you hit Save, a
@@ -244,28 +248,30 @@
 		of the session name text box. With this
 		button, you will be able to take pictures and videos that will all save to
 		your SD Card.  Since iSENSE supports pictures, these pictures will also be
-		uploaded and associated with the next data set you hit Save for.
+		uploaded and associated with the same experiment your next data set saved
+		will upload to.
 		
 		\n\nIf you have chosen a valid experiment with fields, you will see a
 		scrollable list of fields and text boxes for you to begin entering data
-		into.  This is where your data is entered.  Once all the fields you want
+		into.  Once all the fields you want
 		to fill out are filled in, you may hit Save, and these values will be
 		stored as a data set.  If a text field is labeled \"Auto\", you cannot
 		modify its value - we will fill in that value for you when you hit Save.
 		
 		\n\nAll other features and error messages will be self-explanatory
-		as they appear in the application.
+		as they appear in the Manual subapplication.
 		
 		\n\n--------
 
-		\n\nThank you for choosing to use our application - we hope you enjoy it!
+		\n\nThank you for choosing to use our Data Collector application.  We hope 
+		you enjoy using it in conjunction with the iSENSE experience!
 		
 		\n\n--------\n\n
 
 	</string>
     <string name="about_text">	    
         Welcome to the iSENSE Data Collector Android Application, developed by 
-	    UMass Lowell undergraduates Jeremy Poulin and Michael Stowell of the ECG/iSENSE 
+	    UMass Lowell undergraduates Michael Stowell and Jeremy Poulin of the ECG/iSENSE 
 	    team under Fred Martin.
 
 		\n\nThe Engaging Computing Group “develops new technologies to enable 
