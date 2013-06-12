@@ -98,14 +98,6 @@ public class pinpointInterface {
         ArrayList<String[]> records = new ArrayList<String[]>();
 
         try {
-            //Get the settings from the pinpoint
-
-            //settings = pinpoint.GetSettings();
-
-            //Get the conversions from the conversions file.
-            //System.out.println("Getting conversions");
-            //conversions = this.GetConversions();
-
             //Set up PinpointConverter
             conv = new PinpointConverter(myContext);
             
@@ -115,7 +107,6 @@ public class pinpointInterface {
 
             //Figure out how many records are stored on the pinpoint.
             final int numRecords = (((dh[0]) << 16) + ((dh[1] & 255) << 8) + (dh[2] & 255)) / 32;
-            //pdiag.setMessage("Reading "+numRecords+" data points"); //Doesn't work...
             pdiag.setMax(numRecords);
             
             //Request all data from the pinpoint.
@@ -124,9 +115,8 @@ public class pinpointInterface {
 
             System.out.println("Converting raw data");
             //Convert all data recieved from the pinpoint.
-            for (int i = 0; i < numRecords; i++) {
-            	byte[] dataLine = rawData.get(i);
-                records.add(conv.convertAll(dataLine));
+            for (byte[] b : rawData) {
+                records.add(conv.convertAll(b));
             }
 
             if (pinpoint.getSetting(PinComm.SAMPLE_RATE) < 1000) {

@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.raac.pincushion;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-import edu.uml.cs.isense.raac.Isense;
+import edu.uml.cs.isense.raac.MainActivity;
 import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 
 import android.annotation.SuppressLint;
@@ -386,19 +387,18 @@ public class BluetoothService {
 	 */
 	private class ConnectedComm extends Thread {
 		private final BluetoothSocket mmSocket;
-		private final InputStream mmInStream;
+		private final DataInputStream mmInStream;
 		private final OutputStream mmOutStream;
-		private byte nextByte, bbuff[];
 		Queue<Byte> buffer = new LinkedList<Byte>();
 		public ConnectedComm(BluetoothSocket socket) {
 			Log.d(TAG, "create Connected");
 			mmSocket = socket;
-			InputStream tmpIn = null;
+			DataInputStream tmpIn = null;
 			OutputStream tmpOut = null;
 
 			// Get the BluetoothSocket input and output streams
 			try {
-				tmpIn = socket.getInputStream();
+				tmpIn = new DataInputStream(socket.getInputStream());
 				tmpOut = socket.getOutputStream();
 			} catch (IOException e) {
 				Log.e(TAG, "temp sockets not created", e);
@@ -414,11 +414,7 @@ public class BluetoothService {
 			// Keep listening to the InputStream while connected
 			while (true) {
 				try {
-					// Read from the InputStream
-					//nextByte = (byte) mmInStream.read(bbuff);
-					if(mmInStream.available() >= 1) {
-						buffer.add( (byte) mmInStream.read() );
-					}
+					buffer.add( mmInStream.readByte() );
 					//System.out.println("buffer head: "+buffer.peek());
 				} catch (IOException e) {
 					Log.e(TAG, "disconnected", e);

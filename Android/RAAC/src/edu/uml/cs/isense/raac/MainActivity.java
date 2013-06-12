@@ -30,6 +30,7 @@ package edu.uml.cs.isense.raac;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -63,6 +64,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,7 +95,7 @@ import edu.uml.cs.isense.raac.pincushion.PinComm;
 import edu.uml.cs.isense.raac.pincushion.pinpointInterface;
 
 @SuppressLint("NewApi")
-public class Isense extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener {
 	boolean showConnectOption = false, showTimeOption = false, showSensorOption = false, connectFromSplash = true, dataRdy = false;
 	Button rcrdBtn, pushToISENSE, btnSetName;
 	ScrollView dataScroller;
@@ -101,7 +103,7 @@ public class Isense extends Activity implements OnClickListener {
 	ImageView spinner, spinner2;
 	RelativeLayout launchLayout, lastPptLayout, otherPptLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, btStatus, sensorHead, launchStatusA, lastPptName;
+	TextView minField, maxField, aveField, medField, sensorHead, launchStatusA, lastPptName;
 	LinearLayout dataLayout;
 	TextView tenPoints;
 	EditText nameField, splashNameField;
@@ -133,6 +135,8 @@ public class Isense extends Activity implements OnClickListener {
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
+
+	int lastKnownSensor = 0; //0 for temp, 24 pH
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -208,7 +212,6 @@ public class Isense extends Activity implements OnClickListener {
 		maxField = (TextView) findViewById(R.id.et_max);
 		aveField = (TextView) findViewById(R.id.et_ave);
 		medField = (TextView) findViewById(R.id.et_medi);
-		btStatus = (TextView) findViewById(R.id.statusField);
 		spinner = (ImageView) findViewById(R.id.mySpin);
 		spinner2 = (ImageView) findViewById(R.id.mySpinOther);
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
@@ -387,10 +390,18 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	private double applyFormula(int sensor, double x) {
+		BigDecimal bd, rounded;
+		double temp;
 		if(sensor == 24) {
-			return (-0.0185*x)+13.769;
+			temp = (-0.0185*x)+13.769;
+			bd = new BigDecimal(temp);
+			rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+			return rounded.doubleValue();
 		} else if(sensor == 1) {
-			return (-33.47 * Math.log(x)) + 213.85;
+			temp = (-33.47 * Math.log(x)) + 213.85;
+			bd = new BigDecimal(temp);
+			rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+			return rounded.doubleValue();
 		} else {
 			return x;
 		}
@@ -411,15 +422,15 @@ public class Isense extends Activity implements OnClickListener {
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
 		} else if (item.getItemId() == R.id.menu_setTime) {
 			if(ppi.setRealTimeClock())
-				Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 			else
-				Toast.makeText(Isense.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
 		} else if (item.getItemId() == R.id.menu_setSensors) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
 		} else if (item.getItemId() == R.id.menu_login) {
 			if (loggedIn)
-				Toast.makeText(Isense.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
 			else
 				if (rapi.isConnectedToInternet()) new PerformLogin().execute();
 		} else if (item.getItemId() == R.id.menu_settings) {
@@ -476,7 +487,7 @@ public class Isense extends Activity implements OnClickListener {
 			LostPinPoint();
 			return;
 		}
-		
+
 		final ProgressDialog progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setMessage("Please wait, reading data from PINPoint");
@@ -488,14 +499,11 @@ public class Isense extends Activity implements OnClickListener {
 
 		final Runnable toastRun = new Runnable() { 
 			public void run() { 
-				Toast.makeText(getApplicationContext(), "No data on PINPoint!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Error retrieving data from PINPoint! Please try again", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(true);
-			}
-		};
-		final Runnable toastRun2 = new Runnable() { 
-			public void run() { 
-				Toast.makeText(getApplicationContext(), "Error getting data from PINPoint!", Toast.LENGTH_SHORT).show();
-				rcrdBtn.setEnabled(true);
+				dataLayout.removeAllViews();
+				bta1Data.clear();
+				timeData.clear();
 			}
 		};
 
@@ -511,40 +519,35 @@ public class Isense extends Activity implements OnClickListener {
 					public void run(){
 
 						try {
-
 							data = ppi.getData(progressDialog);
 
-						} catch (NoDataException e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun);
-						} catch (IOException e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun2);
-						} catch (Exception e) {
-							e.printStackTrace();
-							rcrdBtn.setEnabled(true);
-						}
+							runOnUiThread(new Runnable(){
 
-						runOnUiThread(new Runnable(){
-
-							@Override
-							public void run() {
-								if(progressDialog.isShowing()) {
-									progressDialog.dismiss();
-								}
-								if (data != null) {
-									try {
-										prepDataForUpload();
-										writeDataToScreen();
-										rcrdBtn.setEnabled(true);
-									} catch (NoConnectionException e) {
-										LostPinPoint();
-										return;
+								@Override
+								public void run() {
+									if(progressDialog.isShowing()) {
+										progressDialog.dismiss();
+									}
+									if (data != null && data.size() == progressDialog.getMax()) {
+										try {
+											prepDataForUpload();
+											writeDataToScreen();
+											rcrdBtn.setEnabled(true);
+										} catch (NoConnectionException e) {
+											LostPinPoint();
+											return;
+										}
+									} else {
+										runOnUiThread(toastRun);
 									}
 								}
-							}
 
-						});
+							});
+						} catch (Exception e) {
+							e.printStackTrace();
+							runOnUiThread(toastRun);
+							Thread.currentThread().interrupt();
+						}
 					}
 
 				});
@@ -558,6 +561,7 @@ public class Isense extends Activity implements OnClickListener {
 		if (v == lastPptLayout) {
 			if(!groupName.equals("")) {
 				pressedRecent = true;
+				splashNameField.setError(null);
 				if(!defaultMac.equals("")) {
 					connectToBluetooth(defaultMac, false);
 				} else {
@@ -565,16 +569,17 @@ public class Isense extends Activity implements OnClickListener {
 					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 				}
 			} else {
-				Toast.makeText(this, "Please enter a group name first!", Toast.LENGTH_SHORT).show();
+				splashNameField.setError("A group name is required");
 			}
 		}
 		if (v == otherPptLayout) {
 			if(!groupName.equals("")) {
 				pressedRecent = false;
+				splashNameField.setError(null);
 				Intent serverIntent = new Intent(this, DeviceListActivity.class);
 				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 			} else {
-				Toast.makeText(this, "Please enter a group name first!", Toast.LENGTH_SHORT).show();
+				splashNameField.setError("A group name is required");
 			}
 		}
 		if (v == rcrdBtn) {
@@ -582,6 +587,7 @@ public class Isense extends Activity implements OnClickListener {
 			getRecords();
 		}
 		if (v == pushToISENSE) {
+			pushToISENSE.setEnabled(false);
 			try {
 				uploadData();
 			} catch (NoConnectionException e) {
@@ -597,6 +603,7 @@ public class Isense extends Activity implements OnClickListener {
 	public void setNameThing() {
 		String name = splashNameField.getText().toString();
 		if(!name.equals("")) {
+			splashNameField.setError(null);
 			groupName = name;
 			nameField.setText(groupName);
 			Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
@@ -604,7 +611,7 @@ public class Isense extends Activity implements OnClickListener {
 					Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
 		} else {
-			Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show();
+			splashNameField.setError("A group name is required");
 		}
 	}
 
@@ -618,10 +625,10 @@ public class Isense extends Activity implements OnClickListener {
 				x++;
 				switch(x) {
 				case 1:  timeData.add(formatTime(str)); 
-						 break;
+				break;
 				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
-						 data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 
-						 break;
+				data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 
+				break;
 				default: break;
 				}
 			}
@@ -701,6 +708,8 @@ public class Isense extends Activity implements OnClickListener {
 					dataLayout.addView(newRow2);
 				}
 				LinearLayout newRow3 = new LinearLayout(getBaseContext());
+				newRow3.setPadding(5, 5, 5, 5);
+				newRow3.setGravity(Gravity.CENTER_VERTICAL);
 				newRow3.setOrientation(LinearLayout.HORIZONTAL);
 				if(i%2 != 0) {
 					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
@@ -729,7 +738,7 @@ public class Isense extends Activity implements OnClickListener {
 	}
 
 	private void findStatistics() {
-		DecimalFormat form = new DecimalFormat("0.0000");
+		DecimalFormat form = new DecimalFormat("0.00");
 		double min, max, ave, med;
 		double temp = 0;
 
@@ -773,10 +782,8 @@ public class Isense extends Activity implements OnClickListener {
 
 	public void setBtStatus() {
 		if (btStatNum == 0) {
-			btStatus.setText("Status: Disconnected");
 			rcrdBtn.setEnabled(false);
 		} else if (btStatNum == 1) {
-			btStatus.setText("Status: Connected");
 			rcrdBtn.setEnabled(true);
 		}
 	}
@@ -839,11 +846,17 @@ public class Isense extends Activity implements OnClickListener {
 						tries ++;
 					}
 					if(tries < 10) {
-						Toast.makeText(Isense.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
 					} else {
-						Toast.makeText(Isense.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
 					}
 					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
+					try {
+						lastKnownSensor = ppi.getSetting(PinComm.BTA1);
+					} catch (NoConnectionException e) {
+						LostPinPoint();
+						e.printStackTrace();
+					}
 
 					if(autoRun) {
 						getRecords();
@@ -954,6 +967,12 @@ public class Isense extends Activity implements OnClickListener {
 			break;
 		case SENSOR_CHANGE:
 			// When the dialog for selecting sensors is closed
+			try {
+				lastKnownSensor = ppi.getSetting(PinComm.BTA1);
+			} catch (NoConnectionException e) {
+				LostPinPoint();
+				e.printStackTrace();
+			}
 			break;
 		case REQUEST_VIEW_DATA:
 			//When the data has been uploaded
@@ -989,7 +1008,7 @@ public class Isense extends Activity implements OnClickListener {
 		dataSet = new JSONArray();
 
 		JSONArray dataJSON;
-		if (ppi.getSetting(PinComm.BTA1) == 1 ||  ppi.getSetting(PinComm.BTA1) == 24) //PINPoint is set to use Temperature Probe
+		if (lastKnownSensor == 1 || lastKnownSensor == 24) //PINPoint is set to use Temperature Probe or pH Sensor
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONArray();
 				dataJSON.put(timeData.get(i));
@@ -1033,7 +1052,7 @@ public class Isense extends Activity implements OnClickListener {
 				}
 				else {
 					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
-						Toast.makeText(Isense.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
 					}
 				}
 			} else sessionUrl = baseSessionUrl;
@@ -1046,7 +1065,7 @@ public class Isense extends Activity implements OnClickListener {
 	private class UploadTask extends AsyncTask <Void, Integer, Void> {
 
 		@Override protected void onPreExecute() {
-			dia = new ProgressDialog(Isense.this);
+			dia = new ProgressDialog(MainActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
@@ -1071,9 +1090,13 @@ public class Isense extends Activity implements OnClickListener {
 			if (!(sessionUrl.equals(baseSessionUrl))) {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(sessionUrl));
+				rcrdBtn.setEnabled(false);
+				showSensorOption = false;
+				showTimeOption = false;
+				invalidateOptionsMenu();
 				startActivity(i);  
 			} else {
-				Toast.makeText(Isense.this, "Upload failed. Check your internet connection, and make sure the experiment is not closed.", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Upload failed. Check your internet connection, and make sure the experiment is not closed.", Toast.LENGTH_LONG).show();
 				dataRdy = true;
 				pushToISENSE.setEnabled(true);
 			}
@@ -1083,7 +1106,7 @@ public class Isense extends Activity implements OnClickListener {
 	//String formatter
 	public String formatTime(String temp) {
 		String dataString = "";
-		
+
 		long unixTs = 0;
 		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z");
 		Date parsed;
@@ -1116,7 +1139,7 @@ public class Isense extends Activity implements OnClickListener {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			Toast.makeText(Isense.this, "Logged in!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "Logged in!", Toast.LENGTH_SHORT).show();
 		}
 
 	}
