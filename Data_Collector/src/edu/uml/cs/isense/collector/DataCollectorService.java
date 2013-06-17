@@ -29,7 +29,7 @@ public class DataCollectorService extends Service {
 
 	// Objects sent in from the DataCollector class
 	public static final String SRATE = "srate";
-	private static long srate     = DataCollector.S_INTERVAL;
+	private static long srate = DataCollector.S_INTERVAL;
 	public static final String REC_LENGTH = "rec_length";
 	private static long  recLength = DataCollector.TEST_LENGTH;
 

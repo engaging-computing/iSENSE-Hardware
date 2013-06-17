@@ -45,6 +45,9 @@ public class DataFieldManager extends Application {
 	}
 
 	public void getOrder() {
+		if (!order.isEmpty())
+			return;
+			
 		if (eid == -1) {
 			order.add(mContext.getString(R.string.time));
 			order.add(mContext.getString(R.string.accel_x));
@@ -66,7 +69,7 @@ public class DataFieldManager extends Application {
 			order.add(mContext.getString(R.string.temperature_f));
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
-		
+
 			expFields = rapi.getExperimentFields(eid);
 
 			for (ExperimentField field : expFields) {
