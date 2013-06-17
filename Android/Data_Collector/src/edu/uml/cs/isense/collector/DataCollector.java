@@ -668,17 +668,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
 
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			
 			step3.setText(getResources().getString(R.string.step3));
+			
 			if (resultCode == RESULT_OK) {
-				
 				sessionDescription = data.getStringExtra("description");
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
 				w.make("Data set deleted", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
+				OrientationManager.enableRotation((Activity) mContext);
 			}
-
+			
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 
 			boolean success = uq.buildQueueFromFile();
@@ -720,20 +722,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
-			try { // TODO - no internet, give up?
-				if (loc != null) {
-					address = new Geocoder(DataCollector.this,
-							Locale.getDefault()).getFromLocation(
-							loc.getLatitude(), loc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
+			if (rapi.isConnectedToInternet()){
+				try {
+					if (loc != null) {
+						address = new Geocoder(DataCollector.this,
+								Locale.getDefault()).getFromLocation(
+										loc.getLatitude(), loc.getLongitude(), 1);
+						if (address.size() > 0) {
+							city = address.get(0).getLocality();
+							state = address.get(0).getAdminArea();
+							country = address.get(0).getCountryName();
+							addr = address.get(0).getAddressLine(0);
+						}
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 
 			// Prepare description for data set
@@ -1016,7 +1020,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// (currently 2 of these methods exist - one also in step1setup)
 	private void getEnabledFields() {
 
-		try { // TODO - check only first for null?
+		try {
 			for (String s : acceptedFields) { if (s.length() != 0) break; }
 		} catch (NullPointerException e) {
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
@@ -1417,7 +1421,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					
 					stopService(new Intent(mContext, DataCollectorService.class));
 					
-					OrientationManager.enableRotation((Activity) mContext);
+					//OrientationManager.enableRotation((Activity) mContext);
 
 					writeToSDCard(null, 'f');
 					setMenuStatus(true);
