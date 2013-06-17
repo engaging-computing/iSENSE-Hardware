@@ -36,6 +36,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
@@ -131,6 +132,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private String dateString;
 	RestAPI rapi;
+	
+	private boolean x = false, y = false, z = false, mag = false;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -204,8 +207,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		if (running)
 			showDialog(DIALOG_FORCE_STOP);
 
-		startStop.getBackground().setColorFilter(0xFFFF0000,
-				PorterDuff.Mode.MULTIPLY);
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
@@ -230,8 +231,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 						timeTimer.cancel();
 						count++;
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
+						startStop.getBackground().clearColorFilter();
 						choiceViaMenu = false;
 
 						if (!appTimedOut)
@@ -255,8 +255,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 						timeTimer.cancel();
 						count++;
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
+						startStop.getBackground().clearColorFilter();
 						choiceViaMenu = false;
 					}
 
@@ -484,6 +483,35 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
+		SharedPreferences prefs = getSharedPreferences(RecordSettings.RECORD_SETTINGS, 0) ;
+		
+		x = prefs.getBoolean("X", x);
+		y = prefs.getBoolean("Y", y);
+		z = prefs.getBoolean("Z", z);
+		mag = prefs.getBoolean("Magnitude", mag);
+	
+		String dataLabel = "";
+		
+		if (x){
+			dataLabel += "X: ";
+		}
+		if (y){
+			if (x){
+				dataLabel += " , Y: ";
+			}
+			else
+				dataLabel += "Y: ";
+		}
+		if (z){
+			if (x || y){
+				dataLabel += " , Z: ";
+			}
+			else
+				dataLabel += "Z: ";
+		}
+		
+		values.setText(dataLabel);
+		
 		if (running)
 			showDialog(DIALOG_FORCE_STOP);
 		if (!rapi.isConnectedToInternet())
@@ -530,6 +558,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			AlertDialog login = loginDialog(this, "Login to iSENSE");
 			login.show();
 			return true;
+		case R.id.record_settings:
+			startActivity(new Intent(this,RecordSettings.class));
 		}
 		return false;
 	}
@@ -544,22 +574,47 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
 
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+			
 			rawAccel = event.values.clone();
-			// accel[0] = event.values[0];
+			accel[0] = event.values[0];
 			accel[1] = event.values[1];
-			// accel[2] = event.values[2];
+			accel[2] = event.values[2];
+			
+			String xPrepend, yPrepend, zPrepend, data = "";
+			
+			xPrepend = accel[0] > 0 ? "+" : "";
+			yPrepend = accel[1] > 0 ? "+" : "";
+			zPrepend = accel[2] > 0 ? "+" : "";
+			
+			if ( mag )
+			accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2) +
+					Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+			
+			if (x) {
+				data = "X: " + xPrepend + oneDigit.format(accel[0]) ;
+			}
+			if (y) {
+				if (!data.equals("")){
+					data += " , Y: " + yPrepend + oneDigit.format(accel[1]);
+				} else {
+					data += "Y: " + yPrepend + oneDigit.format(accel[1]) ;
+				}
+			}
+			if (z) {
+				if (!data.equals("")){
+					data += " , Z: " + zPrepend + oneDigit.format(accel[2]);
+				} else {
+					data += "Z: " + zPrepend + oneDigit.format(accel[2]) ;
+				}
+			}
+			
 
-			// String xPrepend = accel[0] > 0 ? "+" : "";
-			String yPrepend = accel[1] > 0 ? "+" : "";
-			// String zPrepend = accel[2] > 0 ? "+" : "";
 
 			if (count == 0) {
-				values.setText("Y: " + yPrepend + oneDigit.format(accel[1]));
+				values.setText(data);
 				// + ", Z: " + zPrepend + oneDigit.format(accel[2]));
 			}
 
-			// accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2) +
-			// Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			rawMag = event.values.clone();

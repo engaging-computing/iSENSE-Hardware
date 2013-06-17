@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical" >
 
@@ -17,7 +17,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="2dp"
             android:background="#000033"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
@@ -27,13 +26,13 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/values"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/black"
                 android:text="Y: "
@@ -64,7 +63,8 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:text="Hold to Start"
-            android:textSize="30dip" />
+            android:textColor="@android:color/black"
+            android:textSize="30dp" />
 
         <TextView
             android:id="@+id/loginStatus"

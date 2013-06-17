@@ -37,12 +37,18 @@ public final class R {
     public static final class id {
         public static final int ExperimentSearchInput=0x7f090012;
         public static final int ImageViewLogo=0x7f09001a;
+        public static final int LinearLayout1=0x7f090038;
         public static final int OkButton=0x7f090007;
-        public static final int about_app=0x7f09003d;
+        public static final int about_app=0x7f090044;
         public static final int bottomtext=0x7f090011;
+        public static final int button1=0x7f09003e;
         public static final int buttons=0x7f09002b;
         public static final int cancel=0x7f090035;
         public static final int check_layout=0x7f090027;
+        public static final int checkedTextView1=0x7f09003a;
+        public static final int checkedTextView2=0x7f09003b;
+        public static final int checkedTextView3=0x7f09003c;
+        public static final int checkedTextView4=0x7f09003d;
         public static final int description=0x7f09002a;
         public static final int edit_row_label=0x7f090000;
         public static final int edit_row_text=0x7f090001;
@@ -59,7 +65,7 @@ public final class R {
         public static final int initialLabel=0x7f090005;
         public static final int itemContent=0x7f09000f;
         public static final int layout_root=0x7f090002;
-        public static final int login=0x7f09003e;
+        public static final int login=0x7f090045;
         public static final int loginRegisterErrorTextView=0x7f090019;
         public static final int loginStatus=0x7f09001e;
         public static final int name=0x7f090028;
@@ -84,20 +90,22 @@ public final class R {
         public static final int queueedit_edit=0x7f090030;
         public static final int queueedit_okay=0x7f090032;
         public static final int queueprompt_scroll=0x7f090037;
+        public static final int record_settings=0x7f090046;
         public static final int root=0x7f090014;
         public static final int scrollqueue=0x7f090034;
         public static final int startStop=0x7f09001d;
-        public static final int text=0x7f09003a;
-        public static final int toast_layout_root=0x7f090038;
+        public static final int text=0x7f090041;
+        public static final int textView1=0x7f090039;
+        public static final int toast_layout_root=0x7f09003f;
         public static final int toptext=0x7f090010;
         public static final int trobber=0x7f090013;
         public static final int upload=0x7f090036;
         public static final int userNameEditText=0x7f090016;
         public static final int userNameTextView=0x7f090015;
         public static final int values=0x7f09001b;
-        public static final int waffle_check=0x7f090039;
-        public static final int waffle_warn=0x7f09003b;
-        public static final int waffle_x=0x7f09003c;
+        public static final int waffle_check=0x7f090040;
+        public static final int waffle_warn=0x7f090042;
+        public static final int waffle_x=0x7f090043;
     }
     public static final class layout {
         public static final int edit_row=0x7f030000;
@@ -115,9 +123,10 @@ public final class R {
         public static final int queueedit_data=0x7f03000c;
         public static final int queueedit_rename=0x7f03000d;
         public static final int queueprompt=0x7f03000e;
-        public static final int toast_layout_check=0x7f03000f;
-        public static final int toast_layout_warning=0x7f030010;
-        public static final int toast_layout_x=0x7f030011;
+        public static final int record_settings=0x7f03000f;
+        public static final int toast_layout_check=0x7f030010;
+        public static final int toast_layout_warning=0x7f030011;
+        public static final int toast_layout_x=0x7f030012;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -126,6 +135,9 @@ public final class R {
         public static final int beep=0x7f040000;
     }
     public static final class string {
+        public static final int X=0x7f05003b;
+        public static final int Y=0x7f05003c;
+        public static final int Z=0x7f05003d;
         public static final int about_app=0x7f050034;
         public static final int about_title=0x7f050037;
         /**  3  
@@ -154,6 +166,7 @@ public final class R {
         public static final int contentDesc=0x7f050018;
         public static final int delete=0x7f050020;
         public static final int digits_restriction=0x7f05001b;
+        public static final int done=0x7f05003f;
         public static final int eula=0x7f050036;
         public static final int experiments_no_items=0x7f050029;
         /**  10 
@@ -178,6 +191,7 @@ public final class R {
         /**  15 
          */
         public static final int luminous_flux=0x7f050011;
+        public static final int mag=0x7f05003e;
         /**  9  
          */
         public static final int magnetic_total=0x7f05000b;
@@ -204,6 +218,7 @@ public final class R {
         public static final int qr_prompt=0x7f05002b;
         public static final int queue_alter=0x7f05001d;
         public static final int queue_rename=0x7f05001c;
+        public static final int recordSettings=0x7f05003a;
         public static final int rename=0x7f05001e;
         public static final int rides_prompt=0x7f050033;
         public static final int scan_qr=0x7f050025;

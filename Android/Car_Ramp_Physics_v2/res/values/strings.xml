@@ -272,5 +272,11 @@
 	<string name="about_title">About</string>
 	<string name="login_title">Login</string>
 	<string name="logged_in_as">Logged In As:</string>
+	<string name="recordSettings">Record Settings</string>
+	<string name="X">X</string>
+	<string name="Y">Y</string>
+	<string name="Z">Z</string>
+	<string name="mag">Magnitude</string>
+	<string name="done">Done</string>
     
 </resources>
