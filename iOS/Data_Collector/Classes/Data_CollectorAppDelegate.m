@@ -90,24 +90,12 @@
   */
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (!managedObjectModel)
-    {
-        
-        NSMutableArray *allManagedObjectModels = [[NSMutableArray alloc] init];
-        
-        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Data_Collector" withExtension:@"momd"];
-        managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-        [allManagedObjectModels addObject:projectManagedObjectModel];
-        [projectManagedObjectModel release];
-        
-        NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"MyStaticLibraryModels" ofType:@"bundle"];
-        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"MyStaticLibraryModels" withExtension:@"mom"];
-        NSManagedObjectModel *staticLibraryMOM = [[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL];
-        [allManagedObjectModels addObject:staticLibraryMOM];
-        [staticLibraryMOM release];
-        
-        managedObjectModel_ = [NSManagedObjectModel modelByMergingModels:allManagedObjectModels];
-        [allManagedObjectModels release];        NSLog(@"%@", managedObjectModel.entities.description);
+    if (!managedObjectModel) {
+
+        NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
+        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"mom"];
+        managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
+        NSLog(@"%d", managedObjectModel.entities.count);
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();

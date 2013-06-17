@@ -87,6 +87,13 @@
 			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
 			remoteInfo = iSENSE_API_Bundle;
 		};
+		3921701E176FA08D0070DFCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39216FDC176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
 		3987713916DFB2F300DBDE56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
@@ -600,6 +607,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3921701F176FA08D0070DFCC /* PBXTargetDependency */,
 				39A1CC2416DFB43F00B1979F /* PBXTargetDependency */,
 				B7DD76D216B86550000B0CCF /* PBXTargetDependency */,
 			);
@@ -751,6 +759,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3921701F176FA08D0070DFCC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API_Bundle;
+			targetProxy = 3921701E176FA08D0070DFCC /* PBXContainerItemProxy */;
+		};
 		39A1CC2416DFB43F00B1979F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = iSENSE_API;
