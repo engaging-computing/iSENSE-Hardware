@@ -36,6 +36,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -68,8 +69,11 @@ import edu.uml.cs.isense.comm.RestAPI;
 public class CarRampPhysics extends Activity implements SensorEventListener, LocationListener {
     
 	private static String experimentNumber = "409";        // HARD CODED
-	private static String userName         = "accelapp";   // HARD CODED
-	private static String password         = "ecgrul3s";   // HARD CODED
+//	private static String userName         = "accelapp";   // HARD CODED
+//	private static String password         = "ecgrul3s";   // HARD CODED
+	private static String userName = "sor";
+	private static String password = "sor";
+	
 	private static String baseSessionUrl   = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	private static String marketUrl        = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
 	private static String sessionUrl = "";
@@ -168,10 +172,13 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
         mContext = this;
         
         Display deviceDisplay = getWindowManager().getDefaultDisplay(); 
-    	mwidth  = deviceDisplay.getWidth();
-    	mheight = deviceDisplay.getHeight();
+        Point size = new Point();
+        deviceDisplay.getSize(size);
+    	mwidth  = size.x;
+    	mheight = size.y;
         
         rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+        rapi.useDev(true);
         
         // where login was
         
