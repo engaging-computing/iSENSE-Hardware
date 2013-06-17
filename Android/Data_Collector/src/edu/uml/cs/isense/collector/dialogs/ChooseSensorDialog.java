@@ -100,7 +100,12 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 							SensorTypes.AMBIENT_TEMPERATURE);
 				}
 
-				scrollViewLayout.addView(v);
+				LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+					     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+				layoutParams.setMargins(1, 1, 1, 1);
+				
+				scrollViewLayout.addView(v, layoutParams);
 				v.setOnClickListener(this);
 
 				if (field.equals(getString(R.string.null_string))) {
@@ -134,7 +139,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 
 	// Automatically Compatible
 	void setCompatibility(TextView tv, CheckedTextView ctv) {
-		tv.setTextColor(Color.GREEN);
+		tv.setTextColor(Color.parseColor("#00AA00"));
 		tv.setText(R.string.compatible);
 		ctv.setChecked(true);
 	}
@@ -142,11 +147,11 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	// Check compatibility against SensorTypes
 	void setCompatibility(TextView tv, CheckedTextView ctv, SensorTypes sensor) {
 		if (sensors.isCompatible(sensor)) {
-			tv.setTextColor(Color.GREEN);
+			tv.setTextColor(Color.parseColor("#00AA00"));
 			tv.setText(R.string.compatible);
 			ctv.setChecked(true);
 		} else {
-			tv.setTextColor(Color.RED);
+			tv.setTextColor(Color.parseColor("#AA0000"));
 			tv.setText(R.string.incompatible);
 			ctv.setChecked(false);
 			ctv.setCheckMarkDrawable(R.drawable.red_x);
@@ -157,11 +162,11 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	void setCompatibility(TextView tv, CheckedTextView ctv,
 			SensorTypes sensor1, SensorTypes sensor2) {
 		if (sensors.isCompatible(sensor1) && sensors.isCompatible(sensor2)) {
-			tv.setTextColor(Color.GREEN);
+			tv.setTextColor(Color.parseColor("#00AA00"));
 			tv.setText(R.string.compatible);
 			ctv.setChecked(true);
 		} else {
-			tv.setTextColor(Color.RED);
+			tv.setTextColor(Color.parseColor("#AA0000"));
 			tv.setText(R.string.incompatible);
 			ctv.setChecked(false);
 			ctv.setCheckMarkDrawable(R.drawable.red_x);
@@ -189,7 +194,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			if (ctv.isChecked())
 				ctv.setCheckMarkDrawable(R.drawable.red_x);
 			else
-				ctv.setCheckMarkDrawable(R.drawable.bluecheck);
+				ctv.setCheckMarkDrawable(R.drawable.checkmark);
 			ctv.toggle();
 			break;
 		}

@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_sync_time"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -17,8 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/instructions"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="#0066FF" />
     </LinearLayout>
 
     <ScrollView
@@ -69,19 +68,23 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/buttons_sync_time"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/button_rsense"
                 android:text="@string/send"
-                android:textColor="#FFFFFF" />
+                android:textColor="#0066FF" />
 
             <Button
                 android:id="@+id/receiveButton"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginBottom="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/buttons_sync_time"
+                android:background="@drawable/button_rsense"
                 android:text="@string/receive"
-                android:textColor="#FFFFFF" />
+                android:textColor="#0066FF" />
         </LinearLayout>
 
         <LinearLayout
@@ -96,19 +99,23 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/buttons_sync_time"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/button_rsense"
                 android:text="@android:string/cancel"
-                android:textColor="#FFFFFF" />
+                android:textColor="#0066FF" />
             
             <Button
                 android:id="@+id/resetButton"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/buttons_sync_time"
+                android:background="@drawable/button_rsense"
                 android:text="@string/reset"
-                android:textColor="#FFFFFF" />
+                android:textColor="#0066FF" />
 
         </LinearLayout>
     </LinearLayout>
