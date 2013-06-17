@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		39216FCB176F5BD40070DFCC /* DataSet.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 3981B4AF17626FD90030ACE5 /* DataSet.h */; };
-		39216FCC176F5BD40070DFCC /* DataSetQ.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */; };
-		39216FCD176F5BD40070DFCC /* Queue.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39EFB9EB172AD8F800A6BD2A /* Queue.h */; };
-		39216FCE176F5BD40070DFCC /* DataSaver.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */; };
-		39216FCF176F5BD40070DFCC /* DataSetModel.xcdatamodeld in Copy Files */ = {isa = PBXBuildFile; fileRef = 39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */; };
 		39216FD0176F5BD40070DFCC /* Experiment.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39216FD1176F5BD40070DFCC /* ExperimentField.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39216FD2176F5BD40070DFCC /* Image.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
@@ -23,20 +18,12 @@
 		39216FD8176F5BD40070DFCC /* iSENSE_API-Prefix.pch in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */; };
 		39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39216FDE176F5C790070DFCC /* CoreFoundation.framework */; };
 		39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39216FE3176F5C790070DFCC /* InfoPlist.strings */; };
-		39216FEA176F5CD10070DFCC /* DataSaver.m in Resources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
-		39216FEB176F5CD10070DFCC /* DataSetModel.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */; };
-		39216FEC176F5CD10070DFCC /* DataSet.m in Resources */ = {isa = PBXBuildFile; fileRef = 3981B4B017626FD90030ACE5 /* DataSet.m */; };
-		39216FED176F5CD10070DFCC /* DataSetQ.m in Resources */ = {isa = PBXBuildFile; fileRef = 39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */; };
-		39216FEE176F5CD10070DFCC /* Queue.m in Resources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
-		39216FEF176F5CD10070DFCC /* iSENSE.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
-		39216FF0176F5CD10070DFCC /* Experiment.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
-		39216FF1176F5CD10070DFCC /* ExperimentField.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF261D16DFA8760062C3DC /* ExperimentField.m */; };
-		39216FF2176F5CD10070DFCC /* Image.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF261E16DFA8760062C3DC /* Image.m */; };
-		39216FF3176F5CD10070DFCC /* Item.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF261F16DFA8760062C3DC /* Item.m */; };
-		39216FF4176F5CD10070DFCC /* Person.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
-		39216FF5176F5CD10070DFCC /* Session.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
-		39216FF6176F5CD10070DFCC /* SessionData.m in Resources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
-		3981B4B117626FD90030ACE5 /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 3981B4AF17626FD90030ACE5 /* DataSet.h */; };
+		3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFD176F7ACA0070DFCC /* DataSaver.h */; };
+		3921700D176F7ACA0070DFCC /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFE176F7ACA0070DFCC /* DataSet.h */; };
+		3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
+		3921700F176F7ACA0070DFCC /* DataSetQ.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217001176F7ACA0070DFCC /* DataSetQ.h */; };
+		39217017176F7ACA0070DFCC /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217009176F7ACA0070DFCC /* Queue.h */; };
+		3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
 		3981B4B217626FD90030ACE5 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3981B4B017626FD90030ACE5 /* DataSet.m */; };
 		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
@@ -46,14 +33,10 @@
 		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
-		39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */; };
 		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
 		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
-		39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
-		39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9EB172AD8F800A6BD2A /* Queue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39EFB9F3172ADFE000A6BD2A /* DataSetQ.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */; };
-		39EFB9F4172ADFE000A6BD2A /* DataSetQ.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
 		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
 		39FF262416DFA8760062C3DC /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
@@ -72,11 +55,6 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				39216FCB176F5BD40070DFCC /* DataSet.h in Copy Files */,
-				39216FCC176F5BD40070DFCC /* DataSetQ.h in Copy Files */,
-				39216FCD176F5BD40070DFCC /* Queue.h in Copy Files */,
-				39216FCE176F5BD40070DFCC /* DataSaver.h in Copy Files */,
-				39216FCF176F5BD40070DFCC /* DataSetModel.xcdatamodeld in Copy Files */,
 				39216FD0176F5BD40070DFCC /* Experiment.h in Copy Files */,
 				39216FD1176F5BD40070DFCC /* ExperimentField.h in Copy Files */,
 				39216FD2176F5BD40070DFCC /* Image.h in Copy Files */,
@@ -98,16 +76,16 @@
 		39216FE2176F5C790070DFCC /* iSENSE_API_Bundle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iSENSE_API_Bundle-Info.plist"; sourceTree = "<group>"; };
 		39216FE4176F5C790070DFCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API_Bundle-Prefix.pch"; sourceTree = "<group>"; };
-		3981B4AF17626FD90030ACE5 /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
+		39216FFD176F7ACA0070DFCC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
+		39216FFE176F7ACA0070DFCC /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = headers/DataSet.h; sourceTree = "<group>"; };
+		39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
+		39217001176F7ACA0070DFCC /* DataSetQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSetQ.h; path = headers/DataSetQ.h; sourceTree = "<group>"; };
+		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
 		3981B4B017626FD90030ACE5 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
-		39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
-		39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSaver.h; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
-		39EFB9EB172AD8F800A6BD2A /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSetQ.m; sourceTree = "<group>"; };
-		39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSetQ.h; sourceTree = "<group>"; };
 		39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FF25E316DFA28A0062C3DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API-Prefix.pch"; sourceTree = "<group>"; };
@@ -188,10 +166,10 @@
 		39EFB9EE172ADA1F00A6BD2A /* queue_headers */ = {
 			isa = PBXGroup;
 			children = (
-				3981B4AF17626FD90030ACE5 /* DataSet.h */,
-				39EFB9F2172ADFE000A6BD2A /* DataSetQ.h */,
-				39EFB9EB172AD8F800A6BD2A /* Queue.h */,
-				39EFB9E6172AD6BC00A6BD2A /* DataSaver.h */,
+				39216FFE176F7ACA0070DFCC /* DataSet.h */,
+				39216FFD176F7ACA0070DFCC /* DataSaver.h */,
+				39217001176F7ACA0070DFCC /* DataSetQ.h */,
+				39217009176F7ACA0070DFCC /* Queue.h */,
 			);
 			name = queue_headers;
 			sourceTree = "<group>";
@@ -208,7 +186,7 @@
 		39EFB9F0172ADF8F00A6BD2A /* dataset */ = {
 			isa = PBXGroup;
 			children = (
-				39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */,
+				39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */,
 				3981B4B017626FD90030ACE5 /* DataSet.m */,
 				39EFB9F1172ADFE000A6BD2A /* DataSetQ.m */,
 			);
@@ -319,10 +297,10 @@
 				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
 				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
 				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
-				39EFB9E8172AD6BC00A6BD2A /* DataSaver.h in Headers */,
-				39EFB9ED172AD8F800A6BD2A /* Queue.h in Headers */,
-				39EFB9F4172ADFE000A6BD2A /* DataSetQ.h in Headers */,
-				3981B4B117626FD90030ACE5 /* DataSet.h in Headers */,
+				3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */,
+				3921700D176F7ACA0070DFCC /* DataSet.h in Headers */,
+				3921700F176F7ACA0070DFCC /* DataSetQ.h in Headers */,
+				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,19 +374,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39216FEA176F5CD10070DFCC /* DataSaver.m in Resources */,
-				39216FEB176F5CD10070DFCC /* DataSetModel.xcdatamodeld in Resources */,
-				39216FEC176F5CD10070DFCC /* DataSet.m in Resources */,
-				39216FED176F5CD10070DFCC /* DataSetQ.m in Resources */,
-				39216FEE176F5CD10070DFCC /* Queue.m in Resources */,
-				39216FEF176F5CD10070DFCC /* iSENSE.m in Resources */,
-				39216FF0176F5CD10070DFCC /* Experiment.m in Resources */,
-				39216FF1176F5CD10070DFCC /* ExperimentField.m in Resources */,
-				39216FF2176F5CD10070DFCC /* Image.m in Resources */,
-				39216FF3176F5CD10070DFCC /* Item.m in Resources */,
-				39216FF4176F5CD10070DFCC /* Person.m in Resources */,
-				39216FF5176F5CD10070DFCC /* Session.m in Resources */,
-				39216FF6176F5CD10070DFCC /* SessionData.m in Resources */,
 				39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -420,6 +385,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,8 +404,8 @@
 				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				39EFB9F3172ADFE000A6BD2A /* DataSetQ.m in Sources */,
-				39A55B1C17304A46009596DF /* DataSetModel.xcdatamodeld in Sources */,
 				3981B4B217626FD90030ACE5 /* DataSet.m in Sources */,
+				3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,7 +426,6 @@
 		39216FE8176F5C790070DFCC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -472,7 +437,6 @@
 				INFOPLIST_FILE = "iSENSE_API_Bundle/iSENSE_API_Bundle-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = bundle;
@@ -482,7 +446,6 @@
 		39216FE9176F5C790070DFCC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -615,13 +578,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		39A55B1A17304A46009596DF /* DataSetModel.xcdatamodeld */ = {
+		39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */,
+				39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */,
 			);
-			currentVersion = 39A55B1B17304A46009596DF /* DataSetModel.xcdatamodel */;
-			path = DataSetModel.xcdatamodeld;
+			currentVersion = 39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */;
+			name = DataSetModel.xcdatamodeld;
+			path = headers/DataSetModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -17,8 +17,8 @@
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
 #import "DataFieldManager.h"
-#import <iSENSE_API/DataSaver.h>
-#import <iSENSE_API/DataSet.h>
+#import <iSENSE_API/Headers/DataSaver.h>
+#import <iSENSE_API/Headers/DataSet.h>
 #import "Data_CollectorAppDelegate.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, ZXingDelegate, UITextFieldDelegate>  {

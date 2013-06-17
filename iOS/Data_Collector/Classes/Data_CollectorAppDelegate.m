@@ -85,18 +85,29 @@
 
 
 /**
- Returns the managed object model for the application.
- If the model doesn't already exist, it is created by merging all of the models found in the application bundle.
- */
+  * Returns the managed object model for the application.
+  *If the model doesn't already exist, it is created by merging all of the models found in the application bundle.
+  */
 - (NSManagedObjectModel *)managedObjectModel
 {
     if (!managedObjectModel)
     {
-    	NSMutableSet *allBundles = [[[NSMutableSet alloc] init] autorelease];
-    	[allBundles addObjectsFromArray: [NSBundle allBundles]];
-    	[allBundles addObjectsFromArray: [NSBundle allFrameworks]];
         
-    	managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles: [allBundles allObjects]] retain];
+        NSMutableArray *allManagedObjectModels = [[NSMutableArray alloc] init];
+        
+        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Data_Collector" withExtension:@"momd"];
+        managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+        [allManagedObjectModels addObject:projectManagedObjectModel];
+        [projectManagedObjectModel release];
+        
+        NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"MyStaticLibraryModels" ofType:@"bundle"];
+        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"MyStaticLibraryModels" withExtension:@"mom"];
+        NSManagedObjectModel *staticLibraryMOM = [[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL];
+        [allManagedObjectModels addObject:staticLibraryMOM];
+        [staticLibraryMOM release];
+        
+        managedObjectModel_ = [NSManagedObjectModel modelByMergingModels:allManagedObjectModels];
+        [allManagedObjectModels release];        NSLog(@"%@", managedObjectModel.entities.description);
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();
