@@ -668,17 +668,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
 
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			
 			step3.setText(getResources().getString(R.string.step3));
+			
 			if (resultCode == RESULT_OK) {
-				
 				sessionDescription = data.getStringExtra("description");
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
 				w.make("Data set deleted", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
+				OrientationManager.enableRotation((Activity) mContext);
 			}
-
+			
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 
 			boolean success = uq.buildQueueFromFile();
@@ -720,20 +722,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
-			try {
-				if (loc != null) {
-					address = new Geocoder(DataCollector.this,
-							Locale.getDefault()).getFromLocation(
-							loc.getLatitude(), loc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
+			if (rapi.isConnectedToInternet()){
+				try {
+					if (loc != null) {
+						address = new Geocoder(DataCollector.this,
+								Locale.getDefault()).getFromLocation(
+										loc.getLatitude(), loc.getLongitude(), 1);
+						if (address.size() > 0) {
+							city = address.get(0).getLocality();
+							state = address.get(0).getAdminArea();
+							country = address.get(0).getCountryName();
+							addr = address.get(0).getAddressLine(0);
+						}
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 
 			// Prepare description for data set
@@ -993,6 +997,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void initDfm() {
+		
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		String experimentInput = mPrefs.getString("experiment_id", "");
 
@@ -1027,58 +1032,58 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[Fields.TIME] = true;
 
-			if (s.equals(getString(R.string.accel_x)))
+			else if (s.equals(getString(R.string.accel_x)))
 				dfm.enabledFields[Fields.ACCEL_X] = true;
 
-			if (s.equals(getString(R.string.accel_y)))
+			else if (s.equals(getString(R.string.accel_y)))
 				dfm.enabledFields[Fields.ACCEL_Y] = true;
 
-			if (s.equals(getString(R.string.accel_z)))
+			else if (s.equals(getString(R.string.accel_z)))
 				dfm.enabledFields[Fields.ACCEL_Z] = true;
 
-			if (s.equals(getString(R.string.accel_total)))
+			else if (s.equals(getString(R.string.accel_total)))
 				dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
 
-			if (s.equals(getString(R.string.latitude)))
+			else if (s.equals(getString(R.string.latitude)))
 				dfm.enabledFields[Fields.LATITUDE] = true;
 
-			if (s.equals(getString(R.string.longitude)))
+			else if (s.equals(getString(R.string.longitude)))
 				dfm.enabledFields[Fields.LONGITUDE] = true;
 
-			if (s.equals(getString(R.string.magnetic_x)))
+			else if (s.equals(getString(R.string.magnetic_x)))
 				dfm.enabledFields[Fields.MAG_X] = true;
 
-			if (s.equals(getString(R.string.magnetic_y)))
+			else if (s.equals(getString(R.string.magnetic_y)))
 				dfm.enabledFields[Fields.MAG_Y] = true;
 
-			if (s.equals(getString(R.string.magnetic_z)))
+			else if (s.equals(getString(R.string.magnetic_z)))
 				dfm.enabledFields[Fields.MAG_Z] = true;
 
-			if (s.equals(getString(R.string.magnetic_total)))
+			else if (s.equals(getString(R.string.magnetic_total)))
 				dfm.enabledFields[Fields.MAG_TOTAL] = true;
 
-			if (s.equals(getString(R.string.heading_deg)))
+			else if (s.equals(getString(R.string.heading_deg)))
 				dfm.enabledFields[Fields.HEADING_DEG] = true;
 
-			if (s.equals(getString(R.string.heading_rad)))
+			else if (s.equals(getString(R.string.heading_rad)))
 				dfm.enabledFields[Fields.HEADING_RAD] = true;
 
-			if (s.equals(getString(R.string.temperature_c)))
+			else if (s.equals(getString(R.string.temperature_c)))
 				dfm.enabledFields[Fields.TEMPERATURE_C] = true;
 
-			if (s.equals(getString(R.string.temperature_f)))
+			else if (s.equals(getString(R.string.temperature_f)))
 				dfm.enabledFields[Fields.TEMPERATURE_F] = true;
 
-			if (s.equals(getString(R.string.temperature_k)))
+			else if (s.equals(getString(R.string.temperature_k)))
 				dfm.enabledFields[Fields.TEMPERATURE_K] = true;
 
-			if (s.equals(getString(R.string.pressure)))
+			else if (s.equals(getString(R.string.pressure)))
 				dfm.enabledFields[Fields.PRESSURE] = true;
 
-			if (s.equals(getString(R.string.altitude)))
+			else if (s.equals(getString(R.string.altitude)))
 				dfm.enabledFields[Fields.ALTITUDE] = true;
 
-			if (s.equals(getString(R.string.luminous_flux)))
+			else if (s.equals(getString(R.string.luminous_flux)))
 				dfm.enabledFields[Fields.LIGHT] = true;
 
 		}
@@ -1159,70 +1164,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		initLocations();
 	}
-	
-	/*private void performCredentialChecks() {
-		if (rapi.isConnectedToInternet()) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					DataCollector.mContext,
-					DataCollector.mContext.getSharedPreferences("USER_INFO",
-							Context.MODE_PRIVATE));
-
-			if (!(mPrefs.getString("username", "").equals(""))) {
-				login();
-				checkExpNumCredentials();
-			} else {
-				Intent iCanLogin = new Intent(mContext, CanLogin.class);
-				startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
-			}
-		} else {
-			checkExpNumCredentials();
-		}
-	}
-	
-	private void checkExpNumCredentials() {
-		if (rapi.isConnectedToInternet())
-			checkExpNumCredentialsWithConnectivity();
-		else
-			checkExpNumCredentialsWithoutConnectivity();
-	}
-	
-	private void checkExpNumCredentialsWithConnectivity() {
-		SharedPreferences expPrefs = getSharedPreferences("EID", 0);
-		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String fields = mPrefs.getString("accepted_fields", "");
-			if (!(fields.equals(""))) {
-				if (dfm == null) initDfm();
-				getEnabledFields();
-			} else {
-				new SensorCheckTask().execute();
-			}
-		} else {
-			Intent iSetup = new Intent(DataCollector.this, Setup.class);
-			iSetup.putExtra("enable_no_exp_button", true);
-			startActivityForResult(iSetup, SETUP_REQUESTED);
-		}
-	}
-	
-	private void checkExpNumCredentialsWithoutConnectivity() {
-		SharedPreferences expPrefs = getSharedPreferences("EID", 0);
-		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String fields = mPrefs.getString("accepted_fields", "");
-			if (!(fields.equals(""))) {
-				if (dfm == null) initDfm();
-				getEnabledFields();
-				Intent iCanRecord = new Intent(mContext, CanRecord.class);
-				startActivity(iCanRecord);
-			} else {
-				Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
-				startActivity(iNeedConnectivity);
-			}
-		} else {
-			Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
-			startActivity(iNeedConnectivity);
-		}
-	}*/
 
 	@Override
 	protected void onStart() {
@@ -1480,7 +1421,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					
 					stopService(new Intent(mContext, DataCollectorService.class));
 					
-					OrientationManager.enableRotation((Activity) mContext);
+					//OrientationManager.enableRotation((Activity) mContext);
 
 					writeToSDCard(null, 'f');
 					setMenuStatus(true);

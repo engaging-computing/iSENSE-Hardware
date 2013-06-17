@@ -134,9 +134,6 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		Button okay = (Button) findViewById(R.id.sensor_ok);
 		okay.setOnClickListener(this);
 
-		Button back = (Button) findViewById(R.id.sensor_back);
-		back.setOnClickListener(this);
-
 	}
 
 	// Automatically Compatible
@@ -182,11 +179,6 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		case R.id.sensor_ok:
 			setAcceptedFields();
 			setResult(RESULT_OK);
-			finish();
-			break;
-
-		case R.id.sensor_back:
-			setResult(RESULT_CANCELED);
 			finish();
 			break;
 
@@ -242,7 +234,8 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	
 	@Override
 	public void onBackPressed() {
-		setResult(RESULT_CANCELED);
+		setAcceptedFields();
+		setResult(RESULT_OK);
 		finish();
 	}
 

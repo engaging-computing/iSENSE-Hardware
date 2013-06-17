@@ -1586,7 +1586,12 @@ public class RestAPI {
 		String url = "method=getExperimentFields&experiment=" + id;
 		ArrayList<ExperimentField> fields = new ArrayList<ExperimentField>();
 
-		if (isConnected()) {
+		mDbHelper.open();
+		Cursor c = mDbHelper.getExperimentFields(id);
+		mDbHelper.close();
+
+		if ((c == null || c.getCount() == 0) && isConnected()) {
+			Log.w("tag", "interwebs");
 			try {
 				String data = makeRequest(url);
 
@@ -1623,14 +1628,9 @@ public class RestAPI {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 		} else {
-			mDbHelper.open();
-			Cursor c = mDbHelper.getExperimentFields(id);
-			mDbHelper.close();
-
-			if (c == null || c.getCount() == 0)
-				return fields;
-
+			Log.w("tag", "cache");
 			while (!c.isAfterLast()) {
 				ExperimentField f = new ExperimentField();
 
