@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Setup extends Activity implements OnClickListener {
