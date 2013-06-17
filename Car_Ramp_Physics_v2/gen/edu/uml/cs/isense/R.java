@@ -61,14 +61,14 @@ public final class R {
 		public static final int queueedit_okay = 0x7f090032;
 		public static final int queueprompt_scroll = 0x7f090037;
 		public static final int scrollqueue = 0x7f090034;
-		public static final int text = 0x7f09003a;
-		public static final int toast_layout_root = 0x7f090038;
+		public static final int text = 0x7f090041;
+		public static final int toast_layout_root = 0x7f09003f;
 		public static final int toptext = 0x7f090010;
 		public static final int trobber = 0x7f090013;
 		public static final int upload = 0x7f090036;
-		public static final int waffle_check = 0x7f090039;
-		public static final int waffle_warn = 0x7f09003b;
-		public static final int waffle_x = 0x7f09003c;
+		public static final int waffle_check = 0x7f090040;
+		public static final int waffle_warn = 0x7f090042;
+		public static final int waffle_x = 0x7f090043;
 	}
 	public static final class layout {
 		public static final int edit_row = 0x7f030000;
@@ -83,9 +83,9 @@ public final class R {
 		public static final int queueedit_data = 0x7f03000c;
 		public static final int queueedit_rename = 0x7f03000d;
 		public static final int queueprompt = 0x7f03000e;
-		public static final int toast_layout_check = 0x7f03000f;
-		public static final int toast_layout_warning = 0x7f030010;
-		public static final int toast_layout_x = 0x7f030011;
+		public static final int toast_layout_check = 0x7f030010;
+		public static final int toast_layout_warning = 0x7f030011;
+		public static final int toast_layout_x = 0x7f030012;
 	}
 	public static final class string {
 		public static final int accel_total = 0x7f050005;
