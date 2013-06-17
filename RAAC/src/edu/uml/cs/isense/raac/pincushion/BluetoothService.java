@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.raac.pincushion;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-import edu.uml.cs.isense.raac.Isense;
+import edu.uml.cs.isense.raac.MainActivity;
 import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 
 import android.annotation.SuppressLint;
@@ -386,19 +387,17 @@ public class BluetoothService {
 	 */
 	private class ConnectedComm extends Thread {
 		private final BluetoothSocket mmSocket;
-		private final InputStream mmInStream;
+		private final DataInputStream mmInStream;
 		private final OutputStream mmOutStream;
-		private byte nextByte, bbuff[];
-		Queue<Byte> buffer = new LinkedList<Byte>();
 		public ConnectedComm(BluetoothSocket socket) {
 			Log.d(TAG, "create Connected");
 			mmSocket = socket;
-			InputStream tmpIn = null;
+			DataInputStream tmpIn = null;
 			OutputStream tmpOut = null;
 
 			// Get the BluetoothSocket input and output streams
 			try {
-				tmpIn = socket.getInputStream();
+				tmpIn = new DataInputStream(socket.getInputStream());
 				tmpOut = socket.getOutputStream();
 			} catch (IOException e) {
 				Log.e(TAG, "temp sockets not created", e);
@@ -408,34 +407,14 @@ public class BluetoothService {
 			mmOutStream = tmpOut;
 		}
 
-		public void run() {
-			Log.i(TAG, "BEGIN mConnectedThread");
-
-			// Keep listening to the InputStream while connected
-			while (true) {
-				try {
-					// Read from the InputStream
-					//nextByte = (byte) mmInStream.read(bbuff);
-					if(mmInStream.available() >= 1) {
-						buffer.add( (byte) mmInStream.read() );
-					}
-					//System.out.println("buffer head: "+buffer.peek());
-				} catch (IOException e) {
-					Log.e(TAG, "disconnected", e);
-					connectionLost();
-					break;
-				}
-			}
-		}
-
 		public byte read() throws IOException {
 			int i = 0;
 			try {
-				for(i = 0; i < 250; i++) {
-					if(!buffer.isEmpty()) {
-						return buffer.poll();
+				for(i = 0; i < 200; i++) {
+					if(mmInStream.available() > 0) {
+						return mmInStream.readByte();
 					} else {
-						Thread.sleep(55);
+						Thread.sleep(5);
 					}
 				}
 			} catch (InterruptedException e) {
@@ -461,7 +440,7 @@ public class BluetoothService {
 
 		public void clearBuffer() {
 			try {
-				buffer.clear();
+				mmInStream.skipBytes(mmInStream.available());
 				mmOutStream.flush();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -471,6 +450,7 @@ public class BluetoothService {
 
 		public void close() {
 			try {
+				mmInStream.close();
 				mmOutStream.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
