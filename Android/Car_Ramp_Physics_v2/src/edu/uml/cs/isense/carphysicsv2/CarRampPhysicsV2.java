@@ -14,7 +14,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 
-package edu.uml.cs.isense.carphysics;
+package edu.uml.cs.isense.carphysicsv2;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -36,6 +36,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
@@ -56,26 +57,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 
-public class CarRampPhysics extends Activity implements SensorEventListener, LocationListener {
-    
-	private static String experimentNumber = "409";        // HARD CODED
-//	private static String userName         = "accelapp";   // HARD CODED
-//	private static String password         = "ecgrul3s";   // HARD CODED
+public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
+		LocationListener {
+
+	private static String experimentNumber = "409"; // HARD CODED
+	// private static String userName = "accelapp"; // HARD CODED
+	// private static String password = "ecgrul3s"; // HARD CODED
 	private static String userName = "sor";
 	private static String password = "sor";
-	
-	private static String baseSessionUrl   = "http://isense.cs.uml.edu/newvis.php?sessions=";
-	private static String marketUrl        = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
+
+	private static String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	private static String marketUrl = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
 	private static String sessionUrl = "";
 
 	private Button startStop;
@@ -128,6 +132,8 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 
 	private String dateString;
 	RestAPI rapi;
+	
+	private boolean x = false, y = false, z = false, mag = false;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
 
@@ -164,37 +170,8 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 	long currentTime;
 
 	public static Context mContext;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        mContext = this;
-        
-        Display deviceDisplay = getWindowManager().getDefaultDisplay(); 
-        Point size = new Point();
-        deviceDisplay.getSize(size);
-    	mwidth  = size.x;
-    	mheight = size.y;
-        
-        rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
-        rapi.useDev(true);
-        
-        // where login was
-        
-        mHandler = new Handler();
-        
-        startStop = (Button) findViewById(R.id.startStop);
-              
-        values = (TextView) findViewById(R.id.values);
-        
-        /* This block useful for if onBackPressed - retains some things from previous session */
-        if(running)
-    		showDialog(DIALOG_FORCE_STOP);
-        
-        startStop.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
-        startStop.setOnLongClickListener(new OnLongClickListener() {
+
+	private TextView loggedInAs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -204,13 +181,16 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 		mContext = this;
 
 		Display deviceDisplay = getWindowManager().getDefaultDisplay();
-		mwidth = deviceDisplay.getWidth();
-		mheight = deviceDisplay.getHeight();
+		Point size = new Point();
+		deviceDisplay.getSize(size);
+		mwidth = size.x;
+		mheight = size.y;
 
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		rapi.useDev(true);
 
 		// where login was
 
@@ -227,8 +207,6 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 		if (running)
 			showDialog(DIALOG_FORCE_STOP);
 
-		startStop.getBackground().setColorFilter(0xFFFF0000,
-				PorterDuff.Mode.MULTIPLY);
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
@@ -246,21 +224,21 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 						useMenu = true;
 						countdown = 10;
 
-						mSensorManager.unregisterListener(CarRampPhysics.this);
+						mSensorManager
+								.unregisterListener(CarRampPhysicsV2.this);
 						running = false;
 						startStop.setText("Hold to Start");
 
 						timeTimer.cancel();
 						count++;
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
+						startStop.getBackground().clearColorFilter();
 						choiceViaMenu = false;
 
 						if (!appTimedOut)
 							showDialog(DIALOG_CHOICE);
 						else
 							Toast.makeText(
-									CarRampPhysics.this,
+									CarRampPhysicsV2.this,
 									"Your app has timed out, you may not upload data any longer.",
 									Toast.LENGTH_LONG).show();
 
@@ -270,14 +248,14 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 						useMenu = true;
 						countdown = 10;
 
-						mSensorManager.unregisterListener(CarRampPhysics.this);
+						mSensorManager
+								.unregisterListener(CarRampPhysicsV2.this);
 						running = false;
 						startStop.setText("Hold to Start");
 
 						timeTimer.cancel();
 						count++;
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
+						startStop.getBackground().clearColorFilter();
 						choiceViaMenu = false;
 					}
 
@@ -297,7 +275,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 							.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
 						mLocationManager.requestLocationUpdates(
 								LocationManager.NETWORK_PROVIDER, 0, 0,
-								CarRampPhysics.this);
+								CarRampPhysicsV2.this);
 
 					try {
 						Thread.sleep(100);
@@ -314,13 +292,13 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 					if (mSensorManager != null) {
 						mSensorManager
 								.registerListener(
-										CarRampPhysics.this,
+										CarRampPhysicsV2.this,
 										mSensorManager
 												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 										SensorManager.SENSOR_DELAY_FASTEST);
 						mSensorManager
 								.registerListener(
-										CarRampPhysics.this,
+										CarRampPhysicsV2.this,
 										mSensorManager
 												.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 										SensorManager.SENSOR_DELAY_FASTEST);
@@ -419,12 +397,17 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 				}
 
 			} else {
-				if (firstName.length() == 0 || lastInitial.length() == 0)
+				if (firstName.length() == 0 || lastInitial.length() == 0) {
 					/* will also display eula */
 					dontPromptMeTwice = true;
-				startActivityForResult(
-						new Intent(mContext, LoginActivity.class),
-						resultGotName);
+					startActivityForResult(new Intent(mContext,
+							EnterNameActivity.class), resultGotName);
+				}
+				loggedInAs = (TextView) findViewById(R.id.loginStatus);
+				loggedInAs.setText(getResources().getString(
+						R.string.logged_in_as)
+						+ userName);
+
 			}
 		} else {
 			showDialog(DIALOG_NO_CONNECT);
@@ -473,8 +456,8 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(CarRampPhysics.this);
-		mSensorManager.unregisterListener(CarRampPhysics.this);
+		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
+		mSensorManager.unregisterListener(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
@@ -483,8 +466,8 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 	@Override
 	public void onStop() {
 		super.onStop();
-		mLocationManager.removeUpdates(CarRampPhysics.this);
-		mSensorManager.unregisterListener(CarRampPhysics.this);
+		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
+		mSensorManager.unregisterListener(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
@@ -500,15 +483,43 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
+		SharedPreferences prefs = getSharedPreferences(RecordSettings.RECORD_SETTINGS, 0) ;
+		
+		x = prefs.getBoolean("X", x);
+		y = prefs.getBoolean("Y", y);
+		z = prefs.getBoolean("Z", z);
+		mag = prefs.getBoolean("Magnitude", mag);
+	
+		String dataLabel = "";
+		
+		if (x){
+			dataLabel += "X: ";
+		}
+		if (y){
+			if (x){
+				dataLabel += " , Y: ";
+			}
+			else
+				dataLabel += "Y: ";
+		}
+		if (z){
+			if (x || y){
+				dataLabel += " , Z: ";
+			}
+			else
+				dataLabel += "Z: ";
+		}
+		
+		values.setText(dataLabel);
+		
 		if (running)
 			showDialog(DIALOG_FORCE_STOP);
 		if (!rapi.isConnectedToInternet())
 			showDialog(DIALOG_NO_CONNECT);
 		if (firstName.equals("") || lastInitial.equals("")) {
 			if (!dontPromptMeTwice) {
-				startActivityForResult(
-						new Intent(mContext, LoginActivity.class),
-						resultGotName);
+				startActivityForResult(new Intent(mContext,
+						EnterNameActivity.class), resultGotName);
 			}
 		}
 	}
@@ -533,26 +544,22 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_ABOUT, Menu.NONE, "About");
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(0).setEnabled(false);
-		} else {
-			menu.getItem(0).setEnabled(true);
-		}
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ITEM_ABOUT:
-			showDialog(MENU_ITEM_ABOUT);
+		case R.id.about_app:
+			showDialog(R.id.about_app);
 			return true;
+		case R.id.login:
+			AlertDialog login = loginDialog(this, "Login to iSENSE");
+			login.show();
+			return true;
+		case R.id.record_settings:
+			startActivity(new Intent(this,RecordSettings.class));
 		}
 		return false;
 	}
@@ -567,22 +574,47 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
 
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+			
 			rawAccel = event.values.clone();
-			// accel[0] = event.values[0];
+			accel[0] = event.values[0];
 			accel[1] = event.values[1];
-			// accel[2] = event.values[2];
+			accel[2] = event.values[2];
+			
+			String xPrepend, yPrepend, zPrepend, data = "";
+			
+			xPrepend = accel[0] > 0 ? "+" : "";
+			yPrepend = accel[1] > 0 ? "+" : "";
+			zPrepend = accel[2] > 0 ? "+" : "";
+			
+			if ( mag )
+			accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2) +
+					Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+			
+			if (x) {
+				data = "X: " + xPrepend + oneDigit.format(accel[0]) ;
+			}
+			if (y) {
+				if (!data.equals("")){
+					data += " , Y: " + yPrepend + oneDigit.format(accel[1]);
+				} else {
+					data += "Y: " + yPrepend + oneDigit.format(accel[1]) ;
+				}
+			}
+			if (z) {
+				if (!data.equals("")){
+					data += " , Z: " + zPrepend + oneDigit.format(accel[2]);
+				} else {
+					data += "Z: " + zPrepend + oneDigit.format(accel[2]) ;
+				}
+			}
+			
 
-			// String xPrepend = accel[0] > 0 ? "+" : "";
-			String yPrepend = accel[1] > 0 ? "+" : "";
-			// String zPrepend = accel[2] > 0 ? "+" : "";
 
 			if (count == 0) {
-				values.setText("Y: " + yPrepend + oneDigit.format(accel[1]));
+				values.setText(data);
 				// + ", Z: " + zPrepend + oneDigit.format(accel[2]));
 			}
 
-			// accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2) +
-			// Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			rawMag = event.values.clone();
@@ -639,7 +671,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 									dialoginterface.dismiss();
 
 									if (len == 0 || len2 == 0)
-										Toast.makeText(CarRampPhysics.this,
+										Toast.makeText(CarRampPhysicsV2.this,
 												"There are no data to upload!",
 												Toast.LENGTH_LONG).show();
 
@@ -648,7 +680,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 											new Task().execute();
 										else
 											Toast.makeText(
-													CarRampPhysics.this,
+													CarRampPhysicsV2.this,
 													"No connection to Internet found!  Please enable wifi/mobile connectivity.",
 													Toast.LENGTH_LONG).show();
 									}
@@ -659,7 +691,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 								public void onClick(
 										DialogInterface dialoginterface, int i) {
 									dialoginterface.dismiss();
-									Toast.makeText(CarRampPhysics.this,
+									Toast.makeText(CarRampPhysicsV2.this,
 											"Data thrown away!",
 											Toast.LENGTH_LONG).show();
 								}
@@ -721,7 +753,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 
 			break;
 
-		case MENU_ITEM_ABOUT:
+		case R.id.about_app:
 
 			builder.setTitle("About")
 					.setMessage(R.string.about_app)
@@ -769,14 +801,15 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 										boolean success = rapi.login(userName,
 												password);
 										if (success) {
-											Toast.makeText(CarRampPhysics.this,
+											Toast.makeText(
+													CarRampPhysicsV2.this,
 													"Connectivity found!",
 													Toast.LENGTH_SHORT).show();
 											if (!dontPromptMeTwice) {
 												startActivityForResult(
 														new Intent(
 																mContext,
-																LoginActivity.class),
+																EnterNameActivity.class),
 														resultGotName);
 											}
 										} else {
@@ -875,7 +908,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 													startActivityForResult(
 															new Intent(
 																	mContext,
-																	LoginActivity.class),
+																	EnterNameActivity.class),
 															resultGotName);
 												}
 											}
@@ -960,13 +993,14 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 
 			try {
 				if (loc != null) {
-					address = new Geocoder(CarRampPhysics.this,
+					address = new Geocoder(CarRampPhysicsV2.this,
 							Locale.getDefault()).getFromLocation(
 							loc.getLatitude(), loc.getLongitude(), 1);
 					if (address.size() > 0) {
 						city = address.get(0).getLocality();
 						state = address.get(0).getAdminArea();
 						country = address.get(0).getCountryName();
+
 					}
 				}
 			} catch (IOException e) {
@@ -1003,7 +1037,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 		@Override
 		protected void onPreExecute() {
 
-			dia = new ProgressDialog(CarRampPhysics.this);
+			dia = new ProgressDialog(CarRampPhysicsV2.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
@@ -1030,7 +1064,7 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 			len2 = 0;
 			mediaCount = 0;
 
-			Toast.makeText(CarRampPhysics.this, "Data upload successful.",
+			Toast.makeText(CarRampPhysicsV2.this, "Data upload successful.",
 					Toast.LENGTH_SHORT).show();
 			showDialog(DIALOG_VIEW_DATA);
 
@@ -1078,11 +1112,74 @@ public class CarRampPhysics extends Activity implements SensorEventListener, Loc
 		@Override
 		protected void onPostExecute(Void voids) {
 			if (rapi.isConnectedToInternet())
-				Toast.makeText(CarRampPhysics.this, "Connectivity found!",
+				Toast.makeText(CarRampPhysicsV2.this, "Connectivity found!",
 						Toast.LENGTH_SHORT).show();
 			else
 				showDialog(DIALOG_NO_CONNECT);
 		}
+	}
+
+	public AlertDialog loginDialog(Context c, String message) {
+		LayoutInflater factory = LayoutInflater.from(c);
+		final View textEntryView = factory.inflate(R.layout.login, null);
+		final AlertDialog.Builder failAlert = new AlertDialog.Builder(c);
+		failAlert.setTitle("Login/ Register Failed");
+		failAlert.setNegativeButton("OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+
+					}
+				});
+		AlertDialog.Builder alert = new AlertDialog.Builder(c);
+		alert.setTitle("Login/ Register");
+		alert.setMessage(message);
+		alert.setView(textEntryView);
+		alert.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				try {
+					final EditText usernameInput = (EditText) textEntryView
+							.findViewById(R.id.userNameEditText);
+					final EditText passwordInput = (EditText) textEntryView
+							.findViewById(R.id.passwordEditText);
+					RestAPI rapi = RestAPI
+							.getInstance(
+									(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+									getApplicationContext());
+					if (rapi.isConnectedToInternet()) {
+						boolean success = rapi
+								.login(usernameInput.getText().toString(),
+										passwordInput.getText().toString());
+						if (success) {
+							Toast.makeText(
+									getApplicationContext(),
+									"Login as "
+											+ usernameInput.getText()
+													.toString()
+											+ " successful.",
+									Toast.LENGTH_SHORT).show();
+							loggedInAs.setText(getResources().getString(
+									R.string.logged_in_as)
+									+ " " + usernameInput.getText().toString());
+
+						} else {
+							Toast.makeText(
+									getApplicationContext(),
+									"Incorrect login credentials. Please try again.",
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		alert.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Canceled.
+					}
+				});
+		return alert.create();
 	}
 
 }
