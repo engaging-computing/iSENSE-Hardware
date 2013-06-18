@@ -46,7 +46,7 @@
         </activity>
         <activity
             android:name=".DataCollector"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Automatic"
             android:theme="@style/AppTheme" />
         <activity

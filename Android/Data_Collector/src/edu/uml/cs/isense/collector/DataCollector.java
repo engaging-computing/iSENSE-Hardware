@@ -377,11 +377,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		setContentView(R.layout.data_collector);
+		setContentView(R.layout.automatic_concept);
 
-		// Initialize everything you're going to need
-		initVars();
-		initMainUI();
+		// Re-initialize everything we're going to need
+		reInitVars();
+		reInitMainUI();
 
 		// Assign everything to respective variables
 		assignVars();
@@ -670,6 +670,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
 			
 			step3.setText(getResources().getString(R.string.step3));
+			disableStep2();
 			
 			if (resultCode == RESULT_OK) {
 				sessionDescription = data.getStringExtra("description");
@@ -1130,6 +1131,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setText(getResources().getString(R.string.step3));
 		if (uq != null) if (uq.emptyQueue()) disableStep3(); else enableStep3();
 	}
+	
+	// UI variables to re-initialize onConfigurationChange
+	private void reInitMainUI() {
+		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
+		step1 = (Button) findViewById(R.id.auto_step1);
+		step1.setText(getResources().getString(R.string.step1));
+		step2 = (Button) findViewById(R.id.auto_step2);
+		step2.setText(getResources().getString(R.string.step2));
+		if (sessionName.equals("")) disableStep2();
+		step3 = (Button) findViewById(R.id.auto_step3);
+		step3.setText(getResources().getString(R.string.step3));
+		if (uq != null) if (uq.emptyQueue()) disableStep3(); else enableStep3();
+	}
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
@@ -1164,6 +1178,38 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		initLocations();
 	}
+	
+	// Variables to re-initialize for onConfigurationChange
+	private void reInitVars() {
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
+		rapi.useDev(true);
+
+		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq.buildQueueFromFile();
+
+		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		w = new Waffle(this);
+		f = new Fields();
+		
+		accel = new float[4];
+		orientation = new float[3];
+		rawAccel = new float[3];
+		rawMag = new float[3];
+		mag = new float[3];
+
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+
+		initLocations();
+	}
+	
+	
 
 	@Override
 	protected void onStart() {
@@ -1421,7 +1467,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					
 					stopService(new Intent(mContext, DataCollectorService.class));
 					
-					//OrientationManager.enableRotation((Activity) mContext);
+					OrientationManager.enableRotation((Activity) mContext);
 
 					writeToSDCard(null, 'f');
 					setMenuStatus(true);
