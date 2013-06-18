@@ -3,51 +3,67 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="20dp"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/recordSettings"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <CheckedTextView
         android:id="@+id/checkedTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:checkMark="@drawable/checkmark"
         android:checked="false"
+        android:paddingBottom="5dp"
         android:text="@string/X" />
 
     <CheckedTextView
         android:id="@+id/checkedTextView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:checkMark="@drawable/checkmark"
         android:checked="true"
+        android:paddingBottom="5dp"
         android:text="@string/Y" />
-    
+
     <CheckedTextView
         android:id="@+id/checkedTextView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:checkMark="@drawable/checkmark"
         android:checked="false"
+        android:paddingBottom="5dp"
         android:text="@string/Z" />
-    
+
     <CheckedTextView
         android:id="@+id/checkedTextView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:checkMark="@drawable/checkmark"
         android:checked="false"
+        android:paddingBottom="5dp"
         android:text="@string/mag" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical" />
+
+    <LinearLayout
+        style="?android:buttonBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/done" />
+        android:background="@android:color/transparent" >
+
+        <Button
+            android:id="@+id/button1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/done" />
+    </LinearLayout>
 
 </LinearLayout>

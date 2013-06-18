@@ -55,6 +55,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -67,20 +68,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.exp.Setup;
 
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
-	private static String experimentNumber = "409"; // HARD CODED
+	public static String experimentNumber = "409"; // HARD CODED
 	// private static String userName = "accelapp"; // HARD CODED
 	// private static String password = "ecgrul3s"; // HARD CODED
 	private static String userName = "sor";
 	private static String password = "sor";
 
-	private static String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	public static String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	private static String marketUrl = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "";
+	public static String sessionUrl = "";
 
 	private Button startStop;
 	private TextView values;
@@ -90,7 +93,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 
-	private Location loc;
+	public static Location loc;
 	private float accel[];
 	private float orientation[];
 	private Timer timeTimer;
@@ -132,7 +135,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private String dateString;
 	RestAPI rapi;
-	
+
 	private boolean x = false, y = false, z = false, mag = false;
 
 	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
@@ -181,10 +184,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		mContext = this;
 
 		Display deviceDisplay = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		deviceDisplay.getSize(size);
-		mwidth = size.x;
-		mheight = size.y;
+		mwidth = deviceDisplay.getWidth();
+		mheight = deviceDisplay.getHeight();
 
 		rapi = RestAPI
 				.getInstance(
@@ -235,7 +236,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						choiceViaMenu = false;
 
 						if (!appTimedOut)
-							showDialog(DIALOG_CHOICE);
+							try{
+								Intent dataIntent = new Intent(CarRampPhysicsV2.this, DataActivity.class);
+								dataIntent.putExtra("len", len);
+								dataIntent.putExtra("len2", len2);
+								dataIntent.putExtra("First Name", firstName);
+								dataIntent.putExtra("Last Initial", lastInitial);
+								startActivity(dataIntent);
+							}
+						catch(Exception e){
+							
+						}
+							
 						else
 							Toast.makeText(
 									CarRampPhysicsV2.this,
@@ -287,7 +299,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						e.printStackTrace();
 					}
 
-					useMenu = false;
+					useMenu = true;
 
 					if (mSensorManager != null) {
 						mSensorManager
@@ -397,12 +409,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 
 			} else {
+
 				if (firstName.length() == 0 || lastInitial.length() == 0) {
-					/* will also display eula */
 					dontPromptMeTwice = true;
 					startActivityForResult(new Intent(mContext,
 							EnterNameActivity.class), resultGotName);
 				}
+
 				loggedInAs = (TextView) findViewById(R.id.loginStatus);
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
@@ -410,7 +423,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			}
 		} else {
-			showDialog(DIALOG_NO_CONNECT);
+			Toast.makeText(
+					this,
+					"You are not connected to the Internet. Redirecting to Network Settings",
+					Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 		}
 
 	}
@@ -483,43 +500,49 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
-		SharedPreferences prefs = getSharedPreferences(RecordSettings.RECORD_SETTINGS, 0) ;
-		
+		SharedPreferences prefs = getSharedPreferences(
+				RecordSettings.RECORD_SETTINGS, 0);
+
 		x = prefs.getBoolean("X", x);
 		y = prefs.getBoolean("Y", y);
 		z = prefs.getBoolean("Z", z);
 		mag = prefs.getBoolean("Magnitude", mag);
-	
+
 		String dataLabel = "";
-		
-		if (x){
+
+		if (x) {
 			dataLabel += "X: ";
 		}
-		if (y){
-			if (x){
+		if (y) {
+			if (x) {
 				dataLabel += " , Y: ";
-			}
-			else
+			} else
 				dataLabel += "Y: ";
 		}
-		if (z){
-			if (x || y){
+		if (z) {
+			if (x || y) {
 				dataLabel += " , Z: ";
-			}
-			else
+			} else
 				dataLabel += "Z: ";
 		}
-		
+
 		values.setText(dataLabel);
+
+		// if (running)
 		
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
-		if (!rapi.isConnectedToInternet())
-			showDialog(DIALOG_NO_CONNECT);
-		if (firstName.equals("") || lastInitial.equals("")) {
-			if (!dontPromptMeTwice) {
-				startActivityForResult(new Intent(mContext,
-						EnterNameActivity.class), resultGotName);
+
+		if (!rapi.isConnectedToInternet()) {
+			Toast.makeText(
+					this,
+					"You are not connected to the Internet. Redirecting to Network Settings",
+					Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+		} else {
+			if (firstName.equals("") || lastInitial.equals("")) {
+				if (!dontPromptMeTwice) {
+					startActivityForResult(new Intent(mContext,
+							EnterNameActivity.class), resultGotName);
+				}
 			}
 		}
 	}
@@ -550,16 +573,25 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		SharedPreferences prefs;
 		switch (item.getItemId()) {
 		case R.id.about_app:
-			showDialog(R.id.about_app);
+			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case R.id.login:
-			AlertDialog login = loginDialog(this, "Login to iSENSE");
+			AlertDialog login = loginDialog(this);
 			login.show();
 			return true;
 		case R.id.record_settings:
-			startActivity(new Intent(this,RecordSettings.class));
+			startActivity(new Intent(this, RecordSettings.class));
+			return true;
+		case R.id.experiment_select:
+			startActivity(new Intent(this, Setup.class));
+			prefs = getSharedPreferences("EID",0);
+			experimentNumber = prefs.getString("experiment_id", null);
+			if (experimentNumber == null)
+				experimentNumber = "409";
+			return true;
 		}
 		return false;
 	}
@@ -574,47 +606,44 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
 
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			
+
 			rawAccel = event.values.clone();
 			accel[0] = event.values[0];
 			accel[1] = event.values[1];
 			accel[2] = event.values[2];
-			
+
 			String xPrepend, yPrepend, zPrepend, data = "";
-			
+
 			xPrepend = accel[0] > 0 ? "+" : "";
 			yPrepend = accel[1] > 0 ? "+" : "";
 			zPrepend = accel[2] > 0 ? "+" : "";
-			
-			if ( mag )
-			accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2) +
-					Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
-			
+
+			if (mag)
+				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
 			if (x) {
-				data = "X: " + xPrepend + oneDigit.format(accel[0]) ;
+				data = "X: " + xPrepend + oneDigit.format(accel[0]);
 			}
 			if (y) {
-				if (!data.equals("")){
+				if (!data.equals("")) {
 					data += " , Y: " + yPrepend + oneDigit.format(accel[1]);
 				} else {
-					data += "Y: " + yPrepend + oneDigit.format(accel[1]) ;
+					data += "Y: " + yPrepend + oneDigit.format(accel[1]);
 				}
 			}
 			if (z) {
-				if (!data.equals("")){
+				if (!data.equals("")) {
 					data += " , Z: " + zPrepend + oneDigit.format(accel[2]);
 				} else {
-					data += "Z: " + zPrepend + oneDigit.format(accel[2]) ;
+					data += "Z: " + zPrepend + oneDigit.format(accel[2]);
 				}
 			}
-			
-
 
 			if (count == 0) {
 				values.setText(data);
 				// + ", Z: " + zPrepend + oneDigit.format(accel[2]));
 			}
-
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			rawMag = event.values.clone();
@@ -658,48 +687,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		switch (id) {
 
-		case DIALOG_CHOICE:
-
-			builder.setTitle("Select An Action:")
-					.setMessage(
-							"Would you like to upload your data to iSENSE or throw away this data set?")
-					.setPositiveButton("iSENSE",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-
-									if (len == 0 || len2 == 0)
-										Toast.makeText(CarRampPhysicsV2.this,
-												"There are no data to upload!",
-												Toast.LENGTH_LONG).show();
-
-									else {
-										if (rapi.isConnectedToInternet())
-											new Task().execute();
-										else
-											Toast.makeText(
-													CarRampPhysicsV2.this,
-													"No connection to Internet found!  Please enable wifi/mobile connectivity.",
-													Toast.LENGTH_LONG).show();
-									}
-								}
-							})
-					.setNegativeButton("Throw Away",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									Toast.makeText(CarRampPhysicsV2.this,
-											"Data thrown away!",
-											Toast.LENGTH_LONG).show();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
 
 		case DIALOG_FORCE_STOP:
 
@@ -1032,45 +1019,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	};
 
-	private class Task extends AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-			dia = new ProgressDialog(CarRampPhysicsV2.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
-			dia.setCancelable(false);
-			dia.show();
-
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-
-			uploader.run();
-			publishProgress(100);
-			return null;
-
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-
-			dia.setMessage("Done");
-			dia.cancel();
-
-			len = 0;
-			len2 = 0;
-			mediaCount = 0;
-
-			Toast.makeText(CarRampPhysicsV2.this, "Data upload successful.",
-					Toast.LENGTH_SHORT).show();
-			showDialog(DIALOG_VIEW_DATA);
-
-		}
-	}
-
+	
 	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
 		@Override
 		protected void onPreExecute() {
@@ -1119,7 +1068,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		}
 	}
 
-	public AlertDialog loginDialog(Context c, String message) {
+	public AlertDialog loginDialog(Context c) {
 		LayoutInflater factory = LayoutInflater.from(c);
 		final View textEntryView = factory.inflate(R.layout.login, null);
 		final AlertDialog.Builder failAlert = new AlertDialog.Builder(c);
@@ -1131,8 +1080,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 				});
 		AlertDialog.Builder alert = new AlertDialog.Builder(c);
-		alert.setTitle("Login/ Register");
-		alert.setMessage(message);
+		alert.setTitle("Login to iSENSE");
+		alert.setMessage("");
 		alert.setView(textEntryView);
 		alert.setPositiveButton("Login", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {

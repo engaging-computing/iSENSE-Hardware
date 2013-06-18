@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import edu.uml.cs.isense.R;
 
 public class RecordSettings extends Activity {
 
@@ -19,6 +21,8 @@ public class RecordSettings extends Activity {
 	public void onCreate(Bundle savedInstanceBundle){
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.record_settings);
+		
+		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		XcheckBox = (CheckedTextView) findViewById(R.id.checkedTextView1);
 		YcheckBox = (CheckedTextView) findViewById(R.id.checkedTextView2);
@@ -104,7 +108,7 @@ public class RecordSettings extends Activity {
 				editor.putBoolean("Y", Ychecked);
 				editor.putBoolean("Z", Zchecked);
 				editor.putBoolean("Magnitude", Magchecked);
-				editor.apply();
+				editor.commit();
 				finish();
 				
 			}
@@ -115,6 +119,8 @@ public class RecordSettings extends Activity {
 	}
 	
 	public void onResume() {
+		
+		super.onResume();
 		
 		SharedPreferences prefs = getSharedPreferences(RecordSettings.RECORD_SETTINGS, 0) ;
 		
