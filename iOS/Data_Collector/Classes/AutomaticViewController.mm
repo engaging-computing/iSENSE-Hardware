@@ -457,12 +457,12 @@
     
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-    if (entity) {
-        [request setEntity:entity];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    if (dataSetEntity) {
+        [request setEntity:dataSetEntity];
     
         // Sort results for DataSets
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
         NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
         [request setSortDescriptors:sortDescriptors];
     

@@ -16,6 +16,8 @@
     self = [super init];
     if (self) {
         dataQueue = [[NSMutableDictionary alloc] init];
+        dataQueue.headKey = 0;
+        dataQueue.tailKey = 0;
         count = 0;
     }
     return self;

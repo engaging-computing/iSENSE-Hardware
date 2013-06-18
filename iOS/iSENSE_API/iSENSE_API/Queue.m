@@ -10,7 +10,7 @@
 
 
 @implementation NSMutableDictionary (QueueAdditions)
-@dynamic headKey, tailKey;
+@synthesize headKey, tailKey;
 
 
 // Queues are first-in-first-out, so we remove objects from the head
@@ -33,7 +33,13 @@
 // Add to the tail of the queue (no one likes it when people cut in line!)
 - (void) enqueue:(id)anObject withKey:(int)key {
     self.tailKey = key;
-    //this method automatically adds to the end of the array
+    
+    // Initialize headKey
+    if (self.headKey == 0) {
+        self.headKey = key;
+    }
+    
+    // This method automatically adds to the end of the array
     NSNumber *keyObj = [NSNumber numberWithInt:key];
     [self setObject:anObject forKey:keyObj];
 }
@@ -63,21 +69,21 @@
     return headObject;
 }
 
-
-- (int) headKey {
-    return self.headKey;
-}
-
-- (void) setHeadKey:(int)headKey {
-    self.headKey = headKey;
-}
-
-- (int) tailKey {
-    return self.tailKey;
-}
-
-- (void) setTailKey:(int)tailKey {
-    self.tailKey = tailKey;
-}
+//
+//- (int) headKey {
+//    return self.headKey;
+//}
+//
+//- (void) setHeadKey:(int)headKey {
+//    self.headKey = headKey;
+//}
+//
+//- (int) tailKey {
+//    return self.tailKey;
+//}
+//
+//- (void) setTailKey:(int)tailKey {
+//    self.tailKey = tailKey;
+//}
 
 @end

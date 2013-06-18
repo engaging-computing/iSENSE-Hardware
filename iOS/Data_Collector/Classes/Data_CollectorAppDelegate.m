@@ -88,14 +88,13 @@
   * Returns the managed object model for the application.
   *If the model doesn't already exist, it is created by merging all of the models found in the application bundle.
   */
-- (NSManagedObjectModel *)managedObjectModel
-{
+- (NSManagedObjectModel *)managedObjectModel {
     if (!managedObjectModel) {
 
         NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
-        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"mom"];
+        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"momd"];
         managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
-        NSLog(@"%d", managedObjectModel.entities.count);
+        NSLog(@"%@", managedObjectModel.entities.description);
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();
