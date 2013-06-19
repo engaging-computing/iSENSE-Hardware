@@ -1,68 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    
+    android:layout_height="fill_parent" >
+
     <TextView
-		android:id="@+id/nameLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text=" First Name: "
-		android:layout_alignParentLeft="true"
-		android:layout_marginTop="5dip"/>
+        android:id="@+id/nameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dip"
+        android:text=" First Name: " />
 
     <EditText
         android:id="@+id/nameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/nameLabel"
-        android:paddingLeft="6dip"
-        android:inputType="textEmailAddress"
-        android:maxLength="12"/>
-        
-    <TextView
-		android:id="@+id/initialLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text=" Last Initial: "
-		android:layout_marginTop="5dip"
-		android:layout_below="@id/nameInput"
-		android:layout_alignParentLeft = "true"/>
-		
-	<EditText
-	    android:layout_alignParentRight="true"
-        android:id="@+id/initialInput"
-        android:layout_gravity="right"
-        android:gravity="right"
-        android:inputType="text"
-        android:layout_width="40sp"
-        android:maxWidth="40sp"
-        android:layout_height="wrap_content"
         android:background="@android:drawable/editbox_background"
+        android:gravity="left"
+        android:inputType="textEmailAddress"
+        android:maxLength="12"
+        android:paddingLeft="6dip"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/initialLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/nameInput"
+        android:layout_marginTop="5dip"
+        android:text=" Last Initial: " />
+
+    <EditText
+        android:id="@+id/initialInput"
+        android:layout_width="40sp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nameInput"
+        android:layout_below="@+id/nameInput"
+        android:background="@android:drawable/editbox_background"
+        android:ems="10"
+        android:gravity="left"
+        android:inputType="text"
+        android:maxLength="1"
+        android:maxWidth="40sp"
         android:paddingLeft="6dip"
         android:singleLine="true"
-        android:maxLength="1"/>
-	
-	<LinearLayout
-	    android:layout_marginTop="5dp"
-	    android:layout_below="@id/initialInput"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-	    android:gravity="center">
-	
-		<Button 
-		    android:id="@+id/OkButton"
-	    	android:layout_width="150dp"
-	    	android:layout_height="wrap_content"
-	    	android:text="OK"
-	    	/>
-		
-	</LinearLayout>
+        android:textColor="@android:color/black" >
+
+        <requestFocus />
+    </EditText>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/initialInput"
+        android:background="?android:attr/dividerVertical" />
+
+    <LinearLayout
+        style="?android:buttonBarStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view1"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/OkButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OK" />
+    </LinearLayout>
+
 </RelativeLayout>
