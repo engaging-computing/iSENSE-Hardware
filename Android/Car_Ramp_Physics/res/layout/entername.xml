@@ -17,7 +17,7 @@
         android:id="@+id/nameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="left"
         android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/nameLabel"
         android:paddingLeft="6dip"
@@ -32,25 +32,10 @@
 		android:layout_marginTop="5dip"
 		android:layout_below="@id/nameInput"
 		android:layout_alignParentLeft = "true"/>
-		
-	<EditText
-	    android:layout_alignParentRight="true"
-        android:id="@+id/initialInput"
-        android:layout_gravity="right"
-        android:gravity="right"
-        android:inputType="text"
-        android:layout_width="40sp"
-        android:maxWidth="40sp"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/nameInput"
-        android:paddingLeft="6dip"
-        android:singleLine="true"
-        android:maxLength="1"/>
 	
 	<LinearLayout
 	    android:layout_marginTop="5dp"
-	    android:layout_below="@id/initialInput"
+	    android:layout_below="@id/initialLabel"
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -65,4 +50,24 @@
 	    	/>
 		
 	</LinearLayout>
+
+	<EditText
+	    android:id="@+id/initialInput"
+	    android:layout_width="40sp"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBaseline="@+id/initialLabel"
+	    android:layout_alignBottom="@+id/initialLabel"
+	    android:layout_toRightOf="@+id/nameLabel"
+	    android:background="@android:drawable/editbox_background"
+	    android:ems="10"
+	    android:gravity="left"
+	    android:inputType="text"
+	    android:maxLength="1"
+	    android:maxWidth="40sp"
+	    android:paddingLeft="6dip"
+	    android:singleLine="true" >
+
+	    <requestFocus />
+	</EditText>
+
 </RelativeLayout>

@@ -1,68 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    
+    android:layout_height="fill_parent" >
+
     <TextView
-		android:id="@+id/nameLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/firstNameLabel"
-		android:layout_alignParentLeft="true"
-		android:layout_marginTop="5dip"/>
+        android:id="@+id/nameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dip"
+        android:text="@string/firstNameLabel" />
 
     <EditText
         android:id="@+id/nameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:background="@android:drawable/editbox_background"
         android:layout_toRightOf="@id/nameLabel"
-        android:paddingLeft="6dip"
-        android:inputType="textEmailAddress"
-        android:maxLength="12"/>
-        
-    <TextView
-		android:id="@+id/initialLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/lastInitialLabel"
-		android:layout_marginTop="5dip"
-		android:layout_below="@id/nameInput"
-		android:layout_alignParentLeft = "true"/>
-		
-	<EditText
-	    android:layout_alignParentRight="true"
-        android:id="@+id/initialInput"
-        android:layout_gravity="right"
-        android:gravity="right"
-        android:inputType="text"
-        android:layout_width="40sp"
-        android:maxWidth="40sp"
-        android:layout_height="wrap_content"
         android:background="@android:drawable/editbox_background"
+        android:gravity="left"
+        android:inputType="textEmailAddress"
+        android:maxLength="12"
+        android:paddingLeft="6dip" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/initialLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/nameInput"
+        android:layout_marginTop="5dip"
+        android:text="@string/lastInitialLabel" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/initialLabel"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/OK"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/OK" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/initialInput"
+        android:layout_width="40sp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/initialLabel"
+        android:layout_alignBottom="@+id/initialLabel"
+        android:layout_toRightOf="@+id/nameLabel"
+        android:background="@android:drawable/editbox_background"
+        android:ems="10"
+        android:gravity="left"
+        android:inputType="text"
+        android:maxLength="1"
+        android:maxWidth="40sp"
         android:paddingLeft="6dip"
-        android:singleLine="true"
-        android:maxLength="1"/>
-	
-	<LinearLayout
-	    android:layout_marginTop="5dp"
-	    android:layout_below="@id/initialInput"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-	    android:gravity="center">
-	
-		<Button 
-		    android:id="@+id/OK"
-	    	android:layout_width="100dp"
-	    	android:layout_height="wrap_content"
-	    	android:text="@string/OK"
-	    	/>
-		
-	</LinearLayout>
+        android:singleLine="true" >
+    </EditText>
+
 </RelativeLayout>
