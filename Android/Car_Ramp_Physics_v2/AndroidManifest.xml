@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.uml.cs.isense.carphysicsv2"
+    package="edu.uml.cs.isense"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -19,7 +19,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".CarRampPhysicsV2"
+            android:name=".carphysicsv2.CarRampPhysicsV2"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
@@ -30,15 +30,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EnterNameActivity"
+            android:name=".carphysicsv2.EnterNameActivity"
             android:label="@string/promptForName"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Holo.Dialog" >
         </activity>
         <activity
-            android:name="RecordSettings"
-            android:label="@string/recordSettings" >
+            android:name=".carphysicsv2.RecordSettings"
+            android:label="@string/recordSettings" 
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Dialog" >
         </activity>
-            
+        <activity
+            android:name=".carphysicsv2.AboutActivity"
+            android:label="@string/about_title" 
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Dialog"  >
+        </activity>
+        <activity
+            android:name=".carphysicsv2.DataActivity"
+            android:label="@string/upload_or_trash"
+            android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
+        <activity
+            android:name=".exp.Setup"
+            android:label="@string/chooseExperimentTitle" 
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
+        <activity
+            android:name=".exp.BrowseExperiments"
+            android:label="@string/select_exp" 
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".exp.NoQR"
+            android:label="@string/no_qr" 
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

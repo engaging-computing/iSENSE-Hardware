@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import edu.uml.cs.isense.R;
 
 public class EnterNameActivity extends Activity {
 	
