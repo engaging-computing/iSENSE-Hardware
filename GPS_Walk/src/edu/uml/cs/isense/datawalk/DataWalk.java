@@ -3,6 +3,7 @@ package edu.uml.cs.isense.datawalk;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,6 +19,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -44,7 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
 
-public class DataWalk extends Activity implements LocationListener {
+public class DataWalk extends Activity implements LocationListener, SensorEventListener {
 
 	public static Boolean running = false;
 
@@ -62,10 +67,14 @@ public class DataWalk extends Activity implements LocationListener {
 	private int resultGotName;
 	private double latitude;
 	private double longitude;
+	
+	private SensorManager mSensorManager;
 
 	private Location loc;
 	private Timer timeTimer;
 	private Timer mTimer;
+	
+	private float accel[];
 
 	public static String firstName = "";
 	public static String lastInitial = "";
@@ -92,7 +101,7 @@ public class DataWalk extends Activity implements LocationListener {
 
 	private MediaPlayer mMediaPlayer;
 
-	RestAPI rapi = null;
+	RestAPI rapi;
 
 	String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
 	String nameOfSession = "";
@@ -122,12 +131,14 @@ public class DataWalk extends Activity implements LocationListener {
 	public static String textToSession = "";
 	public static String toSendOut = "";
 
-	private static String loginName = "usasef.datawalk.app.user@gmail.com";
-	private static String loginPass = "iSENSErUS";
-	private static String experimentId = "406";
-	private static String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	//private static String loginName = "usasef.datawalk.app.user@gmail.com";
+	//private static String loginPass = "iSENSErUS";
+	private static String loginName = "sor";
+	private static String loginPass = "sor";
+	private static String experimentId = "592";
+	private static String baseSessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=";
 	private static String marketUrl = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=406";
+	private static String sessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=406";
 
 	private static int waitingCounter = 0;
 
@@ -158,6 +169,7 @@ public class DataWalk extends Activity implements LocationListener {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
+		rapi.useDev(true);
 
 		mHandler = new Handler();
 
@@ -178,6 +190,7 @@ public class DataWalk extends Activity implements LocationListener {
 				PorterDuff.Mode.MULTIPLY);
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
+			
 			@Override
 			public boolean onLongClick(View arg0) {
 
@@ -214,13 +227,22 @@ public class DataWalk extends Activity implements LocationListener {
 				} else {
 
 					runLock.acquire();
+					
 					thruUpload = true;
+					
+					accel = new float[4];
+					if (mSensorManager == null)
+						mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+					
+					mSensorManager.registerListener(DataWalk.this,
+							mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+							SensorManager.SENSOR_DELAY_FASTEST);
 
 					elapsedMillis = 0;
 					i = 0;
 
 					try {
-						Thread.sleep(100);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						Toast.makeText(
 								getBaseContext(),
@@ -250,20 +272,19 @@ public class DataWalk extends Activity implements LocationListener {
 
 							if (!rapi.isConnectedToInternet())
 								uploadPoint = false;
+							else
+								uploadPoint = true;
 
-							if ((i % 10) == 1) {
+							if (((i % 10) == 1) && i >= 9) {
 								JSONArray dataJSON = new JSONArray();
 								JSONArray dataSetNew = new JSONArray();
 
 								try {
 
-									/* Latitude */dataJSON.put(loc
-											.getLatitude());
-									/* Longitude */dataJSON.put(loc
-											.getLongitude());
-									/* Time */dataJSON.put(System
-											.currentTimeMillis()
-											+ elapsedMillis);
+									dataJSON.put(accel[3]);
+									dataJSON.put(loc.getLatitude());
+									dataJSON.put(loc.getLongitude());
+									dataJSON.put(System.currentTimeMillis() + elapsedMillis);
 
 									dataSetNew.put(dataJSON);
 									dataSet = dataSetNew;
@@ -321,7 +342,13 @@ public class DataWalk extends Activity implements LocationListener {
 	public void onStop() {
 		super.onStop();
 
-		mLocationManager.removeUpdates(DataWalk.this);
+		if (!running) {
+			if (mLocationManager != null)
+				mLocationManager.removeUpdates(DataWalk.this);
+
+			if (mSensorManager != null)
+				mSensorManager.unregisterListener(DataWalk.this);
+		}
 
 		if (timeTimer != null)
 			timeTimer.cancel();
@@ -696,7 +723,7 @@ public class DataWalk extends Activity implements LocationListener {
 	}
 
 	static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
+		return android.os.Build.VERSION.SDK_INT;
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -704,7 +731,7 @@ public class DataWalk extends Activity implements LocationListener {
 		@Override
 		public void run() {
 
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss", Locale.US);
 			Date dt = new Date();
 			String dateString = sdf.format(dt);
 
@@ -713,7 +740,7 @@ public class DataWalk extends Activity implements LocationListener {
 			if (sessionId == -1) {
 				if (nameOfSession.equals("")) {
 					sessionId = rapi.createSession(experimentId,
-							"*Session Name Not Provided*",
+							"Session name not provided",
 							"Automated Submission Through Android App",
 							"801 Mt Vernon Place NW", "Washington D.C.",
 							"United States");
@@ -753,6 +780,7 @@ public class DataWalk extends Activity implements LocationListener {
 		@Override
 		protected Void doInBackground(Void... voids) {
 
+			rapi.login(loginName, loginPass);
 			uploader.run();
 			return null;
 
@@ -927,5 +955,21 @@ public class DataWalk extends Activity implements LocationListener {
 			showDialog(DIALOG_NO_CONNECT);
 		}
 
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+			accel[0] = event.values[0];
+			accel[1] = event.values[1];
+			accel[2] = event.values[2];
+			accel[3] = (float) Math.sqrt((float) (Math.pow(accel[0], 2)
+					+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
+		}
 	}
 }
