@@ -37,7 +37,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -55,7 +54,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -70,7 +70,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
 
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
@@ -117,6 +121,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	static final public int CAMERA_PIC_REQUESTED = 1;
 	static final public int CAMERA_VID_REQUESTED = 2;
+
+	public DataFieldManager dfm;
+	public Fields f;
 
 	private int count = 0;
 	private int countdown = 10;
@@ -175,6 +182,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static Context mContext;
 
 	private TextView loggedInAs;
+	private PowerManager pm;
+	private WakeLock wl;
+
+	public static UploadQueue uq;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -193,6 +204,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						getApplicationContext());
 		rapi.useDev(true);
 
+		f = new Fields();
+		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
+				mContext, f);
+		dfm.getOrder();
+		uq = new UploadQueue("Car Ramp Physics", mContext, rapi);
+		uq.buildQueueFromFile();
+
+		dateString = "";
+
+		pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP, "wakelock");
 		// where login was
 
 		mHandler = new Handler();
@@ -217,6 +239,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
 
+				wl.acquire();
+
 				if (running) {
 
 					if (timeHasElapsed) {
@@ -236,18 +260,21 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						choiceViaMenu = false;
 
 						if (!appTimedOut)
-							try{
-								Intent dataIntent = new Intent(CarRampPhysicsV2.this, DataActivity.class);
+							try {
+								Intent dataIntent = new Intent(
+										CarRampPhysicsV2.this,
+										DataActivity.class);
 								dataIntent.putExtra("len", len);
 								dataIntent.putExtra("len2", len2);
 								dataIntent.putExtra("First Name", firstName);
-								dataIntent.putExtra("Last Initial", lastInitial);
+								dataIntent
+										.putExtra("Last Initial", lastInitial);
+
 								startActivity(dataIntent);
+							} catch (Exception e) {
+
 							}
-						catch(Exception e){
-							
-						}
-							
+
 						else
 							Toast.makeText(
 									CarRampPhysicsV2.this,
@@ -272,7 +299,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 					startStop.setEnabled(true);
-
 				} else {
 
 					startStop.setEnabled(false);
@@ -354,16 +380,28 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									countdown--;
 								}
 
-								JSONArray dataJSON = new JSONArray();
+								f.timeMillis = currentTime + elapsedMillis;
+								SharedPreferences prefs = getSharedPreferences(
+										RecordSettings.RECORD_SETTINGS, 0);
 
-								/* Time */dataJSON.put(currentTime
-										+ elapsedMillis);
-								/* Accel-y */dataJSON.put(toThou
-										.format(accel[1]));
+								x = prefs.getBoolean("X", x);
+								y = prefs.getBoolean("Y", y);
+								z = prefs.getBoolean("Z", z);
+								mag = prefs.getBoolean("Magnitude", mag);
+								if (x) {
+									f.accel_x = toThou.format(accel[0]);
+								}
+								if (y) {
+									f.accel_y = toThou.format(accel[1]);
+								}
+								if (z) {
+									f.accel_z = toThou.format(accel[2]);
+								}
+								if (mag) {
+									f.accel_total = toThou.format(accel[3]);
+								}
 
-								/* Accel-z */// dataJSON.put(toThou.format(accel[2]));
-
-								dataSet.put(dataJSON);
+								dataSet.put(dfm.putData());
 
 							}
 
@@ -372,7 +410,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					startStop.getBackground().setColorFilter(0xFF00FF00,
 							PorterDuff.Mode.MULTIPLY);
 				}
-
+				wl.release();
 				return running;
 
 			}
@@ -425,9 +463,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		} else {
 			Toast.makeText(
 					this,
-					"You are not connected to the Internet. Redirecting to Network Settings",
+					"You are not connected to the Internet. Data saving enabled",
 					Toast.LENGTH_LONG).show();
-			startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 		}
 
 	}
@@ -503,6 +540,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs = getSharedPreferences(
 				RecordSettings.RECORD_SETTINGS, 0);
 
+		wl.release();
+
 		x = prefs.getBoolean("X", x);
 		y = prefs.getBoolean("Y", y);
 		z = prefs.getBoolean("Z", z);
@@ -529,14 +568,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		values.setText(dataLabel);
 
 		// if (running)
-		
 
 		if (!rapi.isConnectedToInternet()) {
 			Toast.makeText(
 					this,
-					"You are not connected to the Internet. Redirecting to Network Settings",
+					"You are not connected to the Internet. Data will be saved to phone.",
 					Toast.LENGTH_LONG).show();
-			startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 		} else {
 			if (firstName.equals("") || lastInitial.equals("")) {
 				if (!dontPromptMeTwice) {
@@ -545,6 +582,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 			}
 		}
+
+		if (uq != null)
+			uq.buildQueueFromFile();
+
 	}
 
 	@Override
@@ -586,12 +627,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivity(new Intent(this, RecordSettings.class));
 			return true;
 		case R.id.experiment_select:
-			startActivity(new Intent(this, Setup.class));
-			prefs = getSharedPreferences("EID",0);
-			experimentNumber = prefs.getString("experiment_id", null);
-			if (experimentNumber == null)
-				experimentNumber = "409";
+			Intent setup = new Intent(this, Setup.class);
+			startActivityForResult(setup, EXPERIMENT_REQUESTED);
 			return true;
+		case R.id.upload:
+			manageUploadQueue();
 		}
 		return false;
 	}
@@ -686,7 +726,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
 		switch (id) {
-
 
 		case DIALOG_FORCE_STOP:
 
@@ -959,10 +998,28 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		return Integer.parseInt(android.os.Build.VERSION.SDK);
 	}
 
+	public static final int EXPERIMENT_REQUESTED = 9000;
+	public static final int QUEUE_UPLOAD_REQUESTED = 5000;
+
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
 		dontPromptMeTwice = false;
+
+		if (reqCode == EXPERIMENT_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				SharedPreferences prefs = getSharedPreferences("EID", 0);
+				experimentNumber = prefs.getString("experiment_id", null);
+				if (experimentNumber == null)
+					experimentNumber = "409";
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
+						rapi, mContext, f);
+				dfm.getOrder();
+			}
+		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
+			uq.buildQueueFromFile();
+
+		}
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -1019,7 +1076,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	};
 
-	
 	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
 		@Override
 		protected void onPreExecute() {
@@ -1129,6 +1185,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 				});
 		return alert.create();
+	}
+
+	private void manageUploadQueue() {
+
+		if (!uq.emptyQueue()) {
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		} else {
+			Toast.makeText(this, "No data to upload", Toast.LENGTH_LONG).show();
+		}
 	}
 
 }

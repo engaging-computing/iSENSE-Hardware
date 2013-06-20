@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -32,40 +33,62 @@
         <activity
             android:name=".carphysicsv2.EnterNameActivity"
             android:label="@string/promptForName"
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".carphysicsv2.RecordSettings"
-            android:label="@string/recordSettings" 
+            android:label="@string/recordSettings"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".carphysicsv2.AboutActivity"
-            android:label="@string/about_title" 
+            android:label="@string/about_title"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Dialog"  >
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".carphysicsv2.DataActivity"
             android:label="@string/upload_or_trash"
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".exp.Setup"
-            android:label="@string/chooseExperimentTitle" 
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:label="@string/chooseExperimentTitle"
+            android:screenOrientation="portrait"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".exp.BrowseExperiments"
-            android:label="@string/select_exp" 
+            android:label="@string/select_exp"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".exp.NoQR"
-            android:label="@string/no_qr" 
+            android:label="@string/no_qr"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueLayout"
+            android:label="Upload Data"
+            android:theme="@style/theme_queue_layout" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueAlter"
+            android:label="Alter Data Set"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditData"
+            android:label="Edit Data"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".carrampphysicsv2.UploadActivity"
+            android:label="Data Saving"
+            android:screenOrientation="portrait"
+            android:theme="@style/theme_dialog_white" >
         </activity>
     </application>
 

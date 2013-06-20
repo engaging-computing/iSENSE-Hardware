@@ -52,10 +52,18 @@
         <requestFocus />
     </EditText>
 
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/initialInput"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
+        style="?android:buttonBarStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/initialInput"
+        android:layout_below="@id/view1"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:background="@android:color/transparent"
@@ -64,6 +72,7 @@
 
         <Button
             android:id="@+id/OkButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="OK" />

@@ -12,14 +12,23 @@
         android:text="@string/about_app"
         android:textSize="16sp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:orientation="vertical" >
+    </View>
+
     <LinearLayout
         android:id="@+id/LinearLayout2"
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent" >
 
         <Button
             android:id="@+id/button1"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@android:string/ok" />

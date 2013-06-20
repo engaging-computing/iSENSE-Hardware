@@ -1,6 +1,5 @@
 package edu.uml.cs.isense.carphysicsv2;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +21,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.queue.DataSet;
 
 public class DataActivity extends Activity {
 
@@ -36,58 +36,49 @@ public class DataActivity extends Activity {
 	private String firstName;
 	private String lastInitial;
 	private JSONArray dataSet;
-	
-	public void onCreate(Bundle savedInstanceBundle){
+	private boolean uploadSuccessful = true;
+
+	public void onCreate(Bundle savedInstanceBundle) {
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.upload_or_trash);
-		
+
 		iSENSE_Button = (Button) findViewById(R.id.iSENSE_Button);
 		discard_Button = (Button) findViewById(R.id.discard_Button);
-		
+
 		len = getIntent().getExtras().getInt("len");
 		len2 = getIntent().getExtras().getInt("len2");
 		dataSet = CarRampPhysicsV2.dataSet;
 		firstName = getIntent().getExtras().getString("First Name");
 		lastInitial = getIntent().getExtras().getString("Last Initial");
 		loc = CarRampPhysicsV2.loc;
-		
+
 		iSENSE_Button.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				rapi = RestAPI.getInstance();
 				if (len == 0 || len2 == 0)
 					Toast.makeText(DataActivity.this,
-							"There are no data to upload!",
-							Toast.LENGTH_LONG).show();
+							"There are no data to upload!", Toast.LENGTH_LONG)
+							.show();
 
-				else {
-					if (rapi.isConnectedToInternet()){
-						new Task().execute();
-					}
-					else
-						Toast.makeText(
-								DataActivity.this,
-								"No connection to Internet found!  Please enable wifi/mobile connectivity.",
-								Toast.LENGTH_LONG).show();
-				}
-				
-				
+				else
+					new UploadTask().execute();
+
 			}
 		});
-		
+
 		discard_Button.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(DataActivity.this,
-						"Data thrown away!",
+				Toast.makeText(DataActivity.this, "Data thrown away!",
 						Toast.LENGTH_LONG).show();
 				finish();
 			}
 		});
 	}
-	
+
 	private Runnable uploader = new Runnable() {
 
 		@Override
@@ -96,8 +87,10 @@ public class DataActivity extends Activity {
 			int sessionId = -1;
 			String city = "", state = "", country = "";
 			List<Address> address = null;
+			String addr = "";
 
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss", Locale.ENGLISH);
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
+					Locale.ENGLISH);
 			Date dt = new Date();
 			dateString = sdf.format(dt);
 
@@ -110,6 +103,7 @@ public class DataActivity extends Activity {
 						city = address.get(0).getLocality();
 						state = address.get(0).getAdminArea();
 						country = address.get(0).getCountryName();
+						addr = address.get(0).getThoroughfare();
 
 					}
 				}
@@ -121,13 +115,8 @@ public class DataActivity extends Activity {
 
 			String experimentNumber = new String();
 			experimentNumber = CarRampPhysicsV2.experimentNumber;
-			if (experimentNumber == null) {
-				Log.d("Lolcat", "String is still null bro.");
-			} else {
-				Log.d("Lolcat", "Fixed da string problemz!");
-			}
-			if (address.size() <= 0 || address == null) {
-				sessionId = rapi.createSession(experimentNumber , nameOfSession
+			if (address == null || address.size() <= 0) {
+				sessionId = rapi.createSession(experimentNumber, nameOfSession
 						+ " (location not found)",
 						"Automated Submission Through Android App", "", "", "");
 			} else if (firstName.equals("") || lastInitial.equals("")) {
@@ -141,16 +130,39 @@ public class DataActivity extends Activity {
 								+ ", " + state, country);
 			}
 
-			CarRampPhysicsV2.sessionUrl = CarRampPhysicsV2.baseSessionUrl + sessionId;
+			if (sessionId == -1) {
+				uploadSuccessful = false;
+				DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+						"Car Ramp Physics", experimentNumber,
+						dataSet.toString(), null, sessionId, city, state,
+						country, addr);
+				CarRampPhysicsV2.uq.addDataSetToQueue(ds);
+				CarRampPhysicsV2.uq.buildQueueFromFile();
+				return;
+			}
 
-			rapi.putSessionData(sessionId, experimentNumber, dataSet);
+			CarRampPhysicsV2.sessionUrl = CarRampPhysicsV2.baseSessionUrl
+					+ sessionId;
+
+			boolean success = rapi.putSessionData(sessionId, experimentNumber,
+					dataSet);
+
+			if (!success) {
+				uploadSuccessful = false;
+				DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+						"Car Ramp Physics", experimentNumber,
+						dataSet.toString(), null, sessionId, city, state,
+						country, addr);
+				CarRampPhysicsV2.uq.addDataSetToQueue(ds);
+				CarRampPhysicsV2.uq.buildQueueFromFile();
+				return;
+			}
 
 		}
 
 	};
-	public int mediaCount;
-	
-	public class Task extends AsyncTask<Void, Integer, Void> {
+
+	public class UploadTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
 		protected void onPreExecute() {
@@ -180,10 +192,13 @@ public class DataActivity extends Activity {
 
 			len = 0;
 			len2 = 0;
-			mediaCount = 0;
 
-			Toast.makeText(DataActivity.this, "Data upload successful.",
+			if (uploadSuccessful) {
+				Toast.makeText(DataActivity.this, "Data upload successful.",
 					Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(DataActivity.this, "Y'all is nub.", Toast.LENGTH_SHORT).show();
+			}
 			
 			finish();
 
