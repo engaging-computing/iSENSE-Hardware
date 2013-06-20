@@ -884,8 +884,8 @@
         Y_FIELDCONTENTS += (SCROLLVIEW_OBJ_INCR * objNum);
         fieldName = [[UILabel alloc] initWithFrame:[self setScrollViewItem:UI_FIELDNAME toSizeWithY:Y_FIELDNAME]];
     }
-    fieldName.backgroundColor = [UIColor blackColor];
-    fieldName.textColor = [UIColor whiteColor];
+    fieldName.backgroundColor = [UIColor clearColor];
+    fieldName.textColor = [UIColor blackColor];
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
