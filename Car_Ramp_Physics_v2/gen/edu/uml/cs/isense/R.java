@@ -35,7 +35,7 @@ public final class R {
         public static final int ImageViewLogo=0x7f08001f;
         public static final int LinearLayout1=0x7f080000;
         public static final int LinearLayout2=0x7f080002;
-        public static final int OkButton=0x7f08000c;
+        public static final int OkButton=0x7f08000b;
         public static final int about_app=0x7f080049;
         public static final int bottomtext=0x7f080016;
         public static final int button1=0x7f080003;
@@ -104,7 +104,7 @@ public final class R {
         public static final int userNameEditText=0x7f08001b;
         public static final int userNameTextView=0x7f08001a;
         public static final int values=0x7f080020;
-        public static final int view1=0x7f08000b;
+        public static final int view1=0x7f08000c;
         public static final int waffle_check=0x7f080042;
         public static final int waffle_warn=0x7f080044;
         public static final int waffle_x=0x7f080045;
