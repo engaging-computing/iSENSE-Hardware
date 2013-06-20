@@ -64,10 +64,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import edu.uml.cs.isense.collector.dialogs.CanLogin;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
@@ -158,7 +161,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Sensor Components
 	private SensorManager mSensorManager;
 
-
+	
 	/* Data Recording Specific Components */
 
 	// Recording status trigger
@@ -374,11 +377,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		setContentView(R.layout.data_collector);
+		setContentView(R.layout.automatic_concept);
 
-		// Initialize everything you're going to need
-		initVars();
-		initMainUI();
+		// Re-initialize everything we're going to need
+		reInitVars();
+		reInitMainUI();
 
 		// Assign everything to respective variables
 		assignVars();
@@ -665,17 +668,20 @@ public class DataCollector extends Activity implements SensorEventListener,
 			startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
 
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			
 			step3.setText(getResources().getString(R.string.step3));
+			disableStep2();
+			
 			if (resultCode == RESULT_OK) {
-				
 				sessionDescription = data.getStringExtra("description");
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
 				w.make("Data set deleted", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
+				OrientationManager.enableRotation((Activity) mContext);
 			}
-
+			
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 
 			boolean success = uq.buildQueueFromFile();
@@ -713,25 +719,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 		public void run() {
 			int sessionId = -1;
 
+			// Try to obtain a location of upload
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
-			try {
-				if (loc != null) {
-					address = new Geocoder(DataCollector.this,
-							Locale.getDefault()).getFromLocation(
-							loc.getLatitude(), loc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
+			if (rapi.isConnectedToInternet()){
+				try {
+					if (loc != null) {
+						address = new Geocoder(DataCollector.this,
+								Locale.getDefault()).getFromLocation(
+										loc.getLatitude(), loc.getLongitude(), 1);
+						if (address.size() > 0) {
+							city = address.get(0).getLocality();
+							state = address.get(0).getAdminArea();
+							country = address.get(0).getCountryName();
+							addr = address.get(0).getAddressLine(0);
+						}
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 
+			// Prepare description for data set
 			String description;
 			if (sessionDescription.equals(""))
 				description = "Automated Submission Through Android Data Collection App";
@@ -741,28 +751,52 @@ public class DataCollector extends Activity implements SensorEventListener,
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String eid = mPrefs.getString("experiment_id", "");
 
+			// Reset the description
 			sessionDescription = "";
-				
-			// Saves data for later upload
-			DataSet ds = new DataSet(DataSet.Type.DATA, sessionName,
-					description, eid, dataSet.toString(), null,
-					sessionId, city, state, country, addr);
-			uq.addDataSetToQueue(ds);
-				
+			
+			// Start to upload media and data
 			int pic = MediaManager.pictureArray.size();
-			while (pic > 0) {
+			
+			// Check for media
+			if (pic != 0) {
+				
+				// Associates latest picture with data set, then associates rest to experiment
+				boolean firstSave = true;
+				
+				while (pic > 0) {
 					
-				// Saves pictures for later upload
-				DataSet dsp = new DataSet(DataSet.Type.PIC,
-						sessionName, description, eid, null,
-						MediaManager.pictureArray.get(pic - 1),
+					// First run through, save data with the picture
+					if (firstSave) {
+						DataSet ds = new DataSet(DataSet.Type.BOTH, sessionName,
+								description, eid, dataSet.toString(), 
+								MediaManager.pictureArray.get(pic - 1),
+								sessionId, city, state, country, addr);
+						uq.addDataSetToQueue(ds);
+						firstSave = false;
+						
+					// Next set of runs, save the remaining pictures
+					} else {
+						DataSet dsp = new DataSet(DataSet.Type.PIC,
+								sessionName, description, eid, null,
+								MediaManager.pictureArray.get(pic - 1),
+								sessionId, city, state, country, addr);
+						uq.addDataSetToQueue(dsp);
+					}
+						
+					pic--;
+				}
+				
+				// When finished, clear out the media array
+				MediaManager.pictureArray.clear();
+				
+			// Else if no pictures, just save data
+			} else {
+				DataSet ds = new DataSet(DataSet.Type.DATA, sessionName,
+						description, eid, dataSet.toString(), null,
 						sessionId, city, state, country, addr);
-				uq.addDataSetToQueue(dsp);
-					
-				pic--;
+				uq.addDataSetToQueue(ds);
 			}
-
-			MediaManager.pictureArray.clear();
+	
 		}
 
 	};
@@ -964,6 +998,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void initDfm() {
+		
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		String experimentInput = mPrefs.getString("experiment_id", "");
 
@@ -998,58 +1033,58 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[Fields.TIME] = true;
 
-			if (s.equals(getString(R.string.accel_x)))
+			else if (s.equals(getString(R.string.accel_x)))
 				dfm.enabledFields[Fields.ACCEL_X] = true;
 
-			if (s.equals(getString(R.string.accel_y)))
+			else if (s.equals(getString(R.string.accel_y)))
 				dfm.enabledFields[Fields.ACCEL_Y] = true;
 
-			if (s.equals(getString(R.string.accel_z)))
+			else if (s.equals(getString(R.string.accel_z)))
 				dfm.enabledFields[Fields.ACCEL_Z] = true;
 
-			if (s.equals(getString(R.string.accel_total)))
+			else if (s.equals(getString(R.string.accel_total)))
 				dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
 
-			if (s.equals(getString(R.string.latitude)))
+			else if (s.equals(getString(R.string.latitude)))
 				dfm.enabledFields[Fields.LATITUDE] = true;
 
-			if (s.equals(getString(R.string.longitude)))
+			else if (s.equals(getString(R.string.longitude)))
 				dfm.enabledFields[Fields.LONGITUDE] = true;
 
-			if (s.equals(getString(R.string.magnetic_x)))
+			else if (s.equals(getString(R.string.magnetic_x)))
 				dfm.enabledFields[Fields.MAG_X] = true;
 
-			if (s.equals(getString(R.string.magnetic_y)))
+			else if (s.equals(getString(R.string.magnetic_y)))
 				dfm.enabledFields[Fields.MAG_Y] = true;
 
-			if (s.equals(getString(R.string.magnetic_z)))
+			else if (s.equals(getString(R.string.magnetic_z)))
 				dfm.enabledFields[Fields.MAG_Z] = true;
 
-			if (s.equals(getString(R.string.magnetic_total)))
+			else if (s.equals(getString(R.string.magnetic_total)))
 				dfm.enabledFields[Fields.MAG_TOTAL] = true;
 
-			if (s.equals(getString(R.string.heading_deg)))
+			else if (s.equals(getString(R.string.heading_deg)))
 				dfm.enabledFields[Fields.HEADING_DEG] = true;
 
-			if (s.equals(getString(R.string.heading_rad)))
+			else if (s.equals(getString(R.string.heading_rad)))
 				dfm.enabledFields[Fields.HEADING_RAD] = true;
 
-			if (s.equals(getString(R.string.temperature_c)))
+			else if (s.equals(getString(R.string.temperature_c)))
 				dfm.enabledFields[Fields.TEMPERATURE_C] = true;
 
-			if (s.equals(getString(R.string.temperature_f)))
+			else if (s.equals(getString(R.string.temperature_f)))
 				dfm.enabledFields[Fields.TEMPERATURE_F] = true;
 
-			if (s.equals(getString(R.string.temperature_k)))
+			else if (s.equals(getString(R.string.temperature_k)))
 				dfm.enabledFields[Fields.TEMPERATURE_K] = true;
 
-			if (s.equals(getString(R.string.pressure)))
+			else if (s.equals(getString(R.string.pressure)))
 				dfm.enabledFields[Fields.PRESSURE] = true;
 
-			if (s.equals(getString(R.string.altitude)))
+			else if (s.equals(getString(R.string.altitude)))
 				dfm.enabledFields[Fields.ALTITUDE] = true;
 
-			if (s.equals(getString(R.string.luminous_flux)))
+			else if (s.equals(getString(R.string.luminous_flux)))
 				dfm.enabledFields[Fields.LIGHT] = true;
 
 		}
@@ -1096,6 +1131,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setText(getResources().getString(R.string.step3));
 		if (uq != null) if (uq.emptyQueue()) disableStep3(); else enableStep3();
 	}
+	
+	// UI variables to re-initialize onConfigurationChange
+	private void reInitMainUI() {
+		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
+		step1 = (Button) findViewById(R.id.auto_step1);
+		step1.setText(getResources().getString(R.string.step1));
+		step2 = (Button) findViewById(R.id.auto_step2);
+		step2.setText(getResources().getString(R.string.step2));
+		if (sessionName.equals("")) disableStep2();
+		step3 = (Button) findViewById(R.id.auto_step3);
+		step3.setText(getResources().getString(R.string.step3));
+		if (uq != null) if (uq.emptyQueue()) disableStep3(); else enableStep3();
+	}
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
@@ -1103,7 +1151,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		uq = new UploadQueue("datacollector", mContext, rapi);
 		uq.buildQueueFromFile();
@@ -1131,69 +1179,37 @@ public class DataCollector extends Activity implements SensorEventListener,
 		initLocations();
 	}
 	
-	/*private void performCredentialChecks() {
-		if (rapi.isConnectedToInternet()) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					DataCollector.mContext,
-					DataCollector.mContext.getSharedPreferences("USER_INFO",
-							Context.MODE_PRIVATE));
+	// Variables to re-initialize for onConfigurationChange
+	private void reInitVars() {
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
+		rapi.useDev(true);
 
-			if (!(mPrefs.getString("username", "").equals(""))) {
-				login();
-				checkExpNumCredentials();
-			} else {
-				Intent iCanLogin = new Intent(mContext, CanLogin.class);
-				startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
-			}
-		} else {
-			checkExpNumCredentials();
-		}
+		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq.buildQueueFromFile();
+
+		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		w = new Waffle(this);
+		f = new Fields();
+		
+		accel = new float[4];
+		orientation = new float[3];
+		rawAccel = new float[3];
+		rawMag = new float[3];
+		mag = new float[3];
+
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+
+		initLocations();
 	}
 	
-	private void checkExpNumCredentials() {
-		if (rapi.isConnectedToInternet())
-			checkExpNumCredentialsWithConnectivity();
-		else
-			checkExpNumCredentialsWithoutConnectivity();
-	}
 	
-	private void checkExpNumCredentialsWithConnectivity() {
-		SharedPreferences expPrefs = getSharedPreferences("EID", 0);
-		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String fields = mPrefs.getString("accepted_fields", "");
-			if (!(fields.equals(""))) {
-				if (dfm == null) initDfm();
-				getEnabledFields();
-			} else {
-				new SensorCheckTask().execute();
-			}
-		} else {
-			Intent iSetup = new Intent(DataCollector.this, Setup.class);
-			iSetup.putExtra("enable_no_exp_button", true);
-			startActivityForResult(iSetup, SETUP_REQUESTED);
-		}
-	}
-	
-	private void checkExpNumCredentialsWithoutConnectivity() {
-		SharedPreferences expPrefs = getSharedPreferences("EID", 0);
-		if (!(expPrefs.getString("experiment_id", "").equals(""))) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String fields = mPrefs.getString("accepted_fields", "");
-			if (!(fields.equals(""))) {
-				if (dfm == null) initDfm();
-				getEnabledFields();
-				Intent iCanRecord = new Intent(mContext, CanRecord.class);
-				startActivity(iCanRecord);
-			} else {
-				Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
-				startActivity(iNeedConnectivity);
-			}
-		} else {
-			Intent iNeedConnectivity = new Intent(mContext, NeedConnectivity.class);
-			startActivity(iNeedConnectivity);
-		}
-	}*/
 
 	@Override
 	protected void onStart() {
@@ -1382,10 +1398,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 						startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 					} else {
 
-						vibrator.vibrate(300);
-						mMediaPlayer.setLooping(false);
-						mMediaPlayer.start();
-						
 						setUpRecordingDescription();
 						
 						// start running task
@@ -1401,9 +1413,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 						step2.setTextColor(Color.parseColor("#008800"));
 						
 						setUpSensorsForRecording();
+
+						vibrator.vibrate(300);
+						mMediaPlayer.setLooping(false);
+						mMediaPlayer.start();
 						
 						isenseLogo.setImageResource(R.drawable.rsense_logo_recording);
 						isenseLogo.setBackgroundColor(Color.parseColor("#003300"));
+						
+						final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
+						ll.setAlpha(1.0f);
+						AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
+						flash.setDuration(500);
+						flash.setAnimationListener(new AnimationListener() {
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								ll.setAlpha(0.0f);
+							}
+							@Override
+							public void onAnimationRepeat(Animation animation) {}
+							@Override
+							public void onAnimationStart(Animation animation) {}
+						});
+						ll.startAnimation(flash);
 						
 						Intent iService = new Intent(mContext, DataCollectorService.class);
 						iService.putExtra(DataCollectorService.SRATE, sampleInterval);

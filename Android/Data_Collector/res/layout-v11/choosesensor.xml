@@ -12,14 +12,13 @@
         android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
         android:padding="10dp"
-        android:text="@string/select_fields_for"
-        android:textColor="#FFFFFF" />
+        android:text="@string/select_fields_for" />
 
     <ScrollView
         android:id="@+id/choosesensorscroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttons"
+        android:layout_above="@+id/sensor_ok"
         android:layout_below="@id/choose_sensor_text"
         android:background="@android:color/transparent"
         android:padding="5dp"
@@ -41,32 +40,12 @@
         android:layout_below="@id/choosesensorscroll"
         android:background="?android:attr/dividerVertical" />
 
-    <LinearLayout
-        android:id="@+id/buttons"
-        style="?android:attr/buttonBarStyle"
+    <Button
+        android:id="@id/sensor_ok"
+        android:layout_alignParentBottom="true"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/transparent"
-        android:orientation="horizontal"
-        android:weightSum="2" >
-
-        <Button
-            android:id="@+id/sensor_back"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/back"
-            tools:ignore="ButtonStyle" />
-
-        <Button
-            android:id="@+id/sensor_ok"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/ok" />
-    </LinearLayout>
+        android:text="@android:string/ok" />
 
 </RelativeLayout>

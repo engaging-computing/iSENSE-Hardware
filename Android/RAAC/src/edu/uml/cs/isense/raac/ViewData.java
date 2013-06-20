@@ -27,7 +27,7 @@ public class ViewData extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if (v == yes) {
 			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(Uri.parse(Isense.sessionUrl));
+			i.setData(Uri.parse(MainActivity.sessionUrl));
 			startActivity(i);
 		}
 		

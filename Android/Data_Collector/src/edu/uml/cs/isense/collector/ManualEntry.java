@@ -126,7 +126,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 		
 		initLocations();
 
@@ -141,9 +141,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 				+ loginPrefs.getString("username", ""));
 
 		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
-		//experimentLabel.setText(getResources().getString(
-		//		R.string.usingExperiment)
-		//		+ expPrefs.getString(PREFERENCES_EXP_ID, ""));
 
 		sessionName = (EditText) findViewById(R.id.manual_session_name);
 
@@ -199,7 +196,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				iMedia.putExtra("sessionName", sessionName.getText().toString());
 				startActivityForResult(iMedia, MEDIA_REQUESTED);
 			} else {
-				sessionName.setError("Enter a session name first");
+				sessionName.setError("Enter a session name");
 			}
 		}
 	}
