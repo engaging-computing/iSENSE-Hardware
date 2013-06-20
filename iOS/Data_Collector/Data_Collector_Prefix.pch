@@ -12,5 +12,7 @@
 #import <iSENSE.h>
 #import "HexColor.h"
 #import "ExperimentBrowseViewController.h"
+#import <CoreData/CoreData.h>
+
 
 #endif

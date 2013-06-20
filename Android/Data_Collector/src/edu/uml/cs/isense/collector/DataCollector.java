@@ -161,7 +161,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Sensor Components
 	private SensorManager mSensorManager;
 
-
+	
 	/* Data Recording Specific Components */
 
 	// Recording status trigger

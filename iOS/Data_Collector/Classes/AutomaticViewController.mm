@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper, dataSaver;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper, dataSaver, managedObjectContext;
 
 // Long Click Responder
 - (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
@@ -78,10 +78,7 @@
             startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
-            [motionManager stopAccelerometerUpdates]; // TODO - is this all we need to stop updates for?
-            [motionManager stopMagnetometerUpdates];
-            if (motionManager.gyroAvailable) [motionManager stopGyroUpdates];
-            
+            [self stopRecording:motionManager];
             [self setIsRecording:FALSE];
             
             // Open up description dialog
@@ -124,27 +121,68 @@
     NSString *name = @"Session From Mobile";
     if (sessionTitle.text.length != 0) name = sessionTitle.text;
     NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
-    NSLog(@"%@", address);
-    NSLog(@"%@", city);
-    NSLog(@"%@", country);
 
     NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
+    if ([session_num intValue] == -1) {
+        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+        [ds setName:name];
+        [ds setDataDescription:description];
+        [ds setEid:exp_num];
+        [ds setData:nil];
+        [ds setPicturePaths:nil];
+        [ds setSid:[NSNumber numberWithInt:-1]];
+        [ds setCity:city];
+        [ds setCountry:country];
+        [ds setAddress:address];
+        [ds setUploadable:[NSNumber numberWithBool:true]];
+        // Add the new data set to the queue
+        [dataSaver addDataSet:ds];
+        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+        
+        // Commit the changes
+        NSError *error = nil;
+        if (![managedObjectContext save:&error]) {
+            // Handle the error.
+            NSLog(@"%@", error);
+        }
+        
+        return false;
+    }
     
     // Upload to iSENSE (pass me JSON data)
     NSError *error = nil;
     NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+    if (error != nil) {
+        NSLog(@"%@", error);
+        return false;
+    }
+    
     bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-
     if (!success) {
-        DataSet *ds = [[DataSet alloc] initWithName:name andDescription:description andEID:expNum andData:results andPicturePaths:nil andSessionId:session_num.intValue andCity:city andCountry:country andAddress:address];
+        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+        [ds setName:name];
+        [ds setDataDescription:description];
+        [ds setEid:exp_num];
+        [ds setData:results];
+        [ds setPicturePaths:nil];
+        [ds setSid:session_num];
+        [ds setCity:city];
+        [ds setCountry:country];
+        [ds setAddress:address];
+        [ds setUploadable:[NSNumber numberWithBool:true]];
         
+        // Add the new data set to the queue
         [dataSaver addDataSet:ds];
         NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-        [ds release];
         
+        // Commit the changes
+        NSError *error = nil;
+        if (![managedObjectContext save:&error]) {
+            // Handle the error.
+            NSLog(@"%@", error);
+        }
     }
     [exp_num release];
-    
     return success;
 }
 
@@ -394,6 +432,8 @@
         [self updateExpNumLabel]; // TODO - this wasn't here before but I'm assuming it should be since it's in the iPad code as well
     }
     
+    motionManager = [[CMMotionManager alloc] init];
+    
     [self initLocations];
     dfm = [DataFieldManager alloc];
     [self resetAddressFields];
@@ -409,8 +449,43 @@
     dataSaver = [[DataSaver alloc] init];
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
+    
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // Fetch the old DataSets
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    if (dataSetEntity) {
+        [request setEntity:dataSetEntity];
+    
+        // Sort results for DataSets
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
+        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+        [request setSortDescriptors:sortDescriptors];
+    
+        // Actually make the request
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        if (mutableFetchResults == nil) {
+            // Handle the error.
+        }
+    
+        // fill dataSaver's DataSet Queue
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            [dataSaver addDataSet:mutableFetchResults[i]];
+        }
+
+        // release the fetched objects
+        [sortDescriptor release];
+        [sortDescriptors release];
+        [mutableFetchResults release];
+        [request release];
+    }
 }
 
+// Upates the sample interval text on the main UI
 - (void) sampleIntervalUpdated {
     if (sampleInterval.text.intValue >= 125)recommendedSampleInterval = sampleInterval.text.intValue;
     else {
@@ -584,7 +659,7 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-
+// Low memory
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -592,7 +667,7 @@
     // Release any cached data, images, etc. that aren't in use.
 }
 
-
+// Use this when view loads
 - (void)viewDidUnload {
     [super viewDidUnload];
     //[self addChildViewController:(UIViewController*) self.yourChildController];
@@ -600,7 +675,7 @@
     // e.g. self.myOutlet = nil;
 }
 
-
+// Release all the extra 
 - (void)dealloc {
     [mainLogo release];
     [menuButton release];
@@ -616,6 +691,7 @@
     
 }
 
+// Log you into to iSENSE using the iSENSE API
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
@@ -653,7 +729,6 @@
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
     recommendedSampleInterval = [[NSString stringWithString:[sampleInterval text]] floatValue];
-    motionManager = [[CMMotionManager alloc] init];
     
     // Make a new float
     float rate = .125;
@@ -664,8 +739,9 @@
     motionManager.accelerometerUpdateInterval = rate;
     motionManager.magnetometerUpdateInterval = rate;
     motionManager.gyroUpdateInterval = rate;
-    [motionManager startAccelerometerUpdates];
-    [motionManager startMagnetometerUpdates];
+    if (motionManager.accelerometerAvailable) [motionManager startAccelerometerUpdates];
+    else { NSLog(@"Accelometer currently unavailible."); };
+    if (motionManager.magnetometerAvailable) [motionManager startMagnetometerUpdates];
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
     
     // New JSON array to hold data
@@ -673,9 +749,6 @@
     
     // Start the new timer
     recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
-    
-    NSLog(@"End Record Data");
-
 }
 
 // Fill dataToBeJSONed with a row of data
@@ -686,8 +759,10 @@
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
     
+    
     // acceleration in meters per second squared
     fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
+    NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
     fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
     fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
     fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
@@ -721,7 +796,7 @@
     // Update parent JSON object
     [dfm orderDataFromFields:fieldsRow];
     
-    if (dfm.data != nil || dataToBeJSONed != nil)
+    if (dfm.data != nil && dataToBeJSONed != nil)
         [dataToBeJSONed addObject:dfm.data];
     else {
         NSLog(@"something is wrong");
@@ -742,9 +817,10 @@
 }
 
 // Stops the recording and returns the actual data recorded :)
--(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager {
-    [finalMotionManager stopAccelerometerUpdates];
-    return dataToBeJSONed;
+-(void) stopRecording:(CMMotionManager *)finalMotionManager {
+//    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
+//    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
+//    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
 }
 
 // TODO - be rid of these 2 useless functions...
@@ -753,11 +829,12 @@
                 duration:TOAST_LENGTH_SHORT
                 position:TOAST_BOTTOM];
 }
+
+// TODO - get rid of this function
 - (void) upload {
     [self.view makeToast:@"Upload!"
                 duration:TOAST_LENGTH_SHORT
                 position:TOAST_BOTTOM];
-    
 }
 
 // Fetch the experiments from iSENSE
@@ -1090,6 +1167,5 @@
     [spinner release];
     return [message autorelease];
 }
-
 
 @end
