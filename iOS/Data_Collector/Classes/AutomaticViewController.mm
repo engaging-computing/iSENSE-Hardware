@@ -78,10 +78,7 @@
             startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
             [containerForMainButton updateImage:startStopButton];
             
-            [motionManager stopAccelerometerUpdates]; // TODO - is this all we need to stop updates for?
-            [motionManager stopMagnetometerUpdates];
-            if (motionManager.gyroAvailable) [motionManager stopGyroUpdates];
-            
+            [self stopRecording:motionManager];
             [self setIsRecording:FALSE];
             
             // Open up description dialog
@@ -435,6 +432,8 @@
         [self updateExpNumLabel]; // TODO - this wasn't here before but I'm assuming it should be since it's in the iPad code as well
     }
     
+    motionManager = [[CMMotionManager alloc] init];
+    
     [self initLocations];
     dfm = [DataFieldManager alloc];
     [self resetAddressFields];
@@ -486,6 +485,7 @@
     }
 }
 
+// Upates the sample interval text on the main UI
 - (void) sampleIntervalUpdated {
     if (sampleInterval.text.intValue >= 125)recommendedSampleInterval = sampleInterval.text.intValue;
     else {
@@ -659,7 +659,7 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-
+// Low memory
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -667,7 +667,7 @@
     // Release any cached data, images, etc. that aren't in use.
 }
 
-
+// Use this when view loads
 - (void)viewDidUnload {
     [super viewDidUnload];
     //[self addChildViewController:(UIViewController*) self.yourChildController];
@@ -675,7 +675,7 @@
     // e.g. self.myOutlet = nil;
 }
 
-
+// Release all the extra 
 - (void)dealloc {
     [mainLogo release];
     [menuButton release];
@@ -691,6 +691,7 @@
     
 }
 
+// Log you into to iSENSE using the iSENSE API
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
@@ -728,7 +729,6 @@
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
     recommendedSampleInterval = [[NSString stringWithString:[sampleInterval text]] floatValue];
-    motionManager = [[CMMotionManager alloc] init];
     
     // Make a new float
     float rate = .125;
@@ -739,8 +739,9 @@
     motionManager.accelerometerUpdateInterval = rate;
     motionManager.magnetometerUpdateInterval = rate;
     motionManager.gyroUpdateInterval = rate;
-    [motionManager startAccelerometerUpdates];
-    [motionManager startMagnetometerUpdates];
+    if (motionManager.accelerometerAvailable) [motionManager startAccelerometerUpdates];
+    else { NSLog(@"Accelometer currently unavailible."); };
+    if (motionManager.magnetometerAvailable) [motionManager startMagnetometerUpdates];
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
     
     // New JSON array to hold data
@@ -748,9 +749,6 @@
     
     // Start the new timer
     recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
-    
-    NSLog(@"End Record Data");
-
 }
 
 // Fill dataToBeJSONed with a row of data
@@ -761,8 +759,10 @@
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
     
+    
     // acceleration in meters per second squared
     fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
+    NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
     fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
     fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
     fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
@@ -796,7 +796,7 @@
     // Update parent JSON object
     [dfm orderDataFromFields:fieldsRow];
     
-    if (dfm.data != nil || dataToBeJSONed != nil)
+    if (dfm.data != nil && dataToBeJSONed != nil)
         [dataToBeJSONed addObject:dfm.data];
     else {
         NSLog(@"something is wrong");
@@ -817,9 +817,10 @@
 }
 
 // Stops the recording and returns the actual data recorded :)
--(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager {
-    [finalMotionManager stopAccelerometerUpdates];
-    return dataToBeJSONed;
+-(void) stopRecording:(CMMotionManager *)finalMotionManager {
+//    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
+//    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
+//    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
 }
 
 // TODO - be rid of these 2 useless functions...
@@ -828,11 +829,12 @@
                 duration:TOAST_LENGTH_SHORT
                 position:TOAST_BOTTOM];
 }
+
+// TODO - get rid of this function
 - (void) upload {
     [self.view makeToast:@"Upload!"
                 duration:TOAST_LENGTH_SHORT
                 position:TOAST_BOTTOM];
-    
 }
 
 // Fetch the experiments from iSENSE

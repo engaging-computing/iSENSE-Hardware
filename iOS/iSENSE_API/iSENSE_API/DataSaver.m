@@ -16,8 +16,6 @@
     self = [super init];
     if (self) {
         dataQueue = [[NSMutableDictionary alloc] init];
-        dataQueue.headKey = 0;
-        dataQueue.tailKey = 0;
         count = 0;
     }
     return self;
@@ -51,7 +49,8 @@
     DataSet *currentDS;
     while (count) {
         // get the next dataset
-        currentDS = [self removeDataSet:dataQueue.headKey];
+        int headKey = dataQueue.allKeys[0];
+        currentDS = [self removeDataSet:headKey];
         
         // check if the session is uploadable
         if ([currentDS uploadable]) {

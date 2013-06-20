@@ -42,7 +42,7 @@
 -(IBAction) displayMenu:(id)sender;
 -(void) updateLoginStatus;
 -(void) recordData;
--(NSMutableArray *) stopRecording:(CMMotionManager *)finalMotionManager;
+-(void) stopRecording:(CMMotionManager *)finalMotionManager;
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)password;
 - (void) experiment;

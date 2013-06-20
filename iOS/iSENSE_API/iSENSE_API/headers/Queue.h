@@ -16,10 +16,6 @@
 - (void) enqueue:(id)anObject withKey:(int)key;
 - (id) removeFromQueueWithKey:(int)key;
 
-
-@property (nonatomic, assign) int headKey;
-@property (nonatomic, assign) int tailKey;
-
 @end
 
 #endif /* defined(__iSENSE_API__queue__) */
