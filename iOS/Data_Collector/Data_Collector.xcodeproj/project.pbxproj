@@ -16,6 +16,7 @@
 		39046F531726FD4700938FEA /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7C1691F742009037A7 /* logo_green.png */; };
 		39046F541726FD5500938FEA /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7B1691F742009037A7 /* red_button.png */; };
 		39088254169B689F00BEE04F /* UIImageTint.m in Sources */ = {isa = PBXBuildFile; fileRef = 39088253169B689F00BEE04F /* UIImageTint.m */; };
+		39216FFA176F78FB0070DFCC /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 39216FF9176F78FB0070DFCC /* iSENSE_API_Bundle.bundle */; };
 		3963689E169725AA00631268 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3963689D169725AA00631268 /* Toast.m */; };
 		399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 399787AA16B2FDED005F147B /* ExperimentBlock.m */; };
 		399B39D316A089B0000564D9 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399B39D216A089B0000564D9 /* CoreMotion.framework */; };
@@ -43,6 +44,7 @@
 		39A1CE7916DFEB91008A99A6 /* green_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B791691F742009037A7 /* green_button.png */; };
 		39A6405D16F380680058A382 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A6405C16F380680058A382 /* underline.png */; };
 		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
+		39AD183C175538AE002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183B175538AE002969FA /* CoreData.framework */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
@@ -79,6 +81,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		39216FF8176F78FB0070DFCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		3921701E176FA08D0070DFCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39216FDC176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
 		3987713916DFB2F300DBDE56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
@@ -148,6 +164,7 @@
 		39A6405C16F380680058A382 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = underline.png; path = "Resources-iPad/underline.png"; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
+		39AD183B175538AE002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
 		39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBrowseViewController.m; sourceTree = "<group>"; };
 		39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView~ipad.xib"; sourceTree = "<group>"; };
@@ -215,6 +232,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39AD183C175538AE002969FA /* CoreData.framework in Frameworks */,
 				39A1CC2516DFB44300B1979F /* libiSENSE_API.a in Frameworks */,
 				B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */,
 				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
@@ -296,6 +314,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				39AD183B175538AE002969FA /* CoreData.framework */,
 				B7F534FE16CA941F007FBFCA /* CoreLocation.framework */,
 				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
 				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
@@ -344,6 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */,
+				39216FF9176F78FB0070DFCC /* iSENSE_API_Bundle.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -590,6 +610,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3921701F176FA08D0070DFCC /* PBXTargetDependency */,
 				39A1CC2416DFB43F00B1979F /* PBXTargetDependency */,
 				B7DD76D216B86550000B0CCF /* PBXTargetDependency */,
 			);
@@ -636,6 +657,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		39216FF9176F78FB0070DFCC /* iSENSE_API_Bundle.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iSENSE_API_Bundle.bundle;
+			remoteRef = 39216FF8176F78FB0070DFCC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -683,6 +711,7 @@
 				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
 				B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */,
 				39A1CE6A16DFEB45008A99A6 /* button_light_long.png in Resources */,
+				39216FFA176F78FB0070DFCC /* iSENSE_API_Bundle.bundle in Resources */,
 				39A1CE6B16DFEB66008A99A6 /* button_light.png in Resources */,
 				39A1CE6C16DFEB68008A99A6 /* button_dark.png in Resources */,
 				39A1CE6D16DFEB6B008A99A6 /* logo_datacollector_dark.png in Resources */,
@@ -734,6 +763,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3921701F176FA08D0070DFCC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API_Bundle;
+			targetProxy = 3921701E176FA08D0070DFCC /* PBXContainerItemProxy */;
+		};
 		39A1CC2416DFB43F00B1979F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = iSENSE_API;
@@ -770,6 +804,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -797,6 +832,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;

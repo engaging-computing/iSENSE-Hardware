@@ -38,7 +38,7 @@ static iSENSE *_iSENSE = nil;
         NSLog(@"Error Returning Dictionary: %@", requestError);
         return jsonDictionary;
     } @catch (NSException *e) {
-        NSLog(@"Exception: %@", e);
+        NSLog(@"Server Response Exception: %@", e);
         return nil;
     }
 }
@@ -143,7 +143,7 @@ static iSENSE *_iSENSE = nil;
         session_key = [NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]];
         uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
 	} @catch (NSException *e) {
-        NSLog(@"Exception: %@", e);
+        NSLog(@"Loggin Result Exception: %@", e);
         return FALSE;
     }
     
