@@ -37,7 +37,7 @@ public final class R {
     public static final class id {
         public static final int ExperimentSearchInput=0x7f080012;
         public static final int ImageViewLogo=0x7f080014;
-        public static final int OkButton=0x7f080007;
+        public static final int OkButton=0x7f080006;
         public static final int bottomtext=0x7f080011;
         public static final int buttons=0x7f080025;
         public static final int cancel=0x7f08002f;
@@ -54,7 +54,7 @@ public final class R {
         public static final int experiment_qr=0x7f08000b;
         public static final int experimentid=0x7f080023;
         public static final int howToUse=0x7f080016;
-        public static final int initialInput=0x7f080006;
+        public static final int initialInput=0x7f080007;
         public static final int initialLabel=0x7f080005;
         public static final int itemContent=0x7f08000f;
         public static final int layout_root=0x7f080002;
