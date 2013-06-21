@@ -1,16 +1,16 @@
 package edu.uml.cs.isense.carphysicsv2;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Display;
-import android.view.Gravity;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -79,37 +79,43 @@ public class EnterNameActivity extends Activity {
 			
 	}
 	
-	void displayEula() {
-    	AlertDialog.Builder adb = new SimpleEula(this).show();
-        if(adb != null) {
-        	Dialog dialog = adb.create();
-        	
-        	Display display = getWindowManager().getDefaultDisplay(); 
-        	int mwidth = display.getWidth();
-        	int mheight = display.getHeight();
-        	
-        	dialog.show();
-        	
-        	int apiLevel = getApiLevel();
-        	if(apiLevel >= 11) {
+	public static final int EULA_REQUESTED = 8000;
 
-        		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+	private PackageInfo getPackageInfo() {
+		PackageInfo pi = null;
+		try {
+			pi = getPackageManager().getPackageInfo(getPackageName(),
+					PackageManager.GET_ACTIVITIES);
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return pi;
+	}
+
+	void displayEula() {
+
+		PackageInfo versionInfo = getPackageInfo();
+
+		final String eulaKey = EulaActivity.EULA_PREFIX
+				+ versionInfo.versionCode;
+		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean hasBeenShown = prefs.getBoolean(eulaKey, false);
+
+		if (!hasBeenShown) {
+			startActivityForResult(new Intent(this, EulaActivity.class),
+					EULA_REQUESTED);
+			SharedPreferences.Editor editor = prefs.edit();
+        	editor.putBoolean(eulaKey, true);
+        	editor.commit();
         	
-        		lp.copyFrom(dialog.getWindow().getAttributes());
-        		lp.width = mwidth;
-        		lp.height = mheight;
-        		lp.gravity = Gravity.CENTER_VERTICAL;
-        		lp.dimAmount=0.7f;
-	    	
-        		dialog.getWindow().setAttributes(lp);
-        		dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        		
-        	}
-        }
-    }
+		}
+
+	}
+
 	
 	static int getApiLevel() {
-    	return Integer.parseInt(android.os.Build.VERSION.SDK);
+    	return android.os.Build.VERSION.SDK_INT;
     }
 	
 	public class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
