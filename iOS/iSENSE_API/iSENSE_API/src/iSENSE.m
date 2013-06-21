@@ -681,4 +681,10 @@ static iSENSE *_iSENSE = nil;
 	}
 }
 
+// Use this method to determine if internet connectivity is available
+- (bool) isConnectedToInternet {
+    NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://isenseproject.org"] encoding:NSASCIIStringEncoding error:nil];
+    return ( URLString != NULL ) ? true : false;
+}
+
 @end
