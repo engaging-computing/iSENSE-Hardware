@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "StepOneSetup.h"
 #import <ZXingWidgetController.h>
 #import <QRCodeReader.h>
 
