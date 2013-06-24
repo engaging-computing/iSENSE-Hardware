@@ -38,6 +38,9 @@
 "key_password"                  = "password";
 "key_exp_automatic"             = "expnum_automatic";
 "key_exp_manual"                = "expnum_manual";
+"key_remember_me"               = "rememberme";
+"key_select_later"              = "selectexplater";
+"key_step1_session_name"        = "step1sessionname";
 
 // ------------------------------ //
 // --- about application text --- //
