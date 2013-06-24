@@ -3,8 +3,9 @@
     <item android:id="@+id/about_app" android:title="@string/about_title"></item>
     <item android:id="@+id/login" android:title="@string/login_title"></item>
     <item android:id="@+id/record_settings" android:title="@string/recordSettings"></item>
-    <item android:id="@+id/experiment_select" android:title="@string/chooseExperimentTitle"></item>
-    <item android:id="@+id/upload" android:title="Upload"></item>
+    <item android:id="@+id/record_length" android:title="@string/record_length"></item><item android:id="@+id/experiment_select" android:title="@string/chooseExperimentTitle"></item>
+    <item android:id="@+id/upload" android:title="@string/upload"></item>
+    
     
 
 </menu>
