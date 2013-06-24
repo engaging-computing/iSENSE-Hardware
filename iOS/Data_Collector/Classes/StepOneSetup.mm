@@ -15,7 +15,7 @@
 
 @implementation StepOneSetup
 
-@synthesize sessionName, sampleInterval, testLength, rememberMe, selectExp, selectLater, cancel, ok;
+@synthesize sessionName, sampleInterval, testLength, rememberMe, selectExp, selectLater, ok;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -49,20 +49,68 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
+    if (self) {}
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    iapi = [iSENSE getInstance];
+    [iapi toggleUseDev:YES];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    NSString *defaultSesName = [prefs stringForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    NSString *newSesName = ([defaultSesName length] != 0) ? @"" : defaultSesName;
+    [sessionName setText:newSesName];
+    
+    // TODO - rememberMe check
+
+    
+    rememberMe.on = false;
+    selectLater.on = false;
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)okOnClick:(UIButton *)okButton {
+    
+}
+
+- (IBAction)experimentOnClick:(UIButton *)expButton {
+    
+}
+
+- (IBAction)selectLaterToggled:(UISwitch *)switcher {
+    if (switcher.on) {
+        selectExp.enabled = NO;
+        selectExp.alpha = 0.5;
+    } else {
+        selectExp.enabled = YES;
+        selectExp.alpha = 1.0;
+    }
+}
+
+- (IBAction)rememberMeToggled:(UISwitch *)switcher {
+    
+}
+
+- (void) dealloc {
+ 
+    [sessionName release];
+    [sampleInterval release];
+    [testLength release];
+    [rememberMe release];
+    [selectExp release];
+    [selectLater release];
+    [ok release];
+    
+    [super dealloc];
 }
 
 @end
