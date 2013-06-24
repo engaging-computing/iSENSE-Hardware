@@ -560,7 +560,7 @@ public class Main extends Activity implements SimpleGestureListener {
 										ctv.setCheckMarkDrawable(R.drawable.bluecheck);
 										checkedFiles.add(nextFile);
 									} else {
-										ctv.setCheckMarkDrawable(0);
+										ctv.setCheckMarkDrawable(0); 
 										checkedFiles.remove(nextFile);
 									}
 								} else
