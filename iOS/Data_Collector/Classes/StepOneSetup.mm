@@ -15,7 +15,7 @@
 
 @implementation StepOneSetup
 
-@synthesize sessionName, sampleInterval, testLength, rememberMe, selectExp, selectLater, ok;
+@synthesize sessionName, sampleInterval, testLength, expNumLabel, rememberMe, selectExp, selectLater, ok;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -59,18 +59,47 @@
     iapi = [iSENSE getInstance];
     [iapi toggleUseDev:YES];
     
+    sampleInterval.delegate = self;
+    testLength.delegate = self;
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     NSString *defaultSesName = [prefs stringForKey:[StringGrabber grabString:@"key_step1_session_name"]];
-    NSString *newSesName = ([defaultSesName length] != 0) ? @"" : defaultSesName;
+    NSString *newSesName = ([defaultSesName length] == 0) ? @"" : defaultSesName;
     [sessionName setText:newSesName];
     
-    // TODO - rememberMe check
+    bool remem = [prefs boolForKey:[StringGrabber grabString:@"key_remember_me_check"]];
+    if (remem) {
+        NSString *defaultSampleInterval = [prefs stringForKey:[StringGrabber grabString:@"key_sample_interval"]];
+        NSString *newSampleInterval = ([defaultSampleInterval length] == 0) ? @"" : defaultSampleInterval;
+        [sampleInterval setText:newSampleInterval];
+        
+        NSString *defaultTestLength = [prefs stringForKey:[StringGrabber grabString:@"key_test_length"]];
+        NSString *newTestLength = ([defaultTestLength length] == 0) ? @"" : defaultTestLength;
+        [testLength setText:newTestLength];
+        
+        rememberMe.on = true;
+    } else {
+        rememberMe.on = false;
+    }
+    
+    NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+    if ([defaultExp length] != 0) {
+        if ([defaultExp isEqualToString:@"-1"]) {
+            selectLater.on = true;
+            selectExp.enabled = NO;
+            selectExp.alpha = 0.5;
+        } else {
+            NSString *newExpLabel = [NSString stringWithFormat:@"(currently %@)", defaultExp];
+            [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+            selectLater.on = false;
+        }
+    } else {
+        selectLater.on = true;
+        selectExp.enabled = NO;
+        selectExp.alpha = 0.5;
+    }
 
-    
-    rememberMe.on = false;
-    selectLater.on = false;
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -79,7 +108,15 @@
 }
 
 - (IBAction)okOnClick:(UIButton *)okButton {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
+    if (rememberMe.on) {
+        [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+        [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+        [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
+    } else {
+       [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+    }
 }
 
 - (IBAction)experimentOnClick:(UIButton *)expButton {
@@ -105,12 +142,18 @@
     [sessionName release];
     [sampleInterval release];
     [testLength release];
+    [expNumLabel release];
     [rememberMe release];
     [selectExp release];
     [selectLater release];
     [ok release];
     
     [super dealloc];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 @end
