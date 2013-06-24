@@ -29,7 +29,7 @@ public class RecordSettings extends Activity {
 		ZcheckBox = (CheckedTextView) findViewById(R.id.checkedTextView3);
 		MagcheckBox = (CheckedTextView) findViewById(R.id.checkedTextView4);
 		
-		final Button DoneButton = (Button) findViewById(R.id.button1);
+		final Button DoneButton = (Button) findViewById(R.id.loginButton);
 		
 		XcheckBox.setChecked(Xchecked);
 		YcheckBox.setChecked(Ychecked);

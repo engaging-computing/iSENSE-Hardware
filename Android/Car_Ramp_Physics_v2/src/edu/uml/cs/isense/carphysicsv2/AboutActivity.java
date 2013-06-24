@@ -14,7 +14,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.about);
 		
-		okButton = (Button) findViewById(R.id.button1);
+		okButton = (Button) findViewById(R.id.loginButton);
 		
 		okButton.setOnClickListener(new View.OnClickListener() {
 			
