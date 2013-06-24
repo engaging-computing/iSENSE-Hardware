@@ -11,7 +11,13 @@
 
 @interface StepOneSetup : UIViewController {
     
+    iSENSE *iapi;
 }
+
+- (IBAction)rememberMeToggled:(UISwitch *)switcher;
+- (IBAction)selectLaterToggled:(UISwitch *)switcher;
+- (IBAction)experimentOnClick:(UIButton *)expButton;
+- (IBAction)okOnClick:(UIButton *)okButton;
 
 @property (nonatomic, retain) IBOutlet UITextField *sessionName;
 @property (nonatomic, retain) IBOutlet UITextField *sampleInterval;
@@ -19,9 +25,6 @@
 @property (nonatomic, retain) IBOutlet UISwitch    *rememberMe;
 @property (nonatomic, retain) IBOutlet UIButton    *selectExp;
 @property (nonatomic, retain) IBOutlet UISwitch    *selectLater;
-@property (nonatomic, retain) IBOutlet UIButton    *cancel;
 @property (nonatomic, retain) IBOutlet UIButton    *ok;
 
 @end
-
-
