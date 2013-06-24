@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1536</int>
+		<int key="IBDocument.SystemTarget">1552</int>
 		<string key="IBDocument.SystemVersion">11G63b</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
+		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1138.51</string>
 		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1930</string>
+			<string key="NS.object.0">2083</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -54,14 +54,13 @@
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
-						<reference key="IBUINormalTitleColor" ref="503003980"/>
+						<object class="NSColor" key="IBUINormalTitleColor" id="127733539">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4yODk0MjkyODEzIDAuNDY2NTI5NzAwNiAwLjc4NzM2NDEzMDQAA</bytes>
+						</object>
 						<object class="NSColor" key="IBUINormalTitleShadowColor" id="103340019">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
-						</object>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="154059279">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">button_dark.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="23753385">
 							<string key="name">Helvetica-Bold</string>
@@ -88,9 +87,8 @@
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Manual</string>
 						<reference key="IBUIHighlightedTitleColor" ref="503003980"/>
-						<reference key="IBUINormalTitleColor" ref="503003980"/>
+						<reference key="IBUINormalTitleColor" ref="127733539"/>
 						<reference key="IBUINormalTitleShadowColor" ref="103340019"/>
-						<reference key="IBUINormalBackgroundImage" ref="154059279"/>
 						<reference key="IBUIFontDescription" ref="23753385"/>
 						<reference key="IBUIFont" ref="921252761"/>
 					</object>
@@ -100,6 +98,7 @@
 						<string key="NSFrame">{{216, 243}, {592, 129}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="490864519"/>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
@@ -141,6 +140,7 @@
 						<string key="NSFrame">{{381, 54}, {263, 75}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="272812281"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -172,6 +172,7 @@
 						<string key="NSFrame">{{291, 154}, {442, 108}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="1032519700"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -184,8 +185,11 @@
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="272812281"/>
-				<reference key="IBUIBackgroundColor" ref="503003980"/>
+				<reference key="NSNextKeyView" ref="923520245"/>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
+				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
@@ -382,10 +386,9 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="button_dark.png">{300, 200}</string>
 			<string key="logo_datacollector_dark.png">{500, 100}</string>
 			<string key="logo_manual.png">{640, 160}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">1930</string>
+		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
 </archive>

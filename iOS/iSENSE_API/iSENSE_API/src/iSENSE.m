@@ -38,7 +38,7 @@ static iSENSE *_iSENSE = nil;
         NSLog(@"Error Returning Dictionary: %@", requestError);
         return jsonDictionary;
     } @catch (NSException *e) {
-        NSLog(@"Exception: %@", e);
+        NSLog(@"Server Response Exception: %@", e);
         return nil;
     }
 }
@@ -143,7 +143,7 @@ static iSENSE *_iSENSE = nil;
         session_key = [NSString stringWithString:[[result objectForKey:@"data"] valueForKey:@"session"]];
         uid = [[result objectForKey:@"data"] valueForKey:@"uid"];
 	} @catch (NSException *e) {
-        NSLog(@"Exception: %@", e);
+        NSLog(@"Loggin Result Exception: %@", e);
         return FALSE;
     }
     
@@ -679,6 +679,12 @@ static iSENSE *_iSENSE = nil;
 	} else {
 		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 	}
+}
+
+// Use this method to determine if internet connectivity is available
+- (bool) isConnectedToInternet {
+    NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://isenseproject.org"] encoding:NSASCIIStringEncoding error:nil];
+    return ( URLString != NULL ) ? true : false;
 }
 
 @end

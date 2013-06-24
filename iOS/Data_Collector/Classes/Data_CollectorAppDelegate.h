@@ -27,5 +27,10 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *about;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *guide;
 
+// Core Data Stuffs
+@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 @end
 

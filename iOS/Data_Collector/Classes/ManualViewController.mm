@@ -400,14 +400,20 @@
     [message release];
 }
 
-- (IBAction) mediaOnClick:(id)sender {
-    if (sessionNameInput.text.length != 0)
+- (IBAction) mediaOnClick:(id)sender { // TODO - change back!
+    
+    StepOneSetup *stepView = [[StepOneSetup alloc] init];
+    stepView.title = @"Step 1: Setup";
+    [self.navigationController pushViewController:stepView animated:YES];
+    [stepView release];
+    
+    /*if (sessionNameInput.text.length != 0)
         [CameraUsage useCamera];
     else
         [self.view makeToast:@"Please Enter a Session Name First"
                     duration:TOAST_LENGTH_LONG
                     position:TOAST_BOTTOM
-                       image:TOAST_RED_X];
+                       image:TOAST_RED_X];*/
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -884,8 +890,8 @@
         Y_FIELDCONTENTS += (SCROLLVIEW_OBJ_INCR * objNum);
         fieldName = [[UILabel alloc] initWithFrame:[self setScrollViewItem:UI_FIELDNAME toSizeWithY:Y_FIELDNAME]];
     }
-    fieldName.backgroundColor = [UIColor blackColor];
-    fieldName.textColor = [UIColor whiteColor];
+    fieldName.backgroundColor = [UIColor clearColor];
+    fieldName.textColor = [UIColor blackColor];
     fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
@@ -906,13 +912,13 @@
         fieldContents.enabled = NO;
         if (type == TYPE_LATITUDE) {
             fieldContents.text = [StringGrabber grabString:@"auto_lat"];
-            fieldContents.backgroundColor = [HexColor colorWithHexString:@"666666"];
+            fieldContents.backgroundColor = [HexColor colorWithHexString:@"AAAAAA"];
         } else if (type == TYPE_LONGITUDE) {
             fieldContents.text = [StringGrabber grabString:@"auto_long"];
-            fieldContents.backgroundColor = [HexColor colorWithHexString:@"666666"];
+            fieldContents.backgroundColor = [HexColor colorWithHexString:@"AAAAAA"];
         } else {
             fieldContents.text = [StringGrabber grabString:@"auto_time"];
-            fieldContents.backgroundColor = [HexColor colorWithHexString:@"666666"];
+            fieldContents.backgroundColor = [HexColor colorWithHexString:@"AAAAAA"];
         }
     }
     

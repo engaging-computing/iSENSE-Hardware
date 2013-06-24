@@ -16,7 +16,9 @@
 		39046F531726FD4700938FEA /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7C1691F742009037A7 /* logo_green.png */; };
 		39046F541726FD5500938FEA /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B7B1691F742009037A7 /* red_button.png */; };
 		39088254169B689F00BEE04F /* UIImageTint.m in Sources */ = {isa = PBXBuildFile; fileRef = 39088253169B689F00BEE04F /* UIImageTint.m */; };
+		39216FFA176F78FB0070DFCC /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 39216FF9176F78FB0070DFCC /* iSENSE_API_Bundle.bundle */; };
 		3963689E169725AA00631268 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 3963689D169725AA00631268 /* Toast.m */; };
+		3982F19A1774DC7800D3ECF7 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3982F1991774DC7800D3ECF7 /* icon.png */; };
 		399787AB16B2FDED005F147B /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 399787AA16B2FDED005F147B /* ExperimentBlock.m */; };
 		399B39D316A089B0000564D9 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399B39D216A089B0000564D9 /* CoreMotion.framework */; };
 		399BE2F9169F1D1F000F7B2E /* AutomaticViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */; };
@@ -39,10 +41,10 @@
 		39A1CE7516DFEB86008A99A6 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		39A1CE7616DFEB89008A99A6 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
 		39A1CE7716DFEB8C008A99A6 /* spinner_orb.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B761691F742009037A7 /* spinner_orb.png */; };
-		39A1CE7816DFEB8E008A99A6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B781691F742009037A7 /* icon.png */; };
 		39A1CE7916DFEB91008A99A6 /* green_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B791691F742009037A7 /* green_button.png */; };
 		39A6405D16F380680058A382 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A6405C16F380680058A382 /* underline.png */; };
 		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
+		39AD183C175538AE002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183B175538AE002969FA /* CoreData.framework */; };
 		39DA66D416B6FAD3001EE336 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */; };
 		39F8AF931694C1AC00E5E4C2 /* ManualView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */; };
 		39F8AF961694C1C400E5E4C2 /* ManualView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */; };
@@ -59,6 +61,7 @@
 		52572B9A1691F7B1009037A7 /* ManualViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52572B981691F7B1009037A7 /* ManualViewController.mm */; };
 		52572B9F1691F816009037A7 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52572B9E1691F816009037A7 /* Strings.strings */; };
 		52572BF01691FD71009037A7 /* UILongClickButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52572BEF1691FD71009037A7 /* UILongClickButton.m */; };
+		B70BB40517733AB700E71279 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B70BB40417733AB700E71279 /* rsense_logo.png */; };
 		B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */; };
 		B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */; };
 		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
@@ -73,11 +76,34 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B75046C9177484110034B42C /* StepOneSetup.mm in Sources */ = {isa = PBXBuildFile; fileRef = B75046C7177484110034B42C /* StepOneSetup.mm */; };
+		B75046CA177484110034B42C /* StepOneSetup~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046C8177484110034B42C /* StepOneSetup~iphone.xib */; };
+		B75046CC1774AC680034B42C /* StepOneSetup-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046CB1774AC680034B42C /* StepOneSetup-landscape~iphone.xib */; };
+		B75046CE1774ACA40034B42C /* StepOneSetup~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046CD1774ACA40034B42C /* StepOneSetup~ipad.xib */; };
+		B75046D01774ACC40034B42C /* StepOneSetup-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046CF1774ACC40034B42C /* StepOneSetup-landscape~ipad.xib */; };
+		B75046D51774CD470034B42C /* Automatic~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046D41774CD470034B42C /* Automatic~iphone.xib */; };
+		B75046D81774CD710034B42C /* Automatic-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046D71774CD710034B42C /* Automatic-landscape~iphone.xib */; };
+		B75046DA1774CD9D0034B42C /* Automatic~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046D91774CD9D0034B42C /* Automatic~ipad.xib */; };
+		B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */; };
 		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
 		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		39216FF8176F78FB0070DFCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		3921701E176FA08D0070DFCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39216FDC176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
 		3987713916DFB2F300DBDE56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
@@ -134,6 +160,7 @@
 		3963689D169725AA00631268 /* Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toast.m; sourceTree = "<group>"; };
 		397DD9FB169761C90065DBD3 /* bluecheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluecheck.png; sourceTree = "<group>"; };
 		397DD9FC169761C90065DBD3 /* red_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_x.png; sourceTree = "<group>"; };
+		3982F1991774DC7800D3ECF7 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		399787A916B2FDED005F147B /* ExperimentBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBlock.h; sourceTree = "<group>"; };
 		399787AA16B2FDED005F147B /* ExperimentBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBlock.m; sourceTree = "<group>"; };
@@ -147,6 +174,7 @@
 		39A6405C16F380680058A382 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = underline.png; path = "Resources-iPad/underline.png"; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
+		39AD183B175538AE002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39DA66D216B6FAD3001EE336 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentBrowseViewController.h; sourceTree = "<group>"; };
 		39DA66D316B6FAD3001EE336 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentBrowseViewController.m; sourceTree = "<group>"; };
 		39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView~ipad.xib"; sourceTree = "<group>"; };
@@ -160,7 +188,6 @@
 		52572B741691F742009037A7 /* media_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_icon.png; sourceTree = "<group>"; };
 		52572B751691F742009037A7 /* logo_manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_manual.png; sourceTree = "<group>"; };
 		52572B761691F742009037A7 /* spinner_orb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spinner_orb.png; sourceTree = "<group>"; };
-		52572B781691F742009037A7 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		52572B791691F742009037A7 /* green_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_button.png; sourceTree = "<group>"; };
 		52572B7A1691F742009037A7 /* logo_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_red.png; sourceTree = "<group>"; };
 		52572B7B1691F742009037A7 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button.png; sourceTree = "<group>"; };
@@ -182,6 +209,7 @@
 		52572BEE1691FD71009037A7 /* UILongClickButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILongClickButton.h; sourceTree = "<group>"; };
 		52572BEF1691FD71009037A7 /* UILongClickButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILongClickButton.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Data_Collector-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Data_Collector-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		B70BB40417733AB700E71279 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
 		B70D384816DFE54A00D6B3CD /* logo_datacollector_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo_datacollector_dark.png; path = "Resources-iPad/logo_datacollector_dark.png"; sourceTree = "<group>"; };
 		B70D384A16DFE55C00D6B3CD /* button_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_dark.png; path = "Resources-iPad/button_dark.png"; sourceTree = "<group>"; };
 		B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape-ipad.xib"; sourceTree = "<group>"; };
@@ -202,6 +230,16 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B75046C6177484110034B42C /* StepOneSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StepOneSetup.h; sourceTree = "<group>"; };
+		B75046C7177484110034B42C /* StepOneSetup.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StepOneSetup.mm; sourceTree = "<group>"; };
+		B75046C8177484110034B42C /* StepOneSetup~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "StepOneSetup~iphone.xib"; path = "Classes/StepOneSetup~iphone.xib"; sourceTree = "<group>"; };
+		B75046CB1774AC680034B42C /* StepOneSetup-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "StepOneSetup-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B75046CD1774ACA40034B42C /* StepOneSetup~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "StepOneSetup~ipad.xib"; sourceTree = "<group>"; };
+		B75046CF1774ACC40034B42C /* StepOneSetup-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "StepOneSetup-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B75046D41774CD470034B42C /* Automatic~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic~iphone.xib"; sourceTree = "<group>"; };
+		B75046D71774CD710034B42C /* Automatic-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B75046D91774CD9D0034B42C /* Automatic~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic~ipad.xib"; sourceTree = "<group>"; };
+		B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B7B2284316DFA8E300874980 /* logo_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_black.png; sourceTree = "<group>"; };
 		B7EBFB2E16DF9CCE00125169 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
@@ -213,6 +251,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39AD183C175538AE002969FA /* CoreData.framework in Frameworks */,
 				39A1CC2516DFB44300B1979F /* libiSENSE_API.a in Frameworks */,
 				B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */,
 				B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */,
@@ -284,6 +323,7 @@
 			children = (
 				52572B681691F678009037A7 /* Drawable */,
 				52572B691691F67E009037A7 /* Raw */,
+				B75046D11774ADDF0034B42C /* Layout-Both */,
 				52572B6A1691F684009037A7 /* Layout-iPhone */,
 				52572B6B1691F68B009037A7 /* Layout-iPad */,
 				52572B6C1691F692009037A7 /* Strings */,
@@ -294,6 +334,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				39AD183B175538AE002969FA /* CoreData.framework */,
 				B7F534FE16CA941F007FBFCA /* CoreLocation.framework */,
 				B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */,
 				B74A1F1316B8643400F0E9EE /* AddressBook.framework */,
@@ -321,13 +362,13 @@
 			name = UIImageTint;
 			sourceTree = "<group>";
 		};
-		3963689A1697258700631268 /* Toast */ = {
+		3963689A1697258700631268 /* Waffle */ = {
 			isa = PBXGroup;
 			children = (
 				3963689C169725AA00631268 /* Toast.h */,
 				3963689D169725AA00631268 /* Toast.m */,
 			);
-			name = Toast;
+			name = Waffle;
 			sourceTree = "<group>";
 		};
 		398770F216DFB02100DBDE56 /* iSENSE_API */ = {
@@ -342,6 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */,
+				39216FF9176F78FB0070DFCC /* iSENSE_API_Bundle.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -394,6 +436,8 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				3982F1991774DC7800D3ECF7 /* icon.png */,
+				B70BB40417733AB700E71279 /* rsense_logo.png */,
 				39A6405C16F380680058A382 /* underline.png */,
 				39A1CE6816DFEABF008A99A6 /* button_light_long.png */,
 				391A959016DFE98F00C0943B /* button_light.png */,
@@ -409,7 +453,6 @@
 				52572B741691F742009037A7 /* media_icon.png */,
 				52572B751691F742009037A7 /* logo_manual.png */,
 				52572B761691F742009037A7 /* spinner_orb.png */,
-				52572B781691F742009037A7 /* icon.png */,
 				52572B791691F742009037A7 /* green_button.png */,
 				52572B7A1691F742009037A7 /* logo_red.png */,
 				52572B7B1691F742009037A7 /* red_button.png */,
@@ -429,13 +472,15 @@
 		52572B6A1691F684009037A7 /* Layout-iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				B75046D41774CD470034B42C /* Automatic~iphone.xib */,
+				B75046D71774CD710034B42C /* Automatic-landscape~iphone.xib */,
 				399D31EB169E02FD005F9D51 /* MainWindow.xib */,
 				39F8AF951694C1C400E5E4C2 /* ManualView~iphone.xib */,
 				B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */,
-				52572B8F1691F788009037A7 /* AboutView.xib */,
-				52572B941691F796009037A7 /* GuideView.xib */,
 				52572B8A1691F77D009037A7 /* SplashView.xib */,
 				B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */,
+				B75046C8177484110034B42C /* StepOneSetup~iphone.xib */,
+				B75046CB1774AC680034B42C /* StepOneSetup-landscape~iphone.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -443,11 +488,15 @@
 		52572B6B1691F68B009037A7 /* Layout-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				B75046D91774CD9D0034B42C /* Automatic~ipad.xib */,
+				B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */,
 				399D31E9169E02DF005F9D51 /* MainWindow~ipad.xib */,
 				39F8AF921694C1AC00E5E4C2 /* ManualView~ipad.xib */,
 				B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */,
 				52572BC61691FBC6009037A7 /* SplashView-iPad.xib */,
 				B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */,
+				B75046CD1774ACA40034B42C /* StepOneSetup~ipad.xib */,
+				B75046CF1774ACC40034B42C /* StepOneSetup-landscape~ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -480,6 +529,8 @@
 			children = (
 				399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */,
 				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */,
+				B75046C6177484110034B42C /* StepOneSetup.h */,
+				B75046C7177484110034B42C /* StepOneSetup.mm */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";
@@ -502,7 +553,7 @@
 				39A5AA7816C29555005862E7 /* ISenseSearch */,
 				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
-				3963689A1697258700631268 /* Toast */,
+				3963689A1697258700631268 /* Waffle */,
 				39F8AF9B1694C22100E5E4C2 /* CameraUsage */,
 				39F8AF971694C1FB00E5E4C2 /* StringGrabber */,
 				52572BED1691FD33009037A7 /* UILongClickButton */,
@@ -564,6 +615,15 @@
 			name = ZXing;
 			sourceTree = "<group>";
 		};
+		B75046D11774ADDF0034B42C /* Layout-Both */ = {
+			isa = PBXGroup;
+			children = (
+				52572B8F1691F788009037A7 /* AboutView.xib */,
+				52572B941691F796009037A7 /* GuideView.xib */,
+			);
+			name = "Layout-Both";
+			sourceTree = "<group>";
+		};
 		B7DD76C816B86543000B0CCF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -587,6 +647,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3921701F176FA08D0070DFCC /* PBXTargetDependency */,
 				39A1CC2416DFB43F00B1979F /* PBXTargetDependency */,
 				B7DD76D216B86550000B0CCF /* PBXTargetDependency */,
 			);
@@ -633,6 +694,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		39216FF9176F78FB0070DFCC /* iSENSE_API_Bundle.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iSENSE_API_Bundle.bundle;
+			remoteRef = 39216FF8176F78FB0070DFCC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		3987713A16DFB2F300DBDE56 /* libiSENSE_API.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -680,6 +748,7 @@
 				B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */,
 				B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */,
 				39A1CE6A16DFEB45008A99A6 /* button_light_long.png in Resources */,
+				39216FFA176F78FB0070DFCC /* iSENSE_API_Bundle.bundle in Resources */,
 				39A1CE6B16DFEB66008A99A6 /* button_light.png in Resources */,
 				39A1CE6C16DFEB68008A99A6 /* button_dark.png in Resources */,
 				39A1CE6D16DFEB6B008A99A6 /* logo_datacollector_dark.png in Resources */,
@@ -693,9 +762,18 @@
 				39A1CE7516DFEB86008A99A6 /* media_icon.png in Resources */,
 				39A1CE7616DFEB89008A99A6 /* logo_manual.png in Resources */,
 				39A1CE7716DFEB8C008A99A6 /* spinner_orb.png in Resources */,
-				39A1CE7816DFEB8E008A99A6 /* icon.png in Resources */,
 				39A1CE7916DFEB91008A99A6 /* green_button.png in Resources */,
 				39A6405D16F380680058A382 /* underline.png in Resources */,
+				B70BB40517733AB700E71279 /* rsense_logo.png in Resources */,
+				3982F19A1774DC7800D3ECF7 /* icon.png in Resources */,
+				B75046CA177484110034B42C /* StepOneSetup~iphone.xib in Resources */,
+				B75046CC1774AC680034B42C /* StepOneSetup-landscape~iphone.xib in Resources */,
+				B75046CE1774ACA40034B42C /* StepOneSetup~ipad.xib in Resources */,
+				B75046D01774ACC40034B42C /* StepOneSetup-landscape~ipad.xib in Resources */,
+				B75046D51774CD470034B42C /* Automatic~iphone.xib in Resources */,
+				B75046D81774CD710034B42C /* Automatic-landscape~iphone.xib in Resources */,
+				B75046DA1774CD9D0034B42C /* Automatic~ipad.xib in Resources */,
+				B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,12 +802,18 @@
 				39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */,
 				B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */,
 				B71A2DD916E4D91E009A441F /* Fields.m in Sources */,
+				B75046C9177484110034B42C /* StepOneSetup.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3921701F176FA08D0070DFCC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API_Bundle;
+			targetProxy = 3921701E176FA08D0070DFCC /* PBXContainerItemProxy */;
+		};
 		39A1CC2416DFB43F00B1979F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = iSENSE_API;
@@ -766,6 +850,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -793,6 +878,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Data_Collector;
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
