@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class EnterNameActivity extends Activity {
 	
@@ -26,6 +26,8 @@ public class EnterNameActivity extends Activity {
 	
 	static boolean dontToastMeTwice  = false;
 	boolean success;
+
+	Waffle w;
 	
 	private static final String blankFields = "Do not leave any fields blank.  Please enter your first name and last initial.";
 	
@@ -33,6 +35,8 @@ public class EnterNameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.entername);
+		
+		w = new Waffle(mContext);
 		
 		mContext = this;
 		
@@ -73,7 +77,7 @@ public class EnterNameActivity extends Activity {
     
 	private void showFailure() {
 		if(!dontToastMeTwice) {
-			Toast.makeText(mContext, blankFields, Toast.LENGTH_LONG).show();		
+			w.make(blankFields, Waffle.LENGTH_LONG, Waffle.IMAGE_X);		
     		new NoToastTwiceTask().execute();
 		}
 			

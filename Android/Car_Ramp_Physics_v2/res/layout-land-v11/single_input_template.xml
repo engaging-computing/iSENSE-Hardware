@@ -1,42 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/userNameTextView"
+        android:id="@+id/messageBox2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/userNameEditText"
+        android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:ems="10" >
 
-    <TextView
-        android:id="@+id/passwordTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword" />
-
-    <TextView
-        android:id="@+id/loginRegisterErrorTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textStyle="bold" />
+        <requestFocus />
+    </EditText>
 
     <View
         android:id="@+id/view1"
@@ -45,13 +25,14 @@
         android:background="?android:attr/dividerVertical" />
 
     <LinearLayout
+        android:id="@+id/buttonView"
         style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent" >
 
         <Button
-            android:id="@+id/cancelButton"
+            android:id="@+id/negative2"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,12 +40,12 @@
             android:text="Cancel" />
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/positive2"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Login" />
+            android:text="OK" />
     </LinearLayout>
 
 </LinearLayout>
