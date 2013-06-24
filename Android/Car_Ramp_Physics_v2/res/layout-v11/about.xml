@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <ScrollView
-        android:id="@+id/aboutscroll"
+        android:id="@+id/aboutscroll2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
@@ -18,14 +18,23 @@
             android:textSize="16sp" />
     </ScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:orientation="vertical" >
+    </View>
+
     <LinearLayout
         android:id="@+id/LinearLayout2"
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent" >
 
         <Button
             android:id="@+id/loginButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@android:string/ok" />

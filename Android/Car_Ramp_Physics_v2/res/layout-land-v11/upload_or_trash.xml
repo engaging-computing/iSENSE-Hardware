@@ -11,24 +11,33 @@
         android:text="Would you like to upload your data to iSENSE or throw away this data set?"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent" >
 
         <Button
-            android:id="@+id/iSENSE_Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="iSENSE" />
-
-        <Button
             android:id="@+id/discard_Button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Throw Away" />
+
+        <Button
+            android:id="@+id/iSENSE_Button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="iSENSE" />
 
     </LinearLayout>
 

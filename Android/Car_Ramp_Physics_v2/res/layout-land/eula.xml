@@ -5,31 +5,38 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/eulatext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Would you like to upload your data to iSENSE or throw away this data set?"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:orientation="vertical" >
+    </View>
 
     <LinearLayout
+        android:id="@+id/LinearLayout3"
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent" >
+        android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/iSENSE_Button"
+            android:id="@+id/declineButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="iSENSE" />
+            android:text="Decline" />
 
         <Button
-            android:id="@+id/discard_Button"
+            android:id="@+id/acceptButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Throw Away" />
-
+            android:text="Accept" />
     </LinearLayout>
 
 </LinearLayout>
