@@ -11,426 +11,227 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, widController, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, activeField, lastField, keyboardDismissProper, dataSaver, managedObjectContext;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
+
+// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"Automatic-landscape~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"Automatic~ipad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"Automatic-landscape~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"Automatic~iphone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    }
+}
+
 
 // Long Click Responder
-- (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
-    
-    // Handle long press.
-    if (longClickRecognizer.state == UIGestureRecognizerStateBegan) {
-        
-        // Make button unclickable until it gets released
-        longClickRecognizer.enabled = NO;
-        
-        // Start Recording
-        if (![self isRecording]) {
-            
-            // Check for a chosen experiment
-            if (!expNum) {
-                [self.view makeToast:@"No experiment chosen" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
-                return;
-            }
-            
-            // Check for login
-            if (![isenseAPI isLoggedIn]) {
-                [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
-                return;
-            }
-            
-            // Check for a session title
-            if ([[sessionTitle text] length] == 0) {
-                [self.view makeToast:@"Enter a session title first" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
-                return;
-            }
-            
-            // Switch to green mode
-            startStopButton.image = [UIImage imageNamed:@"green_button.png"];
-            mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
-            startStopLabel.text = [StringGrabber grabString:@"stop_button_text"];
-            [containerForMainButton updateImage:startStopButton];
-            
-            // Get Field Order
-            [dfm getFieldOrderOfExperiment:expNum];
-            NSLog(@"%@", [dfm order]);
-            
-            // Record Data
-            [self setIsRecording:TRUE];
-            [self recordData];
-            
-            // Update elapsed time
-            elapsedTime = 0;
-            [self updateElapsedTime];
-            NSLog(@"updated Time");
-            timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
-            NSLog(@"timer was launched");
-            
-        // Stop Recording
-        } else {
-            // Stop Timers
-            [timer invalidate];
-            [timer release];
-            [recordDataTimer invalidate];
-            [recordDataTimer release];
-            
-            // Back to red mode
-            startStopButton.image = [UIImage imageNamed:@"red_button.png"];
-            mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-            startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
-            [containerForMainButton updateImage:startStopButton];
-            
-            [self stopRecording:motionManager];
-            [self setIsRecording:FALSE];
-            
-            // Open up description dialog
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Delete"
-                                                    otherButtonTitles:@"Upload", nil];
-            
-            message.tag = DESCRIPTION_AUTOMATIC;
-            message.delegate = self;
-            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
-            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
-            [message show];
-            [message release];
-            
-        }
-        
-        // Make the beep sound
-        NSString *path = [NSString stringWithFormat:@"%@%@",
-                          [[NSBundle mainBundle] resourcePath],
-                          @"/button-37.wav"];
-        SystemSoundID soundID;
-        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
-        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
-        AudioServicesPlaySystemSound(soundID);
-        
-    }
-    
-}
+//- (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
+//
+//    // Handle long press.
+//    if (longClickRecognizer.state == UIGestureRecognizerStateBegan) {
+//
+//        // Make button unclickable until it gets released
+//        longClickRecognizer.enabled = NO;
+//
+//        // Start Recording
+//        if (![self isRecording]) {
+//
+//            // Check for a chosen experiment
+//            if (!expNum) {
+//                [self.view makeToast:@"No experiment chosen" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                return;
+//            }
+//
+//            // Check for login
+//            if (![isenseAPI isLoggedIn]) {
+//                [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                return;
+//            }
+//
+//            // Check for a session title
+//            if ([[sessionTitle text] length] == 0) {
+//                [self.view makeToast:@"Enter a session title first" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                return;
+//            }
+//
+//            // Switch to green mode
+//            startStopButton.image = [UIImage imageNamed:@"green_button.png"];
+//            mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
+//            startStopLabel.text = [StringGrabber grabString:@"stop_button_text"];
+//            [containerForMainButton updateImage:startStopButton];
+//
+//            // Get Field Order
+//            [dfm getFieldOrderOfExperiment:expNum];
+//            NSLog(@"%@", [dfm order]);
+//
+//            // Record Data
+//            [self setIsRecording:TRUE];
+//            [self recordData];
+//
+//            // Update elapsed time
+//            elapsedTime = 0;
+//            [self updateElapsedTime];
+//            NSLog(@"updated Time");
+//            timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
+//            NSLog(@"timer was launched");
+//
+//        // Stop Recording
+//        } else {
+//            // Stop Timers
+//            [timer invalidate];
+//            [timer release];
+//            [recordDataTimer invalidate];
+//            [recordDataTimer release];
+//
+//            // Back to red mode
+//            startStopButton.image = [UIImage imageNamed:@"red_button.png"];
+//            mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
+//            startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
+//            [containerForMainButton updateImage:startStopButton];
+//
+//            [self stopRecording:motionManager];
+//            [self setIsRecording:FALSE];
+//
+//            // Open up description dialog
+//            UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
+//                                                              message:nil
+//                                                             delegate:self
+//                                                    cancelButtonTitle:@"Delete"
+//                                                    otherButtonTitles:@"Upload", nil];
+//
+//            message.tag = DESCRIPTION_AUTOMATIC;
+//            message.delegate = self;
+//            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+//            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+//            [message show];
+//            [message release];
+//
+//        }
+//
+//        // Make the beep sound
+//        NSString *path = [NSString stringWithFormat:@"%@%@",
+//                          [[NSBundle mainBundle] resourcePath],
+//                          @"/button-37.wav"];
+//        SystemSoundID soundID;
+//        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+//        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
+//        AudioServicesPlaySystemSound(soundID);
+//
+//    }
+//
+//}
 
-- (bool) uploadData:(NSMutableArray *)results withDescription:(NSString *)description {
-    
-    if (![isenseAPI isLoggedIn]) {
-        [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
-        return false;
-    }
-    
-    // Create a session on iSENSE/dev.
-    NSString *name = @"Session From Mobile";
-    if (sessionTitle.text.length != 0) name = sessionTitle.text;
-    NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
+//- (bool) uploadData:(NSMutableArray *)results withDescription:(NSString *)description {
+//
+//    // Check login status
+//    if (![isenseAPI isLoggedIn]) {
+//        [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//        return false;
+//    }
+//
+//    // Create a session on iSENSE/dev.
+//    NSString *name = @"Session From Mobile";
+//    if (sessionTitle.text.length != 0) name = sessionTitle.text;
+//    NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
+//
+//    NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
+//    if ([session_num intValue] == -1) {
+//        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+//        [ds setName:name];
+//        [ds setDataDescription:description];
+//        [ds setEid:exp_num];
+//        [ds setData:nil];
+//        [ds setPicturePaths:nil];
+//        [ds setSid:[NSNumber numberWithInt:-1]];
+//        [ds setCity:city];
+//        [ds setCountry:country];
+//        [ds setAddress:address];
+//        [ds setUploadable:[NSNumber numberWithBool:true]];
+//        // Add the new data set to the queue
+//        [dataSaver addDataSet:ds];
+//        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+//
+//        // Commit the changes
+//        NSError *error = nil;
+//        if (![managedObjectContext save:&error]) {
+//            // Handle the error.
+//            NSLog(@"%@", error);
+//        }
+//
+//        return false;
+//    }
+//
+//    // Upload to iSENSE (pass me JSON data)
+//    NSError *error = nil;
+//    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
+//    if (error != nil) {
+//        NSLog(@"%@", error);
+//        return false;
+//    }
+//
+//    bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
+//    if (!success) {
+//        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+//        [ds setName:name];
+//        [ds setDataDescription:description];
+//        [ds setEid:exp_num];
+//        [ds setData:results];
+//        [ds setPicturePaths:nil];
+//        [ds setSid:session_num];
+//        [ds setCity:city];
+//        [ds setCountry:country];
+//        [ds setAddress:address];
+//        [ds setUploadable:[NSNumber numberWithBool:true]];
+//
+//        // Add the new data set to the queue
+//        [dataSaver addDataSet:ds];
+//        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+//
+//        // Commit the changes
+//        NSError *error = nil;
+//        if (![managedObjectContext save:&error]) {
+//            // Handle the error.
+//            NSLog(@"%@", error);
+//        }
+//    }
+//    [exp_num release];
+//    return success;
+//}
 
-    NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
-    if ([session_num intValue] == -1) {
-        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-        [ds setName:name];
-        [ds setDataDescription:description];
-        [ds setEid:exp_num];
-        [ds setData:nil];
-        [ds setPicturePaths:nil];
-        [ds setSid:[NSNumber numberWithInt:-1]];
-        [ds setCity:city];
-        [ds setCountry:country];
-        [ds setAddress:address];
-        [ds setUploadable:[NSNumber numberWithBool:true]];
-        // Add the new data set to the queue
-        [dataSaver addDataSet:ds];
-        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-        
-        // Commit the changes
-        NSError *error = nil;
-        if (![managedObjectContext save:&error]) {
-            // Handle the error.
-            NSLog(@"%@", error);
-        }
-        
-        return false;
-    }
-    
-    // Upload to iSENSE (pass me JSON data)
-    NSError *error = nil;
-    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-    if (error != nil) {
-        NSLog(@"%@", error);
-        return false;
-    }
-    
-    bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-    if (!success) {
-        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-        [ds setName:name];
-        [ds setDataDescription:description];
-        [ds setEid:exp_num];
-        [ds setData:results];
-        [ds setPicturePaths:nil];
-        [ds setSid:session_num];
-        [ds setCity:city];
-        [ds setCountry:country];
-        [ds setAddress:address];
-        [ds setUploadable:[NSNumber numberWithBool:true]];
-        
-        // Add the new data set to the queue
-        [dataSaver addDataSet:ds];
-        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-        
-        // Commit the changes
-        NSError *error = nil;
-        if (![managedObjectContext save:&error]) {
-            // Handle the error.
-            NSLog(@"%@", error);
-        }
-    }
-    [exp_num release];
-    return success;
-}
-
-- (BOOL) containsAcceptedNumbers:(NSString *)mString {
-    NSCharacterSet *unwantedCharacters =
-    [[NSCharacterSet characterSetWithCharactersInString:
-      [StringGrabber grabString:@"accepted_numbers"]] invertedSet];
-    
-    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
-}
-
-- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    
-	if (textField == sampleInterval) {
-		if (![self containsAcceptedNumbers:string])
-            return NO;
-	}
-    return YES;
-}
-
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
+// Implement viewDidLoad after the nib has been loaded
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading..."];
     [message show];
     
-    UIView *mainView;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        // Bound, allocate, and customize the main view
-        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
-        self.view = mainView;
-        [mainView release];
-        
-        // Initialize isRecording to false
-        [self setIsRecording:FALSE];
-        
-        // Add iSENSE LOGO background image at the top
-        mainLogo = [[UIImageView alloc] initWithFrame:CGRectMake(20, 5, 728, 150)];
-        mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-        
-        // Create a label for login status
-        loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 160, 768, 40)];
-        loginStatus.textAlignment = NSTextAlignmentCenter;
-        loginStatus.font = [UIFont fontWithName:@"Arial" size:32];
-        loginStatus.numberOfLines = 1;
-        loginStatus.backgroundColor = [UIColor clearColor];
-        
-        // Create a label for experiment number
-        expNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 200, 768, 40)];
-        expNumLabel.textColor = [UIColor whiteColor];
-        expNumLabel.textAlignment = NSTextAlignmentCenter;
-        expNumLabel.numberOfLines = 1;
-        expNumLabel.backgroundColor = [UIColor clearColor];
-        expNumLabel.font = [UIFont fontWithName:@"Arial" size:24];
-        
-        // Allocate space and initialize the main button
-        startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 400, 400)];
-        startStopButton.image = [UIImage imageNamed:@"red_button.png"];
-        
-        // Allocate space and add the label to the main button
-        startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, startStopButton.bounds.size.width, startStopButton.bounds.size.height)];
-        startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
-        startStopLabel.textAlignment = NSTextAlignmentCenter;
-        startStopLabel.textColor = [UIColor whiteColor];
-        startStopLabel.font = [startStopLabel.font fontWithSize:25];
-        startStopLabel.numberOfLines = 2;
-        startStopLabel.backgroundColor = [UIColor clearColor];
-        
-        // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(180, 350, 400, 400) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
-        [containerForMainButton addSubview:startStopButton];
-        [containerForMainButton addSubview:startStopLabel];
-        
-        // Add the elapsedTime counter at the bottom
-        elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50)];
-        elapsedTimeView.textAlignment = NSTextAlignmentCenter;
-        elapsedTimeView.font = [elapsedTimeView.font fontWithSize:18];
-        elapsedTimeView.textColor = [UIColor whiteColor];
-        elapsedTimeView.backgroundColor = [UIColor clearColor];
-        
-        // Session Title TextField
-        sessionTitle = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 25, 262, 200, 35)];
-        sessionTitle.background = [UIImage imageNamed:@"underline.png"];
-        sessionTitle.textAlignment = NSTextAlignmentCenter;
-        sessionTitle.font = [sessionTitle.font fontWithSize:24];
-        sessionTitle.textColor = [UIColor whiteColor];
-        sessionTitle.backgroundColor = [UIColor clearColor];
-        sessionTitle.delegate = self;
-        sessionTitle.tag = TAG_AUTOMATIC_SESSION_TITLE;
-        
-        // Session Title Label
-        sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 260, 175, 35)];
-        sessionTitleLabel.textAlignment = NSTextAlignmentLeft;
-        sessionTitleLabel.font = [sessionTitle.font fontWithSize:24];
-        sessionTitleLabel.textColor = [UIColor whiteColor];
-        sessionTitleLabel.backgroundColor = [UIColor clearColor];
-        sessionTitleLabel.text = @"Session Title:";
-        
-        // Recommended Sample Rate TextField
-        sampleInterval = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2, 762, 150, 35)];
-        sampleInterval.background = [UIImage imageNamed:@"underline.png"];
-        sampleInterval.textAlignment = NSTextAlignmentCenter;
-        sampleInterval.font = [sampleInterval.font fontWithSize:24];
-        sampleInterval.textColor = [UIColor whiteColor];
-        sampleInterval.backgroundColor = [UIColor clearColor];
-        sampleInterval.delegate = self;
-        sampleInterval.tag = TAG_AUTOMATIC_SAMPLE_INTERVAL;
-        
-        // Session Title Label
-        sampleIntervalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 200, 760, 225, 35)];
-        sampleIntervalLabel.textAlignment = NSTextAlignmentLeft;
-        sampleIntervalLabel.font = [sampleIntervalLabel.font fontWithSize:24];
-        sampleIntervalLabel.textColor = [UIColor whiteColor];
-        sampleIntervalLabel.backgroundColor = [UIColor clearColor];
-        sampleIntervalLabel.text = @"Sample Interval:";
-        
-        // Add all the subviews to main view
-        [self.view addSubview:expNumLabel];
-        [self.view addSubview:loginStatus];
-        [self.view addSubview:mainLogo];
-        [self.view addSubview:sessionTitle];
-        [self.view addSubview:sessionTitleLabel];
-        [self.view addSubview:sampleInterval];
-        [self.view addSubview:sampleIntervalLabel];
-        [self.view addSubview:containerForMainButton];
-        [self.view addSubview:elapsedTimeView];
-        
-        // Add a menu button
-        menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
-        self.navigationItem.rightBarButtonItem = menuButton;
-        
-        // Attempt Login
-        isenseAPI = [iSENSE getInstance];
-        [isenseAPI toggleUseDev:YES];
-        [self updateLoginStatus];
-        [self updateExpNumLabel];
-        
-    } else {
-        
-        // Bound, allocate, and customize the main view
-        mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
-        self.view = mainView;
-        [mainView release];
-        
-        // Initialize isRecording to false
-        [self setIsRecording:FALSE];
-        
-        // Add iSENSE LOGO background image at the top
-        mainLogo = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 300, 70)];
-        mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-        
-        // Create a label for login status
-        loginStatus = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 320, 20)];
-        loginStatus.textAlignment = NSTextAlignmentCenter;
-        loginStatus.font = [UIFont fontWithName:@"Arial" size:12];
-        loginStatus.numberOfLines = 1;
-        loginStatus.backgroundColor = [UIColor clearColor];
-        
-        // Allocate space and initialize the main button
-        startStopButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 225, 225)];
-        startStopButton.image = [UIImage imageNamed:@"red_button.png"];
-        
-        // Allocate space and add the label to the main button
-        startStopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, startStopButton.bounds.size.width, startStopButton.bounds.size.height)];
-        startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
-        startStopLabel.textAlignment = NSTextAlignmentCenter;
-        startStopLabel.textColor = [UIColor whiteColor];
-        startStopLabel.font = [startStopLabel.font fontWithSize:25];
-        startStopLabel.numberOfLines = 2;
-        startStopLabel.backgroundColor =[UIColor clearColor];
-        
-        // Add main button subviews to the UIPicButton called containerForMainButton (so the whole thing is clickable)
-        containerForMainButton = [[UILongClickButton alloc] initWithFrame:CGRectMake(50, 145, 220, 220) imageView:startStopButton target:self action:@selector(onStartStopLongClick:)];
-        [containerForMainButton addSubview:startStopButton];
-        [containerForMainButton addSubview:startStopLabel];
-        
-        // Create a label for experiment number
-        expNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 95, self.view.frame.size.width, 25)];
-        expNumLabel.textColor = [UIColor whiteColor];
-        expNumLabel.textAlignment = NSTextAlignmentCenter;
-        expNumLabel.numberOfLines = 1;
-        expNumLabel.backgroundColor = [UIColor clearColor];
-        expNumLabel.font = [UIFont fontWithName:@"Arial" size:12];
-        
-        // Add the elapsedTime counter at the bottom
-        elapsedTimeView = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 25)];
-        elapsedTimeView.textAlignment = NSTextAlignmentCenter;
-        elapsedTimeView.font = [elapsedTimeView.font fontWithSize:12];
-        elapsedTimeView.textColor = [UIColor whiteColor];
-        elapsedTimeView.backgroundColor = [UIColor clearColor];
-        
-        // Session Title EditText
-        sessionTitle = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2, 122, 80, 20)];
-        sessionTitle.background = [UIImage imageNamed:@"underline.png"];
-        sessionTitle.textAlignment = NSTextAlignmentCenter;
-        sessionTitle.font = [sessionTitle.font fontWithSize:12];
-        sessionTitle.textColor = [UIColor whiteColor];
-        sessionTitle.backgroundColor = [UIColor clearColor];
-        sessionTitle.delegate = self;
-        sessionTitle.tag = TAG_AUTOMATIC_SESSION_TITLE;
-        
-        // Session Title Label
-        sessionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20)];
-        sessionTitleLabel.textAlignment = NSTextAlignmentLeft;
-        sessionTitleLabel.font = [sessionTitle.font fontWithSize:12];
-        sessionTitleLabel.textColor = [UIColor whiteColor];
-        sessionTitleLabel.backgroundColor = [UIColor clearColor];
-        sessionTitleLabel.text = @"Session Title:";
-        
-        // Recommended Sample Rate TextField
-        sampleInterval = [[UITextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 + 15, self.view.frame.size.height - 32, 50, 20)];
-        sampleInterval.background = [UIImage imageNamed:@"underline.png"];
-        sampleInterval.textAlignment = NSTextAlignmentCenter;
-        sampleInterval.font = [sampleInterval.font fontWithSize:12];
-        sampleInterval.textColor = [UIColor whiteColor];
-        sampleInterval.backgroundColor = [UIColor clearColor];
-        sampleInterval.delegate = self;
-        sampleInterval.tag = TAG_AUTOMATIC_SAMPLE_INTERVAL;
-        
-        // Session Title Label
-        sampleIntervalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 80, self.view.frame.size.height - 35, 150, 20)];
-        sampleIntervalLabel.textAlignment = NSTextAlignmentLeft;
-        sampleIntervalLabel.font = [sampleIntervalLabel.font fontWithSize:12];
-        sampleIntervalLabel.textColor = [UIColor whiteColor];
-        sampleIntervalLabel.backgroundColor = [UIColor clearColor];
-        sampleIntervalLabel.text = @"Sample Interval:";
-        
-        // Add all the subviews to main view
-        [self.view addSubview:loginStatus];
-        [self.view addSubview:expNumLabel];
-        [self.view addSubview:mainLogo];
-        [self.view addSubview:sessionTitle];
-        [self.view addSubview:sessionTitleLabel];
-        [self.view addSubview:containerForMainButton];
-        [self.view addSubview:elapsedTimeView];
-        [self.view addSubview:sampleInterval];
-        [self.view addSubview:sampleIntervalLabel];
-        
-        // Add a menu button
-        menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu:)];
-        self.navigationItem.rightBarButtonItem = menuButton;
-        
-        // Prepare isenseAPI and set login status
-        isenseAPI = [iSENSE getInstance];
-        [isenseAPI toggleUseDev:YES];
-        [self updateLoginStatus];
-        [self updateExpNumLabel]; // TODO - this wasn't here before but I'm assuming it should be since it's in the iPad code as well
-    }
+    // Add a menu button
+    menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu)];
+    self.navigationItem.rightBarButtonItem = menuButton;
+    
+    // Attempt Login
+    isenseAPI = [iSENSE getInstance];
+    [isenseAPI toggleUseDev:YES];
     
     motionManager = [[CMMotionManager alloc] init];
     
@@ -438,17 +239,8 @@
     dfm = [DataFieldManager alloc];
     [self resetAddressFields];
     recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
-    [self registerForKeyboardNotifications];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(sampleIntervalUpdated)
-     name:UITextFieldTextDidEndEditingNotification
-     object:sampleInterval];
     
     dataSaver = [[DataSaver alloc] init];
-    
-    [message dismissWithClickedButtonIndex:nil animated:YES];
     
     if (managedObjectContext == nil) {
         managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
@@ -459,38 +251,32 @@
     NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
-    
+        
         // Sort results for DataSets
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
         NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
         [request setSortDescriptors:sortDescriptors];
-    
+        
         // Actually make the request
         NSError *error = nil;
         NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
         if (mutableFetchResults == nil) {
             // Handle the error.
         }
-    
+        
         // fill dataSaver's DataSet Queue
         for (int i = 0; i < mutableFetchResults.count; i++) {
             [dataSaver addDataSet:mutableFetchResults[i]];
         }
-
+        
         // release the fetched objects
         [sortDescriptor release];
         [sortDescriptors release];
         [mutableFetchResults release];
         [request release];
     }
-}
-
-// Upates the sample interval text on the main UI
-- (void) sampleIntervalUpdated {
-    if (sampleInterval.text.intValue >= 125)recommendedSampleInterval = sampleInterval.text.intValue;
-    else {
-        sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
-    }
+    
+    [message dismissWithClickedButtonIndex:nil animated:YES];
 }
 
 // Is called every time AutomaticView appears
@@ -499,10 +285,9 @@
     
     // Update ExperimentNumber status
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    [self updateExpNumLabel];
 }
 
-- (IBAction) displayMenu:(id)sender {
+- (void) displayMenu {
 	UIActionSheet *popupQuery = [[UIActionSheet alloc]
                                  initWithTitle:nil
                                  delegate:self
@@ -512,135 +297,6 @@
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
-}
-
-// Set your login status to your username to not logged in as necessary
-- (void) updateLoginStatus {
-    if ([isenseAPI isLoggedIn]) {
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
-        loginStatus.textColor = [UIColor greenColor];
-    } else {
-        // see if anything is saved in shared preferences
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *username = [prefs stringForKey:[StringGrabber grabString:@"key_username"]];
-        NSString *password = [prefs stringForKey:[StringGrabber grabString:@"key_password"]];
-        if ([username length] != 0) {
-            bool success = [isenseAPI login:username with:password];
-            if (success) {
-                loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[isenseAPI getLoggedInUsername]];
-                loginStatus.textColor = [UIColor greenColor];
-            } else {
-                loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
-                loginStatus.textColor = [UIColor yellowColor];
-            }
-        }
-        
-        loginStatus.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"NOT LOGGED IN"];
-        loginStatus.textColor = [UIColor yellowColor];
-    }
-}
-
-// Set your expNumLabel to show you the last experiment chosen.
-- (void) updateExpNumLabel {
-    if (expNumLabel) {
-        if (expNum && expNum > 0) {
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
-                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
-        } else {
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            int exp = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
-            if (exp > 0) {
-                expNum = exp;
-                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
-                                                                        with:[NSString stringWithFormat:@"%d", expNum]];
-            }
-        }
-
-    }
-    if (recommendedSampleInterval) {
-        if (recommendedSampleInterval <= 125) sampleInterval.text = @"125";
-        else {
-            sampleInterval.text = [NSString stringWithFormat:@"%d", (int)recommendedSampleInterval];
-        }
-        Experiment *experiment = [isenseAPI getExperiment:[NSNumber numberWithInt:expNum]];
-        if ((NSNull *)experiment.srate != [NSNull null]) {
-            if (experiment.srate.intValue > 125) {
-                sampleInterval.text = [NSString stringWithFormat:@"%d", experiment.srate.intValue];
-                recommendedSampleInterval = experiment.srate.intValue;
-            }
-        }
-    }
-}
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-
-// Resizes all views during rotation
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        
-        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-            self.view.frame = CGRectMake(0, 0, 1024, 768 - NAVIGATION_CONTROLLER_HEIGHT);
-            mainLogo.frame = CGRectMake(5, 5, 502, 125 );
-            containerForMainButton.frame = CGRectMake(517, 184, 400, 400);
-            loginStatus.frame = CGRectMake(5, 135, 502, 40);
-            expNumLabel.frame = CGRectMake(5, 175, 502, 40);
-            elapsedTimeView.frame = CGRectMake(5, 550, 502, 40);
-            sessionTitle.frame = CGRectMake(225, 262, 200, 35);
-            sessionTitleLabel.frame = CGRectMake(50, 260, 175, 35);
-            sampleInterval.frame = CGRectMake(235, 312, 150, 35);
-            sampleIntervalLabel.frame = CGRectMake(50, 310, 225, 35);
-            
-        } else {
-            self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
-            mainLogo.frame = CGRectMake(20, 5, 728, 150);
-            containerForMainButton.frame = CGRectMake(180, 350, 400, 400);
-            loginStatus.frame = CGRectMake(0, 160, 768, 40);
-            expNumLabel.frame = CGRectMake(0, 200, 768, 40);
-            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 50);
-            sessionTitle.frame = CGRectMake(self.view.frame.size.width/2 - 25, 262, 200, 35);
-            sessionTitleLabel.frame = CGRectMake(self.view.frame.size.width/2 - 200, 260, 175, 35);
-            sampleInterval.frame = CGRectMake(self.view.frame.size.width / 2, 762, 150, 35);
-            sampleIntervalLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 200, 760, 225, 35);
-            
-        }
-    } else {
-        
-        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-            self.view.frame = CGRectMake(0, 0, 480, 320 - NAVIGATION_CONTROLLER_HEIGHT);
-            mainLogo.frame = CGRectMake(15, 5, 180, 40);
-            containerForMainButton.frame = CGRectMake(240, 10, 220, 220);
-            loginStatus.frame = CGRectMake(5, 50, 200, 20);
-            expNumLabel.frame = CGRectMake(5, 65, 200, 20);
-            elapsedTimeView.frame = CGRectMake(5, 220, 200, 20);
-            sessionTitle.frame = CGRectMake(100, 122, 80, 20);
-            sessionTitleLabel.frame = CGRectMake(25, 120, 75, 20);
-            sampleInterval.frame = CGRectMake(115, 142, 50, 20);
-            sampleIntervalLabel.frame = CGRectMake(25, 140, 150, 20);
-        } else {
-            self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
-            mainLogo.frame = CGRectMake(10, 5, 300, 70);
-            containerForMainButton.frame = CGRectMake(50, 145, 220, 220);
-            loginStatus.frame = CGRectMake(0, 80, 320, 20);
-            expNumLabel.frame = CGRectMake(0, 95, self.view.frame.size.width, 20);
-            elapsedTimeView.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 20);
-            sessionTitle.frame = CGRectMake(self.view.frame.size.width / 2, 122, 80, 20);
-            sessionTitleLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 80, 120, 75, 20);
-            sampleInterval.frame = CGRectMake(self.view.frame.size.width / 2 + 15, self.view.frame.size.height - 32, 50, 20);
-            sampleIntervalLabel.frame = CGRectMake(self.view.frame.size.width / 2 - 80, self.view.frame.size.height - 35, 150, 20);
-
-        }
-    }
-}
-
-// Dismisses keyboard for sessionTitle
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return NO;
 }
 
 // Allows the device to rotate as necessary.
@@ -659,32 +315,11 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-// Low memory
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc. that aren't in use.
-}
-
-// Use this when view loads
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    //[self addChildViewController:(UIViewController*) self.yourChildController];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-// Release all the extra 
+// Release all the extra
 - (void)dealloc {
     [mainLogo release];
     [menuButton release];
-    [containerForMainButton release];
-    [loginStatus release];
-    [startStopLabel release];
-    [startStopButton release];
     [qrResults release];
-    [widController release];
     [locationManager release];
     locationManager = nil;
     [super dealloc];
@@ -697,7 +332,7 @@
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
     [message show];
     
-    dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
         BOOL success = [isenseAPI login:usernameInput with:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -713,7 +348,6 @@
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
                 
-                [self updateLoginStatus];
             } else {
                 [self.view makeToast:@"Login Failed!"
                             duration:TOAST_LENGTH_SHORT
@@ -726,13 +360,38 @@
     
 }
 
+// Catches long click, starts and stops recording and beeps
+- (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
+    if (!isRecording) {
+        // Get Field Order
+        [dfm getFieldOrderOfExperiment:expNum];
+        NSLog(@"%@", [dfm order]);
+        
+        // Record Data
+        isRecording = TRUE;
+        [self recordData];
+    } else {
+        // Stop Recording
+        isRecording = FALSE;
+        [self stopRecording:motionManager];
+    }
+    
+    // Make the beep sound
+    NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
+    SystemSoundID soundID;
+    NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+    AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
+    AudioServicesPlaySystemSound(soundID);
+    
+}
+
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
-    recommendedSampleInterval = [[NSString stringWithString:[sampleInterval text]] floatValue];
+    //recommendedSampleInterval = [[NSString stringWithString:[sampleInterval text]] floatValue];
     
     // Make a new float
     float rate = .125;
-    if (recommendedSampleInterval > 0) rate = recommendedSampleInterval / 1000;
+    //if (recommendedSampleInterval > 0) rate = recommendedSampleInterval / 1000;
     NSLog(@"Rate: %f", rate);
     
     // Set the accelerometer update interval to reccomended sample interval, and start updates
@@ -740,7 +399,6 @@
     motionManager.magnetometerUpdateInterval = rate;
     motionManager.gyroUpdateInterval = rate;
     if (motionManager.accelerometerAvailable) [motionManager startAccelerometerUpdates];
-    else { NSLog(@"Accelometer currently unavailible."); };
     if (motionManager.magnetometerAvailable) [motionManager startMagnetometerUpdates];
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
     
@@ -782,9 +440,9 @@
     fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
     fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
     fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
-                              sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
-                                   + pow(fieldsRow.mag_y.doubleValue, 2)
-                                   + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
+                            sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
+                                 + pow(fieldsRow.mag_y.doubleValue, 2)
+                                 + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
     
     // rotation rate in radians per second
     if (motionManager.gyroAvailable) {
@@ -801,7 +459,7 @@
     else {
         NSLog(@"something is wrong");
     }
-
+    
 }
 
 // This inits locations
@@ -818,23 +476,37 @@
 
 // Stops the recording and returns the actual data recorded :)
 -(void) stopRecording:(CMMotionManager *)finalMotionManager {
-//    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
-//    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
-//    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
-}
-
-// TODO - be rid of these 2 useless functions...
-- (void) experiment {
-    [self.view makeToast:@"Experiment!"
-                duration:TOAST_LENGTH_SHORT
-                position:TOAST_BOTTOM];
-}
-
-// TODO - get rid of this function
-- (void) upload {
-    [self.view makeToast:@"Upload!"
-                duration:TOAST_LENGTH_SHORT
-                position:TOAST_BOTTOM];
+    // Stop Timers
+    [timer invalidate];
+    [timer release];
+    [recordDataTimer invalidate];
+    [recordDataTimer release];
+    
+    // Stop Sensors
+    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
+    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
+    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
+    
+    // Back to recording mode
+    //    startStopButton.image = [UIImage imageNamed:@"red_button.png"];
+    //    mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
+    //    startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
+    //    containerForMainButton updateImage:startStopButton];
+    
+    // Open up description dialog
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:@"Delete"
+                                            otherButtonTitles:@"Upload", nil];
+    
+    message.tag = DESCRIPTION_AUTOMATIC;
+    message.delegate = self;
+    [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+    [message show];
+    [message release];
+    
 }
 
 // Fetch the experiments from iSENSE
@@ -885,7 +557,7 @@
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_LOGIN) {
-
+        
         if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
@@ -915,37 +587,6 @@
             browseView.chosenExperiment = &expNum;
             [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
-            
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            
-            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-                
-                widController = [[ZXingWidgetController alloc] initWithDelegate:self
-                                                                     showCancel:YES
-                                                                       OneDMode:NO];
-                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-                
-                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-                widController.readers = readers;
-                
-                [self presentModalViewController:widController animated:YES];
-                [qRCodeReader release];
-                [readers release];
-                
-            } else {
-                
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                [message release];
-                
-            }
-            
         }
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
@@ -957,8 +598,6 @@
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
             
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
-                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
         }
         
     } else if (actionSheet.tag == DESCRIPTION_AUTOMATIC) {
@@ -976,7 +615,7 @@
                     description = @"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application.";
                 }
                 
-                bool success = [self uploadData:dataToBeJSONed withDescription:description];
+                bool success = true;//[self uploadData:dataToBeJSONed withDescription:description];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (success) {
@@ -990,7 +629,7 @@
                                     position:TOAST_BOTTOM
                                        image:TOAST_RED_X];
                     }
-                
+                    
                     [message dismissWithClickedButtonIndex:nil animated:YES];
                 });
             });
@@ -998,29 +637,8 @@
         } else {
             
             [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_CHECKMARK];
-       
+            
         }
-    }
-}
-
-- (void)updateElapsedTime {
-    if (elapsedTime == 1) elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d second", elapsedTime];
-    else elapsedTimeView.text = [NSString stringWithFormat:@"Elapsed Time: %d seconds", elapsedTime];
-    elapsedTime++;
-}
-
-- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-    [widController.view removeFromSuperview];
-    
-    qrResults = [result retain];
-    NSArray *split = [qrResults componentsSeparatedByString:@"="];
-    if ([split count] != 2) {
-        [self.view makeToast:@"Invalid QR code scanned"
-                    duration:TOAST_LENGTH_LONG
-                    position:TOAST_BOTTOM
-                       image:TOAST_RED_X];
-    } else {
-        expNum = [[split objectAtIndex:1] intValue];
     }
 }
 
@@ -1053,107 +671,7 @@
     address = [[NSString alloc] initWithString:@"N/a"];
 }
 
-- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
-    [widController.view removeFromSuperview];
-}
-
-// Sets up listeners for keyboard
-- (void) registerForKeyboardNotifications {
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-// Unregisters listeners for keyboard
-- (void) unregisterKeyboardNotifications {
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification {
-    
-    if (activeField.tag == TAG_AUTOMATIC_SESSION_TITLE) {
-        
-        // adjust UI depending on field being editted
-        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
-            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                
-            } else {
-               
-            }
-        } else {
-            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                
-            } else {
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SESSION_LAND_IPHONE,
-                                             self.view.frame.size.width, self.view.frame.size.height);
-            }
-        }
-        
-    } else if (activeField.tag == TAG_AUTOMATIC_SAMPLE_INTERVAL) {
-        // adjust UI depending on field being editted
-        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-        if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
-            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SAMPLE_PORT_IPAD,
-                                             self.view.frame.size.width, self.view.frame.size.height);
-            } else {
-                
-            }
-        } else {
-            if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SAMPLE_PORT_IPHONE,
-                                             self.view.frame.size.width, self.view.frame.size.height);
-            } else {
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - KEY_OFFSET_SAMPLE_LAND_IPHONE,
-                                             self.view.frame.size.width, self.view.frame.size.height);
-            }
-        }
-    }
-    
-    keyboardDismissProper = false;
-}
-
-// Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    
-    @try {
-        if (activeField != nil && (activeField.tag == TAG_AUTOMATIC_SESSION_TITLE || activeField.tag == TAG_AUTOMATIC_SAMPLE_INTERVAL)) {
-            self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-        }
-    } @catch (NSException *e) {
-        // couldn't check activeField - so ignore it
-    }
-    
-    keyboardDismissProper = true;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    lastField   = textField;
-    activeField = textField;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    activeField = nil;
-}
-
-- (IBAction) textFieldFinished:(id)sender {}
-
+// This is for the loading spinner when the app starts automatic mode
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
                                                       message:nil
@@ -1166,6 +684,21 @@
     [spinner startAnimating];
     [spinner release];
     return [message autorelease];
+}
+
+
+// Calls step one to get an experiment, sample interval, test length, etc.
+- (IBAction) setup:(UIButton *)sender {
+    
+    StepOneSetup *stepView = [[StepOneSetup alloc] init];
+    stepView.title = @"Step 1: Setup";
+    [self.navigationController pushViewController:stepView animated:YES];
+    [stepView release];
+    
+}
+
+- (IBAction) uploadData:(UIButton *)sender {
+    
 }
 
 @end

@@ -7,14 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		39216FD0176F5BD40070DFCC /* Experiment.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
-		39216FD1176F5BD40070DFCC /* ExperimentField.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
-		39216FD2176F5BD40070DFCC /* Image.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
-		39216FD3176F5BD40070DFCC /* iSENSE.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; };
-		39216FD4176F5BD40070DFCC /* Item.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261516DFA86B0062C3DC /* Item.h */; };
-		39216FD5176F5BD40070DFCC /* Person.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
-		39216FD6176F5BD40070DFCC /* Session.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
-		39216FD7176F5BD40070DFCC /* SessionData.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
 		39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39216FDE176F5C790070DFCC /* CoreFoundation.framework */; };
 		39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39216FE3176F5C790070DFCC /* InfoPlist.strings */; };
 		3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFD176F7ACA0070DFCC /* DataSaver.h */; };
@@ -23,7 +15,6 @@
 		39217017176F7ACA0070DFCC /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217009176F7ACA0070DFCC /* Queue.h */; };
 		3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
 		3981B4B217626FD90030ACE5 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3981B4B017626FD90030ACE5 /* DataSet.m */; };
-		39A1CC2816DFB48700B1979F /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
 		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -32,6 +23,7 @@
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
 		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
+		39B63D891778C4950024EB75 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
 		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
@@ -52,14 +44,6 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				39216FD0176F5BD40070DFCC /* Experiment.h in Copy Files */,
-				39216FD1176F5BD40070DFCC /* ExperimentField.h in Copy Files */,
-				39216FD2176F5BD40070DFCC /* Image.h in Copy Files */,
-				39216FD3176F5BD40070DFCC /* iSENSE.h in Copy Files */,
-				39216FD4176F5BD40070DFCC /* Item.h in Copy Files */,
-				39216FD5176F5BD40070DFCC /* Person.h in Copy Files */,
-				39216FD6176F5BD40070DFCC /* Session.h in Copy Files */,
-				39216FD7176F5BD40070DFCC /* SessionData.h in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -281,7 +265,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39A1CC2816DFB48700B1979F /* Experiment.h in Headers */,
 				39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */,
 				39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */,
 				39A1CC2A16DFB48700B1979F /* Image.h in Headers */,
@@ -292,6 +275,7 @@
 				3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */,
 				3921700D176F7ACA0070DFCC /* DataSet.h in Headers */,
 				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
+				39B63D891778C4950024EB75 /* Experiment.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
