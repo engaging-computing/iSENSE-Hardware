@@ -183,7 +183,9 @@
 				</object>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 			</object>
-			<object class="IBUILongPressGestureRecognizer" id="979390730"/>
+			<object class="IBUILongPressGestureRecognizer" id="979390730">
+				<bool key="IBUIDelaysTouchesEnded">NO</bool>
+			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
