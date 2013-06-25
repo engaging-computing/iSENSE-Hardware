@@ -49,8 +49,6 @@
 @property (nonatomic, assign) CLLocationManager *locationManager;
 @property (nonatomic, assign) DataFieldManager *dfm;
 @property (nonatomic, assign) NSString *qrResults;
-@property (nonatomic, assign) UITextField *sessionTitle;
-@property (nonatomic, assign) UILabel *sessionTitleLabel;
 @property (nonatomic, assign) CLGeocoder *geoCoder;
 @property (nonatomic, copy) NSString *city;
 @property (nonatomic, copy) NSString *address;
