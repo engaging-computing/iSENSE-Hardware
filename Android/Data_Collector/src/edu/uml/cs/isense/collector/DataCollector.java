@@ -1609,17 +1609,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			long timeStart = System.currentTimeMillis();
 
 			mHandler.post(loadingThread);
-
-			long timeElapsed = System.currentTimeMillis() - timeStart;
-			try {
-				if (timeElapsed < 2000)
-					Thread.sleep(2000 - timeElapsed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 
 			return null;
 		}
