@@ -94,4 +94,9 @@
 #define TOAST_CHECKMARK @"check"
 #define TOAST_RED_X @"red_x"
 
+// data recording constants
+#define S_INTERVAL      125
+#define TEST_LENGTH     600
+#define MAX_DATA_POINTS (1000/S_INTERVAL) * TESTLENGTH
+
 #endif

@@ -17,7 +17,6 @@
 
 @synthesize sessionName, sampleInterval, testLength, expNumLabel, rememberMe, selectExp, selectLater, ok;
 
-// displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
@@ -90,7 +89,7 @@
             selectExp.enabled = NO;
             selectExp.alpha = 0.5;
         } else {
-            NSString *newExpLabel = [NSString stringWithFormat:@"(currently %@)", defaultExp];
+            NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
             [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
             selectLater.on = false;
         }
@@ -104,12 +103,68 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (IBAction)okOnClick:(UIButton *)okButton {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
+    bool ready = true;
+    
+    if ([[sessionName text] length] == 0) {
+        [self.view makeToast:@"Please enter a session name first"
+                    duration:TOAST_LENGTH_LONG
+                    position:TOAST_BOTTOM
+                       image:TOAST_RED_X];
+        ready = false;
+    }
+    
+    int sInt;
+    if ([[sampleInterval text] length] == 0) {
+        sInt = S_INTERVAL;
+    } else {
+        sInt = [[sampleInterval text] integerValue];
+    }
+    
+    if (sInt < S_INTERVAL) {
+        [self.view makeToast:[NSString stringWithFormat:@"Please enter a sample interval >= %d ms", S_INTERVAL]
+                    duration:TOAST_LENGTH_LONG
+                    position:TOAST_BOTTOM
+                       image:TOAST_RED_X];
+        ready = false;
+    }
+    
+    int tLen;
+    if ([[testLength text] length] == 0) {
+        tLen = TEST_LENGTH;
+    } else {
+        tLen = [[testLength text] integerValue];
+    }
+    
+    if (tLen * (1000/sInt) > MAX_DATA_POINTS) {
+        [self.view makeToast:[NSString stringWithFormat:@"Please enter a test length <= %d s", MAX_DATA_POINTS/(1000/sInt)]
+                    duration:TOAST_LENGTH_LONG
+                    position:TOAST_BOTTOM
+                       image:TOAST_RED_X];
+        ready = false;
+    }
+    
+    if (!selectLater.on) {
+        NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        // TODO - fields?
+        if ([eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
+            [self.view makeToast:@"Please select an experiment"
+                        duration:TOAST_LENGTH_LONG
+                        position:TOAST_BOTTOM
+                           image:TOAST_RED_X];
+            ready = false;
+        }
+    }
+    
+    if (ready) {
+        // do stuff
+    }
+    
+    // this goes somewhere
     if (rememberMe.on) {
         [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
         [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
