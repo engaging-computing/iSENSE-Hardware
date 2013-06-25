@@ -44,6 +44,7 @@
 "key_remember_me_check"         = "remembermecheck";
 "key_sample_interval"           = "defaultsampleinterval";
 "key_test_length"               = "defaulttestlength";
+"key_setup_complete"            = "setupiscompleteandnotcanceled";
 
 "current_exp_label"             = "Experiment";
 

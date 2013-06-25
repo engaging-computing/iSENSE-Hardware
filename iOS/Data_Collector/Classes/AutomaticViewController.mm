@@ -11,7 +11,8 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, qrResults, sessionTitle, sessionTitleLabel, recommendedSampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, qrResults,
+    recommendedSampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -277,6 +278,36 @@
     }
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
+}
+
+// Is called every time AutomaticView is about to appear
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // If true, then we're coming back from another ViewController
+    if (self.isMovingToParentViewController == NO) {
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        bool backFromSetup = [prefs boolForKey:[StringGrabber grabString:@"key_setup_complete"]];
+        
+        // We have a session name, sample interval, and test length ready
+        if (backFromSetup) {
+            
+            // TODO - get session name, srate, and t-len  %@&*&*^@#&*(^@#%*&(&*()#@%*(&)#@&(*)%#&*()#%@*(&)#@%*&(#%@*(&)#%@&*()#%@&*(#%*(&)#%(*&)#@%*&()#%@(&*)@#%(&*)
+            NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
+            float JEREMY_THIS_IS_YOUR_SAMPLE_INTERVAL = [sampleIntervalString floatValue];
+            
+            NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
+            int JEREMY_THIS_IS_YOUR_TEST_LENGTH = [testLengthString integerValue];
+            
+            NSString *JEREMY_THIS_YOUR_SESSION_NAME = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            
+            // Set setup_complete key to false again
+            [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
+        }
+        
+        
+    }
 }
 
 // Is called every time AutomaticView appears
