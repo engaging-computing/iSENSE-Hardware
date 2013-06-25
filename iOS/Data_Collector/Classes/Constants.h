@@ -97,6 +97,6 @@
 // data recording constants
 #define S_INTERVAL      125
 #define TEST_LENGTH     600
-#define MAX_DATA_POINTS (1000/S_INTERVAL) * TESTLENGTH
+#define MAX_DATA_POINTS (1000/S_INTERVAL) * TEST_LENGTH
 
 #endif
