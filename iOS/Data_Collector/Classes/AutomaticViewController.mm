@@ -361,28 +361,29 @@
 }
 
 // Catches long click, starts and stops recording and beeps
-- (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
-    if (!isRecording) {
-        // Get Field Order
-        [dfm getFieldOrderOfExperiment:expNum];
-        NSLog(@"%@", [dfm order]);
+- (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        if (!isRecording) {
+            // Get Field Order
+            [dfm getFieldOrderOfExperiment:expNum];
+            NSLog(@"%@", [dfm order]);
+            
+            // Record Data
+            isRecording = TRUE;
+            [self recordData];
+        } else {
+            // Stop Recording
+            isRecording = FALSE;
+            [self stopRecording:motionManager];
+        }
         
-        // Record Data
-        isRecording = TRUE;
-        [self recordData];
-    } else {
-        // Stop Recording
-        isRecording = FALSE;
-        [self stopRecording:motionManager];
+        // Make the beep sound
+        NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
+        SystemSoundID soundID;
+        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
+        AudioServicesPlaySystemSound(soundID);
     }
-    
-    // Make the beep sound
-    NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
-    SystemSoundID soundID;
-    NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
-    AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
-    AudioServicesPlaySystemSound(soundID);
-    
 }
 
 // Record the data and return the NSMutable array to be JSONed
