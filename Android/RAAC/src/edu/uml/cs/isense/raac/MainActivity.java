@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONArray;
 
@@ -115,7 +116,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	String experimentId = "421";
+	String experimentId = "572";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
@@ -1108,7 +1109,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		String dataString = "";
 
 		long unixTs = 0;
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z");
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z", Locale.US);
 		Date parsed;
 
 		try {
