@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface StepOneSetup : UIViewController {
+@interface StepOneSetup : UIViewController <UITextFieldDelegate> {
     
     iSENSE *iapi;
 }
@@ -22,6 +22,7 @@
 @property (nonatomic, retain) IBOutlet UITextField *sessionName;
 @property (nonatomic, retain) IBOutlet UITextField *sampleInterval;
 @property (nonatomic, retain) IBOutlet UITextField *testLength;
+@property (nonatomic, retain) IBOutlet UILabel     *expNumLabel;
 @property (nonatomic, retain) IBOutlet UISwitch    *rememberMe;
 @property (nonatomic, retain) IBOutlet UIButton    *selectExp;
 @property (nonatomic, retain) IBOutlet UISwitch    *selectLater;

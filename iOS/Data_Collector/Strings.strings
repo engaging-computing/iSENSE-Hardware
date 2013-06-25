@@ -41,6 +41,11 @@
 "key_remember_me"               = "rememberme";
 "key_select_later"              = "selectexplater";
 "key_step1_session_name"        = "step1sessionname";
+"key_remember_me_check"         = "remembermecheck";
+"key_sample_interval"           = "defaultsampleinterval";
+"key_test_length"               = "defaulttestlength";
+
+"current_exp_label"             = "Experiment";
 
 // ------------------------------ //
 // --- about application text --- //
