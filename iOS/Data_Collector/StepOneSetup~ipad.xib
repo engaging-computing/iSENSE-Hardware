@@ -302,10 +302,7 @@
 						<string key="NSFrame">{{109, 631}, {643, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-<<<<<<< HEAD
 						<reference key="NSNextKeyView" ref="131381710"/>
-=======
->>>>>>> upstream/master
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
