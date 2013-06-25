@@ -58,6 +58,7 @@
     iapi = [iSENSE getInstance];
     [iapi toggleUseDev:YES];
     
+    sessionName.delegate = self;
     sampleInterval.delegate = self;
     testLength.delegate = self;
     
@@ -161,17 +162,23 @@
     }
     
     if (ready) {
-        // do stuff
+        if (selectLater.on) {
+            [prefs setValue:@"-1" forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        }
+        
+        if (rememberMe.on) {
+            [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+            [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+            [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
+        } else {
+            [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+        }
+        
+        // TODO - do return stuffz then return
+        [self.navigationController popViewControllerAnimated:YES];
     }
     
-    // this goes somewhere
-    if (rememberMe.on) {
-        [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
-        [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
-        [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
-    } else {
-       [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
-    }
+    
 }
 
 - (IBAction)experimentOnClick:(UIButton *)expButton {

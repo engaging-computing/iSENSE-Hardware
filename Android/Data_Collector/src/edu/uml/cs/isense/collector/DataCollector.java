@@ -272,9 +272,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		
 		OrientationManager.disableRotation(DataCollector.this);
 
-		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
-		ImageView spinner = (ImageView) findViewById(R.id.spinner);
-		spinner.startAnimation(rotateInPlace);
+		mHandler = new Handler();
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				rotateInPlace = AnimationUtils.loadAnimation(DataCollector.this, R.anim.superspinner);
+				ImageView spinner = (ImageView) findViewById(R.id.spinner);
+				spinner.startAnimation(rotateInPlace);
+			}
+		});
 		
 		// Set main context of application once
 		mContext = this;
