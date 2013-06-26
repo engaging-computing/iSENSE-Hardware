@@ -11,6 +11,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/headers/DataSaver.h>
+#import <iSENSE_API/headers/QueueUploaderView.h>
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
 #import "DataFieldManager.h"
@@ -35,12 +36,14 @@
 - (void) getExperiments;
 - (void) recordData;
 
-@property (nonatomic, assign) IBOutlet UILongPressGestureRecognizer *longClickRecognizer;
-
 @property (nonatomic, retain) iSENSE *isenseAPI;
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) int elapsedTime;
-@property (nonatomic) float recommendedSampleInterval;
+
+@property (nonatomic) float sampleInterval;
+@property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic) int testLength;
+
 @property (nonatomic, assign) NSTimer *timer;
 @property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
@@ -48,13 +51,14 @@
 @property (nonatomic, assign) int expNum;
 @property (nonatomic, assign) CLLocationManager *locationManager;
 @property (nonatomic, assign) DataFieldManager *dfm;
-@property (nonatomic, assign) NSString *qrResults;
+
 @property (nonatomic, assign) CLGeocoder *geoCoder;
 @property (nonatomic, copy) NSString *city;
 @property (nonatomic, copy) NSString *address;
 @property (nonatomic, copy) NSString *country;
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) IBOutlet UILongPressGestureRecognizer *longClickRecognizer;
 @property (nonatomic, retain) DataSaver *dataSaver;
 
 @end

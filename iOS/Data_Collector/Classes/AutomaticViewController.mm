@@ -11,8 +11,8 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, qrResults,
-    recommendedSampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
+    sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -223,6 +223,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Loading message appears while seting up main view
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading..."];
     [message show];
     
@@ -234,14 +235,14 @@
     isenseAPI = [iSENSE getInstance];
     [isenseAPI toggleUseDev:YES];
     
+    // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
-    
-    [self initLocations];
-    dfm = [DataFieldManager alloc];
-    [self resetAddressFields];
-    recommendedSampleInterval = DEFAULT_SAMPLE_INTERVAL;
-    
+    dfm = [[DataFieldManager alloc] init];
     dataSaver = [[DataSaver alloc] init];
+    sampleInterval = DEFAULT_SAMPLE_INTERVAL;
+
+    [self initLocations];
+    [self resetAddressFields];
     
     if (managedObjectContext == nil) {
         managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
@@ -252,17 +253,14 @@
     NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
-        
-        // Sort results for DataSets
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
-        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-        [request setSortDescriptors:sortDescriptors];
-        
+              
         // Actually make the request
         NSError *error = nil;
         NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
         if (mutableFetchResults == nil) {
             // Handle the error.
+        } else {
+            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
         }
         
         // fill dataSaver's DataSet Queue
@@ -271,8 +269,6 @@
         }
         
         // release the fetched objects
-        [sortDescriptor release];
-        [sortDescriptors release];
         [mutableFetchResults release];
         [request release];
     }
@@ -293,14 +289,14 @@
         // We have a session name, sample interval, and test length ready
         if (backFromSetup) {
             
-            // TODO - get session name, srate, and t-len  %@&*&*^@#&*(^@#%*&(&*()#@%*(&)#@&(*)%#&*()#%@*(&)#@%*&(#%@*(&)#%@&*()#%@&*(#%*(&)#%(*&)#@%*&()#%@(&*)@#%(&*)
+            // retrieve the data from the setup dialog
             NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
-            float JEREMY_THIS_IS_YOUR_SAMPLE_INTERVAL = [sampleIntervalString floatValue];
+            sampleInterval = [sampleIntervalString floatValue];
             
             NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
-            int JEREMY_THIS_IS_YOUR_TEST_LENGTH = [testLengthString integerValue];
+            testLength = [testLengthString integerValue];
             
-            NSString *JEREMY_THIS_YOUR_SESSION_NAME = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            sessionName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
             
             // Set setup_complete key to false again
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -314,7 +310,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Update ExperimentNumber status
+    // Autorotate
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
@@ -350,7 +346,6 @@
 - (void)dealloc {
     [mainLogo release];
     [menuButton release];
-    [qrResults release];
     [locationManager release];
     locationManager = nil;
     [super dealloc];
@@ -419,12 +414,10 @@
 
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
-    //recommendedSampleInterval = [[NSString stringWithString:[sampleInterval text]] floatValue];
     
-    // Make a new float
+    // Get the recording rate
     float rate = .125;
-    //if (recommendedSampleInterval > 0) rate = recommendedSampleInterval / 1000;
-    NSLog(@"Rate: %f", rate);
+    if (sampleInterval > 0) rate = sampleInterval / 1000;
     
     // Set the accelerometer update interval to reccomended sample interval, and start updates
     motionManager.accelerometerUpdateInterval = rate;
@@ -697,6 +690,7 @@
     }
 }
 
+// Reset address fields for next session
 - (void)resetAddressFields {
     city = [[NSString alloc] initWithString:@"N/a"];
     country = [[NSString alloc] initWithString:@"N/a"];
@@ -729,7 +723,13 @@
     
 }
 
+// Launches a view that allows the user to upload and manage his/her datasets
 - (IBAction) uploadData:(UIButton *)sender {
+    
+    QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
+    queueUploader.title = @"Step 3: Manage and Upload Sessions";
+    [self.navigationController pushViewController:queueUploader animated:YES];
+    [queueUploader release];
     
 }
 
