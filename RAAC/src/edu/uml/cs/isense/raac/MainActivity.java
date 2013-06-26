@@ -28,7 +28,6 @@
 
 package edu.uml.cs.isense.raac;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -90,7 +89,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
-import edu.uml.cs.isense.raac.exceptions.NoDataException;
 import edu.uml.cs.isense.raac.pincushion.BluetoothService;
 import edu.uml.cs.isense.raac.pincushion.PinComm;
 import edu.uml.cs.isense.raac.pincushion.pinpointInterface;
@@ -334,7 +332,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		//Update preferences set in PreferenceActivity
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		autoRun = prefs.getBoolean("auto_upload", false);
-		experimentId = prefs.getString("experiment_number", "421");
+		experimentId = prefs.getString("experiment_number", "572");
 		autoConn = prefs.getBoolean("auto_connect", true);
 		defaultMac = prefs.getString("defaultPpt", "");
 	}
