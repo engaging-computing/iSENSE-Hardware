@@ -141,6 +141,15 @@
             if (rds != nil) rds->doesHaveData = true;
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+            message.tag = MENU_EXPERIMENT;
+            [message show];
+            [message release];
+            
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
         }
     }

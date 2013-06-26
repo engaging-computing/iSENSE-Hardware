@@ -324,7 +324,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -556,19 +556,8 @@
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_EXPERIMENT:
-            message = [[UIAlertView alloc] initWithTitle:nil
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
-            [message show];
-            [message release];
             
-			break;
-            
-		case MENU_LOGIN:
+		case 0:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
                                                 delegate:self
@@ -594,42 +583,6 @@
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self login:usernameInput withPassword:passwordInput];
-        }
-        
-    } else if (actionSheet.tag == MENU_EXPERIMENT){
-        
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
-            
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Okay", nil];
-            
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
-            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
-            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message show];
-            [message release];
-            
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
-            
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNum;
-            [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
-        }
-        
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            
-            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
-            
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
-            
         }
         
     } else if (actionSheet.tag == DESCRIPTION_AUTOMATIC) {
