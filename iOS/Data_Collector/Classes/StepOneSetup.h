@@ -12,6 +12,8 @@
 @interface StepOneSetup : UIViewController <UITextFieldDelegate> {
     
     iSENSE *iapi;
+    int expNumInteger;
+    
 }
 
 - (IBAction)rememberMeToggled:(UISwitch *)switcher;

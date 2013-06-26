@@ -401,12 +401,7 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender { // TODO - change back!
-    
-    StepOneSetup *stepView = [[StepOneSetup alloc] init];
-    stepView.title = @"Step 1: Setup";
-    [self.navigationController pushViewController:stepView animated:YES];
-    [stepView release];
-    
+        
     /*if (sessionNameInput.text.length != 0)
         [CameraUsage useCamera];
     else
