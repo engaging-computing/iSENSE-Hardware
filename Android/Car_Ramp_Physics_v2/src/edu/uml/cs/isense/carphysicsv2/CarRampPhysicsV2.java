@@ -86,7 +86,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private Button startStop;
 	private TextView values;
-	private Boolean running = false;
+	public static Boolean running = false;
 	// private Vibrator vibrator;
 
 	private SensorManager mSensorManager;
@@ -121,7 +121,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
-	private boolean appTimedOut = false;
+	public static boolean appTimedOut = false;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -148,7 +148,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	static boolean inPausedState = false;
 	static boolean toastSuccess = false;
 	static boolean useMenu = true;
-	static boolean setupDone = false;
+	public static boolean setupDone = false;
 	static boolean choiceViaMenu = false;
 	static boolean dontToastMeTwice = false;
 	static boolean exitAppViaBack = false;
@@ -223,7 +223,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					R.string.logged_in_as)
 					+ userName);
 		} else {
-			w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+			if (rapi.isConnectedToInternet())
+				w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 		}
 		
 
@@ -615,6 +616,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			createSingleInputDialog("Change Recording Length",
 					"Input new recording length", RECORDING_LENGTH_REQUESTED);
 			return true;
+		case R.id.changename:
+			startActivityForResult(new Intent(this, EnterNameActivity.class), resultGotName);
+			return true ;
 		}
 		return false;
 	}
@@ -736,6 +740,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putInt("length", length);
 				editor.commit();
+			}
+		} else if (reqCode == resultGotName){
+			if (resultCode == RESULT_OK) {
+				// Do nothing. Muahahahaha!
+			} else {
+				finish();
 			}
 		}
 	}

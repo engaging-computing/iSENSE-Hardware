@@ -45,5 +45,9 @@
 	<string name="first_name">First Name: </string>
 	<string name="record_length">Set Recording Length</string>
 	<string name="upload">Upload</string>
+	<string name="digits_restriction">
+	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
+	</string>
+	<string name="changename">Change Name</string>
     
 </resources>
