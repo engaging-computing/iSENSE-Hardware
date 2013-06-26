@@ -36,9 +36,9 @@ public class EnterNameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.entername);
 		
-		w = new Waffle(mContext);
-		
 		mContext = this;
+		
+		w = new Waffle(mContext);
 		
 		final EditText firstNameInput   = (EditText) findViewById(R.id.nameInput);
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
@@ -60,7 +60,7 @@ public class EnterNameActivity extends Activity {
 				   } else {
 					   CarRampPhysicsV2.firstName   = firstNameInput.getText().toString();
 					   CarRampPhysicsV2.lastInitial = lastInitialInput.getText().toString();
-					   setResult(NAME_SUCCESSFUL, null);
+					   setResult(RESULT_OK, null);
 					   finish();
 				   }
 			}
@@ -71,8 +71,21 @@ public class EnterNameActivity extends Activity {
 	}
 	
 	@Override
-    public void onBackPressed() {
-		/* to prevent user from escaping. muahahaha! */
+	public void onBackPressed() {
+		if (!dontToastMeTwice) {
+			if (CarRampPhysicsV2.running)
+				w.make(
+
+				"Cannot exit via BACK while recording data; use HOME instead.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			else
+				w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
+			new NoToastTwiceTask().execute();
+		} else if (CarRampPhysicsV2.exitAppViaBack && !CarRampPhysicsV2.running) {
+			CarRampPhysicsV2.setupDone = false;
+			setResult(RESULT_CANCELED);
+			finish();
+		}
 	}
     
 	private void showFailure() {
@@ -125,6 +138,7 @@ public class EnterNameActivity extends Activity {
 	public class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
 	    @Override protected void onPreExecute() {
 	    	dontToastMeTwice = true;
+	    	CarRampPhysicsV2.exitAppViaBack = true ;
 	    }
 		@Override protected Void doInBackground(Void... voids) {
 	    	try {

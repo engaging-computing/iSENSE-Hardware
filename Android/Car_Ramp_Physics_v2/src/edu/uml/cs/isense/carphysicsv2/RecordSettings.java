@@ -31,6 +31,8 @@ public class RecordSettings extends Activity {
 		
 		final Button DoneButton = (Button) findViewById(R.id.loginButton);
 		
+		setTitle("Which Accelerometer fields would you like to record?");
+		
 		XcheckBox.setChecked(Xchecked);
 		YcheckBox.setChecked(Ychecked);
 		ZcheckBox.setChecked(Zchecked);
