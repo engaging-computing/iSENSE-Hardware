@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,6 +45,8 @@ public class EnterNameActivity extends Activity {
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
 		final Button   okButton         = (Button)   findViewById(R.id.OkButton);
 		
+		firstNameInput.setFilters( new InputFilter[] { new InputFilter.LengthFilter(20)});
+		
 		/*final Message loginSuccess = Message.obtain();
 		loginSuccess.what = NAME_SUCCESSFULL;
 		
@@ -78,6 +81,10 @@ public class EnterNameActivity extends Activity {
 
 				"Cannot exit via BACK while recording data; use HOME instead.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			else if (CarRampPhysicsV2.inApp) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
 			else
 				w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
 			new NoToastTwiceTask().execute();
