@@ -98,9 +98,15 @@
             selectLater.on = false;
         }
     } else {
-        selectLater.on = true;
-        selectExp.enabled = NO;
-        selectExp.alpha = 0.5;
+        if (defaultExp == NULL) {
+            selectLater.on = false;
+            selectExp.enabled = YES;
+            selectExp.alpha = 1.0;
+        } else {
+            selectLater.on = true;
+            selectExp.enabled = NO;
+            selectExp.alpha = 0.5;
+        }
     }
 
 }
@@ -130,10 +136,11 @@
     }
     
     if (sInt < S_INTERVAL) {
-        [self.view makeToast:[NSString stringWithFormat:@"Please enter a sample interval >= %d ms", S_INTERVAL]
-                    duration:TOAST_LENGTH_LONG
-                    position:TOAST_BOTTOM
-                       image:TOAST_RED_X];
+        if (ready == true)
+            [self.view makeToast:[NSString stringWithFormat:@"Please enter a sample interval >= %d ms", S_INTERVAL]
+                        duration:TOAST_LENGTH_LONG
+                        position:TOAST_BOTTOM
+                           image:TOAST_RED_X];
         ready = false;
     }
     
@@ -145,21 +152,23 @@
     }
     
     if (tLen * (1000/sInt) > MAX_DATA_POINTS) {
-        [self.view makeToast:[NSString stringWithFormat:@"Please enter a test length <= %d s", MAX_DATA_POINTS/(1000/sInt)]
-                    duration:TOAST_LENGTH_LONG
-                    position:TOAST_BOTTOM
-                       image:TOAST_RED_X];
+        if (ready == true)
+            [self.view makeToast:[NSString stringWithFormat:@"Please enter a test length <= %d s", MAX_DATA_POINTS/(1000/sInt)]
+                        duration:TOAST_LENGTH_LONG
+                        position:TOAST_BOTTOM
+                           image:TOAST_RED_X];
         ready = false;
     }
     
     if (!selectLater.on) {
         NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]];
         // TODO - fields?
-        if ([eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
-            [self.view makeToast:@"Please select an experiment"
-                        duration:TOAST_LENGTH_LONG
-                        position:TOAST_BOTTOM
-                           image:TOAST_RED_X];
+        if (eid == NULL || [eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
+            if (ready == true)
+                [self.view makeToast:@"Please select an experiment"
+                            duration:TOAST_LENGTH_LONG
+                            position:TOAST_BOTTOM
+                               image:TOAST_RED_X];
             ready = false;
         }
     }
@@ -190,21 +199,96 @@
 }
 
 - (IBAction)experimentOnClick:(UIButton *)expButton {
-    
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:nil
+                                         message:nil
+                                        delegate:self
+                               cancelButtonTitle:@"Cancel"
+                               otherButtonTitles:@"Enter Experiment #", @"Browse", nil];
+    message.tag = MENU_EXPERIMENT;
+    [message show];
+    [message release];
 }
 
 - (IBAction)selectLaterToggled:(UISwitch *)switcher {
     if (switcher.on) {
         selectExp.enabled = NO;
         selectExp.alpha = 0.5;
+        
+        [expNumLabel setText:[StringGrabber grabString:@"current_exp_label"]];
     } else {
         selectExp.enabled = YES;
         selectExp.alpha = 1.0;
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *curExp = [prefs valueForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        if ([curExp length] != 0 && [curExp integerValue] != -1) {
+            NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", curExp];
+            [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+        }
     }
 }
 
 - (IBAction)rememberMeToggled:(UISwitch *)switcher {
     
+}
+
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == MENU_EXPERIMENT){
+        
+        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
+            
+            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message show];
+            [message release];
+            
+        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
+            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNumInteger;
+            [self.navigationController pushViewController:browseView animated:YES];
+            [browseView release];
+        }
+        
+    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            NSString *expNum = [[actionSheet textFieldAtIndex:0] text];
+            expNumInteger = [expNum integerValue];
+           
+            NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", expNum];
+            [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+            
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            
+        }
+        
+    } 
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // If true, then we're coming back from another ViewController
+    if (self.isMovingToParentViewController == NO) {
+        NSLog(@"callback");
+        NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", expNumInteger];
+        [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *expNumString = [NSString stringWithFormat:@"%d", expNumInteger];
+        [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+    }
 }
 
 - (void) dealloc {
