@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, qrResults,
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm,
     recommendedSampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -350,7 +350,6 @@
 - (void)dealloc {
     [mainLogo release];
     [menuButton release];
-    [qrResults release];
     [locationManager release];
     locationManager = nil;
     [super dealloc];

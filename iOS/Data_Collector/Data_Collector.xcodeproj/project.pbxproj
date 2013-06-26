@@ -114,27 +114,6 @@
 			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC;
 			remoteInfo = iSENSE_API;
 		};
-		B7DD76CC16B86543000B0CCF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D;
-			remoteInfo = ZXingWidget;
-		};
-		B7DD76CE16B86543000B0CCF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1D60398D13DF7CAD006F4B51;
-			remoteInfo = ZXingTests;
-		};
-		B7DD76D116B86550000B0CCF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
-			remoteInfo = ZXingWidget;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -212,7 +191,6 @@
 		B71A2DD816E4D91E009A441F /* Fields.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fields.m; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
-		B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = ../../zxing/iphone/ZXingWidget/ZXingWidget.xcodeproj; sourceTree = "<group>"; };
 		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
 		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -530,7 +508,6 @@
 				B7115C1D16D6AA490033AAA1 /* DataFieldManager */,
 				B72DC21716C19A2900999C7E /* HexColor */,
 				39A5AA7816C29555005862E7 /* ISenseSearch */,
-				B74A1EEC16B8623B00F0E9EE /* ZXing */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
 				3963689A1697258700631268 /* Waffle */,
 				39F8AF9B1694C22100E5E4C2 /* CameraUsage */,
@@ -575,14 +552,6 @@
 			name = HexColor;
 			sourceTree = "<group>";
 		};
-		B74A1EEC16B8623B00F0E9EE /* ZXing */ = {
-			isa = PBXGroup;
-			children = (
-				B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */,
-			);
-			name = ZXing;
-			sourceTree = "<group>";
-		};
 		B75046D11774ADDF0034B42C /* Layout-Both */ = {
 			isa = PBXGroup;
 			children = (
@@ -590,15 +559,6 @@
 				52572B941691F796009037A7 /* GuideView.xib */,
 			);
 			name = "Layout-Both";
-			sourceTree = "<group>";
-		};
-		B7DD76C816B86543000B0CCF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B7DD76CD16B86543000B0CCF /* libZXingWidget.a */,
-				B7DD76CF16B86543000B0CCF /* ZXingTests.octest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -617,7 +577,6 @@
 			dependencies = (
 				3921701F176FA08D0070DFCC /* PBXTargetDependency */,
 				39A1CC2416DFB43F00B1979F /* PBXTargetDependency */,
-				B7DD76D216B86550000B0CCF /* PBXTargetDependency */,
 			);
 			name = Data_Collector;
 			productName = Data_Collector;
@@ -649,10 +608,6 @@
 					ProductGroup = 3987713616DFB2F300DBDE56 /* Products */;
 					ProjectRef = 3987713516DFB2F300DBDE56 /* iSENSE_API.xcodeproj */;
 				},
-				{
-					ProductGroup = B7DD76C816B86543000B0CCF /* Products */;
-					ProjectRef = B74A1EFD16B862CE00F0E9EE /* ZXingWidget.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -674,20 +629,6 @@
 			fileType = archive.ar;
 			path = libiSENSE_API.a;
 			remoteRef = 3987713916DFB2F300DBDE56 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B7DD76CD16B86543000B0CCF /* libZXingWidget.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libZXingWidget.a;
-			remoteRef = B7DD76CC16B86543000B0CCF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B7DD76CF16B86543000B0CCF /* ZXingTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ZXingTests.octest;
-			remoteRef = B7DD76CE16B86543000B0CCF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -782,11 +723,6 @@
 			isa = PBXTargetDependency;
 			name = iSENSE_API;
 			targetProxy = 39A1CC2316DFB43F00B1979F /* PBXContainerItemProxy */;
-		};
-		B7DD76D216B86550000B0CCF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ZXingWidget;
-			targetProxy = B7DD76D116B86550000B0CCF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

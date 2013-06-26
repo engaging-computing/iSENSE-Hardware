@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize sessionName, expNum, qrResults, locationManager, browsing;
+@synthesize sessionName, expNum, locationManager, browsing;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -338,8 +338,6 @@
 	[scrollView release];
 	
 	[sessionName release];
-    [qrResults release];
-    [widController release];
     
     [locationManager release];
     locationManager = nil;
@@ -504,7 +502,7 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+            /*if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
                 
                 widController = [[ZXingWidgetController alloc] initWithDelegate:self
                                                                      showCancel:YES
@@ -518,7 +516,7 @@
                 [qRCodeReader release];
                 [readers release];
                 
-            } else {
+            } else {*/
                 
                 UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
                                                                   message:nil
@@ -530,7 +528,7 @@
                 [message show];
                 [message release];
                 
-            }
+            //}
             
         }
         
@@ -572,7 +570,7 @@
     }
 }
 
-- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+/*- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
     [widController.view removeFromSuperview];
     
     qrResults = [result retain];
@@ -596,7 +594,7 @@
 
 - (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
     [widController.view removeFromSuperview];
-}
+}*/
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
