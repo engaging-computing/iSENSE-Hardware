@@ -121,10 +121,10 @@
     bool ready = true;
     
     if ([[sessionName text] length] == 0) {
-        [self.view makeToast:@"Please enter a session name first"
-                    duration:TOAST_LENGTH_LONG
-                    position:TOAST_BOTTOM
-                       image:TOAST_RED_X];
+        [self.view makeWaffle:@"Please enter a session name first"
+                    duration:WAFFLE_LENGTH_LONG
+                    position:WAFFLE_BOTTOM
+                       image:WAFFLE_WARNING];
         ready = false;
     }
     
@@ -137,10 +137,10 @@
     
     if (sInt < S_INTERVAL) {
         if (ready == true)
-            [self.view makeToast:[NSString stringWithFormat:@"Please enter a sample interval >= %d ms", S_INTERVAL]
-                        duration:TOAST_LENGTH_LONG
-                        position:TOAST_BOTTOM
-                           image:TOAST_RED_X];
+            [self.view makeWaffle:[NSString stringWithFormat:@"Please enter a sample interval >= %d ms", S_INTERVAL]
+                        duration:WAFFLE_LENGTH_LONG
+                        position:WAFFLE_BOTTOM
+                           image:WAFFLE_WARNING];
         ready = false;
     }
     
@@ -153,10 +153,10 @@
     
     if (tLen * (1000/sInt) > MAX_DATA_POINTS) {
         if (ready == true)
-            [self.view makeToast:[NSString stringWithFormat:@"Please enter a test length <= %d s", MAX_DATA_POINTS/(1000/sInt)]
-                        duration:TOAST_LENGTH_LONG
-                        position:TOAST_BOTTOM
-                           image:TOAST_RED_X];
+            [self.view makeWaffle:[NSString stringWithFormat:@"Please enter a test length <= %d s", MAX_DATA_POINTS/(1000/sInt)]
+                        duration:WAFFLE_LENGTH_LONG
+                        position:WAFFLE_BOTTOM
+                           image:WAFFLE_WARNING];
         ready = false;
     }
     
@@ -165,10 +165,10 @@
         // TODO - fields?
         if (eid == NULL || [eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
             if (ready == true)
-                [self.view makeToast:@"Please select an experiment"
-                            duration:TOAST_LENGTH_LONG
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Please select an experiment"
+                            duration:WAFFLE_LENGTH_LONG
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_WARNING];
             ready = false;
         }
     }

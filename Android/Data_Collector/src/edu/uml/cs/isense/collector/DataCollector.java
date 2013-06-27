@@ -1649,7 +1649,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menuLogin.setEnabled(enabled);
 			menuMedia.setEnabled(enabled);
 			menuSync.setEnabled(enabled);
-			if (enabled) {
+			/*if (enabled) {
 				MenuItem item = mMenu.findItem(R.id.menu_item_login);
 		    	item.setVisible(true);
 		    	item = mMenu.findItem(R.id.menu_item_media);
@@ -1665,7 +1665,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		    	item = mMenu.findItem(R.id.menu_item_sync);
 		    	item.setVisible(false);
 		    	super.onPrepareOptionsMenu(mMenu);
-			}
+			}*/
 		}
 	}
 

@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize sessionName, expNum, qrResults, locationManager, browsing;
+@synthesize sessionName, expNum, locationManager, browsing;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -141,6 +141,15 @@
             if (rds != nil) rds->doesHaveData = true;
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+            message.tag = MENU_EXPERIMENT;
+            [message show];
+            [message release];
+            
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
         }
     }
@@ -329,8 +338,6 @@
 	[scrollView release];
 	
 	[sessionName release];
-    [qrResults release];
-    [widController release];
     
     [locationManager release];
     locationManager = nil;
@@ -405,10 +412,10 @@
     /*if (sessionNameInput.text.length != 0)
         [CameraUsage useCamera];
     else
-        [self.view makeToast:@"Please Enter a Session Name First"
-                    duration:TOAST_LENGTH_LONG
-                    position:TOAST_BOTTOM
-                       image:TOAST_RED_X];*/
+        [self.view makeWaffle:@"Please Enter a Session Name First"
+                    duration:WAFFLE_LENGTH_LONG
+                    position:WAFFLE_BOTTOM
+                       image:WAFFLE_WARNING];*/
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -495,7 +502,7 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+            /*if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
                 
                 widController = [[ZXingWidgetController alloc] initWithDelegate:self
                                                                      showCancel:YES
@@ -509,7 +516,7 @@
                 [qRCodeReader release];
                 [readers release];
                 
-            } else {
+            } else {*/
                 
                 UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
                                                                   message:nil
@@ -521,7 +528,7 @@
                 [message show];
                 [message release];
                 
-            }
+            //}
             
         }
         
@@ -563,16 +570,16 @@
     }
 }
 
-- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+/*- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
     [widController.view removeFromSuperview];
     
     qrResults = [result retain];
     NSArray *split = [qrResults componentsSeparatedByString:@"="];
     if ([split count] != 2) {
-        [self.view makeToast:@"Invalid QR code scanned"
-                    duration:TOAST_LENGTH_LONG
-                    position:TOAST_BOTTOM
-                       image:TOAST_RED_X];
+        [self.view makeWaffle:@"Invalid QR code scanned"
+                    duration:WAFFLE_LENGTH_LONG
+                    position:WAFFLE_BOTTOM
+                       image:WAFFLE_RED_X];
     } else {
         rds->doesHaveData = false;
         
@@ -587,7 +594,7 @@
 
 - (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
     [widController.view removeFromSuperview];
-}
+}*/
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
@@ -663,10 +670,10 @@
         BOOL success = [iapi login:usernameInput with:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.view makeToast:@"Login Successful!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_CHECKMARK];
+                [self.view makeWaffle:@"Login Successful!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_CHECKMARK];
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
@@ -676,10 +683,10 @@
                 
                 loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
             } else {
-                [self.view makeToast:@"Login Failed!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Login Failed!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_RED_X];
             }
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -730,31 +737,31 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (!exp)
-                [self.view makeToast:@"Please Enter an Experiment # First"
-                            duration:TOAST_LENGTH_LONG
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Please Enter an Experiment # First"
+                            duration:WAFFLE_LENGTH_LONG
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_WARNING];
             if (!loggedIn)
-                [self.view makeToast:@"Please Login First"
-                            duration:TOAST_LENGTH_LONG
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Please Login First"
+                            duration:WAFFLE_LENGTH_LONG
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_WARNING];
             if (!hasSessionName)
-                [self.view makeToast:@"Please Enter a Session Name First"
-                            duration:TOAST_LENGTH_LONG
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Please Enter a Session Name First"
+                            duration:WAFFLE_LENGTH_LONG
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_WARNING];
             if (uploadSuccess != -1) {
                 if (uploadSuccess)
-                    [self.view makeToast:@"Upload Success!"
-                                duration:TOAST_LENGTH_SHORT
-                                position:TOAST_BOTTOM
-                                   image:TOAST_CHECKMARK];
+                    [self.view makeWaffle:@"Upload Success!"
+                                duration:WAFFLE_LENGTH_SHORT
+                                position:WAFFLE_BOTTOM
+                                   image:WAFFLE_CHECKMARK];
                 else
-                    [self.view makeToast:@"Upload Failed!"
-                                duration:TOAST_LENGTH_SHORT
-                                position:TOAST_BOTTOM
-                                   image:TOAST_RED_X];
+                    [self.view makeWaffle:@"Upload Failed!"
+                                duration:WAFFLE_LENGTH_SHORT
+                                position:WAFFLE_BOTTOM
+                                   image:WAFFLE_RED_X];
             }
             
             [message dismissWithClickedButtonIndex:nil animated:YES];

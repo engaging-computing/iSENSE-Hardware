@@ -15,7 +15,7 @@
 #import "Constants.h"
 #import "DataFieldManager.h"
 #import "Data_CollectorAppDelegate.h"
-#import "StepONeSetup.h"
+#import "StepOneSetup.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>  {
 	IBOutlet UIImageView *mainLogo;
@@ -48,7 +48,6 @@
 @property (nonatomic, assign) int expNum;
 @property (nonatomic, assign) CLLocationManager *locationManager;
 @property (nonatomic, assign) DataFieldManager *dfm;
-@property (nonatomic, assign) NSString *qrResults;
 @property (nonatomic, assign) CLGeocoder *geoCoder;
 @property (nonatomic, copy) NSString *city;
 @property (nonatomic, copy) NSString *address;

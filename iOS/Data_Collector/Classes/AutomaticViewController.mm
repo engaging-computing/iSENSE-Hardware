@@ -11,7 +11,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, qrResults,
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm,
     recommendedSampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -59,19 +59,19 @@
 //
 //            // Check for a chosen experiment
 //            if (!expNum) {
-//                [self.view makeToast:@"No experiment chosen" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"No experiment chosen" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
 //            // Check for login
 //            if (![isenseAPI isLoggedIn]) {
-//                [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
 //            // Check for a session title
 //            if ([[sessionTitle text] length] == 0) {
-//                [self.view makeToast:@"Enter a session title first" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"Enter a session title first" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
@@ -146,7 +146,7 @@
 //
 //    // Check login status
 //    if (![isenseAPI isLoggedIn]) {
-//        [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//        [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //        return false;
 //    }
 //
@@ -324,7 +324,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -350,7 +350,6 @@
 - (void)dealloc {
     [mainLogo release];
     [menuButton release];
-    [qrResults release];
     [locationManager release];
     locationManager = nil;
     [super dealloc];
@@ -368,10 +367,10 @@
         BOOL success = [isenseAPI login:usernameInput with:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.view makeToast:@"Login Successful!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_CHECKMARK];
+                [self.view makeWaffle:@"Login Successful!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_CHECKMARK];
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
@@ -380,10 +379,10 @@
                 [prefs synchronize];
                 
             } else {
-                [self.view makeToast:@"Login Failed!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Login Failed!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_RED_X];
             }
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -556,19 +555,8 @@
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_EXPERIMENT:
-            message = [[UIAlertView alloc] initWithTitle:nil
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
-            [message show];
-            [message release];
             
-			break;
-            
-		case MENU_LOGIN:
+		case 0:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
                                                 delegate:self
@@ -596,42 +584,6 @@
             [self login:usernameInput withPassword:passwordInput];
         }
         
-    } else if (actionSheet.tag == MENU_EXPERIMENT){
-        
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
-            
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Okay", nil];
-            
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
-            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
-            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message show];
-            [message release];
-            
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
-            
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNum;
-            [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
-        }
-        
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            
-            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
-            
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
-            
-        }
-        
     } else if (actionSheet.tag == DESCRIPTION_AUTOMATIC) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -651,15 +603,15 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (success) {
-                        [self.view makeToast:@"Upload success"
-                                    duration:TOAST_LENGTH_SHORT
-                                    position:TOAST_BOTTOM
-                                       image:TOAST_CHECKMARK];
+                        [self.view makeWaffle:@"Upload success"
+                                    duration:WAFFLE_LENGTH_SHORT
+                                    position:WAFFLE_BOTTOM
+                                       image:WAFFLE_CHECKMARK];
                     } else {
-                        [self.view makeToast:@"Upload failed"
-                                    duration:TOAST_LENGTH_SHORT
-                                    position:TOAST_BOTTOM
-                                       image:TOAST_RED_X];
+                        [self.view makeWaffle:@"Upload failed"
+                                    duration:WAFFLE_LENGTH_SHORT
+                                    position:WAFFLE_BOTTOM
+                                       image:WAFFLE_RED_X];
                     }
                     
                     [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -668,7 +620,7 @@
             
         } else {
             
-            [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_CHECKMARK];
+            [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
     }

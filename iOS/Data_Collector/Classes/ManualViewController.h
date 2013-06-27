@@ -10,8 +10,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "StepOneSetup.h"
-#import <ZXingWidgetController.h>
-#import <QRCodeReader.h>
 
 typedef struct _RotationDataSaver {
     NSString *sesName;
@@ -20,7 +18,7 @@ typedef struct _RotationDataSaver {
     bool doesHaveData;
 } RotationDataSaver;
 
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate> {
 	
 	// UI Elements
 	UIImageView  *logo;
@@ -36,9 +34,6 @@ typedef struct _RotationDataSaver {
 	iSENSE   *iapi;
 	NSString *sessionName;
     RotationDataSaver *rds;
-    
-    NSString *qrResults;
-    ZXingWidgetController *widController;
     
     CLLocationManager *locationManager;
     
