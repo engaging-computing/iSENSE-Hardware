@@ -53,6 +53,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,7 +87,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private Button startStop;
 	private TextView values;
-	private Boolean running = false;
+	public static Boolean running = false;
 	// private Vibrator vibrator;
 
 	private SensorManager mSensorManager;
@@ -121,7 +122,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
-	private boolean appTimedOut = false;
+	public static boolean appTimedOut = false;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -148,7 +149,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	static boolean inPausedState = false;
 	static boolean toastSuccess = false;
 	static boolean useMenu = true;
-	static boolean setupDone = false;
+	public static boolean setupDone = false;
 	static boolean choiceViaMenu = false;
 	static boolean dontToastMeTwice = false;
 	static boolean exitAppViaBack = false;
@@ -171,6 +172,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static TextView loggedInAs;
 	private Waffle w;
+	public static boolean inApp = false;
 
 	public static UploadQueue uq;
 
@@ -205,7 +207,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		startStop = (Button) findViewById(R.id.startStop);
 
 		values = (TextView) findViewById(R.id.values);
-		
+
 		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH", 0);
 		length = countdown = prefs.getInt("length", 10);
 
@@ -213,19 +215,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		 * This block useful for if onBackPressed - retains some things from
 		 * previous session
 		 */
-		
+
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		
+
 		boolean success = rapi.login(userName, password);
-		
+
 		if (success) {
-			loggedInAs.setText(getResources().getString(
-					R.string.logged_in_as)
+			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 					+ userName);
 		} else {
-			w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+			if (rapi.isConnectedToInternet())
+				w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 		}
-		
 
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -246,7 +247,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						setupDone = false;
 						timeHasElapsed = false;
 						useMenu = true;
-						countdown = 10;
+						countdown = length;
 
 						mSensorManager
 								.unregisterListener(CarRampPhysicsV2.this);
@@ -277,7 +278,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						setupDone = false;
 						timeHasElapsed = false;
 						useMenu = true;
-						countdown = 10;
+						countdown = length;
 
 						mSensorManager
 								.unregisterListener(CarRampPhysicsV2.this);
@@ -373,24 +374,29 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								}
 
 								f.timeMillis = currentTime + elapsedMillis;
+								Log.d("fantastag", "time added");
 								SharedPreferences prefs = getSharedPreferences(
 										RecordSettings.RECORD_SETTINGS, 0);
 
-								x = prefs.getBoolean("X", x);
-								y = prefs.getBoolean("Y", y);
-								z = prefs.getBoolean("Z", z);
+								x = prefs.getBoolean("X", true);
+								y = prefs.getBoolean("Y", true);
+								z = prefs.getBoolean("Z", true);
 								mag = prefs.getBoolean("Magnitude", mag);
 								if (x) {
 									f.accel_x = toThou.format(accel[0]);
+									Log.d("fantastag", "X added");
 								}
 								if (y) {
 									f.accel_y = toThou.format(accel[1]);
+									Log.d("fantastag", "Y added");
 								}
 								if (z) {
 									f.accel_z = toThou.format(accel[2]);
+									Log.d("fantastag", "Z added");
 								}
 								if (mag) {
 									f.accel_total = toThou.format(accel[3]);
+									Log.d("fantastag", "Magnitude¯ added");
 								}
 
 								dataSet.put(dfm.putData());
@@ -613,7 +619,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			return true;
 		case R.id.record_length:
 			createSingleInputDialog("Change Recording Length",
-					"Input new recording length", RECORDING_LENGTH_REQUESTED);
+					"Input new recording length in seconds", RECORDING_LENGTH_REQUESTED);
+			return true;
+		case R.id.changename:
+			startActivityForResult(new Intent(this, EnterNameActivity.class),
+					resultGotName);
 			return true;
 		}
 		return false;
@@ -731,11 +741,20 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				length = Integer.parseInt(data.getStringExtra("input"));
-				countdown = length ;
-				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH", 0);
+				countdown = length;
+				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
+						0);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putInt("length", length);
 				editor.commit();
+			}
+		} else if (reqCode == resultGotName) {
+			if (resultCode == RESULT_OK) {
+				if (!inApp)
+					inApp = true;
+			} else {
+				if (!inApp)
+					finish();
 			}
 		}
 	}

@@ -35,6 +35,8 @@
 		39FF262816DFA8760062C3DC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
 		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
 		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
+		B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */; };
+		B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -87,6 +89,8 @@
 		B7EEB31E1779B7A700EADF1B /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7EEB31F1779B7C200EADF1B /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
 		B7EEB3201779B7D200EADF1B /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCompatibility.h; sourceTree = "<group>"; };
+		B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCompatibility.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +209,7 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				B7F2D81C177B692200F9A58D /* sensor_compatibility */,
 				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
 				39FF261916DFA8760062C3DC /* src_api */,
@@ -290,6 +295,15 @@
 			name = layout_ipad;
 			sourceTree = "<group>";
 		};
+		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
+			isa = PBXGroup;
+			children = (
+				B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */,
+				B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */,
+			);
+			name = sensor_compatibility;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -308,6 +322,7 @@
 				3921700D176F7ACA0070DFCC /* DataSet.h in Headers */,
 				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
 				39B63D891778C4950024EB75 /* Experiment.h in Headers */,
+				B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +427,7 @@
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				3981B4B217626FD90030ACE5 /* DataSet.m in Sources */,
 				3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */,
+				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
