@@ -22,6 +22,8 @@
 		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
+		39A529BA177B67E1007A4052 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A529B8177B67E1007A4052 /* QueueUploaderView.m */; };
+		39A529BC177B68B6007A4052 /* QueueUploaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A529BB177B68B6007A4052 /* QueueUploaderView.h */; };
 		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
 		39B63D891778C4950024EB75 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
@@ -63,6 +65,8 @@
 		39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
 		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
 		3981B4B017626FD90030ACE5 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
+		39A529B8177B67E1007A4052 /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
+		39A529BB177B68B6007A4052 /* QueueUploaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QueueUploaderView.h; path = headers/QueueUploaderView.h; sourceTree = "<group>"; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 			children = (
 				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
 				39EFB9EF172ADE9F00A6BD2A /* objects */,
+				39A529B8177B67E1007A4052 /* QueueUploaderView.m */,
 			);
 			name = src_queue_saver;
 			sourceTree = "<group>";
@@ -152,6 +157,7 @@
 		39EFB9EE172ADA1F00A6BD2A /* queue_headers */ = {
 			isa = PBXGroup;
 			children = (
+				39A529BB177B68B6007A4052 /* QueueUploaderView.h */,
 				39216FFE176F7ACA0070DFCC /* DataSet.h */,
 				39216FFD176F7ACA0070DFCC /* DataSaver.h */,
 				39217009176F7ACA0070DFCC /* Queue.h */,
@@ -323,6 +329,7 @@
 				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
 				39B63D891778C4950024EB75 /* Experiment.h in Headers */,
 				B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */,
+				39A529BC177B68B6007A4052 /* QueueUploaderView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +435,7 @@
 				3981B4B217626FD90030ACE5 /* DataSet.m in Sources */,
 				3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */,
 				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
+				39A529BA177B67E1007A4052 /* QueueUploaderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
