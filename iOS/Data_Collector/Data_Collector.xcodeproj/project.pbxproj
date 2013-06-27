@@ -685,13 +685,10 @@
 				B75046D81774CD710034B42C /* Automatic-landscape~iphone.xib in Resources */,
 				B75046DA1774CD9D0034B42C /* Automatic~ipad.xib in Resources */,
 				B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */,
-<<<<<<< HEAD
 				B7F2D819177B4A7000F9A58D /* waffle_check.png in Resources */,
 				B7F2D81A177B4A7000F9A58D /* waffle_warn.png in Resources */,
 				B7F2D81B177B4A7000F9A58D /* waffle_x.png in Resources */,
-=======
 				39A529A8177B5CCB007A4052 /* MainWindow.xib in Resources */,
->>>>>>> upstream/master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
