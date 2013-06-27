@@ -12,7 +12,7 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
-    sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer;
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -223,6 +223,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
     // Loading message appears while seting up main view
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading..."];
     [message show];
@@ -240,38 +244,20 @@
     dfm = [[DataFieldManager alloc] init];
     dataSaver = [[DataSaver alloc] init];
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
-
+    
+    // Initialize buttons
+    [self setEnabled:true forButton:step1];
+    [self setEnabled:false forButton:step2];
+    [self setEnabled:false forButton:step3];
+    
+    // Enabled step 2
+    if (backFromSetup) [self setEnabled:true forButton:step2];
+    
+    // Handle the DataQueue
+    [self fetchDataSets];
+    
     [self initLocations];
     [self resetAddressFields];
-    
-    if (managedObjectContext == nil) {
-        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
-    }
-    
-    // Fetch the old DataSets
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-    if (dataSetEntity) {
-        [request setEntity:dataSetEntity];
-              
-        // Actually make the request
-        NSError *error = nil;
-        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        if (mutableFetchResults == nil) {
-            // Handle the error.
-        } else {
-            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
-        }
-        
-        // fill dataSaver's DataSet Queue
-        for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
-        }
-        
-        // release the fetched objects
-        [mutableFetchResults release];
-        [request release];
-    }
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
 }
@@ -280,11 +266,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    // Reinitialize setup to false
+    backFromSetup = false;
+    
     // If true, then we're coming back from another ViewController
     if (self.isMovingToParentViewController == NO) {
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        bool backFromSetup = [prefs boolForKey:[StringGrabber grabString:@"key_setup_complete"]];
+        backFromSetup = [prefs boolForKey:[StringGrabber grabString:@"key_setup_complete"]];
         
         // We have a session name, sample interval, and test length ready
         if (backFromSetup) {
@@ -300,10 +289,11 @@
             
             // Set setup_complete key to false again
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
+            
         }
         
-        
     }
+    
 }
 
 // Is called every time AutomaticView appears
@@ -312,6 +302,40 @@
     
     // Autorotate
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+}
+
+// Get the dataSets from the queue :D
+- (void) fetchDataSets {
+    
+    // Fetch the old DataSets
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    if (dataSetEntity) {
+        [request setEntity:dataSetEntity];
+        
+        // Actually make the request
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        if (mutableFetchResults == nil) {
+            [self setEnabled:false forButton:step3];
+        } else {
+            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
+            if (mutableFetchResults.count > 0) {
+                [self setEnabled:true forButton:step3];
+            } else {
+                [self setEnabled:false forButton:step3];
+            }
+        }
+        
+        // fill dataSaver's DataSet Queue
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            [dataSaver addDataSet:mutableFetchResults[i]];
+        }
+        
+        // release the fetched objects
+        [mutableFetchResults release];
+        [request release];
+    }
 }
 
 - (void) displayMenu {
@@ -523,7 +547,7 @@
                                                       message:nil
                                                      delegate:self
                                             cancelButtonTitle:@"Delete"
-                                            otherButtonTitles:@"Upload", nil];
+                                            otherButtonTitles:@"Save Data", nil];
     
     message.tag = DESCRIPTION_AUTOMATIC;
     message.delegate = self;
@@ -629,42 +653,59 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
-            [message show];
+            NSString *description = [[actionSheet textFieldAtIndex:0] text];
+            if ([description length] == 0) {
+                description = @"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application.";
+            }
             
-            dispatch_queue_t queue = dispatch_queue_create("automatic_upload_data", NULL);
-            dispatch_async(queue, ^{
-                
-                NSString *description = [[actionSheet textFieldAtIndex:0] text];
-                if ([description length] == 0) {
-                    description = @"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application.";
-                }
-                
-                bool success = true;//[self uploadData:dataToBeJSONed withDescription:description];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (success) {
-                        [self.view makeToast:@"Upload success"
-                                    duration:TOAST_LENGTH_SHORT
-                                    position:TOAST_BOTTOM
-                                       image:TOAST_CHECKMARK];
-                    } else {
-                        [self.view makeToast:@"Upload failed"
-                                    duration:TOAST_LENGTH_SHORT
-                                    position:TOAST_BOTTOM
-                                       image:TOAST_RED_X];
-                    }
-                    
-                    [message dismissWithClickedButtonIndex:nil animated:YES];
-                });
-            });
+            [self saveDataSetWithDescription:description];
+            [self setEnabled:true forButton:step3];
             
+            [self.view makeToast:@"Data Saved!"
+                        duration:TOAST_LENGTH_SHORT
+                        position:TOAST_BOTTOM
+                           image:TOAST_CHECKMARK];
+                        
         } else {
             
             [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_CHECKMARK];
             
         }
     }
+}
+
+// Save a data set so you don't have to upload it immediately
+- (void) saveDataSetWithDescription:(NSString *)description {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    expNum = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+    
+    bool uploadable = false;
+    if (expNum > 1) uploadable = true;
+    
+    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    [ds setName:sessionName];
+    [ds setDataDescription:description];
+    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setData:dataToBeJSONed];
+    [ds setPicturePaths:nil];
+    [ds setSid:nil];
+    [ds setCity:city];
+    [ds setCountry:country];
+    [ds setAddress:address];
+    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
+    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
+    // Commit the changes
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"%@", error);
+    }
+    
 }
 
 // Finds the associated address from a GPS location.
@@ -712,7 +753,6 @@
     return [message autorelease];
 }
 
-
 // Calls step one to get an experiment, sample interval, test length, etc.
 - (IBAction) setup:(UIButton *)sender {
     
@@ -731,6 +771,16 @@
     [self.navigationController pushViewController:queueUploader animated:YES];
     [queueUploader release];
     
+}
+
+// Button enable switch
+- (void) setEnabled:(BOOL)enabled forButton:(UIButton *)button  {
+    button.enabled = enabled;
+    if (button.enabled) {
+        button.alpha = 1;
+    } else {
+        button.alpha = .5;
+    }
 }
 
 @end
