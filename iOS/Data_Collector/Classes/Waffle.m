@@ -6,7 +6,7 @@
 // Copyright 2012 Charles Scalesse.
 //
 
-#import "Toast.h"
+#import "Waffle.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
@@ -52,40 +52,44 @@ static NSString *kDurationKey = @"CSToastDurationKey";
 
 #pragma mark - Toast Methods
 
-- (void)makeToast:(NSString *)message {
-    [self makeToast:message duration:kDefaultLength position:kDefaultPosition];
+- (void)makeWaffle:(NSString *)message {
+    [self makeWaffle:message duration:kDefaultLength position:kDefaultPosition];
 }
 
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position {
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position {
     UIView *toast = [self makeViewForMessage:message title:nil image:nil];
     [self showToast:toast duration:interval position:position];
 }
 
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title {
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title {
     UIView *toast = [self makeViewForMessage:message title:title image:nil];
     [self showToast:toast duration:interval position:position];
 }
 
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image {
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image {
     UIImage *display;
     
-    if ([image isEqual: @"check"]) {
-        display = [UIImage imageNamed:@"bluecheck"];
+    if ([image isEqual:WAFFLE_CHECKMARK]) {
+        display = [UIImage imageNamed:@"waffle_check"];
+    } else if ([image isEqual:WAFFLE_WARNING]) {
+        display = [UIImage imageNamed:@"waffle_warn"];
     } else {
-        display = [UIImage imageNamed:@"red_x"];
+        display = [UIImage imageNamed:@"waffle_x"];
     }
     
     UIView *toast = [self makeViewForMessage:message title:nil image:display];
     [self showToast:toast duration:interval position:position];
 }
 
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image {
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image {
     UIImage *display;
     
-    if ([image isEqual: @"check"]) {
-        display = [UIImage imageNamed:@"bluecheck"];
+    if ([image isEqual:WAFFLE_CHECKMARK]) {
+        display = [UIImage imageNamed:@"waffle_check"];
+    } else if ([image isEqual:WAFFLE_WARNING]) {
+        display = [UIImage imageNamed:@"waffle_warn"];
     } else {
-        display = [UIImage imageNamed:@"red_x"];
+        display = [UIImage imageNamed:@"waffle_x"];
     }
     
     UIView *toast = [self makeViewForMessage:message title:title image:display];
@@ -368,6 +372,10 @@ static NSString *kDurationKey = @"CSToastDurationKey";
     }
     
     if(imageView != nil) {
+        // center the image in the view first - added by Mike
+        [imageView setFrame:CGRectMake(imageView.frame.origin.x, (wrapperView.frame.size.height/2) - (imageView.frame.size.height/2),
+                                       imageView.frame.size.width, imageView.frame.size.height)];
+        
         [wrapperView addSubview:imageView];
     }
 	

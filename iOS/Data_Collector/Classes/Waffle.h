@@ -28,11 +28,11 @@
 @interface UIView (Toast)
 
 // each makeToast method creates a view and displays it as toast
-- (void)makeToast:(NSString *)message;
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position;
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title;
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image;
-- (void)makeToast:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image;
+- (void)makeWaffle:(NSString *)message;
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position;
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title;
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image;
+- (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image;
 
 // displays toast with an activity spinner
 - (void)makeToastActivity;

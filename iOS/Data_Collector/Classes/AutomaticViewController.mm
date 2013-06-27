@@ -59,19 +59,19 @@
 //
 //            // Check for a chosen experiment
 //            if (!expNum) {
-//                [self.view makeToast:@"No experiment chosen" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"No experiment chosen" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
 //            // Check for login
 //            if (![isenseAPI isLoggedIn]) {
-//                [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
 //            // Check for a session title
 //            if ([[sessionTitle text] length] == 0) {
-//                [self.view makeToast:@"Enter a session title first" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"Enter a session title first" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
@@ -146,7 +146,7 @@
 //
 //    // Check login status
 //    if (![isenseAPI isLoggedIn]) {
-//        [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//        [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //        return false;
 //    }
 //
@@ -367,10 +367,10 @@
         BOOL success = [isenseAPI login:usernameInput with:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.view makeToast:@"Login Successful!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_CHECKMARK];
+                [self.view makeWaffle:@"Login Successful!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_CHECKMARK];
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
@@ -379,10 +379,10 @@
                 [prefs synchronize];
                 
             } else {
-                [self.view makeToast:@"Login Failed!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Login Failed!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_RED_X];
             }
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -603,15 +603,15 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (success) {
-                        [self.view makeToast:@"Upload success"
-                                    duration:TOAST_LENGTH_SHORT
-                                    position:TOAST_BOTTOM
-                                       image:TOAST_CHECKMARK];
+                        [self.view makeWaffle:@"Upload success"
+                                    duration:WAFFLE_LENGTH_SHORT
+                                    position:WAFFLE_BOTTOM
+                                       image:WAFFLE_CHECKMARK];
                     } else {
-                        [self.view makeToast:@"Upload failed"
-                                    duration:TOAST_LENGTH_SHORT
-                                    position:TOAST_BOTTOM
-                                       image:TOAST_RED_X];
+                        [self.view makeWaffle:@"Upload failed"
+                                    duration:WAFFLE_LENGTH_SHORT
+                                    position:WAFFLE_BOTTOM
+                                       image:WAFFLE_RED_X];
                     }
                     
                     [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -620,7 +620,7 @@
             
         } else {
             
-            [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_CHECKMARK];
+            [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
     }
