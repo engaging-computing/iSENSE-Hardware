@@ -16,7 +16,7 @@
 #import "Constants.h"
 #import "DataFieldManager.h"
 #import "Data_CollectorAppDelegate.h"
-#import "StepONeSetup.h"
+#import "StepOneSetup.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>  {
 	IBOutlet UIImageView *mainLogo;

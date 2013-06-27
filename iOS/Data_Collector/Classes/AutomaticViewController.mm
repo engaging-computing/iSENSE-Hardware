@@ -59,19 +59,19 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 //
 //            // Check for a chosen experiment
 //            if (!expNum) {
-//                [self.view makeToast:@"No experiment chosen" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"No experiment chosen" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
 //            // Check for login
 //            if (![isenseAPI isLoggedIn]) {
-//                [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
 //            // Check for a session title
 //            if ([[sessionTitle text] length] == 0) {
-//                [self.view makeToast:@"Enter a session title first" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//                [self.view makeWaffle:@"Enter a session title first" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //                return;
 //            }
 //
@@ -146,7 +146,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 //
 //    // Check login status
 //    if (![isenseAPI isLoggedIn]) {
-//        [self.view makeToast:@"Not logged in" duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_RED_X];
+//        [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
 //        return false;
 //    }
 //
@@ -344,7 +344,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -387,10 +387,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         BOOL success = [isenseAPI login:usernameInput with:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.view makeToast:@"Login Successful!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_CHECKMARK];
+                [self.view makeWaffle:@"Login Successful!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_CHECKMARK];
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
@@ -399,10 +399,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                 [prefs synchronize];
                 
             } else {
-                [self.view makeToast:@"Login Failed!"
-                            duration:TOAST_LENGTH_SHORT
-                            position:TOAST_BOTTOM
-                               image:TOAST_RED_X];
+                [self.view makeWaffle:@"Login Failed!"
+                            duration:WAFFLE_LENGTH_SHORT
+                            position:WAFFLE_BOTTOM
+                               image:WAFFLE_RED_X];
             }
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -573,19 +573,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_EXPERIMENT:
-            message = [[UIAlertView alloc] initWithTitle:nil
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
-            [message show];
-            [message release];
             
-			break;
-            
-		case MENU_LOGIN:
+		case 0:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
                                                 delegate:self
@@ -613,42 +602,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self login:usernameInput withPassword:passwordInput];
         }
         
-    } else if (actionSheet.tag == MENU_EXPERIMENT){
-        
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
-            
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Okay", nil];
-            
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
-            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
-            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message show];
-            [message release];
-            
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
-            
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNum;
-            [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
-        }
-        
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            
-            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
-            
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
-            
-        }
-        
     } else if (actionSheet.tag == DESCRIPTION_AUTOMATIC) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -661,14 +614,14 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self saveDataSetWithDescription:description];
             [self setEnabled:true forButton:step3];
             
-            [self.view makeToast:@"Data Saved!"
-                        duration:TOAST_LENGTH_SHORT
-                        position:TOAST_BOTTOM
-                           image:TOAST_CHECKMARK];
+            [self.view makeWaffle:@"Data Saved!"
+                        duration:WAFFLE_LENGTH_SHORT
+                        position:WAFFLE_BOTTOM
+                           image:WAFFLE_CHECKMARK];
                         
         } else {
             
-            [self.view makeToast:@"Data set deleted." duration:TOAST_LENGTH_SHORT position:TOAST_BOTTOM image:TOAST_CHECKMARK];
+            [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
     }
