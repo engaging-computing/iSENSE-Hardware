@@ -408,7 +408,15 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender { // TODO - change back!
-        
+    
+    SensorCompatibility *sc = [[SensorCompatibility alloc] init];
+    int b1 = [sc getCompatibilityForSensorType:sGPS];
+    int b2 = [sc getCompatibilityForSensorType:sACCELEROMETER];
+    int b3 = [sc getCompatibilityForSensorType:sAMBIENT_LIGHT];
+    int b4 = [sc getCompatibilityForSensorType:sGYROSCOPE];
+    int b5 = [sc getCompatibilityForSensorType:sPROXIMITY];
+    NSLog(@"%d, %d, %d, %d, %d", b1, b2, b3, b4, b5);
+    
     /*if (sessionNameInput.text.length != 0)
         [CameraUsage useCamera];
     else
