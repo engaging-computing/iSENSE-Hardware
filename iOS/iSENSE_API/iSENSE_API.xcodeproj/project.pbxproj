@@ -89,6 +89,7 @@
 		39FF262016DFA8760062C3DC /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
 		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
 		B7EEB31D1779B77700EADF1B /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
 		B7EEB31E1779B7A700EADF1B /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7EEB31F1779B7C200EADF1B /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
@@ -304,6 +305,7 @@
 		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
 			isa = PBXGroup;
 			children = (
+				B7034E491781F6EA00D6F0BA /* SensorEnums.h */,
 				B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */,
 				B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */,
 			);
