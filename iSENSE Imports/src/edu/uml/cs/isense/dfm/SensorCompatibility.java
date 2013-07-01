@@ -22,6 +22,7 @@ public class SensorCompatibility {
 
 	}
 
+    // Row for each of the sensors
 	public boolean[] compatible = { false, false, false, false, false, false };
 
 	public int[][] compatDispatch = {
