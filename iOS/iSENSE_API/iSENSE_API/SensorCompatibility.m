@@ -35,7 +35,7 @@
             {AVAILABLE,             AVAILABLE,          AVAILABLE,          AVAILABLE,      NOT_AVAILABLE  },      // iPad 2
             {AVAILABLE,             AVAILABLE,          AVAILABLE,          AVAILABLE,      NOT_AVAILABLE  },      // iPad 3
             {AVAILABLE,             AVAILABLE,          AVAILABLE,          AVAILABLE,      NOT_AVAILABLE  },      // iPad 4
-            {AVAILABLE,             AVAILABLE,          AVAILABLE,          AVAILABLE,      NOT_AVAILABLE  }       // iPad Mini
+            {AVAILABLE,             AVAILABLE,          AVAILABLE,          AVAILABLE,      NOT_AVAILABLE  }       // iPad Mini 1G
         };
         
         int device = [self getDeviceType];
@@ -105,13 +105,13 @@
         if ([gen isEqualToString:@"1"]) {
             return IPOD_TOUCH_1;
         } else if ([gen isEqualToString:@"2"]) {
-            return IPOD_TOUCH_1;
+            return IPOD_TOUCH_2;
         } else if ([gen isEqualToString:@"3"]) {
-            return IPOD_TOUCH_1;
+            return IPOD_TOUCH_3;
         } else if ([gen isEqualToString:@"4"]) {
-            return IPOD_TOUCH_1;
+            return IPOD_TOUCH_4;
         } else if ([gen isEqualToString:@"5"]) {
-            return IPOD_TOUCH_1;
+            return IPOD_TOUCH_5;
         }
     } else if ([[device lowercaseString] rangeOfString:@"ipad"].location != NSNotFound) {
         if ([gen isEqualToString:@"1"]) {
@@ -120,7 +120,7 @@
             if ([sku isEqualToString:@"1"] || [sku isEqualToString:@"2"] || [sku isEqualToString:@"3"] || [sku isEqualToString:@"4"]) {
                 return IPAD_2;
             } else if ([sku isEqualToString:@"5"] || [sku isEqualToString:@"6"] || [sku isEqualToString:@"7"]) {
-                
+                return IPAD_MINI;
             }
         } else if ([gen isEqualToString:@"3"]) {
             if ([sku isEqualToString:@"1"] || [sku isEqualToString:@"2"] || [sku isEqualToString:@"3"]) {
