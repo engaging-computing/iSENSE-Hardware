@@ -15,7 +15,6 @@
 #import "iSENSE.h"
 
 @interface DataSaver : NSObject {
-    NSMutableDictionary *dataQueue;
 }
 
 -(void)addDataSet:(DataSet *)dataSet;
@@ -24,6 +23,8 @@
 -(bool)upload;
 
 @property (nonatomic, assign) int count;
+@property (nonatomic, assign) NSMutableDictionary *dataQueue;
+
 
 @end
 

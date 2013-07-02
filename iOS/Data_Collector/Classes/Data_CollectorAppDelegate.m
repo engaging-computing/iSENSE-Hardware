@@ -11,7 +11,7 @@
 
 @implementation Data_CollectorAppDelegate
 
-@synthesize window, navControl, about, guide, managedObjectContext, managedObjectModel, persistentStoreCoordinator;
+@synthesize window, navControl, about, guide, managedObjectContext, managedObjectModel, persistentStoreCoordinator, dataSaver;
 
 
 #pragma mark -
@@ -19,10 +19,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // Override point for customization after application launch.
+    // Override point for customization after application launch.    
     self.window.rootViewController = self.navControl;
-	
-    [self.window makeKeyAndVisible];
+	[self.window makeKeyAndVisible];
     
     return YES;
 }

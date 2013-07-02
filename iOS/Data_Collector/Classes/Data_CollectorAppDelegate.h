@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "AboutView.h"
 #import "GuideView.h"
+#import <iSENSE_API/headers/DataSaver.h>
 
 
 @interface Data_CollectorAppDelegate : NSObject <UIApplicationDelegate> {
@@ -17,6 +18,7 @@
 	UINavigationController *navControl;
 	UIBarButtonItem *about;
 	UIBarButtonItem *guide;
+    
 }
 
 - (IBAction) showAbout:(id)sender;
@@ -26,6 +28,9 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *navControl;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *about;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *guide;
+
+// DataSaver
+@property (nonatomic, retain) IBOutlet DataSaver *dataSaver;
 
 // Core Data Stuffs
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
