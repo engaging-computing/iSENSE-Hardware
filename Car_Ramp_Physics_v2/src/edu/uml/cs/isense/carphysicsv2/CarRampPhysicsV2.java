@@ -75,12 +75,15 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
 	public static String experimentNumber = "409"; // HARD CODED
+	public static String defaultExp = "409";
 	// private static String userName = "accelapp"; // HARD CODED
 	// private static String password = "ecgrul3s"; // HARD CODED
 	private static String userName = "sor";
 	private static String password = "sor";
 
-	public static String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
+	public static String baseSessionUrl_Prod = "http://isenseproject.org/newvis.php?sessions=";
+	public static String baseSessionUrl_Dev = "http://isensedev.cs.uml.edu/newvis.php?sessions=";
+	public static String baseSessionUrl = "";
 	// private static String marketUrl =
 	// "https://play.google.com/store/apps/developer?id=UMass+Lowell";
 	public static String sessionUrl = "";
@@ -100,7 +103,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private float rawAccel[];
 	private float rawMag[];
 
-	private static final int INTERVAL = 50;
+	private int INTERVAL = 50;
 	// private static final int EXPERIMENT_CODE = ;
 
 	static final public int DIALOG_CANCELED = 0;
@@ -123,6 +126,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
 	public static boolean appTimedOut = false;
+	public static boolean useDev = true;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -189,7 +193,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(useDev);
+		if (useDev) {
+			baseSessionUrl = baseSessionUrl_Dev;
+		} else {
+			baseSessionUrl = baseSessionUrl_Prod;
+		}
 
 		f = new Fields();
 		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
@@ -211,18 +220,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH", 0);
 		length = countdown = prefs.getInt("length", 10);
 
-		/*
-		 * This block useful for if onBackPressed - retains some things from
-		 * previous session
-		 */
-
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 
 		boolean success = rapi.login(userName, password);
 
 		if (success) {
 			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-					+ userName);
+					+ userName + " Name: " + firstName + " " + lastInitial);
 		} else {
 			if (rapi.isConnectedToInternet())
 				w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
@@ -249,8 +253,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						useMenu = true;
 						countdown = length;
 
-						mSensorManager
-								.unregisterListener(CarRampPhysicsV2.this);
 						running = false;
 						startStop.setText("Hold to Start");
 
@@ -280,8 +282,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						useMenu = true;
 						countdown = length;
 
-						mSensorManager
-								.unregisterListener(CarRampPhysicsV2.this);
+						// mSensorManager
+						// .unregisterListener(CarRampPhysicsV2.this);
 						running = false;
 						startStop.setText("Hold to Start");
 
@@ -420,6 +422,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+		if (mSensorManager != null) {
+			mSensorManager.registerListener(CarRampPhysicsV2.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager
+					.registerListener(CarRampPhysicsV2.this, mSensorManager
+							.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+							SensorManager.SENSOR_DELAY_FASTEST);
+		}
+
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
@@ -501,7 +513,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onPause() {
 		super.onPause();
 		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
-		mSensorManager.unregisterListener(CarRampPhysicsV2.this);
+		// mSensorManager.unregisterListener(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
@@ -511,7 +523,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onStop() {
 		super.onStop();
 		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
-		mSensorManager.unregisterListener(CarRampPhysicsV2.this);
+		// mSensorManager.unregisterListener(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
@@ -553,6 +565,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				dataLabel += " , Z: ";
 			} else
 				dataLabel += "Z: ";
+		}
+
+		if (mag) {
+			if (x || y || z) {
+				dataLabel += " , Magnitude: ";
+			} else
+				dataLabel += "Magnitude: ";
 		}
 
 		values.setText(dataLabel);
@@ -619,13 +638,19 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			return true;
 		case R.id.record_length:
 			createSingleInputDialog("Change Recording Length",
-					"Input new recording length in seconds", RECORDING_LENGTH_REQUESTED);
+					"Input new recording length in seconds",
+					RECORDING_LENGTH_REQUESTED);
 			return true;
 		case R.id.changename:
 			startActivityForResult(new Intent(this, EnterNameActivity.class),
 					resultGotName);
 			return true;
+		case R.id.reset:
+			startActivityForResult(new Intent(this, ResetToDefaults.class),
+					RESET_REQUESTED);
+			return true;
 		}
+
 		return false;
 	}
 
@@ -647,10 +672,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			yPrepend = accel[1] > 0 ? "+" : "";
 			zPrepend = accel[2] > 0 ? "+" : "";
 
-			if (mag)
-				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
-
 			if (x) {
 				data = "X: " + xPrepend + oneDigit.format(accel[0]);
 			}
@@ -669,10 +690,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 			}
 
-			if (count == 0) {
-				values.setText(data);
-				// + ", Z: " + zPrepend + oneDigit.format(accel[2]));
+			if (mag) {
+				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
+				if (!data.equals("")) {
+					data += " , Magnitude: " + oneDigit.format(accel[3]);
+				} else {
+					data += "Magnitude: " + oneDigit.format(accel[3]);
+				}
+
 			}
+			values.setText(data);
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 			rawMag = event.values.clone();
@@ -699,6 +728,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static final int EXPERIMENT_REQUESTED = 9000;
 	public static final int QUEUE_UPLOAD_REQUESTED = 5000;
+	public static final int RESET_REQUESTED = 6003;
 
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -710,7 +740,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences prefs = getSharedPreferences("EID", 0);
 				experimentNumber = prefs.getString("experiment_id", null);
 				if (experimentNumber == null)
-					experimentNumber = "409";
+					experimentNumber = defaultExp;
 				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
 						rapi, mContext, f);
 				dfm.getOrder();
@@ -736,7 +766,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ data.getStringExtra("username"));
+						+ data.getStringExtra("username")
+						+ " Name: "
+						+ firstName + " " + lastInitial);
 			}
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -746,15 +778,54 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						0);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putInt("length", length);
+				if (length <= 25) {
+					INTERVAL = 50;
+				} else {
+					INTERVAL = 2 * length;
+				}
+				editor.putInt("Interval", INTERVAL);
 				editor.commit();
 			}
 		} else if (reqCode == resultGotName) {
 			if (resultCode == RESULT_OK) {
 				if (!inApp)
 					inApp = true;
+				loggedInAs.setText(getResources().getString(
+						R.string.logged_in_as)
+						+ "sor" + " Name: " + firstName + " " + lastInitial);
 			} else {
 				if (!inApp)
 					finish();
+			}
+		} else if (reqCode == RESET_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
+						0);
+				countdown = length = prefs.getInt("length", 10);
+				boolean success = rapi.login("sor", "sor");
+
+				if (success) {
+					loggedInAs
+							.setText(getResources().getString(
+									R.string.logged_in_as)
+									+ "sor"
+									+ " Name: "
+									+ firstName
+									+ " "
+									+ lastInitial);
+				} else {
+					if (rapi.isConnectedToInternet())
+						w.make("Login Error", Waffle.LENGTH_SHORT,
+								Waffle.IMAGE_X);
+				}
+
+				SharedPreferences eprefs = getSharedPreferences("EID", 0);
+				SharedPreferences.Editor editor = eprefs.edit();
+				experimentNumber = defaultExp;
+				editor.putString("experiment_id", experimentNumber);
+				editor.commit();
+				INTERVAL = 50;
+
 			}
 		}
 	}
@@ -870,6 +941,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (uploadSuccessful) {
 				w.make("Data upload successful.", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
+				startActivity(new Intent(CarRampPhysicsV2.this, ViewData.class));
 			} else {
 				w.make("Data saved.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 			}
