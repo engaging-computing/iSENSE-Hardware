@@ -67,6 +67,13 @@
 		B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */; };
 		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
 		B71A2DD916E4D91E009A441F /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A2DD816E4D91E009A441F /* Fields.m */; };
+		B72302AC17831A7D00DD8B16 /* SensorSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = B72302AB17831A7D00DD8B16 /* SensorSelection.m */; };
+		B72302AE17831AE600DD8B16 /* SensorSelection~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */; };
+		B72302B017831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */; };
+		B72302B217831B3800DD8B16 /* SensorSelection~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */; };
+		B72302B417831B5800DD8B16 /* SensorSelection-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */; };
+		B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B91783204000DD8B16 /* SensorCell~iphone.xib */; };
+		B72302BD1783260700DD8B16 /* SensorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B72302BC1783260600DD8B16 /* SensorCell.m */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -198,6 +205,15 @@
 		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B71A2DD716E4D91E009A441F /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
 		B71A2DD816E4D91E009A441F /* Fields.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fields.m; sourceTree = "<group>"; };
+		B72302AA17831A7D00DD8B16 /* SensorSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorSelection.h; sourceTree = "<group>"; };
+		B72302AB17831A7D00DD8B16 /* SensorSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorSelection.m; sourceTree = "<group>"; };
+		B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection~iphone.xib"; sourceTree = "<group>"; };
+		B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection~ipad.xib"; sourceTree = "<group>"; };
+		B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B72302B91783204000DD8B16 /* SensorCell~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorCell~iphone.xib"; sourceTree = "<group>"; };
+		B72302BB1783260600DD8B16 /* SensorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCell.h; sourceTree = "<group>"; };
+		B72302BC1783260600DD8B16 /* SensorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCell.m; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
@@ -454,6 +470,9 @@
 				B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */,
 				B75046C8177484110034B42C /* StepOneSetup~iphone.xib */,
 				B75046CB1774AC680034B42C /* StepOneSetup-landscape~iphone.xib */,
+				B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */,
+				B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */,
+				B72302B91783204000DD8B16 /* SensorCell~iphone.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -471,6 +490,8 @@
 				B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */,
 				B75046CD1774ACA40034B42C /* StepOneSetup~ipad.xib */,
 				B75046CF1774ACC40034B42C /* StepOneSetup-landscape~ipad.xib */,
+				B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */,
+				B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -505,6 +526,10 @@
 				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */,
 				B75046C6177484110034B42C /* StepOneSetup.h */,
 				B75046C7177484110034B42C /* StepOneSetup.mm */,
+				B72302AA17831A7D00DD8B16 /* SensorSelection.h */,
+				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
+				B72302BB1783260600DD8B16 /* SensorCell.h */,
+				B72302BC1783260600DD8B16 /* SensorCell.m */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";
@@ -705,6 +730,11 @@
 				39A529B3177B6226007A4052 /* queue_layout-landscape~iphone.xib in Resources */,
 				39A529B4177B6226007A4052 /* queue_layout~ipad.xib in Resources */,
 				39A529B5177B6226007A4052 /* queue_layout-landscape~ipad.xib in Resources */,
+				B72302AE17831AE600DD8B16 /* SensorSelection~iphone.xib in Resources */,
+				B72302B017831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib in Resources */,
+				B72302B217831B3800DD8B16 /* SensorSelection~ipad.xib in Resources */,
+				B72302B417831B5800DD8B16 /* SensorSelection-landscape~ipad.xib in Resources */,
+				B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +762,8 @@
 				B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */,
 				B71A2DD916E4D91E009A441F /* Fields.m in Sources */,
 				B75046C9177484110034B42C /* StepOneSetup.mm in Sources */,
+				B72302AC17831A7D00DD8B16 /* SensorSelection.m in Sources */,
+				B72302BD1783260700DD8B16 /* SensorCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

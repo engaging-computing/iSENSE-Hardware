@@ -416,6 +416,11 @@
     int b4 = [sc getCompatibilityForSensorType:sGYROSCOPE];
     int b5 = [sc getCompatibilityForSensorType:sPROXIMITY];
     NSLog(@"%d, %d, %d, %d, %d", b1, b2, b3, b4, b5);
+
+    SensorSelection *ssView = [[SensorSelection alloc] init];
+    ssView.title = @"Sensor Selection";
+    [self.navigationController pushViewController:ssView animated:YES];
+    [ssView release];
     
     /*if (sessionNameInput.text.length != 0)
         [CameraUsage useCamera];
