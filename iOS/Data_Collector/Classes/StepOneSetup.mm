@@ -289,6 +289,7 @@
         NSString *expNumString = [NSString stringWithFormat:@"%d", expNumInteger];
         [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_automatic"]];
     }
+    
 }
 
 - (void) dealloc {
@@ -308,6 +309,10 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
     return YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
 @end
