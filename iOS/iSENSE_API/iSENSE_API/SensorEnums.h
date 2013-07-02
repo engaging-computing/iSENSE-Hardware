@@ -14,7 +14,7 @@ typedef enum SensorTypes {
 } SensorTypes;
 
 typedef enum DispatchValues {
-    NOT_AVAILABLE = 0, AVAILABLE = 1, AVAIL_CONNECTIVITY = 3, AVAIL_WIFI_ONLY = 4, NOT_DETECTED = 5
+    NOT_AVAILABLE = 0, AVAILABLE = 1, AVAIL_CONNECTIVITY = 2, AVAIL_WIFI_ONLY = 3, NOT_DETECTED = 4
 } DispatchValues;
 
 #endif
