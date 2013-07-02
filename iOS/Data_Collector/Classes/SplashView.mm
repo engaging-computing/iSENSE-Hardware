@@ -15,7 +15,6 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-    
 }
 
 // Called every time SplashView appears
