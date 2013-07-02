@@ -103,11 +103,11 @@
 					<object class="IBUIButton" id="471789816">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{11, 166}, {297, 247}}</string>
+						<string key="NSFrame">{{20, 181}, {280, 219}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
+						<object class="NSColor" key="IBUIBackgroundColor" id="266587983">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC41OTE4MzY3MzQ3IDAuNTkxODM2NzM0NyAwLjU5MTgzNjczNDcAA</bytes>
+							<bytes key="NSRGB">MSAxIDEAA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -118,11 +118,12 @@
 							<double key="NSSize">15</double>
 							<int key="NSfFlags">16</int>
 						</object>
+						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Hold to Start</string>
 						<reference key="IBUIHighlightedTitleColor" ref="856524880"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzE0IDAuMzA5ODAzOTIxNiAwLjUyMTU2ODYyNzUAA</bytes>
 						</object>
 						<object class="NSColor" key="IBUINormalTitleShadowColor">
 							<int key="NSColorSpace">3</int>
@@ -154,10 +155,7 @@
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
 				<reference key="NSSuperview"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">1</int>
-					<bytes key="NSRGB">MSAxIDEAA</bytes>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="266587983"/>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
@@ -245,9 +243,9 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="1017292634"/>
 							<reference ref="123903398"/>
-							<reference ref="471789816"/>
 							<reference ref="952928082"/>
 							<reference ref="1065720659"/>
+							<reference ref="471789816"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -331,7 +329,7 @@
 					</object>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSAffineTransform">
-						<bytes key="NSTransformStruct">P4AAAL+AAABBMAAAw92AAA</bytes>
+						<bytes key="NSTransformStruct">P4AAAL+AAABBoAAAw0gAAA</bytes>
 					</object>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSAffineTransform">

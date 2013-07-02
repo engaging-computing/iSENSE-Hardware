@@ -24,15 +24,15 @@
 	};
 	28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1069, 1027}}";
-			sepNavSelRange = "{1337, 0}";
-			sepNavVisRange = "{1111, 500}";
+			sepNavIntBoundsRect = "{{0, 0}, {1069, 975}}";
+			sepNavSelRange = "{1447, 0}";
+			sepNavVisRange = "{1221, 462}";
 			sepNavWindowFrame = "{{0, 62}, {755, 816}}";
 		};
 	};
 	28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 2886}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 2977}}";
 			sepNavSelRange = "{6184, 0}";
 			sepNavVisRange = "{0, 606}";
 			sepNavWindowFrame = "{{685, 62}, {755, 816}}";
@@ -78,7 +78,7 @@
 				);
 			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
-				PBXFileTableDataSourceColumnSortingDirectionKey = 1;
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
@@ -125,42 +125,27 @@
 			PBXWorkspaceStateSaveDate = 394470233;
 		};
 		perUserProjectItems = {
-			76034EC91783236600D06836 /* PBXTextBookmark */ = 76034EC91783236600D06836 /* PBXTextBookmark */;
-			76034EF11783375200D06836 /* PBXTextBookmark */ = 76034EF11783375200D06836 /* PBXTextBookmark */;
 			76034EF21783375200D06836 /* PBXTextBookmark */ = 76034EF21783375200D06836 /* PBXTextBookmark */;
 			76034EF31783375200D06836 /* PBXTextBookmark */ = 76034EF31783375200D06836 /* PBXTextBookmark */;
-			76034EF41783375200D06836 /* PBXTextBookmark */ = 76034EF41783375200D06836 /* PBXTextBookmark */;
-			76034EF51783375200D06836 /* PlistBookmark */ = 76034EF51783375200D06836 /* PlistBookmark */;
 			76034F2B1783471E00D06836 /* PlistBookmark */ = 76034F2B1783471E00D06836 /* PlistBookmark */;
-			76034F2C1783471E00D06836 /* PBXTextBookmark */ = 76034F2C1783471E00D06836 /* PBXTextBookmark */;
-			76034F2D1783471E00D06836 /* PBXTextBookmark */ = 76034F2D1783471E00D06836 /* PBXTextBookmark */;
-			76034F2E1783471E00D06836 /* PBXTextBookmark */ = 76034F2E1783471E00D06836 /* PBXTextBookmark */;
-			76034F34178347E200D06836 /* XCBuildMessageTextBookmark */ = 76034F34178347E200D06836 /* XCBuildMessageTextBookmark */;
-			76034F35178347E200D06836 /* PBXTextBookmark */ = 76034F35178347E200D06836 /* PBXTextBookmark */;
-			76034F3B1783482F00D06836 /* PBXTextBookmark */ = 76034F3B1783482F00D06836 /* PBXTextBookmark */;
-			76034F3C1783482F00D06836 /* XCBuildMessageTextBookmark */ = 76034F3C1783482F00D06836 /* XCBuildMessageTextBookmark */;
-			76034F3D1783482F00D06836 /* PBXTextBookmark */ = 76034F3D1783482F00D06836 /* PBXTextBookmark */;
-			76034F441783488300D06836 /* PBXTextBookmark */ = 76034F441783488300D06836 /* PBXTextBookmark */;
-			76034F451783488300D06836 /* PBXTextBookmark */ = 76034F451783488300D06836 /* PBXTextBookmark */;
-			76034F461783488300D06836 /* XCBuildMessageTextBookmark */ = 76034F461783488300D06836 /* XCBuildMessageTextBookmark */;
-			76034F471783488300D06836 /* PBXTextBookmark */ = 76034F471783488300D06836 /* PBXTextBookmark */;
-			7650616E177E056800DF9904 = 7650616E177E056800DF9904 /* PBXTextBookmark */;
-			765061FF177E2ED000DF9904 = 765061FF177E2ED000DF9904 /* PBXTextBookmark */;
-			76506204177E2ED000DF9904 = 76506204177E2ED000DF9904 /* PBXTextBookmark */;
-			76506205177E2ED000DF9904 = 76506205177E2ED000DF9904 /* PBXBookmark */;
-			76506206177E2ED000DF9904 = 76506206177E2ED000DF9904 /* PBXTextBookmark */;
-			769FADBD177FB47600CF0F24 = 769FADBD177FB47600CF0F24 /* PlistBookmark */;
-			769FADEC177FC92200CF0F24 = 769FADEC177FC92200CF0F24 /* PBXBookmark */;
-			769FAE01177FCB3300CF0F24 = 769FAE01177FCB3300CF0F24 /* PBXTextBookmark */;
-			769FAE98177FCD9D00CF0F24 = 769FAE98177FCD9D00CF0F24 /* PBXTextBookmark */;
-			769FAE9B177FCD9D00CF0F24 = 769FAE9B177FCD9D00CF0F24 /* PBXTextBookmark */;
-			769FAECD1781C59400CF0F24 = 769FAECD1781C59400CF0F24 /* PBXTextBookmark */;
-			769FAEEC1781C8AE00CF0F24 = 769FAEEC1781C8AE00CF0F24 /* PBXTextBookmark */;
-			769FAF0B1781CF1400CF0F24 = 769FAF0B1781CF1400CF0F24 /* PBXTextBookmark */;
-			769FAF0C1781CF1400CF0F24 = 769FAF0C1781CF1400CF0F24 /* PBXTextBookmark */;
-			769FAF121781CFE400CF0F24 = 769FAF121781CFE400CF0F24 /* PBXTextBookmark */;
-			769FCD741781EBE100318308 = 769FCD741781EBE100318308 /* PBXTextBookmark */;
-			76C088F7178307D30041FBCB = 76C088F7178307D30041FBCB /* PBXTextBookmark */;
+			76034F5317834BA900D06836 /* XCBuildMessageTextBookmark */ = 76034F5317834BA900D06836 /* XCBuildMessageTextBookmark */;
+			76034F5617834C7500D06836 /* PBXTextBookmark */ = 76034F5617834C7500D06836 /* PBXTextBookmark */;
+			76034F5717834C7500D06836 /* PBXTextBookmark */ = 76034F5717834C7500D06836 /* PBXTextBookmark */;
+			76034F5817834C7500D06836 /* PBXTextBookmark */ = 76034F5817834C7500D06836 /* PBXTextBookmark */;
+			76034F5A17834C7500D06836 /* PBXTextBookmark */ = 76034F5A17834C7500D06836 /* PBXTextBookmark */;
+			76034FEE178365B100D06836 /* PBXTextBookmark */ = 76034FEE178365B100D06836 /* PBXTextBookmark */;
+			76034FEF178365B100D06836 /* XCBuildMessageTextBookmark */ = 76034FEF178365B100D06836 /* XCBuildMessageTextBookmark */;
+			76034FF0178365B100D06836 /* PBXTextBookmark */ = 76034FF0178365B100D06836 /* PBXTextBookmark */;
+			76034FF1178365B100D06836 /* PBXTextBookmark */ = 76034FF1178365B100D06836 /* PBXTextBookmark */;
+			7650616E177E056800DF9904 /* PBXTextBookmark */ = 7650616E177E056800DF9904 /* PBXTextBookmark */;
+			76506204177E2ED000DF9904 /* PBXTextBookmark */ = 76506204177E2ED000DF9904 /* PBXTextBookmark */;
+			76506205177E2ED000DF9904 /* PBXBookmark */ = 76506205177E2ED000DF9904 /* PBXBookmark */;
+			76506206177E2ED000DF9904 /* PBXTextBookmark */ = 76506206177E2ED000DF9904 /* PBXTextBookmark */;
+			769FADEC177FC92200CF0F24 /* PBXBookmark */ = 769FADEC177FC92200CF0F24 /* PBXBookmark */;
+			769FAE01177FCB3300CF0F24 /* PBXTextBookmark */ = 769FAE01177FCB3300CF0F24 /* PBXTextBookmark */;
+			769FAE98177FCD9D00CF0F24 /* PBXTextBookmark */ = 769FAE98177FCD9D00CF0F24 /* PBXTextBookmark */;
+			769FAECD1781C59400CF0F24 /* PBXTextBookmark */ = 769FAECD1781C59400CF0F24 /* PBXTextBookmark */;
+			769FAF0B1781CF1400CF0F24 /* PBXTextBookmark */ = 769FAF0B1781CF1400CF0F24 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 76A6FB0B177C916800143B49 /* Source Control */;
 		userBuildSettings = {
@@ -179,26 +164,6 @@
 			sepNavSelRange = "{189, 0}";
 			sepNavVisRange = "{0, 197}";
 		};
-	};
-	76034EC91783236600D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */;
-		name = "CarRampPhysicsViewController.m: 93";
-		rLen = 0;
-		rLoc = 2351;
-		rType = 0;
-		vrLen = 639;
-		vrLoc = 1978;
-	};
-	76034EF11783375200D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 24";
-		rLen = 1;
-		rLoc = 648;
-		rType = 0;
-		vrLen = 912;
-		vrLoc = 365;
 	};
 	76034EF21783375200D06836 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -220,27 +185,6 @@
 		vrLen = 671;
 		vrLoc = 170;
 	};
-	76034EF41783375200D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */;
-		name = "CarRampPhysicsViewController.m: 93";
-		rLen = 0;
-		rLoc = 2355;
-		rType = 0;
-		vrLen = 606;
-		vrLoc = 0;
-	};
-	76034EF51783375200D06836 /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = 8D1107310486CEB800E47090 /* Car Ramp Physics-Info.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-		);
-		name = "/Users/balabhv/iSENSE-Hardware/iOS/CarRampPhysics/Car Ramp Physics-Info.plist";
-		rLen = 0;
-		rLoc = 9223372036854775807;
-	};
 	76034F2B1783471E00D06836 /* PlistBookmark */ = {
 		isa = PlistBookmark;
 		fRef = 8D1107310486CEB800E47090 /* Car Ramp Physics-Info.plist */;
@@ -252,62 +196,13 @@
 		rLen = 0;
 		rLoc = 9223372036854775807;
 	};
-	76034F2C1783471E00D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */;
-		name = "CarRampPhysicsViewController.m: 219";
-		rLen = 0;
-		rLoc = 6421;
-		rType = 0;
-		vrLen = 986;
-		vrLoc = 5442;
-	};
-	76034F2D1783471E00D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 24";
-		rLen = 1;
-		rLoc = 648;
-		rType = 0;
-		vrLen = 912;
-		vrLoc = 365;
-	};
-	76034F2E1783471E00D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 68";
-		rLen = 0;
-		rLoc = 2408;
-		rType = 0;
-		vrLen = 977;
-		vrLoc = 742;
-	};
 	76034F2F178347C800D06836 /* DataFieldManager.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {803, 5850}}";
+			sepNavIntBoundsRect = "{{0, 0}, {803, 5876}}";
 			sepNavSelRange = "{7198, 0}";
 			sepNavVisRange = "{6977, 306}";
 			sepNavWindowFrame = "{{15, 62}, {755, 816}}";
 		};
-	};
-	76034F34178347E200D06836 /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "Unknown type name 'iSENSE'";
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 43;
-		rType = 1;
-	};
-	76034F35178347E200D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 44";
-		rLen = 0;
-		rLoc = 1337;
-		rType = 0;
-		vrLen = 462;
-		vrLoc = 1116;
 	};
 	76034F381783481C00D06836 /* DataFieldManager.h */ = {
 		uiCtxt = {
@@ -316,73 +211,93 @@
 			sepNavVisRange = "{0, 530}";
 		};
 	};
-	76034F3B1783482F00D06836 /* PBXTextBookmark */ = {
+	76034F5317834BA900D06836 /* XCBuildMessageTextBookmark */ = {
 		isa = PBXTextBookmark;
+		comments = "Unknown type name 'CMMotionManager'";
 		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 44";
-		rLen = 0;
-		rLoc = 1337;
-		rType = 0;
-		vrLen = 500;
-		vrLoc = 1111;
-	};
-	76034F3C1783482F00D06836 /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "'Fields.h' file not found";
-		fRef = 76034F381783481C00D06836 /* DataFieldManager.h */;
 		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
-		rLoc = 10;
+		rLoc = 57;
 		rType = 1;
 	};
-	76034F3D1783482F00D06836 /* PBXTextBookmark */ = {
+	76034F5617834C7500D06836 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 76034F381783481C00D06836 /* DataFieldManager.h */;
-		name = "DataFieldManager.h: 11";
+		fRef = 769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */;
+		name = "UIDropDownMenu.m: 21";
 		rLen = 0;
-		rLoc = 252;
+		rLoc = 1317;
 		rType = 0;
-		vrLen = 364;
-		vrLoc = 0;
+		vrLen = 1621;
+		vrLoc = 41;
 	};
-	76034F441783488300D06836 /* PBXTextBookmark */ = {
+	76034F5717834C7500D06836 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 76034F381783481C00D06836 /* DataFieldManager.h */;
-		name = "DataFieldManager.h: 11";
-		rLen = 0;
-		rLoc = 252;
-		rType = 0;
-		vrLen = 364;
-		vrLoc = 0;
-	};
-	76034F451783488300D06836 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 44";
-		rLen = 0;
-		rLoc = 1337;
-		rType = 0;
-		vrLen = 462;
-		vrLoc = 1111;
-	};
-	76034F461783488300D06836 /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "Use of undeclared identifier 'iapi'";
 		fRef = 76034F2F178347C800D06836 /* DataFieldManager.m */;
+		name = "DataFieldManager.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 663;
+		vrLoc = 0;
+	};
+	76034F5817834C7500D06836 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* CarRampPhysicsAppDelegate.m */;
+		name = "CarRampPhysicsAppDelegate.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 721;
+		vrLoc = 0;
+	};
+	76034F5A17834C7500D06836 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 76034F381783481C00D06836 /* DataFieldManager.h */;
+		name = "DataFieldManager.h: 10";
+		rLen = 0;
+		rLoc = 237;
+		rType = 0;
+		vrLen = 530;
+		vrLoc = 0;
+	};
+	76034FEE178365B100D06836 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */;
+		name = "CarRampPhysicsViewController.m: 213";
+		rLen = 0;
+		rLoc = 6184;
+		rType = 0;
+		vrLen = 606;
+		vrLoc = 0;
+	};
+	76034FEF178365B100D06836 /* XCBuildMessageTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "Unknown type name 'iSENSE'";
+		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
 		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
-		rLoc = 152;
+		rLoc = 46;
 		rType = 1;
 	};
-	76034F471783488300D06836 /* PBXTextBookmark */ = {
+	76034FF0178365B100D06836 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 76034F2F178347C800D06836 /* DataFieldManager.m */;
-		name = "DataFieldManager.m: 153";
+		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
+		name = "CarRampPhysicsViewController.h: 47";
 		rLen = 0;
-		rLoc = 7198;
+		rLoc = 1447;
 		rType = 0;
-		vrLen = 306;
-		vrLoc = 6977;
+		vrLen = 1138;
+		vrLoc = 852;
+	};
+	76034FF1178365B100D06836 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
+		name = "CarRampPhysicsViewController.h: 58";
+		rLen = 0;
+		rLoc = 1861;
+		rType = 0;
+		vrLen = 1860;
+		vrLoc = 250;
 	};
 	7650616E177E056800DF9904 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -393,16 +308,6 @@
 		rType = 0;
 		vrLen = 1157;
 		vrLoc = 2222;
-	};
-	765061FF177E2ED000DF9904 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */;
-		name = "UIDropDownMenu.m: 76";
-		rLen = 1;
-		rLoc = 3445;
-		rType = 0;
-		vrLen = 1662;
-		vrLoc = 0;
 	};
 	76506204177E2ED000DF9904 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -458,18 +363,6 @@
 			sepNavWindowFrame = "{{15, 62}, {755, 816}}";
 		};
 	};
-	769FADBD177FB47600CF0F24 /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = 8D1107310486CEB800E47090 /* Car Ramp Physics-Info.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-			CFBundleVersion,
-		);
-		name = "/Users/balabhv/Documents/iOSworkspace/CarRampPhysics/Car Ramp Physics-Info.plist";
-		rLen = 0;
-		rLoc = 9223372036854775808;
-	};
 	769FADEC177FC92200CF0F24 /* PBXBookmark */ = {
 		isa = PBXBookmark;
 		fRef = 76A6FB14177C964400143B49 /* icon.png */;
@@ -516,16 +409,6 @@
 		path = /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CGGeometry.h;
 		sourceTree = "<absolute>";
 	};
-	769FAE9B177FCD9D00CF0F24 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 1D3623250D0F684500981E51 /* CarRampPhysicsAppDelegate.m */;
-		name = "CarRampPhysicsAppDelegate.m: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 721;
-		vrLoc = 0;
-	};
 	769FAECD1781C59400CF0F24 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 769FADF7177FCA3D00CF0F24 /* EGOTextFieldAlertView.h */;
@@ -536,16 +419,6 @@
 		vrLen = 1233;
 		vrLoc = 0;
 	};
-	769FAEEC1781C8AE00CF0F24 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 769FAD41177FA15D00CF0F24 /* CODIalog.h */;
-		name = "CODIalog.h: 54";
-		rLen = 0;
-		rLoc = 1363;
-		rType = 0;
-		vrLen = 838;
-		vrLoc = 889;
-	};
 	769FAF0B1781CF1400CF0F24 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 769FADF8177FCA3D00CF0F24 /* EGOTextFieldAlertView.m */;
@@ -555,36 +428,6 @@
 		rType = 0;
 		vrLen = 1233;
 		vrLoc = 0;
-	};
-	769FAF0C1781CF1400CF0F24 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 769FAD42177FA15D00CF0F24 /* CODIalog.m */;
-		name = "CODIalog.m: 407";
-		rLen = 0;
-		rLoc = 13628;
-		rType = 0;
-		vrLen = 630;
-		vrLoc = 13267;
-	};
-	769FAF121781CFE400CF0F24 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */;
-		name = "CarRampPhysicsViewController.h: 41";
-		rLen = 0;
-		rLoc = 2410;
-		rType = 0;
-		vrLen = 906;
-		vrLoc = 365;
-	};
-	769FCD741781EBE100318308 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */;
-		name = "CarRampPhysicsViewController.m: 94";
-		rLen = 0;
-		rLoc = 2377;
-		rType = 0;
-		vrLen = 639;
-		vrLoc = 1978;
 	};
 	76A6FAFB177C914F00143B49 /* Car Ramp Physics */ = {
 		isa = PBXExecutable;
@@ -632,16 +475,6 @@
 		uiCtxt = {
 			sepNavWindowFrame = "{{15, 62}, {755, 816}}";
 		};
-	};
-	76C088F7178307D30041FBCB /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */;
-		name = "CarRampPhysicsViewController.m: 94";
-		rLen = 0;
-		rLoc = 2377;
-		rType = 0;
-		vrLen = 676;
-		vrLoc = 1977;
 	};
 	8D1107310486CEB800E47090 /* Car Ramp Physics-Info.plist */ = {
 		uiCtxt = {

@@ -197,7 +197,48 @@
 	<key>Notifications</key>
 	<array/>
 	<key>OpenEditors</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>76034F5D17834C7500D06836</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>CarRampPhysicsViewController.h</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>76034F5E17834C7500D06836</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>CarRampPhysicsViewController.h</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>76034FF1178365B100D06836</string>
+						<key>history</key>
+						<array>
+							<string>76034F5317834BA900D06836</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {755, 719}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>0 118 755 760 0 0 1440 878 </string>
+			</dict>
+		</dict>
+	</array>
 	<key>PerspectiveWidths</key>
 	<array>
 		<integer>-1</integer>
@@ -229,6 +270,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -324,25 +367,27 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>76034F2E1783471E00D06836</string>
+										<string>76034FF0178365B100D06836</string>
 										<key>history</key>
 										<array>
 											<string>7650616E177E056800DF9904</string>
-											<string>765061FF177E2ED000DF9904</string>
 											<string>76506204177E2ED000DF9904</string>
 											<string>76506205177E2ED000DF9904</string>
 											<string>76506206177E2ED000DF9904</string>
 											<string>769FADEC177FC92200CF0F24</string>
 											<string>769FAE01177FCB3300CF0F24</string>
 											<string>769FAE98177FCD9D00CF0F24</string>
-											<string>769FAE9B177FCD9D00CF0F24</string>
 											<string>769FAECD1781C59400CF0F24</string>
 											<string>769FAF0B1781CF1400CF0F24</string>
 											<string>76034EF21783375200D06836</string>
 											<string>76034EF31783375200D06836</string>
 											<string>76034F2B1783471E00D06836</string>
-											<string>76034F2C1783471E00D06836</string>
-											<string>76034F2D1783471E00D06836</string>
+											<string>76034F5617834C7500D06836</string>
+											<string>76034F5717834C7500D06836</string>
+											<string>76034F5817834C7500D06836</string>
+											<string>76034F5A17834C7500D06836</string>
+											<string>76034FEE178365B100D06836</string>
+											<string>76034FEF178365B100D06836</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -364,8 +409,6 @@
 							<string>359pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -545,6 +588,7 @@
 		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>76A6FB09177C916800143B49</string>
+		<string>76034F5D17834C7500D06836</string>
 		<string>/Users/balabhv/iSENSE-Hardware/iOS/CarRampPhysics/Car Ramp Physics.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -569,7 +613,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string></string>
+								<string>CarRampPhysicsViewController.h</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -586,6 +630,8 @@
 							<string>218pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>

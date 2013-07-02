@@ -8,6 +8,9 @@
 #import "DataFieldManager.h"
 #import "CODIalog.h"
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
+#import <CoreMotion/CoreMotion.h>
+#import <CoreLocation/CoreLocation.h>
 
 #define	LOGIN_BUTTON 0
 #define UPLOAD_BUTTON 1
