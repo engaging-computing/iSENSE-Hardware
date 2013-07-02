@@ -13,25 +13,23 @@
     <LinearLayout
         style="?android:buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent" >
+        android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/discard_Button"
+            android:id="@+id/noview"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Discard" />
+            android:text="Don&apos;t View" />
 
         <Button
-            android:id="@+id/iSENSE_Button"
+            android:id="@+id/view"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Publish" />
-
+            android:text="View" />
     </LinearLayout>
 
 </LinearLayout>

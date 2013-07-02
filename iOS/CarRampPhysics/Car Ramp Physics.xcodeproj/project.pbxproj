@@ -15,6 +15,8 @@
 		2899E5220DE3E06400AC0155 /* CarRampPhysicsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* CarRampPhysicsViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* CarRampPhysicsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */; };
+		76034F30178347C800D06836 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76034F2F178347C800D06836 /* DataFieldManager.m */; };
+		76034F401783486B00D06836 /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = 76034F3E1783486B00D06836 /* Fields.m */; };
 		769866DE177DDC6E00A8DE1C /* UIDropDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */; };
 		769FAD43177FA15D00CF0F24 /* CODIalog.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FAD42177FA15D00CF0F24 /* CODIalog.m */; };
 		769FADF9177FCA3D00CF0F24 /* EGOTextFieldAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FADF8177FCA3D00CF0F24 /* EGOTextFieldAlertView.m */; };
@@ -35,6 +37,10 @@
 		28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarRampPhysicsViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Car Ramp Physics_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Car Ramp Physics_Prefix.pch"; sourceTree = "<group>"; };
+		76034F2F178347C800D06836 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
+		76034F381783481C00D06836 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
+		76034F3E1783486B00D06836 /* Fields.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fields.m; sourceTree = "<group>"; };
+		76034F3F1783486B00D06836 /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
 		769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDropDownMenu.m; sourceTree = "<group>"; };
 		769866DD177DDC6E00A8DE1C /* UIDropDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDropDownMenu.h; sourceTree = "<group>"; };
 		769FAD41177FA15D00CF0F24 /* CODIalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CODIalog.h; sourceTree = "<group>"; };
@@ -84,6 +90,10 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				76034F3E1783486B00D06836 /* Fields.m */,
+				76034F3F1783486B00D06836 /* Fields.h */,
+				76034F381783481C00D06836 /* DataFieldManager.h */,
+				76034F2F178347C800D06836 /* DataFieldManager.m */,
 				769FAD41177FA15D00CF0F24 /* CODIalog.h */,
 				769FAD42177FA15D00CF0F24 /* CODIalog.m */,
 				769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */,
@@ -205,6 +215,8 @@
 				769866DE177DDC6E00A8DE1C /* UIDropDownMenu.m in Sources */,
 				769FAD43177FA15D00CF0F24 /* CODIalog.m in Sources */,
 				769FADF9177FCA3D00CF0F24 /* EGOTextFieldAlertView.m in Sources */,
+				76034F30178347C800D06836 /* DataFieldManager.m in Sources */,
+				76034F401783486B00D06836 /* Fields.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

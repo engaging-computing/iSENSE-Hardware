@@ -4,34 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/dividerVertical" />
-
     <LinearLayout
-        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent" >
+        android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/discard_Button"
-            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Discard" />
+            android:text="View" />
 
         <Button
-            android:id="@+id/iSENSE_Button"
-            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/noview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Publish" />
-
+            android:text="Don&apos;t View" />
     </LinearLayout>
 
 </LinearLayout>
