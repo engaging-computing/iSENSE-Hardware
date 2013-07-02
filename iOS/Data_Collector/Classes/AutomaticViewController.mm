@@ -223,8 +223,14 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
         managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // DataSaver from Data_CollectorAppDelegate
+    if (dataSaver == nil ) {
+        dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
     }
     
     // Loading message appears while seting up main view
@@ -242,7 +248,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
     dfm = [[DataFieldManager alloc] init];
-    dataSaver = [[DataSaver alloc] init];
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
     
     // Initialize buttons
