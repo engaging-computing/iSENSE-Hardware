@@ -5,9 +5,12 @@
 //  Created by Virinchi Balabhadrapatruni on 6/27/13.
 //  Copyright 2013 __MyCompanyName__. All rights reserved.
 //
-#import "EGOTextFieldAlertView.h"
+#import "DataFieldManager.h"
 #import "CODIalog.h"
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
+#import <CoreMotion/CoreMotion.h>
+#import <CoreLocation/CoreLocation.h>
 
 #define	LOGIN_BUTTON 0
 #define UPLOAD_BUTTON 1
@@ -21,7 +24,7 @@
 	IBOutlet UIButton *start;
 	IBOutlet UILabel *log;
 	UIAccelerometer *accelerometer;
-	IBOutlet UIButton *menuItem;
+	IBOutlet UIBarButtonItem *menuItem;
 	UIActionSheet *sheet;
 	CODialog *dialog;
 	NSString *first, *last ;
@@ -29,7 +32,6 @@
 		
 }
 
-- (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (void)accelerometer:(UIAccelerometer *)acelerometer didAccelerate:(UIAcceleration*)acceleration;
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex;
 - (IBAction) menu;
@@ -39,6 +41,36 @@
 - (void) showLoginDialog;
 - (void) okLoginDialog;
 - (void) cancelLoginDialog;
+- (IBAction) onRecordLongClick:(UILongPressGestureRecognizer *)sender;
+- (void) recordData;
+
+@property (nonatomic, retain) iSENSE *isenseAPI;
+@property (nonatomic) BOOL isRecording;
+@property (nonatomic) BOOL backFromSetup;
+@property (nonatomic) int elapsedTime;
+
+@property (nonatomic) float sampleInterval;
+@property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic) int testLength;
+
+@property (nonatomic, assign) NSTimer *timer;
+@property (nonatomic, assign) NSTimer *recordDataTimer;
+@property (nonatomic, assign) CMMotionManager *motionManager;
+@property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) int expNum;
+@property (nonatomic, assign) CLLocationManager *locationManager;
+@property (nonatomic, assign) DataFieldManager *dfm;
+
+@property (nonatomic, assign) CLGeocoder *geoCoder;
+@property (nonatomic, copy) NSString *city;
+@property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) NSString *country;
+
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) IBOutlet UILongPressGestureRecognizer *longClickRecognizer;
+@property (nonatomic, retain) DataSaver *dataSaver;
+
+
 
 
 
