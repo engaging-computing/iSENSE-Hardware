@@ -94,6 +94,14 @@
             android:name=".carphysicsv2.SingleInputDialogTemplate"
             android:label="Single input"
             android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".carphysicsv2.ViewData"
+            android:label="Single input"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".carphysicsv2.ResetToDefaults"
+            android:label="Single input"
+            android:theme="@style/theme_dialog_white" />
     </application>
 
 </manifest>

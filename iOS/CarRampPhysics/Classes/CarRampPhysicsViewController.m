@@ -38,7 +38,7 @@
 	[longPress release];
 
 	accelerometer = [UIAccelerometer sharedAccelerometer];
-	accelerometer.updateInterval = 1.0f/60.0f;
+	accelerometer.updateI nterval = 1.0f/60.0f;
 	accelerometer.delegate = self;
 	
 	
@@ -169,6 +169,53 @@
 	[dialog hideAnimated:YES];
 	
 }
-	
+
+- (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        if (!isRecording) {
+            // Get Field Order
+            [dfm getFieldOrderOfExperiment:expNum];
+            NSLog(@"%@", [dfm order]);
+            
+            // Record Data
+            isRecording = TRUE;
+            [self recordData];
+        } else {
+            // Stop Recording
+            isRecording = FALSE;
+            [self stopRecording:motionManager];
+        }
+        
+        // Make the beep sound
+        NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
+        SystemSoundID soundID;
+        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
+        AudioServicesPlaySystemSound(soundID);
+    }
+}
+
+// Record the data and return the NSMutable array to be JSONed
+- (void) recordData {
+    
+    // Get the recording rate
+    float rate = .125;
+    if (sampleInterval > 0) rate = sampleInterval / 1000;
+    
+    // Set the accelerometer update interval to reccomended sample interval, and start updates
+    motionManager.accelerometerUpdateInterval = rate;
+    motionManager.magnetometerUpdateInterval = rate;
+    motionManager.gyroUpdateInterval = rate;
+    if (motionManager.accelerometerAvailable) [motionManager startAccelerometerUpdates];
+    if (motionManager.magnetometerAvailable) [motionManager startMagnetometerUpdates];
+    if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
+    
+    // New JSON array to hold data
+    dataToBeJSONed = [[NSMutableArray alloc] init];
+    
+    // Start the new timer
+    recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
+}
+
 
 @end

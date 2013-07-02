@@ -18,7 +18,7 @@
     </item>
     <item
         android:id="@+id/record_length"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/record_length">
     </item>
     <item
@@ -33,8 +33,13 @@
     </item>
     <item
         android:id="@+id/changename"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/changename">
+    </item>
+    <item
+        android:id="@+id/reset"
+        android:showAsAction="ifRoom"
+        android:title="Reset">
     </item>
 
 </menu>
