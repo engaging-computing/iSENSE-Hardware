@@ -22,7 +22,7 @@
 		
 		recording data, you will not be permitted to exit the app by pressing the 
 		Back button. However, pressing the Home button will stop recording. When the app 
-		resumes, a dialog box will appear indicating that data recording was halted.\n
+		resumes, a message will appear indicating that data recording was halted.\n
     </string>
     
     <string name="updates">Please carefully review the following agreement for this version of this app:</string>
@@ -39,11 +39,12 @@
 	<string name="chooseExperimentTitle">Experiment Settings</string>
 	<string name="no_qr">No QR Scanner</string>
 	<string name="first_name">First Name: </string>
-	<string name="record_length">Set Recording Length</string>
+	<string name="record_length">Recording Length</string>
 	<string name="upload">Upload</string>
 	<string name="digits_restriction">
 	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
 	</string>
 	<string name="changename">Change Name</string>
+	<string name="reset">Reset</string>
     
 </resources>

@@ -10,11 +10,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class EnterNameActivity extends Activity {
@@ -45,8 +46,36 @@ public class EnterNameActivity extends Activity {
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
 		final Button   okButton         = (Button)   findViewById(R.id.OkButton);
 		
-		firstNameInput.setFilters( new InputFilter[] { new InputFilter.LengthFilter(20)});
-		
+		InputFilter[] filters = new InputFilter[2];
+		filters[0] = new InputFilter() {
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end,
+					Spanned dest, int dstart, int dend) {
+				if (end > start) {
+
+					char[] acceptedChars = new char[] { 'a', 'b', 'c', 'd',
+							'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+							'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+							'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+							'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+							'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1',
+							'2', '3', '4', '5', '6', '7', '8', '9', '@', '.',
+							'_', '-', '(', ')', ',' };
+
+					for (int index = start; index < end; index++) {
+						if (!new String(acceptedChars).contains(String
+								.valueOf(source.charAt(index)))) {
+							return "";
+						}
+					}
+				}
+				return null;
+			}
+
+		};
+		filters[1] = new InputFilter.LengthFilter(20);
+		firstNameInput.setFilters(filters);
+		lastInitialInput.setFilters(new InputFilter[]{filters[0], new InputFilter.LengthFilter(1)});
 		/*final Message loginSuccess = Message.obtain();
 		loginSuccess.what = NAME_SUCCESSFULL;
 		

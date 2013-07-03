@@ -1,6 +1,6 @@
 //
 //  DataFieldManager.h
-//  iOS Data Collector
+//  iOS Car Ramp Physics
 //
 //  Created by Mike Stowell on 2/21/13.
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Fields.h"
+#import "DataSaver.h"
 
 @interface DataFieldManager : NSObject {}
 

@@ -1,9 +1,10 @@
 //
 //  CarRampPhysicsViewController.h
-//  CarRampPhysics
+//  iOS Car Ramp Physics
 //
 //  Created by Virinchi Balabhadrapatruni on 6/27/13.
-//  Copyright 2013 __MyCompanyName__. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 #import "DataFieldManager.h"
 #import "CODIalog.h"
@@ -11,12 +12,11 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
-
-#define	LOGIN_BUTTON 0
-#define UPLOAD_BUTTON 1
-#define CHANGE_NAME_BUTTON 2
-#define RECORD_SETTINGS_BUTTON 3
-#define RECORD_LENGTH_BUTTON 4
+#import <CoreData/CoreData.h>
+#import "Constants.h"
+#import "iSENSE.h"
+#import "DataSaver.h"
+#import "StringGrabber.h"
 
 
 @interface CarRampPhysicsViewController : UIViewController <UIAccelerometerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate> {
@@ -43,6 +43,7 @@
 - (void) cancelLoginDialog;
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer *)sender;
 - (void) recordData;
+- (void) stopRecording:(CMMotionManager *)finalMotionManager;
 
 @property (nonatomic, retain) iSENSE *isenseAPI;
 @property (nonatomic) BOOL isRecording;
