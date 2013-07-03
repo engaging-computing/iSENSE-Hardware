@@ -750,8 +750,11 @@
 				B72302B217831B3800DD8B16 /* SensorSelection~ipad.xib in Resources */,
 				B72302B417831B5800DD8B16 /* SensorSelection-landscape~ipad.xib in Resources */,
 				B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */,
+<<<<<<< HEAD
 				B7375CDC1784A40600906119 /* SensorCell~ipad.xib in Resources */,
+=======
 				392CD88C17836F8900C82887 /* QueueCell.xib in Resources */,
+>>>>>>> upstream/master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
