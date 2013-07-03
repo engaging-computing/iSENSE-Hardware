@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.uml.cs.isense"
+    package="edu.uml.cs.isense.carphysicsv2"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,7 +20,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".carphysicsv2.CarRampPhysicsV2"
+            android:name=".CarRampPhysicsV2"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
@@ -30,36 +30,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".carphysicsv2.EnterNameActivity"
+            android:name=".EnterNameActivity"
             android:label="@string/promptForName"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".carphysicsv2.RecordSettings"
+            android:name=".RecordSettings"
             android:label="@string/recordSettings"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".carphysicsv2.AboutActivity"
+            android:name=".AboutActivity"
             android:label="@string/about_title"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".carphysicsv2.DataActivity"
+            android:name=".DataActivity"
             android:label="@string/upload_or_trash"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".exp.Setup"
+            android:name="edu.uml.cs.isense.exp.Setup"
             android:label="@string/chooseExperimentTitle"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".exp.BrowseExperiments"
+            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
             android:label="@string/select_exp" >
         </activity>
         <activity
-            android:name=".exp.NoQR"
+            android:name="edu.uml.cs.isense.exp.NoQR"
             android:label="@string/no_qr" >
         </activity>
         <activity
@@ -79,19 +79,27 @@
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".carphysicsv2.EulaActivity"
+            android:name=".EulaActivity"
             android:label=""
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".carphysicsv2.LoginActivity"
+            android:name=".LoginActivity"
             android:label="Login to iSENSE"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".carphysicsv2.MessageDialogTemplate"
+            android:name=".MessageDialogTemplate"
             android:label="Output a message"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".carphysicsv2.SingleInputDialogTemplate"
+            android:name=".SingleInputDialogTemplate"
+            android:label="Single input"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".ViewData"
+            android:label="Single input"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".ResetToDefaults"
             android:label="Single input"
             android:theme="@style/theme_dialog_white" />
     </application>

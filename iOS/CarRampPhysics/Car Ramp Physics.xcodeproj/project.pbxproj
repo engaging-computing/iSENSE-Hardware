@@ -15,12 +15,59 @@
 		2899E5220DE3E06400AC0155 /* CarRampPhysicsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* CarRampPhysicsViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* CarRampPhysicsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */; };
-		769866DE177DDC6E00A8DE1C /* UIDropDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */; };
+		76034F30178347C800D06836 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76034F2F178347C800D06836 /* DataFieldManager.m */; };
+		76034F401783486B00D06836 /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = 76034F3E1783486B00D06836 /* Fields.m */; };
+		7603706C17845662007EFEDA /* RecordSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603706A17845662007EFEDA /* RecordSettings.m */; };
+		7603706D17845662007EFEDA /* RecordSettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7603706B17845662007EFEDA /* RecordSettings.xib */; };
+		76037107178465BD007EFEDA /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 76037105178465BD007EFEDA /* StringGrabber.m */; };
+		760371591784688A007EFEDA /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603712B17846889007EFEDA /* DataSaver.m */; };
+		7603715A1784688A007EFEDA /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603712C17846889007EFEDA /* DataSet.m */; };
+		7603715B1784688A007EFEDA /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7603713017846889007EFEDA /* DataSetModel.xcdatamodeld */; };
+		7603715C1784688A007EFEDA /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603713E17846889007EFEDA /* Queue.m */; };
+		7603715D1784688A007EFEDA /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7603713F17846889007EFEDA /* queue_layout-landscape~ipad.xib */; };
+		7603715E1784688A007EFEDA /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7603714017846889007EFEDA /* queue_layout-landscape~iphone.xib */; };
+		7603715F1784688A007EFEDA /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7603714117846889007EFEDA /* queue_layout~ipad.xib */; };
+		760371601784688A007EFEDA /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7603714217846889007EFEDA /* queue_layout~iphone.xib */; };
+		760371611784688A007EFEDA /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714317846889007EFEDA /* QueueUploaderView.m */; };
+		760371621784688A007EFEDA /* SensorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714517846889007EFEDA /* SensorCompatibility.m */; };
+		760371631784688A007EFEDA /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714817846889007EFEDA /* iSENSE.m */; };
+		760371641784688A007EFEDA /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714A1784688A007EFEDA /* Experiment.m */; };
+		760371651784688A007EFEDA /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714B1784688A007EFEDA /* ExperimentField.m */; };
+		760371661784688A007EFEDA /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714C1784688A007EFEDA /* Image.m */; };
+		760371671784688A007EFEDA /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714D1784688A007EFEDA /* Item.m */; };
+		760371681784688A007EFEDA /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714E1784688A007EFEDA /* Person.m */; };
+		760371691784688A007EFEDA /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 7603714F1784688A007EFEDA /* Session.m */; };
+		7603716A1784688A007EFEDA /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 760371501784688A007EFEDA /* SessionData.m */; };
+		7603716B1784688A007EFEDA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760371521784688A007EFEDA /* InfoPlist.strings */; };
+		7603716C1784688A007EFEDA /* iSENSE_API_Bundle-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 760371541784688A007EFEDA /* iSENSE_API_Bundle-Info.plist */; };
 		769FAD43177FA15D00CF0F24 /* CODIalog.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FAD42177FA15D00CF0F24 /* CODIalog.m */; };
-		769FADF9177FCA3D00CF0F24 /* EGOTextFieldAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 769FADF8177FCA3D00CF0F24 /* EGOTextFieldAlertView.m */; };
 		76A6FB10177C92D300143B49 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A6FB0F177C92D300143B49 /* logo.png */; };
 		76A6FB15177C964400143B49 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A6FB14177C964400143B49 /* icon.png */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7603716F1784688A007EFEDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 760371561784688A007EFEDA /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */;
+			remoteInfo = iSENSE_API;
+		};
+		760371711784688A007EFEDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 760371561784688A007EFEDA /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39216FDD176F5C790070DFCC /* iSENSE_API_Bundle.bundle */;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		76037173178468F1007EFEDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 760371561784688A007EFEDA /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC /* iSENSE_API */;
+			remoteInfo = iSENSE_API;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -35,12 +82,56 @@
 		28D7ACF70DDB3853001CB0EB /* CarRampPhysicsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarRampPhysicsViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Car Ramp Physics_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Car Ramp Physics_Prefix.pch"; sourceTree = "<group>"; };
-		769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDropDownMenu.m; sourceTree = "<group>"; };
-		769866DD177DDC6E00A8DE1C /* UIDropDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDropDownMenu.h; sourceTree = "<group>"; };
+		76034F2F178347C800D06836 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
+		76034F381783481C00D06836 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
+		76034F3E1783486B00D06836 /* Fields.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fields.m; sourceTree = "<group>"; };
+		76034F3F1783486B00D06836 /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
+		7603706917845662007EFEDA /* RecordSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordSettings.h; sourceTree = "<group>"; };
+		7603706A17845662007EFEDA /* RecordSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordSettings.m; sourceTree = "<group>"; };
+		7603706B17845662007EFEDA /* RecordSettings.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecordSettings.xib; sourceTree = "<group>"; };
+		760370C8178464FB007EFEDA /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		76037105178465BD007EFEDA /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
+		76037106178465BD007EFEDA /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
+		7603712B17846889007EFEDA /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
+		7603712C17846889007EFEDA /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
+		7603712E17846889007EFEDA /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSaver.h; sourceTree = "<group>"; };
+		7603712F17846889007EFEDA /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
+		7603713117846889007EFEDA /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
+		7603713217846889007EFEDA /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		7603713317846889007EFEDA /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		7603713417846889007EFEDA /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		7603713517846889007EFEDA /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		7603713617846889007EFEDA /* iSENSE_API_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE_API_Prefix.pch; sourceTree = "<group>"; };
+		7603713717846889007EFEDA /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		7603713817846889007EFEDA /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		7603713917846889007EFEDA /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
+		7603713A17846889007EFEDA /* QueueUploaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
+		7603713B17846889007EFEDA /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		7603713C17846889007EFEDA /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		7603713D17846889007EFEDA /* iSENSE_API-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API-Prefix.pch"; sourceTree = "<group>"; };
+		7603713E17846889007EFEDA /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
+		7603713F17846889007EFEDA /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
+		7603714017846889007EFEDA /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
+		7603714117846889007EFEDA /* queue_layout~ipad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
+		7603714217846889007EFEDA /* queue_layout~iphone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
+		7603714317846889007EFEDA /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
+		7603714417846889007EFEDA /* SensorCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCompatibility.h; sourceTree = "<group>"; };
+		7603714517846889007EFEDA /* SensorCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCompatibility.m; sourceTree = "<group>"; };
+		7603714617846889007EFEDA /* SensorEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
+		7603714817846889007EFEDA /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
+		7603714A1784688A007EFEDA /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
+		7603714B1784688A007EFEDA /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
+		7603714C1784688A007EFEDA /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		7603714D1784688A007EFEDA /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		7603714E1784688A007EFEDA /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		7603714F1784688A007EFEDA /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		760371501784688A007EFEDA /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+		760371531784688A007EFEDA /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		760371541784688A007EFEDA /* iSENSE_API_Bundle-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "iSENSE_API_Bundle-Info.plist"; sourceTree = "<group>"; };
+		760371551784688A007EFEDA /* iSENSE_API_Bundle-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API_Bundle-Prefix.pch"; sourceTree = "<group>"; };
+		760371561784688A007EFEDA /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = SOURCE_ROOT; };
 		769FAD41177FA15D00CF0F24 /* CODIalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CODIalog.h; sourceTree = "<group>"; };
 		769FAD42177FA15D00CF0F24 /* CODIalog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CODIalog.m; sourceTree = "<group>"; };
-		769FADF7177FCA3D00CF0F24 /* EGOTextFieldAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGOTextFieldAlertView.h; sourceTree = "<group>"; };
-		769FADF8177FCA3D00CF0F24 /* EGOTextFieldAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGOTextFieldAlertView.m; sourceTree = "<group>"; };
 		76A6FB0F177C92D300143B49 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		76A6FB14177C964400143B49 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Car Ramp Physics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Car Ramp Physics-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
@@ -63,8 +154,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				769FADF7177FCA3D00CF0F24 /* EGOTextFieldAlertView.h */,
-				769FADF8177FCA3D00CF0F24 /* EGOTextFieldAlertView.m */,
 				1D3623240D0F684500981E51 /* CarRampPhysicsAppDelegate.h */,
 				1D3623250D0F684500981E51 /* CarRampPhysicsAppDelegate.m */,
 				28D7ACF60DDB3853001CB0EB /* CarRampPhysicsViewController.h */,
@@ -84,10 +173,17 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				7603712A17846889007EFEDA /* iSENSE_API */,
+				760371511784688A007EFEDA /* iSENSE_API_Bundle */,
+				760371561784688A007EFEDA /* iSENSE_API.xcodeproj */,
+				76037105178465BD007EFEDA /* StringGrabber.m */,
+				76037106178465BD007EFEDA /* StringGrabber.h */,
+				76034F3E1783486B00D06836 /* Fields.m */,
+				76034F3F1783486B00D06836 /* Fields.h */,
+				76034F381783481C00D06836 /* DataFieldManager.h */,
+				76034F2F178347C800D06836 /* DataFieldManager.m */,
 				769FAD41177FA15D00CF0F24 /* CODIalog.h */,
 				769FAD42177FA15D00CF0F24 /* CODIalog.m */,
-				769866DC177DDC6E00A8DE1C /* UIDropDownMenu.m */,
-				769866DD177DDC6E00A8DE1C /* UIDropDownMenu.h */,
 				76A6FB14177C964400143B49 /* icon.png */,
 				76A6FB0E177C928000143B49 /* Pictures */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -95,6 +191,10 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				7603706917845662007EFEDA /* RecordSettings.h */,
+				7603706A17845662007EFEDA /* RecordSettings.m */,
+				7603706B17845662007EFEDA /* RecordSettings.xib */,
+				760370C8178464FB007EFEDA /* Constants.h */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -128,6 +228,90 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7603712A17846889007EFEDA /* iSENSE_API */ = {
+			isa = PBXGroup;
+			children = (
+				7603712B17846889007EFEDA /* DataSaver.m */,
+				7603712C17846889007EFEDA /* DataSet.m */,
+				7603712D17846889007EFEDA /* headers */,
+				7603713D17846889007EFEDA /* iSENSE_API-Prefix.pch */,
+				7603713E17846889007EFEDA /* Queue.m */,
+				7603713F17846889007EFEDA /* queue_layout-landscape~ipad.xib */,
+				7603714017846889007EFEDA /* queue_layout-landscape~iphone.xib */,
+				7603714117846889007EFEDA /* queue_layout~ipad.xib */,
+				7603714217846889007EFEDA /* queue_layout~iphone.xib */,
+				7603714317846889007EFEDA /* QueueUploaderView.m */,
+				7603714417846889007EFEDA /* SensorCompatibility.h */,
+				7603714517846889007EFEDA /* SensorCompatibility.m */,
+				7603714617846889007EFEDA /* SensorEnums.h */,
+				7603714717846889007EFEDA /* src */,
+			);
+			path = iSENSE_API;
+			sourceTree = "<group>";
+		};
+		7603712D17846889007EFEDA /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				7603712E17846889007EFEDA /* DataSaver.h */,
+				7603712F17846889007EFEDA /* DataSet.h */,
+				7603713017846889007EFEDA /* DataSetModel.xcdatamodeld */,
+				7603713217846889007EFEDA /* Experiment.h */,
+				7603713317846889007EFEDA /* ExperimentField.h */,
+				7603713417846889007EFEDA /* Image.h */,
+				7603713517846889007EFEDA /* iSENSE.h */,
+				7603713617846889007EFEDA /* iSENSE_API_Prefix.pch */,
+				7603713717846889007EFEDA /* Item.h */,
+				7603713817846889007EFEDA /* Person.h */,
+				7603713917846889007EFEDA /* Queue.h */,
+				7603713A17846889007EFEDA /* QueueUploaderView.h */,
+				7603713B17846889007EFEDA /* Session.h */,
+				7603713C17846889007EFEDA /* SessionData.h */,
+			);
+			path = headers;
+			sourceTree = "<group>";
+		};
+		7603714717846889007EFEDA /* src */ = {
+			isa = PBXGroup;
+			children = (
+				7603714817846889007EFEDA /* iSENSE.m */,
+				7603714917846889007EFEDA /* Objects */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		7603714917846889007EFEDA /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				7603714A1784688A007EFEDA /* Experiment.m */,
+				7603714B1784688A007EFEDA /* ExperimentField.m */,
+				7603714C1784688A007EFEDA /* Image.m */,
+				7603714D1784688A007EFEDA /* Item.m */,
+				7603714E1784688A007EFEDA /* Person.m */,
+				7603714F1784688A007EFEDA /* Session.m */,
+				760371501784688A007EFEDA /* SessionData.m */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
+		760371511784688A007EFEDA /* iSENSE_API_Bundle */ = {
+			isa = PBXGroup;
+			children = (
+				760371521784688A007EFEDA /* InfoPlist.strings */,
+				760371541784688A007EFEDA /* iSENSE_API_Bundle-Info.plist */,
+				760371551784688A007EFEDA /* iSENSE_API_Bundle-Prefix.pch */,
+			);
+			path = iSENSE_API_Bundle;
+			sourceTree = "<group>";
+		};
+		760371571784688A007EFEDA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				760371701784688A007EFEDA /* libiSENSE_API.a */,
+				760371721784688A007EFEDA /* iSENSE_API_Bundle.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		76A6FB0E177C928000143B49 /* Pictures */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +334,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				76037174178468F1007EFEDA /* PBXTargetDependency */,
 			);
 			name = "Car Ramp Physics";
 			productName = CarRampPhysics;
@@ -170,15 +355,39 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 760371571784688A007EFEDA /* Products */;
+					ProjectRef = 760371561784688A007EFEDA /* iSENSE_API.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Car Ramp Physics */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		760371701784688A007EFEDA /* libiSENSE_API.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libiSENSE_API.a;
+			remoteRef = 7603716F1784688A007EFEDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		760371721784688A007EFEDA /* iSENSE_API_Bundle.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iSENSE_API_Bundle.bundle;
+			remoteRef = 760371711784688A007EFEDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1D60588D0D05DD3D006BFB54 /* Resources */ = {
@@ -189,6 +398,13 @@
 				2899E5220DE3E06400AC0155 /* CarRampPhysicsViewController.xib in Resources */,
 				76A6FB10177C92D300143B49 /* logo.png in Resources */,
 				76A6FB15177C964400143B49 /* icon.png in Resources */,
+				7603706D17845662007EFEDA /* RecordSettings.xib in Resources */,
+				7603715D1784688A007EFEDA /* queue_layout-landscape~ipad.xib in Resources */,
+				7603715E1784688A007EFEDA /* queue_layout-landscape~iphone.xib in Resources */,
+				7603715F1784688A007EFEDA /* queue_layout~ipad.xib in Resources */,
+				760371601784688A007EFEDA /* queue_layout~iphone.xib in Resources */,
+				7603716B1784688A007EFEDA /* InfoPlist.strings in Resources */,
+				7603716C1784688A007EFEDA /* iSENSE_API_Bundle-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,13 +418,48 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* CarRampPhysicsAppDelegate.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* CarRampPhysicsViewController.m in Sources */,
-				769866DE177DDC6E00A8DE1C /* UIDropDownMenu.m in Sources */,
 				769FAD43177FA15D00CF0F24 /* CODIalog.m in Sources */,
-				769FADF9177FCA3D00CF0F24 /* EGOTextFieldAlertView.m in Sources */,
+				76034F30178347C800D06836 /* DataFieldManager.m in Sources */,
+				76034F401783486B00D06836 /* Fields.m in Sources */,
+				7603706C17845662007EFEDA /* RecordSettings.m in Sources */,
+				76037107178465BD007EFEDA /* StringGrabber.m in Sources */,
+				760371591784688A007EFEDA /* DataSaver.m in Sources */,
+				7603715A1784688A007EFEDA /* DataSet.m in Sources */,
+				7603715B1784688A007EFEDA /* DataSetModel.xcdatamodeld in Sources */,
+				7603715C1784688A007EFEDA /* Queue.m in Sources */,
+				760371611784688A007EFEDA /* QueueUploaderView.m in Sources */,
+				760371621784688A007EFEDA /* SensorCompatibility.m in Sources */,
+				760371631784688A007EFEDA /* iSENSE.m in Sources */,
+				760371641784688A007EFEDA /* Experiment.m in Sources */,
+				760371651784688A007EFEDA /* ExperimentField.m in Sources */,
+				760371661784688A007EFEDA /* Image.m in Sources */,
+				760371671784688A007EFEDA /* Item.m in Sources */,
+				760371681784688A007EFEDA /* Person.m in Sources */,
+				760371691784688A007EFEDA /* Session.m in Sources */,
+				7603716A1784688A007EFEDA /* SessionData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		76037174178468F1007EFEDA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API;
+			targetProxy = 76037173178468F1007EFEDA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		760371521784688A007EFEDA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				760371531784688A007EFEDA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
@@ -290,6 +541,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		7603713017846889007EFEDA /* DataSetModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				7603713117846889007EFEDA /* DataSetModel.xcdatamodel */,
+			);
+			currentVersion = 7603713117846889007EFEDA /* DataSetModel.xcdatamodel */;
+			path = DataSetModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }

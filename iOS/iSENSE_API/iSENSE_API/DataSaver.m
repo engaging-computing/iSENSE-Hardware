@@ -10,12 +10,11 @@
 
 @implementation DataSaver
 
-@synthesize count;
+@synthesize count, dataQueue;
 
 -(id) init {
     self = [super init];
     if (self) {
-        dataQueue = [[NSMutableDictionary alloc] init];
         count = 0;
     }
     return self;

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
 
 public class DataActivity extends Activity {
 
@@ -14,6 +14,8 @@ public class DataActivity extends Activity {
 	public void onCreate(Bundle savedInstanceBundle) {
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.upload_or_trash);
+		
+		setTitle("Publish Your Data?");
 
 		iSENSE_Button = (Button) findViewById(R.id.iSENSE_Button);
 		discard_Button = (Button) findViewById(R.id.discard_Button);
