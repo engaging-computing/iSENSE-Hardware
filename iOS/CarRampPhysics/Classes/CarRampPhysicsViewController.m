@@ -1,16 +1,18 @@
 //
 //  CarRampPhysicsViewController.m
-//  CarRampPhysics
+//  iOS Car Ramp Physics
 //
 //  Created by Virinchi Balabhadrapatruni on 6/27/13.
-//  Copyright 2013 __MyCompanyName__. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #import "CarRampPhysicsViewController.h"
 
 @implementation CarRampPhysicsViewController
 
-
+@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup;
 
 /*
 // The designated initializer. Override to perform setup that is required before the view is loaded.
@@ -38,9 +40,18 @@
 	[longPress release];
 
 	accelerometer = [UIAccelerometer sharedAccelerometer];
-	accelerometer.updateI nterval = 1.0f/60.0f;
+	accelerometer.updateInterval = 1.0f/60.0f;
 	accelerometer.delegate = self;
 	
+	// Attempt Login
+    isenseAPI = [iSENSE getInstance];
+    [isenseAPI toggleUseDev:YES];
+    
+    // Initializes an Assortment of Variables
+    motionManager = [[CMMotionManager alloc] init];
+    dfm = [[DataFieldManager alloc] init];
+    dataSaver = [[DataSaver alloc] init];
+    sampleInterval = DEFAULT_SAMPLE_INTERVAL;
 	
 	[super viewDidLoad];
 	
@@ -103,9 +114,14 @@
 		case RECORD_SETTINGS_BUTTON:
 			//Record settings dialog goes here
 			break;
-		case RECORD_LENGTH_BUTTON:
-			//Record length dialog goes here
+		case RECORD_LENGTH_BUTTON: {
+			UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Enter Recording Length" message:@"" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+			[[view textFieldAtIndex:0] setDelegate:self];
+			[[view textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeNumberPad];
+			[[view textFieldAtIndex:0] becomeFirstResponder]; 
+			[view show];
 			break;
+		}
 		default:
 			break;
 	}
@@ -216,6 +232,42 @@
     // Start the new timer
     recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
 }
+
+// Stops the recording and returns the actual data recorded :)
+-(void) stopRecording:(CMMotionManager *)finalMotionManager {
+    // Stop Timers
+    [timer invalidate];
+    [timer release];
+    [recordDataTimer invalidate];
+    [recordDataTimer release];
+    
+    // Stop Sensors
+    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
+    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
+    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
+    
+    // Back to recording mode
+    //    startStopButton.image = [UIImage imageNamed:@"red_button.png"];
+    //    mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
+    //    startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
+    //    containerForMainButton updateImage:startStopButton];
+    
+    // Open up description dialog
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:@"Delete"
+                                            otherButtonTitles:@"Save Data", nil];
+    
+    message.tag = DESCRIPTION_AUTOMATIC;
+    message.delegate = self;
+    [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+    [message show];
+    [message release];
+    
+}
+
 
 
 @end

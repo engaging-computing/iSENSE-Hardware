@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class SingleInputDialogTemplate extends Activity {
