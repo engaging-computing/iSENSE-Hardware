@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
 
 public class DataActivity extends Activity {
 

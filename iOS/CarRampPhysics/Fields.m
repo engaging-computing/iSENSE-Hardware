@@ -1,6 +1,6 @@
 //
 //  Fields.m
-//  iOS Data Collector
+//  iOS Car Ramp Physics
 //
 //  Created by Mike Stowell on 3/4/13.
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
