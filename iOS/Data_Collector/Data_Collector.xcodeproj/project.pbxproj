@@ -75,6 +75,7 @@
 		B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B91783204000DD8B16 /* SensorCell~iphone.xib */; };
 		B72302BD1783260700DD8B16 /* SensorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B72302BC1783260600DD8B16 /* SensorCell.m */; };
 		B72DC21A16C19A4F00999C7E /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B72DC21916C19A4F00999C7E /* HexColor.m */; };
+		B7375CDC1784A40600906119 /* SensorCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7375CDB1784A40600906119 /* SensorCell~ipad.xib */; };
 		B74A1F0A16B862FB00F0E9EE /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B74A1F0E16B8641E00F0E9EE /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */; };
@@ -216,6 +217,7 @@
 		B72302BC1783260600DD8B16 /* SensorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCell.m; sourceTree = "<group>"; };
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
+		B7375CDB1784A40600906119 /* SensorCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorCell~ipad.xib"; sourceTree = "<group>"; };
 		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
 		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -492,6 +494,7 @@
 				B75046CF1774ACC40034B42C /* StepOneSetup-landscape~ipad.xib */,
 				B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */,
 				B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */,
+				B7375CDB1784A40600906119 /* SensorCell~ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -735,6 +738,7 @@
 				B72302B217831B3800DD8B16 /* SensorSelection~ipad.xib in Resources */,
 				B72302B417831B5800DD8B16 /* SensorSelection-landscape~ipad.xib in Resources */,
 				B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */,
+				B7375CDC1784A40600906119 /* SensorCell~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
