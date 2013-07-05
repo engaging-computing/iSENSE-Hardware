@@ -48,6 +48,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataWalk extends Activity implements LocationListener, SensorEventListener {
 
@@ -135,19 +136,22 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 	//private static String loginPass = "iSENSErUS";
 	private static String loginName = "sor";
 	private static String loginPass = "sor";
-	private static String experimentId = "592";
+	private static String experimentId = "595";
 	private static String baseSessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=";
 	private static String marketUrl = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
 	private static String sessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=406";
+	private static boolean useDev = true;
 
 	private static int waitingCounter = 0;
 
 	public static JSONArray dataSet;
-
+	public static JSONArray uploadSet;
+	
 	static int mheight = 1;
 	static int mwidth = 1;
 
 	public static Context mContext;
+	private Waffle w;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -155,6 +159,8 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 		setContentView(R.layout.main);
 
 		mContext = this;
+		
+		w = new Waffle(mContext);
 
 		mPowerManager = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);
@@ -169,7 +175,7 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(useDev);
 
 		mHandler = new Handler();
 
@@ -228,6 +234,9 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 
 					runLock.acquire();
 					
+					dataSet = new JSONArray();
+					uploadSet = new JSONArray();
+					
 					thruUpload = true;
 					
 					accel = new float[4];
@@ -270,38 +279,44 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 								}
 							});
 
+							// determine if we can upload
 							if (!rapi.isConnectedToInternet())
 								uploadPoint = false;
 							else
 								uploadPoint = true;
 
-							if (((i % 10) == 1) && i >= 9) {
-								JSONArray dataJSON = new JSONArray();
-								JSONArray dataSetNew = new JSONArray();
+							
+							// record the data point
+							JSONArray dataRow = new JSONArray();
 
-								try {
+							try {
+								
+								//dataJSON.put(accel[3]);
+								dataRow.put(loc.getLatitude());
+								dataRow.put(loc.getLongitude());
+								dataRow.put(System.currentTimeMillis() + elapsedMillis);
 
-									dataJSON.put(accel[3]);
-									dataJSON.put(loc.getLatitude());
-									dataJSON.put(loc.getLongitude());
-									dataJSON.put(System.currentTimeMillis() + elapsedMillis);
+								dataSet.put(dataRow);
 
-									dataSetNew.put(dataJSON);
-									dataSet = dataSetNew;
-
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-
-								if (uploadPoint) {
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											new Task().execute();
-										}
-									});
-								}
+							} catch (JSONException e) {
+								e.printStackTrace();
 							}
+
+							if ((((i % 10) == 0) && i >= 9) && (uploadPoint)) {
+								
+								// setup the upload set and reset the data set
+								uploadSet = new JSONArray();
+								uploadSet = dataSet;
+								dataSet = new JSONArray();
+								
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										new Task().execute();
+									}
+								});
+							}
+							
 						}
 
 					}, 0, TIMER_LOOP);
@@ -744,7 +759,7 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 							"Automated Submission Through Android App",
 							"801 Mt Vernon Place NW", "Washington D.C.",
 							"United States");
-					rapi.putSessionData(sessionId, experimentId, dataSet);
+					rapi.putSessionData(sessionId, experimentId, uploadSet);
 
 					sessionUrl = baseSessionUrl + sessionId;
 				} else {
@@ -752,12 +767,12 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 							"Automated Submission Through Android App",
 							"801 Mt Vernon Place NW", "Washington, DC",
 							"United States");
-					rapi.putSessionData(sessionId, experimentId, dataSet);
+					rapi.putSessionData(sessionId, experimentId, uploadSet);
 
 					sessionUrl = baseSessionUrl + sessionId;
 				}
 			} else {
-				rapi.updateSessionData(sessionId, experimentId, dataSet);
+				rapi.updateSessionData(sessionId, experimentId, uploadSet);
 			}
 
 		}
@@ -769,12 +784,9 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 		@Override
 		protected void onPreExecute() {
 
-			if (!dontToastMeTwice) {
-				Toast.makeText(mContext, "Uploading data to iSENSE...",
-						Toast.LENGTH_SHORT).show();
-				new NoToastTwiceTask().execute();
-			}
-
+			w.make("Uploading data to iSENSE...",
+					Waffle.LENGTH_SHORT);
+				
 		}
 
 		@Override
@@ -959,7 +971,6 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
