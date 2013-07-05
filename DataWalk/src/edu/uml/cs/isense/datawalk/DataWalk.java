@@ -294,7 +294,7 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 								//dataJSON.put(accel[3]);
 								dataRow.put(loc.getLatitude());
 								dataRow.put(loc.getLongitude());
-								dataRow.put(System.currentTimeMillis() + elapsedMillis);
+								dataRow.put(System.currentTimeMillis());
 
 								dataSet.put(dataRow);
 
