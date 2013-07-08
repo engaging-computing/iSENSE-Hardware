@@ -64,6 +64,7 @@ public class Prefs extends PreferenceActivity implements
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -71,6 +72,7 @@ public class Prefs extends PreferenceActivity implements
 				.registerOnSharedPreferenceChangeListener(this);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPause() {
 		super.onPause();

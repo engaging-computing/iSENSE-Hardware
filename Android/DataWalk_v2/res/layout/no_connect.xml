@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Could not connect to the internet through either wifi or mobile service.You will not be able to use this app until either is enabled." 
+        android:text="@string/ConnectMsg"
         android:textSize="18sp"
         />
     <LinearLayout
@@ -20,7 +20,7 @@
             android:id="@+id/no_connect_dismiss"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No"
+            android:text="@string/No"
             android:layout_weight="1"
             />
         
@@ -28,7 +28,7 @@
             android:id="@+id/no_connect_try_again"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Yes"
+            android:text="@string/Yes"
             android:layout_weight="1"
             />
     </LinearLayout>

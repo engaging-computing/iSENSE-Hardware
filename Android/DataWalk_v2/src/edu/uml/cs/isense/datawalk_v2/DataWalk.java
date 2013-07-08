@@ -154,11 +154,12 @@ public class DataWalk extends Activity implements LocationListener,
 	public static Context mContext;
 
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		//TODO
+		
 		//Calling this during onCreate() ensures that your application is properly initialized with default settings, 
 		//which your application may need  to read in order to determine some behaviors(such as whether to download data while on a cell network  
 		
@@ -203,7 +204,7 @@ public class DataWalk extends Activity implements LocationListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 
-				//TODO RAJIA COME BACK TOOOO
+			
 				timeElapsedBox.setText("Time Elapsed:" + " seconds" );
 				
 				if (appTimedOut)
@@ -337,8 +338,6 @@ public class DataWalk extends Activity implements LocationListener,
 									
 								}
 								
-								//TODO 
-								//WE WANT TO KEEP THIS BUT IT WILL BE TRUE ONLY WHEN SAVE POINT IS TRUE AND THE USER SAYS YES THEY WOULD LIKE TO UPLOAD THE DATA
 								if ((i % 10) == 0 && i > 9) {
 									Log.d("tag", "preparing to upload");
 									uploadSet = new JSONArray();
@@ -381,7 +380,7 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(DataWalk.this);
+		
 		if (timeTimer != null)
 			timeTimer.cancel();
 		if (mTimer != null)
@@ -390,6 +389,14 @@ public class DataWalk extends Activity implements LocationListener,
 		mTimer = null;
 		inPausedState = true;
 		
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		
+		if (mLocationManager != null)
+			initLocationManager();
 	}
 
 	@Override
@@ -461,7 +468,7 @@ public class DataWalk extends Activity implements LocationListener,
 				vibrator.vibrate(100);
 			}
 			
-			// TODO - uncomment?
+			
 			/*if (uploadMode) {
 				uploadPoint = true;
 			} else {
@@ -586,7 +593,7 @@ public class DataWalk extends Activity implements LocationListener,
 			w.make("There is no data to upload.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
 		}
 	}
-	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
+	/*private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
 		@Override
 		protected void onPreExecute() {
 			dontToastMeTwice = true;
@@ -611,7 +618,7 @@ public class DataWalk extends Activity implements LocationListener,
 		protected void onPostExecute(Void voids) {
 			dontToastMeTwice = false;
 		}
-	}
+	}*/
 
 	private class NotConnectedTask extends AsyncTask<Void, Integer, Void> {
 
@@ -780,7 +787,11 @@ public class DataWalk extends Activity implements LocationListener,
 					+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 		}
 	}
-	
+	public void resetToDefaults() {
+		// TODO 
+		//startActivityForResult(new Intent(this, Reset.class),
+				//RESET_REQUESTED);
+	}
 
 	// Rajia's created Menu...
 	@Override
@@ -790,7 +801,6 @@ public class DataWalk extends Activity implements LocationListener,
 		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
-//TODO THIS IS WHERE WE CAN ADD THINGS TO TH MENU!
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -800,10 +810,15 @@ public class DataWalk extends Activity implements LocationListener,
 		case R.id.upload:
 			manageUploadQueue();
 			return true;
+		case R.id.reset:
+			resetToDefaults();
+			return true;
 		}
 
 		return false;
 	}
+
+
 	
 
 }
