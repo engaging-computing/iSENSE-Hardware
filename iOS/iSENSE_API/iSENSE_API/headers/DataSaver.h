@@ -23,7 +23,7 @@
 -(bool)upload;
 
 @property (nonatomic, assign) int count;
-@property (nonatomic, assign) NSMutableDictionary *dataQueue;
+@property (nonatomic, retain) NSMutableDictionary *dataQueue;
 
 
 @end

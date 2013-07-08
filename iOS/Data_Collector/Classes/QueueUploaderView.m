@@ -10,7 +10,7 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, managedObjectContext;
+@synthesize mTableView, currentIndex, dataSaver;
 
 // Initialize the view where the 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -55,20 +55,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Managed Object Context for Data_CollectorAppDelegate
-    if (managedObjectContext == nil) {
-        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
-    }
-    
     // Get dataSaver from the App Delegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
-    
-    [self fetchDataSets];
-    
-    NSLog(@"Datasaver %d", dataSaver.count);
-    
+        
     currentIndex = 0;
 
 }
@@ -101,7 +92,7 @@
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return dataSaver.count;
 }
 
 // Initialize a single object in the table
@@ -110,41 +101,23 @@
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
-        UIViewController *temp = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
-        cell = (QueueCell *) temp.view;
-        [temp release];
+        UIViewController *tmp = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
+        cell = (QueueCell *) tmp.view;
+        
+        [tmp release];
     }
     
+    NSLog(@"First: %@", dataSaver.dataQueue.allKeys[0]);
+    
     DataSet *tmp = [dataSaver removeDataSet:dataSaver.dataQueue.allKeys[0]]; // getting all the keys to my queue haha.  dis is bad
-    [cell setupCellWidth:tmp.name andDataType:@"Data" andDescription:tmp.dataDescription andUploadable:true];
+    NSLog(@"Name of first dataset is %@.", tmp.description);
+    [cell setupCellName:tmp.name andDataType:@"Data" andDescription:tmp.dataDescription andUploadable:true];
     [dataSaver addDataSet:tmp];
     
     return cell;
 }
 
-// Get the dataSets from the queue :D
-- (void) fetchDataSets {
-    
-    // Fetch the old DataSets
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-    if (dataSetEntity) {
-        [request setEntity:dataSetEntity];
-        
-        // Actually make the request
-        NSError *error = nil;
-        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        
-        // fill dataSaver's DataSet Queue
-        for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
-        }
-        
-        // release the fetched objects
-        [mutableFetchResults release];
-        [request release];
-    }
-}
+
 
 
 @end

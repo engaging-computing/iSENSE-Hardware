@@ -23,6 +23,8 @@
     self.window.rootViewController = self.navControl;
 	[self.window makeKeyAndVisible];
     
+    dataSaver = [[DataSaver alloc] init];
+    
     return YES;
 }
 
@@ -79,6 +81,9 @@
         managedObjectContext = [[NSManagedObjectContext alloc] init];
         [managedObjectContext setPersistentStoreCoordinator: coordinator];
     }
+    
+    [self fetchDataSets];
+
     return managedObjectContext;
 }
 
@@ -181,5 +186,35 @@
 	[self.navControl pushViewController:guideView animated:YES];
 	[guideView release];
 }
+
+// Get the dataSets from the queue :D
+- (void) fetchDataSets {
+    
+    // Fetch the old DataSets
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    if (dataSetEntity) {
+        [request setEntity:dataSetEntity];
+        
+        // Actually make the request
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        if (mutableFetchResults == nil) {
+            // dats a problem
+        } else {
+            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
+        }
+        
+        // fill dataSaver's DataSet Queue
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            [dataSaver addDataSet:mutableFetchResults[i]];
+        }
+        
+        // release the fetched objects
+        [mutableFetchResults release];
+        [request release];
+    }
+}
+
 
 @end
