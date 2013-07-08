@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ConnectMsg"
+        android:text="@string/iSenseQstion"
         android:textSize="18sp"
         />
     <LinearLayout
@@ -17,19 +17,21 @@
         android:orientation="horizontal">
         
         <Button 
-            android:id="@+id/no_connect_dismiss"
+            android:id="@+id/view_data_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/No"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             />
         
         <Button 
-            android:id="@+id/no_connect_try_again"
+            android:id="@+id/view_data_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/Yes"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             />
     </LinearLayout>
 
