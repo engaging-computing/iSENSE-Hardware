@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Data Walk V2</string>
+    <string name="get_name">Enter Name\:</string>
+    
+    <string name="experiments_no_items">No experiments were found.</string>
+	
+	<string name="aboutApp">This app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. 
+	   \n\n When the app is activated, your GPS coordinates are saved once every 10 seconds, and are then shared on the iSENSE website (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.
+\n\n Instructions: 
+\n\n  In order to begin recording and sharing data, press and hold the button that says "Hold to Start". This allows data to be recorded and saved every 10 seconds (provided that the GPS on your mobile device has a satellite fix). When you are ready to stop recording, press and hold the button that says "Hold to Stop". At this time, you will have the option to view the data live on the iSENSE web site.
+\n\n While data is being recorded, you will not be permitted to exit the app by pressing the Back button. However, pressing the Home button will interrupt the recording. When the app resumes, a dialog box will appear indicating that data recording was halted.  </string>
+	 
+	<string name="OK">OK</string>
+	<string name="firstNameLabel"> First Name: </string>
+	<string name="lastInitialLabel"> Last Initial: </string>
+	<string name="startPrompt">Hold to Start</string>
+	<string name="logoDescription">iSense Logo</string>
+	<string name="stopPrompt">Hold to Stop</string>
+	<string name="timeElapsed">Time Elapsed:   seconds</string>
+	<string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
+	<string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
+	<string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
+	<string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
+	<string name="noLocation4">Lat: waiting for GPS . . . .\nLong: waiting for GPS . . . .</string>
+	<string name="pointsUploaded">Points Uploaded: 0</string>
+	<!-- RAJIA'S STRINGS FOR MENU... -->
+		<string name="settings_label">Settings</string>
+		<string name="settings_title">DataWalk Settings</string>
+		<string name="settings_shortcut">S</string>
+		
+		<string name="Upload_Title">Upload Mode</string>
+		<string name="Upload_Summary_Auto">Automatically Upload Data Sets</string>
+		<string name="Upload_Summary_Save">Save Data Rather than Uploading to iSENSE</string>
+		
+		<string name="Preferences_Title">Preferences</string>
+		<string name="Preferences_Summary">Gives you the option to change first name/last initial, change the experiment number you would like to upload to, change login information, change data-saving rate, and the option to reset all preferences to default?</string>
+	
+		<string name="NameChange_Title">Name Settings</string>
+   		<string name="NameChange_Summary">Change First Name/Last Initial </string>
+    
+    	<string name="Exp_Num_Title">Experiment Number</string>
+    	<string name="Exp_Num_Summary">Change the number of the experiment you would like to upload to</string>
+    
+    	<string name="Login_Title">Login Settings</string>
+    	<string name="Login_Summary">Change Your Login Information</string>
+		
+		
+		<string name="DataSavings_Title"> Change Rate Data is Saved </string>
+    	<string name="DataSavings_Summary">Change Rate that data is saved</string>
+    	
+    	<string name="DataUpload_Title">Change Rate Data Uploaded </string>
+    	<string name="DataUpload_Summary">Change Rate that data is uploaded</string>
+    
+    	<string name="Reset_Title">Return to Defaults</string>
+    	<string name="Reset_Summary">Resets all Preferences</string>
+		
+		<string name="About_Title">About</string>
+		<string name="About_Summary">\n\nThis app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. 
+	   \n\n When the app is activated, your GPS coordinates are saved once every 10 seconds, and are then shared on the iSENSE website (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.	</string>
+		
+		
+		
+
+</resources>
