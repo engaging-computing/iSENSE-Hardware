@@ -8,11 +8,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/SensorCompatibility.h>
+#import <iSENSE_API/SensorEnums.h>
+#import "SensorSelection.h"
 
 @interface StepOneSetup : UIViewController <UITextFieldDelegate> {
     
     iSENSE *iapi;
     int expNumInteger;
+    bool sensorsSelected;
+    bool displaySensorSelectFromBrowse;
     
 }
 

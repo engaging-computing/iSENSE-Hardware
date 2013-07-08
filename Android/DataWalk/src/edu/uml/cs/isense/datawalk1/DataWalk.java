@@ -343,15 +343,18 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(DataWalk.this);
-		if (timeTimer != null)
-			timeTimer.cancel();
-		if (mTimer != null)
-			mTimer.cancel();
-
-		mTimer = null;
+//		mLocationManager.removeUpdates(DataWalk.this);
+//		if (timeTimer != null)
+//			timeTimer.cancel();
+//		if (mTimer != null)
+//			mTimer.cancel();
+//
+//		mTimer = null;
+//		
+//		userLoggedIn = false;
+		
+		
 		inPausedState = true;
-		userLoggedIn = false;
 	}
 
 	@Override
@@ -902,6 +905,13 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
+	}
+	
+	@Override
+	protected void onStart() {
+		if(mLocationManager != null)
+			initLocationManager();
+		super.onStart();
 	}
 
 	private void waitingForGPS() {

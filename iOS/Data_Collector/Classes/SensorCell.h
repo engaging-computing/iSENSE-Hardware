@@ -11,9 +11,7 @@
 
 @interface SensorCell : UITableViewCell
 
-- (SensorCell *) setupCellWith:(NSString *)name andCompatability:(int)compat;
-//- (void) swapLogoEnabled;
-- (void) setEnabled:(bool)isEnabled;
+- (SensorCell *) setupCellWithName:(NSString *)name compatability:(int)compat andEnabled:(bool)en;
 
 @property (nonatomic, retain) IBOutlet UILabel      *field;
 @property (nonatomic, retain) IBOutlet UILabel      *compatible;
