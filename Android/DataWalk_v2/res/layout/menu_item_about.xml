@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="About" 
+        android:text="@string/About" 
         android:textSize="18sp"
         />
 
@@ -16,8 +16,8 @@
         <Button 
             android:id="@+id/menu_item_about_back"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="back"
+            android:layout_height="0dip"
+            android:text="@string/Back"
             android:layout_weight="1"
             />
         
