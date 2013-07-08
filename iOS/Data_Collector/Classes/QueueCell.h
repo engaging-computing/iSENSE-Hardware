@@ -10,7 +10,7 @@
 
 @interface QueueCell : UITableViewCell
 
-- (QueueCell *)setupCellWidth:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable;
+- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;

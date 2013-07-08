@@ -16,10 +16,12 @@
     self = [super init];
     if (self) {
         count = 0;
+        dataQueue = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
+// Add a DataSet to the queue
 -(void)addDataSet:(DataSet *)dataSet {
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
