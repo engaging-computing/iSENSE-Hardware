@@ -24,8 +24,11 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellWidth:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable {
+- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable {
     QueueCell *cell = [[QueueCell alloc] init];
+    
+    NSLog(@"Name is: %@", nameAndDate);
+    
     cell.nameAndDate.text = nameAndDate;
     cell.dataType.text = type;
     cell.description.text = description;

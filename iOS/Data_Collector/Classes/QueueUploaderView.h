@@ -13,11 +13,9 @@
 
 @interface QueueUploaderView : UIViewController {
     
-    DataSaver *dataSaver;
-    
 }
 
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) DataSaver *dataSaver;
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;
 
