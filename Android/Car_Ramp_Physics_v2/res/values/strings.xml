@@ -8,21 +8,17 @@
     <string name="experiments_no_items">No experiments were found.</string>
     
     <string name="about_app">
-        To begin recording data, press and hold the \"Hold to Start\" button. Acceleration data 
-		along the Y axis will be recorded continuously for 10 seconds, and then recording will 
-		stop automatically. At that time, you will have the option to share the data on the 
-		iSENSE website (isenseproject.org) where they can be viewed publicly, or you may simply 
-		throw the data away. If you choose to upload the data set, you may immediately view 
-		a graph of the data live on the iSENSE website.\n\nTo
-		
-		make it easy for you to find your contributed data, this app prompts you to enter your 
-		first name and last initial. If you are not comfortable with your first name, last initial,
-		rough location (specifies city/town at most), and acceleration data being posted on the 
-		web, please refrain from using this application.\n\nWhile
-		
-		recording data, you will not be permitted to exit the app by pressing the 
-		Back button. However, pressing the Home button will stop recording. When the app 
-		resumes, a message will appear indicating that data recording was halted.\n
+        Enter your first name and last initial so that you can later identify your session on iSENSE.
+        
+        Press and hold the Start button, and the app will record 10 seconds of acceleration data.
+        
+        After recording, you may publish your data to isenseproject.org.
+        You are also given an option to view your data.
+        
+        You may modify various settings -- explore the menus.
+        
+        If setting up your own experiment: create fields named \"Time\" (time/milliseconds) and
+        any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
     </string>
     
     <string name="updates">Please carefully review the following agreement for this version of this app:</string>
@@ -36,7 +32,7 @@
 	<string name="mag">Magnitude</string>
 	<string name="done">Done</string>
 	<string name="upload_or_trash">Upload Data or Throw It Away</string>
-	<string name="chooseExperimentTitle">Experiment Settings</string>
+	<string name="chooseExperimentTitle">Experiment Code</string>
 	<string name="no_qr">No QR Scanner</string>
 	<string name="first_name">First Name: </string>
 	<string name="record_length">Recording Length</string>
