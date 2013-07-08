@@ -8,17 +8,18 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ExitMsg" 
+        android:text="@string/About" 
         android:textSize="18sp"
         />
 
         
         <Button 
-            android:id="@+id/force_stop_ok"
+            android:id="@+id/menu_item_about_back"
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:text="@string/OK"
+            android:text="@string/Back"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             />
         
         

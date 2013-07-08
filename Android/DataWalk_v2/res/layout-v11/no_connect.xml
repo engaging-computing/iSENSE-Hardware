@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ConnectMsg"
+        android:text="@string/InternetMsg"
         android:textSize="18sp"
         />
     <LinearLayout
@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:text="@string/No"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             />
         
         <Button 
@@ -30,6 +31,7 @@
             android:layout_height="wrap_content"
             android:text="@string/Yes"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             />
     </LinearLayout>
 
