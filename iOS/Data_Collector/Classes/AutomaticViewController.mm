@@ -295,6 +295,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // Set setup_complete key to false again
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
             
+            // TODO - JEREMY!!! HERE'S THE ENABLED FIELDS IN AN NSMUTABLEARRAY.  HAS THEM PLOX
+            // LET'S PRETEND FIELDS ARE ACCEL-X, ACCEL-Y, ACCEL-Z, AND TIME.  THIS ARRAY COULD BE 1, 0, 1, 1
+            // THAT MEANS RECORD ALL EXCEPT ACCEL-Y.  CAN YOU HAS IMPLEMENT PLOX LOL FROGS.
+            NSMutableArray *THISSHOULDBEAGLOBALVARIABLE = [prefs objectForKey:@"selected_cells"];
+            
         }
         
     }

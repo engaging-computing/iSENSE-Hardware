@@ -12,26 +12,15 @@
 
 @synthesize field, compatible, image;
 
-/*- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {}
-    return self;
-}*/
-
-
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        // init magic here
         self.contentView.backgroundColor = [UIColor clearColor];
-        //enabled = true;
-        //self.contentView.backgroundColor = [UIColor lightGrayColor];
     }
     return self;
 }
 
-
-- (SensorCell *) setupCellWith:(NSString *)name andCompatability:(int)compat {
+- (SensorCell *) setupCellWithName:(NSString *)name compatability:(int)compat andEnabled:(bool)en {
     [field setText:name];
     switch (compat) {
         case NOT_AVAILABLE:
@@ -60,6 +49,13 @@
             break;
     }
     
+    if (en)
+        image.image = [UIImage imageNamed:@"waffle_check"];
+    else
+        image.image = [UIImage imageNamed:@"waffle_x"];
+    
+    //[image setNeedsDisplay];
+    
     return self;
 }
 
@@ -68,23 +64,5 @@
     [super setSelected:selected animated:animated];
 }
 
-/*- (void) swapLogoEnabled {
-    if (!enabled)
-        image.image = [UIImage imageNamed:@"waffle_check"];
-    else
-        image.image = [UIImage imageNamed:@"waffle_x"];
-    
-    enabled = !enabled;
-}*/
-
-- (void) setEnabled:(bool)isEnabled {
-    NSLog(@"lots of enable: %d", isEnabled);
-    if (isEnabled)
-        image.image = [UIImage imageNamed:@"waffle_check"];
-    else
-        image.image = [UIImage imageNamed:@"waffle_x"];
-    
-    [image setNeedsDisplay];
-}
 
 @end
