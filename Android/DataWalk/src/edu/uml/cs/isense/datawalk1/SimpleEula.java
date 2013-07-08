@@ -1,5 +1,6 @@
-package edu.uml.cs.isense.datawalk;
+package edu.uml.cs.isense.datawalk1;
 
+import edu.uml.cs.isense.datawalk1.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

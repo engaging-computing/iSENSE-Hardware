@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.datawalk;
+package edu.uml.cs.isense.datawalk1;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -48,6 +48,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.datawalk1.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataWalk extends Activity implements LocationListener, SensorEventListener {
@@ -136,11 +137,11 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 	//private static String loginPass = "iSENSErUS";
 	private static String loginName = "sor";
 	private static String loginPass = "sor";
-	private static String experimentId = "595";
-	private static String baseSessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=";
+	private static String experimentId = "582";
+	private static String baseSessionUrl = "http://isenseproject.org/highvis.php?sessions=";
 	private static String marketUrl = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=406";
-	private static boolean useDev = true;
+	private static String sessionUrl = "http://isenseproject.org/highvis.php?sessions=-1";
+	private static boolean useDev = false;
 
 	private static int waitingCounter = 0;
 
