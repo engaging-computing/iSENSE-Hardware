@@ -1,0 +1,45 @@
+<?xml version ="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="first_preferencescreen" >
+
+    <!-- Default value is a boolean -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="UploadMode"
+        android:summary="@string/Upload_Summary_Auto"
+        android:title="Collection Mode:" />
+
+    <!-- Change Data Uploading Rate -->
+
+    <ListPreference
+        android:key="Data UploadRate"
+        android:title="Change Rate Data is Recorded"
+        android:entries="@array/dataRate"
+        android:entryValues="@array/dataRateVals"
+         />
+
+    <!-- Change First Name/Last Initial -->
+    <Preference
+        android:key="Name Change"
+        android:summary="@string/NameChange_Summary"
+        android:title="@string/NameChange_Title" />
+
+    <!-- Change Experiment Number -->
+    <Preference
+        android:key="Exp Num"
+        android:summary="@string/Exp_Num_Summary"
+        android:title="@string/Exp_Num_Title" />
+
+
+    <!-- Reset Settings -->
+    <Preference
+        android:key="Reset"
+        android:summary="@string/Reset_Summary"
+        android:title="@string/Reset_Title" />
+    <Preference
+        android:defaultValue="false"
+        android:key="About"
+        android:summary="@string/About_Summary"
+        android:title="@string/About_Title" />
+
+</PreferenceScreen>

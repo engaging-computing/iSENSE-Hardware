@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.datawalk;
+package edu.uml.cs.isense.datawalk_v2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import edu.uml.cs.isense.R;
 
 public class LoginActivity extends Activity {
 	
@@ -21,9 +22,9 @@ public class LoginActivity extends Activity {
 	
 	private static boolean dontToastMeTwice = false;
 	
-	static final public int NAME_SUCCESSFUL = 1;
-	static final public int NAME_FAILED = 0;
-	static final public int NAME_CANCELED = -1;
+	//static final public int NAME_SUCCESSFUL = 1;
+	//static final public int NAME_FAILED = 0;
+	//static final public int NAME_CANCELED = -1;
 	
 	boolean success;
 	
@@ -52,7 +53,7 @@ public class LoginActivity extends Activity {
 				   } else {
 					   DataWalk.firstName   = firstNameInput.getText().toString();
 					   DataWalk.lastInitial = lastInitialInput.getText().toString();
-					   setResult(NAME_SUCCESSFUL, null);
+					   setResult(RESULT_OK);
 					   finish();
 				   }
 			}
@@ -65,8 +66,10 @@ public class LoginActivity extends Activity {
 	    	Dialog dialog = adb.create();
 	    	
 	    	Display display = getWindowManager().getDefaultDisplay(); 
-	    	int mwidth = display.getWidth();
-	    	int mheight = display.getHeight();
+	    	@SuppressWarnings("deprecation")
+			int mwidth = display.getWidth();
+	    	@SuppressWarnings("deprecation")
+			int mheight = display.getHeight();
 	    	
 	    	dialog.show();
 	    	
@@ -98,10 +101,7 @@ public class LoginActivity extends Activity {
     	return android.os.Build.VERSION.SDK_INT;
     }
 	
-	@Override
-    public void onBackPressed() {
-		//don't do anything
-	}
+	
 	
 	private class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
 	    @Override protected void onPreExecute() {
@@ -119,6 +119,12 @@ public class LoginActivity extends Activity {
 	    @Override  protected void onPostExecute(Void voids) {
 	    	dontToastMeTwice = false;
 	    }
+	}
+	
+	@Override
+	public void onBackPressed() {
+		setResult(RESULT_CANCELED);
+		finish();
 	}
 	
 	
