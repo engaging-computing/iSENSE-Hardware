@@ -55,8 +55,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.hidesBackButton = YES;
 	
-    // TODO - setup what to add in the tableview
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] integerValue];
     
@@ -132,7 +132,12 @@
 }
 
 - (IBAction)okOnClick:(id)sender {
-    //[self tableView:table cellForRowAtIndexPath:0];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    [prefs setBool:true forKey:@"sensor_done"];
+    [prefs setObject:selectedCells forKey:@"selected_cells"];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -160,7 +165,8 @@
         [tempController release];
     }
 
-    [cell setupCellWith:[fieldNames objectAtIndex:indexPath.row] andCompatability:[[compatible objectAtIndex:indexPath.row] integerValue]];
+    bool cellEnabled = (([[selectedCells objectAtIndex:indexPath.row] integerValue]) == 1) ? true : false;
+    [cell setupCellWithName:[fieldNames objectAtIndex:indexPath.row] compatability:[[compatible objectAtIndex:indexPath.row] integerValue] andEnabled:cellEnabled];
     
     return cell;
 }
@@ -172,13 +178,11 @@
     [NSThread sleepForTimeInterval:0.08];
     [cell setBackgroundColor:[UIColor clearColor]];
     
-    NSLog(@"@@@@@@@@@@@@@@@@@@");
     NSNumber *newVal = [selectedCells objectAtIndex:indexPath.row];
     [selectedCells replaceObjectAtIndex:indexPath.row withObject:([newVal integerValue] == 1) ? [NSNumber numberWithInt:0] : [NSNumber numberWithInt:1]];
-    for (NSNumber *n in selectedCells) {
-        [cell setEnabled:([n integerValue] == 1) ? true : false];
-    }
-    //[cell swapLogoEnabled];
+
+    bool cellEnabled = (([[selectedCells objectAtIndex:indexPath.row] integerValue]) == 1) ? true : false;
+    [cell setupCellWithName:[fieldNames objectAtIndex:indexPath.row] compatability:[[compatible objectAtIndex:indexPath.row] integerValue] andEnabled:cellEnabled];
 }
 
 @end
