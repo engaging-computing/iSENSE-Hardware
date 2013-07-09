@@ -532,18 +532,18 @@
 		52572B6E1691F6E2009037A7 /* Automatic */ = {
 			isa = PBXGroup;
 			children = (
+				399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */,
+				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */,
+				B72302BB1783260600DD8B16 /* SensorCell.h */,
+				B72302BC1783260600DD8B16 /* SensorCell.m */,
+				B72302AA17831A7D00DD8B16 /* SensorSelection.h */,
+				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
+				B75046C6177484110034B42C /* StepOneSetup.h */,
+				B75046C7177484110034B42C /* StepOneSetup.mm */,
 				392CD88717836F5C00C82887 /* QueueCell.h */,
 				392CD88817836F5C00C82887 /* QueueCell.m */,
 				392CD88917836F5C00C82887 /* QueueUploaderView.h */,
 				392CD88A17836F5C00C82887 /* QueueUploaderView.m */,
-				399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */,
-				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */,
-				B75046C6177484110034B42C /* StepOneSetup.h */,
-				B75046C7177484110034B42C /* StepOneSetup.mm */,
-				B72302AA17831A7D00DD8B16 /* SensorSelection.h */,
-				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
-				B72302BB1783260600DD8B16 /* SensorCell.h */,
-				B72302BC1783260600DD8B16 /* SensorCell.m */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";
