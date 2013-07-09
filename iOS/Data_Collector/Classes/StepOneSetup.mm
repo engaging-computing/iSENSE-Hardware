@@ -288,8 +288,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    NSLog(@"will appear");
-    
     // If true, then we're coming back from another ViewController
     if (self.isMovingToParentViewController == NO) {
         
@@ -299,13 +297,10 @@
         if (backFromSensors) {
             sensorsSelected = true;
             
-            // TODO - get the array of selected values and enable/disable fields accordingly!!!!!!*%&#%(@*#&%(*@#()*%&#@%*@(#&%*()@#&()@#&%)@#&%)@#&%(@#&%)(@%@#))
-            
             // Set the sensor_done key back to false again
             [prefs setBool:false forKey:@"sensor_done"];
         } else {
             // make sure user didn't use the back button
-            NSLog(@"new exp num = %d", expNumInteger);
             if (expNumInteger != 0) {
                 NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", expNumInteger];
                 [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
@@ -314,7 +309,6 @@
                 NSString *expNumString = [NSString stringWithFormat:@"%d", expNumInteger];
                 [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_automatic"]];
                 
-                NSLog(@"set true");
                 displaySensorSelectFromBrowse = true;
             }
         }
@@ -343,13 +337,10 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    NSLog(@"did appear");
     
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
-    NSLog(@"do this code! --- %d", displaySensorSelectFromBrowse);
     if (displaySensorSelectFromBrowse) {
-        NSLog(@"really, do it");
         displaySensorSelectFromBrowse = false;
         
         // launch the sensor selection dialog

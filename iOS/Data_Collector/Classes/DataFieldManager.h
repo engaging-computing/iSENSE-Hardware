@@ -10,10 +10,15 @@
 #import <Foundation/Foundation.h>
 #import "Fields.h"
 
-@interface DataFieldManager : NSObject {}
+@interface DataFieldManager : NSObject {
+
+    bool enabledFields[22];
+}
 
 - (NSMutableArray *) getFieldOrderOfExperiment:(int)exp;
 - (NSMutableArray *) orderDataFromFields:(Fields *)f;
+- (void) setEnabledField:(bool)value atIndex:(int)index;
+- (bool) enabledFieldAtIndex:(int)index;
 
 @property (nonatomic, retain) NSMutableArray *order;
 @property (nonatomic, retain) NSMutableArray *data;
