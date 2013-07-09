@@ -81,6 +81,8 @@
     int gyro    = [sc getCompatibilityForSensorType:sGYROSCOPE];
     //int proxi   = [sc getCompatibilityForSensorType:sPROXIMITY];
     
+    CMMotionManager *motionManager = [[CMMotionManager alloc] init];
+    
     for (NSString *s in fieldNames) {
         // Fields determined from the SensorCompatibility object
         if ([s isEqualToString:[StringGrabber grabField:@"latitude"]] || [s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
@@ -101,8 +103,8 @@
             [compatible addObject:[NSNumber numberWithInt:AVAILABLE]];
         } else if ([[s lowercaseString] rangeOfString:@"heading"].location != NSNotFound) {
             [compatible addObject:([CLLocationManager headingAvailable] ? [NSNumber numberWithInt:AVAILABLE] : [NSNumber numberWithInt:NOT_AVAILABLE])];
-        } else if ([[s lowercaseString] rangeOfString:@"magnet"].location != NSNotFound) {
-            [compatible addObject:([CLLocationManager headingAvailable] ? [NSNumber numberWithInt:AVAILABLE] : [NSNumber numberWithInt:NOT_AVAILABLE])];
+        } else if ([[s lowercaseString] rangeOfString:@"mag"].location != NSNotFound) {
+            [compatible addObject:([motionManager isMagnetometerAvailable] ? [NSNumber numberWithInt:AVAILABLE] : [NSNumber numberWithInt:NOT_AVAILABLE])];
         } else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
             // it appears no iOS device ships with a barometer - current apps calculate air pressure using gps to get location and getting weather conditions at that ground location
             [compatible addObject:[NSNumber numberWithInt:NOT_AVAILABLE]];

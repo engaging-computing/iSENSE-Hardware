@@ -13,6 +13,25 @@
 
 @synthesize order, data;
 
+- (id) init {
+    [self falseEnableFields];
+    return self;
+}
+
+- (void) falseEnableFields {
+    enabledFields[0] = enabledFields[1] = enabledFields[2] = enabledFields[3] = enabledFields[4] = enabledFields[5] = enabledFields[6] = enabledFields[7] =
+    enabledFields[8] = enabledFields[9] = enabledFields[10] = enabledFields[11] = enabledFields[12] = enabledFields[13] = enabledFields[14] = enabledFields[15] =
+    enabledFields[16] = enabledFields[17] = enabledFields[18] = enabledFields[19] = enabledFields[20] = enabledFields[21] = false;
+}
+
+- (void) setEnabledField:(bool)value atIndex:(int)index {
+    enabledFields[index] = value;
+}
+
+- (bool) enabledFieldAtIndex:(int)index {
+    return enabledFields[index];
+}
+
 - (NSMutableArray *) getFieldOrderOfExperiment:(int)exp {
     
     if (order) [order release];

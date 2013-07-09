@@ -841,8 +841,8 @@
                 
                 UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT)];
                 noFields.text = @"Invalid experiment.";
-                noFields.backgroundColor = [HexColor colorWithHexString:@"000000"];
-                noFields.textColor = [HexColor colorWithHexString:@"FFFFFF"];
+                noFields.backgroundColor = [UIColor clearColor];
+                noFields.textColor = [HexColor colorWithHexString:@"000000"];
                 [scrollView addSubview: noFields];
                 [noFields release];
             } else {
