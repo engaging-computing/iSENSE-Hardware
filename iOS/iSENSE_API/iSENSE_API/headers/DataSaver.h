@@ -14,6 +14,8 @@
 #import "Queue.h"
 #import "iSENSE.h"
 
+#define NO_KEY 1
+
 @interface DataSaver : NSObject {
 }
 

@@ -10,6 +10,8 @@
 
 @implementation QueueCell
 
+@synthesize nameAndDate, dataType, description, uploadable;
+
 //- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 //    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 //    if (self) {
@@ -24,16 +26,13 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable {
-    QueueCell *cell = [[QueueCell alloc] init];
+- (QueueCell *)setupCellName:(NSString *)name andDataType:(NSString *)type andDescription:(NSString *)desc andUploadable:(bool)upload {
+      
+    self.nameAndDate.text = name;
+    self.dataType.text = type;
+    self.description.text = desc;
     
-    NSLog(@"Name is: %@", nameAndDate);
-    
-    cell.nameAndDate.text = nameAndDate;
-    cell.dataType.text = type;
-    cell.description.text = description;
-    
-    return cell;
+    return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {

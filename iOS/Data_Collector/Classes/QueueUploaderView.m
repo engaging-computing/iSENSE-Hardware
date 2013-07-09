@@ -21,6 +21,11 @@
     
 }
 
+// Upload button control
+-(IBAction)upload:(id)sender {
+    [dataSaver upload];
+}
+
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
@@ -59,7 +64,7 @@
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
-        
+            
     currentIndex = 0;
 
 }
@@ -107,12 +112,10 @@
         [tmp release];
     }
     
-    NSLog(@"First: %@", dataSaver.dataQueue.allKeys[0]);
-    
-    DataSet *tmp = [dataSaver removeDataSet:dataSaver.dataQueue.allKeys[0]]; // getting all the keys to my queue haha.  dis is bad
-    NSLog(@"Name of first dataset is %@.", tmp.description);
+    DataSet *tmp = [[dataSaver removeDataSet:NO_KEY] retain];
     [cell setupCellName:tmp.name andDataType:@"Data" andDescription:tmp.dataDescription andUploadable:true];
     [dataSaver addDataSet:tmp];
+    [tmp release];
     
     return cell;
 }

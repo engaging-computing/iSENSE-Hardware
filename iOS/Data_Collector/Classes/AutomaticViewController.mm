@@ -622,7 +622,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:[NSNull null]];
+    [ds setPicturePaths:nil];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];

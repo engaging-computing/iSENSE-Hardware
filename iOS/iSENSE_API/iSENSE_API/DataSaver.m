@@ -28,8 +28,10 @@
     count++;
 }
 
+// if key is nil, call dequeue otherwise dequeue with the given key
 -(id)removeDataSet:(int)key {
     count--;
+    if (key == NO_KEY) return [dataQueue dequeue];
     return [dataQueue removeFromQueueWithKey:key];
 }
 
@@ -47,11 +49,13 @@
         NSLog(@"Not logged in.");
         return false;
     }
+    
     DataSet *currentDS;
     while (count) {
         // get the next dataset
-        int headKey = dataQueue.allKeys[0];
-        currentDS = [self removeDataSet:headKey];
+        NSArray *keys = [dataQueue allKeys];
+        NSNumber *firstKey = [keys objectAtIndex:0];
+        currentDS = [self removeDataSet:firstKey.intValue];
         
         // check if the session is uploadable
         if ([currentDS uploadable]) {

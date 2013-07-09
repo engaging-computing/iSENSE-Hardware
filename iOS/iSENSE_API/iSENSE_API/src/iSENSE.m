@@ -19,7 +19,7 @@ static iSENSE *_iSENSE = nil;
 -(NSDictionary *)isenseQuery:(NSString*)target {
     
 	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-	NSLog(@"Sending to iSENSE: %@", final_target);
+	NSLog(@"Sending to %@: %@", baseURL, final_target);
 	NSError *requestError = nil;
     
     /* Post request to allow for longer request */
