@@ -258,8 +258,12 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // Enabled step 2
     if (backFromSetup) [self setEnabled:true forButton:step2];
     
-    // Handle the DataQueue
-    [self fetchDataSets];
+    // Enable upload depending on DataQueue
+    if (dataSaver.count > 0) {
+        [self setEnabled:true forButton:step3];
+    } else {
+        [self setEnabled:false forButton:step3];
+    }
     
     [self initLocations];
     [self resetAddressFields];
@@ -311,39 +315,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
-// Get the dataSets from the queue :D
-- (void) fetchDataSets {
-    
-    // Fetch the old DataSets
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-    if (dataSetEntity) {
-        [request setEntity:dataSetEntity];
-        
-        // Actually make the request
-        NSError *error = nil;
-        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        if (mutableFetchResults == nil) {
-            [self setEnabled:false forButton:step3];
-        } else {
-            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
-            if (mutableFetchResults.count > 0) {
-                [self setEnabled:true forButton:step3];
-            } else {
-                [self setEnabled:false forButton:step3];
-            }
-        }
-        
-        // fill dataSaver's DataSet Queue
-        for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
-        }
-        
-        // release the fetched objects
-        [mutableFetchResults release];
-        [request release];
-    }
-}
 
 - (void) displayMenu {
 	UIActionSheet *popupQuery = [[UIActionSheet alloc]
@@ -666,8 +637,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:nil];
-    [ds setSid:nil];
+    [ds setPicturePaths:[NSNull null]];
+    [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
     [ds setAddress:address];
