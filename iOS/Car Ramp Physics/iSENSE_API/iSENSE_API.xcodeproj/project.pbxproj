@@ -1,0 +1,628 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39216FDE176F5C790070DFCC /* CoreFoundation.framework */; };
+		39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39216FE3176F5C790070DFCC /* InfoPlist.strings */; };
+		3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFD176F7ACA0070DFCC /* DataSaver.h */; };
+		3921700D176F7ACA0070DFCC /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFE176F7ACA0070DFCC /* DataSet.h */; };
+		3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
+		39217017176F7ACA0070DFCC /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217009176F7ACA0070DFCC /* Queue.h */; };
+		3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
+		3981B4B217626FD90030ACE5 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3981B4B017626FD90030ACE5 /* DataSet.m */; };
+		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
+		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
+		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39A1CC2C16DFB48700B1979F /* Item.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261516DFA86B0062C3DC /* Item.h */; };
+		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
+		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
+		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
+		39A529BA177B67E1007A4052 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A529B8177B67E1007A4052 /* QueueUploaderView.m */; };
+		39A529BC177B68B6007A4052 /* QueueUploaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A529BB177B68B6007A4052 /* QueueUploaderView.h */; };
+		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
+		39B63D891778C4950024EB75 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
+		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
+		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
+		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
+		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
+		39FF262416DFA8760062C3DC /* Experiment.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261C16DFA8760062C3DC /* Experiment.m */; };
+		39FF262516DFA8760062C3DC /* ExperimentField.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261D16DFA8760062C3DC /* ExperimentField.m */; };
+		39FF262616DFA8760062C3DC /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261E16DFA8760062C3DC /* Image.m */; };
+		39FF262716DFA8760062C3DC /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261F16DFA8760062C3DC /* Item.m */; };
+		39FF262816DFA8760062C3DC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
+		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
+		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
+		B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */; };
+		B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		39FF25DE16DFA28A0062C3DC /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		39216FDD176F5C790070DFCC /* iSENSE_API_Bundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSENSE_API_Bundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		39216FDE176F5C790070DFCC /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		39216FE2176F5C790070DFCC /* iSENSE_API_Bundle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iSENSE_API_Bundle-Info.plist"; sourceTree = "<group>"; };
+		39216FE4176F5C790070DFCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API_Bundle-Prefix.pch"; sourceTree = "<group>"; };
+		39216FFD176F7ACA0070DFCC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
+		39216FFE176F7ACA0070DFCC /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = headers/DataSet.h; sourceTree = "<group>"; };
+		39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
+		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
+		3981B4B017626FD90030ACE5 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
+		39A529B8177B67E1007A4052 /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
+		39A529BB177B68B6007A4052 /* QueueUploaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QueueUploaderView.h; path = headers/QueueUploaderView.h; sourceTree = "<group>"; };
+		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
+		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
+		39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		39FF25E316DFA28A0062C3DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API-Prefix.pch"; sourceTree = "<group>"; };
+		39FF261116DFA86B0062C3DC /* Experiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experiment.h; sourceTree = "<group>"; };
+		39FF261216DFA86B0062C3DC /* ExperimentField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentField.h; sourceTree = "<group>"; };
+		39FF261316DFA86B0062C3DC /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		39FF261416DFA86B0062C3DC /* iSENSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iSENSE.h; sourceTree = "<group>"; };
+		39FF261516DFA86B0062C3DC /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		39FF261616DFA86B0062C3DC /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		39FF261716DFA86B0062C3DC /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		39FF261816DFA86B0062C3DC /* SessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionData.h; sourceTree = "<group>"; };
+		39FF261A16DFA8760062C3DC /* iSENSE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iSENSE.m; sourceTree = "<group>"; };
+		39FF261C16DFA8760062C3DC /* Experiment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Experiment.m; sourceTree = "<group>"; };
+		39FF261D16DFA8760062C3DC /* ExperimentField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExperimentField.m; sourceTree = "<group>"; };
+		39FF261E16DFA8760062C3DC /* Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		39FF261F16DFA8760062C3DC /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		39FF262016DFA8760062C3DC /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
+		B7EEB31D1779B77700EADF1B /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
+		B7EEB31E1779B7A700EADF1B /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B7EEB31F1779B7C200EADF1B /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
+		B7EEB3201779B7D200EADF1B /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCompatibility.h; sourceTree = "<group>"; };
+		B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCompatibility.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		39216FDA176F5C790070DFCC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39FF25DD16DFA28A0062C3DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39AD183A17553765002969FA /* CoreData.framework in Frameworks */,
+				39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		39216FE0176F5C790070DFCC /* iSENSE_API_Bundle */ = {
+			isa = PBXGroup;
+			children = (
+				39216FE1176F5C790070DFCC /* Supporting Files */,
+			);
+			path = iSENSE_API_Bundle;
+			sourceTree = "<group>";
+		};
+		39216FE1176F5C790070DFCC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				39216FE2176F5C790070DFCC /* iSENSE_API_Bundle-Info.plist */,
+				39216FE3176F5C790070DFCC /* InfoPlist.strings */,
+				39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		39EFB9E4172AD55700A6BD2A /* src_queue_saver */ = {
+			isa = PBXGroup;
+			children = (
+				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
+				39EFB9EF172ADE9F00A6BD2A /* objects */,
+				39A529B8177B67E1007A4052 /* QueueUploaderView.m */,
+			);
+			name = src_queue_saver;
+			sourceTree = "<group>";
+		};
+		39EFB9E9172AD8DB00A6BD2A /* queue */ = {
+			isa = PBXGroup;
+			children = (
+				39EFB9EA172AD8F800A6BD2A /* Queue.m */,
+			);
+			name = queue;
+			sourceTree = "<group>";
+		};
+		39EFB9EE172ADA1F00A6BD2A /* queue_headers */ = {
+			isa = PBXGroup;
+			children = (
+				39A529BB177B68B6007A4052 /* QueueUploaderView.h */,
+				39216FFE176F7ACA0070DFCC /* DataSet.h */,
+				39216FFD176F7ACA0070DFCC /* DataSaver.h */,
+				39217009176F7ACA0070DFCC /* Queue.h */,
+			);
+			name = queue_headers;
+			sourceTree = "<group>";
+		};
+		39EFB9EF172ADE9F00A6BD2A /* objects */ = {
+			isa = PBXGroup;
+			children = (
+				39EFB9F0172ADF8F00A6BD2A /* dataset */,
+				39EFB9E9172AD8DB00A6BD2A /* queue */,
+			);
+			name = objects;
+			sourceTree = "<group>";
+		};
+		39EFB9F0172ADF8F00A6BD2A /* dataset */ = {
+			isa = PBXGroup;
+			children = (
+				39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */,
+				3981B4B017626FD90030ACE5 /* DataSet.m */,
+			);
+			name = dataset;
+			sourceTree = "<group>";
+		};
+		39FF25D516DFA28A0062C3DC = {
+			isa = PBXGroup;
+			children = (
+				39FF25E516DFA28A0062C3DC /* iSENSE_API */,
+				39216FE0176F5C790070DFCC /* iSENSE_API_Bundle */,
+				39FF25E216DFA28A0062C3DC /* Frameworks */,
+				39FF25E116DFA28A0062C3DC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		39FF25E116DFA28A0062C3DC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */,
+				39216FDD176F5C790070DFCC /* iSENSE_API_Bundle.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39FF25E216DFA28A0062C3DC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39AD183917553765002969FA /* CoreData.framework */,
+				39FF25E316DFA28A0062C3DC /* Foundation.framework */,
+				39216FDE176F5C790070DFCC /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
+			isa = PBXGroup;
+			children = (
+				B7F2D81C177B692200F9A58D /* sensor_compatibility */,
+				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
+				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
+				39FF261916DFA8760062C3DC /* src_api */,
+				39FF261016DFA86B0062C3DC /* api_headers */,
+				B7EEB31A1779B73400EADF1B /* layouts */,
+				39FF25E616DFA28A0062C3DC /* Supporting Files */,
+			);
+			path = iSENSE_API;
+			sourceTree = "<group>";
+		};
+		39FF25E616DFA28A0062C3DC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				39FF25E716DFA28A0062C3DC /* iSENSE_API-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		39FF261016DFA86B0062C3DC /* api_headers */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261116DFA86B0062C3DC /* Experiment.h */,
+				39FF261216DFA86B0062C3DC /* ExperimentField.h */,
+				39FF261316DFA86B0062C3DC /* Image.h */,
+				39FF261416DFA86B0062C3DC /* iSENSE.h */,
+				39FF261516DFA86B0062C3DC /* Item.h */,
+				39FF261616DFA86B0062C3DC /* Person.h */,
+				39FF261716DFA86B0062C3DC /* Session.h */,
+				39FF261816DFA86B0062C3DC /* SessionData.h */,
+			);
+			name = api_headers;
+			path = headers;
+			sourceTree = "<group>";
+		};
+		39FF261916DFA8760062C3DC /* src_api */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261A16DFA8760062C3DC /* iSENSE.m */,
+				39FF261B16DFA8760062C3DC /* Objects */,
+			);
+			name = src_api;
+			path = src;
+			sourceTree = "<group>";
+		};
+		39FF261B16DFA8760062C3DC /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				39FF261C16DFA8760062C3DC /* Experiment.m */,
+				39FF261D16DFA8760062C3DC /* ExperimentField.m */,
+				39FF261E16DFA8760062C3DC /* Image.m */,
+				39FF261F16DFA8760062C3DC /* Item.m */,
+				39FF262016DFA8760062C3DC /* Person.m */,
+				39FF262116DFA8760062C3DC /* Session.m */,
+				39FF262216DFA8760062C3DC /* SessionData.m */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
+		B7EEB31A1779B73400EADF1B /* layouts */ = {
+			isa = PBXGroup;
+			children = (
+				B7EEB31B1779B74F00EADF1B /* layout_iphone */,
+				B7EEB31C1779B75B00EADF1B /* layout_ipad */,
+			);
+			name = layouts;
+			sourceTree = "<group>";
+		};
+		B7EEB31B1779B74F00EADF1B /* layout_iphone */ = {
+			isa = PBXGroup;
+			children = (
+				B7EEB31D1779B77700EADF1B /* queue_layout~iphone.xib */,
+				B7EEB31E1779B7A700EADF1B /* queue_layout-landscape~iphone.xib */,
+			);
+			name = layout_iphone;
+			sourceTree = "<group>";
+		};
+		B7EEB31C1779B75B00EADF1B /* layout_ipad */ = {
+			isa = PBXGroup;
+			children = (
+				B7EEB31F1779B7C200EADF1B /* queue_layout~ipad.xib */,
+				B7EEB3201779B7D200EADF1B /* queue_layout-landscape~ipad.xib */,
+			);
+			name = layout_ipad;
+			sourceTree = "<group>";
+		};
+		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
+			isa = PBXGroup;
+			children = (
+				B7034E491781F6EA00D6F0BA /* SensorEnums.h */,
+				B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */,
+				B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */,
+			);
+			name = sensor_compatibility;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		39A1CC2616DFB47000B1979F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */,
+				39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */,
+				39A1CC2A16DFB48700B1979F /* Image.h in Headers */,
+				39A1CC2C16DFB48700B1979F /* Item.h in Headers */,
+				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
+				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
+				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
+				3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */,
+				3921700D176F7ACA0070DFCC /* DataSet.h in Headers */,
+				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
+				39B63D891778C4950024EB75 /* Experiment.h in Headers */,
+				B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */,
+				39A529BC177B68B6007A4052 /* QueueUploaderView.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		39216FDC176F5C790070DFCC /* iSENSE_API_Bundle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39216FE7176F5C790070DFCC /* Build configuration list for PBXNativeTarget "iSENSE_API_Bundle" */;
+			buildPhases = (
+				39216FD9176F5C790070DFCC /* Sources */,
+				39216FDA176F5C790070DFCC /* Frameworks */,
+				39216FDB176F5C790070DFCC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iSENSE_API_Bundle;
+			productName = iSENSE_API_Bundle;
+			productReference = 39216FDD176F5C790070DFCC /* iSENSE_API_Bundle.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		39FF25DF16DFA28A0062C3DC /* iSENSE_API */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39FF25EE16DFA28A0062C3DC /* Build configuration list for PBXNativeTarget "iSENSE_API" */;
+			buildPhases = (
+				39FF25DC16DFA28A0062C3DC /* Sources */,
+				39FF25DD16DFA28A0062C3DC /* Frameworks */,
+				39FF25DE16DFA28A0062C3DC /* Copy Files */,
+				39A1CC2616DFB47000B1979F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iSENSE_API;
+			productName = iSENSE_API;
+			productReference = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		39FF25D716DFA28A0062C3DC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Jeremy Poulin";
+			};
+			buildConfigurationList = 39FF25DA16DFA28A0062C3DC /* Build configuration list for PBXProject "iSENSE_API" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 39FF25D516DFA28A0062C3DC;
+			productRefGroup = 39FF25E116DFA28A0062C3DC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				39FF25DF16DFA28A0062C3DC /* iSENSE_API */,
+				39216FDC176F5C790070DFCC /* iSENSE_API_Bundle */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		39216FDB176F5C790070DFCC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		39216FD9176F5C790070DFCC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39FF25DC16DFA28A0062C3DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FF262316DFA8760062C3DC /* iSENSE.m in Sources */,
+				39FF262416DFA8760062C3DC /* Experiment.m in Sources */,
+				39FF262516DFA8760062C3DC /* ExperimentField.m in Sources */,
+				39FF262616DFA8760062C3DC /* Image.m in Sources */,
+				39FF262716DFA8760062C3DC /* Item.m in Sources */,
+				39FF262816DFA8760062C3DC /* Person.m in Sources */,
+				39FF262916DFA8760062C3DC /* Session.m in Sources */,
+				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
+				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
+				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
+				3981B4B217626FD90030ACE5 /* DataSet.m in Sources */,
+				3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */,
+				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
+				39A529BA177B67E1007A4052 /* QueueUploaderView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		39216FE3176F5C790070DFCC /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39216FE4176F5C790070DFCC /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		39216FE8176F5C790070DFCC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API_Bundle/iSENSE_API_Bundle-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "iSENSE_API_Bundle/iSENSE_API_Bundle-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		39216FE9176F5C790070DFCC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API_Bundle/iSENSE_API_Bundle-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "iSENSE_API_Bundle/iSENSE_API_Bundle-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		39FF25EC16DFA28A0062C3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		39FF25ED16DFA28A0062C3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		39FF25EF16DFA28A0062C3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		39FF25F016DFA28A0062C3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				DSTROOT = /tmp/iSENSE_API.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iSENSE_API/iSENSE_API-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		39216FE7176F5C790070DFCC /* Build configuration list for PBXNativeTarget "iSENSE_API_Bundle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39216FE8176F5C790070DFCC /* Debug */,
+				39216FE9176F5C790070DFCC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		39FF25DA16DFA28A0062C3DC /* Build configuration list for PBXProject "iSENSE_API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39FF25EC16DFA28A0062C3DC /* Debug */,
+				39FF25ED16DFA28A0062C3DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		39FF25EE16DFA28A0062C3DC /* Build configuration list for PBXNativeTarget "iSENSE_API" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39FF25EF16DFA28A0062C3DC /* Debug */,
+				39FF25F016DFA28A0062C3DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */,
+			);
+			currentVersion = 39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */;
+			name = DataSetModel.xcdatamodeld;
+			path = headers/DataSetModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 39FF25D716DFA28A0062C3DC /* Project object */;
+}
