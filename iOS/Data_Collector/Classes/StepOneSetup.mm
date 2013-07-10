@@ -9,10 +9,6 @@
 
 #import "StepOneSetup.h"
 
-//@interface StepOneSetup ()
-
-//@end
-
 @implementation StepOneSetup
 
 @synthesize sessionName, sampleInterval, testLength, expNumLabel, rememberMe, selectExp, selectLater, ok;
@@ -61,8 +57,31 @@
     [iapi toggleUseDev:YES];
     
     sessionName.delegate = self;
+    sessionName.tag = TAG_STEP1_SESSION_NAME;
+    
     sampleInterval.delegate = self;
+    sampleInterval.keyboardType = UIKeyboardTypeNumberPad;
+    sampleInterval.tag = TAG_STEP1_SAMPLE_INTERVAL;
+    UIToolbar* SITool = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 40)];
+    SITool.barStyle = UIBarStyleBlackTranslucent;
+    SITool.items = [NSArray arrayWithObjects:
+                           [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                           [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditingSampleInterval)],
+                           nil];
+    [SITool sizeToFit];
+    sampleInterval.inputAccessoryView = SITool;
+    
     testLength.delegate = self;
+    testLength.keyboardType = UIKeyboardTypeNumberPad;
+    testLength.tag = TAG_STEP1_TEST_LENGTH;
+    UIToolbar* TLTool = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 40)];
+    TLTool.barStyle = UIBarStyleBlackTranslucent;
+    TLTool.items = [NSArray arrayWithObjects:
+                    [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                    [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditingTestLength)],
+                    nil];
+    [TLTool sizeToFit];
+    testLength.inputAccessoryView = TLTool;
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
@@ -166,7 +185,7 @@
     
     if (!selectLater.on) {
         NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]];
-        // TODO - fields?
+        
         if (eid == NULL || [eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
             if (ready == true)
                 [self.view makeWaffle:@"Please select an experiment"
@@ -321,7 +340,6 @@
     
 }
 
-
 - (void) dealloc {
  
     [sessionName release];
@@ -336,12 +354,12 @@
     [super dealloc];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+- (BOOL) textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
     return YES;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void) viewDidAppear:(BOOL)animated {
     
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
@@ -357,6 +375,59 @@
         [self.navigationController pushViewController:ssView animated:YES];
         [ssView release];
     }
+}
+
+- (BOOL) containsAcceptedCharacters:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) containsAcceptedDigits:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_digits"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    
+    switch (textField.tag) {
+            
+        case TAG_STEP1_SESSION_NAME:
+            if (![self containsAcceptedCharacters:string])
+                return NO;
+            
+            return (newLength > 52) ? NO : YES;
+            
+        case TAG_STEP1_SAMPLE_INTERVAL:
+            if (![self containsAcceptedDigits:string])
+                return NO;
+            
+            return (newLength > 15) ? NO : YES;
+            
+        case TAG_STEP1_TEST_LENGTH:
+            if (![self containsAcceptedDigits:string])
+                return NO;
+
+            return (newLength > 10) ? NO : YES;
+            
+        default:
+            return YES;
+    }
+}
+
+- (void) doneEditingSampleInterval {
+    [sampleInterval resignFirstResponder];
+}
+
+- (void) doneEditingTestLength {
+    [testLength resignFirstResponder];
 }
 
 @end
