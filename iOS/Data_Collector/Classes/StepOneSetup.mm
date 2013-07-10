@@ -255,6 +255,9 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNumInteger;
@@ -274,6 +277,8 @@
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            
+            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
             
             // launch the sensor selection dialog
             SensorSelection *ssView = [[SensorSelection alloc] init];
@@ -342,6 +347,9 @@
     
     if (displaySensorSelectFromBrowse) {
         displaySensorSelectFromBrowse = false;
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
         
         // launch the sensor selection dialog
         SensorSelection *ssView = [[SensorSelection alloc] init];
