@@ -72,6 +72,15 @@
             android:textColor="#A8CFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+         <TextView
+            android:id="@+id/loginStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/logged_in_as"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <ImageView
@@ -86,5 +95,6 @@
         android:paddingTop="1dp"
         android:scaleType="fitCenter"
         android:src="@drawable/logo_land" />
+   
 
 </RelativeLayout>

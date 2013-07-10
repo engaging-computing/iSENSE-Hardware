@@ -17,14 +17,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/nameLabel"
-        android:background="@android:drawable/editbox_background"
         android:gravity="left"
         android:inputType="textEmailAddress"
         android:maxLength="12"
-        android:paddingLeft="6dip" >
-
-        <requestFocus />
-    </EditText>
+        android:paddingLeft="6dip"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/initialLabel"
@@ -44,28 +41,32 @@
         android:gravity="center"
         android:orientation="horizontal" >
 
+        
+       
         <Button
             android:id="@+id/OK"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/OK" />
+            android:text="@string/OK" 
+            style="?android:attr/buttonBarButtonStyle"
+            />
     </LinearLayout>
 
     <EditText
         android:id="@+id/initialInput"
         android:layout_width="40sp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/initialLabel"
-        android:layout_alignBottom="@+id/initialLabel"
-        android:layout_toRightOf="@+id/nameLabel"
-        android:background="@android:drawable/editbox_background"
+        android:layout_alignLeft="@+id/nameInput"
+        android:layout_below="@+id/nameInput"
         android:ems="10"
         android:gravity="left"
         android:inputType="text"
         android:maxLength="1"
         android:maxWidth="40sp"
         android:paddingLeft="6dip"
-        android:singleLine="true" >
+        android:singleLine="true"
+        android:textColor="@android:color/black" >
+
     </EditText>
 
 </RelativeLayout>
