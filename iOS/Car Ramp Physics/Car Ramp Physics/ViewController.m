@@ -16,13 +16,18 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, navBar;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [start addGestureRecognizer:longPress];
+    
+    recordLength = 10;
+    countdown = 10;
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -39,13 +44,108 @@
 }
 
 - (IBAction)showMenu:(id)sender {
-    UIActionSheet *menu = [[UIActionSheet alloc] initWithTitle:@"Menu" delegate:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Upload",@"Record Settings", @"Record Length", @"Change Name", @"Experiment Code", @"Login", "@About", @"Reset", nil];
-    [menu showInView:self.view];
+    
+    
+    RNGridMenu *menu;
+    
+    UIImage *upload = [UIImage imageNamed:@"upload2"];
+    UIImage *settings = [UIImage imageNamed:@"settings"];
+    UIImage *code = [UIImage imageNamed:@"barcode"];
+    UIImage *login = [UIImage imageNamed:@"users"];
+    UIImage *about = [UIImage imageNamed:@"info"];
+    UIImage *reset = [UIImage imageNamed:@"reset"];
+    
+    void (^uploadBlock)() = ^() {
+        NSLog(@"Upload button pressed");
+    };
+    void (^settingsBlock)() = ^() {
+        NSLog(@"Record Settings button pressed");
+        UIActionSheet *settings_menu = [[UIActionSheet alloc] initWithTitle:@"Settings" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Variables", @"Length", @"Name", nil];
+        [settings_menu showInView:self.view];
+        
+    };
+    void (^codeBlock)() = ^() {
+        NSLog(@"Experiment button pressed");
+    };
+    void (^loginBlock)() = ^() {
+        NSLog(@"Login button pressed");
+    };
+    void (^aboutBlock)() = ^() {
+        NSLog(@"About button pressed");
+        
+        AboutViewController *about;
+        // Override point for customization after application launch.
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPhone" bundle:nil];
+        } else {
+            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPad" bundle:nil];
+        }
+
+        UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"About"];
+        
+        [self.navBar pushNavigationItem:item animated:YES];
+        
+    };
+    void (^resetBlock)() = ^() {
+        NSLog(@"Reset button pressed");
+    };
+    
+    RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
+    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Settings" action:settingsBlock];
+    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Experiment" action:codeBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
+    RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
+    RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
+    
+    items = [[NSArray alloc] initWithObjects:uploadItem, recordSettingsItem, codeItem, loginItem, aboutItem, resetItem, nil];
+    
+    menu = [[RNGridMenu alloc] initWithItems:items];
+    
+    menu.delegate = self;
+    
+    [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
+    
 }
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"Clicked Button: %d", buttonIndex );
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == 0){
+        //Set x, y,z,mag
+    } else if (buttonIndex == 1) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        [alert show];
+    } else if (buttonIndex == 2){
+        //change name
+    }
+    
+    
+    
 }
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if([title isEqualToString:@"Done"])
+    {
+        UITextField *length = [alertView textFieldAtIndex:0];
+        NSCharacterSet *_NumericOnly = [NSCharacterSet decimalDigitCharacterSet];
+        NSCharacterSet *myStringSet = [NSCharacterSet characterSetWithCharactersInString:length.text];
+        
+        if ([_NumericOnly isSupersetOfSet: myStringSet])
+        {
+            recordLength = countdown = [length.text intValue];
+            NSLog(@"Length is %d", recordLength);
+            
+        } else {
+            [self.view makeWaffle:@"Invalid Length"
+                         duration:WAFFLE_LENGTH_SHORT
+                         position:WAFFLE_BOTTOM
+                            image:WAFFLE_RED_X];
+        }
+    }
+}
+
 
 
 @end
