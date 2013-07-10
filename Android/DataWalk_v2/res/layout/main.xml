@@ -31,7 +31,8 @@
         android:text="@string/startPrompt"
         android:textColor="#3E94D1"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+         />
 
     <LinearLayout
         android:id="@+id/locationBlock"
@@ -83,6 +84,17 @@
             android:textColor="#A8CFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/loginStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/logged_in_as"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    
     </LinearLayout>
 
 </RelativeLayout>
