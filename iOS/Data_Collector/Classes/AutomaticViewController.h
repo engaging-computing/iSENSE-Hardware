@@ -42,7 +42,8 @@
 @property (nonatomic, retain) iSENSE *isenseAPI;
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) BOOL backFromSetup;
-@property (nonatomic) int elapsedTime;
+@property (nonatomic) int  elapsedTime;
+@property (nonatomic) int  recordingRate;
 
 @property (nonatomic) float sampleInterval;
 @property (nonatomic, copy) NSString *sessionName;
