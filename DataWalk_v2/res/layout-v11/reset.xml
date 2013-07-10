@@ -11,14 +11,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
-            android:text="@string/Reset" />
+            android:text="@string/Reset" 
+            style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
             android:id="@+id/noreset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
-            android:text="@string/Cancel" />
+            android:text="@string/Cancel"
+            style="?android:attr/buttonBarButtonStyle" />
  
 
 </LinearLayout>
