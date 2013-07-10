@@ -33,7 +33,7 @@ public class Prefs extends PreferenceActivity implements
 					R.string.Upload_Summary_Auto));
 		} else {
 			uploadModeBox.setSummary(getResources().getString(
-					R.string.Upload_Summary_Save));
+					R.string.Upload_Summary_Auto));
 		}
 		exp_num = getPreferenceScreen().findPreference("Exp Num");
 		exp_num.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -89,7 +89,7 @@ public class Prefs extends PreferenceActivity implements
 						R.string.Upload_Summary_Auto));
 			} else {
 				uploadModeBox.setSummary(getResources().getString(
-						R.string.Upload_Summary_Save));
+						R.string.Upload_Summary_Auto));
 			}
 		}
 	}

@@ -13,5 +13,12 @@
         <item name="5">5000</item>
         <item name="10">10000</item>
         <item name="20">20000</item>
+        <item name="25">20000</item>
+        <item name="30">20000</item>
+        <item name="40">20000</item>
+        <item name="45">20000</item>
+        <item name="50">20000</item>
+        <item name="60">20000</item>
+        
     </string-array>
 </resources>
