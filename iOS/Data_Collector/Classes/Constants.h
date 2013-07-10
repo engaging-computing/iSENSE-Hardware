@@ -100,4 +100,9 @@
 #define TEST_LENGTH     600
 #define MAX_DATA_POINTS (1000/S_INTERVAL) * TEST_LENGTH
 
+// step one setup text field tags
+#define TAG_STEP1_SESSION_NAME      1000
+#define TAG_STEP1_SAMPLE_INTERVAL   1001
+#define TAG_STEP1_TEST_LENGTH       1002
+
 #endif
