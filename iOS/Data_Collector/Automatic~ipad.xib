@@ -166,7 +166,7 @@
 							<string key="NSResourceName">rsense_logo.png</string>
 						</object>
 					</object>
-					<object class="IBUILabel" id="140179266">
+					<object class="IBUILabel" id="208359192">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 174}, {728, 250}}</string>
@@ -187,11 +187,11 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="172469592">
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="829603831">
 							<int key="type">1</int>
 							<double key="pointSize">22</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="939894311">
+						<object class="NSFont" key="IBUIFont" id="723761725">
 							<string key="NSName">Helvetica</string>
 							<double key="NSSize">22</double>
 							<int key="NSfFlags">16</int>
@@ -199,7 +199,7 @@
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">728</double>
 					</object>
-					<object class="IBUILabel" id="837607541">
+					<object class="IBUILabel" id="844535953">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 690}, {728, 250}}</string>
@@ -220,8 +220,8 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
-						<reference key="IBUIFontDescription" ref="172469592"/>
-						<reference key="IBUIFont" ref="939894311"/>
+						<reference key="IBUIFontDescription" ref="829603831"/>
+						<reference key="IBUIFont" ref="723761725"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">728</double>
 					</object>
@@ -305,6 +305,22 @@
 					<int key="connectionID">62</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">step1Label</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="208359192"/>
+					</object>
+					<int key="connectionID">66</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">step3Label</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="844535953"/>
+					</object>
+					<int key="connectionID">67</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">setup:</string>
 						<reference key="source" ref="987364024"/>
@@ -358,8 +374,8 @@
 							<reference ref="987364024"/>
 							<reference ref="217839491"/>
 							<reference ref="942973816"/>
-							<reference ref="140179266"/>
-							<reference ref="837607541"/>
+							<reference ref="208359192"/>
+							<reference ref="844535953"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -411,12 +427,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">64</int>
-						<reference key="object" ref="140179266"/>
+						<reference key="object" ref="208359192"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">65</int>
-						<reference key="object" ref="837607541"/>
+						<reference key="object" ref="844535953"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -440,7 +456,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">65</int>
+			<int key="maxID">67</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

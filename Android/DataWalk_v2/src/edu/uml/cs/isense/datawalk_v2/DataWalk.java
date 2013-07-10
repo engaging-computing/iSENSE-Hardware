@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -55,7 +56,9 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener {
-
+	public static TextView loggedInAs;
+	private static String userName = "Sor";
+	private static String password = "Sor";
 	public static Boolean running = false;
 
 	private Button startStop;
@@ -93,7 +96,8 @@ public class DataWalk extends Activity implements LocationListener,
 	private static final int LOGIN_ACTIVITY_REQUESTED = 100;
 	private static final int QUEUE_UPLOAD_REQUESTED = 101;
 	private static final int TIMER_LOOP = 1000;
-	private static final int INTERVAL = 10000;
+	//TODO
+	private static int INTERVAL = 10000;
 	private int mInterval = INTERVAL;
 
 	private int elapsedMillis = 0;
@@ -144,7 +148,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private static String sessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=406";
 
 	private static int waitingCounter = 0;
-
+	public static final int RESET_REQUESTED = 6459;
 	public static JSONArray dataSet;
 	public static JSONArray uploadSet;
 
@@ -184,6 +188,9 @@ public class DataWalk extends Activity implements LocationListener,
 		startStop = (Button) findViewById(R.id.startStop);
 		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
 		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
+		loggedInAs = (TextView) findViewById(R.id.loginStatus);
+		
+		
 
 		latLong = (TextView) findViewById(R.id.myLocation);
 
@@ -375,8 +382,9 @@ public class DataWalk extends Activity implements LocationListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		attemptLogin();
+		
 	}
-
+	
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -428,7 +436,7 @@ public class DataWalk extends Activity implements LocationListener,
 		uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
 		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate", "10000"));
 		
-		
+		Log.d("tag", "this is name" + firstName + lastInitial);
 		
 		if (uq!=null)
 			uq.buildQueueFromFile();
@@ -444,7 +452,13 @@ public class DataWalk extends Activity implements LocationListener,
 
 		if (mTimer == null)
 			waitingForGPS();
-
+		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+				+" "+ userName +","+ " Name: " + firstName + " " + lastInitial);
+		//TODO POINTS UPLOADED
+		dataPointCount =0;
+		pointsUploadedBox.setText("Points Uploaded: " + dataPointCount);
+		i=0;
+		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
 	}
 
 	@Override
@@ -487,7 +501,7 @@ public class DataWalk extends Activity implements LocationListener,
 			gpsWorking = false;
 		}
 	}
-
+	
 	@Override
 	public void onProviderDisabled(String provider) {
 	}
@@ -590,7 +604,7 @@ public class DataWalk extends Activity implements LocationListener,
 			  
 			
 		}else{
-			w.make("There is no data to upload.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
+			w.make("No Data to Upload.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
 		}
 	}
 	/*private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
@@ -634,10 +648,10 @@ public class DataWalk extends Activity implements LocationListener,
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			if (rapi.isConnectedToInternet())
+			if (rapi.isConnectedToInternet()){
 				Toast.makeText(DataWalk.this, "Connectivity found!",
 						Toast.LENGTH_SHORT).show();
-			else {
+			}else {
 				Intent i = new Intent(DataWalk.this, NoConnect.class);
 				startActivityForResult(i, DIALOG_NO_CONNECT);
 
@@ -743,6 +757,29 @@ public class DataWalk extends Activity implements LocationListener,
 
 		}else if (requestCode == QUEUE_UPLOAD_REQUESTED){
 			uq.buildQueueFromFile();
+		}else if (requestCode == RESET_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
+						0);
+				boolean success = rapi.login("sor", "sor");
+
+				if (success) {
+				loggedInAs.setText(getResources().getString(R.string.logged_in_as) + "sor"+ " Name: "+ firstName + " " + lastInitial);
+				} else {
+					if (rapi.isConnectedToInternet())
+						w.make("Login Error", Waffle.LENGTH_SHORT,
+								Waffle.IMAGE_X);
+				}
+
+				SharedPreferences eprefs = getSharedPreferences("EID", 0);
+				SharedPreferences.Editor editor = eprefs.edit();
+				experimentId = defaultExp;
+				editor.putString("experiment_id", experimentId);
+				editor.commit();
+				INTERVAL = 10000;
+				Log.d("Tag", "re-setting Settings");
+
+			}
 		}
 
 	}// Always b4 This guy
@@ -788,9 +825,8 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 	}
 	public void resetToDefaults() {
-		// TODO 
-		//startActivityForResult(new Intent(this, Reset.class),
-				//RESET_REQUESTED);
+		
+		startActivityForResult(new Intent(this, Reset.class),RESET_REQUESTED);
 	}
 
 	// Rajia's created Menu...
@@ -821,4 +857,5 @@ public class DataWalk extends Activity implements LocationListener,
 
 	
 
+	
 }

@@ -20,8 +20,10 @@
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
-    }
-    self.window.rootViewController = self.viewController;
+    }    
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
+     self.window.rootViewController = navigation;
     [self.window makeKeyAndVisible];
     return YES;
 }
