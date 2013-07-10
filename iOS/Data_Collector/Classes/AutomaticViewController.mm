@@ -12,7 +12,7 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
-sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup;
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -42,6 +42,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self viewDidLoad];
         }
     }
+
 }
 
 
@@ -229,7 +230,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     }
     
     // DataSaver from Data_CollectorAppDelegate
-    if (dataSaver == nil ) {
+    if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
     }
     
@@ -273,6 +274,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [step3Label setAlpha:0.0];
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
+    
+    isRecording = FALSE;
 }
 
 // Is called every time AutomaticView is about to appear
@@ -335,17 +338,28 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
-    return YES;
+    return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    return YES;
+    return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
+    if (isRecording) {
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
+            return UIInterfaceOrientationMaskPortrait;
+        } else if (self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+            return UIInterfaceOrientationMaskPortraitUpsideDown;
+        } else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+            return UIInterfaceOrientationMaskLandscapeLeft;
+        } else {
+            return UIInterfaceOrientationMaskLandscapeRight;
+        }
+    } else
+        return UIInterfaceOrientationMaskAll;
 }
 
 // Release all the extras
@@ -418,7 +432,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self setNonRecordingLayout];
             
             // Stop Recording
-            isRecording = FALSE;
             [self stopRecording:motionManager];
         }
         
@@ -436,7 +449,15 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     // Get the recording rate
     float rate = .125;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
+    sampleInterval = [sampleIntervalString floatValue];
     if (sampleInterval > 0) rate = sampleInterval / 1000;
+    
+    elapsedTime = 0;
+    recordingRate = rate * 1000;
+    
+    NSLog(@"rate: %d", recordingRate);
     
     // Set the accelerometer update interval to reccomended sample interval, and start updates
     motionManager.accelerometerUpdateInterval = rate;
@@ -449,74 +470,121 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // New JSON array to hold data
     dataToBeJSONed = [[NSMutableArray alloc] init];
     
-    // Start the new timer
+    // Start the new timers TODO - put them on dispatch?
     recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
+    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
 }
+
+- (void) updateElapsedTime {
+    
+    if (!isRecording) {
+        [timer invalidate];
+        [timer release];
+    }
+    
+    dispatch_queue_t queue = dispatch_queue_create("automatic_update_elapsed_time", NULL);
+    dispatch_async(queue, ^{
+        elapsedTime += 1;
+        
+        int minutes = elapsedTime / 60;
+        int seconds = elapsedTime % 60;
+        
+        NSString *secondsStr;
+        if (seconds < 10)
+            secondsStr = [NSString stringWithFormat:@"0%d", seconds];
+        else
+            secondsStr = [NSString stringWithFormat:@"%d", seconds];
+        
+        int dataPoints = (1000 / recordingRate) * elapsedTime;
+        
+        NSLog(@"points: %d", dataPoints);
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+			[step3Label setText:[NSString stringWithFormat:@"Time Elapsed: %d:%@\nData Point Count: %d", minutes, secondsStr, dataPoints]];
+        });
+    });
+    
+}
+
 
 // Fill dataToBeJSONed with a row of data
 - (void) buildRowOfData {
-    Fields *fieldsRow = [[Fields alloc] autorelease];
     
-    // Fill a new row of data starting with time
-    double time = [[NSDate date] timeIntervalSince1970];
-    if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
-        fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
-    
-    
-    // acceleration in meters per second squared
-    if ([dfm enabledFieldAtIndex:fACCEL_X])
-        fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
-    NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
-    if ([dfm enabledFieldAtIndex:fACCEL_Y])
-        fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
-    if ([dfm enabledFieldAtIndex:fACCEL_Z])
-        fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
-    if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
-        fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
-                                  sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
-                                       + pow(fieldsRow.accel_y.doubleValue, 2)
-                                       + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
-    
-    // latitude and longitude coordinates
-    CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
-    double latitude  = lc2d.latitude;
-    double longitude = lc2d.longitude;
-    if ([dfm enabledFieldAtIndex:fLATITUDE])
-        fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
-    if ([dfm enabledFieldAtIndex:fLONGITUDE])
-        fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
-    
-    // magnetic field in microTesla
-    if ([dfm enabledFieldAtIndex:fMAG_X])
-        fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
-    if ([dfm enabledFieldAtIndex:fMAG_Y])
-        fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
-    if ([dfm enabledFieldAtIndex:fMAG_Z])
-        fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
-    if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
-        fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
-                                sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
-                                     + pow(fieldsRow.mag_y.doubleValue, 2)
-                                     + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
-    
-    // rotation rate in radians per second
-    if (motionManager.gyroAvailable) {
-        if ([dfm enabledFieldAtIndex:fGYRO_X])
-            fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
-        if ([dfm enabledFieldAtIndex:fGYRO_Y])
-            fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
-        if ([dfm enabledFieldAtIndex:fGYRO_Z])
-            fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
+    if (!isRecording) {
+        [recordDataTimer invalidate];
+        [recordDataTimer release];
     }
     
-    // Update parent JSON object
-    [dfm orderDataFromFields:fieldsRow];
-    
-    if (dfm.data != nil && dataToBeJSONed != nil)
-        [dataToBeJSONed addObject:dfm.data];
-    else {
-        NSLog(@"something is wrong");
-    }
+    dispatch_queue_t queue = dispatch_queue_create("automatic_record_data", NULL);
+    dispatch_async(queue, ^{
+        
+        Fields *fieldsRow = [[Fields alloc] autorelease];
+        
+        // Fill a new row of data starting with time
+        double time = [[NSDate date] timeIntervalSince1970];
+        if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
+            fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
+        
+        
+        // acceleration in meters per second squared
+        if ([dfm enabledFieldAtIndex:fACCEL_X])
+            fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
+        NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
+        if ([dfm enabledFieldAtIndex:fACCEL_Y])
+            fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
+        if ([dfm enabledFieldAtIndex:fACCEL_Z])
+            fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
+        if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
+            fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
+                                      sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
+                                           + pow(fieldsRow.accel_y.doubleValue, 2)
+                                           + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
+        
+        // latitude and longitude coordinates
+        CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+        double latitude  = lc2d.latitude;
+        double longitude = lc2d.longitude;
+        if ([dfm enabledFieldAtIndex:fLATITUDE])
+            fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
+        if ([dfm enabledFieldAtIndex:fLONGITUDE])
+            fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
+        
+        // magnetic field in microTesla
+        if ([dfm enabledFieldAtIndex:fMAG_X])
+            fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
+        if ([dfm enabledFieldAtIndex:fMAG_Y])
+            fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
+        if ([dfm enabledFieldAtIndex:fMAG_Z])
+            fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
+        if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
+            fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
+                                    sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
+                                         + pow(fieldsRow.mag_y.doubleValue, 2)
+                                         + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
+        
+        // rotation rate in radians per second
+        if (motionManager.gyroAvailable) {
+            if ([dfm enabledFieldAtIndex:fGYRO_X])
+                fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
+            if ([dfm enabledFieldAtIndex:fGYRO_Y])
+                fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
+            if ([dfm enabledFieldAtIndex:fGYRO_Z])
+                fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
+        }
+        
+        // update parent JSON object
+        [dfm orderDataFromFields:fieldsRow];
+        
+        if (dfm.data != nil && dataToBeJSONed != nil)
+            [dataToBeJSONed addObject:dfm.data];
+        else {
+            NSLog(@"something is wrong");
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+			// main UI calls to be made here if needed
+        });
+    });
     
 }
 
@@ -616,6 +684,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         }
         
     } else if (actionSheet.tag == DESCRIPTION_AUTOMATIC) {
+        
+        isRecording = FALSE;
         
         if (buttonIndex != OPTION_CANCELED) {
             
@@ -888,7 +958,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void) setRecordingLayout {
     
     [step2 setTitle:@"STOP\n(Press and Hold)" forState:UIControlStateNormal];
-    [step2 setTitleColor:[HexColor colorWithHexString:@"5CB54A"] forState:UIControlStateNormal];
+    [step2 setTitleColor:[HexColor colorWithHexString:@"59B048"] forState:UIControlStateNormal];
 
     [step1 setAlpha:0.0];
     [step3 setAlpha:0.0];
@@ -900,6 +970,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"004400"]];
     [mainLogo setImage:[UIImage imageNamed:@"rsense_logo_recording"]];
+    
+    [step3Label setText:@"Time Elapsed: 0:00\nData Point Count: 0"];
     
 }
 

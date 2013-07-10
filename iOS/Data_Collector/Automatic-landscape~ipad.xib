@@ -165,7 +165,7 @@
 						<reference key="IBUIFontDescription" ref="346600245"/>
 						<reference key="IBUIFont" ref="967555359"/>
 					</object>
-					<object class="IBUILabel" id="234573166">
+					<object class="IBUILabel" id="970540419">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 158}, {984, 170}}</string>
@@ -186,11 +186,11 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="1006338427">
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="175889005">
 							<int key="type">1</int>
 							<double key="pointSize">22</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="754333034">
+						<object class="NSFont" key="IBUIFont" id="208726209">
 							<string key="NSName">Helvetica</string>
 							<double key="NSSize">22</double>
 							<int key="NSfFlags">16</int>
@@ -198,7 +198,7 @@
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">984</double>
 					</object>
-					<object class="IBUILabel" id="242631469">
+					<object class="IBUILabel" id="929310025">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 514}, {984, 170}}</string>
@@ -219,8 +219,8 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
-						<reference key="IBUIFontDescription" ref="1006338427"/>
-						<reference key="IBUIFont" ref="754333034"/>
+						<reference key="IBUIFontDescription" ref="175889005"/>
+						<reference key="IBUIFont" ref="208726209"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">984</double>
 					</object>
@@ -307,6 +307,22 @@
 					<int key="connectionID">95</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">step1Label</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="970540419"/>
+					</object>
+					<int key="connectionID">99</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">step3Label</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="929310025"/>
+					</object>
+					<int key="connectionID">100</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">setup:</string>
 						<reference key="source" ref="92680027"/>
@@ -360,8 +376,8 @@
 							<reference ref="948345008"/>
 							<reference ref="783856159"/>
 							<reference ref="92680027"/>
-							<reference ref="234573166"/>
-							<reference ref="242631469"/>
+							<reference ref="970540419"/>
+							<reference ref="929310025"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -413,12 +429,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">97</int>
-						<reference key="object" ref="234573166"/>
+						<reference key="object" ref="970540419"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">98</int>
-						<reference key="object" ref="242631469"/>
+						<reference key="object" ref="929310025"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -443,7 +459,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">98</int>
+			<int key="maxID">100</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
