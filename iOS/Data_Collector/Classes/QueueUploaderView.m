@@ -10,7 +10,7 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext;
 
 // Initialize the view where the 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -24,6 +24,14 @@
 // Upload button control
 -(IBAction)upload:(id)sender {
     [dataSaver upload];
+    
+    // Commit the changes
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"%@", error);
+    }
+
 }
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -64,7 +72,12 @@
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
-            
+    
+    // Managed Object Context for Data_CollectorAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
     currentIndex = 0;
 
 }
@@ -106,21 +119,35 @@
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
-        UIViewController *tmp = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
-        cell = (QueueCell *) tmp.view;
-        
-        [tmp release];
+        UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
+        cell = (QueueCell *) tmpVC.view;
+        [tmpVC release];
     }
     
-    DataSet *tmp = [[dataSaver removeDataSet:NO_KEY] retain];
-    [cell setupCellName:tmp.name andDataType:@"Data" andDescription:tmp.dataDescription andUploadable:true];
-    [dataSaver addDataSet:tmp];
+    NSArray *keys = [dataSaver.dataQueue allKeys];  
+    DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[currentIndex]] retain];
+    
+    NSString *dataType;
+    if (tmp.picturePaths == nil) {
+        if (tmp.data == nil) {
+            dataType = @"Error";
+        } else {
+            dataType = @"Data";
+        }
+    } else {
+        if (tmp.data == nil) {
+            dataType = @"Picture";
+        } else {
+            dataType = @"Data";
+        }
+    }
+    
+    [cell setupCellName:tmp.name andDataType:dataType andDescription:tmp.dataDescription andUploadable:currentIndex];
     [tmp release];
+    
+    currentIndex++;
     
     return cell;
 }
-
-
-
 
 @end

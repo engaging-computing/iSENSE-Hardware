@@ -62,12 +62,12 @@
             
             // create a session
             if (currentDS.sid.intValue == -1) {
-                int sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.description Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:[NSNumber numberWithInt:currentDS.eid]];
-                if (sessionID == -1) {
+                NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
+                if (sessionID.intValue == -1) {
                     [self addDataSet:currentDS];
                     continue;
                 } else {
-                    currentDS.sid = [NSNumber numberWithInt:sessionID];
+                    currentDS.sid = sessionID;
                 }
             }
             
@@ -81,7 +81,7 @@
                     return false;
                 }
                 
-                if (![isenseAPI putSessionData:dataJSON forSession:[NSNumber numberWithInt:currentDS.sid] inExperiment:[NSNumber numberWithInt:currentDS.eid]]) {
+                if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
                     [self addDataSet:currentDS];
                     continue;
                 }
@@ -97,7 +97,7 @@
                 for (int i = 0; i < pictures.count; i++) {
                     
                     // Track the images that fail to upload
-                    if (![isenseAPI upload:pictures[i] toExperiment:[NSNumber numberWithInt:currentDS.eid] forSession:[NSNumber numberWithInt:currentDS.sid] withName:currentDS.name andDescription:currentDS.description]) {
+                    if (![isenseAPI upload:pictures[i] toExperiment:currentDS.eid forSession:currentDS.sid withName:currentDS.name andDescription:currentDS.dataDescription]) {
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];
                         continue;

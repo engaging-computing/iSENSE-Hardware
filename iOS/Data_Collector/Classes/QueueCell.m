@@ -10,7 +10,7 @@
 
 @implementation QueueCell
 
-@synthesize nameAndDate, dataType, description, uploadable;
+@synthesize nameAndDate, dataType, description;
 
 //- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 //    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -32,6 +32,8 @@
     self.dataType.text = type;
     self.description.text = desc;
     
+    [self setCheckedSwitch:upload];
+    
     return self;
 }
 
@@ -43,5 +45,20 @@
     return self;
 }
 
+
+-(void)setCheckedSwitch:(bool)checked {
+    NSLog(@"Called");
+    if (checked) {
+        self.accessoryType = UITableViewCellAccessoryCheckmark;
+        [self setSelected:true animated:TRUE];
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
+        [self setSelected:false animated:TRUE];
+    }
+}
+
+-(IBAction)setChecked:(UITapGestureRecognizer *)sender {
+    [self setCheckedSwitch:true];
+}
 
 @end

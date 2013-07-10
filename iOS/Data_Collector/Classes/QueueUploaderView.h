@@ -20,5 +20,6 @@
 @property (nonatomic, retain) DataSaver *dataSaver;
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @end

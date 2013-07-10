@@ -11,10 +11,11 @@
 @interface QueueCell : UITableViewCell
 
 - (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable;
+- (IBAction)setChecked:(UITapGestureRecognizer *)sender;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;
 @property (nonatomic, assign) IBOutlet UILabel *description;
-@property (nonatomic, assign) IBOutlet UISwitch *uploadable;
+@property (nonatomic, retain) IBOutlet UITapGestureRecognizer *onClickRecognizer;
 
 @end
