@@ -7,15 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/SensorEnums.h>
 
 @interface SensorCell : UITableViewCell
 
-- (SensorCell *) setupCellWith:(NSString *)name;
-- (void) swapLogoEnabled;
+- (SensorCell *) setupCellWithName:(NSString *)name compatability:(int)compat andEnabled:(bool)en;
 
 @property (nonatomic, retain) IBOutlet UILabel      *field;
 @property (nonatomic, retain) IBOutlet UILabel      *compatible;
 @property (nonatomic, retain) IBOutlet UIImageView  *image;
-@property (nonatomic) bool enabled;
 
 @end

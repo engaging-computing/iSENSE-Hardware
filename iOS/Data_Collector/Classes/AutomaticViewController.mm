@@ -223,8 +223,14 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
         managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // DataSaver from Data_CollectorAppDelegate
+    if (dataSaver == nil ) {
+        dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
     }
     
     // Loading message appears while seting up main view
@@ -242,7 +248,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
     dfm = [[DataFieldManager alloc] init];
-    dataSaver = [[DataSaver alloc] init];
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
     
     // Initialize buttons
@@ -253,8 +258,12 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // Enabled step 2
     if (backFromSetup) [self setEnabled:true forButton:step2];
     
-    // Handle the DataQueue
-    [self fetchDataSets];
+    // Enable upload depending on DataQueue
+    if (dataSaver.count > 0) {
+        [self setEnabled:true forButton:step3];
+    } else {
+        [self setEnabled:false forButton:step3];
+    }
     
     [self initLocations];
     [self resetAddressFields];
@@ -287,6 +296,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             
             sessionName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
             
+            expNum = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            
             // Set setup_complete key to false again
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
             
@@ -304,39 +315,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
-// Get the dataSets from the queue :D
-- (void) fetchDataSets {
-    
-    // Fetch the old DataSets
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-    if (dataSetEntity) {
-        [request setEntity:dataSetEntity];
-        
-        // Actually make the request
-        NSError *error = nil;
-        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        if (mutableFetchResults == nil) {
-            [self setEnabled:false forButton:step3];
-        } else {
-            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
-            if (mutableFetchResults.count > 0) {
-                [self setEnabled:true forButton:step3];
-            } else {
-                [self setEnabled:false forButton:step3];
-            }
-        }
-        
-        // fill dataSaver's DataSet Queue
-        for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
-        }
-        
-        // release the fetched objects
-        [mutableFetchResults release];
-        [request release];
-    }
-}
 
 - (void) displayMenu {
 	UIActionSheet *popupQuery = [[UIActionSheet alloc]
@@ -416,7 +394,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         if (!isRecording) {
             // Get Field Order
             [dfm getFieldOrderOfExperiment:expNum];
-            NSLog(@"%@", [dfm order]);
+            [self getEnabledFields];
             
             // Record Data
             isRecording = TRUE;
@@ -464,40 +442,54 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     // Fill a new row of data starting with time
     double time = [[NSDate date] timeIntervalSince1970];
-    fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
+    if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
+        fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
     
     
     // acceleration in meters per second squared
-    fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
+    if ([dfm enabledFieldAtIndex:fACCEL_X])
+        fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
     NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
-    fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
-    fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
-    fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
-                              sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
-                                   + pow(fieldsRow.accel_y.doubleValue, 2)
-                                   + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
+    if ([dfm enabledFieldAtIndex:fACCEL_Y])
+        fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
+    if ([dfm enabledFieldAtIndex:fACCEL_Z])
+        fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
+    if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
+        fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
+                                  sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
+                                       + pow(fieldsRow.accel_y.doubleValue, 2)
+                                       + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
     
     // latitude and longitude coordinates
     CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
     double latitude  = lc2d.latitude;
     double longitude = lc2d.longitude;
-    fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
-    fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
+    if ([dfm enabledFieldAtIndex:fLATITUDE])
+        fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
+    if ([dfm enabledFieldAtIndex:fLONGITUDE])
+        fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
     
     // magnetic field in microTesla
-    fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
-    fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
-    fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
-    fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
-                            sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
-                                 + pow(fieldsRow.mag_y.doubleValue, 2)
-                                 + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
+    if ([dfm enabledFieldAtIndex:fMAG_X])
+        fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
+    if ([dfm enabledFieldAtIndex:fMAG_Y])
+        fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
+    if ([dfm enabledFieldAtIndex:fMAG_Z])
+        fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
+    if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
+        fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
+                                sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
+                                     + pow(fieldsRow.mag_y.doubleValue, 2)
+                                     + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
     
     // rotation rate in radians per second
     if (motionManager.gyroAvailable) {
-        fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
-        fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
-        fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
+        if ([dfm enabledFieldAtIndex:fGYRO_X])
+            fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
+        if ([dfm enabledFieldAtIndex:fGYRO_Y])
+            fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
+        if ([dfm enabledFieldAtIndex:fGYRO_Z])
+            fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
     }
     
     // Update parent JSON object
@@ -535,6 +527,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
     if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
     if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
+    
+    // Disable step 2
+    step2.enabled = false;
+    step2.alpha = 0.5;
     
     // Back to recording mode
     //    startStopButton.image = [UIImage imageNamed:@"red_button.png"];
@@ -641,8 +637,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:nil];
-    [ds setSid:nil];
+    [ds setPicturePaths:[NSNull null]];
+    [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
     [ds setAddress:address];
@@ -733,6 +729,142 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         button.alpha = 1;
     } else {
         button.alpha = .5;
+    }
+}
+
+// Enabled fields check
+- (void) getEnabledFields {
+    
+    // if exp# = -1 then enable all, else enable some
+    if (expNum == -1) {
+        
+        for (int i = 0; i < [[dfm order] count]; i++) {
+            [dfm setEnabledField:true atIndex:i];
+        }
+        
+    } else {
+        
+        int i = 0;
+        
+        // get the sensorCompatability array first
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
+
+        for (NSString *s in [dfm order]) {
+            if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fACCEL_X];
+                    
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fACCEL_Y];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fACCEL_Z];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fACCEL_TOTAL];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fTIME_MILLIS];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fLATITUDE];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fLONGITUDE];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fMAG_X];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fMAG_Y];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fMAG_Z];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fMAG_TOTAL];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fANGLE_DEG];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fANGLE_RAD];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fTEMPERATURE_C];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fTEMPERATURE_F];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fTEMPERATURE_K];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fPRESSURE];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fALTITUDE];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fLUX];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fGYRO_X];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fGYRO_Y];
+                }
+            }
+            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
+                if ([selectedCells[i] integerValue] == 1) {
+                    [dfm setEnabledField:true atIndex:fGYRO_Z];
+                }
+            }
+            
+            ++i;
+        }
     }
 }
 

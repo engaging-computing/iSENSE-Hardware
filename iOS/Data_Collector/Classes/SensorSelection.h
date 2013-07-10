@@ -7,8 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <CoreMotion/CoreMotion.h>
+
+#import "DataFieldManager.h"
+#import <iSENSE_API/SensorCompatibility.h>
+#import <iSENSE_API/SensorEnums.h>
 
 @interface SensorSelection : UIViewController {
+ 
+    DataFieldManager *dfm;
+    NSMutableArray *fieldNames;
+    NSMutableArray *compatible;
+    NSMutableArray *selectedCells;
     
 }
 

@@ -48,7 +48,9 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {}
+    if (self) {
+        displaySensorSelectFromBrowse = false;
+    }
     return self;
 }
 
@@ -64,8 +66,10 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    // Indicate that we're not done setting up yet
+    // Indicate that we're not done setting up yet and that sensors haven't been selected
     [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
+    [prefs setBool:false forKey:@"sensor_done"];
+    sensorsSelected = false;
     
     NSString *defaultSesName = [prefs stringForKey:[StringGrabber grabString:@"key_step1_session_name"]];
     NSString *newSesName = ([defaultSesName length] == 0) ? @"" : defaultSesName;
@@ -251,6 +255,9 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNumInteger;
@@ -271,6 +278,13 @@
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
             
+            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            
+            // launch the sensor selection dialog
+            SensorSelection *ssView = [[SensorSelection alloc] init];
+            ssView.title = @"Sensor Selection";
+            [self.navigationController pushViewController:ssView animated:YES];
+            [ssView release];
         }
         
     } 
@@ -281,16 +295,32 @@
     
     // If true, then we're coming back from another ViewController
     if (self.isMovingToParentViewController == NO) {
-        NSLog(@"callback");
-        NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", expNumInteger];
-        [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *expNumString = [NSString stringWithFormat:@"%d", expNumInteger];
-        [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        bool backFromSensors = [prefs boolForKey:@"sensor_done"];
+        
+        if (backFromSensors) {
+            sensorsSelected = true;
+            
+            // Set the sensor_done key back to false again
+            [prefs setBool:false forKey:@"sensor_done"];
+        } else {
+            // make sure user didn't use the back button
+            if (expNumInteger != 0) {
+                NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", expNumInteger];
+                [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+                
+                NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                NSString *expNumString = [NSString stringWithFormat:@"%d", expNumInteger];
+                [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+                
+                displaySensorSelectFromBrowse = true;
+            }
+        }
     }
     
 }
+
 
 - (void) dealloc {
  
@@ -312,7 +342,21 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    
+    if (displaySensorSelectFromBrowse) {
+        displaySensorSelectFromBrowse = false;
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+        
+        // launch the sensor selection dialog
+        SensorSelection *ssView = [[SensorSelection alloc] init];
+        ssView.title = @"Sensor Selection";
+        [self.navigationController pushViewController:ssView animated:YES];
+        [ssView release];
+    }
 }
 
 @end
