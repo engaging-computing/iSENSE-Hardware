@@ -26,6 +26,8 @@
     IBOutlet UIButton *step2;
     IBOutlet UIButton *step3;
     UIBarButtonItem *menuButton;
+    IBOutlet UILabel *step1Label;
+    IBOutlet UILabel *step3Label;
 }
 
 - (void)displayMenu;
