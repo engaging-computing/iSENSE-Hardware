@@ -19,9 +19,11 @@
 #import "RNGridMenu.h"
 #import "Waffle.h"
 #import "AboutViewController.h"
+#import "CODialog.h"
+#import "iSENSE_API/headers/iSENSE.h"
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate> {
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
 
 
 
@@ -35,6 +37,8 @@
 
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
+@property(nonatomic, retain) CODialog *change_name;
+@property (nonatomic, retain) iSENSE *isenseAPI;
 
 @property(nonatomic, retain) NSArray *items;
 
@@ -42,6 +46,7 @@
 - (IBAction)showMenu:(id)sender;
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void) changeName;
 
 @end
 

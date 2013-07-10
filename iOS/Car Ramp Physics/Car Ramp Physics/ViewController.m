@@ -16,7 +16,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, navBar;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name;
 
 - (void)viewDidLoad
 {
@@ -26,6 +26,9 @@
     
     recordLength = 10;
     countdown = 10;
+    
+    self.navigationItem.rightBarButtonItem = menuButton;
+    
     
     
 }
@@ -69,6 +72,10 @@
     };
     void (^loginBlock)() = ^() {
         NSLog(@"Login button pressed");
+        
+        UIAlertView *loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+        [loginalert show];
     };
     void (^aboutBlock)() = ^() {
         NSLog(@"About button pressed");
@@ -80,10 +87,8 @@
         } else {
             about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPad" bundle:nil];
         }
-
-        UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"About"];
         
-        [self.navBar pushNavigationItem:item animated:YES];
+        [self.navigationController pushViewController:about animated:YES];
         
     };
     void (^resetBlock)() = ^() {
@@ -116,7 +121,12 @@
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alert show];
     } else if (buttonIndex == 2){
-        //change name
+        change_name = [[CODialog alloc] initWithWindow:self.view.window];
+        change_name.title = @"Enter First Name and Last Initial";
+        [change_name addTextFieldWithPlaceholder:@"First Name" secure:NO];
+        [change_name addTextFieldWithPlaceholder:@"Last Initial" secure:NO];
+        [change_name addButtonWithTitle:@"Done" target:self selector:@selector(changeName)];
+        [change_name showOrUpdateAnimated:YES];
     }
     
     
@@ -125,25 +135,37 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if([title isEqualToString:@"Done"])
-    {
-        UITextField *length = [alertView textFieldAtIndex:0];
-        NSCharacterSet *_NumericOnly = [NSCharacterSet decimalDigitCharacterSet];
-        NSCharacterSet *myStringSet = [NSCharacterSet characterSetWithCharactersInString:length.text];
-        
-        if ([_NumericOnly isSupersetOfSet: myStringSet])
+    
+    if ([alertView.title isEqualToString:@"Enter recording length"]) {
+        NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+        if([title isEqualToString:@"Done"])
         {
-            recordLength = countdown = [length.text intValue];
-            NSLog(@"Length is %d", recordLength);
+            UITextField *length = [alertView textFieldAtIndex:0];
+            NSCharacterSet *_NumericOnly = [NSCharacterSet decimalDigitCharacterSet];
+            NSCharacterSet *myStringSet = [NSCharacterSet characterSetWithCharactersInString:length.text];
             
-        } else {
-            [self.view makeWaffle:@"Invalid Length"
-                         duration:WAFFLE_LENGTH_SHORT
-                         position:WAFFLE_BOTTOM
-                            image:WAFFLE_RED_X];
+            if ([_NumericOnly isSupersetOfSet: myStringSet])
+            {
+                recordLength = countdown = [length.text intValue];
+                NSLog(@"Length is %d", recordLength);
+                
+            } else {
+                [self.view makeWaffle:@"Invalid Length"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_RED_X];
+            }
         }
+    } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
+        
     }
+}
+
+- (void) changeName {
+    
+    [change_name hideAnimated:YES];
+    
+    
 }
 
 
