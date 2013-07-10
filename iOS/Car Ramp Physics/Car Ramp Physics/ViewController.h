@@ -20,10 +20,19 @@
 #import "Waffle.h"
 #import "AboutViewController.h"
 #import "CODialog.h"
-#import "iSENSE_API/headers/iSENSE.h"
+#import "iSENSE.h"
+#import "StringGrabber.h"
+#import "ExperimentBrowseViewController.h"
+#import "DataFieldManager.h"
+#import "Constants.h"
+#import "Fields.h"
+#import <CoreMotion/CMMotionManager.h>
+#import <CoreLocation/CLLocationManager.h>
+#import <CoreLocation/CLGeocoder.h>
+#import <CoreLocation/CLLocationManagerDelegate.h>
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate> {
 
 
 
@@ -38,15 +47,40 @@
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
 @property(nonatomic, retain) CODialog *change_name;
-@property (nonatomic, retain) iSENSE *isenseAPI;
+@property(nonatomic, retain) iSENSE *iapi;
+@property DataFieldManager *dfm;
+@property(nonatomic, retain) CMMotionManager *motionmanager;
+@property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) int expNum;
+@property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic) float sampleInterval;
+@property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic) int testLength;
+
+@property (nonatomic, assign) NSTimer *timer;
+@property (nonatomic, assign) NSTimer *recordDataTimer;
+
+@property (nonatomic, strong) CLGeocoder *geoCoder;
+@property (nonatomic, copy) NSString *city;
+@property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) NSString *country;
+
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @property(nonatomic, retain) NSArray *items;
+
+//Boolean variables
+@property(nonatomic) BOOL running;
+@property(nonatomic) BOOL timeOver;
+@property(nonatomic) BOOL setupDone;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (IBAction)showMenu:(id)sender;
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
-- (void) changeName;
+- (void)changeName;
+- (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 
 @end
 

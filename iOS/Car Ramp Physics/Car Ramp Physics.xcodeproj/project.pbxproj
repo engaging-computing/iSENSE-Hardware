@@ -8,6 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		7631ABF6178D98E2005A0469 /* CODialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7631ABF5178D98DA005A0469 /* CODialog.m */; };
+		765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
+		765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */; };
+		765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B2178DD32200425A27 /* ExperimentBlock.m */; };
+		765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B5178DD34D00425A27 /* ISenseSearch.m */; };
+		765099C2178DD92D00425A27 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BB178DD92D00425A27 /* button_dark.png */; };
+		765099C3178DD92D00425A27 /* button_experiment_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BC178DD92D00425A27 /* button_experiment_clean.png */; };
+		765099C4178DD92D00425A27 /* button_experiment_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BD178DD92D00425A27 /* button_experiment_dark.png */; };
+		765099C5178DD92D00425A27 /* button_light_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BE178DD92D00425A27 /* button_light_long.png */; };
+		765099C6178DD92D00425A27 /* button_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BF178DD92D00425A27 /* button_light.png */; };
+		765099C7178DD92D00425A27 /* noimagedata_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099C0178DD92D00425A27 /* noimagedata_normal.png */; };
+		765099C8178DD92D00425A27 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099C1178DD92D00425A27 /* underline.png */; };
+		765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099C9178DF0CE00425A27 /* CoreLocation.framework */; };
+		765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099CB178DF0D500425A27 /* CoreMotion.framework */; };
+		765099CD178DF15C00425A27 /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D7A178C5D16006E1425 /* Fields.m */; };
+		765099CE178DF52E00425A27 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D78178C5D16006E1425 /* DataFieldManager.m */; };
 		7669F02A178B275C00E51AD0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F029178B275C00E51AD0 /* UIKit.framework */; };
 		7669F02C178B275C00E51AD0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F02B178B275C00E51AD0 /* Foundation.framework */; };
 		7669F02E178B275C00E51AD0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F02D178B275C00E51AD0 /* CoreGraphics.framework */; };
@@ -41,9 +56,50 @@
 		76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EF01A2178B571F00CBE38C /* RNGridMenu.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		765099A4178DCA6200425A27 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39FF25E016DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
+		};
+		765099A6178DCA6200425A27 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		765099A8178DCA7F00425A27 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		7631ABF4178D98DA005A0469 /* CODialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CODialog.h; sourceTree = "<group>"; };
 		7631ABF5178D98DA005A0469 /* CODialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CODialog.m; sourceTree = "<group>"; };
+		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
+		765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentBrowseViewController.h; path = ../ExperimentBrowseViewController.h; sourceTree = "<group>"; };
+		765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExperimentBrowseViewController.m; path = ../ExperimentBrowseViewController.m; sourceTree = "<group>"; };
+		765099B1178DD32200425A27 /* ExperimentBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExperimentBlock.h; sourceTree = "<group>"; };
+		765099B2178DD32200425A27 /* ExperimentBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExperimentBlock.m; sourceTree = "<group>"; };
+		765099B4178DD34D00425A27 /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
+		765099B5178DD34D00425A27 /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
+		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		765099BB178DD92D00425A27 /* button_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_dark.png; sourceTree = "<group>"; };
+		765099BC178DD92D00425A27 /* button_experiment_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_experiment_clean.png; sourceTree = "<group>"; };
+		765099BD178DD92D00425A27 /* button_experiment_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_experiment_dark.png; sourceTree = "<group>"; };
+		765099BE178DD92D00425A27 /* button_light_long.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_light_long.png; sourceTree = "<group>"; };
+		765099BF178DD92D00425A27 /* button_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_light.png; sourceTree = "<group>"; };
+		765099C0178DD92D00425A27 /* noimagedata_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimagedata_normal.png; sourceTree = "<group>"; };
+		765099C1178DD92D00425A27 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underline.png; sourceTree = "<group>"; };
+		765099C9178DF0CE00425A27 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		765099CB178DF0D500425A27 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		7669F026178B275C00E51AD0 /* Car Ramp Physics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Car Ramp Physics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7669F029178B275C00E51AD0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7669F02B178B275C00E51AD0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -95,6 +151,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */,
+				765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */,
+				765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */,
 				767B9274178C527500F1C6FA /* QuartzCore.framework in Frameworks */,
 				767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */,
 				7669F02A178B275C00E51AD0 /* UIKit.framework in Frameworks */,
@@ -106,9 +165,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		765099A0178DCA6200425A27 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				765099A5178DCA6200425A27 /* libiSENSE_API.a */,
+				765099A7178DCA6200425A27 /* iSENSE_API_Bundle.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		7669F01D178B275C00E51AD0 = {
 			isa = PBXGroup;
 			children = (
+				7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */,
 				7669F02F178B275C00E51AD0 /* Car Ramp Physics */,
 				7669F028178B275C00E51AD0 /* Frameworks */,
 				7669F027178B275C00E51AD0 /* Products */,
@@ -126,6 +195,8 @@
 		7669F028178B275C00E51AD0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				765099CB178DF0D500425A27 /* CoreMotion.framework */,
+				765099C9178DF0CE00425A27 /* CoreLocation.framework */,
 				767B9273178C527500F1C6FA /* QuartzCore.framework */,
 				767B9271178C526E00F1C6FA /* Accelerate.framework */,
 				7669F029178B275C00E51AD0 /* UIKit.framework */,
@@ -138,6 +209,13 @@
 		7669F02F178B275C00E51AD0 /* Car Ramp Physics */ = {
 			isa = PBXGroup;
 			children = (
+				765099B7178DD39500425A27 /* Constants.h */,
+				765099B4178DD34D00425A27 /* ISenseSearch.h */,
+				765099B5178DD34D00425A27 /* ISenseSearch.m */,
+				765099B1178DD32200425A27 /* ExperimentBlock.h */,
+				765099B2178DD32200425A27 /* ExperimentBlock.m */,
+				765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */,
+				765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */,
 				7631ABF4178D98DA005A0469 /* CODialog.h */,
 				7631ABF5178D98DA005A0469 /* CODialog.m */,
 				76B58D77178C5D16006E1425 /* DataFieldManager.h */,
@@ -168,6 +246,13 @@
 		7669F030178B275C00E51AD0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				765099BB178DD92D00425A27 /* button_dark.png */,
+				765099BC178DD92D00425A27 /* button_experiment_clean.png */,
+				765099BD178DD92D00425A27 /* button_experiment_dark.png */,
+				765099BE178DD92D00425A27 /* button_light_long.png */,
+				765099BF178DD92D00425A27 /* button_light.png */,
+				765099C0178DD92D00425A27 /* noimagedata_normal.png */,
+				765099C1178DD92D00425A27 /* underline.png */,
 				76B58D7F178C5D2D006E1425 /* waffle_check.png */,
 				76B58D80178C5D2D006E1425 /* waffle_warn.png */,
 				76B58D81178C5D2D006E1425 /* waffle_x.png */,
@@ -204,6 +289,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				765099A9178DCA7F00425A27 /* PBXTargetDependency */,
 			);
 			name = "Car Ramp Physics";
 			productName = "Car Ramp Physics";
@@ -229,12 +315,35 @@
 			mainGroup = 7669F01D178B275C00E51AD0;
 			productRefGroup = 7669F027178B275C00E51AD0 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 765099A0178DCA6200425A27 /* Products */;
+					ProjectRef = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				7669F025178B275C00E51AD0 /* Car Ramp Physics */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		765099A5178DCA6200425A27 /* libiSENSE_API.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libiSENSE_API.a;
+			remoteRef = 765099A4178DCA6200425A27 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		765099A7178DCA6200425A27 /* iSENSE_API_Bundle.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iSENSE_API_Bundle.bundle;
+			remoteRef = 765099A6178DCA6200425A27 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7669F024178B275C00E51AD0 /* Resources */ = {
@@ -260,6 +369,13 @@
 				76B58D84178C5D2D006E1425 /* waffle_x.png in Resources */,
 				76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */,
 				76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */,
+				765099C2178DD92D00425A27 /* button_dark.png in Resources */,
+				765099C3178DD92D00425A27 /* button_experiment_clean.png in Resources */,
+				765099C4178DD92D00425A27 /* button_experiment_dark.png in Resources */,
+				765099C5178DD92D00425A27 /* button_light_long.png in Resources */,
+				765099C6178DD92D00425A27 /* button_light.png in Resources */,
+				765099C7178DD92D00425A27 /* noimagedata_normal.png in Resources */,
+				765099C8178DD92D00425A27 /* underline.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +386,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				765099CE178DF52E00425A27 /* DataFieldManager.m in Sources */,
+				765099CD178DF15C00425A27 /* Fields.m in Sources */,
+				765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */,
 				7631ABF6178D98E2005A0469 /* CODialog.m in Sources */,
 				76B58D8B178C72B0006E1425 /* StringGrabber.m in Sources */,
 				76B58D8C178C72B0006E1425 /* Waffle.m in Sources */,
@@ -278,10 +397,20 @@
 				7669F043178B275C00E51AD0 /* ViewController.m in Sources */,
 				76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */,
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
+				765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */,
+				765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		765099A9178DCA7F00425A27 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API;
+			targetProxy = 765099A8178DCA7F00425A27 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		7669F032178B275C00E51AD0 /* InfoPlist.strings */ = {
@@ -314,7 +443,7 @@
 		7669F04A178B275C00E51AD0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -336,7 +465,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../**";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(inherited)",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -346,7 +480,7 @@
 		7669F04B178B275C00E51AD0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -361,7 +495,12 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../**";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(inherited)",
+				);
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -374,8 +513,10 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
+				HEADER_SEARCH_PATHS = "/Users/balabhv/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
 				INFOPLIST_FILE = "Car Ramp Physics/Car Ramp Physics-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -386,8 +527,10 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
+				HEADER_SEARCH_PATHS = "/Users/balabhv/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
 				INFOPLIST_FILE = "Car Ramp Physics/Car Ramp Physics-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
