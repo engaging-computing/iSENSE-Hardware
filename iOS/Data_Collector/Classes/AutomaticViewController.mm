@@ -268,6 +268,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [self initLocations];
     [self resetAddressFields];
     
+    // Make labels dissapear
+    [step1Label setAlpha:0.0];
+    [step3Label setAlpha:0.0];
+    
     [message dismissWithClickedButtonIndex:nil animated:YES];
 }
 
@@ -344,10 +348,17 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     return UIInterfaceOrientationMaskAll;
 }
 
-// Release all the extra
+// Release all the extras
 - (void)dealloc {
     [mainLogo release];
+    [mainLogoBackground release];
+    [step1 release];
+    [step2 release];
+    [step3 release];
     [menuButton release];
+    [step1Label release];
+    [step3Label release];
+    
     [locationManager release];
     locationManager = nil;
     [super dealloc];
@@ -396,10 +407,16 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [dfm getFieldOrderOfExperiment:expNum];
             [self getEnabledFields];
             
+            // Change the UI
+            [self setRecordingLayout];
+            
             // Record Data
             isRecording = TRUE;
             [self recordData];
         } else {
+            // Change the UI
+            [self setNonRecordingLayout];
+            
             // Stop Recording
             isRecording = FALSE;
             [self stopRecording:motionManager];
@@ -866,6 +883,44 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             ++i;
         }
     }
+}
+
+- (void) setRecordingLayout {
+    
+    [step2 setTitle:@"STOP\n(Press and Hold)" forState:UIControlStateNormal];
+    [step2 setTitleColor:[HexColor colorWithHexString:@"5CB54A"] forState:UIControlStateNormal];
+
+    [step1 setAlpha:0.0];
+    [step3 setAlpha:0.0];
+    [step1 setEnabled:NO];
+    [step3 setEnabled:NO];
+    
+    [step1Label setAlpha:1.0];
+    [step3Label setAlpha:1.0];
+    
+    [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"004400"]];
+    [mainLogo setImage:[UIImage imageNamed:@"rsense_logo_recording"]];
+    
+}
+
+- (void) setNonRecordingLayout {
+
+    [step2 setTitle:@"Step 2: Record a Data Set (Hold Down)" forState:UIControlStateNormal];
+    [step2 setTitleColor:[HexColor colorWithHexString:@"4C6FD9"] forState:UIControlStateNormal];
+    
+    [step1 setAlpha:1.0];
+    [step3 setAlpha:1.0];
+    [step1 setEnabled:YES];
+    [step3 setEnabled:YES];
+    
+    [step1Label setAlpha:0.0];
+    [step3Label setAlpha:0.0];
+    
+    step2.titleLabel.textColor = [HexColor colorWithHexString:@"000066"];
+    
+    [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"000066"]];
+    [mainLogo setImage:[UIImage imageNamed:@"rsense_logo"]];
+
 }
 
 @end

@@ -125,7 +125,7 @@
     }
     
     NSArray *keys = [dataSaver.dataQueue allKeys];  
-    DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[currentIndex]] retain];
+    DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
     
     NSString *dataType;
     if (tmp.picturePaths == nil) {
@@ -142,10 +142,8 @@
         }
     }
     
-    [cell setupCellName:tmp.name andDataType:dataType andDescription:tmp.dataDescription andUploadable:currentIndex];
+    [cell setupCellName:tmp.name andDataType:dataType andDescription:tmp.dataDescription andUploadable:tmp.uploadable];
     [tmp release];
-    
-    currentIndex++;
     
     return cell;
 }
