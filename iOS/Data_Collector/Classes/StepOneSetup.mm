@@ -251,9 +251,7 @@
     }
 }
 
-- (IBAction)rememberMeToggled:(UISwitch *)switcher {
-    
-}
+- (IBAction)rememberMeToggled:(UISwitch *)switcher {}
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_EXPERIMENT){
@@ -428,6 +426,21 @@
 
 - (void) doneEditingTestLength {
     [testLength resignFirstResponder];
+}
+
+// Allows the device to rotate as necessary.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6 enable rotation
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6 enable rotation
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
 }
 
 @end
