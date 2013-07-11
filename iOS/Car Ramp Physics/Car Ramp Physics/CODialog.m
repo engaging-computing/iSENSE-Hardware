@@ -407,6 +407,11 @@ CODialogSynth(highlightedIndex)
   return [field text];
 }
 
+- (UITextField *)textFieldAtIndex:(NSUInteger)index {
+    UITextField *field = [self.textFields objectAtIndex:index];
+    return field;
+}
+
 - (void)showOrUpdateAnimatedInternal:(BOOL)flag {
   CODialogAssertMQ();
   

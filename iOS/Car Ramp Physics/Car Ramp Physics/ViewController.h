@@ -32,7 +32,7 @@
 #import <CoreLocation/CLLocationManagerDelegate.h>
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate> {
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate> {
 
 
 
@@ -80,7 +80,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)changeName;
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
-- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
+- (CODialog *) getDispatchDialogWithMessage:(NSString *)dString;
 
 @end
 

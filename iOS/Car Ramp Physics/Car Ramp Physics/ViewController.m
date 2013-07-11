@@ -160,7 +160,7 @@
     //    containerForMainButton updateImage:startStopButton];
     
     // Open up description dialog
-    UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Publish to iSENSE?"
                                                       message:nil
                                                      delegate:self
                                             cancelButtonTitle:@"Discard"
@@ -168,8 +168,6 @@
     
     message.tag = DESCRIPTION_AUTOMATIC;
     message.delegate = self;
-    [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
     [message show];
     
 }
@@ -394,6 +392,8 @@
         change_name.title = @"Enter First Name and Last Initial";
         [change_name addTextFieldWithPlaceholder:@"First Name" secure:NO];
         [change_name addTextFieldWithPlaceholder:@"Last Initial" secure:NO];
+        UITextField *last = [change_name textFieldAtIndex:1];
+        [last setDelegate:self];
         [change_name addButtonWithTitle:@"Done" target:self selector:@selector(changeName)];
         [change_name showOrUpdateAnimated:YES];
     }
@@ -402,11 +402,17 @@
     
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    return (newLength > 1) ? NO : YES;
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if ([alertView.title isEqualToString:@"Enter recording length"]) {
-        NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+        
         if([title isEqualToString:@"Done"])
         {
             UITextField *length = [alertView textFieldAtIndex:0];
@@ -428,6 +434,12 @@
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
         [login_status setText:[@"Logged in as: " stringByAppendingString: [alertView textFieldAtIndex:0].text]];
+    } else if ([alertView.title isEqualToString:@"Publish to iSENSE?"]) {
+        if ([title isEqualToString:@"Discard"]) {
+            [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
+        } else {
+            //Publish to iSENSE
+        }
     }
 }
 
@@ -440,8 +452,8 @@
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
-    UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
-    [message show];
+    CODialog *message = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [message showOrUpdateAnimated:YES];
     NSLog(@"Making waffle");
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
@@ -458,23 +470,17 @@
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
             }
-            [message dismissWithClickedButtonIndex:(NSInteger)nil animated:YES];
+            [message hideAnimated:YES];
         });
     });
     
 }
 
-- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
-    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
-                                                      message:nil
-                                                     delegate:self
-                                            cancelButtonTitle:nil
-                                            otherButtonTitles:nil];
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.center = CGPointMake(139.5, 75.5);
-    [message addSubview:spinner];
-    [spinner startAnimating];
-    return message;
+- (CODialog *) getDispatchDialogWithMessage:(NSString *)dString {
+    CODialog *spinner = [[CODialog alloc] initWithWindow:self.view.window];
+    [spinner setTitle:dString];
+    spinner.dialogStyle = CODialogStyleIndeterminate;
+    return spinner;
 }
 
 

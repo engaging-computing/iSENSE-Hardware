@@ -45,6 +45,7 @@ typedef NSInteger CODialogStyle;
 /** @name Getting Values */
 
 - (NSString *)textForTextFieldAtIndex:(NSUInteger)index;
+- (UITextField *)textFieldAtIndex:(NSUInteger)index;
 
 /** @name Showing, Updating and Hiding */
 
