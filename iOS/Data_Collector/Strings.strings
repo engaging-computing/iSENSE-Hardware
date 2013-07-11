@@ -49,6 +49,8 @@
 
 "current_exp_label"             = "Experiment";
 
+"loading"                       = "Loading ...";
+
 // ------------------------------ //
 // --- about application text --- //
 // ------------------------------ //
