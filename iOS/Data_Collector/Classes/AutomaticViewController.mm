@@ -446,6 +446,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self setNonRecordingLayout];
             
             // Stop Recording
+            backFromSetup = false;
             [self stopRecording:motionManager];
         }
         
