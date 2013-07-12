@@ -316,7 +316,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             
             sessionName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
             
-            expNum = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
             
             // Set setup_complete key to false again
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -431,6 +431,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (!isRecording) {
+            // Get the experiment
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+            NSLog(@"my exp is: %d", expNum);
+            
             // Get Field Order
             [dfm getFieldOrderOfExperiment:expNum];
             [self getEnabledFields];
@@ -729,7 +734,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
     
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
@@ -842,6 +847,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         
         for (int i = 0; i < [[dfm order] count]; i++) {
             [dfm setEnabledField:true atIndex:i];
+            NSLog(@"setting: %d", i); // TODO - dfm array is empty?
         }
         
     } else {
