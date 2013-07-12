@@ -19,13 +19,17 @@
 @interface DataSaver : NSObject {
 }
 
+-(id)initWithContext:(NSManagedObjectContext *)context;
+-(void)addDataSetFromCoreData:(DataSet *)dataSet;
 -(void)addDataSet:(DataSet *)dataSet;
 -(id)removeDataSet:(int)key;
 -(void)editDataSetWithKey:(int)key;
 -(bool)upload;
+-(void)removeAllDataSets;
 
 @property (nonatomic, assign) int count;
 @property (nonatomic, retain) NSMutableDictionary *dataQueue;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 
 @end

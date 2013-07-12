@@ -10,7 +10,7 @@
 
 @implementation QueueCell
 
-@synthesize nameAndDate, dataType, description;
+@synthesize nameAndDate, dataType, description, dataSet;
 
 //- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 //    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -26,13 +26,30 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellName:(NSString *)name andDataType:(NSString *)type andDescription:(NSString *)desc andUploadable:(bool)upload {
+- (QueueCell *)setupCellWithDataSet:(DataSet *)ds {
       
-    self.nameAndDate.text = name;
-    self.dataType.text = type;
-    self.description.text = desc;
-
-    [self setCheckedSwitch:upload];
+    self.nameAndDate.text = ds.name;
+    self.description.text = ds.dataDescription;
+    
+    NSString *tmpDataType;
+    if (ds.picturePaths == nil) {
+        if (ds.data == nil) {
+            tmpDataType = @"Error";
+        } else {
+            tmpDataType = @"Data";
+        }
+    } else {
+        if (ds.data == nil) {
+            tmpDataType = @"Picture";
+        } else {
+            tmpDataType = @"Data";
+        }
+    }
+    
+    self.dataType.text = tmpDataType;
+    [self setCheckedSwitch:ds.uploadable.boolValue];
+    
+    dataSet = [ds retain];
     
     return self;
 }
@@ -55,11 +72,18 @@
 }
 
 -(IBAction)setChecked:(UITapGestureRecognizer *)sender {
-    if (self.accessoryType == UITableViewCellAccessoryNone) {
+    if (dataSet.uploadable.boolValue == false) {
         [self setCheckedSwitch:true];
+        dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
     } else {
         [self setCheckedSwitch:false];
+        dataSet.uploadable = [[NSNumber alloc] initWithBool:false];
     }
+}
+
+-(void)dealloc {
+    [super dealloc];
+    [dataSet release];
 }
 
 @end

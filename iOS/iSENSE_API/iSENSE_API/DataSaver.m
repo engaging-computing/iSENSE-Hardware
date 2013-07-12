@@ -10,29 +10,90 @@
 
 @implementation DataSaver
 
-@synthesize count, dataQueue;
+@synthesize count, dataQueue, managedObjectContext;
 
--(id) init {
+-(id)initWithContext:(NSManagedObjectContext *)context {
     self = [super init];
     if (self) {
         count = 0;
         dataQueue = [[NSMutableDictionary alloc] init];
+        managedObjectContext = context;
     }
     return self;
 }
 
 // Add a DataSet to the queue
 -(void)addDataSet:(DataSet *)dataSet {
+    
+    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    
+    ds.name = dataSet.name;
+    ds.dataDescription = dataSet.dataDescription;
+    ds.data = dataSet.data;
+    ds.picturePaths = dataSet.picturePaths;
+    ds.eid = dataSet.eid;
+    ds.city = dataSet.city;
+    ds.country = dataSet.country;
+    ds.uploadable = dataSet.uploadable;
+    ds.address = dataSet.address;
+    ds.sid = dataSet.sid;
+        
+    // Commit the changes
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"%@", error);
+    }
+    
+}
+
+-(void)addDataSetFromCoreData:(DataSet *)dataSet {
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     count++;
+
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
 -(id)removeDataSet:(int)key {
     count--;
-    if (key == NO_KEY) return [dataQueue dequeue];
-    return [dataQueue removeFromQueueWithKey:key];
+    DataSet *tmp;
+    if (key == NO_KEY) {
+        tmp = [dataQueue dequeue];
+    } else {
+        tmp = [dataQueue removeFromQueueWithKey:key];
+    }
+    
+    if (tmp != nil) NSLog(@"hope");
+    
+    [managedObjectContext deleteObject:tmp];
+    
+    if (tmp != nil) NSLog(@"more hope");
+    
+    // Commit the changes
+    NSError *error = [[NSError alloc] init];
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"Save failed with error: %@", error);
+    }
+    
+    if (tmp != nil) NSLog(@"yet more hope");
+
+    
+    return tmp;
+}
+
+// if key is nil, call dequeue otherwise dequeue with the given key
+-(void)removeAllDataSets {
+    
+    for (NSNumber *tmp in dataQueue.allKeys) {
+        NSLog(@"delete");
+        [self removeDataSet:tmp.intValue];
+    }
+    
+    [dataQueue removeAllObjects];
+    count = 0;
+
 }
 
 -(void)editDataSetWithKey:(int)key {
@@ -46,19 +107,17 @@
 -(bool)upload {
     iSENSE *isenseAPI = [iSENSE getInstance];
     if (![isenseAPI isLoggedIn]) {
-        NSLog(@"Not logged in.");
+        NSLog(@"Not logged in."); // MIKE I KEN HAZ WAFFLES?
         return false;
     }
     
     DataSet *currentDS;
-    while (count) {
+    for (int i = 0; i < count; i++) {
         // get the next dataset
-        NSArray *keys = [dataQueue allKeys];
-        NSNumber *firstKey = [keys objectAtIndex:0];
-        currentDS = [self removeDataSet:firstKey.intValue];
+        currentDS = [self removeDataSet:NO_KEY];
         
         // check if the session is uploadable
-        if ([currentDS uploadable]) {
+        if (currentDS.uploadable.boolValue) {
             
             // create a session
             if (currentDS.sid.intValue == -1) {
@@ -85,6 +144,8 @@
                     [self addDataSet:currentDS];
                     continue;
                 }
+                
+
             }
             
             // Upload pictures to iSENSE
@@ -110,10 +171,12 @@
                     currentDS.picturePaths = newPicturePaths;
                     [self addDataSet:currentDS];
                     continue;
-                }
+                }               
+                
             }
             
         } else {
+            NSLog(@"Ya nub");
             [self addDataSet:currentDS];
         }
         

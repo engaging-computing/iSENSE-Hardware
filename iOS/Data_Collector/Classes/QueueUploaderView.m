@@ -23,14 +23,16 @@
 
 // Upload button control
 -(IBAction)upload:(id)sender {
-    [dataSaver upload];
     
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
+    NSLog(@"%@", dataSaver.dataQueue.description);
+    
+    
+    // Rebuild the dataSet with the new changes
+    [self rebuildDataQueueFromTableView];
+    /*
+    // Do zee upload thang
+    [dataSaver upload];
+     */
 
 }
 
@@ -126,26 +128,26 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];  
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
+    [cell setupCellWithDataSet:tmp];
     
-    NSString *dataType;
-    if (tmp.picturePaths == nil) {
-        if (tmp.data == nil) {
-            dataType = @"Error";
-        } else {
-            dataType = @"Data";
-        }
-    } else {
-        if (tmp.data == nil) {
-            dataType = @"Picture";
-        } else {
-            dataType = @"Data";
+    return cell;
+}
+
+// Rebuild dataQueue from mTableView
+-(void)rebuildDataQueueFromTableView {
+    
+    // Empty the queue
+    [dataSaver removeAllDataSets];
+       
+    // Go through ever cell in mTableView
+    for (QueueCell *cell in mTableView.subviews) {
+        if ([cell isKindOfClass:[QueueCell class]]) {
+            [dataSaver addDataSet:cell.dataSet];
         }
     }
     
-    [cell setupCellName:tmp.name andDataType:dataType andDescription:tmp.dataDescription andUploadable:tmp.uploadable];
-    [tmp release];
+    [self.navigationController popViewControllerAnimated:YES];
     
-    return cell;
 }
 
 @end

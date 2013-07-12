@@ -733,7 +733,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    DataSet *ds = [[DataSet alloc] init];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
@@ -747,14 +747,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
+    [dataSaver release];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
     
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
+
     
 }
 

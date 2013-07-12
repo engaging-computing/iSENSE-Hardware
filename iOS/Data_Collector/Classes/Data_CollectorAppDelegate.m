@@ -22,9 +22,7 @@
     // Override point for customization after application launch.    
     self.window.rootViewController = self.navControl;
 	[self.window makeKeyAndVisible];
-    
-    dataSaver = [[DataSaver alloc] init];
-    
+        
     return YES;
 }
 
@@ -192,7 +190,7 @@
     
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] retain];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
         
@@ -205,12 +203,15 @@
             NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
         }
         
+        dataSaver = [[DataSaver alloc] initWithContext:managedObjectContext];
+        
         // fill dataSaver's DataSet Queue
         for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
+            [dataSaver addDataSetFromCoreData:mutableFetchResults[i]];
         }
         
         // release the fetched objects
+        [dataSetEntity release];
         [mutableFetchResults release];
         [request release];
     }
