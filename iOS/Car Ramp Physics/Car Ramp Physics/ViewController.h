@@ -64,6 +64,8 @@
 @property (nonatomic) NSString *lastInitial;
 @property (nonatomic) NSNumber *session_num;
 @property (nonatomic) BOOL  setupDone;
+@property (nonatomic) NSString *userName;
+@property (nonatomic) NSString *passWord;
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 

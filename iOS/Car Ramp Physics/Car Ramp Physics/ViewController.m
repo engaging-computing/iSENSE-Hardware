@@ -19,7 +19,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num ;
 
 - (void)viewDidLoad {
     
@@ -30,9 +30,11 @@
     recordLength = 10;
     countdown = 10;
     
+    useDev = TRUE;
+    
     self.navigationItem.rightBarButtonItem = menuButton;
     iapi = [iSENSE getInstance];
-    [iapi toggleUseDev: YES];
+    [iapi toggleUseDev: useDev];
     
     
     running = NO;
@@ -43,6 +45,10 @@
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
+    userName = @"sor";
+    passWord = @"sor";
+    firstName = @"No Name";
+    lastInitial = @"Provided";
     [self login:@"sor" withPassword:@"sor"];
     
     
@@ -333,7 +339,8 @@
     name = [name stringByAppendingString:@" "];
     name = [name stringByAppendingString:lastInitial];
     
-    NSNumber *session_num = [iapi createSession:name withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+    session_num = [iapi createSession:name withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+    
     
     NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
     NSError *error = nil;
@@ -485,7 +492,26 @@
         } else {
             [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
             [self uploadData: @"Car Ramp Physics Test"];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
+            [alert show];
         }
+    } else if ([alertView.title isEqualToString:@"View data on iSENSE?"]) {
+        
+        if ([title isEqualToString:@"View"]) {
+            NSString *url;
+            NSLog(@"%@",session_num);
+            NSLog(@"\n%@", [NSString stringWithFormat:@"%d", [session_num intValue]]);
+            if (useDev) {
+                url = [DEV_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+            } else {
+                url = [PROD_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+            }
+            NSLog(@"%@",url);
+            UIApplication *mySafari = [UIApplication sharedApplication];
+            NSURL *myURL = [[NSURL alloc]initWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            [mySafari openURL:myURL];
+        }
+        
     }
 }
 
@@ -494,6 +520,7 @@
     [change_name hideAnimated:YES];
     firstName = [change_name textForTextFieldAtIndex:0];
     lastInitial = [change_name textForTextFieldAtIndex:1];
+    login_status.text = [@"Logged in as: " stringByAppendingString: userName];
     login_status.text = [login_status.text stringByAppendingString:@" Name: "];
     login_status.text = [login_status.text stringByAppendingString:firstName];
     login_status.text = [login_status.text stringByAppendingString:@" "];
@@ -515,7 +542,13 @@
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_CHECKMARK];
-                [login_status setText:[@"Logged in as: " stringByAppendingString:usernameInput]];
+                login_status.text = [@"Logged in as: " stringByAppendingString: usernameInput];
+                login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+                login_status.text = [login_status.text stringByAppendingString:firstName];
+                login_status.text = [login_status.text stringByAppendingString:@" "];
+                login_status.text = [login_status.text stringByAppendingString:lastInitial];
+                userName = usernameInput;
+                passWord = passwordInput;
             } else {
                 [self.view makeWaffle:@"Login Failed!"
                              duration:WAFFLE_LENGTH_SHORT
