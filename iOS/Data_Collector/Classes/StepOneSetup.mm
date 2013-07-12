@@ -194,24 +194,39 @@
                                image:WAFFLE_WARNING];
             ready = false;
         }
+        
+        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
+        if ([selectedCells count] == 0) {
+            if (ready == true)
+                [self.view makeWaffle:@"Please re-select an experiment and fields to record data for"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            ready = false;
+        }
     }
     
     if (ready) {
         [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
         
-        if (selectLater.on) {
+        if (selectLater.on)
             [prefs setValue:@"-1" forKey:[StringGrabber grabString:@"key_exp_automatic"]];
-        }
         
-        if (rememberMe.on) {
+        if (rememberMe.on)
             [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
-            [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
-            [prefs setValue:[testLength text]     forKey:[StringGrabber grabString:@"key_test_length"]];
-        } else {
+            
+        else
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
-            [prefs setValue:[NSString stringWithFormat:@"%d", S_INTERVAL]  forKey:[StringGrabber grabString:@"key_sample_interval"]];
+            
+        if ([[sampleInterval text] length] == 0)
+            [prefs setValue:[NSString stringWithFormat:@"%d", S_INTERVAL] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+        else
+            [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+        
+        if ([[testLength text] length] == 0)
             [prefs setValue:[NSString stringWithFormat:@"%d", TEST_LENGTH] forKey:[StringGrabber grabString:@"key_test_length"]];
-        }
+        else
+            [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
         
         // Indicate that we're done setting up and return
         [prefs setBool:true forKey:[StringGrabber grabString:@"key_setup_complete"]];

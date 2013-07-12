@@ -23,7 +23,8 @@
     }    
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
-     self.window.rootViewController = navigation;
+    self.window.rootViewController = navigation;
+    self.viewController.setupDone = YES;
     [self.window makeKeyAndVisible];
     return YES;
 }
