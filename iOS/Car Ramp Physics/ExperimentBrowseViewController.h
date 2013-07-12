@@ -12,6 +12,7 @@
 #import "ISenseSearch.h"
 #import "StringGrabber.h"
 #import "Constants.h"
+#import "DataFieldManager.h"
 #import "iSENSE.h"
 
 @interface ExperimentBrowseViewController : UIViewController <UISearchBarDelegate, UIScrollViewDelegate> {
@@ -40,6 +41,7 @@
 @property (nonatomic, assign) int *chosenExperiment;
 @property (nonatomic, assign) int contentHeight;
 @property (nonatomic, retain) ExperimentBlock *lastExperimentClicked;
+
 
 @end
 

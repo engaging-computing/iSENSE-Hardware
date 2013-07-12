@@ -160,6 +160,7 @@
 
 - (void)experimentChosen {
     *_chosenExperiment = lastExperimentClicked.experiment.experiment_id.intValue;
+    NSLog(@"experiment number: %d", *_chosenExperiment);
     [self.navigationController popViewControllerAnimated:YES];
 }
 
