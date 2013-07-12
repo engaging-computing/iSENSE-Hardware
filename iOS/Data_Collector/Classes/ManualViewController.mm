@@ -391,11 +391,11 @@
 - (IBAction) uploadOnClick:(id)sender {
     [self getDataFromFields];
     
-    /*
-    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
-    [iapi login:@"sor" with:@"sor"];
-    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
-    */
+    
+//    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
+//    [iapi login:@"sor" with:@"sor"];
+//    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
+    
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -410,28 +410,15 @@
     [message release];
 }
 
-- (IBAction) mediaOnClick:(id)sender { // TODO - change back!
+- (IBAction) mediaOnClick:(id)sender {
     
-    SensorCompatibility *sc = [[SensorCompatibility alloc] init];
-    int b1 = [sc getCompatibilityForSensorType:sGPS];
-    int b2 = [sc getCompatibilityForSensorType:sACCELEROMETER];
-    int b3 = [sc getCompatibilityForSensorType:sAMBIENT_LIGHT];
-    int b4 = [sc getCompatibilityForSensorType:sGYROSCOPE];
-    int b5 = [sc getCompatibilityForSensorType:sPROXIMITY];
-    NSLog(@"%d, %d, %d, %d, %d", b1, b2, b3, b4, b5);
-
-    SensorSelection *ssView = [[SensorSelection alloc] init];
-    ssView.title = @"Sensor Selection";
-    [self.navigationController pushViewController:ssView animated:YES];
-    [ssView release];
-    
-    /*if (sessionNameInput.text.length != 0)
-        [CameraUsage useCamera];
-    else
-        [self.view makeWaffle:@"Please Enter a Session Name First"
-                    duration:WAFFLE_LENGTH_LONG
-                    position:WAFFLE_BOTTOM
-                       image:WAFFLE_WARNING];*/
+//    if (sessionNameInput.text.length != 0)
+//        [CameraUsage useCamera];
+//    else
+//        [self.view makeWaffle:@"Please Enter a Session Name First"
+//                    duration:WAFFLE_LENGTH_LONG
+//                    position:WAFFLE_BOTTOM
+//                       image:WAFFLE_WARNING];
 }
 
 - (IBAction) displayMenu:(id)sender {

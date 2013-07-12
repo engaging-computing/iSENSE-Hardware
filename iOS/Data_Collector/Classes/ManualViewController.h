@@ -10,11 +10,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-// TODO remove
-#import <iSENSE_API/SensorCompatibility.h>
-#import <iSENSE_API/SensorEnums.h>
-#import "SensorSelection.h"
-
 typedef struct _RotationDataSaver {
     NSString *sesName;
     NSMutableArray *data;
