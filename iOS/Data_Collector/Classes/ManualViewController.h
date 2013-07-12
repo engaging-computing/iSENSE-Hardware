@@ -86,6 +86,7 @@ typedef struct _RotationDataSaver {
 @property (nonatomic, assign) int                    expNum;
 @property (nonatomic, assign) bool                   keyboardDismissProper;
 @property (nonatomic, assign) BOOL                   browsing;
+@property (nonatomic, assign) BOOL                   initialExpDialogOpen;
 
 @end
 

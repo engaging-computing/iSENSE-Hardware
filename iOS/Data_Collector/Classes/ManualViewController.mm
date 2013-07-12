@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize sessionName, expNum, locationManager, browsing;
+@synthesize sessionName, expNum, locationManager, browsing, initialExpDialogOpen;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -141,16 +141,19 @@
             if (rds != nil) rds->doesHaveData = true;
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
-            [message show];
-            [message release];
-            
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+            if (!initialExpDialogOpen) {
+                initialExpDialogOpen = true;
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                message.tag = MENU_EXPERIMENT;
+                [message show];
+                [message release];
+                
+                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+            }
         }
     }
 
@@ -506,6 +509,8 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
+            initialExpDialogOpen = false;
+            
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNum;
@@ -515,22 +520,22 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            /*if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-                
-                widController = [[ZXingWidgetController alloc] initWithDelegate:self
-                                                                     showCancel:YES
-                                                                       OneDMode:NO];
-                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-                
-                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-                widController.readers = readers;
-                
-                [self presentModalViewController:widController animated:YES];
-                [qRCodeReader release];
-                [readers release];
-                
-            } else {*/
-                
+//            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+//                
+//                widController = [[ZXingWidgetController alloc] initWithDelegate:self
+//                                                                     showCancel:YES
+//                                                                       OneDMode:NO];
+//                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
+//                
+//                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
+//                widController.readers = readers;
+//                
+//                [self presentModalViewController:widController animated:YES];
+//                [qRCodeReader release];
+//                [readers release];
+//                
+//            } else {
+            
                 UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
                                                                   message:nil
                                                                  delegate:self
@@ -541,11 +546,13 @@
                 [message show];
                 [message release];
                 
-            //}
+//            }
             
         }
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        initialExpDialogOpen = false;
         
         if (buttonIndex != OPTION_CANCELED) {
 
@@ -583,31 +590,31 @@
     }
 }
 
-/*- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-    [widController.view removeFromSuperview];
-    
-    qrResults = [result retain];
-    NSArray *split = [qrResults componentsSeparatedByString:@"="];
-    if ([split count] != 2) {
-        [self.view makeWaffle:@"Invalid QR code scanned"
-                    duration:WAFFLE_LENGTH_LONG
-                    position:WAFFLE_BOTTOM
-                       image:WAFFLE_RED_X];
-    } else {
-        rds->doesHaveData = false;
-        
-        expNum = [[split objectAtIndex:1] intValue];
-        
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
-        
-        [self fillDataFieldEntryList:expNum withData:nil];
-    }
-}
-
-- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
-    [widController.view removeFromSuperview];
-}*/
+//- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+//    [widController.view removeFromSuperview];
+//    
+//    qrResults = [result retain];
+//    NSArray *split = [qrResults componentsSeparatedByString:@"="];
+//    if ([split count] != 2) {
+//        [self.view makeWaffle:@"Invalid QR code scanned"
+//                    duration:WAFFLE_LENGTH_LONG
+//                    position:WAFFLE_BOTTOM
+//                       image:WAFFLE_RED_X];
+//    } else {
+//        rds->doesHaveData = false;
+//        
+//        expNum = [[split objectAtIndex:1] intValue];
+//        
+//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+//        
+//        [self fillDataFieldEntryList:expNum withData:nil];
+//    }
+//}
+//
+//- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
+//    [widController.view removeFromSuperview];
+//}
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
@@ -803,19 +810,13 @@
                 
                 if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
                     if (expField.unit_id.intValue == UNIT_LATITUDE) {
-                        //if (data == nil)
-                            scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
-                        //else
-                        //    scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
                     } else if (expField.unit_id.intValue == UNIT_LONGITUDE) {
-                        //if (data == nil)
-                            scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
-                        //else
-                        //    scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
                     } else /* Time */ {
-                        //if (data == nil)
-                            scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
-                        //else
+                        // if (data == nil)
+                        scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
+                        // else
                         //    scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 } else {
@@ -919,10 +920,6 @@
         fieldContents.text = [tmp retain];
     }
     
-    /*
-     * [tmp release];
-     */
-        
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;
         if (type == TYPE_LATITUDE) {
