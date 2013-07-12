@@ -83,7 +83,8 @@
 
 - (NSMutableArray *) orderDataFromFields:(Fields *)f {
     
-    if (data) {}
+    if (data)
+        data = nil;
     data = [[NSMutableArray alloc] init];
     
     iSENSE *iapi = [iSENSE getInstance];
@@ -93,27 +94,27 @@
             [data addObject:[f accel_x]];
         else
             [data addObject:@""];
-        
+        NSLog(@"X added");
         if (!([f accel_y] == nil))
             [data addObject:[f accel_y]];
         else
             [data addObject:@""];
-        
+        NSLog(@"Y added");
         if (!([f accel_z] == nil))
             [data addObject:[f accel_z]];
         else
             [data addObject:@""];
-        
+        NSLog(@"Z added");
         if (!([f accel_total] == nil))
             [data addObject:[f accel_total]];
         else
             [data addObject:@""];
-        
+        NSLog(@"Total added");
         if (!([f time_millis] == nil))
             [data addObject:[f time_millis]];
         else
             [data addObject:@""];
-        
+        NSLog(@"Time added");
     } else {
         
         for (NSString *s in order) {
@@ -122,6 +123,7 @@
                     [data addObject:[f accel_x]];
                 else
                     [data addObject:@""];
+                NSLog(@"X added");
                 continue;
             }
             if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
@@ -129,6 +131,7 @@
                     [data addObject:[f accel_y]];
                 else
                     [data addObject:@""];
+                NSLog(@"Y added");
                 continue;
             }
             if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
@@ -136,6 +139,7 @@
                     [data addObject:[f accel_z]];
                 else
                     [data addObject:@""];
+                NSLog(@"Z added");
                 continue;
             }
             if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
@@ -143,6 +147,7 @@
                     [data addObject:[f accel_total]];
                 else
                     [data addObject:@""];
+                NSLog(@"Total added");
                 continue;
             }
             if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
@@ -150,6 +155,7 @@
                     [data addObject:[f time_millis]];
                 else
                     [data addObject:@""];
+                NSLog(@"Time added");
                 continue;
             }
             
