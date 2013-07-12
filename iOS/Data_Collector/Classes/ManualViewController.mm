@@ -119,7 +119,7 @@
     if (expNum && expNum > 0) {
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+        [prefs setValue:[NSString stringWithFormat:@"%d", expNum] forKey:[StringGrabber grabString:@"key_exp_manual"]];
         
         if (browsing == YES) {
             browsing = NO;
@@ -133,7 +133,7 @@
         }
     } else {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int exp = [prefs integerForKey:[StringGrabber grabString:@"key_exp_manual"]];
+        int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_manual"]] intValue];
         if (exp > 0) {
             expNum = exp;
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
@@ -545,12 +545,13 @@
 
             [self cleanRDSData];
             
-            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
+            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            expNum = [expNumString intValue];
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+            [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_manual"]];
             
             [self fillDataFieldEntryList:expNum withData:nil];
         }

@@ -194,6 +194,16 @@
                                image:WAFFLE_WARNING];
             ready = false;
         }
+        
+        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
+        if ([selectedCells count] == 0) {
+            if (ready == true)
+                [self.view makeWaffle:@"Please re-select an experiment and fields to record data for"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            ready = false;
+        }
     }
     
     if (ready) {
