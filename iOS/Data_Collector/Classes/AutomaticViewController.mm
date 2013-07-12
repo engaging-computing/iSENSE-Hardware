@@ -446,6 +446,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self setNonRecordingLayout];
             
             // Stop Recording
+            backFromSetup = false;
             [self stopRecording:motionManager];
         }
         
@@ -508,7 +509,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         else
             secondsStr = [NSString stringWithFormat:@"%d", seconds];
         
-        int dataPoints = (1000 / recordingRate) * elapsedTime;
+        int dataPoints = (int) (1000 / ((float)recordingRate) * elapsedTime);
         
         NSLog(@"points: %d", dataPoints);
 
