@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 
+#define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
+#define PROD_VIS_URL @"http://isenseproject.org/highvis.php?sessions="
+
 @interface ViewController ()
 
 - (IBAction)showMenu:(id)sender;
@@ -16,7 +19,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial ;
 
 - (void)viewDidLoad {
     
@@ -40,12 +43,26 @@
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
+    [self login:@"sor" withPassword:@"sor"];
     
     
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.isMovingToParentViewController == YES) {
+        change_name = [[CODialog alloc] initWithWindow:self.view.window];
+        change_name.title = @"Enter First Name and Last Initial";
+        [change_name addTextFieldWithPlaceholder:@"First Name" secure:NO];
+        [change_name addTextFieldWithPlaceholder:@"Last Initial" secure:NO];
+        UITextField *last = [change_name textFieldAtIndex:1];
+        [last setDelegate:self];
+        [change_name addButtonWithTitle:@"Done" target:self selector:@selector(changeName)];
+        [change_name showOrUpdateAnimated:YES];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -115,7 +132,6 @@
     dispatch_async(queue, ^{
         elapsedTime += 1;
         
-        int minutes = elapsedTime / 60;
         int seconds = elapsedTime % 60;
         
         NSString *secondsStr;
@@ -128,9 +144,6 @@
         
         NSLog(@"points: %d", dataPoints);
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-			NSLog(@"Time Elapsed: %d:%@\nData Point Count: %d", minutes, secondsStr, dataPoints);
-        });
     });
     
 }
@@ -138,7 +151,7 @@
 
 // Fill dataToBeJSONed with a row of data
 - (void) buildRowOfData {
-    Fields *fieldsRow = [Fields alloc];
+    Fields *fieldsRow = [[Fields alloc] init];
     
     // Fill a new row of data starting with time
     double time = [[NSDate date] timeIntervalSince1970];
@@ -191,20 +204,22 @@
                         vector_status.text = [@"Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]];
                 });
             }
-            // Update parent JSON object
-            [dfm orderDataFromFields:fieldsRow];
-            
-            if (dfm.data != nil && dataToBeJSONed != nil)
-                [dataToBeJSONed addObject:dfm.data];
-            else {
-                NSLog(@"something is wrong");
-            }
         }
-        
     });
+    // Update parent JSON object
+    [dfm orderDataFromFields:fieldsRow];
     
-    
+    if (dfm.data != nil && dataToBeJSONed != nil)
+        [dataToBeJSONed addObject:dfm.data];
+    else {
+        NSLog(@"something is wrong");
+    }
 }
+
+
+
+
+
 
 // This inits locations
 - (void) initLocations {
@@ -304,6 +319,36 @@
     [experiment hideAnimated:YES];
     expNum = [[experiment textForTextFieldAtIndex:0] intValue];
     NSLog(@"experiment number: %d", expNum);
+}
+
+- (bool) uploadData:(NSString *) description {
+    
+    if (![iapi isLoggedIn]) {
+        [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+        return false;
+        
+    }
+    
+    NSString *name = firstName;
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:lastInitial];
+    
+    NSNumber *session_num = [iapi createSession:name withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+    
+    NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array options:0 error:&error];
+    if (error != nil) {
+        NSLog(@"Error:%@", error);
+        return false;
+    }
+    bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
+    if (!success)
+        [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
+    else
+        [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+    return success;
+    
 }
 
 - (IBAction)showMenu:(id)sender {
@@ -438,7 +483,8 @@
         if ([title isEqualToString:@"Discard"]) {
             [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
-            //Publish to iSENSE
+            [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
+            [self uploadData: @"Car Ramp Physics Test"];
         }
     }
 }
@@ -446,7 +492,12 @@
 - (void) changeName {
     
     [change_name hideAnimated:YES];
-    
+    firstName = [change_name textForTextFieldAtIndex:0];
+    lastInitial = [change_name textForTextFieldAtIndex:1];
+    login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+    login_status.text = [login_status.text stringByAppendingString:firstName];
+    login_status.text = [login_status.text stringByAppendingString:@" "];
+    login_status.text = [login_status.text stringByAppendingString:lastInitial];
     
 }
 
@@ -464,6 +515,7 @@
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_CHECKMARK];
+                [login_status setText:[@"Logged in as: " stringByAppendingString:usernameInput]];
             } else {
                 [self.view makeWaffle:@"Login Failed!"
                              duration:WAFFLE_LENGTH_SHORT
