@@ -6,16 +6,6 @@
 //  Copyright (c) 2013 ECG. All rights reserved.
 //
 
-// waffle constants
-#define WAFFLE_LENGTH_SHORT  2.0
-#define WAFFLE_LENGTH_LONG   3.5
-#define WAFFLE_BOTTOM @"bottom"
-#define WAFFLE_TOP @"top"
-#define WAFFLE_CENTER @"center"
-#define WAFFLE_CHECKMARK @"waffle_check"
-#define WAFFLE_RED_X @"waffle_x"
-#define WAFFLE_WARNING @"waffle_warn"
-
 #import "RNGridMenu.h"
 #import "Waffle.h"
 #import "AboutViewController.h"
@@ -32,10 +22,11 @@
 #import <CoreLocation/CLLocationManagerDelegate.h>
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate> {
-
-
-
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+{
+    
+    
+    
 }
 
 @property(nonatomic) IBOutlet UILabel *vector_status;
@@ -47,6 +38,7 @@
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
 @property(nonatomic, retain) CODialog *change_name;
+@property(nonatomic, retain) CODialog *experiment;
 @property(nonatomic, retain) iSENSE *iapi;
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
@@ -64,6 +56,8 @@
 @property (nonatomic, copy) NSString *city;
 @property (nonatomic, copy) NSString *address;
 @property (nonatomic, copy) NSString *country;
+@property (nonatomic) int  elapsedTime;
+@property (nonatomic) int  recordingRate;
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
@@ -81,6 +75,7 @@
 - (void)changeName;
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (CODialog *) getDispatchDialogWithMessage:(NSString *)dString;
+- (void) updateElapsedTime;
 
 @end
 
