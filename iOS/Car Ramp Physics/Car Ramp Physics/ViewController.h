@@ -16,6 +16,7 @@
 #import "DataFieldManager.h"
 #import "Constants.h"
 #import "Fields.h"
+#import "HexColor.h"
 #import <CoreMotion/CMMotionManager.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLGeocoder.h>

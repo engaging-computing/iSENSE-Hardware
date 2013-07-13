@@ -37,6 +37,7 @@
 		7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */; };
 		7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F047178B275C00E51AD0 /* ViewController_iPad.xib */; };
 		7669F050178B29B800E51AD0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F04F178B29B800E51AD0 /* logo.png */; };
+		76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 76778D1B17919A6B0067ABA1 /* HexColor.m */; };
 		767B9260178C3F1700F1C6FA /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B925F178C3F1700F1C6FA /* upload2.png */; };
 		767B9262178C3FF600F1C6FA /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9261178C3FF600F1C6FA /* users.png */; };
 		767B9264178C40D500F1C6FA /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9263178C40D500F1C6FA /* info.png */; };
@@ -121,6 +122,8 @@
 		7669F045178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7669F048178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		7669F04F178B29B800E51AD0 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = "../../../Android/Car_Ramp_Physics_v2/res/drawable-xhdpi/logo.png"; sourceTree = "<group>"; };
+		76778D1A17919A6B0067ABA1 /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HexColor.h; path = ../HexColor.h; sourceTree = "<group>"; };
+		76778D1B17919A6B0067ABA1 /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = ../HexColor.m; sourceTree = "<group>"; };
 		767B925F178C3F1700F1C6FA /* upload2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload2.png; sourceTree = "<group>"; };
 		767B9261178C3FF600F1C6FA /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
 		767B9263178C40D500F1C6FA /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
@@ -213,6 +216,8 @@
 		7669F02F178B275C00E51AD0 /* Car Ramp Physics */ = {
 			isa = PBXGroup;
 			children = (
+				76778D1A17919A6B0067ABA1 /* HexColor.h */,
+				76778D1B17919A6B0067ABA1 /* HexColor.m */,
 				765099B7178DD39500425A27 /* Constants.h */,
 				765099B4178DD34D00425A27 /* ISenseSearch.h */,
 				765099B5178DD34D00425A27 /* ISenseSearch.m */,
@@ -407,6 +412,7 @@
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
 				765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */,
 				765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */,
+				76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
