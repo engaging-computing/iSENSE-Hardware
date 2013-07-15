@@ -33,7 +33,19 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    NSLog(@"got barcode: %@", [url host]);
+    NSLog(@"got barcode: %@", url);
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    
+    NSString *exp = arr[2];
+    
+    int expNum = [exp intValue];
+    
+    NSLog(@"ExpNum: %d", expNum);
+    
+    self.viewController.expNum = expNum;
+    
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
