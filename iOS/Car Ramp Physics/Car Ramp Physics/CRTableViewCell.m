@@ -102,7 +102,7 @@
     }
     return self;
 }
-
+                                
 #pragma mark - Properties
 - (void)setIsSelected:(BOOL)isSelected
 {

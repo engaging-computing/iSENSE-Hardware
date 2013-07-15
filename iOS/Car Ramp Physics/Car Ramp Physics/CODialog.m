@@ -476,9 +476,7 @@ CODialogSynth(highlightedIndex)
     [self removeFromSuperview];
     self.overlay = nil;
     
-    // Rekey host window
-    // https://github.com/eaigner/CODialog/issues/6
-    //
+    
     [self.hostWindow makeKeyWindow];
   }];
 }

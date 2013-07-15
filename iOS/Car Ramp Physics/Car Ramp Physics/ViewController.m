@@ -3,8 +3,8 @@
 //  Car Ramp Physics
 //
 //  Created by Virinchi Balabhadrapatruni on 7/8/13.
-//  Copyright (c) 2013 ECG. All rights reserved.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "ViewController.h"
 
