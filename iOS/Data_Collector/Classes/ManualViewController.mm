@@ -523,7 +523,7 @@
 //                
 //            } else {
             
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
                                                                   message:nil
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"

@@ -839,16 +839,22 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     }
 }
 
+- (void) setupDFMWithAllFields {
+    
+    [dfm addAllFieldsToOrder];
+    
+    for (int i = 0; i < [[dfm order] count]; i++) {
+        [dfm setEnabledField:true atIndex:i];
+    }
+}
+
 // Enabled fields check
 - (void) getEnabledFields {
     
-    // if exp# = -1 then enable all, else enable some
+    // if exp# = -1 then enable all fields, else enable some based on compatability and sensor selection array
     if (expNum == -1) {
         
-        for (int i = 0; i < [[dfm order] count]; i++) {
-            [dfm setEnabledField:true atIndex:i];
-            NSLog(@"setting: %d", i); // TODO - dfm array is empty?
-        }
+        [self setupDFMWithAllFields];
         
     } else {
         

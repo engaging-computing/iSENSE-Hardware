@@ -446,6 +446,31 @@
     return data;    
 }
 
+- (void) addAllFieldsToOrder {
+    [order addObject:[StringGrabber grabField:@"time"]];
+    [order addObject:[StringGrabber grabField:@"accel_x"]];
+    [order addObject:[StringGrabber grabField:@"accel_y"]];
+    [order addObject:[StringGrabber grabField:@"accel_z"]];
+    [order addObject:[StringGrabber grabField:@"accel_total"]];
+    [order addObject:[StringGrabber grabField:@"latitude"]];
+    [order addObject:[StringGrabber grabField:@"longitude"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_x"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_y"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_z"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_total"]];
+    [order addObject:[StringGrabber grabField:@"heading_deg"]];
+    [order addObject:[StringGrabber grabField:@"heading_rad"]];
+    [order addObject:[StringGrabber grabField:@"temperature_c"]];
+    [order addObject:[StringGrabber grabField:@"pressure"]];
+    [order addObject:[StringGrabber grabField:@"altitude"]];
+    [order addObject:[StringGrabber grabField:@"luminous_flux"]];
+    [order addObject:[StringGrabber grabField:@"gyroscope_x"]];
+    [order addObject:[StringGrabber grabField:@"gyroscope_y"]];
+    [order addObject:[StringGrabber grabField:@"gyroscope_z"]];
+    [order addObject:[StringGrabber grabField:@"temperature_f"]];
+    [order addObject:[StringGrabber grabField:@"temperature_k"]];
+}
+
 - (void) dealloc {
     [order release];
     [data  release];
