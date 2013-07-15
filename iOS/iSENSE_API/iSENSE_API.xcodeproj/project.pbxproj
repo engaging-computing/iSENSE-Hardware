@@ -36,6 +36,11 @@
 		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
 		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
 		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
+		B7F09EF81794599100725483 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF51794599100725483 /* waffle_check.png */; };
+		B7F09EF91794599100725483 /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF61794599100725483 /* waffle_warn.png */; };
+		B7F09EFA1794599100725483 /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF71794599100725483 /* waffle_x.png */; };
+		B7F09EFD1794599E00725483 /* Waffle.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F09EFB1794599E00725483 /* Waffle.h */; };
+		B7F09EFE1794599E00725483 /* Waffle.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F09EFC1794599E00725483 /* Waffle.m */; };
 		B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */; };
 		B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */; };
 /* End PBXBuildFile section */
@@ -87,6 +92,12 @@
 		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
 		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
 		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
+		B7F09EF51794599100725483 /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
+		B7F09EF61794599100725483 /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
+		B7F09EF71794599100725483 /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
+		B7F09EFB1794599E00725483 /* Waffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Waffle.h; sourceTree = "<group>"; };
+		B7F09EFC1794599E00725483 /* Waffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Waffle.m; sourceTree = "<group>"; };
+		B7F09EFF179459EC00725483 /* WaffleConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaffleConstants.h; sourceTree = "<group>"; };
 		B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCompatibility.h; sourceTree = "<group>"; };
 		B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCompatibility.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -208,6 +219,7 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				B7F09EF41794595700725483 /* waffle */,
 				B7F2D81C177B692200F9A58D /* sensor_compatibility */,
 				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
@@ -266,6 +278,19 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		B7F09EF41794595700725483 /* waffle */ = {
+			isa = PBXGroup;
+			children = (
+				B7F09EFF179459EC00725483 /* WaffleConstants.h */,
+				B7F09EFB1794599E00725483 /* Waffle.h */,
+				B7F09EFC1794599E00725483 /* Waffle.m */,
+				B7F09EF51794599100725483 /* waffle_check.png */,
+				B7F09EF61794599100725483 /* waffle_warn.png */,
+				B7F09EF71794599100725483 /* waffle_x.png */,
+			);
+			name = waffle;
+			sourceTree = "<group>";
+		};
 		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
 			isa = PBXGroup;
 			children = (
@@ -295,6 +320,7 @@
 				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
 				39B63D891778C4950024EB75 /* Experiment.h in Headers */,
 				B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */,
+				B7F09EFD1794599E00725483 /* Waffle.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +395,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */,
+				B7F09EF81794599100725483 /* waffle_check.png in Resources */,
+				B7F09EF91794599100725483 /* waffle_warn.png in Resources */,
+				B7F09EFA1794599100725483 /* waffle_x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +429,7 @@
 				3981B4B217626FD90030ACE5 /* DataSet.m in Sources */,
 				3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */,
 				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
+				B7F09EFE1794599E00725483 /* Waffle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
