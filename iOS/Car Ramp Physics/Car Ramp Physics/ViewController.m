@@ -22,7 +22,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver ;
 
 - (void)viewDidLoad {
     
@@ -59,6 +59,17 @@
     firstName = @"No Name";
     lastInitial = @"Provided";
     [self login:@"sor" withPassword:@"sor"];
+    
+    // Managed Object Context for Data_CollectorAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // DataSaver from Data_CollectorAppDelegate
+    if (dataSaver == nil) {
+        dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+    }
+
     
     
 }
@@ -358,6 +369,40 @@
     NSLog(@"experiment number: %d", expNum);
 }
 
+// Save a data set so you don't have to upload it immediately
+- (void) saveDataSetWithDescription:(NSString *)description {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+    
+    bool uploadable = false;
+    if (expNum > 1) uploadable = true;
+    
+    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    [ds setName:sessionName];
+    [ds setDataDescription:description];
+    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setData:dataToBeJSONed];
+    [ds setPicturePaths:[NSNull null]];
+    [ds setSid:[NSNumber numberWithInt:-1]];
+    [ds setCity:city];
+    [ds setCountry:country];
+    [ds setAddress:address];
+    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
+    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
+    // Commit the changes
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"%@", error);
+    }
+    
+}
+
 - (bool) uploadData:(NSString *) description {
     
     if (![iapi isLoggedIn]) {
@@ -380,12 +425,16 @@
         NSLog(@"Error:%@", error);
         return false;
     }
+    /*
     bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
     if (!success)
         [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
-    else
+    else {
         [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
-    return success;
+        
+    }*/
+    [self saveDataSetWithDescription:@"Car Ramp Physics"];
+    return true;
     
 }
 
@@ -403,6 +452,15 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
+        UploadTableViewController *uploadController;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            uploadController = [[UploadTableViewController alloc] initWithNibName:@"UploadTableViewController_iPhone" bundle:nil];
+        } else {
+           uploadController = [[UploadTableViewController alloc] initWithNibName:@"UploadTableViewController_iPad" bundle:nil];
+        }    
+
+        uploadController.saver = dataSaver;
+        [self.navigationController pushViewController:uploadController animated:YES];
     };
     void (^settingsBlock)() = ^() {
         NSLog(@"Record Settings button pressed");

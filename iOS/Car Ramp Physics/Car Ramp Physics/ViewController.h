@@ -17,6 +17,11 @@
 #import "Constants.h"
 #import "Fields.h"
 #import "HexColor.h"
+#import "UploadTableViewController.h"
+#import "DataSaver.h"
+#import "DataSet.h"
+#import "Queue.h"
+#import "AppDelegate.h"
 #import <CoreMotion/CMMotionManager.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLGeocoder.h>
@@ -69,6 +74,8 @@
 @property (nonatomic) NSString *passWord;
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) DataSaver *dataSaver;
+
 
 @property(nonatomic, retain) NSArray *items;
 
