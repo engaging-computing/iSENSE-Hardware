@@ -10,6 +10,9 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVCaptureDevice.h>
+
 typedef struct _RotationDataSaver {
     NSString *sesName;
     NSMutableArray *data;
@@ -60,6 +63,7 @@ typedef struct _RotationDataSaver {
 - (void)   cleanRDSData;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
+- (BOOL) handleNewQRCode:(NSURL *)url;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView  *logo;

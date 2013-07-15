@@ -49,6 +49,8 @@
 // substitute for viewDidLoad - allocates memory and sets up main UI
 - (void) viewHasLoaded {
     
+    NSLog(@"view has loaded");
+    
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
                                                                    style:UIBarButtonItemStylePlain
@@ -327,6 +329,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    
+    NSLog(@"view did appear");
     //[self updateExpNumLabel];
 }
 
@@ -507,21 +511,21 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-//            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-//                
-//                widController = [[ZXingWidgetController alloc] initWithDelegate:self
-//                                                                     showCancel:YES
-//                                                                       OneDMode:NO];
-//                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-//                
-//                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-//                widController.readers = readers;
-//                
-//                [self presentModalViewController:widController animated:YES];
-//                [qRCodeReader release];
-//                [readers release];
-//                
-//            } else {
+           if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+        
+               if ([[UIApplication sharedApplication]
+                   canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                   NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+                   Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+                   [dcad setLastController:self];
+                   [[UIApplication sharedApplication] openURL:urlp2s];
+               } else {
+                   NSURL *urlapp = [NSURL URLWithString:
+                                    @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+                   [[UIApplication sharedApplication] openURL:urlapp];
+               }
+           
+           } else {
             
                 UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
                                                                   message:nil
@@ -533,7 +537,7 @@
                 [message show];
                 [message release];
                 
-//            }
+           }
             
         }
         
@@ -577,32 +581,6 @@
         }
     }
 }
-
-//- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-//    [widController.view removeFromSuperview];
-//    
-//    qrResults = [result retain];
-//    NSArray *split = [qrResults componentsSeparatedByString:@"="];
-//    if ([split count] != 2) {
-//        [self.view makeWaffle:@"Invalid QR code scanned"
-//                    duration:WAFFLE_LENGTH_LONG
-//                    position:WAFFLE_BOTTOM
-//                       image:WAFFLE_RED_X];
-//    } else {
-//        rds->doesHaveData = false;
-//        
-//        expNum = [[split objectAtIndex:1] intValue];
-//        
-//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
-//        
-//        [self fillDataFieldEntryList:expNum withData:nil];
-//    }
-//}
-//
-//- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
-//    [widController.view removeFromSuperview];
-//}
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
@@ -1045,6 +1023,31 @@
     [spinner startAnimating];
     [spinner release];
     return [message autorelease];
+}
+
+- (BOOL) handleNewQRCode:(NSURL *)url {
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSString *exp = arr[2];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    
+    expNum = [exp intValue];
+    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
+    
+    if (browsing == YES) {
+        browsing = NO;
+        [self cleanRDSData];
+        [self fillDataFieldEntryList:expNum withData:nil];
+    } else {
+        if (rds != nil && rds->doesHaveData)
+            [self fillDataFieldEntryList:expNum withData:rds->data];
+        else
+            [self fillDataFieldEntryList:expNum withData:nil];
+    }
+    
+    return YES;
 }
 
 @end
