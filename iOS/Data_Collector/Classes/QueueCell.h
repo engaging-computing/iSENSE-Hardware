@@ -7,14 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/headers/DataSet.h>
 
 @interface QueueCell : UITableViewCell
 
-- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable;
+- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet;
+- (IBAction)setChecked:(UITapGestureRecognizer *)sender;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;
 @property (nonatomic, assign) IBOutlet UILabel *description;
-@property (nonatomic, assign) IBOutlet UISwitch *uploadable;
+@property (nonatomic, retain) IBOutlet UITapGestureRecognizer *onClickRecognizer;
+@property (nonatomic, retain) DataSet *dataSet;
 
 @end

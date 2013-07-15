@@ -10,6 +10,8 @@
 
 @implementation QueueCell
 
+@synthesize nameAndDate, dataType, description, dataSet;
+
 //- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 //    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 //    if (self) {
@@ -24,16 +26,32 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable {
-    QueueCell *cell = [[QueueCell alloc] init];
+- (QueueCell *)setupCellWithDataSet:(DataSet *)ds {
+      
+    self.nameAndDate.text = ds.name;
+    self.description.text = ds.dataDescription;
     
-    NSLog(@"Name is: %@", nameAndDate);
+    NSString *tmpDataType;
+    if (ds.picturePaths == nil) {
+        if (ds.data == nil) {
+            tmpDataType = @"Error";
+        } else {
+            tmpDataType = @"Data";
+        }
+    } else {
+        if (ds.data == nil) {
+            tmpDataType = @"Picture";
+        } else {
+            tmpDataType = @"Data";
+        }
+    }
     
-    cell.nameAndDate.text = nameAndDate;
-    cell.dataType.text = type;
-    cell.description.text = description;
+    self.dataType.text = tmpDataType;
+    [self setCheckedSwitch:ds.uploadable.boolValue];
     
-    return cell;
+    dataSet = [ds retain];
+    
+    return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -44,5 +62,28 @@
     return self;
 }
 
+
+-(void)setCheckedSwitch:(bool)checked {
+    if (checked) {
+        self.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
+    }
+}
+
+-(IBAction)setChecked:(UITapGestureRecognizer *)sender {
+    if (dataSet.uploadable.boolValue == false) {
+        [self setCheckedSwitch:true];
+        dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
+    } else {
+        [self setCheckedSwitch:false];
+        dataSet.uploadable = [[NSNumber alloc] initWithBool:false];
+    }
+}
+
+-(void)dealloc {
+    [super dealloc];
+    [dataSet release];
+}
 
 @end
