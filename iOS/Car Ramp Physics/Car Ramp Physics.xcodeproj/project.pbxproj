@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		7631ABF6178D98E2005A0469 /* CODialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7631ABF5178D98DA005A0469 /* CODialog.m */; };
 		765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
 		765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */; };
@@ -36,6 +37,13 @@
 		7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */; };
 		7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F047178B275C00E51AD0 /* ViewController_iPad.xib */; };
 		7669F050178B29B800E51AD0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F04F178B29B800E51AD0 /* logo.png */; };
+		76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 76778D1B17919A6B0067ABA1 /* HexColor.m */; };
+		76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B781791E07B001D6E3A /* CRTableViewCell.m */; };
+		76785B881791E66D001D6E3A /* UploadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B861791E66D001D6E3A /* UploadTableViewController.m */; };
+		76785B891791E66D001D6E3A /* UploadTableViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76785B871791E66D001D6E3A /* UploadTableViewController_iPhone.xib */; };
+		76785B8E1792F525001D6E3A /* UploadTableViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76785B8C1792F525001D6E3A /* UploadTableViewController_iPad.xib */; };
+		76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B90179332A0001D6E3A /* MarqueeLabel.m */; };
+		76785B9317937721001D6E3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76785B9217937721001D6E3A /* CoreData.framework */; };
 		767B9260178C3F1700F1C6FA /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B925F178C3F1700F1C6FA /* upload2.png */; };
 		767B9262178C3FF600F1C6FA /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9261178C3FF600F1C6FA /* users.png */; };
 		767B9264178C40D500F1C6FA /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9263178C40D500F1C6FA /* info.png */; };
@@ -82,6 +90,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		7631ABF4178D98DA005A0469 /* CODialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CODialog.h; sourceTree = "<group>"; };
 		7631ABF5178D98DA005A0469 /* CODialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CODialog.m; sourceTree = "<group>"; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
@@ -119,6 +128,17 @@
 		7669F045178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7669F048178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		7669F04F178B29B800E51AD0 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = "../../../Android/Car_Ramp_Physics_v2/res/drawable-xhdpi/logo.png"; sourceTree = "<group>"; };
+		76778D1A17919A6B0067ABA1 /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HexColor.h; path = ../HexColor.h; sourceTree = "<group>"; };
+		76778D1B17919A6B0067ABA1 /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = ../HexColor.m; sourceTree = "<group>"; };
+		76785B771791E07B001D6E3A /* CRTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRTableViewCell.h; sourceTree = "<group>"; };
+		76785B781791E07B001D6E3A /* CRTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRTableViewCell.m; sourceTree = "<group>"; };
+		76785B851791E66D001D6E3A /* UploadTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadTableViewController.h; sourceTree = "<group>"; };
+		76785B861791E66D001D6E3A /* UploadTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadTableViewController.m; sourceTree = "<group>"; };
+		76785B871791E66D001D6E3A /* UploadTableViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadTableViewController_iPhone.xib; sourceTree = "<group>"; };
+		76785B8C1792F525001D6E3A /* UploadTableViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadTableViewController_iPad.xib; sourceTree = "<group>"; };
+		76785B8F179332A0001D6E3A /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarqueeLabel.h; path = ../MarqueeLabel.h; sourceTree = "<group>"; };
+		76785B90179332A0001D6E3A /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MarqueeLabel.m; path = ../MarqueeLabel.m; sourceTree = "<group>"; };
+		76785B9217937721001D6E3A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		767B925F178C3F1700F1C6FA /* upload2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload2.png; sourceTree = "<group>"; };
 		767B9261178C3FF600F1C6FA /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
 		767B9263178C40D500F1C6FA /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
@@ -153,6 +173,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76785B9317937721001D6E3A /* CoreData.framework in Frameworks */,
 				765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */,
 				765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */,
 				765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */,
@@ -197,6 +218,7 @@
 		7669F028178B275C00E51AD0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76785B9217937721001D6E3A /* CoreData.framework */,
 				765099CB178DF0D500425A27 /* CoreMotion.framework */,
 				765099C9178DF0CE00425A27 /* CoreLocation.framework */,
 				767B9273178C527500F1C6FA /* QuartzCore.framework */,
@@ -211,6 +233,16 @@
 		7669F02F178B275C00E51AD0 /* Car Ramp Physics */ = {
 			isa = PBXGroup;
 			children = (
+				76785B8F179332A0001D6E3A /* MarqueeLabel.h */,
+				76785B90179332A0001D6E3A /* MarqueeLabel.m */,
+				76785B851791E66D001D6E3A /* UploadTableViewController.h */,
+				76785B861791E66D001D6E3A /* UploadTableViewController.m */,
+				76785B871791E66D001D6E3A /* UploadTableViewController_iPhone.xib */,
+				76785B8C1792F525001D6E3A /* UploadTableViewController_iPad.xib */,
+				76785B771791E07B001D6E3A /* CRTableViewCell.h */,
+				76785B781791E07B001D6E3A /* CRTableViewCell.m */,
+				76778D1A17919A6B0067ABA1 /* HexColor.h */,
+				76778D1B17919A6B0067ABA1 /* HexColor.m */,
 				765099B7178DD39500425A27 /* Constants.h */,
 				765099B4178DD34D00425A27 /* ISenseSearch.h */,
 				765099B5178DD34D00425A27 /* ISenseSearch.m */,
@@ -248,6 +280,7 @@
 		7669F030178B275C00E51AD0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				760FABBB1790566C00951F97 /* Strings.strings */,
 				76E02E30178F19220057D37B /* Fields.strings */,
 				765099BB178DD92D00425A27 /* button_dark.png */,
 				765099BC178DD92D00425A27 /* button_experiment_clean.png */,
@@ -380,6 +413,9 @@
 				765099C7178DD92D00425A27 /* noimagedata_normal.png in Resources */,
 				765099C8178DD92D00425A27 /* underline.png in Resources */,
 				76E02E31178F19220057D37B /* Fields.strings in Resources */,
+				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
+				76785B891791E66D001D6E3A /* UploadTableViewController_iPhone.xib in Resources */,
+				76785B8E1792F525001D6E3A /* UploadTableViewController_iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,6 +439,10 @@
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
 				765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */,
 				765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */,
+				76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */,
+				76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */,
+				76785B881791E66D001D6E3A /* UploadTableViewController.m in Sources */,
+				76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

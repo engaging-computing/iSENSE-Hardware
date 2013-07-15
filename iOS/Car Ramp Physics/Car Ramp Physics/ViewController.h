@@ -16,6 +16,12 @@
 #import "DataFieldManager.h"
 #import "Constants.h"
 #import "Fields.h"
+#import "HexColor.h"
+#import "UploadTableViewController.h"
+#import "DataSaver.h"
+#import "DataSet.h"
+#import "Queue.h"
+#import "AppDelegate.h"
 #import <CoreMotion/CMMotionManager.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLGeocoder.h>
@@ -39,6 +45,7 @@
 @property(nonatomic) int countdown;
 @property(nonatomic, retain) CODialog *change_name;
 @property(nonatomic, retain) CODialog *experiment;
+@property(nonatomic, retain) UIAlertView *view;
 @property(nonatomic, retain) iSENSE *iapi;
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
@@ -59,14 +66,23 @@
 @property (nonatomic) int  elapsedTime;
 @property (nonatomic) int  recordingRate;
 
+@property (nonatomic) NSString *firstName;
+@property (nonatomic) NSString *lastInitial;
+@property (nonatomic) NSNumber *session_num;
+@property (nonatomic) BOOL  setupDone;
+@property (nonatomic) NSString *userName;
+@property (nonatomic) NSString *passWord;
+
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) DataSaver *dataSaver;
+
 
 @property(nonatomic, retain) NSArray *items;
 
 //Boolean variables
 @property(nonatomic) BOOL running;
 @property(nonatomic) BOOL timeOver;
-@property(nonatomic) BOOL setupDone;
+@property(nonatomic) BOOL useDev;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (IBAction)showMenu:(id)sender;
