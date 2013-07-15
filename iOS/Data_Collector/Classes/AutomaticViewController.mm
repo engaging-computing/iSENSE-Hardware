@@ -244,6 +244,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Current count = %d", dataSaver.count);
     }
     
     // Loading message appears while seting up main view
@@ -739,12 +740,12 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:[NSNull null]];
+    [ds setPicturePaths:nil];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
@@ -753,15 +754,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
+    [ds release];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-    
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
-    
+
 }
 
 // Finds the associated address from a GPS location.
