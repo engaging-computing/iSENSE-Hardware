@@ -96,7 +96,7 @@
         NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
         NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"momd"];
         managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
-        //NSLog(@"%@", managedObjectModel.entities.description);
+        NSLog(@"%@", managedObjectModel.entities.description);
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();
@@ -188,6 +188,7 @@
 // Get the dataSets from the queue :D
 - (void) fetchDataSets {
     
+   
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] retain];

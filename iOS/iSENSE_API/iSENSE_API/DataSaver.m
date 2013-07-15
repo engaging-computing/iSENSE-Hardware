@@ -45,6 +45,9 @@
         NSLog(@"%@", error);
     }
     
+    int newKey = arc4random();
+    [dataQueue enqueue:dataSet withKey:newKey];
+    count++;
 }
 
 -(void)addDataSetFromCoreData:(DataSet *)dataSet {
@@ -55,20 +58,17 @@
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
--(id)removeDataSet:(int)key {
+-(id)removeDataSet:(NSNumber *)key {
     count--;
     DataSet *tmp;
-    if (key == NO_KEY) {
+    NSLog(@"Removing dataSet with key: %@", key);
+    if (key == nil) {
         tmp = [dataQueue dequeue];
     } else {
         tmp = [dataQueue removeFromQueueWithKey:key];
     }
     
-    if (tmp != nil) NSLog(@"hope");
-    
     [managedObjectContext deleteObject:tmp];
-    
-    if (tmp != nil) NSLog(@"more hope");
     
     // Commit the changes
     NSError *error = [[NSError alloc] init];
@@ -77,26 +77,30 @@
         NSLog(@"Save failed with error: %@", error);
     }
     
-    if (tmp != nil) NSLog(@"yet more hope");
-
-    
     return tmp;
+}
+
+-(id)getDataSet {
+    NSNumber *firstKey = [dataQueue.allKeys objectAtIndex:0];
+    return [dataQueue objectForKey:firstKey];
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
 -(void)removeAllDataSets {
     
-    for (NSNumber *tmp in dataQueue.allKeys) {
-        NSLog(@"delete");
-        [self removeDataSet:tmp.intValue];
+    for (int i = 0; i < dataQueue.count; i++) {
+        NSNumber *tmp = [dataQueue.allKeys objectAtIndex:i];
+        NSLog(@"deleting %@", tmp);
+        [self removeDataSet:tmp];
     }
     
     [dataQueue removeAllObjects];
+    NSLog(@"%@", dataQueue.description);
     count = 0;
 
 }
 
--(void)editDataSetWithKey:(int)key {
+-(void)editDataSetWithKey:(NSNumber *)key {
     DataSet *dataSet = [dataQueue removeFromQueueWithKey:key];
     /*
      * Do editing code here!
@@ -111,10 +115,13 @@
         return false;
     }
     
+    NSMutableArray *dataSetsToBeRemoved = [[NSMutableArray alloc] init];
     DataSet *currentDS;
-    for (int i = 0; i < count; i++) {
+    
+    for (NSNumber *currentKey in dataQueue.allKeys) {
+        
         // get the next dataset
-        currentDS = [self removeDataSet:NO_KEY];
+        currentDS = [dataQueue objectForKey:currentKey];
         
         // check if the session is uploadable
         if (currentDS.uploadable.boolValue) {
@@ -123,7 +130,6 @@
             if (currentDS.sid.intValue == -1) {
                 NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
                 if (sessionID.intValue == -1) {
-                    [self addDataSet:currentDS];
                     continue;
                 } else {
                     currentDS.sid = sessionID;
@@ -135,17 +141,13 @@
                 NSError *error = nil;
                 NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
                 if (error != nil) {
-                    [self addDataSet:currentDS];
                     NSLog(@"%@", error);
                     return false;
                 }
                 
                 if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
-                    [self addDataSet:currentDS];
                     continue;
                 }
-                
-
             }
             
             // Upload pictures to iSENSE
@@ -169,21 +171,29 @@
                 // Add back the images that need to be uploaded
                 if (failedAtLeastOnce) {
                     currentDS.picturePaths = newPicturePaths;
-                    [self addDataSet:currentDS];
                     continue;
-                }               
-                
+                }
             }
+            
+        [dataSetsToBeRemoved addObject:currentKey];
             
         } else {
             NSLog(@"Ya nub");
-            [self addDataSet:currentDS];
+            continue;
         }
         
         
     }
     
+    [self removeDataSets:dataSetsToBeRemoved];
+    
     return true;
+}
+
+-(void)removeDataSets:(NSArray *)keys {
+    for(NSNumber *key in keys) {
+        [self removeDataSet:key];
+    }
 }
 
 @end

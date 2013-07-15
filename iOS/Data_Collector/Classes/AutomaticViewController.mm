@@ -244,6 +244,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Current count = %d", dataSaver.count);
     }
     
     // Loading message appears while seting up main view
@@ -739,7 +740,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [[DataSet alloc] init];
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
@@ -753,11 +754,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
-    [dataSaver release];
+    [ds release];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-    
 
-    
 }
 
 // Finds the associated address from a GPS location.

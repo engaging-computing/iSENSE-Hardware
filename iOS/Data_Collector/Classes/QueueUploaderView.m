@@ -26,13 +26,11 @@
     
     NSLog(@"%@", dataSaver.dataQueue.description);
     
-    
-    // Rebuild the dataSet with the new changes
-    [self rebuildDataQueueFromTableView];
-    /*
     // Do zee upload thang
     [dataSaver upload];
-     */
+    
+    // Rebuild the dataSet with the new changes
+    [self.navigationController popViewControllerAnimated:YES];
 
 }
 
@@ -70,14 +68,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Get dataSaver from the App Delegate
-    if (dataSaver == nil) {
-        dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
-    }
-    
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
         managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // Get dataSaver from the App Delegate
+    if (dataSaver == nil) {
+        dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
+        if (dataSaver == nil) NSLog(@"We've got a problem here");
     }
     
     currentIndex = 0;
@@ -112,6 +111,7 @@
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (dataSaver == nil) NSLog(@"Why am I nil?");
     return dataSaver.count;
 }
 
@@ -131,23 +131,6 @@
     [cell setupCellWithDataSet:tmp];
     
     return cell;
-}
-
-// Rebuild dataQueue from mTableView
--(void)rebuildDataQueueFromTableView {
-    
-    // Empty the queue
-    [dataSaver removeAllDataSets];
-       
-    // Go through ever cell in mTableView
-    for (QueueCell *cell in mTableView.subviews) {
-        if ([cell isKindOfClass:[QueueCell class]]) {
-            [dataSaver addDataSet:cell.dataSet];
-        }
-    }
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    
 }
 
 @end

@@ -18,10 +18,13 @@
     id headObject = [self objectForKey:firstKey];
     if (headObject != nil) {
         [self removeObjectForKey:firstKey];
+        NSLog(@"deleted dataset so new queue count is %d", self.count);
         return headObject;
     }
     
-    NSLog(@"Cannot dequeue dataSet: invalid key");
+    if (self.count != 0) NSLog(@"Cannot dequeue dataSet: invalid key");
+    else NSLog(@"Cannot dequeue dataSet: empty queue");
+    
     return headObject;
 }
 
@@ -35,21 +38,25 @@
 
 
 // Allows any arbitrary node to be removed
-- (id) removeFromQueueWithKey:(int)key {
+- (id) removeFromQueueWithKey:(NSNumber *)key {
+    NSLog(@"%@", [self allKeys].description);
     NSArray *keys = [self allKeys];
-    id firstKey = [keys objectAtIndex:0];
+    NSNumber *firstKey = [keys objectAtIndex:0];
     id headObject;
-    if (key == ((NSNumber *)firstKey).intValue) {
+    if (key == firstKey) {
         headObject = [self dequeue];
+        return headObject;
     } else {
-        NSNumber *keyObj = [NSNumber numberWithInt:key];
-        headObject = [self objectForKey:keyObj];
+        headObject = [self objectForKey:key];
         if (headObject != nil) {
-            [self removeObjectForKey:keyObj];
+            [self removeObjectForKey:key];
+            NSLog(@"deleted dataset so new queue count is %d", self.count);
             return headObject;
+        } else {
+            NSLog(@"Cannot remove dataSet: invalid key");
         }
     }
-    NSLog(@"Cannot remove dataSet: invalid key");
+    NSLog(@"I should never get here from queue remove with key");
     return headObject;
 }
 
