@@ -10,7 +10,7 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext;
 
 // Initialize the view where the 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -19,6 +19,19 @@
     }
     return self;
     
+}
+
+// Upload button control
+-(IBAction)upload:(id)sender {
+    
+    NSLog(@"%@", dataSaver.dataQueue.description);
+    
+    // Do zee upload thang
+    [dataSaver upload];
+    
+    // Rebuild the dataSet with the new changes
+    [self.navigationController popViewControllerAnimated:YES];
+
 }
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -55,11 +68,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Managed Object Context for Data_CollectorAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
     // Get dataSaver from the App Delegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
+        if (dataSaver == nil) NSLog(@"We've got a problem here");
     }
-        
+    
     currentIndex = 0;
 
 }
@@ -92,6 +111,7 @@
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (dataSaver == nil) NSLog(@"Why am I nil?");
     return dataSaver.count;
 }
 
@@ -101,23 +121,16 @@
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
-        UIViewController *tmp = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
-        cell = (QueueCell *) tmp.view;
-        
-        [tmp release];
+        UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
+        cell = (QueueCell *) tmpVC.view;
+        [tmpVC release];
     }
     
-    NSLog(@"First: %@", dataSaver.dataQueue.allKeys[0]);
-    
-    DataSet *tmp = [dataSaver removeDataSet:dataSaver.dataQueue.allKeys[0]]; // getting all the keys to my queue haha.  dis is bad
-    NSLog(@"Name of first dataset is %@.", tmp.description);
-    [cell setupCellName:tmp.name andDataType:@"Data" andDescription:tmp.dataDescription andUploadable:true];
-    [dataSaver addDataSet:tmp];
+    NSArray *keys = [dataSaver.dataQueue allKeys];  
+    DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
+    [cell setupCellWithDataSet:tmp];
     
     return cell;
 }
-
-
-
 
 @end
