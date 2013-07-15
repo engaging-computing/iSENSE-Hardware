@@ -26,6 +26,8 @@
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
     self.window.rootViewController = navigation;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:YES forKey:@"Y"];
     self.viewController.setupDone = YES;
     [self.window makeKeyAndVisible];
     return YES;
