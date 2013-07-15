@@ -19,6 +19,7 @@
 - (NSMutableArray *) orderDataFromFields:(Fields *)f;
 - (void) setEnabledField:(bool)value atIndex:(int)index;
 - (bool) enabledFieldAtIndex:(int)index;
+- (void) addAllFieldsToOrder;
 
 @property (nonatomic, retain) NSMutableArray *order;
 @property (nonatomic, retain) NSMutableArray *data;

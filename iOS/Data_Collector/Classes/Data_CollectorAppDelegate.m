@@ -218,5 +218,13 @@
     }
 }
 
+- (void) setLastController:(UIViewController *)uivc {
+    lastController = uivc;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    ManualViewController *mvc = (ManualViewController *) lastController;
+    return [mvc handleNewQRCode:url];
+}
 
 @end
