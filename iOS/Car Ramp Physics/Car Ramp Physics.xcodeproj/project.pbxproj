@@ -39,9 +39,6 @@
 		7669F050178B29B800E51AD0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F04F178B29B800E51AD0 /* logo.png */; };
 		76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 76778D1B17919A6B0067ABA1 /* HexColor.m */; };
 		76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B781791E07B001D6E3A /* CRTableViewCell.m */; };
-		76785B881791E66D001D6E3A /* UploadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B861791E66D001D6E3A /* UploadTableViewController.m */; };
-		76785B891791E66D001D6E3A /* UploadTableViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76785B871791E66D001D6E3A /* UploadTableViewController_iPhone.xib */; };
-		76785B8E1792F525001D6E3A /* UploadTableViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76785B8C1792F525001D6E3A /* UploadTableViewController_iPad.xib */; };
 		76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B90179332A0001D6E3A /* MarqueeLabel.m */; };
 		76785B9317937721001D6E3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76785B9217937721001D6E3A /* CoreData.framework */; };
 		767B9260178C3F1700F1C6FA /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B925F178C3F1700F1C6FA /* upload2.png */; };
@@ -62,6 +59,9 @@
 		76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */; };
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
+		76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E91F8617945E2E001749FC /* VariablesViewController.m */; };
+		76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */; };
+		76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */; };
 		76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EF01A2178B571F00CBE38C /* RNGridMenu.m */; };
 /* End PBXBuildFile section */
 
@@ -132,10 +132,6 @@
 		76778D1B17919A6B0067ABA1 /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = ../HexColor.m; sourceTree = "<group>"; };
 		76785B771791E07B001D6E3A /* CRTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRTableViewCell.h; sourceTree = "<group>"; };
 		76785B781791E07B001D6E3A /* CRTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRTableViewCell.m; sourceTree = "<group>"; };
-		76785B851791E66D001D6E3A /* UploadTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadTableViewController.h; sourceTree = "<group>"; };
-		76785B861791E66D001D6E3A /* UploadTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadTableViewController.m; sourceTree = "<group>"; };
-		76785B871791E66D001D6E3A /* UploadTableViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadTableViewController_iPhone.xib; sourceTree = "<group>"; };
-		76785B8C1792F525001D6E3A /* UploadTableViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadTableViewController_iPad.xib; sourceTree = "<group>"; };
 		76785B8F179332A0001D6E3A /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarqueeLabel.h; path = ../MarqueeLabel.h; sourceTree = "<group>"; };
 		76785B90179332A0001D6E3A /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MarqueeLabel.m; path = ../MarqueeLabel.m; sourceTree = "<group>"; };
 		76785B9217937721001D6E3A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -164,6 +160,10 @@
 		76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPhone.xib; sourceTree = "<group>"; };
 		76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		76E91F8517945E2E001749FC /* VariablesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariablesViewController.h; sourceTree = "<group>"; };
+		76E91F8617945E2E001749FC /* VariablesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariablesViewController.m; sourceTree = "<group>"; };
+		76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VariablesViewController_iPhone.xib; sourceTree = "<group>"; };
+		76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VariablesViewController_iPad.xib; sourceTree = "<group>"; };
 		76EF01A1178B571F00CBE38C /* RNGridMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNGridMenu.h; path = ../RNGridMenu.h; sourceTree = "<group>"; };
 		76EF01A2178B571F00CBE38C /* RNGridMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGridMenu.m; path = ../RNGridMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,10 +235,10 @@
 			children = (
 				76785B8F179332A0001D6E3A /* MarqueeLabel.h */,
 				76785B90179332A0001D6E3A /* MarqueeLabel.m */,
-				76785B851791E66D001D6E3A /* UploadTableViewController.h */,
-				76785B861791E66D001D6E3A /* UploadTableViewController.m */,
-				76785B871791E66D001D6E3A /* UploadTableViewController_iPhone.xib */,
-				76785B8C1792F525001D6E3A /* UploadTableViewController_iPad.xib */,
+				76E91F8517945E2E001749FC /* VariablesViewController.h */,
+				76E91F8617945E2E001749FC /* VariablesViewController.m */,
+				76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */,
+				76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */,
 				76785B771791E07B001D6E3A /* CRTableViewCell.h */,
 				76785B781791E07B001D6E3A /* CRTableViewCell.m */,
 				76778D1A17919A6B0067ABA1 /* HexColor.h */,
@@ -414,8 +414,8 @@
 				765099C8178DD92D00425A27 /* underline.png in Resources */,
 				76E02E31178F19220057D37B /* Fields.strings in Resources */,
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
-				76785B891791E66D001D6E3A /* UploadTableViewController_iPhone.xib in Resources */,
-				76785B8E1792F525001D6E3A /* UploadTableViewController_iPad.xib in Resources */,
+				76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */,
+				76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,8 +441,8 @@
 				765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */,
 				76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */,
 				76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */,
-				76785B881791E66D001D6E3A /* UploadTableViewController.m in Sources */,
 				76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */,
+				76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

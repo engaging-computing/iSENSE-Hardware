@@ -1,20 +1,20 @@
 //
-//  UploadTableViewController.m
+//  VariablesViewController.m
 //  Car Ramp Physics
 //
-//  Created by Virinchi Balabhadrapatruni on 7/13/13.
+//  Created by Virinchi Balabhadrapatruni on 7/15/13.
 //  Copyright (c) 2013 ECG. All rights reserved.
 //
 
-#import "UploadTableViewController.h"
+#import "VariablesViewController.h"
 
-@interface UploadTableViewController ()
+@interface VariablesViewController ()
 
 @end
 
-@implementation UploadTableViewController
+@implementation VariablesViewController
 
-@synthesize dataSource, selectedMarks, saver;
+@synthesize dataSource, selectedMarks;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -28,35 +28,58 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    UIBarButtonItem *uploadButton = [[UIBarButtonItem alloc] initWithTitle:@"Upload" style:UIBarButtonItemStyleDone target:self action:@selector(uploadSaved)];
+
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
     
     dataSource = [[NSMutableArray alloc] init];
     selectedMarks = [[NSMutableArray alloc] init];
     
-    int count = saver.count;
+    [dataSource addObject:@"X"];
+    [dataSource addObject:@"Y"];
+    [dataSource addObject:@"Z"];
+    [dataSource addObject:@"Magnitude"];
+    
+    [self loadPrefs];
+    
+    self.navigationItem.rightBarButtonItem = doneButton;
+    
+    self.navigationItem.title = @"Record Settings";
     
     
-    while (count) {
-        // get the next dataset
-        int headKey = saver.dataQueue.allKeys[0];
-        DataSet *current = [saver removeDataSet:headKey];
-        [saver.dataQueue enqueue:current withKey:headKey];
-    
-        NSString *cellString = [current.name stringByAppendingString:[@" " stringByAppendingString:current.description]];
-        
-        [dataSource addObject:cellString];
-        
-        count--;
+}
 
-    }
+- (void) loadPrefs {
     
-    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(-20, 0.0f, 130.0f, 44.01f)];
-    [toolbar setBarStyle:UIBarStyleBlack];
-    NSArray* buttons = [NSArray arrayWithObjects:self.editButtonItem, uploadButton, nil];
-    [toolbar setItems:buttons animated:YES];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:toolbar];
+    BOOL x = [prefs boolForKey:@"X"];
+    BOOL y = [prefs boolForKey:@"Y"];
+    BOOL z = [prefs boolForKey:@"Z"];
+    BOOL mag = [prefs boolForKey:@"Magnitude"];
+    
+    if (x)
+        [selectedMarks addObject:@"X"];
+    if (y)
+        [selectedMarks addObject:@"Y"];
+    if (z)
+        [selectedMarks addObject:@"Z"];
+    if (mag)
+        [selectedMarks addObject:@"Magnitude"];
+    
+    
+}
+
+- (void) done {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:[selectedMarks containsObject:@"X"] forKey:@"X"];
+    [prefs setBool:[selectedMarks containsObject:@"Y"] forKey:@"Y"];
+    [prefs setBool:[selectedMarks containsObject:@"Z"] forKey:@"Z"];
+    [prefs setBool:[selectedMarks containsObject:@"Magnitude"] forKey:@"Magnitude"];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    
     
 }
 
@@ -77,7 +100,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.dataSource count];
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -99,6 +122,7 @@
     return cell;
 }
 
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -110,18 +134,6 @@
         [selectedMarks addObject:text];
     
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // If row is deleted, remove it from the list.
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [dataSource removeObjectAtIndex:indexPath.row];
-        [tableView reloadData];
-    }
-}
-
-- (void) uploadSaved {
-    
 }
 
 @end
