@@ -11,6 +11,9 @@
 #define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
 #define PROD_VIS_URL @"http://isenseproject.org/highvis.php?sessions="
 
+#define DEV_DEFAULT_EXP 596
+#define PROD_DEFAULT_EXP 409
+
 @interface ViewController ()
 
 - (IBAction)showMenu:(id)sender;
@@ -19,7 +22,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver ;
 
 - (void)viewDidLoad {
     
@@ -41,6 +44,12 @@
     timeOver = NO;
     setupDone = NO;
     
+    if (useDev) {
+        expNum = DEV_DEFAULT_EXP;
+    } else {
+        expNum = PROD_DEFAULT_EXP;
+    }
+    
     dfm = [[DataFieldManager alloc] init];
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
@@ -50,6 +59,17 @@
     firstName = @"No Name";
     lastInitial = @"Provided";
     [self login:@"sor" withPassword:@"sor"];
+    
+    // Managed Object Context for Data_CollectorAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // DataSaver from Data_CollectorAppDelegate
+    if (dataSaver == nil) {
+        dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+    }
+
     
     
 }
@@ -82,12 +102,8 @@
             [self getEnabledFields];
             // Record Data
             running = YES;
+            [start setEnabled:NO];
             [self recordData];
-        } else {
-            // Stop Recording
-            running = NO;
-            [vector_status setText:@"Y: "];
-            [self stopRecording:motionmanager];
         }
         
         
@@ -134,6 +150,8 @@
         
     }
     
+    
+    
     dispatch_queue_t queue = dispatch_queue_create("automatic_update_elapsed_time", NULL);
     dispatch_async(queue, ^{
         elapsedTime += 1;
@@ -149,6 +167,21 @@
         int dataPoints = (1000 / recordingRate) * elapsedTime;
         
         NSLog(@"points: %d", dataPoints);
+        
+        if (countdown >= -1) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
+                countdown--;
+            });
+        }
+        
+        if (countdown < -1) {
+            
+            [self stopRecording:motionmanager];
+        }
+        
+        
+        
         
     });
     
@@ -222,11 +255,6 @@
     }
 }
 
-
-
-
-
-
 // This inits locations
 - (void) initLocations {
     if (!locationManager) {
@@ -241,6 +269,7 @@
 
 // Stops the recording and returns the actual data recorded :)
 -(void) stopRecording:(CMMotionManager *)finalMotionManager {
+    
     // Stop Timers
     [timer invalidate];
     [recordDataTimer invalidate];
@@ -250,21 +279,26 @@
     if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
     if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
     
-    // Back to recording mode
-    //    startStopButton.image = [UIImage imageNamed:@"red_button.png"];
-    //    mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-    //    startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
-    //    containerForMainButton updateImage:startStopButton];
-    
-    // Open up description dialog
-    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Publish to iSENSE?"
-                                                      message:nil
-                                                     delegate:self
-                                            cancelButtonTitle:@"Discard"
-                                            otherButtonTitles:@"Publish", nil];
-    
-    message.delegate = self;
-    [message show];
+    // Stop Recording
+    running = NO;
+    [vector_status setText:@"Y: "];
+    countdown = recordLength;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
+        [start setEnabled:YES];
+        
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Publish to iSENSE?"
+                                                          message:nil
+                                                         delegate:self
+                                                cancelButtonTitle:@"Discard"
+                                                otherButtonTitles:@"Publish", nil];
+        
+        message.delegate = self;
+        [message show];
+    });
     
 }
 
@@ -316,15 +350,57 @@
 }
 
 - (void) QRCode {
-    //Do nothing
+    //The following feature is experimental;
     [experiment hideAnimated:YES];
-    [self.view makeWaffle:@"QR Code functionality not implemented yet"];
+    if ([[UIApplication sharedApplication]
+         canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+        NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=carPhysics%3A//EAN"];
+        [[UIApplication sharedApplication] openURL:urlp2s];
+    } else {
+        NSURL *urlapp = [NSURL URLWithString:
+                         @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+        [[UIApplication sharedApplication] openURL:urlapp];
+    }
 }
 
 - (void) expCode {
     [experiment hideAnimated:YES];
     expNum = [[experiment textForTextFieldAtIndex:0] intValue];
     NSLog(@"experiment number: %d", expNum);
+}
+
+// Save a data set so you don't have to upload it immediately
+- (void) saveDataSetWithDescription:(NSString *)description {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+    
+    bool uploadable = false;
+    if (expNum > 1) uploadable = true;
+    
+    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    [ds setName:sessionName];
+    [ds setDataDescription:description];
+    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setData:dataToBeJSONed];
+    [ds setPicturePaths:[NSNull null]];
+    [ds setSid:[NSNumber numberWithInt:-1]];
+    [ds setCity:city];
+    [ds setCountry:country];
+    [ds setAddress:address];
+    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
+    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
+    // Commit the changes
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"%@", error);
+    }
+    
 }
 
 - (bool) uploadData:(NSString *) description {
@@ -349,12 +425,16 @@
         NSLog(@"Error:%@", error);
         return false;
     }
+    /*
     bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
     if (!success)
         [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
-    else
+    else {
         [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
-    return success;
+        
+    }*/
+    [self saveDataSetWithDescription:@"Car Ramp Physics"];
+    return true;
     
 }
 
@@ -372,6 +452,15 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
+        UploadTableViewController *uploadController;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            uploadController = [[UploadTableViewController alloc] initWithNibName:@"UploadTableViewController_iPhone" bundle:nil];
+        } else {
+           uploadController = [[UploadTableViewController alloc] initWithNibName:@"UploadTableViewController_iPad" bundle:nil];
+        }    
+
+        uploadController.saver = dataSaver;
+        [self.navigationController pushViewController:uploadController animated:YES];
     };
     void (^settingsBlock)() = ^() {
         NSLog(@"Record Settings button pressed");
@@ -412,6 +501,14 @@
     };
     void (^resetBlock)() = ^() {
         NSLog(@"Reset button pressed");
+        countdown = recordLength = 10;
+        userName = passWord = @"sor";
+        [self login:userName withPassword:passWord];
+        login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+        login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+        login_status.text = [login_status.text stringByAppendingString:firstName];
+        login_status.text = [login_status.text stringByAppendingString:@" "];
+        login_status.text = [login_status.text stringByAppendingString:lastInitial];
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
