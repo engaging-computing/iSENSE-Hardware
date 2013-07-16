@@ -227,7 +227,7 @@
     dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
     dispatch_async(queue, ^{
         // acceleration in meters per second squared
-        if ([dfm enabledFieldAtIndex:fACCEL_X] && x) {
+        if ([dfm enabledFieldAtIndex:fACCEL_X]) {
             fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
             NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -235,7 +235,7 @@
             });
         }
         
-        if ([dfm enabledFieldAtIndex:fACCEL_Y] && y) {
+        if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
             fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([dfm enabledFieldAtIndex:fACCEL_X])
@@ -245,7 +245,7 @@
             });
             NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
         }
-        if ([dfm enabledFieldAtIndex:fACCEL_Z] && z) {
+        if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
             fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
             NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -255,7 +255,7 @@
                     vector_status.text = [@"Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]];
             });
             
-            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL] && mag) {
+            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
                 fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
                                               + pow(fieldsRow.accel_y.doubleValue, 2)
@@ -396,9 +396,6 @@
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
-    
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
@@ -417,6 +414,7 @@
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
     
 }
 
