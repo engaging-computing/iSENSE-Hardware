@@ -12,9 +12,9 @@
 
 @synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi;
 
-// Initialize the view where the 
+// Initialize the view
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         iapi = [iSENSE getInstance];
     }
@@ -84,6 +84,14 @@
             [self viewDidLoad];
         }
     }
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:YES];
+    
+    // Autorotate
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+
 }
 
 // Do any additional setup after loading the view.

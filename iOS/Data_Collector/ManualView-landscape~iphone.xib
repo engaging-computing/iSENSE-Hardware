@@ -274,7 +274,6 @@
 						<string key="NSFrame">{{24, 126}, {415, 154}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -529,6 +528,7 @@
 						<string key="displayMenu:">id</string>
 						<string key="mediaOnClick:">id</string>
 						<string key="saveOnClick:">id</string>
+						<string key="textFieldFinished:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="clearOnClick:">
@@ -545,6 +545,10 @@
 						</object>
 						<object class="IBActionInfo" key="saveOnClick:">
 							<string key="name">saveOnClick:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="textFieldFinished:">
+							<string key="name">textFieldFinished:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
