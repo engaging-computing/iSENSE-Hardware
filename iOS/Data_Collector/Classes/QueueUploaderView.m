@@ -10,12 +10,13 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi;
 
 // Initialize the view where the 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
     if (self) {
+        iapi = [iSENSE getInstance];
     }
     return self;
     
@@ -26,11 +27,32 @@
     
     NSLog(@"%@", dataSaver.dataQueue.description);
     
-    // Do zee upload thang
-    [dataSaver upload];
-    
-    // Rebuild the dataSet with the new changes
-    [self.navigationController popViewControllerAnimated:YES];
+    // Words n stuff
+    if ([iapi isLoggedIn]) {
+        
+        // Do zee upload thang
+        bool uploadSuccessful = [dataSaver upload];
+        if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    } else {
+        if ([iapi isConnectedToInternet]) {
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            message.tag = MENU_LOGIN;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message show];
+            [message release];
+        } else {
+           
+            [self.navigationController popViewControllerAnimated:YES];
+
+        }
+    }
 
 }
 
@@ -76,7 +98,6 @@
     // Get dataSaver from the App Delegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
-        if (dataSaver == nil) NSLog(@"We've got a problem here");
     }
     
     currentIndex = 0;
@@ -132,5 +153,75 @@
     
     return cell;
 }
+
+// Log you into to iSENSE using the iSENSE API
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL success = [iapi login:usernameInput with:passwordInput];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [self.view makeWaffle:@"Login Successful!"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_CHECKMARK];
+                
+                // save the username and password in prefs
+                NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs synchronize];
+                
+            } else {
+                [self.view makeWaffle:@"Login Failed!"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_RED_X];
+            }
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+            if ([iapi isLoggedIn]) {
+                // Do zee upload thang
+                bool uploadSuccessful = [dataSaver upload];
+                if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+            }
+            
+            [self.navigationController popViewControllerAnimated:YES];
+
+        });
+    });
+    
+}
+
+// This is for the loading spinner when the app starts automatic mode
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    [spinner release];
+    return [message autorelease];
+}
+
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == MENU_LOGIN) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    }
+}
+
 
 @end
