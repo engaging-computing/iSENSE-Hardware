@@ -159,6 +159,8 @@
 
 
 - (void)dealloc {
+    NSLog(@"dataSaver count is %d in dealloc", dataSaver.count);
+    [dataSaver release];
     [managedObjectModel release];
     [managedObjectContext release];
     [persistentStoreCoordinator release];
@@ -203,9 +205,9 @@
         } else {
             NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
         }
-        
+
         dataSaver = [[DataSaver alloc] initWithContext:managedObjectContext];
-        
+                
         // fill dataSaver's DataSet Queue
         for (int i = 0; i < mutableFetchResults.count; i++) {
             [dataSaver addDataSetFromCoreData:mutableFetchResults[i]];
