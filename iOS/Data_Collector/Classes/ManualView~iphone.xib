@@ -195,7 +195,7 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">Upload</string>
+						<string key="IBUINormalTitle">Save</string>
 						<reference key="IBUIHighlightedTitleColor" ref="142880060"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -378,12 +378,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">uploadOnClick:</string>
+						<string key="label">saveOnClick:</string>
 						<reference key="source" ref="85172356"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">46</int>
+					<int key="connectionID">48</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -530,7 +530,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">47</int>
+			<int key="maxID">48</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -545,8 +545,8 @@
 							<string>clearOnClick:</string>
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
+							<string>saveOnClick:</string>
 							<string>textFieldFinished:</string>
-							<string>uploadOnClick:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -564,8 +564,8 @@
 							<string>clearOnClick:</string>
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
+							<string>saveOnClick:</string>
 							<string>textFieldFinished:</string>
-							<string>uploadOnClick:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -582,11 +582,11 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">textFieldFinished:</string>
+								<string key="name">saveOnClick:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">uploadOnClick:</string>
+								<string key="name">textFieldFinished:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>

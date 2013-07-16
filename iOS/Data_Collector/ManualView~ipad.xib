@@ -49,6 +49,7 @@
 						<string key="NSFrameSize">{768, 127}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="577549214"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -160,7 +161,7 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">Upload</string>
+						<string key="IBUINormalTitle">Save</string>
 						<reference key="IBUIHighlightedTitleColor" ref="474914697"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -293,7 +294,7 @@
 				<string key="NSFrame">{{0, 20}, {768, 1004}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="577549214"/>
+				<reference key="NSNextKeyView" ref="1070287811"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
@@ -381,12 +382,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">uploadOnClick:</string>
+						<string key="label">saveOnClick:</string>
 						<reference key="source" ref="906180905"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">62</int>
+					<int key="connectionID">65</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -549,7 +550,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">64</int>
+			<int key="maxID">65</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -564,10 +565,12 @@
 							<string>clearOnClick:</string>
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
-							<string>uploadOnClick:</string>
+							<string>saveOnClick:</string>
+							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -581,7 +584,8 @@
 							<string>clearOnClick:</string>
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
-							<string>uploadOnClick:</string>
+							<string>saveOnClick:</string>
+							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -598,7 +602,11 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">uploadOnClick:</string>
+								<string key="name">saveOnClick:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">textFieldFinished:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
