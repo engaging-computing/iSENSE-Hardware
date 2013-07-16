@@ -68,6 +68,7 @@
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Datasaver Details: %@", dataSaver.description);
         NSLog(@"Current count = %d", dataSaver.count);
     }
 
@@ -313,6 +314,20 @@
         [start setEnabled:YES];
         
     });
+    
+    NSString *name = firstName;
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:lastInitial];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"HH:mm:ss"];
+    
+    NSDate *now = [[NSDate alloc] init];
+    
+    NSString* timeString = [dateFormat stringFromDate:now];
+    
+    sessionName = [name stringByAppendingString:[@" " stringByAppendingString:timeString]];;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
         UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Publish to iSENSE?"
@@ -382,7 +397,7 @@
         [[UIApplication sharedApplication] openURL:urlp2s];
     } else {
         NSURL *urlapp = [NSURL URLWithString:
-                         @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+                         @"http://itunes.com/app/pic2shop"];
         [[UIApplication sharedApplication] openURL:urlapp];
     }
 }
@@ -398,7 +413,7 @@
     
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
-    
+    NSLog(@"Bla");
     DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
@@ -410,7 +425,7 @@
     [ds setCountry:country];
     [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    
+    NSLog(@"Bla2");
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
@@ -426,11 +441,7 @@
         
     }
     
-    NSString *name = firstName;
-    name = [name stringByAppendingString:@" "];
-    name = [name stringByAppendingString:lastInitial];
-    
-    session_num = [iapi createSession:name withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+    session_num = [iapi createSession:sessionName withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
     
     
     NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];

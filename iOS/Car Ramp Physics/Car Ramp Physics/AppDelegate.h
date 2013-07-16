@@ -18,7 +18,7 @@
 
 @property (strong, nonatomic) ViewController *viewController;
 
-@property (nonatomic, retain) IBOutlet DataSaver *dataSaver;
+@property (nonatomic, strong) IBOutlet DataSaver *dataSaver;
 
 // Core Data Stuffs
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;

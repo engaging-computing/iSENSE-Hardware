@@ -21,5 +21,7 @@
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property(nonatomic) NSMutableArray *selectedMarks;
+@property(nonatomic) NSMutableArray *dataSource;
 
 @end

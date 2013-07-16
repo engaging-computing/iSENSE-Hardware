@@ -10,9 +10,9 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource;
 
-// Initialize the view where the 
+// Initialize the view where the
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
     if (self) {
@@ -31,7 +31,7 @@
     
     // Rebuild the dataSet with the new changes
     [self.navigationController popViewControllerAnimated:YES];
-
+    
 }
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -79,8 +79,20 @@
         if (dataSaver == nil) NSLog(@"We've got a problem here");
     }
     
+    selectedMarks = [[NSMutableArray alloc] init];
+    dataSource = [[NSMutableArray alloc] init];
+    
+    
+    
+    for(int i = 0; i<dataSaver.count;i++) {
+        NSArray *keys = [dataSaver.dataQueue allKeys];
+        DataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
+        
+        [dataSource addObject:tmp.name];
+    }
+    
     currentIndex = 0;
-
+    
 }
 
 // Dispose of any resources that can be recreated.
@@ -115,21 +127,39 @@
     return dataSaver.count;
 }
 
-// Initialize a single object in the table
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CRTableViewCellIdentifier = @"cellIdentifier";
     
-    static NSString *cellIndetifier = @"QueueCellIdentifier";
-    QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
+    // init the CRTableViewCell
+    CRTableViewCell *cell = (CRTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CRTableViewCellIdentifier];
+    
     if (cell == nil) {
-        UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
-        cell = (QueueCell *) tmpVC.view;
+        cell = [[CRTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CRTableViewCellIdentifier];
     }
     
-    NSArray *keys = [dataSaver.dataQueue allKeys];  
-    DataSet *tmp = [dataSaver.dataQueue objectForKey:keys[indexPath.row]];
-    [cell setupCellWithDataSet:tmp];
+    // Check if the cell is currently selected (marked)
+    NSString *text = [dataSource objectAtIndex:[indexPath row]];
+    cell.isSelected = [selectedMarks containsObject:text] ? YES : NO;
+    cell.textLabel.text = text;
     
     return cell;
 }
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *text = [dataSource objectAtIndex:[indexPath row]];
+    
+    if ([selectedMarks containsObject:text])// Is selected?
+        [selectedMarks removeObject:text];
+    else
+        [selectedMarks addObject:text];
+    
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
 
 @end

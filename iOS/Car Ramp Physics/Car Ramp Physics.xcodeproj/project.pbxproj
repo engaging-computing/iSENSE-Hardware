@@ -13,13 +13,13 @@
 		760D19731795861400C123D6 /* logoIOS_retina_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19721795861400C123D6 /* logoIOS_retina_ipad.png */; };
 		760D197617958A4300C123D6 /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 760D197417958A4300C123D6 /* QueueCell.m */; };
 		760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 760D197517958A4300C123D6 /* QueueUploaderView.m */; };
-		760D197C17958AE100C123D6 /* QueueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197B17958AE100C123D6 /* QueueCell.xib */; };
 		760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */; };
 		760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197E17958AF600C123D6 /* queue_layout~iphone.xib */; };
 		760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */; };
 		760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198217958AFF00C123D6 /* queue_layout~ipad.xib */; };
 		760D198B1795934300C123D6 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
+		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7631ABF6178D98E2005A0469 /* CODialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7631ABF5178D98DA005A0469 /* CODialog.m */; };
 		765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
 		765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */; };
@@ -110,13 +110,14 @@
 		760D197517958A4300C123D6 /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
 		760D197817958A4C00C123D6 /* QueueCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
 		760D197917958A4C00C123D6 /* QueueUploaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
-		760D197B17958AE100C123D6 /* QueueCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QueueCell.xib; sourceTree = "<group>"; };
 		760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		760D197E17958AF600C123D6 /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
 		760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		760D198217958AFF00C123D6 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
 		760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = iSENSE_API_Bundle.bundle; sourceTree = "<group>"; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
+		761D275D1795C1960056FA8C /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
+		761D27601795C1A30056FA8C /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		7631ABF4178D98DA005A0469 /* CODialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CODialog.h; sourceTree = "<group>"; };
 		7631ABF5178D98DA005A0469 /* CODialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CODialog.m; sourceTree = "<group>"; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
@@ -217,7 +218,6 @@
 		760D197A17958AD500C123D6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				760D197B17958AE100C123D6 /* QueueCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -320,6 +320,7 @@
 		76E91F91179478B7001749FC /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				761D27601795C1A30056FA8C /* Queue.h */,
 				760D197817958A4C00C123D6 /* QueueCell.h */,
 				760D197917958A4C00C123D6 /* QueueUploaderView.h */,
 				76785B8F179332A0001D6E3A /* MarqueeLabel.h */,
@@ -346,6 +347,7 @@
 		76E91F92179478DF001749FC /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				761D275D1795C1960056FA8C /* Queue.m */,
 				760D197417958A4300C123D6 /* QueueCell.m */,
 				760D197517958A4300C123D6 /* QueueUploaderView.m */,
 				76785B90179332A0001D6E3A /* MarqueeLabel.m */,
@@ -517,7 +519,6 @@
 				760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */,
 				760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */,
 				760D19731795861400C123D6 /* logoIOS_retina_ipad.png in Resources */,
-				760D197C17958AE100C123D6 /* QueueCell.xib in Resources */,
 				760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */,
 				760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */,
 				760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */,
@@ -551,6 +552,7 @@
 				76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */,
 				760D197617958A4300C123D6 /* QueueCell.m in Sources */,
 				760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */,
+				761D275E1795C1960056FA8C /* Queue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
