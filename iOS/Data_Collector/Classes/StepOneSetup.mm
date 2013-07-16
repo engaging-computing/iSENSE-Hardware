@@ -95,7 +95,8 @@
     [sessionName setText:newSesName];
     
     bool remem = [prefs boolForKey:[StringGrabber grabString:@"key_remember_me_check"]];
-    if (remem) {
+    bool returnWithPrefs = [prefs boolForKey:@"return_with_prefs"];
+    if (remem || returnWithPrefs) {
         NSString *defaultSampleInterval = [prefs stringForKey:[StringGrabber grabString:@"key_sample_interval"]];
         NSString *newSampleInterval = ([defaultSampleInterval length] == 0) ? @"" : defaultSampleInterval;
         [sampleInterval setText:newSampleInterval];
@@ -105,7 +106,9 @@
         [testLength setText:newTestLength];
         
         rememberMe.on = true;
-    } else {
+    }
+    
+    if (!remem) {
         rememberMe.on = false;
     }
     
@@ -131,7 +134,7 @@
             selectExp.alpha = 0.5;
         }
     }
-
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -287,8 +290,7 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            [self rememberPrefs];
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
@@ -337,7 +339,7 @@
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
             
-            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            [self rememberPrefs];
             
             // launch the sensor selection dialog
             SensorSelection *ssView = [[SensorSelection alloc] init];
@@ -498,7 +500,7 @@
     NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
     [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
     
-    [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    [self rememberPrefs];
     
     // launch the sensor selection dialog
     SensorSelection *ssView = [[SensorSelection alloc] init];
@@ -507,6 +509,30 @@
     [ssView release];
     
     return YES;
+}
+
+- (void) rememberPrefs {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    
+    if (rememberMe.on)
+        [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+    
+    else
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+    
+    if ([[sampleInterval text] length] == 0)
+        [prefs setValue:[NSString stringWithFormat:@"%d", S_INTERVAL] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+    else
+        [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+    
+    if ([[testLength text] length] == 0)
+        [prefs setValue:[NSString stringWithFormat:@"%d", TEST_LENGTH] forKey:[StringGrabber grabString:@"key_test_length"]];
+    else
+        [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
+    
+    [prefs setBool:true forKey:@"return_with_prefs"];
 }
 
 @end
