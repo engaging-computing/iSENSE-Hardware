@@ -16,10 +16,15 @@
 // constants for dialogs
 #define MENU_EXPERIMENT               0
 #define MENU_LOGIN                    1
-#define EXPERIMENT_MANUAL_ENTRY       2
+#define EXPERIMENT_MANUAL_ENTRY       118
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5
+
+// constants for manual dialog
+#define MANUAL_MENU_UPLOAD            0
+#define MANUAL_MENU_EXPERIMENT        1
+#define MANUAL_MENU_LOGIN             2
 
 // options for action sheet
 #define OPTION_CANCELED                0

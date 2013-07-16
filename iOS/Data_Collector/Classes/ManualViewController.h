@@ -42,7 +42,7 @@ typedef struct _RotationDataSaver {
 }
 
 // Storyboard functions
-- (IBAction) uploadOnClick:(id)sender;
+- (IBAction) saveOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
