@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		760D196C179585FB00C123D6 /* logoIOS_Regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196B179585FB00C123D6 /* logoIOS_Regular.png */; };
+		760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196E179585FF00C123D6 /* logoIOS_Retina.png */; };
+		760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */; };
+		760D19731795861400C123D6 /* logoIOS_retina_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19721795861400C123D6 /* logoIOS_retina_ipad.png */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		7631ABF6178D98E2005A0469 /* CODialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7631ABF5178D98DA005A0469 /* CODialog.m */; };
 		765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
@@ -90,6 +94,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		760D196B179585FB00C123D6 /* logoIOS_Regular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_Regular.png; sourceTree = "<group>"; };
+		760D196E179585FF00C123D6 /* logoIOS_Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_Retina.png; sourceTree = "<group>"; };
+		760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_iPad_regular.png; sourceTree = "<group>"; };
+		760D19721795861400C123D6 /* logoIOS_retina_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_retina_ipad.png; sourceTree = "<group>"; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		7631ABF4178D98DA005A0469 /* CODialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CODialog.h; sourceTree = "<group>"; };
 		7631ABF5178D98DA005A0469 /* CODialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CODialog.m; sourceTree = "<group>"; };
@@ -200,6 +208,10 @@
 		7669F01D178B275C00E51AD0 = {
 			isa = PBXGroup;
 			children = (
+				760D19721795861400C123D6 /* logoIOS_retina_ipad.png */,
+				760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */,
+				760D196E179585FF00C123D6 /* logoIOS_Retina.png */,
+				760D196B179585FB00C123D6 /* logoIOS_Regular.png */,
 				7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */,
 				7669F02F178B275C00E51AD0 /* Car Ramp Physics */,
 				7669F028178B275C00E51AD0 /* Frameworks */,
@@ -464,6 +476,10 @@
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
 				76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */,
 				76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */,
+				760D196C179585FB00C123D6 /* logoIOS_Regular.png in Resources */,
+				760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */,
+				760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */,
+				760D19731795861400C123D6 /* logoIOS_retina_ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
