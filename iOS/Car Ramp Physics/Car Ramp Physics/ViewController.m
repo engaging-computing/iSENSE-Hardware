@@ -68,7 +68,9 @@
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Current count = %d", dataSaver.count);
     }
+
 
     
     
@@ -400,12 +402,12 @@
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:[NSNull null]];
+    [ds setPicturePaths:nil];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
@@ -415,13 +417,6 @@
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-    
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
     
 }
 
@@ -455,7 +450,7 @@
         [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
         
     }
-    //[self saveDataSetWithDescription:@"Car Ramp Physics"];
+    [self saveDataSetWithDescription:@"Car Ramp Physics"];
     return true;
     
 }
@@ -474,6 +469,9 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
+        queueUploader.title = @"Upload saved data";
+        [self.navigationController pushViewController:queueUploader animated:YES];
         
     };
     void (^settingsBlock)() = ^() {
