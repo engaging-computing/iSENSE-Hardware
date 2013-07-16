@@ -305,8 +305,7 @@
                     [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
                     [[UIApplication sharedApplication] openURL:urlp2s];
                 } else {
-                    NSURL *urlapp = [NSURL URLWithString:
-                                     @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
                     [[UIApplication sharedApplication] openURL:urlapp];
                 }
                 
