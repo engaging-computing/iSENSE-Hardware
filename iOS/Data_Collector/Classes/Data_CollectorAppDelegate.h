@@ -13,6 +13,7 @@
 #import <iSENSE_API/headers/DataSaver.h>
 
 #import "ManualViewController.h"
+#import "StepOneSetup.h"
 
 
 @interface Data_CollectorAppDelegate : NSObject <UIApplicationDelegate> {
@@ -20,12 +21,16 @@
 	UINavigationController *navControl;
 	UIBarButtonItem *about;
 	UIBarButtonItem *guide;
+    
+    // for QR codes
     UIViewController *lastController;
+    int returnToClass;
 }
 
 - (IBAction) showAbout:(id)sender;
 - (IBAction) showGuide:(id)sender;
 - (void) setLastController:(UIViewController *)uivc;
+- (void) setReturnToClass:(int)ret;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UINavigationController *navControl;

@@ -12,6 +12,10 @@
 #import <iSENSE_API/SensorEnums.h>
 #import "SensorSelection.h"
 
+#import "Data_CollectorAppDelegate.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVCaptureDevice.h>
+
 @interface StepOneSetup : UIViewController <UITextFieldDelegate> {
     
     iSENSE *iapi;
@@ -25,6 +29,8 @@
 - (IBAction)selectLaterToggled:(UISwitch *)switcher;
 - (IBAction)experimentOnClick:(UIButton *)expButton;
 - (IBAction)okOnClick:(UIButton *)okButton;
+
+- (BOOL) handleNewQRCode:(NSURL *)url;
 
 @property (nonatomic, retain) IBOutlet UITextField *sessionName;
 @property (nonatomic, retain) IBOutlet UITextField *sampleInterval;

@@ -105,4 +105,8 @@
 #define TAG_STEP1_SAMPLE_INTERVAL   1001
 #define TAG_STEP1_TEST_LENGTH       1002
 
+// delegate constants to determine the calling class
+#define DELEGATE_KEY_AUTOMATIC  0
+#define DELEGATE_KEY_MANUAL     1
+
 #endif
