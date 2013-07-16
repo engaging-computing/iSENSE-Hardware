@@ -513,11 +513,11 @@
             
            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
         
-               if ([[UIApplication sharedApplication]
-                   canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+               if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
                    [dcad setLastController:self];
+                   [dcad setReturnToClass:DELEGATE_KEY_MANUAL];
                    [[UIApplication sharedApplication] openURL:urlp2s];
                } else {
                    NSURL *urlapp = [NSURL URLWithString:
