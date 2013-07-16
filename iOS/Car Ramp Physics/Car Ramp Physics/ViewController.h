@@ -22,6 +22,7 @@
 #import "DataSet.h"
 #import "Queue.h"
 #import "AppDelegate.h"
+#import "QueueUploaderView.h"
 #import <CoreMotion/CMMotionManager.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLGeocoder.h>
@@ -73,8 +74,8 @@
 @property (nonatomic) NSString *userName;
 @property (nonatomic) NSString *passWord;
 
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) DataSaver *dataSaver;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) DataSaver *dataSaver;
 
 
 @property(nonatomic, retain) NSArray *items;

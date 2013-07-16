@@ -68,7 +68,10 @@
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Datasaver Details: %@", dataSaver.description);
+        NSLog(@"Current count = %d", dataSaver.count);
     }
+
 
     
     
@@ -225,7 +228,7 @@
     dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
     dispatch_async(queue, ^{
         // acceleration in meters per second squared
-        if ([dfm enabledFieldAtIndex:fACCEL_X] && x) {
+        if ([dfm enabledFieldAtIndex:fACCEL_X]) {
             fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
             NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -233,7 +236,7 @@
             });
         }
         
-        if ([dfm enabledFieldAtIndex:fACCEL_Y] && y) {
+        if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
             fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([dfm enabledFieldAtIndex:fACCEL_X])
@@ -243,7 +246,7 @@
             });
             NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
         }
-        if ([dfm enabledFieldAtIndex:fACCEL_Z] && z) {
+        if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
             fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
             NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -253,7 +256,7 @@
                     vector_status.text = [@"Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]];
             });
             
-            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL] && mag) {
+            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
                 fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
                                               + pow(fieldsRow.accel_y.doubleValue, 2)
@@ -311,6 +314,20 @@
         [start setEnabled:YES];
         
     });
+    
+    NSString *name = firstName;
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:lastInitial];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"HH:mm:ss"];
+    
+    NSDate *now = [[NSDate alloc] init];
+    
+    NSString* timeString = [dateFormat stringFromDate:now];
+    
+    sessionName = [name stringByAppendingString:[@" " stringByAppendingString:timeString]];;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
         UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Publish to iSENSE?"
@@ -380,7 +397,7 @@
         [[UIApplication sharedApplication] openURL:urlp2s];
     } else {
         NSURL *urlapp = [NSURL URLWithString:
-                         @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+                         @"http://itunes.com/app/pic2shop"];
         [[UIApplication sharedApplication] openURL:urlapp];
     }
 }
@@ -394,34 +411,25 @@
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
-    
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
-    
-    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    NSLog(@"Bla");
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:[NSNull null]];
+    [ds setPicturePaths:nil];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
     [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    
+    NSLog(@"Bla2");
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
     
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
     
 }
 
@@ -433,11 +441,7 @@
         
     }
     
-    NSString *name = firstName;
-    name = [name stringByAppendingString:@" "];
-    name = [name stringByAppendingString:lastInitial];
-    
-    session_num = [iapi createSession:name withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+    session_num = [iapi createSession:sessionName withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
     
     
     NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
@@ -455,7 +459,7 @@
         [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
         
     }
-    //[self saveDataSetWithDescription:@"Car Ramp Physics"];
+    [self saveDataSetWithDescription:@"Car Ramp Physics"];
     return true;
     
 }
@@ -474,6 +478,9 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
+        queueUploader.title = @"Upload saved data";
+        [self.navigationController pushViewController:queueUploader animated:YES];
         
     };
     void (^settingsBlock)() = ^() {
