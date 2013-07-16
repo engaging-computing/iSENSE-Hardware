@@ -224,9 +224,18 @@
     lastController = uivc;
 }
 
+- (void) setReturnToClass:(int)ret {
+    returnToClass = ret;
+}
+
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    ManualViewController *mvc = (ManualViewController *) lastController;
-    return [mvc handleNewQRCode:url];
+    if (returnToClass == DELEGATE_KEY_AUTOMATIC) {
+        StepOneSetup *svc = (StepOneSetup *) lastController;
+        return [svc handleNewQRCode:url];
+    } else {
+        ManualViewController *mvc = (ManualViewController *) lastController;
+        return [mvc handleNewQRCode:url];
+    }
 }
 
 @end

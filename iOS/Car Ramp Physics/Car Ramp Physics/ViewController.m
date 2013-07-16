@@ -3,8 +3,8 @@
 //  Car Ramp Physics
 //
 //  Created by Virinchi Balabhadrapatruni on 7/8/13.
-//  Copyright (c) 2013 ECG. All rights reserved.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "ViewController.h"
 
@@ -22,7 +22,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag ;
 
 - (void)viewDidLoad {
     
@@ -85,6 +85,29 @@
         [last setDelegate:self];
         [change_name addButtonWithTitle:@"Done" target:self selector:@selector(changeName)];
         [change_name showOrUpdateAnimated:YES];
+        
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        
+        BOOL x1 = [prefs boolForKey:@"X"];
+        BOOL y1 = [prefs boolForKey:@"Y"];
+        BOOL z1 = [prefs boolForKey:@"Z"];
+        BOOL mag1 = [prefs boolForKey:@"Magnitude"];
+
+        
+        if (x)
+            x = x1;
+        if (y)
+            y = y1;
+        if (z)
+            z = z1;
+        if (mag)
+            mag = mag1;
+        
+        
+        
+        
+        
     }
 }
 
@@ -202,7 +225,7 @@
     dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
     dispatch_async(queue, ^{
         // acceleration in meters per second squared
-        if ([dfm enabledFieldAtIndex:fACCEL_X]) {
+        if ([dfm enabledFieldAtIndex:fACCEL_X] && x) {
             fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
             NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -210,7 +233,7 @@
             });
         }
         
-        if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
+        if ([dfm enabledFieldAtIndex:fACCEL_Y] && y) {
             fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([dfm enabledFieldAtIndex:fACCEL_X])
@@ -220,7 +243,7 @@
             });
             NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
         }
-        if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
+        if ([dfm enabledFieldAtIndex:fACCEL_Z] && z) {
             fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
             NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -230,7 +253,7 @@
                     vector_status.text = [@"Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]];
             });
             
-            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
+            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL] && mag) {
                 fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
                                               + pow(fieldsRow.accel_y.doubleValue, 2)
@@ -350,7 +373,6 @@
 }
 
 - (void) QRCode {
-    //The following feature is experimental;
     [experiment hideAnimated:YES];
     if ([[UIApplication sharedApplication]
          canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
@@ -425,15 +447,15 @@
         NSLog(@"Error:%@", error);
         return false;
     }
-    /*
+    
     bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
     if (!success)
         [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
     else {
         [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
         
-    }*/
-    [self saveDataSetWithDescription:@"Car Ramp Physics"];
+    }
+    //[self saveDataSetWithDescription:@"Car Ramp Physics"];
     return true;
     
 }
@@ -452,15 +474,7 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
-        UploadTableViewController *uploadController;
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            uploadController = [[UploadTableViewController alloc] initWithNibName:@"UploadTableViewController_iPhone" bundle:nil];
-        } else {
-           uploadController = [[UploadTableViewController alloc] initWithNibName:@"UploadTableViewController_iPad" bundle:nil];
-        }    
-
-        uploadController.saver = dataSaver;
-        [self.navigationController pushViewController:uploadController animated:YES];
+        
     };
     void (^settingsBlock)() = ^() {
         NSLog(@"Record Settings button pressed");
@@ -531,7 +545,15 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == 0){
+        VariablesViewController *var;
+        // Override point for customization after application launch.
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            var = [[VariablesViewController alloc] initWithNibName:@"VariablesViewController_iPhone" bundle:nil];
+        } else {
+            var = [[VariablesViewController alloc] initWithNibName:@"VariablesViewController_iPad" bundle:nil];
+        }
         
+        [self.navigationController pushViewController:var animated:YES];
     } else if (buttonIndex == 1) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];

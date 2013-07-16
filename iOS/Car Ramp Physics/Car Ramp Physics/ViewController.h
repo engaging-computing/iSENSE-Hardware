@@ -3,8 +3,8 @@
 //  Car Ramp Physics
 //
 //  Created by Virinchi Balabhadrapatruni on 7/8/13.
-//  Copyright (c) 2013 ECG. All rights reserved.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "RNGridMenu.h"
 #import "Waffle.h"
@@ -17,7 +17,7 @@
 #import "Constants.h"
 #import "Fields.h"
 #import "HexColor.h"
-#import "UploadTableViewController.h"
+#import "VariablesViewController.h"
 #import "DataSaver.h"
 #import "DataSet.h"
 #import "Queue.h"
@@ -83,6 +83,10 @@
 @property(nonatomic) BOOL running;
 @property(nonatomic) BOOL timeOver;
 @property(nonatomic) BOOL useDev;
+@property(nonatomic) BOOL x;
+@property(nonatomic) BOOL y;
+@property(nonatomic) BOOL z;
+@property(nonatomic) BOOL mag;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (IBAction)showMenu:(id)sender;

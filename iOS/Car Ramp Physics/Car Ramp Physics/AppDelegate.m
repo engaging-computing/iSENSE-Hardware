@@ -3,8 +3,8 @@
 //  Car Ramp Physics
 //
 //  Created by Virinchi Balabhadrapatruni on 7/8/13.
-//  Copyright (c) 2013 ECG. All rights reserved.
-//
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "AppDelegate.h"
 
@@ -26,6 +26,8 @@
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
     self.window.rootViewController = navigation;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:YES forKey:@"Y"];
     self.viewController.setupDone = YES;
     [self.window makeKeyAndVisible];
     return YES;
