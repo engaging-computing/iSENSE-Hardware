@@ -241,7 +241,7 @@
                                          message:nil
                                         delegate:self
                                cancelButtonTitle:@"Cancel"
-                               otherButtonTitles:@"Enter Experiment #", @"Browse", nil];
+                               otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
     message.tag = MENU_EXPERIMENT;
     [message show];
     [message release];
@@ -295,6 +295,34 @@
             browseView.chosenExperiment = &expNumInteger;
             [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+                
+                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+                    [dcad setLastController:self];
+                    [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
+                    [[UIApplication sharedApplication] openURL:urlp2s];
+                } else {
+                    NSURL *urlapp = [NSURL URLWithString:
+                                     @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+                    [[UIApplication sharedApplication] openURL:urlapp];
+                }
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
         }
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
@@ -456,6 +484,30 @@
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL) handleNewQRCode:(NSURL *)url {
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSString *exp = arr[2];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_automatic"]];
+
+    expNumInteger = [exp integerValue];
+    
+    NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
+    [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+    
+    [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    
+    // launch the sensor selection dialog
+    SensorSelection *ssView = [[SensorSelection alloc] init];
+    ssView.title = @"Sensor Selection";
+    [self.navigationController pushViewController:ssView animated:YES];
+    [ssView release];
+    
+    return YES;
 }
 
 @end
