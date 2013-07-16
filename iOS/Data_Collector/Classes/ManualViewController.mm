@@ -392,14 +392,10 @@
     return YES;
 }
 
-- (IBAction) uploadOnClick:(id)sender {
+- (IBAction) saveOnClick:(id)sender {
     [self getDataFromFields];
     
-    
-//    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
-//    [iapi login:@"sor" with:@"sor"];
-//    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
-    
+    // @JEREMY - you can replace the above uploading code with your saving code :D!!
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -431,7 +427,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -442,25 +438,31 @@
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_EXPERIMENT:
+        case MANUAL_MENU_UPLOAD:
+            
+            // TODO - @JEREMY'S BLOCK TO BE A GOD AND STUFF AND INTRODUCE THE UPLOAD MENU OPTION PRESS THING :D
+            
+            break;
+            
+		case MANUAL_MENU_EXPERIMENT:
             message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
+            message.tag = MANUAL_MENU_EXPERIMENT;
             [message show];
             [message release];
             
 			break;
             
-		case MENU_LOGIN:
+		case MANUAL_MENU_LOGIN:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Okay", nil];
-            message.tag = MENU_LOGIN;
+            message.tag = MANUAL_MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             [message show];
             [message release];
@@ -474,7 +476,7 @@
 }
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == MENU_LOGIN) {
+    if (actionSheet.tag == MANUAL_MENU_LOGIN) {
         
         if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
@@ -482,7 +484,7 @@
             [self login:usernameInput withPassword:passwordInput];
         }
         
-    } else if (actionSheet.tag == MENU_EXPERIMENT){
+    } else if (actionSheet.tag == MANUAL_MENU_EXPERIMENT){
         
         if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
             
@@ -520,8 +522,7 @@
                    [dcad setReturnToClass:DELEGATE_KEY_MANUAL];
                    [[UIApplication sharedApplication] openURL:urlp2s];
                } else {
-                   NSURL *urlapp = [NSURL URLWithString:
-                                    @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=308740640&mt=8"];
+                   NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
                    [[UIApplication sharedApplication] openURL:urlapp];
                }
            

@@ -2,7 +2,7 @@
 //  DataSet.m
 //  iSENSE_API
 //
-//  Created by Jeremy Poulin on 6/7/13.
+//  Created by Jeremy Poulin on 7/16/13.
 //  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
 //
 
@@ -15,11 +15,13 @@
 @dynamic city;
 @dynamic country;
 @dynamic data;
-@dynamic dataDescription;
-@dynamic eid;
-@dynamic name;
 @dynamic picturePaths;
-@dynamic sid;
+@dynamic eid;
 @dynamic uploadable;
+@dynamic dataDescription;
+@dynamic sid;
+@dynamic name;
+@dynamic hasInitialExp;
+@dynamic parentName;
 
 @end
