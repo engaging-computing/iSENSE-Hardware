@@ -17,6 +17,7 @@
 
 -(IBAction)upload:(id)sender;
 
+@property (nonatomic, assign) iSENSE *iapi;
 @property (nonatomic, retain) DataSaver *dataSaver;
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;

@@ -111,6 +111,7 @@
 -(bool)upload {
     iSENSE *isenseAPI = [iSENSE getInstance];
     if (![isenseAPI isLoggedIn]) {
+        
         NSLog(@"Not logged in."); // MIKE I KEN HAZ WAFFLES?
         return false;
     }
