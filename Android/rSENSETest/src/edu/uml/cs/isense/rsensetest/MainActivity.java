@@ -63,7 +63,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			try {
 				URL url = new URL(uri[0]);
 				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-				urlConnection.setRequestProperty("Content-Type", "application/json");
+				urlConnection.setRequestProperty("Accept", "application/json");
 				InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 				try {
 					ByteArrayOutputStream bo = new ByteArrayOutputStream();
