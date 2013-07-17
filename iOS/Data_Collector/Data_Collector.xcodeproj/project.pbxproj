@@ -503,6 +503,10 @@
 		52572B6D1691F6DD009037A7 /* Splash */ = {
 			isa = PBXGroup;
 			children = (
+				392CD88717836F5C00C82887 /* QueueCell.h */,
+				392CD88817836F5C00C82887 /* QueueCell.m */,
+				392CD88917836F5C00C82887 /* QueueUploaderView.h */,
+				392CD88A17836F5C00C82887 /* QueueUploaderView.m */,
 				B7EBFB2E16DF9CCE00125169 /* Constants.h */,
 				52572B881691F77D009037A7 /* SplashView.h */,
 				52572B891691F77D009037A7 /* SplashView.mm */,
@@ -525,10 +529,6 @@
 				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
 				B75046C6177484110034B42C /* StepOneSetup.h */,
 				B75046C7177484110034B42C /* StepOneSetup.mm */,
-				392CD88717836F5C00C82887 /* QueueCell.h */,
-				392CD88817836F5C00C82887 /* QueueCell.m */,
-				392CD88917836F5C00C82887 /* QueueUploaderView.h */,
-				392CD88A17836F5C00C82887 /* QueueUploaderView.m */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";
