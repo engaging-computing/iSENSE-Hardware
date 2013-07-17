@@ -12,6 +12,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
+#import "QueueUploaderView.h"
 
 typedef struct _RotationDataSaver {
     NSString *sesName;
@@ -41,17 +42,16 @@ typedef struct _RotationDataSaver {
     
 }
 
-// Storyboard functions
+// XIB functions
 - (IBAction) saveOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
 
-// Programmatic functions
+// Behavioral functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
-- (void) upload:(NSMutableArray *)results;
 
-- (void) getDataFromFields;
+- (NSMutableArray *) getDataFromFields;
 - (void) initLocations;
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
 - (BOOL) containsAcceptedNumbers:(NSString *)mString;
@@ -63,7 +63,10 @@ typedef struct _RotationDataSaver {
 - (void)   cleanRDSData;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
-- (BOOL) handleNewQRCode:(NSURL *)url;
+- (BOOL)   handleNewQRCode:(NSURL *)url;
+
+- (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description;
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView  *logo;
@@ -79,13 +82,18 @@ typedef struct _RotationDataSaver {
 @property (nonatomic, retain) UITextField           *lastField;
 
 // Non-UI Properties
-@property (nonatomic, copy)   NSString              *sessionName;
 @property (nonatomic, copy)   NSString              *qrResults;
 @property (nonatomic, retain) CLLocationManager     *locationManager;
 @property (nonatomic, assign) int                    expNum;
 @property (nonatomic, assign) bool                   keyboardDismissProper;
 @property (nonatomic, assign) BOOL                   browsing;
 @property (nonatomic, assign) BOOL                   initialExpDialogOpen;
+@property (nonatomic, assign) CLGeocoder            *geoCoder;
+@property (nonatomic, copy)   NSString              *city;
+@property (nonatomic, copy)   NSString              *address;
+@property (nonatomic, copy)   NSString              *country;
+@property (nonatomic, retain) DataSaver             *dataSaver;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @end
 
