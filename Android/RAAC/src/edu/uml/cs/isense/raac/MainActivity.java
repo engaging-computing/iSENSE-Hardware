@@ -28,7 +28,6 @@
 
 package edu.uml.cs.isense.raac;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -37,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONArray;
 
@@ -89,7 +89,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
-import edu.uml.cs.isense.raac.exceptions.NoDataException;
 import edu.uml.cs.isense.raac.pincushion.BluetoothService;
 import edu.uml.cs.isense.raac.pincushion.PinComm;
 import edu.uml.cs.isense.raac.pincushion.pinpointInterface;
@@ -115,7 +114,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	String experimentId = "421";
+	String experimentId = "572";
 	String username = "sor";
 	String password = "sor";
 	boolean loggedIn = false;
@@ -333,7 +332,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		//Update preferences set in PreferenceActivity
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		autoRun = prefs.getBoolean("auto_upload", false);
-		experimentId = prefs.getString("experiment_number", "421");
+		experimentId = prefs.getString("experiment_number", "572");
 		autoConn = prefs.getBoolean("auto_connect", true);
 		defaultMac = prefs.getString("defaultPpt", "");
 	}
@@ -1108,7 +1107,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		String dataString = "";
 
 		long unixTs = 0;
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z");
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z", Locale.US);
 		Date parsed;
 
 		try {

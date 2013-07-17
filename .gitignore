@@ -12,3 +12,6 @@
 #	Eclipse files
 .classpath
 .project
+
+Android/rSENSETest/bin/
+Android/rSENSETest/gen/
