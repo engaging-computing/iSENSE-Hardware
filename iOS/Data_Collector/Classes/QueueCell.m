@@ -78,6 +78,16 @@
 
 - (void) setSessionName:(NSString *)name {
     self.nameAndDate.text = name;
+    [dataSet setName:name];
+}
+
+- (NSNumber *)getKey {
+    return mKey;
+}
+
+- (void) setExpNum:(NSString *)exp {
+    self.eidLabel.text = exp;
+    [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
 }
 
 -(void)dealloc {
