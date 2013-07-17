@@ -83,7 +83,7 @@
             android:label=""
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".CarRampLoginActivity"
             android:label="Login to iSENSE"
             android:theme="@style/theme_dialog_white" />
         <activity

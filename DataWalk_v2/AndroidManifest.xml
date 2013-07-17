@@ -39,6 +39,23 @@
             android:name=".datawalk_v2.Prefs"
             android:label="Settings" >
         </activity>
+         <activity
+            android:name=".datawalk_v2.EnterNameActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:label="Name Activity" >
+        </activity>
+         <activity
+            android:name=".datawalk_v2.About"
+            android:label="About" >
+        </activity>
+        <activity
+            android:name=".datawalk_v2.LoginIsense"
+            android:label="Login to Isense" >
+        </activity>
+          <activity
+            android:name=".datawalk_v2.Reset"
+            android:label="Reset Settings" >
+        </activity>
         <activity
             android:name=".datawalk_v2.dialogs.NoGps"
             android:label="No Gps Satellites found" >
