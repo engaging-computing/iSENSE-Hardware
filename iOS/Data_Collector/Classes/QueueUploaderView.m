@@ -151,11 +151,11 @@
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     UIAlertView *message;
-    //QueueCell *cell;
+    QueueCell *cell;
     
 	switch (buttonIndex) {
         case QUEUE_DELETE:
-            //cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             
             //[dataSaver removeDataSet:<#(NSNumber *)#>];
             break;
