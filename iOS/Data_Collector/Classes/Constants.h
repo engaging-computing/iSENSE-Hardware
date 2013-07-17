@@ -114,4 +114,10 @@
 #define DELEGATE_KEY_AUTOMATIC  0
 #define DELEGATE_KEY_MANUAL     1
 
+// constants for QueueUploaderView's actionSheet
+#define QUEUE_DELETE        0
+#define QUEUE_RENAME        1
+#define QUEUE_SELECT_EXP    2
+#define QUEUE_LOGIN         500
+
 #endif
