@@ -117,7 +117,6 @@
 										<string key="NSFrame">{{696, 11}, {32, 22}}</string>
 										<reference key="NSSuperview" ref="50236330"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<int key="IBUIContentMode">1</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -154,6 +153,7 @@
 							<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
 						</object>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUISelectionStyle">2</int>
 						<reference key="IBUIContentView" ref="50236330"/>
 					</object>
 				</array>

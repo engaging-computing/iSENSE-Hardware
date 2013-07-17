@@ -45,184 +45,21 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 
 }
 
-
-// Long Click Responder
-//- (IBAction)onStartStopLongClick:(UILongPressGestureRecognizer*)longClickRecognizer {
-//
-//    // Handle long press.
-//    if (longClickRecognizer.state == UIGestureRecognizerStateBegan) {
-//
-//        // Make button unclickable until it gets released
-//        longClickRecognizer.enabled = NO;
-//
-//        // Start Recording
-//        if (![self isRecording]) {
-//
-//            // Check for a chosen experiment
-//            if (!expNum) {
-//                [self.view makeWaffle:@"No experiment chosen" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-//                return;
-//            }
-//
-//            // Check for login
-//            if (![isenseAPI isLoggedIn]) {
-//                [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-//                return;
-//            }
-//
-//            // Check for a session title
-//            if ([[sessionTitle text] length] == 0) {
-//                [self.view makeWaffle:@"Enter a session title first" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-//                return;
-//            }
-//
-//            // Switch to green mode
-//            startStopButton.image = [UIImage imageNamed:@"green_button.png"];
-//            mainLogo.image = [UIImage imageNamed:@"logo_green.png"];
-//            startStopLabel.text = [StringGrabber grabString:@"stop_button_text"];
-//            [containerForMainButton updateImage:startStopButton];
-//
-//            // Get Field Order
-//            [dfm getFieldOrderOfExperiment:expNum];
-//            NSLog(@"%@", [dfm order]);
-//
-//            // Record Data
-//            [self setIsRecording:TRUE];
-//            [self recordData];
-//
-//            // Update elapsed time
-//            elapsedTime = 0;
-//            [self updateElapsedTime];
-//            NSLog(@"updated Time");
-//            timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
-//            NSLog(@"timer was launched");
-//
-//        // Stop Recording
-//        } else {
-//            // Stop Timers
-//            [timer invalidate];
-//            [timer release];
-//            [recordDataTimer invalidate];
-//            [recordDataTimer release];
-//
-//            // Back to red mode
-//            startStopButton.image = [UIImage imageNamed:@"red_button.png"];
-//            mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-//            startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
-//            [containerForMainButton updateImage:startStopButton];
-//
-//            [self stopRecording:motionManager];
-//            [self setIsRecording:FALSE];
-//
-//            // Open up description dialog
-//            UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
-//                                                              message:nil
-//                                                             delegate:self
-//                                                    cancelButtonTitle:@"Delete"
-//                                                    otherButtonTitles:@"Upload", nil];
-//
-//            message.tag = DESCRIPTION_AUTOMATIC;
-//            message.delegate = self;
-//            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
-//            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
-//            [message show];
-//            [message release];
-//
-//        }
-//
-//        // Make the beep sound
-//        NSString *path = [NSString stringWithFormat:@"%@%@",
-//                          [[NSBundle mainBundle] resourcePath],
-//                          @"/button-37.wav"];
-//        SystemSoundID soundID;
-//        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
-//        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
-//        AudioServicesPlaySystemSound(soundID);
-//
-//    }
-//
-//}
-
-//- (bool) uploadData:(NSMutableArray *)results withDescription:(NSString *)description {
-//
-//    // Check login status
-//    if (![isenseAPI isLoggedIn]) {
-//        [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-//        return false;
-//    }
-//
-//    // Create a session on iSENSE/dev.
-//    NSString *name = @"Session From Mobile";
-//    if (sessionTitle.text.length != 0) name = sessionTitle.text;
-//    NSNumber *exp_num = [[NSNumber alloc] initWithInt:expNum];
-//
-//    NSNumber *session_num = [isenseAPI createSession:name withDescription:description Street:address City:city Country:country toExperiment:exp_num];
-//    if ([session_num intValue] == -1) {
-//        DataSet *ds = (DataSet *) [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-//        [ds setName:name];
-//        [ds setDataDescription:description];
-//        [ds setEid:exp_num];
-//        [ds setData:nil];
-//        [ds setPicturePaths:nil];
-//        [ds setSid:[NSNumber numberWithInt:-1]];
-//        [ds setCity:city];
-//        [ds setCountry:country];
-//        [ds setAddress:address];
-//        [ds setUploadable:[NSNumber numberWithBool:true]];
-//        // Add the new data set to the queue
-//        [dataSaver addDataSet:ds];
-//        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-//
-//        // Commit the changes
-//        NSError *error = nil;
-//        if (![managedObjectContext save:&error]) {
-//            // Handle the error.
-//            NSLog(@"%@", error);
-//        }
-//
-//        return false;
-//    }
-//
-//    // Upload to iSENSE (pass me JSON data)
-//    NSError *error = nil;
-//    NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-//    if (error != nil) {
-//        NSLog(@"%@", error);
-//        return false;
-//    }
-//
-//    bool success = [isenseAPI putSessionData:dataJSON forSession:session_num inExperiment:exp_num];
-//    if (!success) {
-//        DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
-//        [ds setName:name];
-//        [ds setDataDescription:description];
-//        [ds setEid:exp_num];
-//        [ds setData:results];
-//        [ds setPicturePaths:nil];
-//        [ds setSid:session_num];
-//        [ds setCity:city];
-//        [ds setCountry:country];
-//        [ds setAddress:address];
-//        [ds setUploadable:[NSNumber numberWithBool:true]];
-//
-//        // Add the new data set to the queue
-//        [dataSaver addDataSet:ds];
-//        NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-//
-//        // Commit the changes
-//        NSError *error = nil;
-//        if (![managedObjectContext save:&error]) {
-//            // Handle the error.
-//            NSLog(@"%@", error);
-//        }
-//    }
-//    [exp_num release];
-//    return success;
-//}
-
 // Implement viewDidLoad after the nib has been loaded
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Immediately kill the timers with fire
+    if (timer != nil) {
+        [timer invalidate];
+        [timer release];
+        timer = nil;
+    }
+    if (recordDataTimer != nil) {
+        [recordDataTimer invalidate];
+        [recordDataTimer release];
+        recordDataTimer = nil;
+    }
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -232,10 +69,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Current count = %d", dataSaver.count);
     }
     
     // Loading message appears while seting up main view
-    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading..."];
+    UIAlertView *message = [self getDispatchDialogWithMessage:[StringGrabber grabString:@"loading"]];
     [message show];
     
     // Add a menu button
@@ -274,9 +112,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [step3Label setAlpha:0.0];
     
     [message dismissWithClickedButtonIndex:nil animated:YES];
-    
+        
     isRecording = FALSE;
 }
+
 
 // Is called every time AutomaticView is about to appear
 - (void)viewWillAppear:(BOOL)animated {
@@ -303,7 +142,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             
             sessionName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
             
-            expNum = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
             
             // Set setup_complete key to false again
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -375,6 +214,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     [locationManager release];
     locationManager = nil;
+    
     [super dealloc];
     
 }
@@ -417,6 +257,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (!isRecording) {
+            // Get the experiment
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+            NSLog(@"my exp is: %d", expNum);
+            
             // Get Field Order
             [dfm getFieldOrderOfExperiment:expNum];
             [self getEnabledFields];
@@ -432,6 +277,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self setNonRecordingLayout];
             
             // Stop Recording
+            backFromSetup = false;
             [self stopRecording:motionManager];
         }
         
@@ -457,8 +303,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     elapsedTime = 0;
     recordingRate = rate * 1000;
     
-    NSLog(@"rate: %d", recordingRate);
-    
     // Set the accelerometer update interval to reccomended sample interval, and start updates
     motionManager.accelerometerUpdateInterval = rate;
     motionManager.magnetometerUpdateInterval = rate;
@@ -477,9 +321,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 
 - (void) updateElapsedTime {
     
-    if (!isRecording) {
+    if (!isRecording || timer == nil) {
         [timer invalidate];
         [timer release];
+        timer = nil;
     }
     
     dispatch_queue_t queue = dispatch_queue_create("automatic_update_elapsed_time", NULL);
@@ -495,7 +340,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         else
             secondsStr = [NSString stringWithFormat:@"%d", seconds];
         
-        int dataPoints = (1000 / recordingRate) * elapsedTime;
+        int dataPoints = (int) (1000 / ((float)recordingRate) * elapsedTime);
         
         NSLog(@"points: %d", dataPoints);
 
@@ -510,81 +355,80 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 // Fill dataToBeJSONed with a row of data
 - (void) buildRowOfData {
     
-    if (!isRecording) {
+    if (!isRecording || recordDataTimer == nil) {
+        
         [recordDataTimer invalidate];
         [recordDataTimer release];
-    }
-    
-    dispatch_queue_t queue = dispatch_queue_create("automatic_record_data", NULL);
-    dispatch_async(queue, ^{
+        recordDataTimer = nil;
         
-        Fields *fieldsRow = [[Fields alloc] autorelease];
+    } else {
         
-        // Fill a new row of data starting with time
-        double time = [[NSDate date] timeIntervalSince1970];
-        if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
-            fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
-        
-        
-        // acceleration in meters per second squared
-        if ([dfm enabledFieldAtIndex:fACCEL_X])
-            fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
-        NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
-        if ([dfm enabledFieldAtIndex:fACCEL_Y])
-            fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
-        if ([dfm enabledFieldAtIndex:fACCEL_Z])
-            fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
-        if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
-            fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
-                                      sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
-                                           + pow(fieldsRow.accel_y.doubleValue, 2)
-                                           + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
-        
-        // latitude and longitude coordinates
-        CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
-        double latitude  = lc2d.latitude;
-        double longitude = lc2d.longitude;
-        if ([dfm enabledFieldAtIndex:fLATITUDE])
-            fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
-        if ([dfm enabledFieldAtIndex:fLONGITUDE])
-            fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
-        
-        // magnetic field in microTesla
-        if ([dfm enabledFieldAtIndex:fMAG_X])
-            fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
-        if ([dfm enabledFieldAtIndex:fMAG_Y])
-            fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
-        if ([dfm enabledFieldAtIndex:fMAG_Z])
-            fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
-        if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
-            fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
-                                    sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
-                                         + pow(fieldsRow.mag_y.doubleValue, 2)
-                                         + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
-        
-        // rotation rate in radians per second
-        if (motionManager.gyroAvailable) {
-            if ([dfm enabledFieldAtIndex:fGYRO_X])
-                fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
-            if ([dfm enabledFieldAtIndex:fGYRO_Y])
-                fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
-            if ([dfm enabledFieldAtIndex:fGYRO_Z])
-                fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
-        }
-        
-        // update parent JSON object
-        [dfm orderDataFromFields:fieldsRow];
-        
-        if (dfm.data != nil && dataToBeJSONed != nil)
-            [dataToBeJSONed addObject:dfm.data];
-        else {
-            NSLog(@"something is wrong");
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-			// main UI calls to be made here if needed
+        dispatch_queue_t queue = dispatch_queue_create("automatic_record_data", NULL);
+        dispatch_async(queue, ^{
+            
+            Fields *fieldsRow = [[Fields alloc] autorelease];
+            
+            // Fill a new row of data starting with time
+            double time = [[NSDate date] timeIntervalSince1970];
+            if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
+                fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
+            
+            
+            // acceleration in meters per second squared
+            if ([dfm enabledFieldAtIndex:fACCEL_X])
+                fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
+            NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
+            if ([dfm enabledFieldAtIndex:fACCEL_Y])
+                fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
+            if ([dfm enabledFieldAtIndex:fACCEL_Z])
+                fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
+            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
+                fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
+                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
+                                               + pow(fieldsRow.accel_y.doubleValue, 2)
+                                               + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
+            
+            // latitude and longitude coordinates
+            CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+            double latitude  = lc2d.latitude;
+            double longitude = lc2d.longitude;
+            if ([dfm enabledFieldAtIndex:fLATITUDE])
+                fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
+            if ([dfm enabledFieldAtIndex:fLONGITUDE])
+                fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
+            
+            // magnetic field in microTesla
+            if ([dfm enabledFieldAtIndex:fMAG_X])
+                fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
+            if ([dfm enabledFieldAtIndex:fMAG_Y])
+                fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
+            if ([dfm enabledFieldAtIndex:fMAG_Z])
+                fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
+            if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
+                fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
+                                        sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
+                                             + pow(fieldsRow.mag_y.doubleValue, 2)
+                                             + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
+            
+            // rotation rate in radians per second
+            if (motionManager.gyroAvailable) {
+                if ([dfm enabledFieldAtIndex:fGYRO_X])
+                    fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
+                if ([dfm enabledFieldAtIndex:fGYRO_Y])
+                    fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
+                if ([dfm enabledFieldAtIndex:fGYRO_Z])
+                    fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
+            }
+            
+            // update parent JSON object
+            [dfm orderDataFromFields:fieldsRow];
+            
+            if (dfm.data != nil && dataToBeJSONed != nil)
+                [dataToBeJSONed addObject:dfm.data];
+            // else NOTHING IS WRONG!!!
+            
         });
-    });
+    }
     
 }
 
@@ -605,8 +449,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // Stop Timers
     [timer invalidate];
     [timer release];
+    timer = nil;
     [recordDataTimer invalidate];
     [recordDataTimer release];
+    recordDataTimer = nil;
     
     // Stop Sensors
     if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
@@ -714,34 +560,30 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [prefs integerForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
     
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
+    [ds setParentName:PARENT_AUTOMATIC];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:[NSNull null]];
+    [ds setPicturePaths:nil];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
     [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]]; // this line crashes in simulator
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
+    [ds release];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
-    
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
-    
+
 }
 
 // Finds the associated address from a GPS location.
@@ -819,15 +661,22 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     }
 }
 
+- (void) setupDFMWithAllFields {
+    
+    [dfm addAllFieldsToOrder];
+    
+    for (int i = 0; i < [[dfm order] count]; i++) {
+        [dfm setEnabledField:true atIndex:i];
+    }
+}
+
 // Enabled fields check
 - (void) getEnabledFields {
     
-    // if exp# = -1 then enable all, else enable some
+    // if exp# = -1 then enable all fields, else enable some based on compatability and sensor selection array
     if (expNum == -1) {
         
-        for (int i = 0; i < [[dfm order] count]; i++) {
-            [dfm setEnabledField:true atIndex:i];
-        }
+        [self setupDFMWithAllFields];
         
     } else {
         

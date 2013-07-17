@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize sessionName, expNum, locationManager, browsing;
+@synthesize sessionName, expNum, locationManager, browsing, initialExpDialogOpen;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -48,6 +48,8 @@
 
 // substitute for viewDidLoad - allocates memory and sets up main UI
 - (void) viewHasLoaded {
+    
+    NSLog(@"view has loaded");
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -119,7 +121,7 @@
     if (expNum && expNum > 0) {
         expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+        [prefs setValue:[NSString stringWithFormat:@"%d", expNum] forKey:[StringGrabber grabString:@"key_exp_manual"]];
         
         if (browsing == YES) {
             browsing = NO;
@@ -133,7 +135,7 @@
         }
     } else {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int exp = [prefs integerForKey:[StringGrabber grabString:@"key_exp_manual"]];
+        int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_manual"]] intValue];
         if (exp > 0) {
             expNum = exp;
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
@@ -141,16 +143,19 @@
             if (rds != nil) rds->doesHaveData = true;
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
-            [message show];
-            [message release];
-            
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+            if (!initialExpDialogOpen) {
+                initialExpDialogOpen = true;
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                message.tag = MANUAL_MENU_EXPERIMENT;
+                [message show];
+                [message release];
+                
+                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+            }
         }
     }
 
@@ -324,6 +329,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    
+    NSLog(@"view did appear");
     //[self updateExpNumLabel];
 }
 
@@ -385,14 +392,10 @@
     return YES;
 }
 
-- (IBAction) uploadOnClick:(id)sender {
+- (IBAction) saveOnClick:(id)sender {
     [self getDataFromFields];
     
-    /*
-    UIImage *image = [UIImage imageNamed:@"logo_datacollector_dark.png"];
-    [iapi login:@"sor" with:@"sor"];
-    bool success = [iapi upload:image toExperiment:[NSNumber numberWithInt:553] forSession:[NSNumber numberWithInt:6385] withName:@"Name" andDescription:@"Description"];
-    */
+    // @JEREMY - you can replace the above uploading code with your saving code :D!!
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -407,28 +410,15 @@
     [message release];
 }
 
-- (IBAction) mediaOnClick:(id)sender { // TODO - change back!
+- (IBAction) mediaOnClick:(id)sender {
     
-    SensorCompatibility *sc = [[SensorCompatibility alloc] init];
-    int b1 = [sc getCompatibilityForSensorType:sGPS];
-    int b2 = [sc getCompatibilityForSensorType:sACCELEROMETER];
-    int b3 = [sc getCompatibilityForSensorType:sAMBIENT_LIGHT];
-    int b4 = [sc getCompatibilityForSensorType:sGYROSCOPE];
-    int b5 = [sc getCompatibilityForSensorType:sPROXIMITY];
-    NSLog(@"%d, %d, %d, %d, %d", b1, b2, b3, b4, b5);
-
-    SensorSelection *ssView = [[SensorSelection alloc] init];
-    ssView.title = @"Sensor Selection";
-    [self.navigationController pushViewController:ssView animated:YES];
-    [ssView release];
-    
-    /*if (sessionNameInput.text.length != 0)
-        [CameraUsage useCamera];
-    else
-        [self.view makeWaffle:@"Please Enter a Session Name First"
-                    duration:WAFFLE_LENGTH_LONG
-                    position:WAFFLE_BOTTOM
-                       image:WAFFLE_WARNING];*/
+//    if (sessionNameInput.text.length != 0)
+//        [CameraUsage useCamera];
+//    else
+//        [self.view makeWaffle:@"Please Enter a Session Name First"
+//                    duration:WAFFLE_LENGTH_LONG
+//                    position:WAFFLE_BOTTOM
+//                       image:WAFFLE_WARNING];
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -437,7 +427,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -448,25 +438,31 @@
 	UIAlertView *message;
     
 	switch (buttonIndex) {
-		case MENU_EXPERIMENT:
+        case MANUAL_MENU_UPLOAD:
+            
+            // TODO - @JEREMY'S BLOCK TO BE A GOD AND STUFF AND INTRODUCE THE UPLOAD MENU OPTION PRESS THING :D
+            
+            break;
+            
+		case MANUAL_MENU_EXPERIMENT:
             message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MENU_EXPERIMENT;
+            message.tag = MANUAL_MENU_EXPERIMENT;
             [message show];
             [message release];
             
 			break;
             
-		case MENU_LOGIN:
+		case MANUAL_MENU_LOGIN:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Okay", nil];
-            message.tag = MENU_LOGIN;
+            message.tag = MANUAL_MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             [message show];
             [message release];
@@ -480,7 +476,7 @@
 }
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == MENU_LOGIN) {
+    if (actionSheet.tag == MANUAL_MENU_LOGIN) {
         
         if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
@@ -488,7 +484,7 @@
             [self login:usernameInput withPassword:passwordInput];
         }
         
-    } else if (actionSheet.tag == MENU_EXPERIMENT){
+    } else if (actionSheet.tag == MANUAL_MENU_EXPERIMENT){
         
         if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
             
@@ -506,6 +502,8 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
+            initialExpDialogOpen = false;
+            
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNum;
@@ -515,23 +513,22 @@
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
-            /*if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-                
-                widController = [[ZXingWidgetController alloc] initWithDelegate:self
-                                                                     showCancel:YES
-                                                                       OneDMode:NO];
-                QRCodeReader* qRCodeReader = [[QRCodeReader alloc] init];
-                
-                NSSet *readers = [[NSSet alloc] initWithObjects:qRCodeReader,nil];
-                widController.readers = readers;
-                
-                [self presentModalViewController:widController animated:YES];
-                [qRCodeReader release];
-                [readers release];
-                
-            } else {*/
-                
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"You device does not have a camera that supports QR Code scanning."
+           if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+        
+               if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                   NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+                   Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+                   [dcad setLastController:self];
+                   [dcad setReturnToClass:DELEGATE_KEY_MANUAL];
+                   [[UIApplication sharedApplication] openURL:urlp2s];
+               } else {
+                   NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
+                   [[UIApplication sharedApplication] openURL:urlapp];
+               }
+           
+           } else {
+            
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
                                                                   message:nil
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"
@@ -541,22 +538,25 @@
                 [message show];
                 [message release];
                 
-            //}
+           }
             
         }
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
+        initialExpDialogOpen = false;
+        
         if (buttonIndex != OPTION_CANCELED) {
 
             [self cleanRDSData];
             
-            expNum = [[[actionSheet textFieldAtIndex:0] text] intValue];
+            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            expNum = [expNumString intValue];
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
+            [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_manual"]];
             
             [self fillDataFieldEntryList:expNum withData:nil];
         }
@@ -582,32 +582,6 @@
         }
     }
 }
-
-/*- (void) zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
-    [widController.view removeFromSuperview];
-    
-    qrResults = [result retain];
-    NSArray *split = [qrResults componentsSeparatedByString:@"="];
-    if ([split count] != 2) {
-        [self.view makeWaffle:@"Invalid QR code scanned"
-                    duration:WAFFLE_LENGTH_LONG
-                    position:WAFFLE_BOTTOM
-                       image:WAFFLE_RED_X];
-    } else {
-        rds->doesHaveData = false;
-        
-        expNum = [[split objectAtIndex:1] intValue];
-        
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setInteger:expNum forKey:[StringGrabber grabString:@"key_exp_manual"]];
-        
-        [self fillDataFieldEntryList:expNum withData:nil];
-    }
-}
-
-- (void) zxingControllerDidCancel:(ZXingWidgetController*)controller {
-    [widController.view removeFromSuperview];
-}*/
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
@@ -803,19 +777,13 @@
                 
                 if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
                     if (expField.unit_id.intValue == UNIT_LATITUDE) {
-                        //if (data == nil)
-                            scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
-                        //else
-                        //    scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
                     } else if (expField.unit_id.intValue == UNIT_LONGITUDE) {
-                        //if (data == nil)
-                            scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
-                        //else
-                        //    scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
                     } else /* Time */ {
-                        //if (data == nil)
-                            scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
-                        //else
+                        // if (data == nil)
+                        scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
+                        // else
                         //    scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 } else {
@@ -919,10 +887,6 @@
         fieldContents.text = [tmp retain];
     }
     
-    /*
-     * [tmp release];
-     */
-        
     if (type != TYPE_DEFAULT) {
         fieldContents.enabled = NO;
         if (type == TYPE_LATITUDE) {
@@ -1060,6 +1024,31 @@
     [spinner startAnimating];
     [spinner release];
     return [message autorelease];
+}
+
+- (BOOL) handleNewQRCode:(NSURL *)url {
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSString *exp = arr[2];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    
+    expNum = [exp intValue];
+    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
+    
+    if (browsing == YES) {
+        browsing = NO;
+        [self cleanRDSData];
+        [self fillDataFieldEntryList:expNum withData:nil];
+    } else {
+        if (rds != nil && rds->doesHaveData)
+            [self fillDataFieldEntryList:expNum withData:rds->data];
+        else
+            [self fillDataFieldEntryList:expNum withData:nil];
+    }
+    
+    return YES;
 }
 
 @end

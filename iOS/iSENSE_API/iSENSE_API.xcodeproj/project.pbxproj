@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		391DA0D81795B4AA0011B955 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 391DA0D61795B4AA0011B955 /* DataSet.m */; };
 		39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39216FDE176F5C790070DFCC /* CoreFoundation.framework */; };
 		39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39216FE3176F5C790070DFCC /* InfoPlist.strings */; };
-		3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFD176F7ACA0070DFCC /* DataSaver.h */; };
-		3921700D176F7ACA0070DFCC /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 39216FFE176F7ACA0070DFCC /* DataSet.h */; };
 		3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
 		39217017176F7ACA0070DFCC /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217009176F7ACA0070DFCC /* Queue.h */; };
 		3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
-		3981B4B217626FD90030ACE5 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3981B4B017626FD90030ACE5 /* DataSet.m */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
 		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -35,6 +33,14 @@
 		39FF262816DFA8760062C3DC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
 		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
 		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
+		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
+		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
+		B712DE241796D17000A30CAC /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* DataSet.h */; };
+		B7F09EF81794599100725483 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF51794599100725483 /* waffle_check.png */; };
+		B7F09EF91794599100725483 /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF61794599100725483 /* waffle_warn.png */; };
+		B7F09EFA1794599100725483 /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF71794599100725483 /* waffle_x.png */; };
+		B7F09EFD1794599E00725483 /* Waffle.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F09EFB1794599E00725483 /* Waffle.h */; };
+		B7F09EFE1794599E00725483 /* Waffle.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F09EFC1794599E00725483 /* Waffle.m */; };
 		B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */; };
 		B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */; };
 /* End PBXBuildFile section */
@@ -53,16 +59,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		391DA0D61795B4AA0011B955 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
 		39216FDD176F5C790070DFCC /* iSENSE_API_Bundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSENSE_API_Bundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		39216FDE176F5C790070DFCC /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		39216FE2176F5C790070DFCC /* iSENSE_API_Bundle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iSENSE_API_Bundle-Info.plist"; sourceTree = "<group>"; };
 		39216FE4176F5C790070DFCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API_Bundle-Prefix.pch"; sourceTree = "<group>"; };
-		39216FFD176F7ACA0070DFCC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
-		39216FFE176F7ACA0070DFCC /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = headers/DataSet.h; sourceTree = "<group>"; };
 		39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
 		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
-		3981B4B017626FD90030ACE5 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
@@ -86,6 +90,14 @@
 		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
 		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
 		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
+		B712DE211796D17000A30CAC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
+		B712DE221796D17000A30CAC /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = headers/DataSet.h; sourceTree = "<group>"; };
+		B7F09EF51794599100725483 /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
+		B7F09EF61794599100725483 /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
+		B7F09EF71794599100725483 /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
+		B7F09EFB1794599E00725483 /* Waffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Waffle.h; sourceTree = "<group>"; };
+		B7F09EFC1794599E00725483 /* Waffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Waffle.m; sourceTree = "<group>"; };
+		B7F09EFF179459EC00725483 /* WaffleConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaffleConstants.h; sourceTree = "<group>"; };
 		B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCompatibility.h; sourceTree = "<group>"; };
 		B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCompatibility.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,6 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */,
+				76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,8 +162,8 @@
 		39EFB9EE172ADA1F00A6BD2A /* queue_headers */ = {
 			isa = PBXGroup;
 			children = (
-				39216FFE176F7ACA0070DFCC /* DataSet.h */,
-				39216FFD176F7ACA0070DFCC /* DataSaver.h */,
+				B712DE211796D17000A30CAC /* DataSaver.h */,
+				B712DE221796D17000A30CAC /* DataSet.h */,
 				39217009176F7ACA0070DFCC /* Queue.h */,
 			);
 			name = queue_headers;
@@ -168,8 +181,8 @@
 		39EFB9F0172ADF8F00A6BD2A /* dataset */ = {
 			isa = PBXGroup;
 			children = (
+				391DA0D61795B4AA0011B955 /* DataSet.m */,
 				39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */,
-				3981B4B017626FD90030ACE5 /* DataSet.m */,
 			);
 			name = dataset;
 			sourceTree = "<group>";
@@ -206,6 +219,7 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				B7F09EF41794595700725483 /* waffle */,
 				B7F2D81C177B692200F9A58D /* sensor_compatibility */,
 				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
@@ -264,6 +278,19 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		B7F09EF41794595700725483 /* waffle */ = {
+			isa = PBXGroup;
+			children = (
+				B7F09EFF179459EC00725483 /* WaffleConstants.h */,
+				B7F09EFB1794599E00725483 /* Waffle.h */,
+				B7F09EFC1794599E00725483 /* Waffle.m */,
+				B7F09EF51794599100725483 /* waffle_check.png */,
+				B7F09EF61794599100725483 /* waffle_warn.png */,
+				B7F09EF71794599100725483 /* waffle_x.png */,
+			);
+			name = waffle;
+			sourceTree = "<group>";
+		};
 		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,11 +315,12 @@
 				39A1CC2D16DFB48700B1979F /* Person.h in Headers */,
 				39A1CC2E16DFB48700B1979F /* Session.h in Headers */,
 				39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */,
-				3921700C176F7ACA0070DFCC /* DataSaver.h in Headers */,
-				3921700D176F7ACA0070DFCC /* DataSet.h in Headers */,
 				39217017176F7ACA0070DFCC /* Queue.h in Headers */,
 				39B63D891778C4950024EB75 /* Experiment.h in Headers */,
 				B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */,
+				B7F09EFD1794599E00725483 /* Waffle.h in Headers */,
+				B712DE231796D17000A30CAC /* DataSaver.h in Headers */,
+				B712DE241796D17000A30CAC /* DataSet.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +395,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */,
+				B7F09EF81794599100725483 /* waffle_check.png in Resources */,
+				B7F09EF91794599100725483 /* waffle_warn.png in Resources */,
+				B7F09EFA1794599100725483 /* waffle_x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,9 +426,10 @@
 				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
 				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
-				3981B4B217626FD90030ACE5 /* DataSet.m in Sources */,
 				3921700E176F7ACA0070DFCC /* DataSetModel.xcdatamodeld in Sources */,
 				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
+				B7F09EFE1794599E00725483 /* Waffle.m in Sources */,
+				391DA0D81795B4AA0011B955 /* DataSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

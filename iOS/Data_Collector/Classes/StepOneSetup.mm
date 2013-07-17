@@ -95,7 +95,8 @@
     [sessionName setText:newSesName];
     
     bool remem = [prefs boolForKey:[StringGrabber grabString:@"key_remember_me_check"]];
-    if (remem) {
+    bool returnWithPrefs = [prefs boolForKey:@"return_with_prefs"];
+    if (remem || returnWithPrefs) {
         NSString *defaultSampleInterval = [prefs stringForKey:[StringGrabber grabString:@"key_sample_interval"]];
         NSString *newSampleInterval = ([defaultSampleInterval length] == 0) ? @"" : defaultSampleInterval;
         [sampleInterval setText:newSampleInterval];
@@ -105,7 +106,9 @@
         [testLength setText:newTestLength];
         
         rememberMe.on = true;
-    } else {
+    }
+    
+    if (!remem) {
         rememberMe.on = false;
     }
     
@@ -131,7 +134,7 @@
             selectExp.alpha = 0.5;
         }
     }
-
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -194,24 +197,39 @@
                                image:WAFFLE_WARNING];
             ready = false;
         }
+        
+        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
+        if ([selectedCells count] == 0) {
+            if (ready == true)
+                [self.view makeWaffle:@"Please re-select an experiment and fields to record data for"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            ready = false;
+        }
     }
     
     if (ready) {
         [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
         
-        if (selectLater.on) {
+        if (selectLater.on)
             [prefs setValue:@"-1" forKey:[StringGrabber grabString:@"key_exp_automatic"]];
-        }
         
-        if (rememberMe.on) {
+        if (rememberMe.on)
             [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
-            [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
-            [prefs setValue:[testLength text]     forKey:[StringGrabber grabString:@"key_test_length"]];
-        } else {
+            
+        else
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
-            [prefs setValue:[NSString stringWithFormat:@"%d", S_INTERVAL]  forKey:[StringGrabber grabString:@"key_sample_interval"]];
+            
+        if ([[sampleInterval text] length] == 0)
+            [prefs setValue:[NSString stringWithFormat:@"%d", S_INTERVAL] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+        else
+            [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+        
+        if ([[testLength text] length] == 0)
             [prefs setValue:[NSString stringWithFormat:@"%d", TEST_LENGTH] forKey:[StringGrabber grabString:@"key_test_length"]];
-        }
+        else
+            [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
         
         // Indicate that we're done setting up and return
         [prefs setBool:true forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -226,7 +244,7 @@
                                          message:nil
                                         delegate:self
                                cancelButtonTitle:@"Cancel"
-                               otherButtonTitles:@"Enter Experiment #", @"Browse", nil];
+                               otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
     message.tag = MENU_EXPERIMENT;
     [message show];
     [message release];
@@ -251,9 +269,7 @@
     }
 }
 
-- (IBAction)rememberMeToggled:(UISwitch *)switcher {
-    
-}
+- (IBAction)rememberMeToggled:(UISwitch *)switcher {}
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == MENU_EXPERIMENT){
@@ -274,14 +290,40 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            [self rememberPrefs];
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNumInteger;
             [self.navigationController pushViewController:browseView animated:YES];
             [browseView release];
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+                
+                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+                    [dcad setLastController:self];
+                    [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
+                    [[UIApplication sharedApplication] openURL:urlp2s];
+                } else {
+                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
+                    [[UIApplication sharedApplication] openURL:urlapp];
+                }
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
         }
         
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
@@ -297,7 +339,7 @@
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
             
-            [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            [self rememberPrefs];
             
             // launch the sensor selection dialog
             SensorSelection *ssView = [[SensorSelection alloc] init];
@@ -428,6 +470,69 @@
 
 - (void) doneEditingTestLength {
     [testLength resignFirstResponder];
+}
+
+// Allows the device to rotate as necessary.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6 enable rotation
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6 enable rotation
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL) handleNewQRCode:(NSURL *)url {
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSString *exp = arr[2];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_automatic"]];
+
+    expNumInteger = [exp integerValue];
+    
+    NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
+    [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+    
+    [self rememberPrefs];
+    
+    // launch the sensor selection dialog
+    SensorSelection *ssView = [[SensorSelection alloc] init];
+    ssView.title = @"Sensor Selection";
+    [self.navigationController pushViewController:ssView animated:YES];
+    [ssView release];
+    
+    return YES;
+}
+
+- (void) rememberPrefs {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    
+    if (rememberMe.on)
+        [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+    
+    else
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_remember_me_check"]];
+    
+    if ([[sampleInterval text] length] == 0)
+        [prefs setValue:[NSString stringWithFormat:@"%d", S_INTERVAL] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+    else
+        [prefs setValue:[sampleInterval text] forKey:[StringGrabber grabString:@"key_sample_interval"]];
+    
+    if ([[testLength text] length] == 0)
+        [prefs setValue:[NSString stringWithFormat:@"%d", TEST_LENGTH] forKey:[StringGrabber grabString:@"key_test_length"]];
+    else
+        [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
+    
+    [prefs setBool:true forKey:@"return_with_prefs"];
 }
 
 @end

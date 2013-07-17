@@ -8,6 +8,9 @@
 //
 
 #import "Data_CollectorAppDelegate.h"
+#import "ManualViewController.h"
+#import "StepOneSetup.h"
+#import "QueueUploaderView.h"
 
 @implementation Data_CollectorAppDelegate
 
@@ -22,9 +25,7 @@
     // Override point for customization after application launch.    
     self.window.rootViewController = self.navControl;
 	[self.window makeKeyAndVisible];
-    
-    dataSaver = [[DataSaver alloc] init];
-    
+        
     return YES;
 }
 
@@ -98,7 +99,7 @@
         NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
         NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"momd"];
         managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
-        //NSLog(@"%@", managedObjectModel.entities.description);
+        NSLog(@"%@", managedObjectModel.entities.description);
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();
@@ -161,6 +162,8 @@
 
 
 - (void)dealloc {
+    NSLog(@"dataSaver count is %d in dealloc", dataSaver.count);
+    [dataSaver release];
     [managedObjectModel release];
     [managedObjectContext release];
     [persistentStoreCoordinator release];
@@ -190,9 +193,10 @@
 // Get the dataSets from the queue :D
 - (void) fetchDataSets {
     
+   
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] retain];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
         
@@ -204,17 +208,40 @@
         } else {
             NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
         }
-        
+
+        dataSaver = [[DataSaver alloc] initWithContext:managedObjectContext];
+                
         // fill dataSaver's DataSet Queue
         for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
+            [dataSaver addDataSetFromCoreData:mutableFetchResults[i]];
         }
         
         // release the fetched objects
+        [dataSetEntity release];
         [mutableFetchResults release];
         [request release];
     }
 }
 
+- (void) setLastController:(UIViewController *)uivc {
+    lastController = uivc;
+}
+
+- (void) setReturnToClass:(int)ret {
+    returnToClass = ret;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if (returnToClass == DELEGATE_KEY_AUTOMATIC) {
+        StepOneSetup *svc = (StepOneSetup *) lastController;
+        return [svc handleNewQRCode:url];
+    } else if (returnToClass == DELEGATE_KEY_MANUAL) {
+        ManualViewController *mvc = (ManualViewController *) lastController;
+        return [mvc handleNewQRCode:url];
+    } else {
+        QueueUploaderView *qvc = (QueueUploaderView *) lastController;
+        return [qvc handleNewQRCode:url];
+    }
+}
 
 @end

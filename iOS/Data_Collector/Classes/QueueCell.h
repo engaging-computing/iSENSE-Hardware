@@ -7,14 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/headers/DataSet.h>
 
 @interface QueueCell : UITableViewCell
 
-- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable;
+- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
+- (void) toggleChecked;
+- (void) setSessionName:(NSString *)name;
+- (NSNumber *)getKey;
+- (void) setExpNum:(NSString *)exp;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;
 @property (nonatomic, assign) IBOutlet UILabel *description;
-@property (nonatomic, assign) IBOutlet UISwitch *uploadable;
+@property (nonatomic, assign) IBOutlet UILabel *eidLabel;
+
+@property (nonatomic, retain) DataSet *dataSet;
+@property (nonatomic, retain) NSNumber *mKey;
 
 @end

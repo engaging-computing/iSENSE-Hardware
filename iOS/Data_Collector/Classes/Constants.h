@@ -16,10 +16,15 @@
 // constants for dialogs
 #define MENU_EXPERIMENT               0
 #define MENU_LOGIN                    1
-#define EXPERIMENT_MANUAL_ENTRY       2
+#define EXPERIMENT_MANUAL_ENTRY       118
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5
+
+// constants for manual dialog
+#define MANUAL_MENU_UPLOAD            0
+#define MANUAL_MENU_EXPERIMENT        1
+#define MANUAL_MENU_LOGIN             2
 
 // options for action sheet
 #define OPTION_CANCELED                0
@@ -104,5 +109,16 @@
 #define TAG_STEP1_SESSION_NAME      1000
 #define TAG_STEP1_SAMPLE_INTERVAL   1001
 #define TAG_STEP1_TEST_LENGTH       1002
+
+// delegate constants to determine the calling class
+#define DELEGATE_KEY_AUTOMATIC  0
+#define DELEGATE_KEY_MANUAL     1
+#define DELELGATE_KEY_QUEUE     2
+
+// constants for QueueUploaderView's actionSheet
+#define QUEUE_DELETE        0
+#define QUEUE_RENAME        1
+#define QUEUE_SELECT_EXP    2
+#define QUEUE_LOGIN         500
 
 #endif

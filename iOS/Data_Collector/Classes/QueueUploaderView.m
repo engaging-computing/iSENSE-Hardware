@@ -10,15 +10,50 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi, lastClickedCellIndex;
 
-// Initialize the view where the 
+// Initialize the view
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        iapi = [iSENSE getInstance];
     }
     return self;
     
+}
+
+// Upload button control
+-(IBAction)upload:(id)sender {
+    
+    NSLog(@"%@", dataSaver.dataQueue.description);
+    
+    // Words n stuff
+    if ([iapi isLoggedIn]) {
+        
+        // Do zee upload thang
+        bool uploadSuccessful = [dataSaver upload];
+        if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    } else {
+        if ([iapi isConnectedToInternet]) {
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            message.tag = QUEUE_LOGIN;
+			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message show];
+            [message release];
+        } else {
+           
+            [self.navigationController popViewControllerAnimated:YES];
+
+        }
+    }
+
 }
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -51,17 +86,210 @@
     }
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:YES];
+    
+    // Autorotate
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+
+}
+
 // Do any additional setup after loading the view.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Managed Object Context for Data_CollectorAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
     
     // Get dataSaver from the App Delegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
-        
+    
     currentIndex = 0;
 
+    // add long press gesture listener to the table
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
+                                          initWithTarget:self action:@selector(handleLongPressOnTableCell:)];
+    lpgr.minimumPressDuration = 0.5;
+    lpgr.delegate = self;
+    [self.mTableView addGestureRecognizer:lpgr];
+    [lpgr release];
+
+    // make table clear
+    mTableView.backgroundColor = [UIColor clearColor];
+    mTableView.backgroundView = nil; // TODO frogs?
+}
+
+- (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        
+        CGPoint p = [gestureRecognizer locationInView:self.mTableView];
+        
+        NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
+        if (indexPath != nil) {
+            lastClickedCellIndex = [indexPath copy];
+            NSLog(@"stuff stuff: %@", lastClickedCellIndex);
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
+            if (cell.isHighlighted) {
+                NSLog(@"long press on table view at row %d", indexPath.row);
+                UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                             initWithTitle:nil
+                                             delegate:self
+                                             cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"Delete"
+                                             otherButtonTitles:@"Rename", @"Select Experiment", nil];
+                popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                [popupQuery showInView:self.view];
+                [popupQuery release];
+            }
+        }
+    }
+}
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    UIAlertView *message;
+    QueueCell *cell;
+
+	switch (buttonIndex) {
+        case QUEUE_DELETE:
+
+            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [dataSaver removeDataSet:[cell getKey]];
+            [self.mTableView reloadData];
+            
+            break;
+            
+        case QUEUE_RENAME:
+            message = [[UIAlertView alloc] initWithTitle:@"Enter new session name:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
+            
+            message.tag = QUEUE_RENAME;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message show];
+            [message release];
+            
+            break;
+            
+        case QUEUE_SELECT_EXP:
+            message = [[UIAlertView alloc] initWithTitle:nil
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+            message.tag = QUEUE_SELECT_EXP;
+            [message show];
+            [message release];
+            
+			break;
+            
+		default:
+			break;
+	}
+	
+}
+
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == QUEUE_LOGIN) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else if (actionSheet.tag == QUEUE_RENAME) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            NSString *newSessionName = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setSessionName:newSessionName];
+        }
+    } else if (actionSheet.tag == QUEUE_SELECT_EXP) {
+        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
+            
+            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message show];
+            [message release];
+            
+        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
+            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNum;
+            browsing = true;
+            [self.navigationController pushViewController:browseView animated:YES];
+            [browseView release];
+            
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+                
+                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+                    [dcad setLastController:self];
+                    [dcad setReturnToClass:DELELGATE_KEY_QUEUE];
+                    [[UIApplication sharedApplication] openURL:urlp2s];
+                } else {
+                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
+                    [[UIApplication sharedApplication] openURL:urlapp];
+                }
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
+            
+        }
+    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+                        
+            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setExpNum:expNumString];
+        }
+        
+    }
+}
+
+- (BOOL) handleNewQRCode:(NSURL *)url {
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSString *exp = arr[2];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    
+    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+    [cell setExpNum:exp];
+    
+    return YES;
 }
 
 // Dispose of any resources that can be recreated.
@@ -92,6 +320,7 @@
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (dataSaver == nil) NSLog(@"Why am I nil?");
     return dataSaver.count;
 }
 
@@ -101,23 +330,94 @@
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
-        UIViewController *tmp = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
-        cell = (QueueCell *) tmp.view;
-        
-        [tmp release];
+        UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
+        cell = (QueueCell *) tmpVC.view;
+        [tmpVC release];
     }
     
-    NSLog(@"First: %@", dataSaver.dataQueue.allKeys[0]);
+    NSArray *keys = [dataSaver.dataQueue allKeys];  
+    DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
+    [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
-    DataSet *tmp = [dataSaver removeDataSet:dataSaver.dataQueue.allKeys[0]]; // getting all the keys to my queue haha.  dis is bad
-    NSLog(@"Name of first dataset is %@.", tmp.description);
-    [cell setupCellName:tmp.name andDataType:@"Data" andDescription:tmp.dataDescription andUploadable:true];
-    [dataSaver addDataSet:tmp];
+    if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
+        browsing = false;
+        NSString *expNumString = [NSString stringWithFormat:@"%d", expNum];
+        NSLog(@"new exp from browsing is: %@", expNumString);
+        [cell setExpNum:expNumString];
+        //[self.mTableView reloadData];
+    }
     
     return cell;
 }
 
+// Log you into to iSENSE using the iSENSE API
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL success = [iapi login:usernameInput with:passwordInput];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [self.view makeWaffle:@"Login Successful!"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_CHECKMARK];
+                
+                // save the username and password in prefs
+                NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs synchronize];
+                
+            } else {
+                [self.view makeWaffle:@"Login Failed!"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_RED_X];
+            }
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+            if ([iapi isLoggedIn]) {
+                // Do zee upload thang
+                bool uploadSuccessful = [dataSaver upload];
+                if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+            }
+            
+            [self.navigationController popViewControllerAnimated:YES];
 
+        });
+    });
+    
+}
 
+// This is for the loading spinner when the app starts automatic mode
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    [spinner release];
+    return [message autorelease];
+}
+
+// TODO - this method isn't be fired... why? It fires in SensorSelection and its EXACTLY THE SAME
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"log plz");
+    [tableView reloadData];
+    QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
+    [NSThread sleepForTimeInterval:0.07];
+    [cell setBackgroundColor:[UIColor clearColor]];
+    
+    [cell toggleChecked];
+}
 
 @end

@@ -10,13 +10,9 @@
 
 @implementation QueueCell
 
-//- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-//    if (self) {
-//        // Initialization code
-//    }
-//    return self;
-//}
+@synthesize nameAndDate, dataType, description, eidLabel, dataSet, mKey;
+
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
@@ -24,25 +20,79 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellName:(NSString *)nameAndDate andDataType:(NSString *)type andDescription:(NSString *)description andUploadable:(bool)uploadable {
-    QueueCell *cell = [[QueueCell alloc] init];
+- (QueueCell *)setupCellWithDataSet:(DataSet *)ds andKey:(NSNumber *)key {
+    self.mKey = key;
+    self.nameAndDate.text = ds.name;
+    self.description.text = ds.dataDescription;
+    self.eidLabel.text = (ds.eid.intValue == -1) ? @"No Exp." : [NSString stringWithFormat:@"%d", ds.eid.intValue];
     
-    NSLog(@"Name is: %@", nameAndDate);
+    NSString *tmpDataType;
+    if (ds.picturePaths == nil) {
+        if (ds.data == nil) {
+            tmpDataType = @"Error";
+        } else {
+            tmpDataType = @"Data";
+        }
+    } else {
+        if (ds.data == nil) {
+            tmpDataType = @"Picture";
+        } else {
+            tmpDataType = @"Data";
+        }
+    }
     
-    cell.nameAndDate.text = nameAndDate;
-    cell.dataType.text = type;
-    cell.description.text = description;
+    self.dataType.text = tmpDataType;
+    [self setCheckedSwitch:ds.uploadable.boolValue];
     
-    return cell;
+    dataSet = [ds retain];
+    
+    return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        // do stuff
+        self.contentView.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
 
+
+-(void)setCheckedSwitch:(bool)checked {
+    if (checked) {
+        self.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
+    }
+}
+
+- (void) toggleChecked {
+    if (dataSet.uploadable.boolValue == false) {
+        [self setCheckedSwitch:true];
+        dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
+    } else {
+        [self setCheckedSwitch:false];
+        dataSet.uploadable = [[NSNumber alloc] initWithBool:false];
+    }
+}
+
+- (void) setSessionName:(NSString *)name {
+    self.nameAndDate.text = name;
+    [dataSet setName:name];
+}
+
+- (NSNumber *)getKey {
+    return mKey;
+}
+
+- (void) setExpNum:(NSString *)exp {
+    self.eidLabel.text = exp;
+    [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
+}
+
+-(void)dealloc {
+    [super dealloc];
+    [dataSet release];
+}
 
 @end
