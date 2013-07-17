@@ -120,6 +120,7 @@
 
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
+    mTableView.backgroundView = nil; // TODO frogs?
 }
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -412,9 +413,11 @@
     NSLog(@"log plz");
     [tableView reloadData];
     QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
-    [cell setBackgroundColor:[UIColor lightGrayColor]];
-    [NSThread sleepForTimeInterval:0.08];
+    
+    [NSThread sleepForTimeInterval:0.07];
     [cell setBackgroundColor:[UIColor clearColor]];
+    
+    [cell toggleChecked];
 }
 
 @end
