@@ -12,7 +12,7 @@
 @interface QueueCell : UITableViewCell
 
 - (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
-- (IBAction)setChecked:(UITapGestureRecognizer *)sender;
+- (void) toggleChecked;
 - (void) setSessionName:(NSString *)name;
 - (NSNumber *)getKey;
 - (void) setExpNum:(NSString *)exp;
@@ -22,7 +22,6 @@
 @property (nonatomic, assign) IBOutlet UILabel *description;
 @property (nonatomic, assign) IBOutlet UILabel *eidLabel;
 
-@property (nonatomic, retain) IBOutlet UITapGestureRecognizer *onClickRecognizer;
 @property (nonatomic, retain) DataSet *dataSet;
 @property (nonatomic, retain) NSNumber *mKey;
 

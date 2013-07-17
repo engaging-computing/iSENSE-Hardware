@@ -178,8 +178,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView reloadData];
     SensorCell *cell = (SensorCell *)[tableView cellForRowAtIndexPath:indexPath];
-    [cell setBackgroundColor:[UIColor lightGrayColor]];
-    [NSThread sleepForTimeInterval:0.08];
+    
+    [NSThread sleepForTimeInterval:0.07];
     [cell setBackgroundColor:[UIColor clearColor]];
     
     NSNumber *newVal = [selectedCells objectAtIndex:indexPath.row];

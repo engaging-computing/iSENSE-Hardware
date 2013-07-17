@@ -14,7 +14,6 @@
 			<string>IBProxyObject</string>
 			<string>IBUILabel</string>
 			<string>IBUITableViewCell</string>
-			<string>IBUITapGestureRecognizer</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -166,13 +165,16 @@
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="322765688"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
+				</object>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-				<int key="IBUISelectionStyle">0</int>
+				<int key="IBUISelectionStyle">2</int>
 				<int key="IBUIAccessoryType">3</int>
 				<reference key="IBUIContentView" ref="322765688"/>
 				<real value="45" key="IBUIRowHeight"/>
 			</object>
-			<object class="IBUITapGestureRecognizer" id="1015871400"/>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
@@ -210,37 +212,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">onClickRecognizer</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="1015871400"/>
-					</object>
-					<int key="connectionID">234</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
-						<string key="label">gestureRecognizers</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="1015871400"/>
-						<string key="cachedDesigntimeCollectionClassName">NSArray</string>
-						<bool key="addsContentToExistingCollection">YES</bool>
-					</object>
-					<int key="connectionID">236</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">eidLabel</string>
 						<reference key="source" ref="135679168"/>
 						<reference key="destination" ref="843630395"/>
 					</object>
 					<int key="connectionID">238</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">setChecked:</string>
-						<reference key="source" ref="1015871400"/>
-						<reference key="destination" ref="135679168"/>
-					</object>
-					<int key="connectionID">233</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -289,11 +265,6 @@
 						<reference key="parent" ref="135679168"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">231</int>
-						<reference key="object" ref="1015871400"/>
-						<reference key="parent" ref="0"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">237</int>
 						<reference key="object" ref="843630395"/>
 						<reference key="parent" ref="135679168"/>
@@ -310,7 +281,6 @@
 				<string key="181.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="182.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="185.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="231.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="237.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
@@ -324,23 +294,11 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">QueueCell</string>
 					<string key="superclassName">UITableViewCell</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">setChecked:</string>
-						<string key="NS.object.0">UITapGestureRecognizer</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">setChecked:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">setChecked:</string>
-							<string key="candidateClassName">UITapGestureRecognizer</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="dataType">UILabel</string>
 						<string key="description">UILabel</string>
 						<string key="eidLabel">UILabel</string>
 						<string key="nameAndDate">UILabel</string>
-						<string key="onClickRecognizer">UITapGestureRecognizer</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="dataType">
@@ -358,10 +316,6 @@
 						<object class="IBToOneOutletInfo" key="nameAndDate">
 							<string key="name">nameAndDate</string>
 							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="onClickRecognizer">
-							<string key="name">onClickRecognizer</string>
-							<string key="candidateClassName">UITapGestureRecognizer</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

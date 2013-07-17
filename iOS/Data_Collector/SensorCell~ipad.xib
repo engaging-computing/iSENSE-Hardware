@@ -153,6 +153,7 @@
 							<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
 						</object>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUISelectionStyle">2</int>
 						<reference key="IBUIContentView" ref="50236330"/>
 					</object>
 				</array>
