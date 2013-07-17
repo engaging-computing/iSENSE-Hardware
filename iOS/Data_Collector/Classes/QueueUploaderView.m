@@ -120,6 +120,7 @@
 
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
+    mTableView.backgroundView = nil; // TODO frogs?
 }
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -152,12 +153,14 @@
     
     UIAlertView *message;
     QueueCell *cell;
-    
+
 	switch (buttonIndex) {
         case QUEUE_DELETE:
+
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [dataSaver removeDataSet:[cell getKey]];
+            [self.mTableView reloadData];
             
-            //[dataSaver removeDataSet:<#(NSNumber *)#>];
             break;
             
         case QUEUE_RENAME:
@@ -176,8 +179,16 @@
             break;
             
         case QUEUE_SELECT_EXP:
-            NSLog(@"select exp");
-            break;
+            message = [[UIAlertView alloc] initWithTitle:nil
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+            message.tag = QUEUE_SELECT_EXP;
+            [message show];
+            [message release];
+            
+			break;
             
 		default:
 			break;
@@ -201,7 +212,84 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setSessionName:newSessionName];
         }
+    } else if (actionSheet.tag == QUEUE_SELECT_EXP) {
+        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
+            
+            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message show];
+            [message release];
+            
+        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
+            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNum;
+            browsing = true;
+            [self.navigationController pushViewController:browseView animated:YES];
+            [browseView release];
+            
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            
+            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+                
+                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+                    [dcad setLastController:self];
+                    [dcad setReturnToClass:DELELGATE_KEY_QUEUE];
+                    [[UIApplication sharedApplication] openURL:urlp2s];
+                } else {
+                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
+                    [[UIApplication sharedApplication] openURL:urlapp];
+                }
+                
+            } else {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:nil];
+                
+                [message setAlertViewStyle:UIAlertViewStyleDefault];
+                [message show];
+                [message release];
+                
+            }
+            
+        }
+    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+                        
+            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setExpNum:expNumString];
+        }
+        
     }
+}
+
+- (BOOL) handleNewQRCode:(NSURL *)url {
+    
+    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSString *exp = arr[2];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    
+    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+    [cell setExpNum:exp];
+    
+    return YES;
 }
 
 // Dispose of any resources that can be recreated.
@@ -250,6 +338,14 @@
     NSArray *keys = [dataSaver.dataQueue allKeys];  
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
+    
+    if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
+        browsing = false;
+        NSString *expNumString = [NSString stringWithFormat:@"%d", expNum];
+        NSLog(@"new exp from browsing is: %@", expNumString);
+        [cell setExpNum:expNumString];
+        //[self.mTableView reloadData];
+    }
     
     return cell;
 }
@@ -317,9 +413,11 @@
     NSLog(@"log plz");
     [tableView reloadData];
     QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
-    [cell setBackgroundColor:[UIColor lightGrayColor]];
-    [NSThread sleepForTimeInterval:0.08];
+    
+    [NSThread sleepForTimeInterval:0.07];
     [cell setBackgroundColor:[UIColor clearColor]];
+    
+    [cell toggleChecked];
 }
 
 @end
