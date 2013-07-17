@@ -10,29 +10,97 @@
 
 @implementation DataSaver
 
-@synthesize count;
+@synthesize count, dataQueue, managedObjectContext;
 
--(id) init {
+-(id)initWithContext:(NSManagedObjectContext *)context {
     self = [super init];
     if (self) {
-        dataQueue = [[NSMutableDictionary alloc] init];
         count = 0;
+        dataQueue = [[NSMutableDictionary alloc] init];
+        managedObjectContext = context;
     }
     return self;
 }
 
+// Add a DataSet to the queue
 -(void)addDataSet:(DataSet *)dataSet {
+    
+    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    
+    ds.name = dataSet.name;
+    ds.dataDescription = dataSet.dataDescription;
+    ds.data = dataSet.data;
+    ds.picturePaths = dataSet.picturePaths;
+    ds.eid = dataSet.eid;
+    ds.city = dataSet.city;
+    ds.country = dataSet.country;
+    ds.uploadable = dataSet.uploadable;
+    ds.address = dataSet.address;
+    ds.sid = dataSet.sid;
+        
+    // Commit the changes
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"%@", error);
+    }
+    
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     count++;
 }
 
--(id)removeDataSet:(int)key {
-    count--;
-    return [dataQueue removeFromQueueWithKey:key];
+-(void)addDataSetFromCoreData:(DataSet *)dataSet {
+    int newKey = arc4random();
+    [dataQueue enqueue:dataSet withKey:newKey];
+    count++;
+
 }
 
--(void)editDataSetWithKey:(int)key {
+// if key is nil, call dequeue otherwise dequeue with the given key
+-(id)removeDataSet:(NSNumber *)key {
+    count--;
+    DataSet *tmp;
+    NSLog(@"Removing dataSet with key: %@", key);
+    if (key == nil) {
+        tmp = [dataQueue dequeue];
+    } else {
+        tmp = [dataQueue removeFromQueueWithKey:key];
+    }
+    
+    [managedObjectContext deleteObject:tmp];
+    
+    // Commit the changes
+    NSError *error = [[NSError alloc] init];
+    if (![managedObjectContext save:&error]) {
+        // Handle the error.
+        NSLog(@"Save failed with error: %@", error);
+    }
+    
+    return tmp;
+}
+
+-(id)getDataSet {
+    NSNumber *firstKey = [dataQueue.allKeys objectAtIndex:0];
+    return [dataQueue objectForKey:firstKey];
+}
+
+// if key is nil, call dequeue otherwise dequeue with the given key
+-(void)removeAllDataSets {
+    
+    for (int i = 0; i < dataQueue.count; i++) {
+        NSNumber *tmp = [dataQueue.allKeys objectAtIndex:i];
+        NSLog(@"deleting %@", tmp);
+        [self removeDataSet:tmp];
+    }
+    
+    [dataQueue removeAllObjects];
+    NSLog(@"%@", dataQueue.description);
+    count = 0;
+
+}
+
+-(void)editDataSetWithKey:(NSNumber *)key {
     DataSet *dataSet = [dataQueue removeFromQueueWithKey:key];
     /*
      * Do editing code here!
@@ -43,26 +111,29 @@
 -(bool)upload {
     iSENSE *isenseAPI = [iSENSE getInstance];
     if (![isenseAPI isLoggedIn]) {
-        NSLog(@"Not logged in.");
+        
+        NSLog(@"Not logged in."); // MIKE I KEN HAZ WAFFLES?
         return false;
     }
+    
+    NSMutableArray *dataSetsToBeRemoved = [[NSMutableArray alloc] init];
     DataSet *currentDS;
-    while (count) {
+    
+    for (NSNumber *currentKey in dataQueue.allKeys) {
+        
         // get the next dataset
-        int headKey = dataQueue.allKeys[0];
-        currentDS = [self removeDataSet:headKey];
+        currentDS = [dataQueue objectForKey:currentKey];
         
         // check if the session is uploadable
-        if ([currentDS uploadable]) {
+        if (currentDS.uploadable.boolValue) {
             
             // create a session
             if (currentDS.sid.intValue == -1) {
-                int sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.description Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:[NSNumber numberWithInt:currentDS.eid]];
-                if (sessionID == -1) {
-                    [self addDataSet:currentDS];
+                NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
+                if (sessionID.intValue == -1) {
                     continue;
                 } else {
-                    currentDS.sid = [NSNumber numberWithInt:sessionID];
+                    currentDS.sid = sessionID;
                 }
             }
             
@@ -71,13 +142,11 @@
                 NSError *error = nil;
                 NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
                 if (error != nil) {
-                    [self addDataSet:currentDS];
                     NSLog(@"%@", error);
                     return false;
                 }
                 
-                if (![isenseAPI putSessionData:dataJSON forSession:[NSNumber numberWithInt:currentDS.sid] inExperiment:[NSNumber numberWithInt:currentDS.eid]]) {
-                    [self addDataSet:currentDS];
+                if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
                     continue;
                 }
             }
@@ -92,7 +161,7 @@
                 for (int i = 0; i < pictures.count; i++) {
                     
                     // Track the images that fail to upload
-                    if (![isenseAPI upload:pictures[i] toExperiment:[NSNumber numberWithInt:currentDS.eid] forSession:[NSNumber numberWithInt:currentDS.sid] withName:currentDS.name andDescription:currentDS.description]) {
+                    if (![isenseAPI upload:pictures[i] toExperiment:currentDS.eid forSession:currentDS.sid withName:currentDS.name andDescription:currentDS.dataDescription]) {
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];
                         continue;
@@ -103,19 +172,29 @@
                 // Add back the images that need to be uploaded
                 if (failedAtLeastOnce) {
                     currentDS.picturePaths = newPicturePaths;
-                    [self addDataSet:currentDS];
                     continue;
                 }
             }
             
+        [dataSetsToBeRemoved addObject:currentKey];
+            
         } else {
-            [self addDataSet:currentDS];
+            NSLog(@"Ya nub");
+            continue;
         }
         
         
     }
     
+    [self removeDataSets:dataSetsToBeRemoved];
+    
     return true;
+}
+
+-(void)removeDataSets:(NSArray *)keys {
+    for(NSNumber *key in keys) {
+        [self removeDataSet:key];
+    }
 }
 
 @end

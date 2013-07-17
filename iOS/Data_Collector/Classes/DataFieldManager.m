@@ -13,6 +13,25 @@
 
 @synthesize order, data;
 
+- (id) init {
+    [self falseEnableFields];
+    return self;
+}
+
+- (void) falseEnableFields {
+    enabledFields[0] = enabledFields[1] = enabledFields[2] = enabledFields[3] = enabledFields[4] = enabledFields[5] = enabledFields[6] = enabledFields[7] =
+    enabledFields[8] = enabledFields[9] = enabledFields[10] = enabledFields[11] = enabledFields[12] = enabledFields[13] = enabledFields[14] = enabledFields[15] =
+    enabledFields[16] = enabledFields[17] = enabledFields[18] = enabledFields[19] = enabledFields[20] = enabledFields[21] = false;
+}
+
+- (void) setEnabledField:(bool)value atIndex:(int)index {
+    enabledFields[index] = value;
+}
+
+- (bool) enabledFieldAtIndex:(int)index {
+    return enabledFields[index];
+}
+
 - (NSMutableArray *) getFieldOrderOfExperiment:(int)exp {
     
     if (order) [order release];
@@ -425,6 +444,31 @@
     }
 
     return data;    
+}
+
+- (void) addAllFieldsToOrder {
+    [order addObject:[StringGrabber grabField:@"time"]];
+    [order addObject:[StringGrabber grabField:@"accel_x"]];
+    [order addObject:[StringGrabber grabField:@"accel_y"]];
+    [order addObject:[StringGrabber grabField:@"accel_z"]];
+    [order addObject:[StringGrabber grabField:@"accel_total"]];
+    [order addObject:[StringGrabber grabField:@"latitude"]];
+    [order addObject:[StringGrabber grabField:@"longitude"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_x"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_y"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_z"]];
+    [order addObject:[StringGrabber grabField:@"magnetic_total"]];
+    [order addObject:[StringGrabber grabField:@"heading_deg"]];
+    [order addObject:[StringGrabber grabField:@"heading_rad"]];
+    [order addObject:[StringGrabber grabField:@"temperature_c"]];
+    [order addObject:[StringGrabber grabField:@"pressure"]];
+    [order addObject:[StringGrabber grabField:@"altitude"]];
+    [order addObject:[StringGrabber grabField:@"luminous_flux"]];
+    [order addObject:[StringGrabber grabField:@"gyroscope_x"]];
+    [order addObject:[StringGrabber grabField:@"gyroscope_y"]];
+    [order addObject:[StringGrabber grabField:@"gyroscope_z"]];
+    [order addObject:[StringGrabber grabField:@"temperature_f"]];
+    [order addObject:[StringGrabber grabField:@"temperature_k"]];
 }
 
 - (void) dealloc {

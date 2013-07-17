@@ -19,7 +19,7 @@ static iSENSE *_iSENSE = nil;
 -(NSDictionary *)isenseQuery:(NSString*)target {
     
 	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-	NSLog(@"Sending to iSENSE: %@", final_target);
+	NSLog(@"Sending to %@: %@", baseURL, final_target);
 	NSError *requestError = nil;
     
     /* Post request to allow for longer request */
@@ -637,7 +637,11 @@ static iSENSE *_iSENSE = nil;
 - (NSNumber *) createSession:(NSString *)name withDescription:(NSString *)description Street:(NSString *)street City:(NSString *)city Country:(NSString *)country toExperiment:(NSNumber *)exp_id {
     if ([self isLoggedIn]) {
         NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=createSession&session_key=%@&eid=%@&name=%@&description=%@&street=%@&city=%@&country=%@", session_key, exp_id, name, description, street, city, country]];
-        NSNumber *sid = [[result objectForKey:@"data"] valueForKey:@"sessionId"];
+        
+        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+        [f setNumberStyle:NSNumberFormatterDecimalStyle];
+        NSNumber *sid = [f numberFromString:[[result objectForKey:@"data"] valueForKey:@"sessionId"]];
+
         return sid;
     }
 	return NULL;

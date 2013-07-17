@@ -22,6 +22,19 @@
 	<string>0.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>edu.uml.cs.isense.datacollector.${PRODUCT_NAME:rfc1034identifier}</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>DataCollector</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -29,9 +42,11 @@
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>NSMainNibFile~ipad</key>
-	<string>MainWindow~ipad</string>
+	<string>MainWindow</string>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
+	<key>UIPrerenderedIcon</key>
+	<true/>
 	<key>UIRequiresPersistentWiFi</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>

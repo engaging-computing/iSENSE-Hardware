@@ -272,9 +272,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		
 		OrientationManager.disableRotation(DataCollector.this);
 
-		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
-		ImageView spinner = (ImageView) findViewById(R.id.spinner);
-		spinner.startAnimation(rotateInPlace);
+		mHandler = new Handler();
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				rotateInPlace = AnimationUtils.loadAnimation(DataCollector.this, R.anim.superspinner);
+				ImageView spinner = (ImageView) findViewById(R.id.spinner);
+				spinner.startAnimation(rotateInPlace);
+			}
+		});
 		
 		// Set main context of application once
 		mContext = this;
@@ -1643,7 +1649,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menuLogin.setEnabled(enabled);
 			menuMedia.setEnabled(enabled);
 			menuSync.setEnabled(enabled);
-			if (enabled) {
+			/*if (enabled) {
 				MenuItem item = mMenu.findItem(R.id.menu_item_login);
 		    	item.setVisible(true);
 		    	item = mMenu.findItem(R.id.menu_item_media);
@@ -1659,7 +1665,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		    	item = mMenu.findItem(R.id.menu_item_sync);
 		    	item.setVisible(false);
 		    	super.onPrepareOptionsMenu(mMenu);
-			}
+			}*/
 		}
 	}
 

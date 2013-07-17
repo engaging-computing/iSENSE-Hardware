@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:baselineAligned="false"
+    android:keepScreenOn="true"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/startStop"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/locationBlock"
+        android:layout_below="@+id/timePointCountBlock"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/button_rsense"
+        android:text="@string/startPrompt"
+        android:textColor="#3E94D1"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/locationBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#000033"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/myLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000033"
+            android:text="@string/noLocation0"
+            android:textColor="#A8CFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timePointCountBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/ImageViewLogo"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/timeElapsed"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000033"
+            android:text="@string/timeElapsed"
+            android:textColor="#A8CFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/pointCount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/pointsUploaded"
+            android:textColor="#A8CFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+         <TextView
+            android:id="@+id/loginStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/logged_in_as"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ImageViewLogo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:contentDescription="@string/logoDescription"
+        android:paddingBottom="1dp"
+        android:paddingTop="1dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo_land" />
+   
+
+</RelativeLayout>

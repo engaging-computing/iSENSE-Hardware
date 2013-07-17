@@ -15,15 +15,21 @@
 #import "iSENSE.h"
 
 @interface DataSaver : NSObject {
-    NSMutableDictionary *dataQueue;
 }
 
+-(id)initWithContext:(NSManagedObjectContext *)context;
+-(void)addDataSetFromCoreData:(DataSet *)dataSet;
 -(void)addDataSet:(DataSet *)dataSet;
--(id)removeDataSet:(int)key;
--(void)editDataSetWithKey:(int)key;
+-(id)removeDataSet:(NSNumber *)key;
+-(void)editDataSetWithKey:(NSNumber *)key;
 -(bool)upload;
+-(void)removeAllDataSets;
+-(id)getDataSet;
 
 @property (nonatomic, assign) int count;
+@property (nonatomic, retain) NSMutableDictionary *dataQueue;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+
 
 @end
 

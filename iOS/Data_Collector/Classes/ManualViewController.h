@@ -9,9 +9,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "StepOneSetup.h"
-#import <ZXingWidgetController.h>
-#import <QRCodeReader.h>
+
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVCaptureDevice.h>
 
 typedef struct _RotationDataSaver {
     NSString *sesName;
@@ -20,7 +20,7 @@ typedef struct _RotationDataSaver {
     bool doesHaveData;
 } RotationDataSaver;
 
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, ZXingDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate> {
 	
 	// UI Elements
 	UIImageView  *logo;
@@ -37,15 +37,12 @@ typedef struct _RotationDataSaver {
 	NSString *sessionName;
     RotationDataSaver *rds;
     
-    NSString *qrResults;
-    ZXingWidgetController *widController;
-    
     CLLocationManager *locationManager;
     
 }
 
 // Storyboard functions
-- (IBAction) uploadOnClick:(id)sender;
+- (IBAction) saveOnClick:(id)sender;
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
@@ -66,6 +63,7 @@ typedef struct _RotationDataSaver {
 - (void)   cleanRDSData;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
+- (BOOL) handleNewQRCode:(NSURL *)url;
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView  *logo;
@@ -87,6 +85,7 @@ typedef struct _RotationDataSaver {
 @property (nonatomic, assign) int                    expNum;
 @property (nonatomic, assign) bool                   keyboardDismissProper;
 @property (nonatomic, assign) BOOL                   browsing;
+@property (nonatomic, assign) BOOL                   initialExpDialogOpen;
 
 @end
 

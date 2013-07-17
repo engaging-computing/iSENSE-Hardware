@@ -11,7 +11,7 @@
 
 @implementation Data_CollectorAppDelegate
 
-@synthesize window, navControl, about, guide, managedObjectContext, managedObjectModel, persistentStoreCoordinator;
+@synthesize window, navControl, about, guide, managedObjectContext, managedObjectModel, persistentStoreCoordinator, dataSaver;
 
 
 #pragma mark -
@@ -19,11 +19,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // Override point for customization after application launch.
+    // Override point for customization after application launch.    
     self.window.rootViewController = self.navControl;
-	
-    [self.window makeKeyAndVisible];
-    
+	[self.window makeKeyAndVisible];
+        
     return YES;
 }
 
@@ -80,6 +79,9 @@
         managedObjectContext = [[NSManagedObjectContext alloc] init];
         [managedObjectContext setPersistentStoreCoordinator: coordinator];
     }
+    
+    [self fetchDataSets];
+
     return managedObjectContext;
 }
 
@@ -157,6 +159,8 @@
 
 
 - (void)dealloc {
+    NSLog(@"dataSaver count is %d in dealloc", dataSaver.count);
+    [dataSaver release];
     [managedObjectModel release];
     [managedObjectContext release];
     [persistentStoreCoordinator release];
@@ -181,6 +185,57 @@
 	guideView.title = @"Guide";
 	[self.navControl pushViewController:guideView animated:YES];
 	[guideView release];
+}
+
+// Get the dataSets from the queue :D
+- (void) fetchDataSets {
+    
+   
+    // Fetch the old DataSets
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] retain];
+    if (dataSetEntity) {
+        [request setEntity:dataSetEntity];
+        
+        // Actually make the request
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        if (mutableFetchResults == nil) {
+            // dats a problem
+        } else {
+            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
+        }
+
+        dataSaver = [[DataSaver alloc] initWithContext:managedObjectContext];
+                
+        // fill dataSaver's DataSet Queue
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            [dataSaver addDataSetFromCoreData:mutableFetchResults[i]];
+        }
+        
+        // release the fetched objects
+        [dataSetEntity release];
+        [mutableFetchResults release];
+        [request release];
+    }
+}
+
+- (void) setLastController:(UIViewController *)uivc {
+    lastController = uivc;
+}
+
+- (void) setReturnToClass:(int)ret {
+    returnToClass = ret;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if (returnToClass == DELEGATE_KEY_AUTOMATIC) {
+        StepOneSetup *svc = (StepOneSetup *) lastController;
+        return [svc handleNewQRCode:url];
+    } else {
+        ManualViewController *mvc = (ManualViewController *) lastController;
+        return [mvc handleNewQRCode:url];
+    }
 }
 
 @end

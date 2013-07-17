@@ -16,10 +16,15 @@
 // constants for dialogs
 #define MENU_EXPERIMENT               0
 #define MENU_LOGIN                    1
-#define EXPERIMENT_MANUAL_ENTRY       2
+#define EXPERIMENT_MANUAL_ENTRY       118
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5
+
+// constants for manual dialog
+#define MANUAL_MENU_UPLOAD            0
+#define MANUAL_MENU_EXPERIMENT        1
+#define MANUAL_MENU_LOGIN             2
 
 // options for action sheet
 #define OPTION_CANCELED                0
@@ -85,18 +90,28 @@
 // nav controller height
 #define NAVIGATION_CONTROLLER_HEIGHT 64
 
-// toast constants
-#define TOAST_LENGTH_SHORT  2.0
-#define TOAST_LENGTH_LONG   3.5
-#define TOAST_BOTTOM @"bottom"
-#define TOAST_TOP @"top"
-#define TOAST_CENTER @"center"
-#define TOAST_CHECKMARK @"check"
-#define TOAST_RED_X @"red_x"
+// waffle constants
+#define WAFFLE_LENGTH_SHORT  2.0
+#define WAFFLE_LENGTH_LONG   3.5
+#define WAFFLE_BOTTOM @"bottom"
+#define WAFFLE_TOP @"top"
+#define WAFFLE_CENTER @"center"
+#define WAFFLE_CHECKMARK @"waffle_check"
+#define WAFFLE_RED_X @"waffle_x"
+#define WAFFLE_WARNING @"waffle_warn"
 
 // data recording constants
 #define S_INTERVAL      125
 #define TEST_LENGTH     600
-#define MAX_DATA_POINTS (1000/S_INTERVAL) * TESTLENGTH
+#define MAX_DATA_POINTS (1000/S_INTERVAL) * TEST_LENGTH
+
+// step one setup text field tags
+#define TAG_STEP1_SESSION_NAME      1000
+#define TAG_STEP1_SAMPLE_INTERVAL   1001
+#define TAG_STEP1_TEST_LENGTH       1002
+
+// delegate constants to determine the calling class
+#define DELEGATE_KEY_AUTOMATIC  0
+#define DELEGATE_KEY_MANUAL     1
 
 #endif

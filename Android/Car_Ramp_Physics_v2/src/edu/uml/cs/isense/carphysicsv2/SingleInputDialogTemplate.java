@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class SingleInputDialogTemplate extends Activity {
 
 	Button pos, neg ;
 	EditText input ;
+	Waffle w;
 	
 	
 	public void onCreate(Bundle b) {
@@ -27,14 +29,25 @@ public class SingleInputDialogTemplate extends Activity {
 		neg = (Button) findViewById(R.id.negative2);
 		input = (EditText) findViewById(R.id.editText1);
 		
+		w = new Waffle(CarRampPhysicsV2.mContext);
+		
 		pos.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent();
-				i.putExtra("input", input.getText().toString());
-				setResult(RESULT_OK, i);
-				finish();
+				
+				String in = input.getText().toString();
+				int inInt = Integer.parseInt(in);
+				
+				if (inInt <= 600 && inInt > 0) {
+					Intent i = new Intent();
+					i.putExtra("input", in );
+					setResult(RESULT_OK, i);
+					finish();
+				} else {
+					w.make("Input is not between 0 and 10 minutes. Try again.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				}
+				
 			}
 		});
 		

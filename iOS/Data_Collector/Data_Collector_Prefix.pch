@@ -8,11 +8,10 @@
 #import <UIKit/UIKit.h>
 #import "StringGrabber.h"
 #import "CameraUsage.h"
-#import "Toast.h"
+#import <iSENSE_API/Waffle.h>
 #import <iSENSE.h>
 #import "HexColor.h"
 #import "ExperimentBrowseViewController.h"
 #import <CoreData/CoreData.h>
-
 
 #endif
