@@ -17,7 +17,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/nameLabel"
-        android:background="@android:drawable/editbox_background"
         android:gravity="left"
         android:inputType="textEmailAddress"
         android:maxLength="12"
@@ -39,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/nameInput"
         android:layout_below="@+id/nameInput"
-        android:background="@android:drawable/editbox_background"
         android:ems="10"
         android:gravity="left"
         android:inputType="text"
@@ -49,7 +47,6 @@
         android:singleLine="true"
         android:textColor="@android:color/black" >
 
-        <requestFocus />
     </EditText>
 
     <View

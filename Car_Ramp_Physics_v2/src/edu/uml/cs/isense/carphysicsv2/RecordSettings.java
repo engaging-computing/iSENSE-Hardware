@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckedTextView;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
 
 public class RecordSettings extends Activity {
 
@@ -30,6 +30,8 @@ public class RecordSettings extends Activity {
 		MagcheckBox = (CheckedTextView) findViewById(R.id.checkedTextView4);
 		
 		final Button DoneButton = (Button) findViewById(R.id.loginButton);
+		
+		setTitle("Which Accelerometer fields would you like to record?");
 		
 		XcheckBox.setChecked(Xchecked);
 		YcheckBox.setChecked(Ychecked);

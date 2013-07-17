@@ -9,11 +9,13 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.carphysicsv2.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class EnterNameActivity extends Activity {
@@ -36,14 +38,44 @@ public class EnterNameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.entername);
 		
-		w = new Waffle(mContext);
-		
 		mContext = this;
+		
+		w = new Waffle(mContext);
 		
 		final EditText firstNameInput   = (EditText) findViewById(R.id.nameInput);
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
 		final Button   okButton         = (Button)   findViewById(R.id.OkButton);
 		
+		InputFilter[] filters = new InputFilter[2];
+		filters[0] = new InputFilter() {
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end,
+					Spanned dest, int dstart, int dend) {
+				if (end > start) {
+
+					char[] acceptedChars = new char[] { 'a', 'b', 'c', 'd',
+							'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+							'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+							'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+							'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+							'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1',
+							'2', '3', '4', '5', '6', '7', '8', '9', '@', '.',
+							'_', '-', '(', ')', ',' };
+
+					for (int index = start; index < end; index++) {
+						if (!new String(acceptedChars).contains(String
+								.valueOf(source.charAt(index)))) {
+							return "";
+						}
+					}
+				}
+				return null;
+			}
+
+		};
+		filters[1] = new InputFilter.LengthFilter(20);
+		firstNameInput.setFilters(filters);
+		lastInitialInput.setFilters(new InputFilter[]{filters[0], new InputFilter.LengthFilter(1)});
 		/*final Message loginSuccess = Message.obtain();
 		loginSuccess.what = NAME_SUCCESSFULL;
 		
@@ -60,7 +92,7 @@ public class EnterNameActivity extends Activity {
 				   } else {
 					   CarRampPhysicsV2.firstName   = firstNameInput.getText().toString();
 					   CarRampPhysicsV2.lastInitial = lastInitialInput.getText().toString();
-					   setResult(NAME_SUCCESSFUL, null);
+					   setResult(RESULT_OK, null);
 					   finish();
 				   }
 			}
@@ -71,8 +103,25 @@ public class EnterNameActivity extends Activity {
 	}
 	
 	@Override
-    public void onBackPressed() {
-		/* to prevent user from escaping. muahahaha! */
+	public void onBackPressed() {
+		if (!dontToastMeTwice) {
+			if (CarRampPhysicsV2.running)
+				w.make(
+
+				"Cannot exit via BACK while recording data; use HOME instead.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			else if (CarRampPhysicsV2.inApp) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+			else
+				w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
+			new NoToastTwiceTask().execute();
+		} else if (CarRampPhysicsV2.exitAppViaBack && !CarRampPhysicsV2.running) {
+			CarRampPhysicsV2.setupDone = false;
+			setResult(RESULT_CANCELED);
+			finish();
+		}
 	}
     
 	private void showFailure() {
@@ -125,6 +174,7 @@ public class EnterNameActivity extends Activity {
 	public class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
 	    @Override protected void onPreExecute() {
 	    	dontToastMeTwice = true;
+	    	CarRampPhysicsV2.exitAppViaBack = true ;
 	    }
 		@Override protected Void doInBackground(Void... voids) {
 	    	try {
