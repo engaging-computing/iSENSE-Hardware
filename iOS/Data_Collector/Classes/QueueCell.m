@@ -66,7 +66,7 @@
     }
 }
 
--(IBAction)setChecked:(UITapGestureRecognizer *)sender {
+- (void) toggleChecked {
     if (dataSet.uploadable.boolValue == false) {
         [self setCheckedSwitch:true];
         dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
