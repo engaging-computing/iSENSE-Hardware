@@ -11,11 +11,13 @@
 #import "QueueCell.h"
 #import <iSENSE_API/headers/DataSaver.h>
 
-@interface QueueUploaderView : UIViewController {
+@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate> {
     
 }
 
--(IBAction)upload:(id)sender;
+- (IBAction) upload:(id)sender;
+
+- (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer;
 
 @property (nonatomic, assign) iSENSE *iapi;
 @property (nonatomic, retain) DataSaver *dataSaver;

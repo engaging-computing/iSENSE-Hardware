@@ -150,7 +150,7 @@
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"
                                                         otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-                message.tag = MENU_EXPERIMENT;
+                message.tag = MANUAL_MENU_EXPERIMENT;
                 [message show];
                 [message release];
                 

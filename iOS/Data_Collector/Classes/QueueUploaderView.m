@@ -110,6 +110,33 @@
     
     currentIndex = 0;
 
+    // add long press gesture listener to the table
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
+                                          initWithTarget:self action:@selector(handleLongPressOnTableCell:)];
+    lpgr.minimumPressDuration = 0.5;
+    lpgr.delegate = self;
+    [self.mTableView addGestureRecognizer:lpgr];
+    [lpgr release];
+
+    // make table clear
+    mTableView.backgroundColor = [UIColor clearColor];
+}
+
+- (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        
+        CGPoint p = [gestureRecognizer locationInView:self.mTableView];
+        
+        NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
+        if (indexPath == nil) {
+            NSLog(@"long press on table view but not on a row");
+        } else {
+            UITableViewCell *cell = [self.mTableView cellForRowAtIndexPath:indexPath];
+            if (cell.isHighlighted) {
+                NSLog(@"long press on table view at section %d row %d", indexPath.section, indexPath.row);
+            }
+        }
+    }
 }
 
 // Dispose of any resources that can be recreated.
@@ -229,6 +256,16 @@
             [self login:usernameInput withPassword:passwordInput];
         }
     }
+}
+
+// TODO - this method isn't be fired... why? It fires in SensorSelection and its EXACTLY THE SAME
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"log plz");
+    [tableView reloadData];
+    QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [cell setBackgroundColor:[UIColor lightGrayColor]];
+    [NSThread sleepForTimeInterval:0.08];
+    [cell setBackgroundColor:[UIColor clearColor]];
 }
 
 

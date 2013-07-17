@@ -116,6 +116,8 @@
         }
     }
     
+    table.backgroundColor = [UIColor clearColor];
+    
 }
 
 - (void)didReceiveMemoryWarning {
