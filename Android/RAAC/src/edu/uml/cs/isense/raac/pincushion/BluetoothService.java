@@ -2,14 +2,8 @@ package edu.uml.cs.isense.raac.pincushion;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.UUID;
-
-import edu.uml.cs.isense.raac.MainActivity;
-import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -22,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -59,9 +54,6 @@ public class BluetoothService {
 
 	public static final String DEVICE_NAME = "device_name";
 	public static final String TOAST = "toast";
-
-	private static final int REQUEST_CONNECT_DEVICE = 10;
-	private static final int REQUEST_ENABLE_BT = 11;
 
 	/**
 	 * Constructor. Prepares a new BluetoothChat session.
@@ -228,6 +220,7 @@ public class BluetoothService {
 	/**
 	 * Indicate that the connection was lost and notify the UI Activity.
 	 */
+	@SuppressWarnings("unused")
 	private void connectionLost() {
 		setState(STATE_LISTEN);
 
@@ -247,6 +240,7 @@ public class BluetoothService {
 		// The local socket
 		private final BluetoothServerSocket mmServerSocket;
 
+		@SuppressWarnings("unused")
 		public AcceptThread() {
 			BluetoothServerSocket tmp = null;
 
