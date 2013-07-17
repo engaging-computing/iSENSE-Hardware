@@ -11,6 +11,15 @@
         android:text="@string/InternetMsg"
         android:textSize="18sp"
         />
+     <TextView
+        android:id="@+id/tryAgainTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/try_again_msg"
+        android:textSize="18sp"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,5 +43,36 @@
             style="?android:attr/buttonBarButtonStyle"
             />
     </LinearLayout>
-
+	 <TextView
+        android:id="@+id/saveTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/SaveMsg"
+        android:textSize="18sp"
+        />
+	 <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+        <Button 
+            android:id="@+id/no_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/No"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            />
+        
+        <Button 
+            android:id="@+id/yes_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Yes"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            />
+    </LinearLayout>
 </LinearLayout>

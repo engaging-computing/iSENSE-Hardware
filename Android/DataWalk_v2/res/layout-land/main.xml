@@ -95,6 +95,29 @@
         android:paddingTop="1dp"
         android:scaleType="fitCenter"
         android:src="@drawable/logo_land" />
-   
+
+   <TextView
+       android:id="@+id/expNumBx"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_below="@+id/timePointCountBlock"
+       android:background="#000033"
+       android:text="@string/Exp_Num_Is"
+       android:textColor="#A8CFFF"
+       android:textSize="18sp"
+       android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/RateBx"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/expNumBx"
+        android:background="#000033"
+        android:text="@string/Rate_Is"
+        android:textColor="#A8CFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
