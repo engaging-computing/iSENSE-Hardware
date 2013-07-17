@@ -13,26 +13,30 @@
 
     <ListPreference
         android:key="Data UploadRate"
-        android:title="Change Rate Data is Recorded"
+        android:title="Data is Recorded Every... "
         android:entries="@array/dataRate"
         android:entryValues="@array/dataRateVals"
-         />
-
-    <!-- Change First Name/Last Initial -->
+        android:defaultValue="10000" /> 
+        
+        
     <Preference
         android:key="Name Change"
-        android:summary="@string/NameChange_Summary"
+        android:summary="@string/NameChange"
         android:title="@string/NameChange_Title" />
 
-    <!-- Change Experiment Number -->
+  
     <Preference
         android:key="Exp Num"
         android:summary="@string/Exp_Num_Summary"
         android:title="@string/Exp_Num_Title" />
+   
+  
+    
     <Preference
         android:defaultValue="false"
         android:key="About"
         android:summary="@string/About_Summary"
-        android:title="@string/About_Title" />
-
+        android:title="@string/About_Title" />   
+        
+    
 </PreferenceScreen>

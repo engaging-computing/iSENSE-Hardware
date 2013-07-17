@@ -13,7 +13,7 @@ import edu.uml.cs.isense.carphysicsv2.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.waffle.Waffle;
 
-public class LoginActivity extends Activity {
+public class CarRampLoginActivity extends Activity {
 
 	Button ok, cancel;
 	EditText user, pass;

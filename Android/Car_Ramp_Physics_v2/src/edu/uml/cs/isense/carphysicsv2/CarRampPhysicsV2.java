@@ -34,8 +34,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -52,7 +50,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +57,6 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.carphysicsv2.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -467,40 +463,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	}
 
-	public static final int EULA_REQUESTED = 8000;
-
-	private PackageInfo getPackageInfo() {
-		PackageInfo pi = null;
-		try {
-			pi = getPackageManager().getPackageInfo(getPackageName(),
-					PackageManager.GET_ACTIVITIES);
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		return pi;
-	}
-
-	void displayEula() {
-
-		PackageInfo versionInfo = getPackageInfo();
-
-		final String eulaKey = EulaActivity.EULA_PREFIX
-				+ versionInfo.versionCode;
-		final SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		boolean hasBeenShown = prefs.getBoolean(eulaKey, false);
-
-		if (!hasBeenShown) {
-			startActivityForResult(new Intent(this, EulaActivity.class),
-					EULA_REQUESTED);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean(eulaKey, true);
-			editor.commit();
-
-		}
-
-	}
-
 	long getUploadTime(int millisecond) {
 
 		Calendar c = Calendar.getInstance();
@@ -635,8 +597,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case R.id.login:
-			startActivityForResult(new Intent(this, LoginActivity.class),
-					LOGIN_STATUS_REQUESTED);
+			startActivityForResult(new Intent(this, CarRampLoginActivity.class),LOGIN_STATUS_REQUESTED);
 			return true;
 		case R.id.record_settings:
 			startActivity(new Intent(this, RecordSettings.class));

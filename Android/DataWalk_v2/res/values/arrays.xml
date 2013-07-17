@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="dataRate">
-        <item name="1">1 second per point</item>
-        <item name="2">2 seconds per point</item>
-        <item name="5">5 seconds per point</item>
-        <item name="10">10 seconds per point</item>
-        <item name="20">20 seconds per point</item>
+        <item name="1">1 second </item>
+        <item name="2">2 seconds </item>
+        <item name="5">5 seconds </item>
+        <item name="10">10 seconds </item>
+        <item name="30">30 seconds </item>
+        <item name="1 minute">1 minute </item>
     </string-array>
     <string-array name="dataRateVals">
         <item name="1">1000</item>
         <item name="2">2000</item>
         <item name="5">5000</item>
         <item name="10">10000</item>
-        <item name="20">20000</item>
-        <item name="25">20000</item>
-        <item name="30">20000</item>
-        <item name="40">20000</item>
-        <item name="45">20000</item>
-        <item name="50">20000</item>
-        <item name="60">20000</item>
+        <item name="30">30000</item>
+        <item name="1 minute">60000</item>
         
     </string-array>
 </resources>

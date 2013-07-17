@@ -7,7 +7,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.R;
 
+
 public class NoConnect extends Activity {
+
+	public static final int RESULT_SAVE = 2; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +36,31 @@ public class NoConnect extends Activity {
 				finish();
 			}
 		});
+		final Button noSave = (Button) findViewById(R.id.no_save);
+		noSave.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setResult(RESULT_OK);
+				finish();
+			}
+		});
 		
-	}
+
+		final Button yesSave = (Button) findViewById(R.id.yes_save);
+		yesSave.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//TODO
+				setResult(RESULT_SAVE);
+				finish();
+			}
+		});
+	}//ends onCreate
 	
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);
 		finish();
-	}
+	}//ends onBackPressed
 	
-}
+}//ends noConnect class

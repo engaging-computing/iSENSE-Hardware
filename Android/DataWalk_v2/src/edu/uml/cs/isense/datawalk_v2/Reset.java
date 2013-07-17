@@ -3,6 +3,7 @@ package edu.uml.cs.isense.datawalk_v2;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import edu.uml.cs.isense.R;
@@ -25,11 +26,10 @@ public class Reset extends Activity {
 			public void onClick(View v) {
 				//TODO
 				// This is what happens when the reset button is clicked...
-				int length = 10;
-				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
-						0);
+				int length = 10000;
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Reset.this);
 				SharedPreferences.Editor editor = prefs.edit();
-				editor.putInt("length", length);
+				editor.putString("Data UploadRate", "" + length);
 				editor.commit();
 				setResult(RESULT_OK);
 				finish();
