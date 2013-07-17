@@ -10,7 +10,7 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi, lastClickedCellIndex;
 
 // Initialize the view
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -43,7 +43,7 @@
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Okay", nil];
-            message.tag = MENU_LOGIN;
+            message.tag = QUEUE_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             [message show];
             [message release];
@@ -128,13 +128,78 @@
         CGPoint p = [gestureRecognizer locationInView:self.mTableView];
         
         NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
-        if (indexPath == nil) {
-            NSLog(@"long press on table view but not on a row");
-        } else {
-            UITableViewCell *cell = [self.mTableView cellForRowAtIndexPath:indexPath];
+        if (indexPath != nil) {
+            lastClickedCellIndex = [indexPath copy];
+            NSLog(@"stuff stuff: %@", lastClickedCellIndex);
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
-                NSLog(@"long press on table view at section %d row %d", indexPath.section, indexPath.row);
+                NSLog(@"long press on table view at row %d", indexPath.row);
+                UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                             initWithTitle:nil
+                                             delegate:self
+                                             cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"Delete"
+                                             otherButtonTitles:@"Rename", @"Select Experiment", nil];
+                popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                [popupQuery showInView:self.view];
+                [popupQuery release];
             }
+        }
+    }
+}
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    UIAlertView *message;
+    //QueueCell *cell;
+    
+	switch (buttonIndex) {
+        case QUEUE_DELETE:
+            //cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            
+            //[dataSaver removeDataSet:<#(NSNumber *)#>];
+            break;
+            
+        case QUEUE_RENAME:
+            message = [[UIAlertView alloc] initWithTitle:@"Enter new session name:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
+            
+            message.tag = QUEUE_RENAME;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message show];
+            [message release];
+            
+            break;
+            
+        case QUEUE_SELECT_EXP:
+            NSLog(@"select exp");
+            break;
+            
+		default:
+			break;
+	}
+	
+}
+
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == QUEUE_LOGIN) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else if (actionSheet.tag == QUEUE_RENAME) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            NSString *newSessionName = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setSessionName:newSessionName];
         }
     }
 }
@@ -184,7 +249,7 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];  
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
-    [cell setupCellWithDataSet:tmp];
+    [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     return cell;
 }
@@ -247,17 +312,6 @@
     return [message autorelease];
 }
 
-- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == MENU_LOGIN) {
-        
-        if (buttonIndex != OPTION_CANCELED) {
-            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
-            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
-            [self login:usernameInput withPassword:passwordInput];
-        }
-    }
-}
-
 // TODO - this method isn't be fired... why? It fires in SensorSelection and its EXACTLY THE SAME
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"log plz");
@@ -267,6 +321,5 @@
     [NSThread sleepForTimeInterval:0.08];
     [cell setBackgroundColor:[UIColor clearColor]];
 }
-
 
 @end

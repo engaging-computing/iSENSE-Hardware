@@ -567,7 +567,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
-// @Mike string constant // [ds setParentName:];
+    [ds setParentName:PARENT_AUTOMATIC];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
@@ -577,7 +577,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [ds setCountry:country];
     [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];
+    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]]; // this line crashes in simulator
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];

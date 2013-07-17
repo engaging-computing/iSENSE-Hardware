@@ -11,8 +11,8 @@
 #import "QueueCell.h"
 #import <iSENSE_API/headers/DataSaver.h>
 
-@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate> {
-    
+@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate> {
+
 }
 
 - (IBAction) upload:(id)sender;
@@ -23,6 +23,7 @@
 @property (nonatomic, retain) DataSaver *dataSaver;
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;
+@property (nonatomic, retain) NSIndexPath *lastClickedCellIndex;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @end

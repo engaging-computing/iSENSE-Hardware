@@ -11,13 +11,17 @@
 
 @interface QueueCell : UITableViewCell
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet;
+- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
 - (IBAction)setChecked:(UITapGestureRecognizer *)sender;
+- (void) setSessionName:(NSString *)name;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;
 @property (nonatomic, assign) IBOutlet UILabel *description;
+@property (nonatomic, assign) IBOutlet UILabel *eidLabel;
+
 @property (nonatomic, retain) IBOutlet UITapGestureRecognizer *onClickRecognizer;
 @property (nonatomic, retain) DataSet *dataSet;
+@property (nonatomic, retain) NSNumber *mKey;
 
 @end
