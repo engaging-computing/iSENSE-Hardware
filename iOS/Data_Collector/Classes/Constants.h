@@ -113,6 +113,7 @@
 // delegate constants to determine the calling class
 #define DELEGATE_KEY_AUTOMATIC  0
 #define DELEGATE_KEY_MANUAL     1
+#define DELELGATE_KEY_QUEUE     2
 
 // constants for QueueUploaderView's actionSheet
 #define QUEUE_DELETE        0

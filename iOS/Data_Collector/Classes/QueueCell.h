@@ -14,6 +14,8 @@
 - (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
 - (IBAction)setChecked:(UITapGestureRecognizer *)sender;
 - (void) setSessionName:(NSString *)name;
+- (NSNumber *)getKey;
+- (void) setExpNum:(NSString *)exp;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;

@@ -11,13 +11,18 @@
 #import "QueueCell.h"
 #import <iSENSE_API/headers/DataSaver.h>
 
-@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate> {
+#import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVCaptureDevice.h>
 
+@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate> {
+    int expNum;
+    bool browsing;
 }
 
 - (IBAction) upload:(id)sender;
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer;
+- (BOOL) handleNewQRCode:(NSURL *)url;
 
 @property (nonatomic, assign) iSENSE *iapi;
 @property (nonatomic, retain) DataSaver *dataSaver;

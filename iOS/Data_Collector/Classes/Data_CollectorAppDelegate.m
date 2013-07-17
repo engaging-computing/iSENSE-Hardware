@@ -8,6 +8,9 @@
 //
 
 #import "Data_CollectorAppDelegate.h"
+#import "ManualViewController.h"
+#import "StepOneSetup.h"
+#import "QueueUploaderView.h"
 
 @implementation Data_CollectorAppDelegate
 
@@ -232,9 +235,12 @@
     if (returnToClass == DELEGATE_KEY_AUTOMATIC) {
         StepOneSetup *svc = (StepOneSetup *) lastController;
         return [svc handleNewQRCode:url];
-    } else {
+    } else if (returnToClass == DELEGATE_KEY_MANUAL) {
         ManualViewController *mvc = (ManualViewController *) lastController;
         return [mvc handleNewQRCode:url];
+    } else {
+        QueueUploaderView *qvc = (QueueUploaderView *) lastController;
+        return [qvc handleNewQRCode:url];
     }
 }
 

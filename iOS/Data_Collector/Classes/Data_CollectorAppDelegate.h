@@ -12,10 +12,6 @@
 #import "GuideView.h"
 #import <iSENSE_API/headers/DataSaver.h>
 
-#import "ManualViewController.h"
-#import "StepOneSetup.h"
-
-
 @interface Data_CollectorAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
 	UINavigationController *navControl;
