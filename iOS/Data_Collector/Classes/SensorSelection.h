@@ -23,7 +23,7 @@
     
 }
 
-- (IBAction)okOnClick:(id)sender;
+- (IBAction) okOnClick:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) IBOutlet UIButton *ok;
