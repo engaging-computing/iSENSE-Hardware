@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.carphysicsv2;
+package edu.uml.cs.isense.datawalk_v2;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.waffle.Waffle;
+
 
 public class EnterNameActivity extends Activity {
 
@@ -19,12 +21,11 @@ public class EnterNameActivity extends Activity {
 	static final public int NAME_FAILED = 0;
 	static final public int NAME_CANCELED = -1;
 
-	static boolean dontToastMeTwice = false;
 	boolean success;
 
 	Waffle w;
 
-	private static final String blankFields = "Do not leave any fields blank.  Please enter your first name and last initial.";
+	private static final String blankFields = "Do not leave any fields blank. Please enter your first name and last initial.";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +33,13 @@ public class EnterNameActivity extends Activity {
 		setContentView(R.layout.entername);
 
 		mContext = this;
-
 		w = new Waffle(mContext);
 
 		final EditText firstNameInput = (EditText) findViewById(R.id.nameInput);
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
-		final Button okButton = (Button) findViewById(R.id.OkButton);
+		final Button okButton = (Button) findViewById(R.id.OK);
 
+		
 		InputFilter[] filters = new InputFilter[2];
 		filters[0] = new InputFilter() {
 			@Override
@@ -69,7 +70,7 @@ public class EnterNameActivity extends Activity {
 		filters[1] = new InputFilter.LengthFilter(20);
 		firstNameInput.setFilters(filters);
 		lastInitialInput.setFilters(new InputFilter[] { filters[0],
-				new InputFilter.LengthFilter(1) });
+				new InputFilter.LengthFilter(1) }); 
 
 		okButton.setOnClickListener(new OnClickListener() {
 
@@ -79,9 +80,9 @@ public class EnterNameActivity extends Activity {
 						|| lastInitialInput.length() == 0) {
 					showFailure();
 				} else {
-					CarRampPhysicsV2.firstName = firstNameInput.getText()
-							.toString();
-					CarRampPhysicsV2.lastInitial = lastInitialInput.getText()
+					DataWalk.setupDone = true;
+					DataWalk.firstName = firstNameInput.getText().toString();
+					DataWalk.lastInitial = lastInitialInput.getText()
 							.toString();
 					setResult(RESULT_OK, null);
 					finish();
@@ -93,44 +94,17 @@ public class EnterNameActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (CarRampPhysicsV2.running)
-			w.make(
-
-			"Cannot exit via BACK while recording data; use HOME instead.",
-					Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-		else if (CarRampPhysicsV2.inApp) {
-			CarRampPhysicsV2.setupDone = false;
-			setResult(RESULT_CANCELED);
-			super.onBackPressed();
-		} else
-			w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
-
+		DataWalk.setupDone = false;
+		setResult(RESULT_CANCELED);
+		super.onBackPressed();
 	}
 
 	private void showFailure() {
 		w.make(blankFields, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-
 	}
 
 	static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
-
+	
 }
-
-/*
- * final Message msg = Message.obtain(); msg.setTarget(h); msg.what =
- * NAME_FAILED; message = blankFields;
- * 
- * new AlertDialog.Builder(mContext) .setTitle("Error") .setMessage(message)
- * .setPositiveButton("OK", new DialogInterface.OnClickListener() {
- * 
- * @Override public void onClick(DialogInterface dialog, int which) {
- * msg.sendToTarget(); } }) .setOnCancelListener(new OnCancelListener() { public
- * void onCancel(DialogInterface dialog) { msg.sendToTarget(); } }) .show();
- * 
- * }
- * 
- * }
- */
-

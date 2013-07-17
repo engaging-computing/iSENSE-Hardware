@@ -94,6 +94,24 @@
             android:textColor="#A8CFFF"
             android:textSize="18sp"
             android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/expNumBx"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/Exp_Num_Is"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+           <TextView
+            android:id="@+id/RateBx"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/Rate_Is"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
     
     </LinearLayout>
 
