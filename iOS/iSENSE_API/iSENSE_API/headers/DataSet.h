@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#define PARENT_AUTOMATIC    @"Automatic"
+#define PARENT_MANUAL       @"Manual"
 
 @interface DataSet : NSManagedObject
 
