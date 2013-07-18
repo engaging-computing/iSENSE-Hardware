@@ -50,6 +50,7 @@
             android:text="@string/OK" 
             style="?android:attr/buttonBarButtonStyle"
             />
+        
     </LinearLayout>
 
     <EditText
