@@ -140,7 +140,7 @@
                                              delegate:self
                                              cancelButtonTitle:@"Cancel"
                                              destructiveButtonTitle:@"Delete"
-                                             otherButtonTitles:@"Rename", @"Select Experiment", nil];
+                                             otherButtonTitles:@"Rename", @"Select Experiment", @"Change Description", nil];
                 popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                 [popupQuery showInView:self.view];
                 [popupQuery release];
@@ -189,6 +189,19 @@
             [message release];
             
 			break;
+            
+        case QUEUE_CHANGE_DESC:
+            message = [[UIAlertView alloc] initWithTitle:@"Enter new data set description:"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = QUEUE_CHANGE_DESC;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message show];
+            [message release];
             
 		default:
 			break;
@@ -275,6 +288,13 @@
             [cell setExpNum:expNumString];
         }
         
+    } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            NSString *newDescription = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setDesc:newDescription];
+        }
     }
 }
 

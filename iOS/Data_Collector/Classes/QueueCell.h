@@ -16,6 +16,7 @@
 - (void) setSessionName:(NSString *)name;
 - (NSNumber *)getKey;
 - (void) setExpNum:(NSString *)exp;
+- (void) setDesc:(NSString *)desc;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;

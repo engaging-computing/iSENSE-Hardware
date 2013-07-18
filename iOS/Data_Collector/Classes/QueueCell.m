@@ -90,6 +90,11 @@
     [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
 }
 
+- (void) setDesc:(NSString *)desc {
+    self.description.text = desc;
+    [dataSet setDataDescription:desc];
+}
+
 -(void)dealloc {
     [super dealloc];
     [dataSet release];

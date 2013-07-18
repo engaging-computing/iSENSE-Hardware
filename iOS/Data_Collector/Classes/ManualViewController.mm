@@ -413,9 +413,46 @@
 }
 
 - (IBAction) saveOnClick:(id)sender {
-    NSMutableArray *dataJSON = [[self getDataFromFields] retain];
-
-    [self saveDataSet:dataJSON withDescription:@"description"];
+    
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Saving data set..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL exp = TRUE, hasSessionName = TRUE, uploadSuccess = FALSE;
+        
+        if (expNum == 0 || expNum == -1)
+            exp = FALSE;
+        
+        else
+            if ([[sessionNameInput text] isEqualToString:@""])
+                hasSessionName = FALSE;
+        
+            else {
+                NSMutableArray *dataJSON = [[self getDataFromFields] retain];
+                [self saveDataSet:dataJSON withDescription:@"Data set from iOS Data Collector - Manual Entry."];
+                uploadSuccess = TRUE;
+            }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (!exp)
+                [self.view makeWaffle:@"Please enter an experiment first"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            if (!hasSessionName)
+                [self.view makeWaffle:@"Please enter a session name first"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            if (uploadSuccess)
+                [self.view makeWaffle:@"Data set saved" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+            
+            
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+        });
+    });
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -431,6 +468,8 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
+    
+    [self.view makeWaffle:@"This feature is currently disabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
     
 //    if (sessionNameInput.text.length != 0)
 //        [CameraUsage useCamera];
@@ -461,10 +500,14 @@
 	switch (buttonIndex) {
         case MANUAL_MENU_UPLOAD:
             
-            queueUploader = [[QueueUploaderView alloc] init];
-            queueUploader.title = @"Manage and Upload Sessions";
-            [self.navigationController pushViewController:queueUploader animated:YES];
-            [queueUploader release];
+            if (dataSaver.count > 0) {
+                queueUploader = [[QueueUploaderView alloc] init];
+                queueUploader.title = @"Manage and Upload Sessions";
+                [self.navigationController pushViewController:queueUploader animated:YES];
+                [queueUploader release];
+            } else {
+                [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+            }
             
             break;
             
@@ -1077,7 +1120,7 @@
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_manual"]] intValue];
     
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
