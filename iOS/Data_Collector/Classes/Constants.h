@@ -118,8 +118,8 @@
 // constants for QueueUploaderView's actionSheet
 #define QUEUE_DELETE        0
 #define QUEUE_RENAME        1
-#define QUEUE_SELECT_EXP    2
-#define QUEUE_CHANGE_DESC   3
+#define QUEUE_CHANGE_DESC   2
+#define QUEUE_SELECT_EXP    3
 #define QUEUE_LOGIN         500
 
 #endif

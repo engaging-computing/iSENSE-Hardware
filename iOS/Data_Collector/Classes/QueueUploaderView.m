@@ -130,20 +130,35 @@
         
         NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
         if (indexPath != nil) {
+            
             lastClickedCellIndex = [indexPath copy];
             NSLog(@"stuff stuff: %@", lastClickedCellIndex);
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
+                
                 NSLog(@"long press on table view at row %d", indexPath.row);
-                UIActionSheet *popupQuery = [[UIActionSheet alloc]
-                                             initWithTitle:nil
-                                             delegate:self
-                                             cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:@"Delete"
-                                             otherButtonTitles:@"Rename", @"Select Experiment", @"Change Description", nil];
-                popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-                [popupQuery showInView:self.view];
-                [popupQuery release];
+                
+                if (![cell dataSetHasInitialExperiment]) {
+                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                                 initWithTitle:nil
+                                                 delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:@"Delete"
+                                                 otherButtonTitles:@"Rename", @"Change Description", @"Select Experiment", nil];
+                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                    [popupQuery showInView:self.view];
+                    [popupQuery release];
+                } else {
+                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                                 initWithTitle:nil
+                                                 delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:@"Delete"
+                                                 otherButtonTitles:@"Rename", @"Change Description", nil];
+                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                    [popupQuery showInView:self.view];
+                    [popupQuery release];
+                }
             }
         }
     }
@@ -160,6 +175,7 @@
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [dataSaver removeDataSet:[cell getKey]];
             [self.mTableView reloadData];
+            [mTableView reloadData];
             
             break;
             
@@ -178,18 +194,6 @@
             
             break;
             
-        case QUEUE_SELECT_EXP:
-            message = [[UIAlertView alloc] initWithTitle:nil
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = QUEUE_SELECT_EXP;
-            [message show];
-            [message release];
-            
-			break;
-            
         case QUEUE_CHANGE_DESC:
             message = [[UIAlertView alloc] initWithTitle:@"Enter new data set description:"
                                                  message:nil
@@ -202,6 +206,23 @@
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
             [message show];
             [message release];
+            
+        case QUEUE_SELECT_EXP:
+            
+            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            if (![cell dataSetHasInitialExperiment]) {
+                
+                message = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:nil
+                                                    delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                message.tag = QUEUE_SELECT_EXP;
+                [message show];
+                [message release];
+            }
+            
+			break;
             
 		default:
 			break;
