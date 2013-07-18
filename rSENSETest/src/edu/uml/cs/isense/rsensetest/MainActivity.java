@@ -25,8 +25,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	Button login, getusers, getprojects;
 	TextView status;
-	String baseURL = "http://129.63.17.17:3000";
-	String authToken = "";
+	API api;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
 		
-		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+		api = new API();
 	}
 
 	@Override
@@ -55,66 +54,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if ( v == login ) {
 			status.setText("clicked login");
-			new RequestTask().execute(baseURL, "login", "username_or_email=testguy&password=1", "POST");
+			api.createSession("testguy", "1");
 		} else if ( v == getusers ) {
 			status.setText("clicked get users");
-			new RequestTask().execute(baseURL, "users", "", "GET");
+			api.getUsers();
 		} else if ( v == getprojects ) {
 			status.setText("clicked get projects");
-			new RequestTask().execute(baseURL, "projects", "authenticity_token="+authToken, "GET");
-		}
-	}
-
-	//nabbed from StackOverflow
-	//http://stackoverflow.com/questions/3505930/make-an-http-request-with-android
-	class RequestTask extends AsyncTask<String, String, String>{
-
-		String requestPathBase = "";
-
-		@Override
-		protected String doInBackground(String... uri) {
-			int mstat = 0;
-			requestPathBase = uri[1];
-			System.out.println(authToken);
-			try {
-				URL url = new URL(uri[0]+"/"+uri[1]+"?"+uri[2]);
-				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-				urlConnection.setRequestMethod(uri[3]);
-				urlConnection.setRequestProperty("Accept", "application/json");
-				mstat = urlConnection.getResponseCode();
-				InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-				try {
-					ByteArrayOutputStream bo = new ByteArrayOutputStream();
-					int i = in.read();
-					while(i != -1) {
-						bo.write(i);
-						i = in.read();
-					}
-					return bo.toString();
-				} catch (IOException e) {
-					return "";
-				}
-				finally {
-					in.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "Status: "+mstat;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			System.out.println(result);
-			try {
-				if(requestPathBase.equals("login")) {
-					JSONObject j = new JSONObject(result);
-					authToken = j.getString("authenticity_token");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			api.getProjects();
 		}
 	}
 
