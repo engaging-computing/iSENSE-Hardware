@@ -287,6 +287,8 @@
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
                 }
             }
+        } else {
+            self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
         }
     } @catch (NSException *e) {
         // couldn't check activeField - so ignore it
@@ -531,6 +533,10 @@
                                        otherButtonTitles:@"Okay", nil];
             message.tag = MANUAL_MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message textFieldAtIndex:0].tag = TAG_MANUAL_LOGIN;
+            [message textFieldAtIndex:1].tag = TAG_MANUAL_LOGIN;
+            [message textFieldAtIndex:0].delegate = self;
+            [message textFieldAtIndex:1].delegate = self;
             [message show];
             [message release];
             
@@ -564,6 +570,8 @@
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message textFieldAtIndex:0].tag = TAG_MANUAL_EXP;
+            [message textFieldAtIndex:0].delegate = self;
             [message show];
             [message release];
             
@@ -651,6 +659,24 @@
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
+    if (textField.tag == TAG_MANUAL_LOGIN) {
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (![self containsAcceptedCharacters:string])
+            return NO;
+        
+        return (newLength > 100) ? NO : YES;
+    }
+    
+    if (textField.tag == TAG_MANUAL_EXP) {
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (![self containsAcceptedDigits:string])
+            return NO;
+        
+        return (newLength > 6) ? NO : YES;
+    }
+    
     if (![self containsAcceptedCharacters:string])
         return NO;
     
@@ -709,6 +735,14 @@
     NSCharacterSet *unwantedCharacters =
     [[NSCharacterSet characterSetWithCharactersInString:
       [StringGrabber grabString:@"accepted_numbers"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) containsAcceptedDigits:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_digits"]] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
