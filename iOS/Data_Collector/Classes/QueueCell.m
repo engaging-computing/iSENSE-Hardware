@@ -95,6 +95,11 @@
     [dataSet setDataDescription:desc];
 }
 
+- (BOOL) dataSetHasInitialExperiment {
+    NSNumber *initial = [dataSet hasInitialExp];
+    return [initial boolValue];
+}
+
 -(void)dealloc {
     [super dealloc];
     [dataSet release];

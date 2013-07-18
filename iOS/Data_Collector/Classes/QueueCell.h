@@ -17,6 +17,7 @@
 - (NSNumber *)getKey;
 - (void) setExpNum:(NSString *)exp;
 - (void) setDesc:(NSString *)desc;
+- (BOOL) dataSetHasInitialExperiment;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;

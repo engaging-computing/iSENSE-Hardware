@@ -506,7 +506,7 @@
                 [self.navigationController pushViewController:queueUploader animated:YES];
                 [queueUploader release];
             } else {
-                [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+                [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
             }
             
             break;
