@@ -14,7 +14,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 
-@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate> {
+@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UITextFieldDelegate> {
     int expNum;
     bool browsing;
 }

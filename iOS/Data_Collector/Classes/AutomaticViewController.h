@@ -19,7 +19,7 @@
 #import "Data_CollectorAppDelegate.h"
 #import "StepOneSetup.h"
 
-@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate>  {
 	IBOutlet UIImageView *mainLogo;
     IBOutlet UILabel *mainLogoBackground;
     IBOutlet UIButton *step1;
