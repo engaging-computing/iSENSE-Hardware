@@ -509,6 +509,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                                        otherButtonTitles:@"Okay", nil];
             message.tag = MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message textFieldAtIndex:0].tag = TAG_AUTO_LOGIN;
+            [message textFieldAtIndex:1].tag = TAG_AUTO_LOGIN;
+            [message textFieldAtIndex:0].delegate = self;
+            [message textFieldAtIndex:1].delegate = self;
             [message show];
             [message release];
             
@@ -567,7 +571,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
-// @Mike string constant // [ds setParentName:];
+    [ds setParentName:PARENT_AUTOMATIC];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
@@ -577,7 +581,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [ds setCountry:country];
     [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];
+    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]]; // this line crashes in simulator
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
@@ -842,6 +846,31 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"000066"]];
     [mainLogo setImage:[UIImage imageNamed:@"rsense_logo"]];
 
+}
+
+- (BOOL) containsAcceptedCharacters:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    
+    switch (textField.tag) {
+            
+        case TAG_AUTO_LOGIN:
+            if (![self containsAcceptedCharacters:string])
+                return NO;
+            
+            return (newLength > 100) ? NO : YES;
+            
+        default:
+            return YES;
+    }
 }
 
 @end

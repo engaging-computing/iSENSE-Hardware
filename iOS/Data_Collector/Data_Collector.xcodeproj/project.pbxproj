@@ -67,6 +67,9 @@
 		B70D6D7316DD30BB007309F0 /* SplashView-landscape-ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B70D6D7216DD30BB007309F0 /* SplashView-landscape-ipad.xib */; };
 		B7115C2016D6AA800033AAA1 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */; };
 		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
+		B712DE1E1796C67F00A30CAC /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = B712DE1B1796C67F00A30CAC /* waffle_check.png */; };
+		B712DE1F1796C67F00A30CAC /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = B712DE1C1796C67F00A30CAC /* waffle_warn.png */; };
+		B712DE201796C67F00A30CAC /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = B712DE1D1796C67F00A30CAC /* waffle_x.png */; };
 		B71349FA16DD38BA00FDC3FF /* SplashView-landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */; };
 		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
 		B71A2DD916E4D91E009A441F /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A2DD816E4D91E009A441F /* Fields.m */; };
@@ -206,6 +209,9 @@
 		B7115C1E16D6AA800033AAA1 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
 		B7115C1F16D6AA800033AAA1 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
 		B7115C2116D6ACD80033AAA1 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		B712DE1B1796C67F00A30CAC /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
+		B712DE1C1796C67F00A30CAC /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
+		B712DE1D1796C67F00A30CAC /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
 		B71349F916DD38BA00FDC3FF /* SplashView-landscape.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashView-landscape.xib"; sourceTree = "<group>"; };
 		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B71A2DD716E4D91E009A441F /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
@@ -222,7 +228,6 @@
 		B72DC21816C19A4F00999C7E /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
 		B72DC21916C19A4F00999C7E /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
 		B7375CDB1784A40600906119 /* SensorCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorCell~ipad.xib"; sourceTree = "<group>"; };
-		B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libZXingWidget.a; path = "../../../../Library/Developer/Xcode/DerivedData/Data_Collector-hkqdkezgdqmaragkfyskribhsoge/Build/Products/Debug-iphoneos/libZXingWidget.a"; sourceTree = "<group>"; };
 		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -279,6 +284,7 @@
 				52572B6D1691F6DD009037A7 /* Splash */,
 				52572B6E1691F6E2009037A7 /* Automatic */,
 				52572B6F1691F6E9009037A7 /* Manual */,
+				39BFA4DF1796EAE400372A87 /* QueueSaver */,
 				39DA66D016B6F840001EE336 /* ExperimentBrowser */,
 				52572B711691F6F5009037A7 /* Objects */,
 				52572B721691F703009037A7 /* Delegate Files */,
@@ -341,7 +347,6 @@
 				B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */,
 				B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */,
 				B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */,
-				B74A1F0916B862FB00F0E9EE /* libZXingWidget.a */,
 				399B39D216A089B0000564D9 /* CoreMotion.framework */,
 				399BE2FA169F3878000F7B2E /* QuartzCore.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
@@ -387,6 +392,30 @@
 			name = ISenseSearch;
 			sourceTree = "<group>";
 		};
+		39BFA4DF1796EAE400372A87 /* QueueSaver */ = {
+			isa = PBXGroup;
+			children = (
+				392CD88717836F5C00C82887 /* QueueCell.h */,
+				392CD88817836F5C00C82887 /* QueueCell.m */,
+				392CD88917836F5C00C82887 /* QueueUploaderView.h */,
+				392CD88A17836F5C00C82887 /* QueueUploaderView.m */,
+			);
+			name = QueueSaver;
+			sourceTree = "<group>";
+		};
+		39BFA4E01796F55900372A87 /* Step One Files */ = {
+			isa = PBXGroup;
+			children = (
+				B72302BB1783260600DD8B16 /* SensorCell.h */,
+				B72302BC1783260600DD8B16 /* SensorCell.m */,
+				B72302AA17831A7D00DD8B16 /* SensorSelection.h */,
+				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
+				B75046C6177484110034B42C /* StepOneSetup.h */,
+				B75046C7177484110034B42C /* StepOneSetup.mm */,
+			);
+			name = "Step One Files";
+			sourceTree = "<group>";
+		};
 		39DA66D016B6F840001EE336 /* ExperimentBrowser */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +446,9 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				B712DE1B1796C67F00A30CAC /* waffle_check.png */,
+				B712DE1C1796C67F00A30CAC /* waffle_warn.png */,
+				B712DE1D1796C67F00A30CAC /* waffle_x.png */,
 				3982F1991774DC7800D3ECF7 /* icon.png */,
 				B70BB40417733AB700E71279 /* rsense_logo.png */,
 				B774E8EC179067C000B23A03 /* rsense_logo_recording.png */,
@@ -519,16 +551,7 @@
 			children = (
 				399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */,
 				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */,
-				B72302BB1783260600DD8B16 /* SensorCell.h */,
-				B72302BC1783260600DD8B16 /* SensorCell.m */,
-				B72302AA17831A7D00DD8B16 /* SensorSelection.h */,
-				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
-				B75046C6177484110034B42C /* StepOneSetup.h */,
-				B75046C7177484110034B42C /* StepOneSetup.mm */,
-				392CD88717836F5C00C82887 /* QueueCell.h */,
-				392CD88817836F5C00C82887 /* QueueCell.m */,
-				392CD88917836F5C00C82887 /* QueueUploaderView.h */,
-				392CD88A17836F5C00C82887 /* QueueUploaderView.m */,
+				39BFA4E01796F55900372A87 /* Step One Files */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";
@@ -734,6 +757,9 @@
 				392CD88C17836F8900C82887 /* QueueCell~iphone.xib in Resources */,
 				B774E8ED179067C000B23A03 /* rsense_logo_recording.png in Resources */,
 				391DA0DC1795D9BE0011B955 /* QueueCell~ipad.xib in Resources */,
+				B712DE1E1796C67F00A30CAC /* waffle_check.png in Resources */,
+				B712DE1F1796C67F00A30CAC /* waffle_warn.png in Resources */,
+				B712DE201796C67F00A30CAC /* waffle_x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

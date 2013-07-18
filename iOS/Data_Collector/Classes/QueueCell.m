@@ -10,15 +10,9 @@
 
 @implementation QueueCell
 
-@synthesize nameAndDate, dataType, description, dataSet;
+@synthesize nameAndDate, dataType, description, eidLabel, dataSet, mKey;
 
-//- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-//    if (self) {
-//        // Initialization code
-//    }
-//    return self;
-//}
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
@@ -26,10 +20,11 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)ds {
-      
+- (QueueCell *)setupCellWithDataSet:(DataSet *)ds andKey:(NSNumber *)key {
+    self.mKey = key;
     self.nameAndDate.text = ds.name;
     self.description.text = ds.dataDescription;
+    self.eidLabel.text = (ds.eid.intValue == -1) ? @"No Exp." : [NSString stringWithFormat:@"%d", ds.eid.intValue];
     
     NSString *tmpDataType;
     if (ds.picturePaths == nil) {
@@ -57,7 +52,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        // do stuff
+        self.contentView.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -71,7 +66,7 @@
     }
 }
 
--(IBAction)setChecked:(UITapGestureRecognizer *)sender {
+- (void) toggleChecked {
     if (dataSet.uploadable.boolValue == false) {
         [self setCheckedSwitch:true];
         dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
@@ -79,6 +74,30 @@
         [self setCheckedSwitch:false];
         dataSet.uploadable = [[NSNumber alloc] initWithBool:false];
     }
+}
+
+- (void) setSessionName:(NSString *)name {
+    self.nameAndDate.text = name;
+    [dataSet setName:name];
+}
+
+- (NSNumber *)getKey {
+    return mKey;
+}
+
+- (void) setExpNum:(NSString *)exp {
+    self.eidLabel.text = exp;
+    [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
+}
+
+- (void) setDesc:(NSString *)desc {
+    self.description.text = desc;
+    [dataSet setDataDescription:desc];
+}
+
+- (BOOL) dataSetHasInitialExperiment {
+    NSNumber *initial = [dataSet hasInitialExp];
+    return [initial boolValue];
 }
 
 -(void)dealloc {

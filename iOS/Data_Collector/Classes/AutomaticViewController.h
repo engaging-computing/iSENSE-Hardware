@@ -11,7 +11,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/headers/DataSaver.h>
-#import <iSENSE_API/headers/QueueUploaderView.h>
+#import "QueueUploaderView.h"
 #import "Data_CollectorAppDelegate.h"
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
@@ -19,7 +19,7 @@
 #import "Data_CollectorAppDelegate.h"
 #import "StepOneSetup.h"
 
-@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>  {
+@interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate>  {
 	IBOutlet UIImageView *mainLogo;
     IBOutlet UILabel *mainLogoBackground;
     IBOutlet UIButton *step1;

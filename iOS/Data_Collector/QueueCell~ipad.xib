@@ -14,7 +14,6 @@
 			<string>IBProxyObject</string>
 			<string>IBUILabel</string>
 			<string>IBUITableViewCell</string>
-			<string>IBUITapGestureRecognizer</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -46,7 +45,7 @@
 								<string key="NSFrame">{{5, 3}, {647, 21}}</string>
 								<reference key="NSSuperview" ref="322765688"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="550115405"/>
+								<reference key="NSNextKeyView" ref="843630395"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -87,7 +86,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">Picture</string>
+								<string key="IBUIText">Data</string>
 								<reference key="IBUITextColor" ref="391007478"/>
 								<reference key="IBUIHighlightedColor" ref="816550143"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -98,7 +97,7 @@
 							<object class="IBUILabel" id="550115405">
 								<reference key="NSNextResponder" ref="322765688"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{5, 20}, {705, 21}}</string>
+								<string key="NSFrame">{{113, 20}, {568, 21}}</string>
 								<reference key="NSSuperview" ref="322765688"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="207774994"/>
@@ -108,19 +107,40 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">Moar Labelz</string>
+								<string key="IBUIText">Description</string>
 								<reference key="IBUITextColor" ref="391007478"/>
 								<reference key="IBUIHighlightedColor" ref="816550143"/>
 								<int key="IBUIBaselineAdjustment">0</int>
-								<object class="IBUIFontDescription" key="IBUIFontDescription">
+								<object class="IBUIFontDescription" key="IBUIFontDescription" id="183137470">
 									<int key="type">1</int>
 									<double key="pointSize">12</double>
 								</object>
-								<object class="NSFont" key="IBUIFont">
+								<object class="NSFont" key="IBUIFont" id="606785617">
 									<string key="NSName">Helvetica</string>
 									<double key="NSSize">12</double>
 									<int key="NSfFlags">16</int>
 								</object>
+								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
+							</object>
+							<object class="IBUILabel" id="843630395">
+								<reference key="NSNextResponder" ref="322765688"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{5, 20}, {100, 21}}</string>
+								<reference key="NSSuperview" ref="322765688"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="550115405"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<int key="IBUIContentMode">7</int>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+								<string key="IBUIText">EID</string>
+								<reference key="IBUITextColor" ref="391007478"/>
+								<reference key="IBUIHighlightedColor" ref="816550143"/>
+								<int key="IBUIBaselineAdjustment">0</int>
+								<reference key="IBUIFontDescription" ref="183137470"/>
+								<reference key="IBUIFont" ref="606785617"/>
 								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							</object>
 						</array>
@@ -145,13 +165,16 @@
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="322765688"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
+				</object>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-				<int key="IBUISelectionStyle">0</int>
+				<int key="IBUISelectionStyle">2</int>
 				<int key="IBUIAccessoryType">3</int>
 				<reference key="IBUIContentView" ref="322765688"/>
 				<real value="45" key="IBUIRowHeight"/>
 			</object>
-			<object class="IBUITapGestureRecognizer" id="1015871400"/>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
@@ -189,29 +212,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">onClickRecognizer</string>
+						<string key="label">eidLabel</string>
 						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="1015871400"/>
+						<reference key="destination" ref="843630395"/>
 					</object>
-					<int key="connectionID">234</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletCollectionConnection" key="connection">
-						<string key="label">gestureRecognizers</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="1015871400"/>
-						<string key="cachedDesigntimeCollectionClassName">NSArray</string>
-						<bool key="addsContentToExistingCollection">YES</bool>
-					</object>
-					<int key="connectionID">236</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">setChecked:</string>
-						<reference key="source" ref="1015871400"/>
-						<reference key="destination" ref="135679168"/>
-					</object>
-					<int key="connectionID">233</int>
+					<int key="connectionID">238</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -237,9 +242,10 @@
 						<int key="objectID">175</int>
 						<reference key="object" ref="135679168"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="550115405"/>
 							<reference ref="765178334"/>
 							<reference ref="207774994"/>
+							<reference ref="843630395"/>
+							<reference ref="550115405"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -259,9 +265,9 @@
 						<reference key="parent" ref="135679168"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">231</int>
-						<reference key="object" ref="1015871400"/>
-						<reference key="parent" ref="0"/>
+						<int key="objectID">237</int>
+						<reference key="object" ref="843630395"/>
+						<reference key="parent" ref="135679168"/>
 					</object>
 				</array>
 			</object>
@@ -275,35 +281,24 @@
 				<string key="181.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="182.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="185.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="231.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="237.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">236</int>
+			<int key="maxID">238</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">QueueCell</string>
 					<string key="superclassName">UITableViewCell</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">setChecked:</string>
-						<string key="NS.object.0">UITapGestureRecognizer</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">setChecked:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">setChecked:</string>
-							<string key="candidateClassName">UITapGestureRecognizer</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="dataType">UILabel</string>
 						<string key="description">UILabel</string>
+						<string key="eidLabel">UILabel</string>
 						<string key="nameAndDate">UILabel</string>
-						<string key="onClickRecognizer">UITapGestureRecognizer</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="dataType">
@@ -314,13 +309,13 @@
 							<string key="name">description</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="eidLabel">
+							<string key="name">eidLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="nameAndDate">
 							<string key="name">nameAndDate</string>
 							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="onClickRecognizer">
-							<string key="name">onClickRecognizer</string>
-							<string key="candidateClassName">UITapGestureRecognizer</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
