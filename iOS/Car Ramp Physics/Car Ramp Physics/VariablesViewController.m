@@ -25,6 +25,52 @@
     return self;
 }
 
+// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"VariablesViewController~landscape_iPad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"VariablesViewController_iPad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"VariablesViewController~landscape_iPhone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"VariablesViewController_iPhone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    }
+    
+}
+
+// pre-iOS6 rotating options
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6 rotating options
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6 interface orientations
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -46,6 +92,11 @@
     self.navigationItem.title = @"Record Settings";
     
     
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
 }
 
 - (void) loadPrefs {

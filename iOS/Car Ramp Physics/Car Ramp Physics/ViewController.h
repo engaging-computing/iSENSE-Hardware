@@ -9,7 +9,6 @@
 #import "RNGridMenu.h"
 #import "Waffle.h"
 #import "AboutViewController.h"
-#import "CODialog.h"
 #import "iSENSE.h"
 #import "StringGrabber.h"
 #import "ExperimentBrowseViewController.h"
@@ -29,10 +28,20 @@
 #import <CoreLocation/CLLocationManagerDelegate.h>
 #import <UIKit/UIKit.h>
 
+typedef struct _RotationDataSaver{
+    __unsafe_unretained NSString *first;
+    __unsafe_unretained NSString *last;
+    __unsafe_unretained NSString *user;
+    __unsafe_unretained NSString *pass;
+    bool hasName;
+    bool hasLogin;
+    
+} RotationDataSaver;
+
 @interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 {
     
-    
+    RotationDataSaver *saver;
     
 }
 
@@ -40,13 +49,14 @@
 @property(nonatomic) IBOutlet UILabel *login_status;
 @property(nonatomic) IBOutlet UIButton *start;
 @property(nonatomic) IBOutlet UIBarButtonItem *menuButton;
-@property(nonatomic) IBOutlet UINavigationBar *navBar;
+@property(nonatomic) IBOutlet UIImageView *image;
 
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
-@property(nonatomic, retain) CODialog *change_name;
-@property(nonatomic, retain) CODialog *experiment;
+@property(nonatomic, retain) UIAlertView *change_name;
+@property(nonatomic, retain) UIAlertView *experiment;
 @property(nonatomic, retain) UIAlertView *view;
+@property(nonatomic, retain) UIAlertView *exp_num;
 @property(nonatomic, retain) iSENSE *iapi;
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
@@ -78,6 +88,8 @@
 @property (nonatomic, strong) DataSaver *dataSaver;
 
 
+
+
 @property(nonatomic, retain) NSArray *items;
 
 //Boolean variables
@@ -95,7 +107,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)changeName;
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
-- (CODialog *) getDispatchDialogWithMessage:(NSString *)dString;
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 - (void) updateElapsedTime;
 
 @end

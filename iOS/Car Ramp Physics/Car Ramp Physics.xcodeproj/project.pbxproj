@@ -20,7 +20,7 @@
 		760D198B1795934300C123D6 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
-		7631ABF6178D98E2005A0469 /* CODialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7631ABF5178D98DA005A0469 /* CODialog.m */; };
+		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
 		765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */; };
 		765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B2178DD32200425A27 /* ExperimentBlock.m */; };
@@ -45,7 +45,7 @@
 		7669F03C178B275C00E51AD0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F03B178B275C00E51AD0 /* Default.png */; };
 		7669F03E178B275C00E51AD0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F03D178B275C00E51AD0 /* Default@2x.png */; };
 		7669F040178B275C00E51AD0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F03F178B275C00E51AD0 /* Default-568h@2x.png */; };
-		7669F043178B275C00E51AD0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7669F042178B275C00E51AD0 /* ViewController.m */; };
+		7669F043178B275C00E51AD0 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7669F042178B275C00E51AD0 /* ViewController.mm */; };
 		7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */; };
 		7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F047178B275C00E51AD0 /* ViewController_iPad.xib */; };
 		7669F050178B29B800E51AD0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F04F178B29B800E51AD0 /* logo.png */; };
@@ -62,6 +62,11 @@
 		767B926E178C45A800F1C6FA /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926D178C45A800F1C6FA /* pencil.png */; };
 		767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9271178C526E00F1C6FA /* Accelerate.framework */; };
 		767B9274178C527500F1C6FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9273178C527500F1C6FA /* QuartzCore.framework */; };
+		76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */; };
+		76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */; };
+		76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */; };
+		76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */; };
+		76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */; };
 		76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D7F178C5D2D006E1425 /* waffle_check.png */; };
 		76B58D83178C5D2D006E1425 /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D80178C5D2D006E1425 /* waffle_warn.png */; };
 		76B58D84178C5D2D006E1425 /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D81178C5D2D006E1425 /* waffle_x.png */; };
@@ -118,8 +123,7 @@
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		761D275D1795C1960056FA8C /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		761D27601795C1A30056FA8C /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
-		7631ABF4178D98DA005A0469 /* CODialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CODialog.h; sourceTree = "<group>"; };
-		7631ABF5178D98DA005A0469 /* CODialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CODialog.m; sourceTree = "<group>"; };
+		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentBrowseViewController.h; path = ../ExperimentBrowseViewController.h; sourceTree = "<group>"; };
 		765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExperimentBrowseViewController.m; path = ../ExperimentBrowseViewController.m; sourceTree = "<group>"; };
@@ -151,7 +155,7 @@
 		7669F03D178B275C00E51AD0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		7669F03F178B275C00E51AD0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7669F041178B275C00E51AD0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		7669F042178B275C00E51AD0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		7669F042178B275C00E51AD0 /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		7669F045178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7669F048178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		7669F04F178B29B800E51AD0 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = "../../../Android/Car_Ramp_Physics_v2/res/drawable-xhdpi/logo.png"; sourceTree = "<group>"; };
@@ -171,6 +175,11 @@
 		767B926D178C45A800F1C6FA /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		767B9271178C526E00F1C6FA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		767B9273178C527500F1C6FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
+		76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
+		76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76B58D77178C5D16006E1425 /* DataFieldManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DataFieldManager.h; path = ../DataFieldManager.h; sourceTree = "<group>"; };
 		76B58D78178C5D16006E1425 /* DataFieldManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DataFieldManager.m; path = ../DataFieldManager.m; sourceTree = "<group>"; };
 		76B58D79178C5D16006E1425 /* Fields.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Fields.h; path = ../Fields.h; sourceTree = "<group>"; };
@@ -299,8 +308,11 @@
 				760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */,
 				760D197E17958AF600C123D6 /* queue_layout~iphone.xib */,
 				76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */,
+				76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */,
 				76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */,
+				76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */,
 				7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */,
+				7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */,
 			);
 			name = iPhone;
 			sourceTree = "<group>";
@@ -311,8 +323,11 @@
 				760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */,
 				760D198217958AFF00C123D6 /* queue_layout~ipad.xib */,
 				76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */,
+				76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */,
 				76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */,
+				76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */,
 				7669F047178B275C00E51AD0 /* ViewController_iPad.xib */,
+				76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */,
 			);
 			name = iPad;
 			sourceTree = "<group>";
@@ -331,7 +346,6 @@
 				765099B4178DD34D00425A27 /* ISenseSearch.h */,
 				765099B1178DD32200425A27 /* ExperimentBlock.h */,
 				765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */,
-				7631ABF4178D98DA005A0469 /* CODialog.h */,
 				76B58D77178C5D16006E1425 /* DataFieldManager.h */,
 				76B58D79178C5D16006E1425 /* Fields.h */,
 				76B58D7B178C5D16006E1425 /* StringGrabber.h */,
@@ -357,14 +371,13 @@
 				765099B5178DD34D00425A27 /* ISenseSearch.m */,
 				765099B2178DD32200425A27 /* ExperimentBlock.m */,
 				765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */,
-				7631ABF5178D98DA005A0469 /* CODialog.m */,
 				76B58D78178C5D16006E1425 /* DataFieldManager.m */,
 				76B58D7A178C5D16006E1425 /* Fields.m */,
 				76B58D7C178C5D16006E1425 /* StringGrabber.m */,
 				76B58D7E178C5D16006E1425 /* Waffle.m */,
 				76EF01A2178B571F00CBE38C /* RNGridMenu.m */,
 				7669F039178B275C00E51AD0 /* AppDelegate.m */,
-				7669F042178B275C00E51AD0 /* ViewController.m */,
+				7669F042178B275C00E51AD0 /* ViewController.mm */,
 				76B58D8E178C742B006E1425 /* AboutViewController.m */,
 				7669F035178B275C00E51AD0 /* main.m */,
 			);
@@ -523,6 +536,12 @@
 				760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */,
 				760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */,
 				760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */,
+				76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */,
+				76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */,
+				7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */,
+				76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */,
+				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
+				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,12 +555,11 @@
 				765099CE178DF52E00425A27 /* DataFieldManager.m in Sources */,
 				765099CD178DF15C00425A27 /* Fields.m in Sources */,
 				765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */,
-				7631ABF6178D98E2005A0469 /* CODialog.m in Sources */,
 				76B58D8B178C72B0006E1425 /* StringGrabber.m in Sources */,
 				76B58D8C178C72B0006E1425 /* Waffle.m in Sources */,
 				7669F036178B275C00E51AD0 /* main.m in Sources */,
 				7669F03A178B275C00E51AD0 /* AppDelegate.m in Sources */,
-				7669F043178B275C00E51AD0 /* ViewController.m in Sources */,
+				7669F043178B275C00E51AD0 /* ViewController.mm in Sources */,
 				76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */,
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
 				765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */,
@@ -567,6 +585,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7627A3991796EA3000F2CB48 /* en */,
+			);
+			name = "ViewController~landscape_iPhone.xib";
+			sourceTree = "<group>";
+		};
 		7669F032178B275C00E51AD0 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
