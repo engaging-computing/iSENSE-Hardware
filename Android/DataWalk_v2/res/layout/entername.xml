@@ -33,6 +33,7 @@
         android:text="@string/lastInitialLabel" />
 
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/initialLabel"
@@ -40,16 +41,6 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:orientation="horizontal" >
-
-        
-       
-        <Button
-            android:id="@+id/OK"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/OK" 
-            style="?android:attr/buttonBarButtonStyle"
-            />
     </LinearLayout>
 
     <EditText
@@ -66,7 +57,17 @@
         android:paddingLeft="6dip"
         android:singleLine="true"
         android:textColor="@android:color/black" >
-
     </EditText>
+
+    <Button
+        android:id="@+id/OK"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
+        android:paddingTop="10dp"
+        android:text="@string/OK" />
 
 </RelativeLayout>

@@ -8,13 +8,14 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.exp.Setup;
 
 public class Prefs extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
-	private CheckBoxPreference uploadModeBox;
+	public static CheckBoxPreference uploadModeBox;
 	private Preference exp_num;
 	private Preference name_change;
 
@@ -24,17 +25,16 @@ public class Prefs extends PreferenceActivity implements
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d("tag", "we are in prefs class");
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-		uploadModeBox = (CheckBoxPreference) getPreferenceScreen()
-				.findPreference("UploadMode");
+		uploadModeBox = (CheckBoxPreference) getPreferenceScreen().findPreference("UploadMode");
 		if (uploadModeBox.isChecked()) {
-			uploadModeBox.setSummary(getResources().getString(
-					R.string.Upload_Summary_Auto));
+			uploadModeBox.setSummary(getResources().getString(R.string.Upload_Summary_Auto));
 		} else {
-			uploadModeBox.setSummary(getResources().getString(
-					R.string.Upload_Summary_Auto));
+			uploadModeBox.setSummary(getResources().getString(R.string.Upload_Summary_Auto));
 		}
+		
 		exp_num = getPreferenceScreen().findPreference("Exp Num");
 		exp_num.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
@@ -49,14 +49,13 @@ public class Prefs extends PreferenceActivity implements
 		});
 
 		name_change = getPreferenceScreen().findPreference("Name Change");
-		name_change
-				.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		name_change.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						startActivityForResult(new Intent(DataWalk.mContext,
-								LoginActivity.class), EXPERIMENT_NAME_REQUESTED);
-
+								EnterNameActivity.class), EXPERIMENT_NAME_REQUESTED);
+						
 						return false;
 					}
 
@@ -68,16 +67,14 @@ public class Prefs extends PreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getPreferenceScreen().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPause() {
 		super.onPause();
-		getPreferenceScreen().getSharedPreferences()
-				.unregisterOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override

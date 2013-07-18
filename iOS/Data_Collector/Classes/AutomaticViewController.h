@@ -11,7 +11,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/headers/DataSaver.h>
-#import <iSENSE_API/headers/QueueUploaderView.h>
+#import "QueueUploaderView.h"
 #import "Data_CollectorAppDelegate.h"
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"

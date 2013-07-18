@@ -66,7 +66,7 @@
     }
 }
 
--(IBAction)setChecked:(UITapGestureRecognizer *)sender {
+- (void) toggleChecked {
     if (dataSet.uploadable.boolValue == false) {
         [self setCheckedSwitch:true];
         dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
@@ -78,6 +78,26 @@
 
 - (void) setSessionName:(NSString *)name {
     self.nameAndDate.text = name;
+    [dataSet setName:name];
+}
+
+- (NSNumber *)getKey {
+    return mKey;
+}
+
+- (void) setExpNum:(NSString *)exp {
+    self.eidLabel.text = exp;
+    [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
+}
+
+- (void) setDesc:(NSString *)desc {
+    self.description.text = desc;
+    [dataSet setDataDescription:desc];
+}
+
+- (BOOL) dataSetHasInitialExperiment {
+    NSNumber *initial = [dataSet hasInitialExp];
+    return [initial boolValue];
 }
 
 -(void)dealloc {
