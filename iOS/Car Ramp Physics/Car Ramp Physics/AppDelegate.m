@@ -24,6 +24,7 @@
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
     }    
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    self.viewController.navigationItem.rightBarButtonItem = self.viewController.menuButton;
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
     self.window.rootViewController = navigation;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
