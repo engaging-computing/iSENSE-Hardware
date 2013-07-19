@@ -75,6 +75,8 @@
 		76B58D90178C742C006E1425 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D8E178C742B006E1425 /* AboutViewController.m */; };
 		76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */; };
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
+		76C54CF41799704100B93A67 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76C54CF31799704100B93A67 /* button-37.wav */; };
+		76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C54CF81799754300B93A67 /* AudioToolbox.framework */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
 		76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E91F8617945E2E001749FC /* VariablesViewController.m */; };
 		76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */; };
@@ -195,6 +197,8 @@
 		76B58D8E178C742B006E1425 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPhone.xib; sourceTree = "<group>"; };
 		76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
+		76C54CF31799704100B93A67 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
+		76C54CF81799754300B93A67 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		76E91F8517945E2E001749FC /* VariablesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariablesViewController.h; sourceTree = "<group>"; };
 		76E91F8617945E2E001749FC /* VariablesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariablesViewController.m; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */,
 				76785B9317937721001D6E3A /* CoreData.framework in Frameworks */,
 				765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */,
 				765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */,
@@ -266,6 +271,7 @@
 		7669F028178B275C00E51AD0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76C54CF81799754300B93A67 /* AudioToolbox.framework */,
 				76785B9217937721001D6E3A /* CoreData.framework */,
 				765099CB178DF0D500425A27 /* CoreMotion.framework */,
 				765099C9178DF0CE00425A27 /* CoreLocation.framework */,
@@ -294,6 +300,7 @@
 		7669F030178B275C00E51AD0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				76C54CF31799704100B93A67 /* button-37.wav */,
 				76E91F9417947907001749FC /* Strings */,
 				76E91F93179478FC001749FC /* Images */,
 				7669F031178B275C00E51AD0 /* Car Ramp Physics-Info.plist */,
@@ -542,6 +549,7 @@
 				76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */,
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
+				76C54CF41799704100B93A67 /* button-37.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

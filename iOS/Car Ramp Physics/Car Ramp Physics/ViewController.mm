@@ -154,11 +154,7 @@
     
     [image setAutoresizesSubviews:YES];
     
-    
-    
-    
-    
-    
+ 
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -192,10 +188,9 @@
         if (mag)
             mag = mag1;
         
-        [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-        NSLog(@"Frog FROG FROG");
-        
     }
+    
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
 }
 
@@ -219,7 +214,12 @@
             [self recordData];
         }
         
-        
+        NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
+        SystemSoundID soundID;
+        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+        CFURLRef url = (__bridge CFURLRef)filePath;
+        AudioServicesCreateSystemSoundID(url, &soundID);
+        AudioServicesPlaySystemSound(soundID);
         
     }
 }
@@ -281,14 +281,14 @@
         
         NSLog(@"points: %d", dataPoints);
         
-        if (countdown >= -1) {
+        if (countdown >= 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
                 countdown--;
             });
         }
         
-        if (countdown < -1) {
+        if (countdown < 0) {
             
             [self stopRecording:motionmanager];
         }
@@ -531,23 +531,25 @@
     
     session_num = [iapi createSession:sessionName withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
     
-    
-    NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
-    NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array options:0 error:&error];
-    if (error != nil) {
-        NSLog(@"Error:%@", error);
-        return false;
-    }
-    
-    bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
-    if (!success)
-        [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
-    else {
-        [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+    if ([iapi isConnectedToInternet]) {
+        NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
+        NSError *error = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array options:0 error:&error];
+        if (error != nil) {
+            NSLog(@"Error:%@", error);
+            return false;
+        }
         
+        bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
+        if (!success)
+            [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
+        else {
+            [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+            
+        }
+    } else {
+        [self saveDataSetWithDescription:sessionName];
     }
-    [self saveDataSetWithDescription:@"Car Ramp Physics"];
     return true;
     
 }
@@ -733,7 +735,7 @@
         }
         
     } else if ([alertView.title isEqualToString:@"Enter Name"]) {
-        if ([[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
+        if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
             
             change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
             

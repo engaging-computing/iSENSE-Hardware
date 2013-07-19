@@ -27,6 +27,7 @@
 #import <CoreLocation/CLGeocoder.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 typedef struct _RotationDataSaver{
     __unsafe_unretained NSString *first;
