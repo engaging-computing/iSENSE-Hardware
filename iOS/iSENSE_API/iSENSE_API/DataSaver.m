@@ -61,7 +61,6 @@
 -(id)removeDataSet:(NSNumber *)key {
     count--;
     DataSet *tmp;
-    NSLog(@"Removing dataSet with key: %@", key);
     if (key == nil) {
         tmp = [dataQueue dequeue];
     } else {
@@ -95,7 +94,6 @@
     }
     
     [dataQueue removeAllObjects];
-    NSLog(@"%@", dataQueue.description);
     count = 0;
 
 }
@@ -182,7 +180,6 @@
         [dataSetsToBeRemoved addObject:currentKey];
             
         } else {
-            NSLog(@"Ya nub");
             continue;
         }
         

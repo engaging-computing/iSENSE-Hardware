@@ -32,7 +32,7 @@
         
         // Do zee upload thang
         bool uploadSuccessful = [dataSaver upload];
-        if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+        if (!uploadSuccessful) NSLog(@"Upload Not Successful");
         
         [self.navigationController popViewControllerAnimated:YES];
         
@@ -386,6 +386,7 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];  
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
+    NSLog(@"DataSet data: %@", tmp.data);// @Mike
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
@@ -458,7 +459,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"log plz");
     [tableView reloadData];
     QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
     

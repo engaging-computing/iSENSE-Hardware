@@ -18,7 +18,6 @@
     id headObject = [self objectForKey:firstKey];
     if (headObject != nil) {
         [self removeObjectForKey:firstKey];
-        NSLog(@"deleted dataset so new queue count is %d", self.count);
         return headObject;
     }
     

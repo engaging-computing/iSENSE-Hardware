@@ -419,10 +419,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                 if ([dfm enabledFieldAtIndex:fGYRO_Z])
                     fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
             }
-            
+                        
             // update parent JSON object
             [dfm orderDataFromFields:fieldsRow];
-            
+                        
             if (dfm.data != nil && dataToBeJSONed != nil)
                 [dataToBeJSONed addObject:dfm.data];
             // else NOTHING IS WRONG!!!
