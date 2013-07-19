@@ -9,9 +9,10 @@
 #import "CRTableViewCell.h"
 #import <UIKit/UIKit.h>
 
-@interface VariablesViewController : UITableViewController
+@interface VariablesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 
 @property(nonatomic) NSMutableArray *dataSource;
 @property(nonatomic) NSMutableArray *selectedMarks;
+@property(nonatomic) IBOutlet UITableView *table;
 @end
