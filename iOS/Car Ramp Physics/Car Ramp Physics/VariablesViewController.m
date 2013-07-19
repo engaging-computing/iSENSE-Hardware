@@ -14,16 +14,8 @@
 
 @implementation VariablesViewController
 
-@synthesize dataSource, selectedMarks;
+@synthesize dataSource, selectedMarks, table;
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -54,6 +46,7 @@
         }
     }
     
+    
 }
 
 // pre-iOS6 rotating options
@@ -71,10 +64,23 @@
     return UIInterfaceOrientationMaskAll;
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)
+fromInterfaceOrientation
+{
+    NSLog(@"didRotateFromInterfaceOrientation:%d",fromInterfaceOrientation);
+    [table reloadRowsAtIndexPaths:[table indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    for (NSIndexPath *path in [table indexPathsForVisibleRows]) {
+        NSLog(@"NULLFROGS");
+        [table cellForRowAtIndexPath:path];
+    }
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done)];
     
     dataSource = [[NSMutableArray alloc] init];
@@ -85,17 +91,26 @@
     [dataSource addObject:@"Z"];
     [dataSource addObject:@"Magnitude"];
     
-    [self loadPrefs];
-    
     self.navigationItem.rightBarButtonItem = doneButton;
     
+    [table setDataSource:self];
+    [table setDelegate:self];
+    
     self.navigationItem.title = @"Record Settings";
+    
+    self.view.autoresizesSubviews = YES;
+    [table reloadData];
+    
+    NSLog(@"View did load");
+    
+    [self loadPrefs];
     
     
 }
 
 - (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    //[super viewDidAppear:animated];
+    
     [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
 }
 
@@ -160,10 +175,11 @@
     
     // init the CRTableViewCell
     CRTableViewCell *cell = (CRTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CRTableViewCellIdentifier];
-    
-    if (cell == nil) {
+    if (cell == nil){
         cell = [[CRTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CRTableViewCellIdentifier];
     }
+    
+    cell.frame = CGRectMake(0, 0, tableView.frame.size.width, tableView.frame.size.height);
     
     // Check if the cell is currently selected (marked)
     NSString *text = [dataSource objectAtIndex:[indexPath row]];
