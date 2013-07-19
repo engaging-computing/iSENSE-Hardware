@@ -124,6 +124,9 @@
         // get the next dataset
         currentDS = [dataQueue objectForKey:currentKey];
         
+        // prevent trying to upload with an invalid experiment
+        if (currentDS.eid.intValue == -1) continue;
+        
         // check if the session is uploadable
         if (currentDS.uploadable.boolValue) {
             
