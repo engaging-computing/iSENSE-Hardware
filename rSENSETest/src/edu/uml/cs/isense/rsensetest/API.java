@@ -40,8 +40,13 @@ public class API {
 		return false;
 	}
 
+	//Return many projects
 	public String getProjects() {
 		return makeRequest(baseURL, "projects", "authenticity_token="+authToken, "GET");
+	}
+	//Return one project
+	public String getProject(int projectId) {
+		return makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken, "GET");
 	}
 
 	/*Authenticated function*/
