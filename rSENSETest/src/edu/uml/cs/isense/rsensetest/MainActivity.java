@@ -54,14 +54,54 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if ( v == login ) {
 			status.setText("clicked login");
-			api.createSession("testguy", "1");
+			new LoginTask().execute("testguy", "1");
 		} else if ( v == getusers ) {
 			status.setText("clicked get users");
-			api.getUsers();
+			new UsersTask().execute();
 		} else if ( v == getprojects ) {
 			status.setText("clicked get projects");
-			api.getProjects();
+			new ProjectsTask().execute();
 		}
 	}
 
+	private class LoginTask extends AsyncTask<String, Void, Boolean> {
+		@Override
+		protected Boolean doInBackground(String... params) {
+			return api.createSession(params[0], params[1]);
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(result) {
+				status.setText("Login Succeeded");
+			} else {
+				status.setText("Login Failed");
+			}
+		}
+	}
+	
+	private class UsersTask extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... params) {
+			return api.getUsers();
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			status.setText(result);
+		}
+	}
+	
+	private class ProjectsTask extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... params) {
+			return api.getProjects();
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			status.setText(result);
+		}
+	}
+	
 }

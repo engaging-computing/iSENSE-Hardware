@@ -10,6 +10,9 @@ import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class API {
 	String baseURL = "http://129.63.17.17:3000";
 	String authToken = "";
@@ -22,18 +25,29 @@ public class API {
 	/*Once you've done this you'll be able to call authenticated functions and get data back*/
 	/*Returns true if login succeeds*/
 	public boolean createSession(String username, String password) {
-		makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST");
-		return true;
+		String result = makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST");
+		try {
+			JSONObject j =  new JSONObject(result);
+			authToken = j.getString("authenticity_token");
+			if( j.getString("status").equals("success")) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
-	public void getProjects() {
-		makeRequest(baseURL, "projects", "authenticity_token="+authToken, "GET");
+	public String getProjects() {
+		return makeRequest(baseURL, "projects", "authenticity_token="+authToken, "GET");
 	}
 
 	/*Authenticated function*/
 	/*Must have called createSession before calling this function*/
-	public void getUsers() {
-		makeRequest(baseURL, "users", "", "GET");
+	public String getUsers() {
+		return makeRequest(baseURL, "users", "", "GET");
 	}
 
 	public String makeRequest(String baseURL, String path, String parameters, String reqType) {
@@ -63,7 +77,7 @@ public class API {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "Status: "+mstat;
 
+		return "Error: status " + mstat;
 	}
 }
