@@ -47,6 +47,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
+
+        <Button
+            android:id="@+id/cancelB"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="@string/cancel" />
+
         <Button
             android:id="@+id/loginB"
             android:layout_width="wrap_content"
@@ -55,15 +64,6 @@
             android:text="@string/login"
             style="?android:attr/buttonBarButtonStyle"
             />
-
-        <Button
-            android:id="@+id/cancelB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:text="@string/cancel"
-            style="?android:attr/buttonBarButtonStyle"
-             />
 
     </LinearLayout>
     

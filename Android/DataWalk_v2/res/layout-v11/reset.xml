@@ -4,7 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    
+    <Button
+        android:id="@+id/noreset"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:text="@string/Cancel" />
 
         <Button
             android:id="@+id/reset"
@@ -13,14 +19,6 @@
             android:layout_weight=".5"
             android:text="@string/Reset" 
             style="?android:attr/buttonBarButtonStyle"/>
-
-        <Button
-            android:id="@+id/noreset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="@string/Cancel"
-            style="?android:attr/buttonBarButtonStyle" />
  
 
 </LinearLayout>

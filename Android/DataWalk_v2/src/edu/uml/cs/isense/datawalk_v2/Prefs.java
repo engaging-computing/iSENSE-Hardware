@@ -1,23 +1,21 @@
 package edu.uml.cs.isense.datawalk_v2;
 
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.exp.Setup;
+
 
 public class Prefs extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	public static CheckBoxPreference uploadModeBox;
-	private Preference exp_num;
-	private Preference name_change;
+	
+
 
 	public static final int EXPERIMENT_REQUESTED = 9000;
 	public static final int EXPERIMENT_NAME_REQUESTED = 5004;
@@ -29,39 +27,19 @@ public class Prefs extends PreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		uploadModeBox = (CheckBoxPreference) getPreferenceScreen().findPreference("UploadMode");
-		if (uploadModeBox.isChecked()) {
-			uploadModeBox.setSummary(getResources().getString(R.string.Upload_Summary_Auto));
-		} else {
-			uploadModeBox.setSummary(getResources().getString(R.string.Upload_Summary_Auto));
+		if(DataWalk.umbChecked==true){
+			uploadModeBox.setChecked(true);
+			uploadModeBox.setEnabled(false);
+		}else{
+			uploadModeBox.setChecked(false);
+			uploadModeBox.setEnabled(false);
 		}
 		
-		exp_num = getPreferenceScreen().findPreference("Exp Num");
-		exp_num.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				startActivityForResult(new Intent(DataWalk.mContext,
-						Setup.class), EXPERIMENT_REQUESTED);
-
-				return false;
-			}
-
-		});
-
-		name_change = getPreferenceScreen().findPreference("Name Change");
-		name_change.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						startActivityForResult(new Intent(DataWalk.mContext,
-								EnterNameActivity.class), EXPERIMENT_NAME_REQUESTED);
-						
-						return false;
-					}
-
-				});
-
-	}
+		this.setTitle("Collection Mode");
+		
+		
+		
+	}//ends onCreate
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -73,8 +51,7 @@ public class Prefs extends PreferenceActivity implements
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPause() {
-		super.onPause();
-		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
@@ -82,26 +59,13 @@ public class Prefs extends PreferenceActivity implements
 			String key) {
 		if (key.equals("UploadMode")) {
 			if (uploadModeBox.isChecked()) {
-				uploadModeBox.setSummary(getResources().getString(
-						R.string.Upload_Summary_Auto));
+				//uploadModeBox.setSummary(getResources().getString(R.string.Upload_Summary_Auto));
 			} else {
-				uploadModeBox.setSummary(getResources().getString(
-						R.string.Upload_Summary_Auto));
+				//uploadModeBox.setSummary(getResources().getString(R.string.Upload_Summary_Auto));
 			}
 		}
 	}
 
-	public void onActivityResult(int reqCode, int resultCode, Intent data) {
-		if (reqCode == EXPERIMENT_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				SharedPreferences prefs = getSharedPreferences("EID", 0);
-				DataWalk.experimentId = prefs.getString("experiment_id", null);
-				if (DataWalk.experimentId == null) {
-					DataWalk.experimentId = DataWalk.defaultExp;
-				}
-			}
-		}
-
-	}
+	
 }// ends class
 
