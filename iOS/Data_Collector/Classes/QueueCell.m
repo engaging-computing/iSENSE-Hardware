@@ -90,6 +90,16 @@
     [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
 }
 
+- (void) setDesc:(NSString *)desc {
+    self.description.text = desc;
+    [dataSet setDataDescription:desc];
+}
+
+- (BOOL) dataSetHasInitialExperiment {
+    NSNumber *initial = [dataSet hasInitialExp];
+    return [initial boolValue];
+}
+
 -(void)dealloc {
     [super dealloc];
     [dataSet release];

@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize sessionName, expNum, locationManager, browsing, initialExpDialogOpen;
+@synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -165,6 +165,21 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+    
+    // Managed Object Context for Data_CollectorAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // DataSaver from Data_CollectorAppDelegate
+    if (dataSaver == nil) {
+        dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+        NSLog(@"Current count = %d", dataSaver.count);
+    }
+    
+    [self initLocations];
+    [self resetAddressFields];
+
 }
 
 - (void) cleanRDSData {
@@ -272,6 +287,8 @@
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
                 }
             }
+        } else {
+            self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
         }
     } @catch (NSException *e) {
         // couldn't check activeField - so ignore it
@@ -343,8 +360,6 @@
 	[sessionNameInput release];
 	[media release];
 	[scrollView release];
-	
-	[sessionName release];
     
     [locationManager release];
     locationManager = nil;
@@ -364,6 +379,13 @@
         locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         [locationManager startUpdatingLocation];
     }
+}
+
+// Reset address fields for next session
+- (void)resetAddressFields {
+    city = [[NSString alloc] initWithString:@"N/a"];
+    country = [[NSString alloc] initWithString:@"N/a"];
+    address = [[NSString alloc] initWithString:@"N/a"];
 }
 
 // method not called on real device - don't assign a location to a global variable here
@@ -393,9 +415,46 @@
 }
 
 - (IBAction) saveOnClick:(id)sender {
-    [self getDataFromFields];
     
-    // @JEREMY - you can replace the above uploading code with your saving code :D!!
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Saving data set..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL exp = TRUE, hasSessionName = TRUE, uploadSuccess = FALSE;
+        
+        if (expNum == 0 || expNum == -1)
+            exp = FALSE;
+        
+        else
+            if ([[sessionNameInput text] isEqualToString:@""])
+                hasSessionName = FALSE;
+        
+            else {
+                NSMutableArray *dataJSON = [[self getDataFromFields] retain];
+                [self saveDataSet:dataJSON withDescription:@"Data set from iOS Data Collector - Manual Entry."];
+                uploadSuccess = TRUE;
+            }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (!exp)
+                [self.view makeWaffle:@"Please enter an experiment first"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            if (!hasSessionName)
+                [self.view makeWaffle:@"Please enter a session name first"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_WARNING];
+            if (uploadSuccess)
+                [self.view makeWaffle:@"Data set saved" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+            
+            
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+        });
+    });
 }
 
 - (IBAction) clearOnClick:(id)sender {
@@ -411,6 +470,8 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
+    
+    [self.view makeWaffle:@"This feature is currently disabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
     
 //    if (sessionNameInput.text.length != 0)
 //        [CameraUsage useCamera];
@@ -436,11 +497,19 @@
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
 	UIAlertView *message;
-    
+    QueueUploaderView *queueUploader;
+
 	switch (buttonIndex) {
         case MANUAL_MENU_UPLOAD:
             
-            // TODO - @JEREMY'S BLOCK TO BE A GOD AND STUFF AND INTRODUCE THE UPLOAD MENU OPTION PRESS THING :D
+            if (dataSaver.count > 0) {
+                queueUploader = [[QueueUploaderView alloc] init];
+                queueUploader.title = @"Manage and Upload Sessions";
+                [self.navigationController pushViewController:queueUploader animated:YES];
+                [queueUploader release];
+            } else {
+                [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
+            }
             
             break;
             
@@ -464,6 +533,10 @@
                                        otherButtonTitles:@"Okay", nil];
             message.tag = MANUAL_MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message textFieldAtIndex:0].tag = TAG_MANUAL_LOGIN;
+            [message textFieldAtIndex:1].tag = TAG_MANUAL_LOGIN;
+            [message textFieldAtIndex:0].delegate = self;
+            [message textFieldAtIndex:1].delegate = self;
             [message show];
             [message release];
             
@@ -497,6 +570,8 @@
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message textFieldAtIndex:0].tag = TAG_MANUAL_EXP;
+            [message textFieldAtIndex:0].delegate = self;
             [message show];
             [message release];
             
@@ -576,7 +651,6 @@
                           [((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]] ))
                         
                         ((UITextField *) element).text = @"";
-                    
                 }
             }
         }
@@ -584,6 +658,24 @@
 }
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    if (textField.tag == TAG_MANUAL_LOGIN) {
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (![self containsAcceptedCharacters:string])
+            return NO;
+        
+        return (newLength > 100) ? NO : YES;
+    }
+    
+    if (textField.tag == TAG_MANUAL_EXP) {
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (![self containsAcceptedDigits:string])
+            return NO;
+        
+        return (newLength > 6) ? NO : YES;
+    }
     
     if (![self containsAcceptedCharacters:string])
         return NO;
@@ -647,6 +739,14 @@
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
+- (BOOL) containsAcceptedDigits:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_digits"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
@@ -681,7 +781,8 @@
     
 }
 
-- (void) upload:(NSMutableArray *)results {
+// @Mike delete this after testing my code
+/* - (void) upload:(NSMutableArray *)results {
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
     [message show];
       
@@ -754,7 +855,7 @@
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
     });
-}
+} */
 
 - (void) fillDataFieldEntryList:(int)eid withData:(NSMutableArray *)data {
     
@@ -956,7 +1057,7 @@
     }
 }
 
-- (void) getDataFromFields {
+- (NSMutableArray *) getDataFromFields {
     NSMutableArray *data = [[NSMutableArray alloc] init];
     int count = 0;
     
@@ -988,19 +1089,17 @@
                     [data addObject:((UITextField *) element).text];
                 else
                     [data addObject:@""];
-                
             }
         }
         count++;
     }
-    
+
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
     [dataEncapsulator addObject:data];
-    
-    [self upload:dataEncapsulator];
-    
     [data release];
-    [dataEncapsulator release];
+    
+    return [dataEncapsulator autorelease];
+
 }
 
 - (void) hideKeyboard {
@@ -1050,5 +1149,58 @@
     
     return YES;
 }
+
+// Save a data set so you don't have to upload it immediately
+- (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_manual"]] intValue];
+    
+    bool uploadable = false;
+    if (expNum > 1) uploadable = true;
+    
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    [ds setName:sessionNameInput.text];
+    [ds setParentName:PARENT_MANUAL];
+    [ds setDataDescription:description];
+    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setData:dataJSON];
+    [ds setPicturePaths:nil];
+    [ds setSid:[NSNumber numberWithInt:-1]];
+    [ds setCity:city];
+    [ds setCountry:country];
+    [ds setAddress:address];
+    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];    
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
+    [ds release];
+    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
+}
+
+// Finds the associated address from a GPS location.
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    if (geoCoder) {
+        [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+            if ([placemarks count] > 0) {
+                city = [[[placemarks objectAtIndex:0] locality] retain];
+                country = [[[placemarks objectAtIndex:0] country] retain];
+                NSString *subThoroughFare = [[placemarks objectAtIndex:0] subThoroughfare];
+                NSString *thoroughFare = [[placemarks objectAtIndex:0] thoroughfare];
+                address = [[NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare] retain];
+                
+                if (!address || !city || !country)
+                    [self resetAddressFields];
+                
+                if ((NSNull *)address == [NSNull null] || (NSNull *)city == [NSNull null] || (NSNull *)country == [NSNull null])
+                    [self resetAddressFields];
+            } else {
+                [self resetAddressFields];
+            }
+        }];
+    }
+}
+
 
 @end

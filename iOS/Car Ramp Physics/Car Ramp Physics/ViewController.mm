@@ -22,7 +22,61 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num ;
+
+// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    saver->first = firstName;
+    saver->last = lastInitial;
+    saver->user = userName;
+    saver->pass = passWord;
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ViewController_iPad"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPhone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"ViewController_iPhone"
+                                          owner:self
+                                        options:nil];
+            [self viewDidLoad];
+        }
+        
+    }
+    
+    
+}
+
+// pre-iOS6 rotating options
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6 rotating options
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6 interface orientations
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
 
 - (void)viewDidLoad {
     
@@ -35,7 +89,7 @@
     
     useDev = TRUE;
     
-    self.navigationItem.rightBarButtonItem = menuButton;
+    
     iapi = [iSENSE getInstance];
     [iapi toggleUseDev: useDev];
     
@@ -54,11 +108,35 @@
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
-    userName = @"sor";
-    passWord = @"sor";
-    firstName = @"No Name";
-    lastInitial = @"Provided";
-    [self login:@"sor" withPassword:@"sor"];
+    if (saver == nil) {
+        saver = new RotationDataSaver;
+        saver->hasName = false;
+        saver->hasLogin = false;
+        saver->first =  [[NSString alloc] init];
+        saver->last = [[NSString alloc] init];;
+        saver->user = [[NSString alloc] init];
+        saver->pass = [[NSString alloc] init];
+    }
+    
+    if (saver->hasName){
+        firstName = saver->first;
+        lastInitial = saver->last;
+    } else {
+        firstName = @"No Name";
+        lastInitial = @"Provided";
+    }
+    
+    if (saver->hasLogin){
+        userName = saver->user;
+        passWord = saver->pass;
+    } else {
+        userName = @"sor";
+        passWord = @"sor";
+        
+        
+    }
+    
+    [self login:userName withPassword:passWord];
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -71,8 +149,14 @@
         NSLog(@"Datasaver Details: %@", dataSaver.description);
         NSLog(@"Current count = %d", dataSaver.count);
     }
-
-
+    
+    self.navigationItem.rightBarButtonItem = menuButton;
+    
+    [image setAutoresizesSubviews:YES];
+    
+    
+    
+    
     
     
 }
@@ -80,15 +164,16 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (self.isMovingToParentViewController == YES) {
-        change_name = [[CODialog alloc] initWithWindow:self.view.window];
-        change_name.title = @"Enter First Name and Last Initial";
-        [change_name addTextFieldWithPlaceholder:@"First Name" secure:NO];
-        [change_name addTextFieldWithPlaceholder:@"Last Initial" secure:NO];
-        UITextField *last = [change_name textFieldAtIndex:1];
-        [last setDelegate:self];
-        [change_name addButtonWithTitle:@"Done" target:self selector:@selector(changeName)];
-        [change_name showOrUpdateAnimated:YES];
         
+        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        
+        [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+        UITextField *last = [change_name textFieldAtIndex:1];
+        [last setSecureTextEntry:NO];
+        [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        last.placeholder = @"Last Initial";
+        last.delegate = self;
+        [change_name show];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         
@@ -96,7 +181,7 @@
         BOOL y1 = [prefs boolForKey:@"Y"];
         BOOL z1 = [prefs boolForKey:@"Z"];
         BOOL mag1 = [prefs boolForKey:@"Magnitude"];
-
+        
         
         if (x)
             x = x1;
@@ -107,12 +192,14 @@
         if (mag)
             mag = mag1;
         
-        
-        
-        
+        [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+        NSLog(@"Frog FROG FROG");
         
     }
+    
 }
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -380,7 +467,7 @@
 }
 
 - (void) browseExp {
-    [experiment hideAnimated:YES];
+    [experiment dismissWithClickedButtonIndex:1 animated:YES];
     ExperimentBrowseViewController *browse;
     browse = [[ExperimentBrowseViewController alloc] init];
     browse.title = @"Browse for Experiments";
@@ -390,7 +477,7 @@
 }
 
 - (void) QRCode {
-    [experiment hideAnimated:YES];
+    [experiment dismissWithClickedButtonIndex:2 animated:YES];
     if ([[UIApplication sharedApplication]
          canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
         NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=carPhysics%3A//EAN"];
@@ -403,9 +490,10 @@
 }
 
 - (void) expCode {
-    [experiment hideAnimated:YES];
-    expNum = [[experiment textForTextFieldAtIndex:0] intValue];
-    NSLog(@"experiment number: %d", expNum);
+    [experiment dismissWithClickedButtonIndex:0 animated:YES];
+    exp_num = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [exp_num setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [exp_num show];
 }
 
 // Save a data set so you don't have to upload it immediately
@@ -491,12 +579,12 @@
     };
     void (^codeBlock)() = ^() {
         NSLog(@"Experiment button pressed");
-        experiment = [[CODialog alloc] initWithWindow:self.view.window];
-        [experiment addTextFieldWithPlaceholder:@"Enter Experiment #" secure:NO];
-        [experiment addButtonWithTitle:@"Browse" target:self selector:@selector(browseExp)];
-        [experiment addButtonWithTitle:@"QR Code" target:self selector:@selector(QRCode)];
-        [experiment addButtonWithTitle:@"Done" target:self selector:@selector(expCode)];
-        [experiment showOrUpdateAnimated:YES];
+        experiment = [[UIAlertView alloc] initWithTitle:@"Experiment Code" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+        [experiment addButtonWithTitle:@"Enter Experiment #"];
+        [experiment addButtonWithTitle:@"Browse"];
+        [experiment addButtonWithTitle:@"QR Code"];
+        [experiment addButtonWithTitle:@"Done"];
+        [experiment show];
         
     };
     void (^loginBlock)() = ^() {
@@ -566,14 +654,15 @@
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alert show];
     } else if (buttonIndex == 2){
-        change_name = [[CODialog alloc] initWithWindow:self.view.window];
-        change_name.title = @"Enter First Name and Last Initial";
-        [change_name addTextFieldWithPlaceholder:@"First Name" secure:NO];
-        [change_name addTextFieldWithPlaceholder:@"Last Initial" secure:NO];
+        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Namel" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        
+        [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
-        [last setDelegate:self];
-        [change_name addButtonWithTitle:@"Done" target:self selector:@selector(changeName)];
-        [change_name showOrUpdateAnimated:YES];
+        [last setSecureTextEntry:NO];
+        [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        last.placeholder = @"Last Initial";
+        last.delegate = self;
+        [change_name show];
     }
     
     
@@ -616,8 +705,13 @@
         if ([title isEqualToString:@"Discard"]) {
             [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
-            [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
-            [self uploadData: @"Car Ramp Physics Test"];
+            UIAlertView *dis = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
+            [dis show];
+            dispatch_queue_t queue = dispatch_queue_create("upload", NULL);
+            dispatch_async(queue, ^{
+                [self uploadData: @""];
+            });
+            [dis dismissWithClickedButtonIndex:nil animated:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
             [alert show];
         }
@@ -638,36 +732,77 @@
             [mySafari openURL:myURL];
         }
         
+    } else if ([alertView.title isEqualToString:@"Enter Name"]) {
+        if ([[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
+            
+            change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+            
+            [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            UITextField *last = [change_name textFieldAtIndex:1];
+            [last setSecureTextEntry:NO];
+            [change_name textFieldAtIndex:0].placeholder = @"First Name";
+            last.placeholder = @"Last Initial";
+            last.delegate = self;
+            [change_name show];
+            [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
+        } else {
+            [self changeName];
+        }
+    } else if ([alertView.title isEqualToString:@"Experiment Code"]){
+        if ([title isEqualToString:@"Enter Experiment #"]) {
+            [self expCode];
+        } else if ([title isEqualToString:@"Browse"]) {
+            [self browseExp];
+        } else if ([title isEqualToString:@"QR Code"]) {
+            [self QRCode];
+        } else {
+            [experiment dismissWithClickedButtonIndex:3 animated:YES];
+        }
+    } else if ([alertView.title isEqualToString:@"Enter Experiment #"]) {
+        expNum = [[alertView textFieldAtIndex:0].text intValue];
+        if (expNum == 0) {
+            if (useDev) {
+                expNum = DEV_DEFAULT_EXP;
+            } else {
+                expNum = PROD_DEFAULT_EXP;
+            }
+        }
     }
 }
 
 - (void) changeName {
     
-    [change_name hideAnimated:YES];
-    firstName = [change_name textForTextFieldAtIndex:0];
-    lastInitial = [change_name textForTextFieldAtIndex:1];
+    [change_name dismissWithClickedButtonIndex:0 animated:YES];
+    firstName = [change_name textFieldAtIndex:0].text;
+    lastInitial = [change_name textFieldAtIndex:1].text;
     login_status.text = [@"Logged in as: " stringByAppendingString: userName];
     login_status.text = [login_status.text stringByAppendingString:@" Name: "];
     login_status.text = [login_status.text stringByAppendingString:firstName];
     login_status.text = [login_status.text stringByAppendingString:@" "];
     login_status.text = [login_status.text stringByAppendingString:lastInitial];
+    saver->hasName = true;
     
 }
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
-    CODialog *message = [self getDispatchDialogWithMessage:@"Logging in..."];
-    [message showOrUpdateAnimated:YES];
+    UIAlertView *message;
+    if (!saver->hasLogin){
+        message = [self getDispatchDialogWithMessage:@"Logging in..."];
+        [message show];
+    }
     NSLog(@"Making waffle");
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
         BOOL success = [iapi login:usernameInput with:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.view makeWaffle:@"Login Successful!"
-                             duration:WAFFLE_LENGTH_SHORT
-                             position:WAFFLE_BOTTOM
-                                image:WAFFLE_CHECKMARK];
+                if (!saver->hasLogin){
+                    [self.view makeWaffle:@"Login Successful!"
+                                 duration:WAFFLE_LENGTH_SHORT
+                                 position:WAFFLE_BOTTOM
+                                    image:WAFFLE_CHECKMARK];
+                }
                 login_status.text = [@"Logged in as: " stringByAppendingString: usernameInput];
                 login_status.text = [login_status.text stringByAppendingString:@" Name: "];
                 login_status.text = [login_status.text stringByAppendingString:firstName];
@@ -675,23 +810,33 @@
                 login_status.text = [login_status.text stringByAppendingString:lastInitial];
                 userName = usernameInput;
                 passWord = passwordInput;
+                
+                saver->hasLogin = true;
             } else {
                 [self.view makeWaffle:@"Login Failed!"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
             }
-            [message hideAnimated:YES];
+            if (message != nil)
+                [message dismissWithClickedButtonIndex:nil animated:YES];
         });
     });
     
 }
 
-- (CODialog *) getDispatchDialogWithMessage:(NSString *)dString {
-    CODialog *spinner = [[CODialog alloc] initWithWindow:self.view.window];
-    [spinner setTitle:dString];
-    spinner.dialogStyle = CODialogStyleIndeterminate;
-    return spinner;
+// This is for the loading spinner when the app starts things
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
 }
 
 

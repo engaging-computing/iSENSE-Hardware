@@ -32,7 +32,7 @@
         
         // Do zee upload thang
         bool uploadSuccessful = [dataSaver upload];
-        if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+        if (!uploadSuccessful) NSLog(@"Upload Not Successful");
         
         [self.navigationController popViewControllerAnimated:YES];
         
@@ -130,20 +130,35 @@
         
         NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
         if (indexPath != nil) {
+            
             lastClickedCellIndex = [indexPath copy];
             NSLog(@"stuff stuff: %@", lastClickedCellIndex);
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
+                
                 NSLog(@"long press on table view at row %d", indexPath.row);
-                UIActionSheet *popupQuery = [[UIActionSheet alloc]
-                                             initWithTitle:nil
-                                             delegate:self
-                                             cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:@"Delete"
-                                             otherButtonTitles:@"Rename", @"Select Experiment", nil];
-                popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-                [popupQuery showInView:self.view];
-                [popupQuery release];
+                
+                if (![cell dataSetHasInitialExperiment]) {
+                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                                 initWithTitle:nil
+                                                 delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:@"Delete"
+                                                 otherButtonTitles:@"Rename", @"Change Description", @"Select Experiment", nil];
+                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                    [popupQuery showInView:self.view];
+                    [popupQuery release];
+                } else {
+                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                                 initWithTitle:nil
+                                                 delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:@"Delete"
+                                                 otherButtonTitles:@"Rename", @"Change Description", nil];
+                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                    [popupQuery showInView:self.view];
+                    [popupQuery release];
+                }
             }
         }
     }
@@ -160,6 +175,7 @@
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [dataSaver removeDataSet:[cell getKey]];
             [self.mTableView reloadData];
+            [mTableView reloadData];
             
             break;
             
@@ -173,20 +189,44 @@
             message.tag = QUEUE_RENAME;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_RENAME;
+            [message textFieldAtIndex:0].delegate = self;
+            [message show];
+            [message release];
+            
+            break;
+            
+        case QUEUE_CHANGE_DESC:
+            message = [[UIAlertView alloc] initWithTitle:@"Enter new data set description:"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = QUEUE_CHANGE_DESC;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_DESC;
+            [message textFieldAtIndex:0].delegate = self;
             [message show];
             [message release];
             
             break;
             
         case QUEUE_SELECT_EXP:
-            message = [[UIAlertView alloc] initWithTitle:nil
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = QUEUE_SELECT_EXP;
-            [message show];
-            [message release];
+            
+            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            if (![cell dataSetHasInitialExperiment]) {
+                
+                message = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:nil
+                                                    delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                message.tag = QUEUE_SELECT_EXP;
+                [message show];
+                [message release];
+            }
             
 			break;
             
@@ -224,6 +264,8 @@
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_EXP;
+            [message textFieldAtIndex:0].delegate = self;
             [message show];
             [message release];
             
@@ -275,6 +317,13 @@
             [cell setExpNum:expNumString];
         }
         
+    } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            NSString *newDescription = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setDesc:newDescription];
+        }
     }
 }
 
@@ -337,14 +386,15 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];  
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
+    NSLog(@"DataSet data: %@", tmp.data);// @Mike
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
         browsing = false;
         NSString *expNumString = [NSString stringWithFormat:@"%d", expNum];
         NSLog(@"new exp from browsing is: %@", expNumString);
-        [cell setExpNum:expNumString];
-        //[self.mTableView reloadData];
+        if (expNum != 0)
+            [cell setExpNum:expNumString];
     }
     
     return cell;
@@ -408,9 +458,7 @@
     return [message autorelease];
 }
 
-// TODO - this method isn't be fired... why? It fires in SensorSelection and its EXACTLY THE SAME
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"log plz");
     [tableView reloadData];
     QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
     
@@ -418,6 +466,56 @@
     [cell setBackgroundColor:[UIColor clearColor]];
     
     [cell toggleChecked];
+}
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL) containsAcceptedCharacters:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) containsAcceptedDigits:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_digits"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    
+    switch (textField.tag) {
+            
+        case TAG_QUEUE_RENAME:
+            if (![self containsAcceptedCharacters:string])
+                return NO;
+            
+            return (newLength > 30) ? NO : YES;
+            
+        case TAG_QUEUE_DESC:
+            if (![self containsAcceptedCharacters:string])
+                return NO;
+            
+            return (newLength > 255) ? NO : YES;
+            
+        case TAG_QUEUE_EXP:
+            if (![self containsAcceptedDigits:string])
+                return NO;
+            
+            return (newLength > 6) ? NO : YES;
+            
+        default:
+            return YES;
+    }
 }
 
 @end

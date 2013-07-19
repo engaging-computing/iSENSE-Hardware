@@ -285,6 +285,8 @@
             message.tag = EXPERIMENT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message textFieldAtIndex:0].tag = TAG_STEPONE_EXP;
+            [message textFieldAtIndex:0].delegate = self;
             [message show];
             [message release];
             
@@ -458,6 +460,12 @@
                 return NO;
 
             return (newLength > 10) ? NO : YES;
+            
+        case TAG_STEPONE_EXP:
+            if (![self containsAcceptedDigits:string])
+                return NO;
+            
+            return (newLength > 6) ? NO : YES;
             
         default:
             return YES;

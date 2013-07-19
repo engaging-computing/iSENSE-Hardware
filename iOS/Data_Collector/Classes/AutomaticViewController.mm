@@ -419,10 +419,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                 if ([dfm enabledFieldAtIndex:fGYRO_Z])
                     fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
             }
-            
+                        
             // update parent JSON object
             [dfm orderDataFromFields:fieldsRow];
-            
+                        
             if (dfm.data != nil && dataToBeJSONed != nil)
                 [dataToBeJSONed addObject:dfm.data];
             // else NOTHING IS WRONG!!!
@@ -509,6 +509,10 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                                        otherButtonTitles:@"Okay", nil];
             message.tag = MENU_LOGIN;
 			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+            [message textFieldAtIndex:0].tag = TAG_AUTO_LOGIN;
+            [message textFieldAtIndex:1].tag = TAG_AUTO_LOGIN;
+            [message textFieldAtIndex:0].delegate = self;
+            [message textFieldAtIndex:1].delegate = self;
             [message show];
             [message release];
             
@@ -842,6 +846,31 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"000066"]];
     [mainLogo setImage:[UIImage imageNamed:@"rsense_logo"]];
 
+}
+
+- (BOOL) containsAcceptedCharacters:(NSString *)mString {
+    NSCharacterSet *unwantedCharacters =
+    [[NSCharacterSet characterSetWithCharactersInString:
+      [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    
+    return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
+}
+
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    
+    switch (textField.tag) {
+            
+        case TAG_AUTO_LOGIN:
+            if (![self containsAcceptedCharacters:string])
+                return NO;
+            
+            return (newLength > 100) ? NO : YES;
+            
+        default:
+            return YES;
+    }
 }
 
 @end
