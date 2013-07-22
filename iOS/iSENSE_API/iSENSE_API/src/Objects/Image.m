@@ -1,6 +1,6 @@
 //
 //  Image.m
-//  isenseAPI
+//  iSENSE API
 //
 //  Created by John Fertitta on 2/28/11.
 //  Copyright 2011 UMass Lowell. All rights reserved.
