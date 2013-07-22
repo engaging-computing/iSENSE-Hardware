@@ -32,6 +32,10 @@
     saver->user = userName;
     saver->pass = passWord;
     
+    if (running) {
+        return;
+    }
+    
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPad"
@@ -62,19 +66,31 @@
     
 }
 
-// pre-iOS6 rotating options
+// Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+    // Overriden to allow any orientation.
+    return (running) ? NO : YES;
 }
 
-// iOS6 rotating options
+// iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    return YES;
+    return (running) ? NO : YES;
 }
 
-// iOS6 interface orientations
+// iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
+    if (running) {
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
+            return UIInterfaceOrientationMaskPortrait;
+        } else if (self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+            return UIInterfaceOrientationMaskPortraitUpsideDown;
+        } else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+            return UIInterfaceOrientationMaskLandscapeLeft;
+        } else {
+            return UIInterfaceOrientationMaskLandscapeRight;
+        }
+    } else
+        return UIInterfaceOrientationMaskAll;
 }
 
 
