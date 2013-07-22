@@ -54,7 +54,7 @@ public class API {
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
 				RProject proj = new RProject();
-				
+
 				proj.project_id = inner.getInt("id");
 				//proj.featured_media_id = inner.getInt("featuredMediaId");
 				proj.name = inner.getString("name");
@@ -65,7 +65,7 @@ public class API {
 				proj.timecreated = inner.getString("createdAt");
 				proj.owner_name = inner.getString("ownerName");
 				proj.owner_url = inner.getString("ownerUrl");
-				
+
 				result.add(proj);
 			}
 		} catch (JSONException e) {
@@ -74,8 +74,27 @@ public class API {
 		return result;
 	}
 	//Return one project
-	public String getProject(int projectId) {
-		return makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken, "GET");
+	public RProject getProject(int projectId) {
+		RProject proj = new RProject();
+		try {
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken, "GET");
+			JSONObject j = new JSONObject(reqResult);
+
+			proj.project_id = j.getInt("id");
+			//proj.featured_media_id = j.getInt("featuredMediaId");
+			proj.name = j.getString("name");
+			proj.url = j.getString("url");
+			proj.hidden = j.getBoolean("hidden");
+			proj.featured = j.getBoolean("featured");
+			proj.like_count = j.getInt("likeCount");
+			proj.timecreated = j.getString("createdAt");
+			proj.owner_name = j.getString("ownerName");
+			proj.owner_url = j.getString("ownerUrl");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return proj;
 	}
 
 	/*Authenticated function*/
