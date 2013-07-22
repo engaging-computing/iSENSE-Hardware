@@ -69,7 +69,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
-        NSLog(@"Current count = %d", dataSaver.count);
     }
     
     // Loading message appears while seting up main view
@@ -260,7 +259,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // Get the experiment
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
-            NSLog(@"my exp is: %d", expNum);
             
             // Get Field Order
             [dfm getFieldOrderOfExperiment:expNum];
@@ -343,8 +341,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         
         int dataPoints = (int) (1000 / ((float)recordingRate) * elapsedTime);
         
-        NSLog(@"points: %d", dataPoints);
-
         dispatch_async(dispatch_get_main_queue(), ^{
 			[step3Label setText:[NSString stringWithFormat:@"Time Elapsed: %d:%@\nData Point Count: %d", minutes, secondsStr, dataPoints]];
         });
@@ -380,7 +376,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // acceleration in meters per second squared
             if ([dfm enabledFieldAtIndex:fACCEL_X])
                 fieldsRow.accel_x = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665];
-            NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
             if ([dfm enabledFieldAtIndex:fACCEL_Y])
                 fieldsRow.accel_y = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665];
             if ([dfm enabledFieldAtIndex:fACCEL_Z])
@@ -613,7 +608,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
             [ds release];
-            NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
             
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });

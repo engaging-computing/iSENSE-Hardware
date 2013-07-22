@@ -25,8 +25,6 @@
 // Upload button control
 -(IBAction)upload:(id)sender {
     
-    NSLog(@"%@", dataSaver.dataQueue.description);
-    
     // Words n stuff
     if ([iapi isLoggedIn]) {
         
@@ -37,23 +35,34 @@
         [self.navigationController popViewControllerAnimated:YES];
         
     } else {
+        NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+        NSString *user = [prefs objectForKey:[StringGrabber grabString:@"key_username"]];
+        NSString *pass = [prefs objectForKey:[StringGrabber grabString:@"key_password"]];
+        
         if ([iapi isConnectedToInternet]) {
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login"
-                                                 message:nil
-                                                delegate:self
-                                       cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
-            message.tag = QUEUE_LOGIN;
-			[message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-            [message show];
-            [message release];
+            
+            if (user == nil || pass == nil) {
+                
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login"
+                                                                  message:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                        otherButtonTitles:@"Okay", nil];
+                message.tag = QUEUE_LOGIN;
+                [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+                [message show];
+                [message release];
+            } else {
+                [self loginAndUploadWithUsername:user withPassword:pass];
+            }
+            
         } else {
-           
+            
             [self.navigationController popViewControllerAnimated:YES];
-
+            
         }
     }
-
+    
 }
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -91,7 +100,7 @@
     
     // Autorotate
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-
+    
 }
 
 // Do any additional setup after loading the view.
@@ -109,7 +118,7 @@
     }
     
     currentIndex = 0;
-
+    
     // add long press gesture listener to the table
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
                                           initWithTarget:self action:@selector(handleLongPressOnTableCell:)];
@@ -117,7 +126,7 @@
     lpgr.delegate = self;
     [self.mTableView addGestureRecognizer:lpgr];
     [lpgr release];
-
+    
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
     mTableView.backgroundView = nil; // TODO frogs?
@@ -132,11 +141,8 @@
         if (indexPath != nil) {
             
             lastClickedCellIndex = [indexPath copy];
-            NSLog(@"stuff stuff: %@", lastClickedCellIndex);
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
-                
-                NSLog(@"long press on table view at row %d", indexPath.row);
                 
                 if (![cell dataSetHasInitialExperiment]) {
                     UIActionSheet *popupQuery = [[UIActionSheet alloc]
@@ -168,10 +174,10 @@
     
     UIAlertView *message;
     QueueCell *cell;
-
+    
 	switch (buttonIndex) {
         case QUEUE_DELETE:
-
+            
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [dataSaver removeDataSet:[cell getKey]];
             [self.mTableView reloadData];
@@ -181,10 +187,10 @@
             
         case QUEUE_RENAME:
             message = [[UIAlertView alloc] initWithTitle:@"Enter new session name:"
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Okay", nil];
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
             
             message.tag = QUEUE_RENAME;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -242,7 +248,7 @@
         if (buttonIndex != OPTION_CANCELED) {
             NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
-            [self login:usernameInput withPassword:passwordInput];
+            [self loginAndUploadWithUsername:usernameInput withPassword:passwordInput];
         }
     } else if (actionSheet.tag == QUEUE_RENAME) {
         
@@ -311,7 +317,7 @@
     } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
-                        
+            
             NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setExpNum:expNumString];
@@ -384,15 +390,13 @@
         [tmpVC release];
     }
     
-    NSArray *keys = [dataSaver.dataQueue allKeys];  
+    NSArray *keys = [dataSaver.dataQueue allKeys];
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
-    NSLog(@"DataSet data: %@", tmp.data);// @Mike
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
         browsing = false;
         NSString *expNumString = [NSString stringWithFormat:@"%d", expNum];
-        NSLog(@"new exp from browsing is: %@", expNumString);
         if (expNum != 0)
             [cell setExpNum:expNumString];
     }
@@ -400,8 +404,9 @@
     return cell;
 }
 
-// Log you into to iSENSE using the iSENSE API
-- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+// Log you into to iSENSE using the iSENSE API and uploads data
+- (void) loginAndUploadWithUsername:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
     [message show];
@@ -437,7 +442,7 @@
             }
             
             [self.navigationController popViewControllerAnimated:YES];
-
+            
         });
     });
     
