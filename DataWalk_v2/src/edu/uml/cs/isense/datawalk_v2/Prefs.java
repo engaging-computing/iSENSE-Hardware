@@ -8,13 +8,14 @@ import android.preference.CheckBoxPreference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.waffle.Waffle;
 
 
 public class Prefs extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	public static CheckBoxPreference uploadModeBox;
-	
+	Waffle w;
 
 
 	public static final int EXPERIMENT_REQUESTED = 9000;
@@ -27,17 +28,19 @@ public class Prefs extends PreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		uploadModeBox = (CheckBoxPreference) getPreferenceScreen().findPreference("UploadMode");
-		if(DataWalk.umbChecked==true){
-			uploadModeBox.setChecked(true);
-			uploadModeBox.setEnabled(false);
-		}else{
-			uploadModeBox.setChecked(false);
-			uploadModeBox.setEnabled(false);
-		}
 		
 		this.setTitle("Collection Mode");
+		if(DataWalk.umbChecked==true){
+			      uploadModeBox.setChecked(true);
+			      uploadModeBox.setEnabled(false);
+		}else{
+			      uploadModeBox.setChecked(false);
+			      uploadModeBox.setEnabled(false);
+		}if (!uploadModeBox.isChecked()){
+			Log.d("tag", "Rajia u just decided to turn save mode on(:");
+		}
 		
-		
+		//Create a boolean saveModeBox we cannot change 
 		
 	}//ends onCreate
 
