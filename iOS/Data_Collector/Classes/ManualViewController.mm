@@ -1202,5 +1202,34 @@
     }
 }
 
+// Called to start the camera app
+- (BOOL)startCameraControllerFromViewController:(UIViewController*)controller usingDelegate:(id <UIImagePickerControllerDelegate, UINavigationControllerDelegate>) delegate {
+    
+    if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO) || (delegate == nil) || (controller == nil))
+        return NO;
+    
+    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
+    cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
+    
+    // Displays a control that allows the user to choose picture or
+    // movie capture, if both are available:
+    cameraUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    
+    // Hides the controls for moving & scaling pictures, or for
+    // trimming movies. To instead show the controls, use YES.
+    cameraUI.allowsEditing = NO;
+    cameraUI.delegate = delegate;
+    
+    [controller presentModalViewController:cameraUI animated:YES];
+    
+    return YES;
+}
+
+// Performs the action for the Camera Button in the main UI
+- (IBAction) showCameraUI {
+    if ([self startCameraControllerFromViewController:self usingDelegate:self]) NSLog(@"Camera True");
+    else NSLog(@"No Camera!");
+}
+
 
 @end
