@@ -11,28 +11,28 @@
 
 @interface Fields : NSObject {}
 
-@property (assign) NSNumber *accel_x;
-@property (assign) NSNumber *accel_y;
-@property (assign) NSNumber *accel_z;
-@property (assign) NSNumber *accel_total;
-@property (assign) NSNumber *temperature_c;
-@property (assign) NSNumber *temperature_f;
-@property (assign) NSNumber *temperature_k;
-@property (assign) NSNumber *time_millis;
-@property (assign) NSNumber *lux;
-@property (assign) NSNumber *angle_deg;
-@property (assign) NSNumber *angle_rad;
-@property (assign) NSNumber *latitude;
-@property (assign) NSNumber *longitude;
-@property (assign) NSNumber *mag_x;
-@property (assign) NSNumber *mag_y;
-@property (assign) NSNumber *mag_z;
-@property (assign) NSNumber *mag_total;
-@property (assign) NSNumber *altitude;
-@property (assign) NSNumber *pressure;
-@property (assign) NSNumber *gyro_x;
-@property (assign) NSNumber *gyro_y;
-@property (assign) NSNumber *gyro_z;
+@property (retain) NSNumber *accel_x;
+@property (retain) NSNumber *accel_y;
+@property (retain) NSNumber *accel_z;
+@property (retain) NSNumber *accel_total;
+@property (retain) NSNumber *temperature_c;
+@property (retain) NSNumber *temperature_f;
+@property (retain) NSNumber *temperature_k;
+@property (retain) NSNumber *time_millis;
+@property (retain) NSNumber *lux;
+@property (retain) NSNumber *angle_deg; // TODO doesn't recognize field if it's called "angle-degrees"
+@property (retain) NSNumber *angle_rad; // TODO see above
+@property (retain) NSNumber *latitude;
+@property (retain) NSNumber *longitude;
+@property (retain) NSNumber *mag_x;
+@property (retain) NSNumber *mag_y;
+@property (retain) NSNumber *mag_z;
+@property (retain) NSNumber *mag_total;
+@property (retain) NSNumber *altitude;
+@property (retain) NSNumber *pressure;  // TODO doesn't recognize "pressure"
+@property (retain) NSNumber *gyro_x;
+@property (retain) NSNumber *gyro_y;
+@property (retain) NSNumber *gyro_z;
 
 // Fields constants
 #define fACCEL_X        0
