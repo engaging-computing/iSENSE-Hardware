@@ -25,8 +25,6 @@
 // Upload button control
 -(IBAction)upload:(id)sender {
     
-    NSLog(@"%@", dataSaver.dataQueue.description);
-    
     // Words n stuff
     if ([iapi isLoggedIn]) {
         
@@ -143,11 +141,8 @@
         if (indexPath != nil) {
             
             lastClickedCellIndex = [indexPath copy];
-            NSLog(@"stuff stuff: %@", lastClickedCellIndex);
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
-                
-                NSLog(@"long press on table view at row %d", indexPath.row);
                 
                 if (![cell dataSetHasInitialExperiment]) {
                     UIActionSheet *popupQuery = [[UIActionSheet alloc]
@@ -397,13 +392,11 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];
     DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
-    NSLog(@"DataSet data: %@", tmp.data);// @Mike
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
         browsing = false;
         NSString *expNumString = [NSString stringWithFormat:@"%d", expNum];
-        NSLog(@"new exp from browsing is: %@", expNumString);
         if (expNum != 0)
             [cell setExpNum:expNumString];
     }
