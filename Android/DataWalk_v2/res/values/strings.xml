@@ -31,6 +31,7 @@
 	<string name="Upload">Upload</string>
 	<string name="Back">Back</string>
 	<string name="iSenseQstion">Would you like to view your data on the iSENSE website?</string>
+	<string name="noUploadText">You will not be able to upload the saved data until you are connected to the internet.</string>
 	<string name="InternetMsg">Could not connect to the internet through either wifi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
 	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
 	<string name="No">No</string>
