@@ -20,6 +20,7 @@
 - (void) setEnabledField:(bool)value atIndex:(int)index;
 - (bool) enabledFieldAtIndex:(int)index;
 - (void) addAllFieldsToOrder;
+- (id) reOrderData:(id)oldData forExperimentID:(int)eid;
 
 @property (nonatomic, retain) NSMutableArray *order;
 @property (nonatomic, retain) NSMutableArray *data;
