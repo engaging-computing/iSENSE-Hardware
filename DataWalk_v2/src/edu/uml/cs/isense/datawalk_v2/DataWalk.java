@@ -59,6 +59,8 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener {
 	public static TextView loggedInAs;
+	public static Boolean inApp = false;
+	public static Boolean umbChecked = true; 
 	public static Boolean running = false;
 	public DataFieldManager dfm;
 	public Fields f;
@@ -242,9 +244,16 @@ public class DataWalk extends Activity implements LocationListener,
 					}
 
 				} else {
+					//TODO
+					//THIS ALLOWS THE START BUTTON TO CONTINUOUSLY CALL THE NAME ACTIVITY IF SOMEONE DID NOT ENTER A NAME!!!!
 					if(!setupDone){
-						startActivityForResult(new Intent(mContext,EnterNameActivity.class), resultGotName);
-						return false;
+						if (firstName.equals("") || lastInitial.equals("")) {
+							startActivityForResult(new Intent(mContext,EnterNameActivity.class), resultGotName);
+							w.make("You must enter your name before starting to record data.",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
+							setupDone=true;
+							return false;
+						}
+						
 					}
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -300,11 +309,12 @@ public class DataWalk extends Activity implements LocationListener,
 							});
 							if (!rapi.isConnectedToInternet())
 								uploadPoint = false;
-							else if (uploadMode)
+							
+							else if (uploadMode){
 								uploadPoint = true;
-							else
+							}else{
 								savePoint = true;
-
+							}
 							if ((i % (mInterval / 1000)) == 0 && i != 0) {
 								Log.d("tag", "saving point");
 								JSONArray dataJSON = new JSONArray();
@@ -334,7 +344,7 @@ public class DataWalk extends Activity implements LocationListener,
 									e.printStackTrace();
 								}
 								if (savePoint) {
-									// TODO PUT A SESSION NAME
+									umbChecked = false;
 									DataSet ds = new DataSet(
 											DataSet.Type.DATA,
 											"",
@@ -350,7 +360,7 @@ public class DataWalk extends Activity implements LocationListener,
 													Waffle.IMAGE_CHECK);
 										}
 									});
-									Prefs.uploadModeBox.setChecked(false);
+									
 								}
 
 								if ((i % 10) == 0 && i > 9) {
@@ -390,15 +400,16 @@ public class DataWalk extends Activity implements LocationListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		attemptLogin();
-		// TODO
-		if (savedInstanceState == null) {
+		
+		if (savedInstanceState == null && rapi.isConnectedToInternet()) {
 			if (firstName.equals("") || lastInitial.equals("")) {
 				startActivityForResult(new Intent(mContext,
 						EnterNameActivity.class), resultGotName);
 
 			}
 		}
-
+		
+		
 	}
 
 	@Override
@@ -449,10 +460,8 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onResume() {
 		super.onResume();
 
-		uploadMode = PreferenceManager.getDefaultSharedPreferences(this)
-				.getBoolean("UploadMode", true);
-		mInterval = Integer.parseInt(PreferenceManager
-				.getDefaultSharedPreferences(this).getString("Data UploadRate",
+		uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
+		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate",
 						"10000"));
 
 		Log.d("tag", "this is name" + firstName + lastInitial);
@@ -483,6 +492,8 @@ public class DataWalk extends Activity implements LocationListener,
 		rateBox.setText("Data is Recorded Every: " + mInterval / 1000
 				+ " seconds");
 		Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
+		
+		
 	}
 
 	@Override
@@ -778,10 +789,13 @@ public class DataWalk extends Activity implements LocationListener,
 
 			} else {
 				savePoint = true;
+				umbChecked = false;
 				w.make("You Have Choosen to Turn Save Mode On!",
 						Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				startActivityForResult(new Intent(mContext,EnterNameActivity.class), resultGotName);
 				Log.d("Tag",
 						"Rajia you have indicated that you want to turn save mode on!!!!!");
+				
 			}
 
 		}// ends resultCode = dialog_no_connect
@@ -789,10 +803,14 @@ public class DataWalk extends Activity implements LocationListener,
 			uq.buildQueueFromFile();
 		} else if (requestCode == resultGotName) {
 			if (resultCode == RESULT_OK) {
-
+				if(!inApp)
+					inApp=true;
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
 						+ "sor" + " Name: " + firstName + " " + lastInitial);
+			}else{
+				if(!inApp)
+					finish();
 			}
 		} else if (requestCode == RESET_REQUESTED) {
 
@@ -804,15 +822,16 @@ public class DataWalk extends Activity implements LocationListener,
 				loginPass = "sor";
 				firstName = " ";
 				lastInitial = "";
-				
 				experimentId = defaultExp;
-				
+				if (rapi.isConnectedToInternet())
+				umbChecked = true;
 				SharedPreferences prefs = getSharedPreferences("EID", 0);
 				SharedPreferences.Editor mEdit = prefs.edit();
 				mEdit.putString("experiment_id", defaultExp);
 				mEdit.commit();
+				w.make("Settings have been reset to Default",Waffle.LENGTH_SHORT,Waffle.IMAGE_CHECK);
+				startActivityForResult(new Intent(mContext,EnterNameActivity.class), resultGotName);
 				
-				Prefs.uploadModeBox.setChecked(true);
 			}
 		} else if (requestCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -885,6 +904,10 @@ public class DataWalk extends Activity implements LocationListener,
 		switch (item.getItemId()) {
 		case R.id.Settings:
 			startActivity(new Intent(this, Prefs.class));
+			if(!umbChecked)
+			w.make("The app will remain in Save Mode untill connected to the internet.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
+			if(umbChecked)
+			w.make("Data will  automatically be uploaded to iSENSE!", Waffle.LENGTH_LONG);
 			return true;
 		case R.id.Upload:
 			manageUploadQueue();
@@ -899,17 +922,15 @@ public class DataWalk extends Activity implements LocationListener,
 					LOGIN_STATUS_REQUESTED);
 			return true;
 		case R.id.NameChange:
-			// TODO
 			startActivityForResult(new Intent(this, EnterNameActivity.class),
 					resultGotName);
 			Log.d("tag", "you clicked on NameChange");
 			return true;
 		case R.id.DataUploadRate:
-			// TODO
+			startActivity(new Intent(this, PrefsTwo.class));
 			Log.d("tag", "you clicked on Change Recording Rate");
 			return true;
 		case R.id.ExpNum:
-			// TODO
 			Intent setup = new Intent(this, Setup.class);
 			startActivityForResult(setup, EXPERIMENT_REQUESTED);
 			Log.d("tag", "you clicked on Change Exp Num");

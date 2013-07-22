@@ -33,36 +33,47 @@
         <activity
             android:name=".datawalk_v2.LoginActivity"
             android:label="@string/get_name"
-            android:theme="@android:style/Theme.Dialog" >
+           	android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".datawalk_v2.Prefs"
-            android:label="Settings" >
+            android:label="Settings"
+            >
+        </activity>
+        <activity
+            android:name=".datawalk_v2.PrefsTwo"
+            android:label="SettingsTwo"
+             >
         </activity>
          <activity
             android:name=".datawalk_v2.EnterNameActivity"
-            android:theme="@android:style/Theme.Dialog"
-            android:label="Name Activity" >
+            android:label="Name Activity"
+            android:theme="@style/theme_dialog_white" >
         </activity>
          <activity
             android:name=".datawalk_v2.About"
-            android:label="About" >
+            android:label="About" 
+            android:theme="@style/theme_dialog_white">
         </activity>
         <activity
             android:name=".datawalk_v2.LoginIsense"
-            android:label="Login to Isense" >
+            android:label="Login to Isense" 
+            android:theme="@style/theme_dialog_white">
         </activity>
           <activity
             android:name=".datawalk_v2.Reset"
-            android:label="Reset Settings" >
+            android:label="Reset Settings"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".datawalk_v2.dialogs.NoGps"
-            android:label="No Gps Satellites found" >
+            android:label="No Gps Satellites found" 
+            android:theme="@style/theme_dialog_white">
         </activity>
         <activity
             android:name=".datawalk_v2.dialogs.ViewData"
-            android:label="View Data" >
+            android:label="View Data"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".datawalk_v2.dialogs.ForceStop"
@@ -74,7 +85,8 @@
         </activity>
         <activity
             android:name=".datawalk_v2.dialogs.NoConnect"
-            android:label="No Connectivity" >
+            android:label="No Connectivity" 
+            android:theme="@style/theme_dialog_white">
         </activity>
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
