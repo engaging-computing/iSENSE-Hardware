@@ -14,6 +14,11 @@
 #define DEV_DEFAULT_EXP 596
 #define PROD_DEFAULT_EXP 409
 
+#define FIRST_NAME_FIELD 9001
+#define LAST_NAME_FIELD 9002
+#define LOGIN_USER 9003
+#define LOGIN_PASS 9004
+
 @interface ViewController ()
 
 - (IBAction)showMenu:(id)sender;
@@ -22,7 +27,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -170,7 +175,7 @@
     
     [image setAutoresizesSubviews:YES];
     
- 
+    
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -183,6 +188,9 @@
         UITextField *last = [change_name textFieldAtIndex:1];
         [last setSecureTextEntry:NO];
         [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        UITextField *first = [change_name textFieldAtIndex:0];
+        first.delegate = self;
+        first.tag = FIRST_NAME_FIELD;
         last.placeholder = @"Last Initial";
         last.delegate = self;
         [change_name show];
@@ -608,8 +616,12 @@
     void (^loginBlock)() = ^() {
         NSLog(@"Login button pressed");
         
-        UIAlertView *loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
         [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+        [loginalert textFieldAtIndex:0].delegate = self;
+        [loginalert textFieldAtIndex:1].delegate = self;
+        [loginalert textFieldAtIndex:0].tag = LOGIN_USER;
+        [loginalert textFieldAtIndex:1].tag = LOGIN_PASS;
         [loginalert show];
     };
     void (^aboutBlock)() = ^() {
@@ -672,12 +684,15 @@
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alert show];
     } else if (buttonIndex == 2){
-        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Namel" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
         
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
         [last setSecureTextEntry:NO];
         [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        UITextField *first = [change_name textFieldAtIndex:0];
+        first.tag = FIRST_NAME_FIELD;
+        first.delegate = self;
         last.placeholder = @"Last Initial";
         last.delegate = self;
         [change_name show];
@@ -688,8 +703,21 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSLog(@"Hello");
+#define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];    
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
-    return (newLength > 1) ? NO : YES;
+    if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
+        if (textField.tag == FIRST_NAME_FIELD || textField.tag == LOGIN_USER || textField.tag == LOGIN_PASS) {
+            return (newLength > 20) ? NO : YES;
+        } else {
+            return (newLength > 1) ? NO : YES;
+        }
+    } else {
+        return NO;
+    }
+
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -759,6 +787,9 @@
             UITextField *last = [change_name textFieldAtIndex:1];
             [last setSecureTextEntry:NO];
             [change_name textFieldAtIndex:0].placeholder = @"First Name";
+            UITextField *first = [change_name textFieldAtIndex:0];
+            first.delegate = self;
+            first.tag = FIRST_NAME_FIELD;
             last.placeholder = @"Last Initial";
             last.delegate = self;
             [change_name show];
