@@ -15,7 +15,7 @@
 #import "Data_CollectorAppDelegate.h"
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
-#import "DataFieldManager.h"
+#import <iSENSE_API/DataFieldManager.h>
 #import "Data_CollectorAppDelegate.h"
 #import "StepOneSetup.h"
 
@@ -53,6 +53,7 @@
 @property (nonatomic, assign) NSTimer *recordDataTimer;
 @property (nonatomic, assign) CMMotionManager *motionManager;
 @property (nonatomic, assign) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, assign) NSMutableArray *dataToBeOrdered;
 @property (nonatomic, assign) int expNum;
 @property (nonatomic, assign) CLLocationManager *locationManager;
 @property (nonatomic, assign) DataFieldManager *dfm;

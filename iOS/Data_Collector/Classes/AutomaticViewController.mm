@@ -12,7 +12,7 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
-sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate;
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate, dataToBeOrdered;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -69,7 +69,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
-        NSLog(@"Current count = %d", dataSaver.count);
     }
     
     // Loading message appears while seting up main view
@@ -260,7 +259,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // Get the experiment
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
-            NSLog(@"my exp is: %d", expNum);
             
             // Get Field Order
             [dfm getFieldOrderOfExperiment:expNum];
@@ -312,7 +310,8 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
     
     // New JSON array to hold data
-    dataToBeJSONed = [[NSMutableArray alloc] init];
+    //dataToBeJSONed = [[NSMutableArray alloc] init];
+    dataToBeOrdered = [[NSMutableArray alloc] init];
     
     // Start the new timers TODO - put them on dispatch?
     recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
@@ -342,8 +341,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         
         int dataPoints = (int) (1000 / ((float)recordingRate) * elapsedTime);
         
-        NSLog(@"points: %d", dataPoints);
-
         dispatch_async(dispatch_get_main_queue(), ^{
 			[step3Label setText:[NSString stringWithFormat:@"Time Elapsed: %d:%@\nData Point Count: %d", minutes, secondsStr, dataPoints]];
         });
@@ -352,7 +349,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 }
 
 
-// Fill dataToBeJSONed with a row of data
+// Fill dataToBeOrdered with a row of data
 - (void) buildRowOfData {
     
     if (!isRecording || recordDataTimer == nil) {
@@ -366,66 +363,72 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         dispatch_queue_t queue = dispatch_queue_create("automatic_record_data", NULL);
         dispatch_async(queue, ^{
             
-            Fields *fieldsRow = [[Fields alloc] autorelease];
+            double time2 = [[NSDate date] timeIntervalSince1970];
+            
+            Fields *fieldsRow = [[Fields alloc] init];
             
             // Fill a new row of data starting with time
             double time = [[NSDate date] timeIntervalSince1970];
             if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
-                fieldsRow.time_millis = [[[NSNumber alloc] initWithDouble:time * 1000] autorelease];
+                fieldsRow.time_millis = [NSNumber numberWithDouble:time * 1000];
             
             
             // acceleration in meters per second squared
             if ([dfm enabledFieldAtIndex:fACCEL_X])
-                fieldsRow.accel_x = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665] autorelease];
-            NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
+                fieldsRow.accel_x = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665];
             if ([dfm enabledFieldAtIndex:fACCEL_Y])
-                fieldsRow.accel_y = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665] autorelease];
+                fieldsRow.accel_y = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665];
             if ([dfm enabledFieldAtIndex:fACCEL_Z])
-                fieldsRow.accel_z = [[[NSNumber alloc] initWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665] autorelease];
+                fieldsRow.accel_z = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665];
             if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
-                fieldsRow.accel_total = [[[NSNumber alloc] initWithDouble:
+                fieldsRow.accel_total = [NSNumber numberWithDouble:
                                           sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
                                                + pow(fieldsRow.accel_y.doubleValue, 2)
-                                               + pow(fieldsRow.accel_z.doubleValue, 2))] autorelease];
+                                               + pow(fieldsRow.accel_z.doubleValue, 2))];
             
             // latitude and longitude coordinates
             CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
             double latitude  = lc2d.latitude;
             double longitude = lc2d.longitude;
             if ([dfm enabledFieldAtIndex:fLATITUDE])
-                fieldsRow.latitude = [[[NSNumber alloc] initWithDouble:latitude] autorelease];
+                fieldsRow.latitude = [NSNumber numberWithDouble:latitude];
             if ([dfm enabledFieldAtIndex:fLONGITUDE])
-                fieldsRow.longitude = [[[NSNumber alloc] initWithDouble:longitude] autorelease];
+                fieldsRow.longitude = [NSNumber numberWithDouble:longitude];
             
             // magnetic field in microTesla
             if ([dfm enabledFieldAtIndex:fMAG_X])
-                fieldsRow.mag_x = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].x] autorelease];
+                fieldsRow.mag_x = [NSNumber numberWithDouble:[motionManager.magnetometerData magneticField].x];
             if ([dfm enabledFieldAtIndex:fMAG_Y])
-                fieldsRow.mag_y = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].y] autorelease];
+                fieldsRow.mag_y = [NSNumber numberWithDouble:[motionManager.magnetometerData magneticField].y];
             if ([dfm enabledFieldAtIndex:fMAG_Z])
-                fieldsRow.mag_z = [[[NSNumber alloc] initWithDouble:[motionManager.magnetometerData magneticField].z] autorelease];
+                fieldsRow.mag_z = [NSNumber numberWithDouble:[motionManager.magnetometerData magneticField].z];
             if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
-                fieldsRow.mag_total = [[[NSNumber alloc] initWithDouble:
+                fieldsRow.mag_total = [NSNumber numberWithDouble:
                                         sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
                                              + pow(fieldsRow.mag_y.doubleValue, 2)
-                                             + pow(fieldsRow.mag_z.doubleValue, 2))] autorelease];
+                                             + pow(fieldsRow.mag_z.doubleValue, 2))];
             
             // rotation rate in radians per second
             if (motionManager.gyroAvailable) {
                 if ([dfm enabledFieldAtIndex:fGYRO_X])
-                    fieldsRow.gyro_x = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].x] autorelease];
+                    fieldsRow.gyro_x = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].x];
                 if ([dfm enabledFieldAtIndex:fGYRO_Y])
-                    fieldsRow.gyro_y = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].y] autorelease];
+                    fieldsRow.gyro_y = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].y];
                 if ([dfm enabledFieldAtIndex:fGYRO_Z])
-                    fieldsRow.gyro_z = [[[NSNumber alloc] initWithDouble:[motionManager.gyroData rotationRate].z] autorelease];
+                    fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].z];
             }
             
             // update parent JSON object
-            [dfm orderDataFromFields:fieldsRow];
+            //[dfm orderDataFromFields:fieldsRow];
             
-            if (dfm.data != nil && dataToBeJSONed != nil)
-                [dataToBeJSONed addObject:dfm.data];
+            if (dataToBeOrdered != nil) {
+                [dataToBeOrdered addObject:fieldsRow];
+            }
             // else NOTHING IS WRONG!!!
+            
+            [fieldsRow release];
+            double time3 = [[NSDate date] timeIntervalSince1970];
+            NSLog(@"Recording took %lf ms", (1000 *(time3 - time2)));
             
         });
     }
@@ -563,31 +566,53 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
     
-    bool uploadable = false;
-    if (expNum > 1) uploadable = true;
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
+    [message show];
     
-    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-    [ds setName:sessionName];
-    [ds setParentName:PARENT_AUTOMATIC];
-    [ds setDataDescription:description];
-    [ds setEid:[NSNumber numberWithInt:expNum]];
-    [ds setData:dataToBeJSONed];
-    [ds setPicturePaths:nil];
-    [ds setSid:[NSNumber numberWithInt:-1]];
-    [ds setCity:city];
-    [ds setCountry:country];
-    [ds setAddress:address];
-    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]]; // this line crashes in simulator
-    
-    // Add the new data set to the queue
-    [dataSaver addDataSet:ds];
-    [ds release];
-    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
+    dispatch_async(queue, ^{
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+        
+        bool uploadable = false;
+        if (expNum > 1) uploadable = true;
+        
+        DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+        
+        dataToBeJSONed = [[NSMutableArray alloc] init];
+        
+        // Organize the data from dataToBeOrdered
+        for (int i = 0; i < [dataToBeOrdered count]; i++) {
+            Fields *f = [dataToBeOrdered objectAtIndex:i];
+            [dfm orderDataFromFields:f];
+            [dataToBeJSONed addObject:dfm.data];
+        }
 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [ds setName:sessionName];
+            [ds setParentName:PARENT_AUTOMATIC];
+            [ds setDataDescription:description];
+            [ds setEid:[NSNumber numberWithInt:expNum]];
+            [ds setData:dataToBeJSONed];
+            [ds setPicturePaths:nil];
+            [ds setSid:[NSNumber numberWithInt:-1]];
+            [ds setCity:city];
+            [ds setCountry:country];
+            [ds setAddress:address];
+            [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+            [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]]; // this line crashes in simulator
+            
+            // Add the new data set to the queue
+            [dataSaver addDataSet:ds];
+            [ds release];
+            
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+        });
+    });
+    
 }
 
 // Finds the associated address from a GPS location.
@@ -667,7 +692,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 
 - (void) setupDFMWithAllFields {
     
-    [dfm addAllFieldsToOrder];
+    //[dfm addAllFieldsToOrder];
     
     for (int i = 0; i < [[dfm order] count]; i++) {
         [dfm setEnabledField:true atIndex:i];
@@ -677,19 +702,15 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 // Enabled fields check
 - (void) getEnabledFields {
     
-    // if exp# = -1 then enable all fields, else enable some based on compatability and sensor selection array
     if (expNum == -1) {
-        
         [self setupDFMWithAllFields];
-        
     } else {
-        
         int i = 0;
         
         // get the sensorCompatability array first
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
-
+        
         for (NSString *s in [dfm order]) {
             if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
                 if ([selectedCells[i] integerValue] == 1) {
@@ -805,7 +826,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             
             ++i;
         }
+  
     }
+        
 }
 
 - (void) setRecordingLayout {

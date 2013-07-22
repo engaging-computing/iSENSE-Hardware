@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="5dip"
-        android:text="@string/firstNameLabel" />
+        android:text="@string/firstNameLabel"/>
 
     <EditText
         android:id="@+id/nameInput"

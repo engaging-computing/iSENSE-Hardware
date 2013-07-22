@@ -90,7 +90,7 @@
     if (self) {
         label = [[MarqueeLabel alloc] initWithFrame:CGRectMake(kMarkCell, .0, self.frame.size.width - kMarkCell, self.frame.size.height)];
         label.textColor = [UIColor blackColor];
-        label.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
+        label.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         label.textAlignment = UITextAlignmentLeft;
         label.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:label];
