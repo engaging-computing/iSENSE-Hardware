@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.rsensetest;
+package edu.uml.cs.isense.comm;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,6 +27,7 @@ public class API {
 	public boolean createSession(String username, String password) {
 		String result = makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST");
 		try {
+			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
 			authToken = j.getString("authenticity_token");
 			if( j.getString("status").equals("success")) {

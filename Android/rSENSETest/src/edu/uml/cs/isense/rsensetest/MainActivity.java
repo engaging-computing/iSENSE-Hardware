@@ -1,17 +1,6 @@
 package edu.uml.cs.isense.rsensetest;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import java.net.CookiePolicy;
-import org.json.JSONObject;
-
+import edu.uml.cs.isense.comm.API;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
