@@ -1227,8 +1227,8 @@
 
 // Performs the action for the Camera Button in the main UI
 - (IBAction) showCameraUI {
-    if ([self startCameraControllerFromViewController:self usingDelegate:self]) NSLog(@"Wrong");
-    else { NSLog(@"Correct!"); };
+    if ([self startCameraControllerFromViewController:self usingDelegate:self]) NSLog(@"Camera True");
+    else NSLog(@"No Camera!");
 }
 
 
