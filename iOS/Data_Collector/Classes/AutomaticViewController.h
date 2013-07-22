@@ -15,7 +15,7 @@
 #import "Data_CollectorAppDelegate.h"
 #import "ExperimentBrowseViewController.h"
 #import "Constants.h"
-#import "DataFieldManager.h"
+#import <iSENSE_API/DataFieldManager.h>
 #import "Data_CollectorAppDelegate.h"
 #import "StepOneSetup.h"
 
