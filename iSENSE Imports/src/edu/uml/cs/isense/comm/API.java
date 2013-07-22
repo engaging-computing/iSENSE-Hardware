@@ -9,9 +9,13 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import edu.uml.cs.isense.objects.RProject;
 
 public class API {
 	String baseURL = "http://129.63.17.17:3000";
@@ -42,8 +46,32 @@ public class API {
 	}
 
 	//Return many projects
-	public String getProjects() {
-		return makeRequest(baseURL, "projects", "authenticity_token="+authToken, "GET");
+	public ArrayList<RProject> getProjects() {
+		ArrayList<RProject> result = new ArrayList<RProject>();
+		try {
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+authToken, "GET");
+			JSONArray j = new JSONArray(reqResult);
+			for(int i = 0; i < j.length(); i++) {
+				JSONObject inner = j.getJSONObject(i);
+				RProject proj = new RProject();
+				
+				proj.project_id = inner.getInt("id");
+				//proj.featured_media_id = inner.getInt("featuredMediaId");
+				proj.name = inner.getString("name");
+				proj.url = inner.getString("url");
+				proj.hidden = inner.getBoolean("hidden");
+				proj.featured = inner.getBoolean("featured");
+				proj.like_count = inner.getInt("likeCount");
+				proj.timecreated = inner.getString("createdAt");
+				proj.owner_name = inner.getString("ownerName");
+				proj.owner_url = inner.getString("ownerUrl");
+				
+				result.add(proj);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	//Return one project
 	public String getProject(int projectId) {

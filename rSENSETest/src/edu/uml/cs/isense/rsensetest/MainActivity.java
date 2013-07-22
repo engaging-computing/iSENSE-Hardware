@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.rsensetest;
 
-import edu.uml.cs.isense.comm.API;
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RProject;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -81,15 +84,18 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class ProjectsTask extends AsyncTask<Void, Void, String> {
+	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
 		@Override
-		protected String doInBackground(Void... params) {
+		protected ArrayList<RProject> doInBackground(Void... params) {
 			return api.getProjects();
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-			status.setText(result);
+		protected void onPostExecute(ArrayList<RProject> projects) {
+			status.setText("Projects:\n");
+			for(RProject p : projects) {
+				status.append(p.name + "\n");
+			}
 		}
 	}
 	
