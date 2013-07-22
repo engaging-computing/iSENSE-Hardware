@@ -5,7 +5,8 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="25dp">
     
     <TextView 
         android:id="@+id/userNameTV"
@@ -46,12 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
-            android:id="@+id/loginB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:text="@string/login" />
 
         <Button
             android:id="@+id/cancelB"
@@ -59,6 +54,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="50"
             android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/loginB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="@string/login" />
 
     </LinearLayout>
     
