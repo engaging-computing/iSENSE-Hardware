@@ -21,7 +21,7 @@ typedef struct _RotationDataSaver {
     bool doesHaveData;
 } RotationDataSaver;
 
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
 	
 	// UI Elements
 	UIImageView  *logo;
@@ -47,6 +47,7 @@ typedef struct _RotationDataSaver {
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
+- (IBAction) showCameraUI;
 
 // Behavioral functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;

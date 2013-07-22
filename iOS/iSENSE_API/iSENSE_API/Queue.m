@@ -8,7 +8,6 @@
 
 #include "Queue.h"
 
-
 @implementation NSMutableDictionary (QueueAdditions)
 
 // Queues are first-in-first-out, so we remove objects from the head
