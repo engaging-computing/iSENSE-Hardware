@@ -1,5 +1,5 @@
 //
-//  StringGrabber.m
+//  FieldGrabber.m
 //  Data_Collector
 //
 //  Created by Mike Stowell on 12/28/12.

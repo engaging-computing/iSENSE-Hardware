@@ -1,6 +1,6 @@
 //
 //  Experiment.h
-//  isenseAPI
+//  iSENSE API
 //
 //  Created by James Dalphond on 2/23/11.
 //  copyright 2011 UMass Lowell. All rights reserved.

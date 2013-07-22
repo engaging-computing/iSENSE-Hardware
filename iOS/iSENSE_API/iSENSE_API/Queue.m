@@ -1,9 +1,10 @@
 //
-//  queue.m
-//  iSENSE_API
+//  Queue.m
+//  iSENSE API
 //
 //  Created by Jeremy Poulin on 4/26/13.
-//  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #include "Queue.h"

@@ -1,11 +1,11 @@
 //
 //  ExperimentField.h
-//  isenseAPI
+//  iSENSE API
 //
 //  Created by James Dalphond on 2/23/11.
 //  Copyright 2011 UMass Lowell. All rights reserved.
 //
-//  Modified by John Fertitta on 3/1/11.
+//  Modified by Mike Stowell on 12/05/12.
 //
 
 #import <Foundation/Foundation.h>

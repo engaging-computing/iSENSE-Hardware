@@ -1,9 +1,10 @@
 //
-//  SensorTypeEnum.h
-//  iSENSE_API
+//  SensorEnums.h
+//  iSENSE API
 //
-//  Created by Michael Stowell on 7/1/13.
-//  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
+//  Created by Mike Stowell on 7/1/13.
+//  Copyright 2013 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
 //
 
 #ifndef iSENSE_API_SensorTypeEnum_h
