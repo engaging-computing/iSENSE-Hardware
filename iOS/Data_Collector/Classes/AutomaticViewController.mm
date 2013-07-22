@@ -3,6 +3,7 @@
 //  iOS Data Collector
 //
 //  Created by Jeremy Poulin on 1/10/13.
+//  Modified by Mike Stowell on 7/22/13.
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
@@ -310,7 +311,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     if (motionManager.gyroAvailable) [motionManager startGyroUpdates];
     
     // New JSON array to hold data
-    //dataToBeJSONed = [[NSMutableArray alloc] init];
     dataToBeOrdered = [[NSMutableArray alloc] init];
     
     // Start the new timers TODO - put them on dispatch?
@@ -362,8 +362,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         
         dispatch_queue_t queue = dispatch_queue_create("automatic_record_data", NULL);
         dispatch_async(queue, ^{
-            
-            double time2 = [[NSDate date] timeIntervalSince1970];
             
             Fields *fieldsRow = [[Fields alloc] init];
             
@@ -418,17 +416,13 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                     fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].z];
             }
             
-            // update parent JSON object
-            //[dfm orderDataFromFields:fieldsRow];
-            
+            // update data object
             if (dataToBeOrdered != nil) {
                 [dataToBeOrdered addObject:fieldsRow];
             }
             // else NOTHING IS WRONG!!!
             
             [fieldsRow release];
-            double time3 = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"Recording took %lf ms", (1000 *(time3 - time2)));
             
         });
     }
@@ -465,12 +459,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     // Disable step 2
     step2.enabled = false;
     step2.alpha = 0.5;
-    
-    // Back to recording mode
-    //    startStopButton.image = [UIImage imageNamed:@"red_button.png"];
-    //    mainLogo.image = [UIImage imageNamed:@"logo_red.png"];
-    //    startStopLabel.text = [StringGrabber grabString:@"start_button_text"];
-    //    containerForMainButton updateImage:startStopButton];
     
     // Open up description dialog
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:[StringGrabber grabString:@"description_or_delete"]
@@ -579,7 +567,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         bool uploadable = false;
         if (expNum > 1) uploadable = true;
         
-        DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+        DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet"
+                                                                  inManagedObjectContext:managedObjectContext]
+                       insertIntoManagedObjectContext:managedObjectContext];
         
         dataToBeJSONed = [[NSMutableArray alloc] init];
         
@@ -603,7 +593,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [ds setCountry:country];
             [ds setAddress:address];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-            [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]]; // this line crashes in simulator
+            [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];
             
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
@@ -640,9 +630,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 
 // Reset address fields for next session
 - (void)resetAddressFields {
-    city = [[NSString alloc] initWithString:@"N/a"];
-    country = [[NSString alloc] initWithString:@"N/a"];
-    address = [[NSString alloc] initWithString:@"N/a"];
+    city = [[NSString alloc] initWithString:@"N/A"];
+    country = [[NSString alloc] initWithString:@"N/A"];
+    address = [[NSString alloc] initWithString:@"N/A"];
 }
 
 // This is for the loading spinner when the app starts automatic mode
@@ -691,8 +681,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 }
 
 - (void) setupDFMWithAllFields {
-    
-    //[dfm addAllFieldsToOrder];
     
     for (int i = 0; i < [[dfm order] count]; i++) {
         [dfm setEnabledField:true atIndex:i];

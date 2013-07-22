@@ -36,6 +36,13 @@
 		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
 		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
 		B712DE241796D17000A30CAC /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* DataSet.h */; };
+		B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */; };
+		B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */; };
+		B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB3179D8D1D00B891B0 /* Fields.h */; };
+		B73CFDB6179D8D1D00B891B0 /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB4179D8D1D00B891B0 /* Fields.m */; };
+		B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */; };
+		B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */; };
+		B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B73CFDBB179D8DE700B891B0 /* Fields.strings */; };
 		B7F09EF81794599100725483 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF51794599100725483 /* waffle_check.png */; };
 		B7F09EF91794599100725483 /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF61794599100725483 /* waffle_warn.png */; };
 		B7F09EFA1794599100725483 /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF71794599100725483 /* waffle_x.png */; };
@@ -92,6 +99,13 @@
 		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
 		B712DE211796D17000A30CAC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
 		B712DE221796D17000A30CAC /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = headers/DataSet.h; sourceTree = "<group>"; };
+		B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
+		B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
+		B73CFDB3179D8D1D00B891B0 /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
+		B73CFDB4179D8D1D00B891B0 /* Fields.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fields.m; sourceTree = "<group>"; };
+		B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldGrabber.h; sourceTree = "<group>"; };
+		B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldGrabber.m; sourceTree = "<group>"; };
+		B73CFDBB179D8DE700B891B0 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		B7F09EF51794599100725483 /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
 		B7F09EF61794599100725483 /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
 		B7F09EF71794599100725483 /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
@@ -219,10 +233,11 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
 				B7F09EF41794595700725483 /* waffle */,
-				B7F2D81C177B692200F9A58D /* sensor_compatibility */,
-				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
+				B7F2D81C177B692200F9A58D /* sensor_compatability */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
+				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
 				39FF261916DFA8760062C3DC /* src_api */,
 				39FF261016DFA86B0062C3DC /* api_headers */,
 				39FF25E616DFA28A0062C3DC /* Supporting Files */,
@@ -278,6 +293,20 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		B73CFDAE179D8CD700B891B0 /* data_field_manager */ = {
+			isa = PBXGroup;
+			children = (
+				B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */,
+				B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */,
+				B73CFDB3179D8D1D00B891B0 /* Fields.h */,
+				B73CFDB4179D8D1D00B891B0 /* Fields.m */,
+				B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */,
+				B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */,
+				B73CFDBB179D8DE700B891B0 /* Fields.strings */,
+			);
+			name = data_field_manager;
+			sourceTree = "<group>";
+		};
 		B7F09EF41794595700725483 /* waffle */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,14 +320,14 @@
 			name = waffle;
 			sourceTree = "<group>";
 		};
-		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
+		B7F2D81C177B692200F9A58D /* sensor_compatability */ = {
 			isa = PBXGroup;
 			children = (
 				B7034E491781F6EA00D6F0BA /* SensorEnums.h */,
 				B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */,
 				B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */,
 			);
-			name = sensor_compatibility;
+			name = sensor_compatability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,6 +350,9 @@
 				B7F09EFD1794599E00725483 /* Waffle.h in Headers */,
 				B712DE231796D17000A30CAC /* DataSaver.h in Headers */,
 				B712DE241796D17000A30CAC /* DataSet.h in Headers */,
+				B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */,
+				B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */,
+				B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +430,7 @@
 				B7F09EF81794599100725483 /* waffle_check.png in Resources */,
 				B7F09EF91794599100725483 /* waffle_warn.png in Resources */,
 				B7F09EFA1794599100725483 /* waffle_x.png in Resources */,
+				B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +463,9 @@
 				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
 				B7F09EFE1794599E00725483 /* Waffle.m in Sources */,
 				391DA0D81795B4AA0011B955 /* DataSet.m in Sources */,
+				B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */,
+				B73CFDB6179D8D1D00B891B0 /* Fields.m in Sources */,
+				B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
