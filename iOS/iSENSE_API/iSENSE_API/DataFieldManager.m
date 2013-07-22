@@ -8,6 +8,8 @@
 //
 
 #import "DataFieldManager.h"
+#import "iSENSE.h"
+#import "FieldGrabber.h"
 
 @implementation DataFieldManager
 
@@ -39,7 +41,7 @@
         return order;
     }
     
-    if (order) [order release];
+    if (order) order = nil;
     order = [[NSMutableArray alloc] init];
     
     iSENSE *iapi = [iSENSE getInstance];
@@ -51,13 +53,13 @@
                 // Temperature (1)
             case TEMPERATURE:
                 if (!([field.field_name.lowercaseString rangeOfString:@"f"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"temperature_f"]];
+                    [order addObject:[FieldGrabber grabField:@"temperature_f"]];
                 } else if (!([field.field_name.lowercaseString rangeOfString:@"c"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"temperature_c"]];
+                    [order addObject:[FieldGrabber grabField:@"temperature_c"]];
                 } else if (!([field.field_name.lowercaseString rangeOfString:@"k"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"temperature_k"]];
+                    [order addObject:[FieldGrabber grabField:@"temperature_k"]];
                 } else {
-                    [order addObject:[StringGrabber grabField:@"null_string"]];
+                    [order addObject:[FieldGrabber grabField:@"null_string"]];
                 }
                 break;
                 
@@ -65,43 +67,43 @@
             case LENGTH:
             case DISTANCE:
                 if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"altitude"]];
+                    [order addObject:[FieldGrabber grabField:@"altitude"]];
                 } else {
-                    [order addObject:[StringGrabber grabField:@"null_string"]];
+                    [order addObject:[FieldGrabber grabField:@"null_string"]];
                 }
                 break;
                 
                 // Time (7)
             case TIME:
-                [order addObject:[StringGrabber grabField:@"time"]];
+                [order addObject:[FieldGrabber grabField:@"time"]];
                 break;
                 
                 // Light (8, 9, 29)
             case LUMINOUS_FLUX:
             case LUMINOUS_INTENSITY:
             case LIGHT:
-                [order addObject:[StringGrabber grabField:@"luminous_flux"]];
+                [order addObject:[FieldGrabber grabField:@"luminous_flux"]];
                 break;
                 
                 // Angle (10)
             case ANGLE:
                 if (!([field.field_name.lowercaseString rangeOfString:@"deg"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"heading_deg"]];
+                    [order addObject:[FieldGrabber grabField:@"heading_deg"]];
                 } else if (!([field.field_name.lowercaseString rangeOfString:@"rad"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"heading_rad"]];
+                    [order addObject:[FieldGrabber grabField:@"heading_rad"]];
                 } else {
-                    [order addObject:[StringGrabber grabField:@"null_string"]];
+                    [order addObject:[FieldGrabber grabField:@"null_string"]];
                 }
                 break;
                 
                 // Geospacial (19)
             case GEOSPACIAL:
                 if (!([field.field_name.lowercaseString rangeOfString:@"lat"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"latitude"]];
+                    [order addObject:[FieldGrabber grabField:@"latitude"]];
                 } else if (!([field.field_name.lowercaseString rangeOfString:@"lon"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"longitude"]];
+                    [order addObject:[FieldGrabber grabField:@"longitude"]];
                 } else {
-                    [order addObject:[StringGrabber grabField:@"null_string"]];
+                    [order addObject:[FieldGrabber grabField:@"null_string"]];
                 }
                 break;
                 
@@ -110,28 +112,28 @@
             case CUSTOM:
                 if (!([field.field_name.lowercaseString rangeOfString:@"mag"].location == NSNotFound)) {
                     if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"magnetic_x"]];
+                        [order addObject:[FieldGrabber grabField:@"magnetic_x"]];
                     } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"magnetic_y"]];
+                        [order addObject:[FieldGrabber grabField:@"magnetic_y"]];
                     } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"magnetic_z"]];
+                        [order addObject:[FieldGrabber grabField:@"magnetic_z"]];
                     } else {
-                        [order addObject:[StringGrabber grabField:@"magnetic_total"]];
+                        [order addObject:[FieldGrabber grabField:@"magnetic_total"]];
                     }
                 } else if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
-                    [order addObject:[StringGrabber grabField:@"altitude"]];
+                    [order addObject:[FieldGrabber grabField:@"altitude"]];
                 } else if (!([field.field_name.lowercaseString rangeOfString:@"gyro"].location == NSNotFound)
                            || !([field.field_name.lowercaseString rangeOfString:@"rotation"].location == NSNotFound)) {
                     
                     if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"gyroscope_x"]];
+                        [order addObject:[FieldGrabber grabField:@"gyroscope_x"]];
                     } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"gyroscope_y"]];
+                        [order addObject:[FieldGrabber grabField:@"gyroscope_y"]];
                     } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"gyroscope_z"]];
+                        [order addObject:[FieldGrabber grabField:@"gyroscope_z"]];
                     }
                 } else {
-                    [order addObject:[StringGrabber grabField:@"null_string"]];
+                    [order addObject:[FieldGrabber grabField:@"null_string"]];
                 }
                 break;
                 
@@ -139,27 +141,27 @@
             case ACCELERATION:
                 if (!([field.field_name.lowercaseString rangeOfString:@"accel"].location == NSNotFound)) {
                     if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"accel_x"]];
+                        [order addObject:[FieldGrabber grabField:@"accel_x"]];
                     } else if (!([field.field_name.lowercaseString rangeOfString:@"y"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"accel_y"]];
+                        [order addObject:[FieldGrabber grabField:@"accel_y"]];
                     } else if (!([field.field_name.lowercaseString rangeOfString:@"z"].location == NSNotFound)) {
-                        [order addObject:[StringGrabber grabField:@"accel_z"]];
+                        [order addObject:[FieldGrabber grabField:@"accel_z"]];
                     } else {
-                        [order addObject:[StringGrabber grabField:@"accel_total"]];
+                        [order addObject:[FieldGrabber grabField:@"accel_total"]];
                     }
                 } else {
-                    [order addObject:[StringGrabber grabField:@"null_string"]];
+                    [order addObject:[FieldGrabber grabField:@"null_string"]];
                 }
                 break;
                 
                 // Pressure (27)
             case PRESSURE:
-                [order addObject:[StringGrabber grabField:@"pressure"]];
+                [order addObject:[FieldGrabber grabField:@"pressure"]];
                 break;
                 
                 // No match
             default:
-                [order addObject:[StringGrabber grabField:@"null_string"]];
+                [order addObject:[FieldGrabber grabField:@"null_string"]];
                 break;
         }
     }
@@ -170,147 +172,147 @@
 
 - (NSMutableArray *) orderDataFromFields:(Fields *)f {
         
-    if (data) [data release];
+    if (data) data = nil;
     data = [[NSMutableArray alloc] init];
     
     NSLog(@"Fields accel_x = %@", [f accel_x]);
     
     for (NSString *s in order) {
-        if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
+        if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]]) {
             if (!([f accel_x] == nil))
                 [data addObject:[f accel_x]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"accel_y"]]) {
             if (!([f accel_y] == nil))
                 [data addObject:[f accel_y]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"accel_z"]]) {
             if (!([f accel_z] == nil))
                 [data addObject:[f accel_z]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"accel_total"]]) {
             if (!([f accel_total] == nil))
                 [data addObject:[f accel_total]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"temperature_c"]]) {
             if (!([f temperature_c] == nil))
                 [data addObject:[f temperature_c]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"temperature_f"]]) {
             if (!([f temperature_f] == nil))
                 [data addObject:[f temperature_f]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"temperature_k"]]) {
             if (!([f temperature_k] == nil))
                 [data addObject:[f temperature_k]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"time"]]) {
             if (!([f time_millis] == nil))
                 [data addObject:[f time_millis]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"luminous_flux"]]) {
             if (!([f lux] == nil))
                 [data addObject:[f lux]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"heading_deg"]]) {
             if (!([f angle_deg] == nil))
                 [data addObject:[f angle_deg]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"heading_rad"]]) {
             if (!([f angle_rad] == nil))
                 [data addObject:[f angle_rad]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"latitude"]]) {
             if (!([f latitude] == nil))
                 [data addObject:[f latitude]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"longitude"]]) {
             if (!([f longitude] == nil))
                 [data addObject:[f longitude]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_x"]]) {
             if (!([f mag_x] == nil))
                 [data addObject:[f mag_x]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_y"]]) {
             if (!([f mag_y] == nil))
                 [data addObject:[f mag_y]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_z"]]) {
             if (!([f mag_z] == nil))
                 [data addObject:[f mag_z]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_total"]]) {
             if (!([f mag_total] == nil))
                 [data addObject:[f mag_total]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"altitude"]]) {
             if (!([f altitude] == nil))
                 [data addObject:[f altitude]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"pressure"]]) {
             if (!([f pressure] == nil))
                 [data addObject:[f pressure]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"gyroscope_x"]]) {
             if (!([f gyro_x] == nil))
                 [data addObject:[f gyro_x]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"gyroscope_y"]]) {
             if (!([f gyro_y] == nil))
                 [data addObject:[f gyro_y]];
             else
                 [data addObject:@""];
             
-        } else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
+        } else if ([s isEqualToString:[FieldGrabber grabField:@"gyroscope_z"]]) {
             if (!([f gyro_z] == nil))
                 [data addObject:[f gyro_z]];
             else
                 [data addObject:@""];
             
+        } else {
+            [data addObject:@""];
         }
-        
-        [data addObject:@""];
         
     }
     
@@ -318,37 +320,31 @@
 }
 
 - (void) addAllFieldsToOrder {
-    if (order) [order release];
+    if (order) order = nil;
     order = [[NSMutableArray alloc] init];
     
-    [order addObject:[StringGrabber grabField:@"time"]];
-    [order addObject:[StringGrabber grabField:@"accel_x"]];
-    [order addObject:[StringGrabber grabField:@"accel_y"]];
-    [order addObject:[StringGrabber grabField:@"accel_z"]];
-    [order addObject:[StringGrabber grabField:@"accel_total"]];
-    [order addObject:[StringGrabber grabField:@"latitude"]];
-    [order addObject:[StringGrabber grabField:@"longitude"]];
-    [order addObject:[StringGrabber grabField:@"magnetic_x"]];
-    [order addObject:[StringGrabber grabField:@"magnetic_y"]];
-    [order addObject:[StringGrabber grabField:@"magnetic_z"]];
-    [order addObject:[StringGrabber grabField:@"magnetic_total"]];
-    [order addObject:[StringGrabber grabField:@"heading_deg"]];
-    [order addObject:[StringGrabber grabField:@"heading_rad"]];
-    [order addObject:[StringGrabber grabField:@"temperature_c"]];
-    [order addObject:[StringGrabber grabField:@"pressure"]];
-    [order addObject:[StringGrabber grabField:@"altitude"]];
-    [order addObject:[StringGrabber grabField:@"luminous_flux"]];
-    [order addObject:[StringGrabber grabField:@"gyroscope_x"]];
-    [order addObject:[StringGrabber grabField:@"gyroscope_y"]];
-    [order addObject:[StringGrabber grabField:@"gyroscope_z"]];
-    [order addObject:[StringGrabber grabField:@"temperature_f"]];
-    [order addObject:[StringGrabber grabField:@"temperature_k"]];
-}
-
-- (void) dealloc {
-    [order release];
-    [data  release];
-    [super dealloc];
+    [order addObject:[FieldGrabber grabField:@"time"]];
+    [order addObject:[FieldGrabber grabField:@"accel_x"]];
+    [order addObject:[FieldGrabber grabField:@"accel_y"]];
+    [order addObject:[FieldGrabber grabField:@"accel_z"]];
+    [order addObject:[FieldGrabber grabField:@"accel_total"]];
+    [order addObject:[FieldGrabber grabField:@"latitude"]];
+    [order addObject:[FieldGrabber grabField:@"longitude"]];
+    [order addObject:[FieldGrabber grabField:@"magnetic_x"]];
+    [order addObject:[FieldGrabber grabField:@"magnetic_y"]];
+    [order addObject:[FieldGrabber grabField:@"magnetic_z"]];
+    [order addObject:[FieldGrabber grabField:@"magnetic_total"]];
+    [order addObject:[FieldGrabber grabField:@"heading_deg"]];
+    [order addObject:[FieldGrabber grabField:@"heading_rad"]];
+    [order addObject:[FieldGrabber grabField:@"temperature_c"]];
+    [order addObject:[FieldGrabber grabField:@"pressure"]];
+    [order addObject:[FieldGrabber grabField:@"altitude"]];
+    [order addObject:[FieldGrabber grabField:@"luminous_flux"]];
+    [order addObject:[FieldGrabber grabField:@"gyroscope_x"]];
+    [order addObject:[FieldGrabber grabField:@"gyroscope_y"]];
+    [order addObject:[FieldGrabber grabField:@"gyroscope_z"]];
+    [order addObject:[FieldGrabber grabField:@"temperature_f"]];
+    [order addObject:[FieldGrabber grabField:@"temperature_k"]];
 }
 
 
