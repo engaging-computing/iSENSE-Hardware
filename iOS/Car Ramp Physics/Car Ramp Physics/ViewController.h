@@ -58,6 +58,7 @@ typedef struct _RotationDataSaver{
 @property(nonatomic, retain) UIAlertView *experiment;
 @property(nonatomic, retain) UIAlertView *view;
 @property(nonatomic, retain) UIAlertView *exp_num;
+@property(nonatomic, retain) UIAlertView *loginalert;
 @property(nonatomic, retain) iSENSE *iapi;
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
