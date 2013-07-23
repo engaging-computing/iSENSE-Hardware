@@ -10,12 +10,27 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource, iapi;
 
 // Initialize the view where the
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
+    
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+           self = [super initWithNibName:@"queue_layout-landscape~ipad" bundle:nibBundleOrNil];
+        } else {
+            self = [super initWithNibName:@"queue_layout~ipad" bundle:nibBundleOrNil];
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            self = [super initWithNibName:@"queue_layout-landscape~iphone" bundle:nibBundleOrNil];
+        } else {
+            self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
+        }
+    }
+
     if (self) {
+        iapi = [iSENSE getInstance];
     }
     return self;
     
@@ -26,11 +41,21 @@
     
     NSLog(@"%@", dataSaver.dataQueue.description);
     
-    // Do zee upload thang
-    [dataSaver upload];
-    
-    // Rebuild the dataSet with the new changes
-    [self.navigationController popViewControllerAnimated:YES];
+    // Words n stuff
+    if ([iapi isLoggedIn]) {
+        
+        // Do zee upload thang
+        bool uploadSuccessful = [dataSaver upload];
+        if (!uploadSuccessful) NSLog(@"Upload Not Successful");
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    } else {
+        
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }
     
 }
 
@@ -81,7 +106,6 @@
     
     selectedMarks = [[NSMutableArray alloc] init];
     dataSource = [[NSMutableArray alloc] init];
-    
     
     
     for(int i = 0; i<dataSaver.count;i++) {
