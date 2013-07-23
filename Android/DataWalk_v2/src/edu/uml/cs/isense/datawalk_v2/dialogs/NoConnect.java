@@ -10,7 +10,7 @@ import edu.uml.cs.isense.R;
 
 public class NoConnect extends Activity {
 
-	public static final int RESULT_SAVE = 2; 
+	public static final int RESULT_LEAVE = 2; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,28 +19,13 @@ public class NoConnect extends Activity {
 		
 		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
-		final Button yes = (Button) findViewById(R.id.no_connect_dismiss);
-		yes.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_OK);
-				finish();
-			}
-		});
+		
 		
 		final Button no = (Button) findViewById(R.id.no_connect_try_again);
 		no.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-		final Button noSave = (Button) findViewById(R.id.no_save);
-		noSave.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setResult(RESULT_OK);
 				finish();
 			}
 		});
@@ -51,7 +36,7 @@ public class NoConnect extends Activity {
 			@Override
 			public void onClick(View v) {
 				//TODO
-				setResult(RESULT_SAVE);
+				setResult(RESULT_OK);
 				finish();
 			}
 		});
@@ -59,7 +44,7 @@ public class NoConnect extends Activity {
 	
 	@Override
 	public void onBackPressed() {
-		setResult(RESULT_CANCELED);
+		setResult(RESULT_LEAVE);
 		finish();
 	}//ends onBackPressed
 	
