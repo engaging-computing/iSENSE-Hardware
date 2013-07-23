@@ -23,5 +23,6 @@
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property(nonatomic) NSMutableArray *selectedMarks;
 @property(nonatomic) NSMutableArray *dataSource;
+@property (nonatomic, assign) iSENSE *iapi;
 
 @end

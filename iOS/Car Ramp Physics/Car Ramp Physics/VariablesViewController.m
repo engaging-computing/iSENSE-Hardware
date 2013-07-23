@@ -71,7 +71,6 @@ fromInterfaceOrientation
     [table reloadRowsAtIndexPaths:[table indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationAutomatic];
     
     for (NSIndexPath *path in [table indexPathsForVisibleRows]) {
-        NSLog(@"NULLFROGS");
         [table cellForRowAtIndexPath:path];
     }
 }
@@ -135,14 +134,15 @@ fromInterfaceOrientation
     
 }
 
-- (void) done {
-    
+- (void) savePrefs {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setBool:[selectedMarks containsObject:@"X"] forKey:@"X"];
     [prefs setBool:[selectedMarks containsObject:@"Y"] forKey:@"Y"];
     [prefs setBool:[selectedMarks containsObject:@"Z"] forKey:@"Z"];
     [prefs setBool:[selectedMarks containsObject:@"Magnitude"] forKey:@"Magnitude"];
-    
+}
+
+- (void) done {
     [self.navigationController popViewControllerAnimated:YES];
     
     
@@ -199,6 +199,8 @@ fromInterfaceOrientation
         [selectedMarks removeObject:text];
     else
         [selectedMarks addObject:text];
+    
+    [self savePrefs];
     
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }

@@ -61,6 +61,7 @@ public class DataWalk extends Activity implements LocationListener,
 	public static TextView loggedInAs;
 	public static Boolean inApp = false;
 	public static Boolean umbChecked = true; 
+	public static Boolean ChkBoxChecked = true;
 	public static Boolean running = false;
 	public DataFieldManager dfm;
 	public Fields f;
@@ -233,7 +234,46 @@ public class DataWalk extends Activity implements LocationListener,
 					timeTimer.cancel();
 					running = false;
 					useMenu = true;
+					
+					if (savePoint) {
+						SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
+								Locale.US);
+						Date dt = new Date();
+						String dateString = sdf.format(dt);
 
+						nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
+						
+						// get user's experiment #, or default if there is none
+						SharedPreferences prefs = getSharedPreferences("EID", 0);
+						experimentId = prefs.getString("experiment_id", "");
+						if (experimentId.equals("")) {
+							experimentId = defaultExp;
+						}
+						
+						DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+								"Data Point Uploaded from Android DataWalk",
+								experimentId, dataSet.toString(), null, -1, "",
+								"", "", "");
+						uq.addDataSetToQueue(ds);
+					} else if (uploadMode) {
+						if (dataSet.length() != 0) {
+							Log.d("tag", "uploading extra points");
+							uploadSet = new JSONArray();
+							uploadSet = dataSet;
+							dataSet = new JSONArray();
+
+							if (uploadPoint == true) {
+								Log.d("tag", "uploading");
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										new Task().execute();
+									}
+								});
+							}
+						}
+					}
+					
 					if (dataPointCount >= 1) {
 						Intent i = new Intent(DataWalk.this, ViewData.class);
 						startActivityForResult(i, DIALOG_VIEW_DATA);
@@ -286,6 +326,10 @@ public class DataWalk extends Activity implements LocationListener,
 								Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					}
+					
+					if (savePoint) {
+						uploadMode = false;
+					}
 
 					useMenu = false;
 					running = true;
@@ -309,11 +353,14 @@ public class DataWalk extends Activity implements LocationListener,
 							});
 							if (!rapi.isConnectedToInternet())
 								uploadPoint = false;
-							
+							//TODO
 							else if (uploadMode){
 								uploadPoint = true;
+								ChkBoxChecked = true;
+							//TODO
 							}else{
 								savePoint = true;
+								ChkBoxChecked = false;
 							}
 							if ((i % (mInterval / 1000)) == 0 && i != 0) {
 								Log.d("tag", "saving point");
@@ -345,13 +392,13 @@ public class DataWalk extends Activity implements LocationListener,
 								}
 								if (savePoint) {
 									umbChecked = false;
-									DataSet ds = new DataSet(
-											DataSet.Type.DATA,
-											"",
-											"Data Point Uploaded from Android DataWalk",
-											"-1", dataSet.toString(), null, -1,
-											"", "", "", "");
-									uq.addDataSetToQueue(ds);
+//									DataSet ds = new DataSet(
+//											DataSet.Type.DATA,
+//											"",
+//											"Data Point Uploaded from Android DataWalk",
+//											"592", dataSet.toString(), null, -1,
+//											"", "", "", "");
+//									uq.addDataSetToQueue(ds);
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -363,7 +410,7 @@ public class DataWalk extends Activity implements LocationListener,
 									
 								}
 
-								if ((i % 10) == 0 && i > 9) {
+								if (uploadMode && ((i % 10) == 0 && i > 9)) {
 									Log.d("tag", "preparing to upload");
 									uploadSet = new JSONArray();
 									uploadSet = dataSet;
@@ -460,6 +507,8 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onResume() {
 		super.onResume();
 
+		if(rapi.isConnectedToInternet())
+			//umbChecked=true;
 		uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
 		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate",
 						"10000"));
@@ -517,10 +566,14 @@ public class DataWalk extends Activity implements LocationListener,
 				vibrator.vibrate(100);
 			}
 
-			/*
-			 * if (uploadMode) { uploadPoint = true; } else { savePoint = true;
-			 * gpsWorking = true; }
-			 */
+			//TODO
+			  /*if (uploadMode) { 
+				  uploadPoint = true; 
+			  } else { 
+				  savePoint = true;
+				  gpsWorking = true; 
+			  }*/
+			 
 			gpsWorking = true;
 
 		} else {
@@ -622,7 +675,7 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 		return true;
 	}
-
+	//TODO
 	private void manageUploadQueue() {
 		if (!uq.emptyQueue()) {
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
@@ -786,7 +839,7 @@ public class DataWalk extends Activity implements LocationListener,
 				} else {
 					new NotConnectedTask().execute();
 				}
-
+				//This else is when the person wants to turn save mode on
 			} else {
 				savePoint = true;
 				umbChecked = false;
@@ -824,6 +877,7 @@ public class DataWalk extends Activity implements LocationListener,
 				lastInitial = "";
 				experimentId = defaultExp;
 				if (rapi.isConnectedToInternet())
+				ChkBoxChecked = true;
 				umbChecked = true;
 				SharedPreferences prefs = getSharedPreferences("EID", 0);
 				SharedPreferences.Editor mEdit = prefs.edit();

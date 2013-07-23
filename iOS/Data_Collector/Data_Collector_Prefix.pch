@@ -7,7 +7,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "StringGrabber.h"
-#import "CameraUsage.h"
 #import <iSENSE_API/Waffle.h>
 #import <iSENSE.h>
 #import "HexColor.h"

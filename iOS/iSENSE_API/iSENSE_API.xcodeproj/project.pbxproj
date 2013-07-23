@@ -235,9 +235,9 @@
 			children = (
 				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
 				B7F09EF41794595700725483 /* waffle */,
-				B7F2D81C177B692200F9A58D /* sensor_compatibility */,
-				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
+				B7F2D81C177B692200F9A58D /* sensor_compatability */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
+				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
 				39FF261916DFA8760062C3DC /* src_api */,
 				39FF261016DFA86B0062C3DC /* api_headers */,
 				39FF25E616DFA28A0062C3DC /* Supporting Files */,
@@ -320,14 +320,14 @@
 			name = waffle;
 			sourceTree = "<group>";
 		};
-		B7F2D81C177B692200F9A58D /* sensor_compatibility */ = {
+		B7F2D81C177B692200F9A58D /* sensor_compatability */ = {
 			isa = PBXGroup;
 			children = (
 				B7034E491781F6EA00D6F0BA /* SensorEnums.h */,
 				B7F2D81D177B69F400F9A58D /* SensorCompatibility.h */,
 				B7F2D81E177B69F400F9A58D /* SensorCompatibility.m */,
 			);
-			name = sensor_compatibility;
+			name = sensor_compatability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

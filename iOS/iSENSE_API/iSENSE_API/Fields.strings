@@ -1,14 +1,14 @@
 //
-// Strings.strings
-// Splash
+// Fields.strings
+// iSENSE API
 //
-//  Created by Mike Stowell on 2/21/13.
-//  Copyright 2013 iSENSE Development Team. All rights reserved.
-//  Engaging Computing Lab, Advisor: Fred Martin
+// Created by Mike Stowell on 2/21/13.
+// Copyright 2013 iSENSE Development Team. All rights reserved.
+// Engaging Computing Lab, Advisor: Fred Martin
 //
 
 
-// < "Label"        = "Value" > //
+//  "Label"         = "Value"  //
 
 "null_string"       = "nil";
 "time"              = "Time";

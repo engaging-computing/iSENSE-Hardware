@@ -1,6 +1,6 @@
 //
 //  iSENSE.m
-//  isenseAPI
+//  iSENSE API
 //
 //  Created by John Fertitta on 2/23/11.
 //  Updated by Jeremy Poulin on 12/05/12.
