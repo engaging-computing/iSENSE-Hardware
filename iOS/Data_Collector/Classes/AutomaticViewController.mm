@@ -13,7 +13,8 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
-sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate, dataToBeOrdered;
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate,
+dataToBeOrdered, backFromQueue;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -60,6 +61,29 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         [recordDataTimer invalidate];
         [recordDataTimer release];
         recordDataTimer = nil;
+    }
+    
+    // Check backFromQueue status to inform user of data set upload success or failure
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = [prefs boolForKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    if (backFromQueue) {
+        int uploaded = [prefs integerForKey:@"key_data_uploaded"];
+        switch (uploaded) {
+            case DATA_NONE_UPLOADED:
+                [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+                break;
+                
+            case DATA_UPLOAD_SUCCESS:
+                [self.view makeWaffle:@"All selected data sets uploaded successfully" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+                break;
+                
+            case DATA_UPLOAD_FAILED:
+                [self.view makeWaffle:@"At least one data set failed to upload" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+                break;
+        }
+        
+        // Set back_from_queue key to false again
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_back_from_queue"]];
     }
     
     // Managed Object Context for Data_CollectorAppDelegate
@@ -121,7 +145,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Reinitialize setup to false
+    // Reinitialize setup and queue to false
     backFromSetup = false;
     
     // If true, then we're coming back from another ViewController
@@ -538,10 +562,6 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self saveDataSetWithDescription:description];
             [self setEnabled:true forButton:step3];
             
-            [self.view makeWaffle:@"Data Saved!"
-                        duration:WAFFLE_LENGTH_SHORT
-                        position:WAFFLE_BOTTOM
-                           image:WAFFLE_CHECKMARK];
                         
         } else {
             
@@ -598,6 +618,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
             [ds release];
+            
+            [self.view makeWaffle:@"Data set saved"
+                         duration:WAFFLE_LENGTH_SHORT
+                         position:WAFFLE_BOTTOM
+                            image:WAFFLE_CHECKMARK];
             
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -662,6 +687,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 
 // Launches a view that allows the user to upload and manage his/her datasets
 - (IBAction) uploadData:(UIButton *)sender {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = true;
+    [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
     
     QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
     queueUploader.title = @"Step 3: Manage and Upload Sessions";
