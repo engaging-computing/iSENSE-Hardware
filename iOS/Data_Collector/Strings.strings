@@ -46,6 +46,7 @@
 "key_sample_interval"           = "defaultsampleinterval";
 "key_test_length"               = "defaulttestlength";
 "key_setup_complete"            = "setupiscompleteandnotcanceled";
+"key_back_from_queue"           = "backfromdataqueue";
 
 "current_exp_label"             = "Experiment";
 
