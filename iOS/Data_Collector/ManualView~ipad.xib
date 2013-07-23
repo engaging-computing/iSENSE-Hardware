@@ -407,6 +407,15 @@
 					</object>
 					<int key="connectionID">56</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">showCameraUI</string>
+						<reference key="source" ref="461281461"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">66</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -550,7 +559,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">65</int>
+			<int key="maxID">66</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -566,10 +575,12 @@
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
+							<string>showCameraUI</string>
 							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -585,6 +596,7 @@
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
+							<string>showCameraUI</string>
 							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
@@ -603,6 +615,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">saveOnClick:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showCameraUI</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
