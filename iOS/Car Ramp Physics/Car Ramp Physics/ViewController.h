@@ -39,7 +39,7 @@ typedef struct _RotationDataSaver{
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 {
     
     RotationDataSaver *saver;
@@ -89,19 +89,20 @@ typedef struct _RotationDataSaver{
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) DataSaver *dataSaver;
 
-
-
+@property (nonatomic) UIPickerView *picker;
+@property (nonatomic) NSMutableArray *lengths;
+@property (nonatomic) UITextField *lengthField;
 
 @property(nonatomic, retain) NSArray *items;
 
 //Boolean variables
-@property(nonatomic) BOOL running;
-@property(nonatomic) BOOL timeOver;
-@property(nonatomic) BOOL useDev;
-@property(nonatomic) BOOL x;
-@property(nonatomic) BOOL y;
-@property(nonatomic) BOOL z;
-@property(nonatomic) BOOL mag;
+@property (nonatomic) BOOL running;
+@property (nonatomic) BOOL timeOver;
+@property (nonatomic) BOOL useDev;
+@property (nonatomic) BOOL x;
+@property (nonatomic) BOOL y;
+@property (nonatomic) BOOL z;
+@property (nonatomic) BOOL mag;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (IBAction)showMenu:(id)sender;
