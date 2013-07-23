@@ -15,6 +15,10 @@
 #import "Queue.h"
 #import "iSENSE.h"
 
+#define DATA_NONE_UPLOADED  1500
+#define DATA_UPLOAD_SUCCESS 1501
+#define DATA_UPLOAD_FAILED  1502
+
 @interface DataSaver : NSObject {
 }
 

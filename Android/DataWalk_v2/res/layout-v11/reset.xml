@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+	
+
+
+	<LinearLayout 
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+    	style="?android:attr/buttonBarStyle"
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="horizontal" >
+
 
     <Button
         android:id="@+id/noreset"
@@ -12,13 +18,12 @@
         android:layout_weight=".5"
         android:text="@string/Cancel" />
 
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="@string/Reset" 
-            style="?android:attr/buttonBarButtonStyle"/>
- 
+    <Button
+        android:id="@+id/reset"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:text="@string/Reset" />
 
 </LinearLayout>
