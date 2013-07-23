@@ -102,27 +102,48 @@ public class API {
 	/*Must have called createSession before calling this function*/
 	public ArrayList<RPerson> getUsers() {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
-		 try {
-				String reqResult = makeRequest(baseURL, "users", "", "GET");
-				JSONArray j = new JSONArray(reqResult);
-				for(int i = 0; i < j.length(); i++) {
-					JSONObject inner = j.getJSONObject(i);
-					RPerson person = new RPerson();
-					
-					person.person_id = inner.getInt("id");
-					person.name = inner.getString("name");
-					person.username = inner.getString("username");
-					person.url = inner.getString("url");
-					person.gravatar = inner.getString("gravatar");
-					person.timecreated = inner.getString("createdAt");
-					person.hidden = inner.getBoolean("hidden");
+		try {
+			String reqResult = makeRequest(baseURL, "users", "", "GET");
+			JSONArray j = new JSONArray(reqResult);
+			for(int i = 0; i < j.length(); i++) {
+				JSONObject inner = j.getJSONObject(i);
+				RPerson person = new RPerson();
 
-					people.add(person);
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
+				person.person_id = inner.getInt("id");
+				person.name = inner.getString("name");
+				person.username = inner.getString("username");
+				person.url = inner.getString("url");
+				person.gravatar = inner.getString("gravatar");
+				person.timecreated = inner.getString("createdAt");
+				person.hidden = inner.getBoolean("hidden");
+
+				people.add(person);
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return people;
+	}
+	/*Authenticated function*/
+	/*Must have called createSession before calling this function*/
+	public RPerson getUser() {
+		RPerson person = new RPerson();
+		try {
+			String reqResult = makeRequest(baseURL, "users", "", "GET");
+			JSONObject j = new JSONObject(reqResult);
+
+			person.person_id = j.getInt("id");
+			person.name = j.getString("name");
+			person.username = j.getString("username");
+			person.url = j.getString("url");
+			person.gravatar = j.getString("gravatar");
+			person.timecreated = j.getString("createdAt");
+			person.hidden = j.getBoolean("hidden");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return person;
 	}
 
 	public String makeRequest(String baseURL, String path, String parameters, String reqType) {
