@@ -12,8 +12,17 @@
         android:text="@string/About" 
         android:textSize="18sp"
         />
-
-        
+     <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:orientation="vertical" >
+    </View>
+    
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         <Button 
             android:id="@+id/menu_item_about_back"
             android:layout_width="match_parent"
@@ -23,5 +32,5 @@
             style="?android:attr/buttonBarButtonStyle"
             />
         
-        
+        </LinearLayout>
 </LinearLayout>

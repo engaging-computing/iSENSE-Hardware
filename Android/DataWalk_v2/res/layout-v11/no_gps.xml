@@ -12,10 +12,17 @@
         android:text="@string/NoGpsMsg"
         android:textSize="18sp"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:orientation="vertical" >
+    </View>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle">
         
         <Button 
             android:id="@+id/no_gps_no"

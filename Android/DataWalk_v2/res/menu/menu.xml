@@ -8,11 +8,11 @@
         android:title="@string/Upload">
     </item>
     
-    <item
+    <!-- <item
         android:id="@+id/Settings"
         android:showAsAction="always"
         android:title="@string/settings_label">
-    </item>
+    </item> -->
     
     <item
         android:id="@+id/DataUploadRate"

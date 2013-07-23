@@ -274,6 +274,7 @@ public class DataWalk extends Activity implements LocationListener,
 						}
 					}
 					
+					if(uploadPoint){
 					if (dataPointCount >= 1) {
 						Intent i = new Intent(DataWalk.this, ViewData.class);
 						startActivityForResult(i, DIALOG_VIEW_DATA);
@@ -282,9 +283,10 @@ public class DataWalk extends Activity implements LocationListener,
 					else {
 
 					}
+					}
 
 				} else {
-					//TODO
+					
 					//THIS ALLOWS THE START BUTTON TO CONTINUOUSLY CALL THE NAME ACTIVITY IF SOMEONE DID NOT ENTER A NAME!!!!
 					if(!setupDone){
 						if (firstName.equals("") || lastInitial.equals("")) {
@@ -353,11 +355,11 @@ public class DataWalk extends Activity implements LocationListener,
 							});
 							if (!rapi.isConnectedToInternet())
 								uploadPoint = false;
-							//TODO
+							
 							else if (uploadMode){
 								uploadPoint = true;
 								ChkBoxChecked = true;
-							//TODO
+							
 							}else{
 								savePoint = true;
 								ChkBoxChecked = false;
@@ -373,7 +375,7 @@ public class DataWalk extends Activity implements LocationListener,
 									@Override
 									public void run() {
 										pointsUploadedBox
-												.setText("Points Uploaded: "
+												.setText("Points Recorded: "
 														+ dataPointCount);
 									}
 
@@ -506,10 +508,18 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		if(rapi.isConnectedToInternet())
-			//umbChecked=true;
-		uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
+	
+		if(rapi.isConnectedToInternet()){
+			
+		savePoint = false;
+		uploadPoint = true;
+		uploadMode = true;
+		umbChecked = true;
+		w.make("Connected to Internet- new data will automatically be uploaded to iSENSE!", w.LENGTH_LONG, w.IMAGE_CHECK);
+		}
+		if (umbChecked)
+			uploadMode = true;
+		//uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
 		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate",
 						"10000"));
 
@@ -534,7 +544,7 @@ public class DataWalk extends Activity implements LocationListener,
 				+ " " + loginName + "  " + " Name: " + firstName + " "
 				+ lastInitial);
 		dataPointCount = 0;
-		pointsUploadedBox.setText("Points Uploaded: " + dataPointCount);
+		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
 		i = 0;
 		expNumBox.setText("Experiment Number: " + experimentId);
 		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
@@ -566,7 +576,7 @@ public class DataWalk extends Activity implements LocationListener,
 				vibrator.vibrate(100);
 			}
 
-			//TODO
+			
 			  /*if (uploadMode) { 
 				  uploadPoint = true; 
 			  } else { 
@@ -675,7 +685,7 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 		return true;
 	}
-	//TODO
+	
 	private void manageUploadQueue() {
 		if (!uq.emptyQueue()) {
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
@@ -817,9 +827,14 @@ public class DataWalk extends Activity implements LocationListener,
 			// DON'T SAVE OR DON'T TRY AGAIN WE SET THE RESULT TO OKAY, AND WE
 			// JUST EXIT THE APP.
 			if (resultCode == RESULT_OK) {
-				finish();
+				savePoint = true;
+				umbChecked = false;
+				w.make("You Have Choosen to Turn Save Mode On!",
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				startActivityForResult(new Intent(mContext,EnterNameActivity.class), resultGotName);
 				Log.d("Tag",
-						"Rajia you have indicated that you want to EXIT!!!!!");
+						"Rajia you have indicated that you want to turn save mode on!!!!!");
+				
 			}
 			// IF THE PERSON HITS THE TRY AGAIN BUTTON THE RESULT IS SET TO
 			// RESULT_CANCELED IN WHICH WE TRY TO CONNECT TO THE INTERNET AGAIN
@@ -841,14 +856,9 @@ public class DataWalk extends Activity implements LocationListener,
 				}
 				//This else is when the person wants to turn save mode on
 			} else {
-				savePoint = true;
-				umbChecked = false;
-				w.make("You Have Choosen to Turn Save Mode On!",
-						Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-				startActivityForResult(new Intent(mContext,EnterNameActivity.class), resultGotName);
+				finish();
 				Log.d("Tag",
-						"Rajia you have indicated that you want to turn save mode on!!!!!");
-				
+						"Rajia you have indicated that you want to EXIT!!!!!");
 			}
 
 		}// ends resultCode = dialog_no_connect
@@ -956,13 +966,13 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.Settings:
+		/*case R.id.Settings:
 			startActivity(new Intent(this, Prefs.class));
 			if(!umbChecked)
 			w.make("The app will remain in Save Mode untill connected to the internet.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
 			if(umbChecked)
 			w.make("Data will  automatically be uploaded to iSENSE!", Waffle.LENGTH_LONG);
-			return true;
+			return true;*/
 		case R.id.Upload:
 			manageUploadQueue();
 			return true;

@@ -62,7 +62,6 @@
 
     <Button
         android:id="@+id/OK"
-        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout1"

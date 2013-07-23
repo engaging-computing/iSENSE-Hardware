@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
+    
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding="25dp">
+    android:orientation="vertical"
+    android:padding="25dp" >
 
     <TextView
         android:id="@+id/textView1"
@@ -12,68 +14,47 @@
         android:text="@string/InternetMsg"
         android:textSize="18sp"
         />
-     <TextView
-        android:id="@+id/tryAgainTV"
+   
+   <TextView 
+        android:id="@+id/instructionsTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/try_again_msg"
-        android:textSize="18sp"
-        />
+        android:text="@string/saveModeInstructions"
+        android:textSize="18sp"/>
+   
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"
+        android:orientation="vertical" >
+    </View>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="100"
+        style="?android:attr/buttonBarStyle">
         
-        <Button 
-            android:id="@+id/no_connect_dismiss"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/No"
-            android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            />
-        
+       
         <Button 
             android:id="@+id/no_connect_try_again"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Yes"
-            android:layout_weight="1"
+            android:text="@string/try_again"
+            android:layout_weight="60"
             style="?android:attr/buttonBarButtonStyle"
             />
-    </LinearLayout>
-	 <TextView
-        android:id="@+id/saveTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/SaveMsg"
-        android:textSize="18sp"
-        />
-	 <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        
-        <Button 
-            android:id="@+id/no_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/No"
-            android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            />
-        
-        <Button 
+         <Button 
             android:id="@+id/yes_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Yes"
-            android:layout_weight="1"
+            android:text="@string/saveMode"
+            android:layout_weight="40"
             style="?android:attr/buttonBarButtonStyle"
             />
+        
     </LinearLayout>
-</LinearLayout>
+    
+   
+    </LinearLayout>

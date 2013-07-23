@@ -12,10 +12,16 @@
         android:text="@string/iSenseQstion"
         android:textSize="18sp"
         />
+    <View
+    	android:id="@+id/view1"
+    	android:layout_width="match_parent"
+    	android:layout_height="1dp"
+    	android:background="?android:attr/dividerVertical" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle">
         
         <Button 
             android:id="@+id/view_data_no"
