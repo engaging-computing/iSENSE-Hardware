@@ -432,13 +432,13 @@
 			name = StringGrabber;
 			sourceTree = "<group>";
 		};
-		39F8AF9B1694C22100E5E4C2 /* CameraUsage */ = {
+		39F8AF9B1694C22100E5E4C2 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
 				39F8AF9C1694C23800E5E4C2 /* CameraViewController.h */,
 				39F8AF9D1694C23800E5E4C2 /* CameraViewController.m */,
 			);
-			name = CameraUsage;
+			name = Camera;
 			sourceTree = "<group>";
 		};
 		52572B681691F678009037A7 /* Drawable */ = {
@@ -569,7 +569,7 @@
 				B72DC21716C19A2900999C7E /* HexColor */,
 				39A5AA7816C29555005862E7 /* ISenseSearch */,
 				399787A716B2FDA6005F147B /* ExperimentBlock */,
-				39F8AF9B1694C22100E5E4C2 /* CameraUsage */,
+				39F8AF9B1694C22100E5E4C2 /* Camera */,
 				39F8AF971694C1FB00E5E4C2 /* StringGrabber */,
 			);
 			name = Objects;
