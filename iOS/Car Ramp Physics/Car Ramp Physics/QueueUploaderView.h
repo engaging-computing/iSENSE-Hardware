@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "Constants.h"
 #import "QueueCell.h"
+#import "ExperimentBrowseViewController.h"
+#import "Waffle.h"
 #import <DataSaver.h>
 
-@interface QueueUploaderView : UIViewController {
+@interface QueueUploaderView : UIViewController <UITextFieldDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> {
     
 }
 
@@ -21,8 +24,10 @@
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property(nonatomic) NSMutableArray *selectedMarks;
-@property(nonatomic) NSMutableArray *dataSource;
+@property (nonatomic) NSMutableArray *selectedMarks;
+@property (nonatomic) NSMutableArray *dataSource;
 @property (nonatomic, assign) iSENSE *iapi;
+@property (nonatomic, retain) UIBarButtonItem *edit;
+@property (nonatomic, retain) NSIndexPath *lastClickedCellIndex;
 
 @end

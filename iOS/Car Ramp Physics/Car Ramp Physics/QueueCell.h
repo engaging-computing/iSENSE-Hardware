@@ -1,22 +1,25 @@
 //
 //  QueueCell.h
-//  Data_Collector
+//  Car Ramp Physics
 //
-//  Created by Jeremy Poulin on 7/2/13.
+//  Created by Virinchi Balabhadrapatruni on 7/23/13.
+//  Copyright (c) 2013 ECG. All rights reserved.
 //
-//
+
+#import "DataSet.h"
 #import "CRTableViewCell.h"
-#import <UIKit/UIKit.h>
-#import <DataSet.h>
 
-@interface QueueCell : UITableViewCell
+@interface QueueCell : CRTableViewCell
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet;
+- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
+- (void) toggleChecked;
+- (void) setSessionName:(NSString *)name;
+- (NSNumber *)getKey;
+- (void) setExpNum:(NSString *)exp;
 
-@property (nonatomic, assign) BOOL isSelected;
-@property (nonatomic, readonly, strong) UILabel *textLabel;
-@property (nonatomic, readonly, strong) UIImageView *imageView;
-@property (nonatomic, readonly, strong) UIImage *renderedMark;
 @property (nonatomic, retain) DataSet *dataSet;
+@property (nonatomic, retain) NSNumber *mKey;
+
+
 
 @end

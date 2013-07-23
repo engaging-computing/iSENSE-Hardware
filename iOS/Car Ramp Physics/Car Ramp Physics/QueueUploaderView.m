@@ -10,14 +10,14 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource, iapi;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource, iapi, edit, lastClickedCellIndex;
 
 // Initialize the view where the
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-           self = [super initWithNibName:@"queue_layout-landscape~ipad" bundle:nibBundleOrNil];
+            self = [super initWithNibName:@"queue_layout-landscape~ipad" bundle:nibBundleOrNil];
         } else {
             self = [super initWithNibName:@"queue_layout~ipad" bundle:nibBundleOrNil];
         }
@@ -28,7 +28,7 @@
             self = [super initWithNibName:@"queue_layout~iphone" bundle:nibBundleOrNil];
         }
     }
-
+    
     if (self) {
         iapi = [iSENSE getInstance];
     }
@@ -105,19 +105,167 @@
     }
     
     selectedMarks = [[NSMutableArray alloc] init];
-    dataSource = [[NSMutableArray alloc] init];
     
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
+                                          initWithTarget:self action:@selector(handleLongPressOnTableCell:)];
+    lpgr.minimumPressDuration = 0.5;
+    lpgr.delegate = self;
+    [self.mTableView addGestureRecognizer:lpgr];
     
-    for(int i = 0; i<dataSaver.count;i++) {
-        NSArray *keys = [dataSaver.dataQueue allKeys];
-        DataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
-        
-        [dataSource addObject:tmp.name];
-    }
+    mTableView.allowsSelectionDuringEditing = YES;
     
     currentIndex = 0;
     
 }
+
+- (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        
+        CGPoint p = [gestureRecognizer locationInView:self.mTableView];
+        
+        NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
+        if (indexPath != nil) {
+            
+            lastClickedCellIndex = [indexPath copy];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
+            if (cell.isHighlighted) {
+                
+                UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                             initWithTitle:nil
+                                             delegate:self
+                                             cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"Delete"
+                                             otherButtonTitles:@"Rename", nil];
+                popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                [popupQuery showInView:self.view];
+                
+            }
+        }
+    }
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleNone;
+}
+
+- (BOOL)tableView:(UITableView *)tableview shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
+
+- (BOOL)tableView:(UITableView *)tableview canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
+- (void) enterEditMode {
+    if ([mTableView isEditing]) {
+        // If the tableView is already in edit mode, turn it off. Also change the title of the button to reflect the intended verb (‘Edit’, in this case).
+        [mTableView setEditing:NO animated:YES];
+        [edit setTitle:@"Edit"];
+        edit.style = UIBarButtonItemStyleBordered;
+    }
+    else {
+        [edit setTitle:@"Done"];
+        edit.style = UIBarButtonItemStyleDone;
+        
+        // Turn on edit mode
+        
+        [mTableView setEditing:YES animated:YES];
+    }
+}
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    UIAlertView *message;
+    QueueCell *cell;
+    
+	switch (buttonIndex) {
+        case QUEUE_DELETE: {
+            
+            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            NSNumber *key = [cell getKey];
+            cell = nil;
+            DataSet *ds = [dataSaver.dataQueue objectForKey:key];
+            [dataSaver removeDataSet:key];
+            [self.mTableView reloadData];
+            
+            break;
+        }
+            
+        case QUEUE_RENAME: {
+            message = [[UIAlertView alloc] initWithTitle:@"Enter new session name:"
+                                                 message:nil
+                                                delegate:self
+                                       cancelButtonTitle:@"Cancel"
+                                       otherButtonTitles:@"Okay", nil];
+            
+            message.tag = QUEUE_RENAME;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_RENAME;
+            [message textFieldAtIndex:0].delegate = self;
+            [message show];
+            
+            break;
+        }
+            
+        default:
+			break;
+	}
+	
+}
+
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+    
+    UIAlertView *message;
+    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
+    dispatch_async(queue, ^{
+        BOOL success = [iapi login:usernameInput with:passwordInput];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [self.view makeWaffle:@"Login Successful!"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_CHECKMARK];
+            } else {
+                [self.view makeWaffle:@"Login Failed!"
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_RED_X];
+            }
+            if (message != nil)
+                [message dismissWithClickedButtonIndex:nil animated:YES];
+        });
+    });
+    
+}
+
+
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == QUEUE_LOGIN) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
+    } else if (actionSheet.tag == QUEUE_RENAME) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            NSString *newSessionName = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setSessionName:newSessionName];
+            [mTableView reloadData];
+        }
+    }
+}
+
 
 // Dispose of any resources that can be recreated.
 - (void)didReceiveMemoryWarning {
@@ -157,15 +305,19 @@
     static NSString *CRTableViewCellIdentifier = @"cellIdentifier";
     
     // init the CRTableViewCell
-    CRTableViewCell *cell = (CRTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CRTableViewCellIdentifier];
+    QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:CRTableViewCellIdentifier];
     
     if (cell == nil) {
-        cell = [[CRTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CRTableViewCellIdentifier];
+        cell = [[QueueCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CRTableViewCellIdentifier];
     }
     
+    NSArray *keys = [dataSaver.dataQueue allKeys];
+    DataSet *tmp = [dataSaver.dataQueue objectForKey:keys[indexPath.row]];
+    [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
+    
     // Check if the cell is currently selected (marked)
-    NSString *text = [dataSource objectAtIndex:[indexPath row]];
-    cell.isSelected = [selectedMarks containsObject:text] ? YES : NO;
+    NSString *text = cell.dataSet.name;
+    cell.isSelected = [selectedMarks containsObject:[cell getKey]] ? YES : NO;
     cell.textLabel.text = text;
     
     return cell;
@@ -175,12 +327,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *text = [dataSource objectAtIndex:[indexPath row]];
+    QueueCell *cell = (QueueCell *) [mTableView cellForRowAtIndexPath:indexPath];
     
-    if ([selectedMarks containsObject:text])// Is selected?
-        [selectedMarks removeObject:text];
+    
+    if ([selectedMarks containsObject:[cell getKey]])// Is selected?
+        [selectedMarks removeObject:[cell getKey]];
     else
-        [selectedMarks addObject:text];
+        [selectedMarks addObject:[cell getKey]];
+    
     
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }

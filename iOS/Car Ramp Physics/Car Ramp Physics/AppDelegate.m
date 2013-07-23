@@ -27,8 +27,6 @@
     self.viewController.navigationItem.rightBarButtonItem = self.viewController.menuButton;
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
     self.window.rootViewController = navigation;
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setBool:YES forKey:@"Y"];
     self.viewController.setupDone = YES;
     [self.window makeKeyAndVisible];
     return YES;
@@ -147,7 +145,7 @@
         return persistentStoreCoordinator;
     }
 	
-    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"CarRampPhysics.sqlite"]];
+    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"CarPhysics.sqlite"]];
 	
 	NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
@@ -181,8 +179,19 @@
 }
 
 
+#pragma mark -
+#pragma mark Memory management
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+}
+
+
+#pragma mark -
+#pragma mark Custom Functions
+
 // Get the dataSets from the queue :D
 - (void) fetchDataSets {
+    
     
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -203,11 +212,9 @@
         
         // fill dataSaver's DataSet Queue
         for (int i = 0; i < mutableFetchResults.count; i++) {
-            [dataSaver addDataSet:mutableFetchResults[i]];
+            [dataSaver addDataSetFromCoreData:mutableFetchResults[i]];
         }
         
-        // release the fetched objects
-       
     }
 }
 

@@ -70,12 +70,12 @@
     }
     
     [managedObjectContext deleteObject:tmp];
-    
+
     // Commit the changes
-    NSError *error = [[NSError alloc] init];
+    NSError *error = nil;
     if (![managedObjectContext save:&error]) {
         // Handle the error.
-        NSLog(@"Save failed with error: %@", error);
+        NSLog(@"Save failed: %@", error);
     }
     
     return tmp;
