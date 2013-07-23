@@ -234,7 +234,46 @@ public class DataWalk extends Activity implements LocationListener,
 					timeTimer.cancel();
 					running = false;
 					useMenu = true;
+					
+					if (savePoint) {
+						SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
+								Locale.US);
+						Date dt = new Date();
+						String dateString = sdf.format(dt);
 
+						nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
+						
+						// get user's experiment #, or default if there is none
+						SharedPreferences prefs = getSharedPreferences("EID", 0);
+						experimentId = prefs.getString("experiment_id", "");
+						if (experimentId.equals("")) {
+							experimentId = defaultExp;
+						}
+						
+						DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+								"Data Point Uploaded from Android DataWalk",
+								experimentId, dataSet.toString(), null, -1, "",
+								"", "", "");
+						uq.addDataSetToQueue(ds);
+					} else if (uploadMode) {
+						if (dataSet.length() != 0) {
+							Log.d("tag", "uploading extra points");
+							uploadSet = new JSONArray();
+							uploadSet = dataSet;
+							dataSet = new JSONArray();
+
+							if (uploadPoint == true) {
+								Log.d("tag", "uploading");
+								mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										new Task().execute();
+									}
+								});
+							}
+						}
+					}
+					
 					if (dataPointCount >= 1) {
 						Intent i = new Intent(DataWalk.this, ViewData.class);
 						startActivityForResult(i, DIALOG_VIEW_DATA);
@@ -286,6 +325,10 @@ public class DataWalk extends Activity implements LocationListener,
 								"Data recording interrupted! Time values may be inconsistent.",
 								Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
+					}
+					
+					if (savePoint) {
+						uploadMode = false;
 					}
 
 					useMenu = false;
@@ -349,13 +392,13 @@ public class DataWalk extends Activity implements LocationListener,
 								}
 								if (savePoint) {
 									umbChecked = false;
-									DataSet ds = new DataSet(
-											DataSet.Type.DATA,
-											"",
-											"Data Point Uploaded from Android DataWalk",
-											"592", dataSet.toString(), null, -1,
-											"", "", "", "");
-									uq.addDataSetToQueue(ds);
+//									DataSet ds = new DataSet(
+//											DataSet.Type.DATA,
+//											"",
+//											"Data Point Uploaded from Android DataWalk",
+//											"592", dataSet.toString(), null, -1,
+//											"", "", "", "");
+//									uq.addDataSetToQueue(ds);
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -367,7 +410,7 @@ public class DataWalk extends Activity implements LocationListener,
 									
 								}
 
-								if ((i % 10) == 0 && i > 9) {
+								if (uploadMode && ((i % 10) == 0 && i > 9)) {
 									Log.d("tag", "preparing to upload");
 									uploadSet = new JSONArray();
 									uploadSet = dataSet;
