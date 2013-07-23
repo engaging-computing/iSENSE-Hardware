@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -72,15 +73,18 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class UsersTask extends AsyncTask<Void, Void, String> {
+	private class UsersTask extends AsyncTask<Void, Void, ArrayList<RPerson>> {
 		@Override
-		protected String doInBackground(Void... params) {
+		protected ArrayList<RPerson> doInBackground(Void... params) {
 			return api.getUsers();
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-			status.setText(result);
+		protected void onPostExecute(ArrayList<RPerson> people) {
+			status.setText("People:\n");
+			for(RPerson p : people) {
+				status.append(p.name + "\n");
+			}
 		}
 	}
 	
