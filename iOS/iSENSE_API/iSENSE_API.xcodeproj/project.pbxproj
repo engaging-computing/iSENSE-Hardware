@@ -177,8 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				B712DE211796D17000A30CAC /* DataSaver.h */,
-				B712DE221796D17000A30CAC /* DataSet.h */,
-				39217009176F7ACA0070DFCC /* Queue.h */,
+				B73B842F179ED4B50003007F /* objects */,
 			);
 			name = queue_headers;
 			sourceTree = "<group>";
@@ -291,6 +290,31 @@
 				39FF262216DFA8760062C3DC /* SessionData.m */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		B73B842D179ED48E0003007F /* dataset */ = {
+			isa = PBXGroup;
+			children = (
+				B712DE221796D17000A30CAC /* DataSet.h */,
+			);
+			name = dataset;
+			sourceTree = "<group>";
+		};
+		B73B842E179ED4950003007F /* queue */ = {
+			isa = PBXGroup;
+			children = (
+				39217009176F7ACA0070DFCC /* Queue.h */,
+			);
+			name = queue;
+			sourceTree = "<group>";
+		};
+		B73B842F179ED4B50003007F /* objects */ = {
+			isa = PBXGroup;
+			children = (
+				B73B842D179ED48E0003007F /* dataset */,
+				B73B842E179ED4950003007F /* queue */,
+			);
+			name = objects;
 			sourceTree = "<group>";
 		};
 		B73CFDAE179D8CD700B891B0 /* data_field_manager */ = {

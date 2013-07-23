@@ -19,6 +19,9 @@
 #define LOGIN_USER 9003
 #define LOGIN_PASS 9004
 
+#define FIRST_TIME_NAME 9005
+#define ENTER_NAME 9006
+
 @interface ViewController ()
 
 - (IBAction)showMenu:(id)sender;
@@ -193,6 +196,7 @@
         first.tag = FIRST_NAME_FIELD;
         last.placeholder = @"Last Initial";
         last.delegate = self;
+        change_name.tag = FIRST_TIME_NAME;
         [change_name show];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -203,14 +207,15 @@
         BOOL mag1 = [prefs boolForKey:@"Magnitude"];
         
         
-        if (x)
-            x = x1;
-        if (y)
-            y = y1;
-        if (z)
-            z = z1;
-        if (mag)
-            mag = mag1;
+        x = x1;
+        y = y1;
+        z = z1;
+        mag = mag1;
+        
+        [dfm setEnabledField:x atIndex:fACCEL_X];
+        [dfm setEnabledField:y atIndex:fACCEL_Y];
+        [dfm setEnabledField:z atIndex:fACCEL_Z];
+        [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         
     }
     
@@ -230,7 +235,6 @@
         NSLog(@"Long Press");
         if (!running) {
             // Get Field Order
-            [dfm getFieldOrderOfExperiment:expNum];
             [self getEnabledFields];
             // Record Data
             running = YES;
@@ -517,6 +521,12 @@
     [experiment dismissWithClickedButtonIndex:0 animated:YES];
     exp_num = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [exp_num setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    if (useDev) {
+        [exp_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",DEV_DEFAULT_EXP];
+    } else {
+        [exp_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",PROD_DEFAULT_EXP];
+    }
+    
     [exp_num show];
 }
 
@@ -571,6 +581,7 @@
             [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
             
         }
+        [self saveDataSetWithDescription:sessionName];
     } else {
         [self saveDataSetWithDescription:sessionName];
     }
@@ -684,7 +695,7 @@
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alert show];
     } else if (buttonIndex == 2){
-        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
         
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
@@ -695,6 +706,7 @@
         first.delegate = self;
         last.placeholder = @"Last Initial";
         last.delegate = self;
+        change_name.tag = ENTER_NAME;
         [change_name show];
     }
     
@@ -705,7 +717,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSLog(@"Hello");
 #define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];    
+    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
         if (textField.tag == FIRST_NAME_FIELD || textField.tag == LOGIN_USER || textField.tag == LOGIN_PASS) {
@@ -716,7 +728,7 @@
     } else {
         return NO;
     }
-
+    
     
 }
 
@@ -780,8 +792,14 @@
         
     } else if ([alertView.title isEqualToString:@"Enter Name"]) {
         if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
+            if (alertView.tag == FIRST_TIME_NAME) {
+               change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+                change_name.tag = FIRST_TIME_NAME;
+            } else {
+              change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
+                change_name.tag = ENTER_NAME;
+            }
             
-            change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
             
             [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             UITextField *last = [change_name textFieldAtIndex:1];
@@ -792,10 +810,22 @@
             first.tag = FIRST_NAME_FIELD;
             last.placeholder = @"Last Initial";
             last.delegate = self;
+            
             [change_name show];
             [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
-            [self changeName];
+            if ([title isEqualToString:@"Cancel"]) {
+                [change_name dismissWithClickedButtonIndex:0 animated:YES];
+                login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+                login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+                login_status.text = [login_status.text stringByAppendingString:firstName];
+                login_status.text = [login_status.text stringByAppendingString:@" "];
+                login_status.text = [login_status.text stringByAppendingString:lastInitial];
+                saver->hasName = true;
+            } else {
+               [self changeName]; 
+            }
+            
         }
     } else if ([alertView.title isEqualToString:@"Experiment Code"]){
         if ([title isEqualToString:@"Enter Experiment #"]) {

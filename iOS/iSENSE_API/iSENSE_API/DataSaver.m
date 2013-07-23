@@ -70,12 +70,12 @@
     }
     
     [managedObjectContext deleteObject:tmp];
-    
+
     // Commit the changes
-    NSError *error = [[NSError alloc] init];
+    NSError *error = nil;
     if (![managedObjectContext save:&error]) {
         // Handle the error.
-        NSLog(@"Save failed with error: %@", error);
+        NSLog(@"Save failed: %@", error);
     }
     
     return tmp;
@@ -113,6 +113,10 @@
         return false;
     }
     
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int dataSetsToUpload = 0;
+    int dataSetsFailed = 0;
+    
     NSMutableArray *dataSetsToBeRemoved = [[NSMutableArray alloc] init];
     DataSet *currentDS;
     
@@ -126,6 +130,8 @@
         
         // check if the session is uploadable
         if (currentDS.uploadable.boolValue) {
+            
+            dataSetsToUpload++;
             
             // create a session
             if (currentDS.sid.intValue == -1) {
@@ -153,6 +159,7 @@
                 }
                 
                 if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
+                    dataSetsFailed++;
                     continue;
                 }
             }
@@ -168,6 +175,7 @@
                     
                     // track the images that fail to upload
                     if (![isenseAPI upload:pictures[i] toExperiment:currentDS.eid forSession:currentDS.sid withName:currentDS.name andDescription:currentDS.dataDescription]) {
+                        dataSetsFailed++;
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];
                         continue;
@@ -192,6 +200,15 @@
     }
     
     [self removeDataSets:dataSetsToBeRemoved];
+    
+    if (dataSetsToUpload > 0)
+        if (dataSetsFailed > 0)
+            [prefs setInteger:DATA_UPLOAD_FAILED forKey:@"key_data_uploaded"];
+        else
+            [prefs setInteger:DATA_UPLOAD_SUCCESS forKey:@"key_data_uploaded"];
+    else
+        [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+    
     
     return true;
 }
