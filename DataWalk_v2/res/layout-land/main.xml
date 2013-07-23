@@ -5,7 +5,8 @@
     android:background="#FFFFFF"
     android:baselineAligned="false"
     android:keepScreenOn="true"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" 
+    >
 
     <Button
         android:id="@+id/startStop"
