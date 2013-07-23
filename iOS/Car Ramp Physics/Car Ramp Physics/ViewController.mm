@@ -19,6 +19,9 @@
 #define LOGIN_USER 9003
 #define LOGIN_PASS 9004
 
+#define FIRST_TIME_NAME 9005
+#define ENTER_NAME 9006
+
 @interface ViewController ()
 
 - (IBAction)showMenu:(id)sender;
@@ -27,7 +30,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -96,6 +99,29 @@
         }
     } else
         return UIInterfaceOrientationMaskAll;
+}
+
+// returns the number of 'columns' to display.
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+    
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent: (NSInteger)component
+{
+    return 6;
+    
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [self.lengths objectAtIndex:row];
+}
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    lengthField.text = [self.lengths objectAtIndex:row];
 }
 
 
@@ -175,7 +201,50 @@
     
     [image setAutoresizesSubviews:YES];
     
+    lengths = [[NSMutableArray alloc] initWithObjects:@"1 sec", @"2 sec", @"5 sec", @"10 sec", @"30 sec", @"60 sec", nil];
     
+    picker = [[UIPickerView alloc]init];
+    [picker setDataSource:self];
+    [picker setDelegate:self];
+    
+    [picker setShowsSelectionIndicator:YES];
+    
+    [self setPickerDefault];
+    
+    
+}
+
+- (void) setPickerDefault {
+    switch (countdown) {
+        case 1:
+            [picker selectRow:0 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:0 forComponent:0];
+            break;
+        case 2:
+            [picker selectRow:1 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:1 forComponent:0];
+            break;
+        case 5:
+            [picker selectRow:2 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:2 forComponent:0];
+            break;
+        case 10:
+            [picker selectRow:3 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:3 forComponent:0];
+            break;
+        case 30:
+            [picker selectRow:4 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:4 forComponent:0];
+            break;
+        case 60:
+            [picker selectRow:5 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:5 forComponent:0];
+            break;
+        default:
+            break;
+    }
+    
+    [picker reloadComponent:0];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -193,6 +262,7 @@
         first.tag = FIRST_NAME_FIELD;
         last.placeholder = @"Last Initial";
         last.delegate = self;
+        change_name.tag = FIRST_TIME_NAME;
         [change_name show];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -203,14 +273,15 @@
         BOOL mag1 = [prefs boolForKey:@"Magnitude"];
         
         
-        if (x)
-            x = x1;
-        if (y)
-            y = y1;
-        if (z)
-            z = z1;
-        if (mag)
-            mag = mag1;
+        x = x1;
+        y = y1;
+        z = z1;
+        mag = mag1;
+        
+        [dfm setEnabledField:x atIndex:fACCEL_X];
+        [dfm setEnabledField:y atIndex:fACCEL_Y];
+        [dfm setEnabledField:z atIndex:fACCEL_Z];
+        [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         
     }
     
@@ -230,7 +301,6 @@
         NSLog(@"Long Press");
         if (!running) {
             // Get Field Order
-            [dfm getFieldOrderOfExperiment:expNum];
             [self getEnabledFields];
             // Record Data
             running = YES;
@@ -517,6 +587,12 @@
     [experiment dismissWithClickedButtonIndex:0 animated:YES];
     exp_num = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [exp_num setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    if (useDev) {
+        [exp_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",DEV_DEFAULT_EXP];
+    } else {
+        [exp_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",PROD_DEFAULT_EXP];
+    }
+    
     [exp_num show];
 }
 
@@ -571,6 +647,7 @@
             [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
             
         }
+        [self saveDataSetWithDescription:sessionName];
     } else {
         [self saveDataSetWithDescription:sessionName];
     }
@@ -682,9 +759,12 @@
     } else if (buttonIndex == 1) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        lengthField = [alert textFieldAtIndex:0];
+        lengthField.inputView = picker;
+        [self setPickerDefault];
         [alert show];
     } else if (buttonIndex == 2){
-        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
         
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
@@ -695,6 +775,7 @@
         first.delegate = self;
         last.placeholder = @"Last Initial";
         last.delegate = self;
+        change_name.tag = ENTER_NAME;
         [change_name show];
     }
     
@@ -705,7 +786,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSLog(@"Hello");
 #define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];    
+    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
         if (textField.tag == FIRST_NAME_FIELD || textField.tag == LOGIN_USER || textField.tag == LOGIN_PASS) {
@@ -716,7 +797,7 @@
     } else {
         return NO;
     }
-
+    
     
 }
 
@@ -729,20 +810,11 @@
         if([title isEqualToString:@"Done"])
         {
             UITextField *length = [alertView textFieldAtIndex:0];
-            NSCharacterSet *_NumericOnly = [NSCharacterSet decimalDigitCharacterSet];
-            NSCharacterSet *myStringSet = [NSCharacterSet characterSetWithCharactersInString:length.text];
             
-            if ([_NumericOnly isSupersetOfSet: myStringSet])
-            {
-                recordLength = countdown = [length.text intValue];
-                NSLog(@"Length is %d", recordLength);
-                
-            } else {
-                [self.view makeWaffle:@"Invalid Length"
-                             duration:WAFFLE_LENGTH_SHORT
-                             position:WAFFLE_BOTTOM
-                                image:WAFFLE_RED_X];
-            }
+            NSArray *lolcats = [length.text componentsSeparatedByString:@" "];
+            recordLength = countdown = [lolcats[0] intValue];
+            NSLog(@"Length is %d", recordLength);
+            
         }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
@@ -780,8 +852,14 @@
         
     } else if ([alertView.title isEqualToString:@"Enter Name"]) {
         if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
+            if (alertView.tag == FIRST_TIME_NAME) {
+                change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+                change_name.tag = FIRST_TIME_NAME;
+            } else {
+                change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
+                change_name.tag = ENTER_NAME;
+            }
             
-            change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
             
             [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
             UITextField *last = [change_name textFieldAtIndex:1];
@@ -792,10 +870,22 @@
             first.tag = FIRST_NAME_FIELD;
             last.placeholder = @"Last Initial";
             last.delegate = self;
+            
             [change_name show];
             [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
-            [self changeName];
+            if ([title isEqualToString:@"Cancel"]) {
+                [change_name dismissWithClickedButtonIndex:0 animated:YES];
+                login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+                login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+                login_status.text = [login_status.text stringByAppendingString:firstName];
+                login_status.text = [login_status.text stringByAppendingString:@" "];
+                login_status.text = [login_status.text stringByAppendingString:lastInitial];
+                saver->hasName = true;
+            } else {
+                [self changeName];
+            }
+            
         }
     } else if ([alertView.title isEqualToString:@"Experiment Code"]){
         if ([title isEqualToString:@"Enter Experiment #"]) {
