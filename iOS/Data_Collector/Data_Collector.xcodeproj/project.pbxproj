@@ -98,6 +98,7 @@
 		B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */; };
 		B774E8ED179067C000B23A03 /* rsense_logo_recording.png in Resources */ = {isa = PBXBuildFile; fileRef = B774E8EC179067C000B23A03 /* rsense_logo_recording.png */; };
 		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
+		B7EBFDC417A0193E006B90A8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -244,6 +245,7 @@
 		B7B2284316DFA8E300874980 /* logo_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_black.png; sourceTree = "<group>"; };
 		B7EBFB2E16DF9CCE00125169 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -252,6 +254,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7EBFDC417A0193E006B90A8 /* SystemConfiguration.framework in Frameworks */,
 				39A90478179DA53000268F6D /* MobileCoreServices.framework in Frameworks */,
 				39AD183C175538AE002969FA /* CoreData.framework in Frameworks */,
 				39A1CC2516DFB44300B1979F /* libiSENSE_API.a in Frameworks */,
@@ -336,6 +339,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */,
 				39A90477179DA53000268F6D /* MobileCoreServices.framework */,
 				39AD183B175538AE002969FA /* CoreData.framework */,
 				B7F534FE16CA941F007FBFCA /* CoreLocation.framework */,

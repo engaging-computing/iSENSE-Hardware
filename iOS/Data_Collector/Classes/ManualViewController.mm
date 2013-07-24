@@ -909,7 +909,10 @@
             if (scrollView.subviews.count == 0) {
                 
                 UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT)];
-                noFields.text = @"Invalid experiment.";
+                if ([iapi isConnectedToInternet])
+                    noFields.text = @"Invalid experiment.";
+                else
+                    noFields.text = @"Cannot find experiment fields while not connected to the internet.";
                 noFields.backgroundColor = [UIColor clearColor];
                 noFields.textColor = [HexColor colorWithHexString:@"000000"];
                 [scrollView addSubview: noFields];

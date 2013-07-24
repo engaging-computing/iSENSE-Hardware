@@ -114,20 +114,23 @@ dataToBeOrdered, backFromQueue;
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
     
     // Initialize buttons
+    bool step2Enabled = [prefs boolForKey:[StringGrabber grabString:@"key_step_2_enabled"]];
+    
     [self setEnabled:true forButton:step1];
-    [self setEnabled:false forButton:step2];
-    [self setEnabled:false forButton:step3];
     
-    // Enabled step 2
-    if (backFromSetup) [self setEnabled:true forButton:step2];
-    
-    // Enable upload depending on DataQueue
+    if (backFromSetup || step2Enabled) {
+        [self setEnabled:true forButton:step2]; 
+    } else {
+        [self setEnabled:false forButton:step2];
+    }
+
     if (dataSaver.count > 0) {
         [self setEnabled:true forButton:step3];
     } else {
         [self setEnabled:false forButton:step3];
     }
     
+    // Initialize locations
     [self initLocations];
     [self resetAddressFields];
     
@@ -168,8 +171,9 @@ dataToBeOrdered, backFromQueue;
             
             expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
             
-            // Set setup_complete key to false again
+            // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
+            [prefs setBool:true forKey:[StringGrabber grabString:@"key_step_2_enabled"]];
             
         }
         
@@ -192,7 +196,7 @@ dataToBeOrdered, backFromQueue;
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Login", nil];
+                                 otherButtonTitles:@"Login", @"Media", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -280,9 +284,9 @@ dataToBeOrdered, backFromQueue;
 // Catches long click, starts and stops recording and beeps
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         if (!isRecording) {
             // Get the experiment
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
             
             // Get Field Order
@@ -301,6 +305,7 @@ dataToBeOrdered, backFromQueue;
             
             // Stop Recording
             backFromSetup = false;
+            [prefs setBool:false forKey:[StringGrabber grabString:@"key_step_2_enabled"]];
             [self stopRecording:motionManager];
         }
         
@@ -516,6 +521,7 @@ dataToBeOrdered, backFromQueue;
     
 	switch (buttonIndex) {
             
+        // Login
 		case 0:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
@@ -532,6 +538,13 @@ dataToBeOrdered, backFromQueue;
             [message release];
             
             break;
+            
+        // Media
+        case 1:
+            [self.view makeWaffle:@"This feature is currently disabled."
+                         duration:WAFFLE_LENGTH_SHORT
+                         position:WAFFLE_BOTTOM
+                            image:WAFFLE_RED_X];
             
 		default:
 			break;
@@ -568,6 +581,8 @@ dataToBeOrdered, backFromQueue;
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
+    } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
+        // TODO - media code
     }
 }
 

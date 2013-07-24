@@ -20,6 +20,7 @@
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5
+#define MENU_MEDIA_AUTOMATIC          2
 
 // constants for manual dialog
 #define MANUAL_MENU_UPLOAD            0
