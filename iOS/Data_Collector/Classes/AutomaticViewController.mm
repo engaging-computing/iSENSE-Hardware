@@ -196,7 +196,7 @@ dataToBeOrdered, backFromQueue;
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Login", nil];
+                                 otherButtonTitles:@"Login", @"Media", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -521,6 +521,7 @@ dataToBeOrdered, backFromQueue;
     
 	switch (buttonIndex) {
             
+        // Login
 		case 0:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
@@ -537,6 +538,13 @@ dataToBeOrdered, backFromQueue;
             [message release];
             
             break;
+            
+        // Media
+        case 1:
+            [self.view makeWaffle:@"This feature is currently disabled."
+                         duration:WAFFLE_LENGTH_SHORT
+                         position:WAFFLE_BOTTOM
+                            image:WAFFLE_RED_X];
             
 		default:
 			break;
@@ -573,6 +581,8 @@ dataToBeOrdered, backFromQueue;
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
+    } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
+        // TODO - media code
     }
 }
 
