@@ -36,7 +36,7 @@
         <activity
             android:name="edu.uml.cs.isense.collector.splash.Splash"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
+            android:label="Data Collector"
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
