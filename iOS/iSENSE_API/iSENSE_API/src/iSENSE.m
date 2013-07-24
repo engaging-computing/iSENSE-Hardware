@@ -8,6 +8,7 @@
 //
 
 #import "iSENSE.h"
+#import "Reachability.h"
 
 static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
 static iSENSE *_iSENSE = nil;
@@ -687,8 +688,11 @@ static iSENSE *_iSENSE = nil;
 
 // Use this method to determine if internet connectivity is available
 - (bool) isConnectedToInternet {
-    NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://isenseproject.org"] encoding:NSASCIIStringEncoding error:nil];
-    return ( URLString != NULL ) ? true : false;
+    // NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://isenseproject.org"] encoding:NSASCIIStringEncoding error:nil];
+    // return ( URLString != NULL ) ? true : false;
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    return !(networkStatus == NotReachable);
 }
 
 @end
