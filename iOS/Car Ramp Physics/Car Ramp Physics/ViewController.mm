@@ -30,7 +30,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -128,6 +128,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
 	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [start addGestureRecognizer:longPress];
     
@@ -163,6 +164,7 @@
         saver->last = [[NSString alloc] init];;
         saver->user = [[NSString alloc] init];
         saver->pass = [[NSString alloc] init];
+        saver->saveMode = NO;
     }
     
     if (saver->hasName){
@@ -182,6 +184,8 @@
         
         
     }
+    
+    saveModeEnabled = saver->saveMode;
     
     [self login:userName withPassword:passWord];
     
@@ -283,13 +287,21 @@
         [dfm setEnabledField:z atIndex:fACCEL_Z];
         [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         
+        [self saveModeDialog];
+        
     }
     
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
 }
 
-
+- (void) saveModeDialog {
+    if (![iapi isConnectedToInternet]) {
+        saveMode = [[UIAlertView alloc] initWithTitle:@"No Connectivity" message:@"Could not connect to the Internet through either Wi-Fi or mobile service. You will not be able to upload data to iSENSE until either is enabled.\n* Turning on Save Mode will allow data to be saved until Internet is enabled." delegate:self cancelButtonTitle:@"Try Again" otherButtonTitles:@"Save Mode", nil];
+        
+        [saveMode show];
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -905,6 +917,14 @@
             } else {
                 expNum = PROD_DEFAULT_EXP;
             }
+        }
+    } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
+        if ([title isEqualToString:@"Try Again"]){
+            [self saveModeDialog];
+        } else {
+            saveModeEnabled = YES;
+            saver->saveMode = YES;
+            [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
         }
     }
 }
