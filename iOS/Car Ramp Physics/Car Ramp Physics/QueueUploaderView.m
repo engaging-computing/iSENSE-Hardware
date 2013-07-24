@@ -190,7 +190,6 @@
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             NSNumber *key = [cell getKey];
             cell = nil;
-            DataSet *ds = [dataSaver.dataQueue objectForKey:key];
             [dataSaver removeDataSet:key];
             [self.mTableView reloadData];
             
