@@ -53,7 +53,7 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4wMTgzMTk5NjkxNCAwIDAuNDgzODU2ODI0AA</bytes>
+							<bytes key="NSRGB">MC4wMDA2Njk2NTgxNDM0IDAuMDM1NzY5MDcgMC4yOTU5OTgwODY3AA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -556,11 +556,9 @@
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
 							<string>showCameraUI</string>
-							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -577,7 +575,6 @@
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
 							<string>showCameraUI</string>
-							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -599,10 +596,6 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">showCameraUI</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">textFieldFinished:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -706,7 +699,7 @@
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{96, 96}</string>
-				<string>{507, 130}</string>
+				<string>{777, 189}</string>
 			</object>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>

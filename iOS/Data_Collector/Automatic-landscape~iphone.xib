@@ -48,7 +48,7 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4wMTgzMTk5NjkxNCAwIDAuNDgzODU2ODI0AA</bytes>
+							<bytes key="NSRGB">MC4wMDA2Njk2NTgxNDM0IDAuMDM1NzY5MDcgMC4yOTU5OTgwODY3AA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -532,7 +532,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="NS.key.0">rsense_logo.png</string>
-			<string key="NS.object.0">{507, 130}</string>
+			<string key="NS.object.0">{777, 189}</string>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>

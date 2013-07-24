@@ -49,7 +49,7 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4wMTgzMTk5NjkxNCAwIDAuNDgzODU2ODI0AA</bytes>
+							<bytes key="NSRGB">MC4wMDA2Njk2NTgxNDM0IDAuMDM1NzY5MDcgMC4yOTU5OTgwODY3AA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -538,7 +538,6 @@
 						<string key="mediaOnClick:">id</string>
 						<string key="saveOnClick:">id</string>
 						<string key="showCameraUI">id</string>
-						<string key="textFieldFinished:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="clearOnClick:">
@@ -559,10 +558,6 @@
 						</object>
 						<object class="IBActionInfo" key="showCameraUI">
 							<string key="name">showCameraUI</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="textFieldFinished:">
-							<string key="name">textFieldFinished:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
@@ -623,7 +618,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="media_icon.png">{96, 96}</string>
-			<string key="rsense_logo.png">{507, 130}</string>
+			<string key="rsense_logo.png">{777, 189}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
