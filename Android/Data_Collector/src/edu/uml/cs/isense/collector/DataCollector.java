@@ -1171,6 +1171,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// UI variables to re-initialize onConfigurationChange
 	private void reInitMainUI() {
 		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
+			isenseLogo.setVisibility(View.GONE);
+		}
+		
 		step1 = (Button) findViewById(R.id.auto_step1);
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
