@@ -186,6 +186,9 @@
     
     [query release];
     
+    [scrollView addSubview:bottomSpinnerBlock];
+    [experimentSpinner startAnimating];
+    
     // Dismiss keyboard.
     [search resignFirstResponder];
 }
@@ -353,6 +356,14 @@
                 [scrollView addSubview:block];
                 [block release];
                 maxHeight += 54; // adds 4 pixels of padding
+            }
+            
+            if (experiments.count == 0) {
+                UILabel *noExperimentsFound = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 310, 20)];
+                noExperimentsFound.text = @"No experiments found.";
+                [scrollView addSubview:noExperimentsFound];
+                [noExperimentsFound release];
+                maxHeight += 20;
             }
             
             // Hopefully adds a spinner to the bottom of the view
