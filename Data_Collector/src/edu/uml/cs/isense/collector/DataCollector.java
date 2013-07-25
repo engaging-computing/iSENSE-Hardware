@@ -832,7 +832,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dia.setMessage("Please wait while your data are saved...");
 			dia.setCancelable(false);
 			dia.show();
-
+			TextView tv = (TextView) dia.findViewById(android.R.id.message);
+			tv.setTextColor(Color.WHITE);
 		}
 
 		@Override
@@ -1764,12 +1765,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setText(getResources().getString(R.string.step3));
 	}
 
+	@SuppressLint("NewApi")
 	private void setActionBarNormal() {
 		// Action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#66AAFF")));
+					.parseColor("#111133")));
 			bar.setIcon(getResources()
 					.getDrawable(R.drawable.rsense_logo_right));
 			bar.setDisplayShowTitleEnabled(false);
@@ -1785,12 +1787,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	@SuppressLint("NewApi")
 	private void setActionBarRecording() {
 		// Action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#008709")));
+					.parseColor("#07420E")));
 			bar.setIcon(getResources().getDrawable(
 					R.drawable.rsense_logo_recording_right));
 			bar.setDisplayShowTitleEnabled(false);
