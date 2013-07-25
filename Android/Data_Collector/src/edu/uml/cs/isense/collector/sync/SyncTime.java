@@ -85,7 +85,7 @@ public class SyncTime extends Activity {
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#66AAFF")));
+					.parseColor("#111133")));
 			bar.setIcon(getResources()
 					.getDrawable(R.drawable.rsense_logo_right));
 			bar.setDisplayShowTitleEnabled(false);

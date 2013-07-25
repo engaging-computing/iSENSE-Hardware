@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -120,6 +121,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private EditText sessionName;
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -137,7 +139,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#66AAFF")));
+					.parseColor("#111133")));
 			bar.setIcon(getResources()
 					.getDrawable(R.drawable.rsense_logo_right));
 			bar.setDisplayShowTitleEnabled(false);
@@ -595,6 +597,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Loading data fields...");
 			dia.setCancelable(false);
 			dia.show();
+			TextView tv = (TextView) dia.findViewById(android.R.id.message);
+			tv.setTextColor(Color.WHITE);
 
 			super.onPreExecute();
 		}
@@ -651,6 +655,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Saving data...");
 			dia.setCancelable(false);
 			dia.show();
+			TextView tv = (TextView) dia.findViewById(android.R.id.message);
+			tv.setTextColor(Color.WHITE);
 
 			super.onPreExecute();
 		}
@@ -750,6 +756,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Preparing pictures...");
 			dia.setCancelable(false);
 			dia.show();
+			TextView tv = (TextView) dia.findViewById(android.R.id.message);
+			tv.setTextColor(Color.WHITE);
 
 			super.onPreExecute();
 		}
