@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected ArrayList<RPerson> doInBackground(Void... params) {
 			if(userName.getText().toString().equals("")) {
-				return api.getUsers(1, 10);
+				return api.getUsers(1, 10, true);
 			} else {
 				ArrayList<RPerson> rp = new ArrayList<RPerson>();
 				rp.add(api.getUser(userName.getText().toString()));

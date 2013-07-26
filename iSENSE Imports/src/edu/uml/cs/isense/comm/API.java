@@ -115,10 +115,15 @@ public class API {
 
 	/*Authenticated function*/
 	/*Must have called createSession before calling this function*/
-	public ArrayList<RPerson> getUsers(int page, int perPage) {
+	/*@param page Which page of results to start from. 1-indexed*/
+	/*@param perPage How many results to display per page */
+	/*@param descending Whether to display the results in descending order (true) or ascending order (false) */
+	public ArrayList<RPerson> getUsers(int page, int perPage, boolean descending) {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
-			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage, "GET");
+			String sortMode = "DESC";
+			if(!descending) sortMode = "ASC";
+			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET");
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
