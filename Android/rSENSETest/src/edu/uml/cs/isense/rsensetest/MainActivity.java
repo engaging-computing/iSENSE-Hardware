@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected ArrayList<RPerson> doInBackground(Void... params) {
 			if(userName.getText().toString().equals("")) {
-				return api.getUsers();
+				return api.getUsers(1, 10, true);
 			} else {
 				ArrayList<RPerson> rp = new ArrayList<RPerson>();
 				rp.add(api.getUser(userName.getText().toString()));
@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
 			if(projID.getText().toString().equals("")) {
-				return api.getProjects();
+				return api.getProjects(1, 10, true);
 			} else {
 				ArrayList<RProject> rp = new ArrayList<RProject>();
 				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
