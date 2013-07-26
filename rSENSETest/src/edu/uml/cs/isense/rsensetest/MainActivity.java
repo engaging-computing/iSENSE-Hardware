@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
 		
-		api = new API();
+		api = API.getInstance();
 	}
 
 	@Override
