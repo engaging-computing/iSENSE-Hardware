@@ -448,10 +448,13 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				39AC210417A038B600B0384C /* experimentblock_clean.png */,
 				39AC210517A038B600B0384C /* experimentblock_dark.png */,
+=======
 				B7EBFDC917A05F58006B90A8 /* rsense_logo_right.png */,
 				B7EBFDCA17A05F58006B90A8 /* rsense_logo_recording_right.png */,
+>>>>>>> upstream/master
 				B712DE1B1796C67F00A30CAC /* waffle_check.png */,
 				B712DE1C1796C67F00A30CAC /* waffle_warn.png */,
 				B712DE1D1796C67F00A30CAC /* waffle_x.png */,
@@ -738,10 +741,13 @@
 				B712DE1E1796C67F00A30CAC /* waffle_check.png in Resources */,
 				B712DE1F1796C67F00A30CAC /* waffle_warn.png in Resources */,
 				B712DE201796C67F00A30CAC /* waffle_x.png in Resources */,
+<<<<<<< HEAD
 				39AC210617A038B600B0384C /* experimentblock_clean.png in Resources */,
 				39AC210717A038B600B0384C /* experimentblock_dark.png in Resources */,
+=======
 				B7EBFDCB17A05F58006B90A8 /* rsense_logo_right.png in Resources */,
 				B7EBFDCC17A05F58006B90A8 /* rsense_logo_recording_right.png in Resources */,
+>>>>>>> upstream/master
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
