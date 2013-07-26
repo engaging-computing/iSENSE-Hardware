@@ -133,10 +133,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(false);
+		rapi.useDev(true);
 		
-		// Action bar customization for API >= 11
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#111133")));
@@ -597,8 +597,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Loading data fields...");
 			dia.setCancelable(false);
 			dia.show();
-			TextView tv = (TextView) dia.findViewById(android.R.id.message);
-			tv.setTextColor(Color.WHITE);
 
 			super.onPreExecute();
 		}
@@ -655,8 +653,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Saving data...");
 			dia.setCancelable(false);
 			dia.show();
-			TextView tv = (TextView) dia.findViewById(android.R.id.message);
-			tv.setTextColor(Color.WHITE);
 
 			super.onPreExecute();
 		}
@@ -756,8 +752,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 			dia.setMessage("Preparing pictures...");
 			dia.setCancelable(false);
 			dia.show();
-			TextView tv = (TextView) dia.findViewById(android.R.id.message);
-			tv.setTextColor(Color.WHITE);
 
 			super.onPreExecute();
 		}
