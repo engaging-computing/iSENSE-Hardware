@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RPerson;
@@ -18,6 +19,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	Button login, getusers, getprojects;
 	TextView status;
+	EditText projID, userName;
 	API api;
 
 	@Override
@@ -29,10 +31,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers = (Button) findViewById(R.id.btn_getusers);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
 		status = (TextView) findViewById(R.id.txt_results);
+		projID = (EditText) findViewById(R.id.et_projectnum);
+		userName = (EditText) findViewById(R.id.et_username);
 
 		login.setOnClickListener(this);
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
+		getusers.setEnabled(false);
 		
 		api = API.getInstance();
 	}
@@ -67,6 +72,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(Boolean result) {
 			if(result) {
 				status.setText("Login Succeeded");
+				getusers.setEnabled(true);
 			} else {
 				status.setText("Login Failed");
 			}
@@ -76,7 +82,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class UsersTask extends AsyncTask<Void, Void, ArrayList<RPerson>> {
 		@Override
 		protected ArrayList<RPerson> doInBackground(Void... params) {
-			return api.getUsers();
+			if(userName.getText().toString().equals("")) {
+				return api.getUsers();
+			} else {
+				ArrayList<RPerson> rp = new ArrayList<RPerson>();
+				rp.add(api.getUser(userName.getText().toString()));
+				return rp;
+			}
 		}
 		
 		@Override
@@ -91,7 +103,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
-			return api.getProjects();
+			if(projID.getText().toString().equals("")) {
+				return api.getProjects();
+			} else {
+				ArrayList<RProject> rp = new ArrayList<RProject>();
+				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
+				return rp;
+			}
 		}
 		
 		@Override
