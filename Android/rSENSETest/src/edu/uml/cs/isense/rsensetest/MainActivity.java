@@ -1,16 +1,6 @@
 package edu.uml.cs.isense.rsensetest;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import java.net.CookiePolicy;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -20,6 +10,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RPerson;
+import edu.uml.cs.isense.objects.RProject;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -80,27 +73,33 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class UsersTask extends AsyncTask<Void, Void, String> {
+	private class UsersTask extends AsyncTask<Void, Void, ArrayList<RPerson>> {
 		@Override
-		protected String doInBackground(Void... params) {
+		protected ArrayList<RPerson> doInBackground(Void... params) {
 			return api.getUsers();
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-			status.setText(result);
+		protected void onPostExecute(ArrayList<RPerson> people) {
+			status.setText("People:\n");
+			for(RPerson p : people) {
+				status.append(p.name + "\n");
+			}
 		}
 	}
 	
-	private class ProjectsTask extends AsyncTask<Void, Void, String> {
+	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
 		@Override
-		protected String doInBackground(Void... params) {
+		protected ArrayList<RProject> doInBackground(Void... params) {
 			return api.getProjects();
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-			status.setText(result);
+		protected void onPostExecute(ArrayList<RProject> projects) {
+			status.setText("Projects:\n");
+			for(RProject p : projects) {
+				status.append(p.name + "\n");
+			}
 		}
 	}
 	
