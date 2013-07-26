@@ -8,7 +8,7 @@
 	<string name="aboutApp">This app enables you to record your GPS location continuously while walking outdoors and share the data online. 
 	    It has been designed solely for demonstration at the 2nd USA Science and Engineering Festival and will eventually expire.\n\nWhen 
 	    the app is activated, your GPS coordinates are recorded once every 10 seconds, and the coordinates are shared on the iSENSE 
-	    website (isenseproject.org), where they can be viewed publicly. To make it easy for you to find your contributed data, the app prompts 
+	    website (isense.cs.uml.edu), where they can be viewed publicly. To make it easy for you to find your contributed data, the app prompts
 	    you to enter your first name and last initial. If you are not comfortable with your first name, last initial, and location being posted 
 	    on the web, please refrain from using this application.\n\nTo begin recording and sharing data, press and hold the "Hold to Start" button. 
 	    Data will be recorded and uploaded every 10 seconds (provided that the GPS on your mobile device has a satellite fix). When you are ready 
