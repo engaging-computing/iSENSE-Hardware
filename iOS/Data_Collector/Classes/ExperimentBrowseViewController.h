@@ -29,7 +29,7 @@
     UIView *bottomSpinnerBlock;
 }
 
-- (IBAction) onExperimentButtonClicked:(id)caller;
+- (void) onExperimentButtonClicked:(id)caller;
 - (void) updateScrollView:(ISenseSearch *)iSS;
 - (void) loadExperimentInfomationForIPad;
 

@@ -29,7 +29,6 @@
     self = [self init];
     if (self) {
         query = [q retain];
-        NSLog(@"Query RetainCount = %d", query.retainCount);
         searchType = st;
         buildType = bt;
         page = p;

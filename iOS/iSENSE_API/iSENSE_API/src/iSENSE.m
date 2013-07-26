@@ -450,10 +450,6 @@ static iSENSE *_iSENSE = nil;
  * Sort: Sort results like on iSENSE.  Accepts "recent", "rating", "activity", and "popularity".
  */
 - (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
-    NSLog(@"fromPage: %@", fromPage);
-    NSLog(@"withPage: %@", limit);
-    NSLog(@"withQuery: %@", query);
-    NSLog(@"andSort: %@", sort);
     
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
 	NSArray *data = [result objectForKey:@"data"];

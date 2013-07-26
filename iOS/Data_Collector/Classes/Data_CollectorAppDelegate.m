@@ -99,7 +99,6 @@
         NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
         NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"momd"];
         managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
-        NSLog(@"%@", managedObjectModel.entities.description);
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();
@@ -162,7 +161,6 @@
 
 
 - (void)dealloc {
-    NSLog(@"dataSaver count is %d in dealloc", dataSaver.count);
     [dataSaver release];
     [managedObjectModel release];
     [managedObjectContext release];
@@ -203,11 +201,6 @@
         // Actually make the request
         NSError *error = nil;
         NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        if (mutableFetchResults == nil) {
-            // dats a problem
-        } else {
-            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
-        }
 
         dataSaver = [[DataSaver alloc] initWithContext:managedObjectContext];
                 

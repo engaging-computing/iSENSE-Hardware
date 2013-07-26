@@ -12,7 +12,6 @@
 @implementation UIImagePickerController (CameraDelegateMethods)
 
 // For responding to the user tapping Cancel.
-
 - (void) imagePickerControllerDidCancel: (UIImagePickerController *) picker {
     
     [[picker parentViewController] dismissModalViewControllerAnimated: YES];
@@ -21,7 +20,7 @@
 }
 
 // For responding to the user accepting a newly-captured picture or movie
-- (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo: (NSDictionary *) info {
+- (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo:(NSDictionary *) info {
     
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     UIImage *originalImage, *editedImage, *imageToSave;
@@ -43,8 +42,6 @@
         
     }
     
-    
-    
     // Handle a movie capture
     if (CFStringCompare ((CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) {        
         
@@ -59,7 +56,5 @@
     [picker release];
     
 }
-
-
 
 @end
