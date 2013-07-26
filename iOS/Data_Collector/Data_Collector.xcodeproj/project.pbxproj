@@ -86,6 +86,8 @@
 		B74A1F1216B8642C00F0E9EE /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */; };
 		B74A1F1416B8643400F0E9EE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1316B8643400F0E9EE /* AddressBook.framework */; };
 		B74A1F1616B8643800F0E9EE /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */; };
+		B74CA1B417A2C0BF00C0E395 /* rsense_logo_recording.png in Resources */ = {isa = PBXBuildFile; fileRef = B74CA1B217A2C0BF00C0E395 /* rsense_logo_recording.png */; };
+		B74CA1B517A2C0BF00C0E395 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B74CA1B317A2C0BF00C0E395 /* rsense_logo.png */; };
 		B75046C9177484110034B42C /* StepOneSetup.mm in Sources */ = {isa = PBXBuildFile; fileRef = B75046C7177484110034B42C /* StepOneSetup.mm */; };
 		B75046CA177484110034B42C /* StepOneSetup~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046C8177484110034B42C /* StepOneSetup~iphone.xib */; };
 		B75046CC1774AC680034B42C /* StepOneSetup-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046CB1774AC680034B42C /* StepOneSetup-landscape~iphone.xib */; };
@@ -97,8 +99,6 @@
 		B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */; };
 		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
 		B7EBFDC417A0193E006B90A8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		B7EBFDCB17A05F58006B90A8 /* rsense_logo_right.png in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFDC917A05F58006B90A8 /* rsense_logo_right.png */; };
-		B7EBFDCC17A05F58006B90A8 /* rsense_logo_recording_right.png in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFDCA17A05F58006B90A8 /* rsense_logo_recording_right.png */; };
 		B7F534FF16CA941F007FBFCA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F534FE16CA941F007FBFCA /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -230,6 +230,8 @@
 		B74A1F1116B8642C00F0E9EE /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = usr/lib/libiconv.2.4.0.dylib; sourceTree = SDKROOT; };
 		B74A1F1316B8643400F0E9EE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B74A1F1516B8643800F0E9EE /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		B74CA1B217A2C0BF00C0E395 /* rsense_logo_recording.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo_recording.png; sourceTree = "<group>"; };
+		B74CA1B317A2C0BF00C0E395 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
 		B75046C6177484110034B42C /* StepOneSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StepOneSetup.h; sourceTree = "<group>"; };
 		B75046C7177484110034B42C /* StepOneSetup.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StepOneSetup.mm; sourceTree = "<group>"; };
 		B75046C8177484110034B42C /* StepOneSetup~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "StepOneSetup~iphone.xib"; path = "Classes/StepOneSetup~iphone.xib"; sourceTree = "<group>"; };
@@ -244,8 +246,6 @@
 		B7EBFB2E16DF9CCE00125169 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		B7EBFDC917A05F58006B90A8 /* rsense_logo_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo_right.png; sourceTree = "<group>"; };
-		B7EBFDCA17A05F58006B90A8 /* rsense_logo_recording_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo_recording_right.png; sourceTree = "<group>"; };
 		B7F534FE16CA941F007FBFCA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -453,6 +453,8 @@
 				39AC210517A038B600B0384C /* experimentblock_dark.png */,
 				B7EBFDC917A05F58006B90A8 /* rsense_logo_right.png */,
 				B7EBFDCA17A05F58006B90A8 /* rsense_logo_recording_right.png */,
+				B74CA1B217A2C0BF00C0E395 /* rsense_logo_recording.png */,
+				B74CA1B317A2C0BF00C0E395 /* rsense_logo.png */,
 				B712DE1B1796C67F00A30CAC /* waffle_check.png */,
 				B712DE1C1796C67F00A30CAC /* waffle_warn.png */,
 				B712DE1D1796C67F00A30CAC /* waffle_x.png */,
@@ -742,6 +744,8 @@
 				B7EBFDCB17A05F58006B90A8 /* rsense_logo_right.png in Resources */,
 				B7EBFDCC17A05F58006B90A8 /* rsense_logo_recording_right.png in Resources */,
 				39A6D38417A2E92C0066D56E /* novis_photo.png in Resources */,
+				B74CA1B417A2C0BF00C0E395 /* rsense_logo_recording.png in Resources */,
+				B74CA1B517A2C0BF00C0E395 /* rsense_logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
