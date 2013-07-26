@@ -115,10 +115,10 @@ public class API {
 
 	/*Authenticated function*/
 	/*Must have called createSession before calling this function*/
-	public ArrayList<RPerson> getUsers() {
+	public ArrayList<RPerson> getUsers(int page, int perPage) {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
-			String reqResult = makeRequest(baseURL, "users", "", "GET");
+			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage, "GET");
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
