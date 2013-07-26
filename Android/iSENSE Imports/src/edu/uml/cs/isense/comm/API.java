@@ -62,10 +62,12 @@ public class API {
 	}
 
 	//Return many projects
-	public ArrayList<RProject> getProjects() {
+	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+authToken, "GET");
+			String sortMode = "DESC";
+			if(!descending) sortMode = "ASC";
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET");
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
