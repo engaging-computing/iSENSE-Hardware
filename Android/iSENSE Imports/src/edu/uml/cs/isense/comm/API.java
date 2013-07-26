@@ -19,11 +19,26 @@ import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 
 public class API {
+	private static API instance = null;
 	String baseURL = "http://129.63.17.17:3000";
 	String authToken = "";
 
 	public API() {
 		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+	}
+
+	/**
+	 * Gets the one instance of the API class (instead of recreating a new
+	 * one every time). Functions as a constructor if the current instance is
+	 * null.
+	 * 
+	 * @return current or new API
+	 */
+	public static API getInstance() {
+		if(instance == null) {
+			instance = new API();
+		}
+		return instance;
 	}
 
 	/*Call this function to log in to iSENSE*/
@@ -126,10 +141,10 @@ public class API {
 	}
 	/*Authenticated function*/
 	/*Must have called createSession before calling this function*/
-	public RPerson getUser() {
+	public RPerson getUser(String username) {
 		RPerson person = new RPerson();
 		try {
-			String reqResult = makeRequest(baseURL, "users", "", "GET");
+			String reqResult = makeRequest(baseURL, "users/"+username, "", "GET");
 			JSONObject j = new JSONObject(reqResult);
 
 			person.person_id = j.getInt("id");
