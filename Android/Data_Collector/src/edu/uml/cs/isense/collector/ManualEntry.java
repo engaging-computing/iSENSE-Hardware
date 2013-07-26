@@ -133,7 +133,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 		
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
