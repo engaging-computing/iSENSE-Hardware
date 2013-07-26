@@ -141,10 +141,10 @@ public class API {
 	}
 	/*Authenticated function*/
 	/*Must have called createSession before calling this function*/
-	public RPerson getUser() {
+	public RPerson getUser(String username) {
 		RPerson person = new RPerson();
 		try {
-			String reqResult = makeRequest(baseURL, "users", "", "GET");
+			String reqResult = makeRequest(baseURL, "users/"+username, "", "GET");
 			JSONObject j = new JSONObject(reqResult);
 
 			person.person_id = j.getInt("id");
