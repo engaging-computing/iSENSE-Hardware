@@ -45,8 +45,8 @@ public class Splash extends FragmentActivity {
 
 		w = new Waffle(mContext);
 		
-		// Action bar customization for API >= 11
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#111133")));

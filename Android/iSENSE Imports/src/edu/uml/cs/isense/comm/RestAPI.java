@@ -48,7 +48,7 @@ public class RestAPI {
 	private static RestAPI instance = null;
 	private static final String TAG = "RestAPI";
 	private static final String serverRep = "Server Response: ";
-	private static String base_url = "http://isense.cs.uml.edu/ws/api.php";
+	private static String base_url = "http://129.63.8.186/ws/api.php";
 	private static String session_key = null;
 	private final String charEncoding = "iso-8859-1";
 	private String username = null;
@@ -2024,9 +2024,9 @@ public class RestAPI {
 	 */
 	public void useDev(boolean devSwitch) {
 		if (devSwitch)
-			base_url = "http://isensedev.cs.uml.edu/ws/api.php";
+			base_url = "http://129.63.8.185/ws/api.php";
 		else
-			base_url = "http://isense.cs.uml.edu/ws/api.php";
+			base_url = "http://129.63.8.186/ws/api.php";
 	}
 
 	/**

@@ -281,7 +281,7 @@
 
 		\n\niSENSE exists as a branch off of the ECG, which involves “teachers 
 		and kids in inquiry-rich science projects with electronic data collection.” 
-		Data collected from iSENSE experiments may be found on the isenseproject.org 
+		Data collected from iSENSE experiments may be found on the isense.cs.uml.edu
 		website.
 
 		\n\nThis Android application is essentially the general data collection 
@@ -302,7 +302,7 @@
 		his or her experiment and login information and he or she is ready to go.
 
 		\n\nIn order to use this application, you must have an account on 
-		isenseproject.org.\n\n</string>
+		isense.cs.uml.edu.\n\n</string>
     <string name="menu_login">Login</string>
     <string name="menu_media">Media</string>
     <string name="menu_sync">Sync Time</string>

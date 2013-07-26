@@ -138,9 +138,9 @@ public class DataWalk extends Activity implements LocationListener, SensorEventL
 	private static String loginName = "sor";
 	private static String loginPass = "sor";
 	private static String experimentId = "582";
-	private static String baseSessionUrl = "http://isenseproject.org/highvis.php?sessions=";
+	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
 	private static String marketUrl = "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "http://isenseproject.org/highvis.php?sessions=-1";
+	private static String sessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=-1";
 	private static boolean useDev = false;
 
 	private static int waitingCounter = 0;

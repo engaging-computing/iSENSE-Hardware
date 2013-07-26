@@ -79,7 +79,7 @@
 		begin recording data, press and hold the \"Hold to Start\" button. Acceleration data 
 		along the Y axis will be recorded continuously for 10 seconds, and then recording will 
 		stop automatically. At that time, you will have the option to share the data on the 
-		iSENSE website (isenseproject.org) where they can be viewed publicly, or you may simply 
+		iSENSE website (isense.cs.uml.edu) where they can be viewed publicly, or you may simply
 		throw the data away. If you choose to upload the data set, you may immediately view 
 		a graph of the data live on the iSENSE website.\n\nTo
 		
@@ -266,7 +266,7 @@
 		198 Riverside St.\n
 		Lowell, MA\n
 		01854\n
-		http://isenseproject.org/\n
+		http://isense.cs.uml.edu/\n
 		
 	</string>
     

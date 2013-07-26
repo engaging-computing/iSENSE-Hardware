@@ -117,8 +117,8 @@
             android:id="@+id/scroll_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_below="@id/session_name_wrapper" >
+            android:layout_below="@id/session_name_wrapper"
+            android:layout_margin="5dp" >
 
             <LinearLayout
                 android:id="@+id/field_view"

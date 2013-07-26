@@ -54,13 +54,13 @@
 #define UI_FIELDCONTENTS        1
 
 // manual scrollview oddity patches
-#define PORTRAIT_BOTTOM_CUT         40
-#define LANDSCAPE_BOTTOM_CUT_IPAD   30
+#define PORTRAIT_BOTTOM_CUT         30
+#define LANDSCAPE_BOTTOM_CUT_IPAD   1
 #define LANDSCAPE_BOTTOM_CUT_IPHONE 80
 #define TOP_ELEMENT_ADJUSTMENT      30
-#define START_Y_PORTRAIT_IPAD       20
+#define START_Y_PORTRAIT_IPAD       50
 #define START_Y_PORTRAIT_IPHONE     50
-#define START_Y_LANDSCAPE_IPAD      5
+#define START_Y_LANDSCAPE_IPAD      40
 #define START_Y_LANDSCAPE_IPHONE    0
 
 // manual scrollview keyboard and other offset values
