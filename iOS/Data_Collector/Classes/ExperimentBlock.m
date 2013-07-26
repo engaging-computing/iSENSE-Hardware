@@ -18,6 +18,7 @@
 
     self = [super initWithFrame:frame];
     if (self) {
+        
         // Initialization code
         experiment = [exp retain];
         _target = target;
@@ -38,7 +39,7 @@
         
         UILabel *experimentDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 22, frame.size.width - 10, 25)];
         [experimentDescriptionLabel setBackgroundColor:[UIColor clearColor]];
-        if (exp.description == nil) experimentDescriptionLabel.text = exp.description;
+        if ([exp.description class] != [NSNull class]) experimentDescriptionLabel.text = exp.description;
         else experimentDescriptionLabel.text = @"No description provided.";
         experimentDescriptionLabel.textAlignment = NSTextAlignmentCenter;
         experimentDescriptionLabel.textColor = [UIColor blackColor];
@@ -52,11 +53,6 @@
         [experimentDescriptionLabel release];
         [experimentNameLabel release];
         
-        // Set the listener for the experiment button
-        UITapGestureRecognizer *pressRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonClicked)];
-        [self addGestureRecognizer:pressRecognizer];
-        [pressRecognizer release];
-        
     }
     return self;
 }
@@ -69,7 +65,16 @@
     }
 }
 
-- (void) buttonClicked {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self switchToDarkImage:TRUE];
+}
+
+-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self switchToDarkImage:FALSE];
+
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [_target performSelector:_selector withObject:self];
 }
 

@@ -31,7 +31,6 @@
 		39A1CE6C16DFEB68008A99A6 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B70D384A16DFE55C00D6B3CD /* button_dark.png */; };
 		39A1CE6D16DFEB6B008A99A6 /* logo_datacollector_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B70D384816DFE54A00D6B3CD /* logo_datacollector_dark.png */; };
 		39A1CE6E16DFEB70008A99A6 /* logo_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B7B2284316DFA8E300874980 /* logo_black.png */; };
-		39A1CE6F16DFEB72008A99A6 /* noimagedata_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */; };
 		39A1CE7216DFEB7E008A99A6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3908824F169B325A00BEE04F /* Default-568h@2x.png */; };
 		39A1CE7516DFEB86008A99A6 /* media_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B741691F742009037A7 /* media_icon.png */; };
 		39A1CE7616DFEB89008A99A6 /* logo_manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 52572B751691F742009037A7 /* logo_manual.png */; };
@@ -44,6 +43,7 @@
 		39A529B4177B6226007A4052 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39A529B0177B6226007A4052 /* queue_layout~ipad.xib */; };
 		39A529B5177B6226007A4052 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 39A529B1177B6226007A4052 /* queue_layout-landscape~ipad.xib */; };
 		39A6405D16F380680058A382 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A6405C16F380680058A382 /* underline.png */; };
+		39A6D38417A2E92C0066D56E /* novis_photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A6D38317A2E92C0066D56E /* novis_photo.png */; };
 		39A752F016C18EFB00914BBE /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A752EF16C18EFB00914BBE /* ISenseSearch.m */; };
 		39A90478179DA53000268F6D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A90477179DA53000268F6D /* MobileCoreServices.framework */; };
 		39AC210617A038B600B0384C /* experimentblock_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 39AC210417A038B600B0384C /* experimentblock_clean.png */; };
@@ -165,6 +165,7 @@
 		39A529B0177B6226007A4052 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
 		39A529B1177B6226007A4052 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		39A6405C16F380680058A382 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = underline.png; path = "Resources-iPad/underline.png"; sourceTree = "<group>"; };
+		39A6D38317A2E92C0066D56E /* novis_photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = novis_photo.png; sourceTree = "<group>"; };
 		39A752EE16C18EFB00914BBE /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
 		39A752EF16C18EFB00914BBE /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		39A90477179DA53000268F6D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -179,7 +180,6 @@
 		39F8AF991694C20C00E5E4C2 /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		39F8AF9C1694C23800E5E4C2 /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 		39F8AF9D1694C23800E5E4C2 /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
-		39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = noimagedata_normal.png; path = "Resources-iPad/noimagedata_normal.png"; sourceTree = "<group>"; };
 		52572B641691F671009037A7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		52572B741691F742009037A7 /* media_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = media_icon.png; sourceTree = "<group>"; };
 		52572B751691F742009037A7 /* logo_manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_manual.png; sourceTree = "<group>"; };
@@ -448,6 +448,7 @@
 		52572B681691F678009037A7 /* Drawable */ = {
 			isa = PBXGroup;
 			children = (
+				39A6D38317A2E92C0066D56E /* novis_photo.png */,
 				39AC210417A038B600B0384C /* experimentblock_clean.png */,
 				39AC210517A038B600B0384C /* experimentblock_dark.png */,
 				B7EBFDC917A05F58006B90A8 /* rsense_logo_right.png */,
@@ -462,7 +463,6 @@
 				B70D384A16DFE55C00D6B3CD /* button_dark.png */,
 				B70D384816DFE54A00D6B3CD /* logo_datacollector_dark.png */,
 				B7B2284316DFA8E300874980 /* logo_black.png */,
-				39FA5BC816D6AC7C00F56C51 /* noimagedata_normal.png */,
 				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
 				52572B741691F742009037A7 /* media_icon.png */,
 				52572B751691F742009037A7 /* logo_manual.png */,
@@ -706,7 +706,6 @@
 				39A1CE6C16DFEB68008A99A6 /* button_dark.png in Resources */,
 				39A1CE6D16DFEB6B008A99A6 /* logo_datacollector_dark.png in Resources */,
 				39A1CE6E16DFEB70008A99A6 /* logo_black.png in Resources */,
-				39A1CE6F16DFEB72008A99A6 /* noimagedata_normal.png in Resources */,
 				39A1CE7216DFEB7E008A99A6 /* Default-568h@2x.png in Resources */,
 				39A1CE7516DFEB86008A99A6 /* media_icon.png in Resources */,
 				39A1CE7616DFEB89008A99A6 /* logo_manual.png in Resources */,
@@ -742,6 +741,7 @@
 				39AC210717A038B600B0384C /* experimentblock_dark.png in Resources */,
 				B7EBFDCB17A05F58006B90A8 /* rsense_logo_right.png in Resources */,
 				B7EBFDCC17A05F58006B90A8 /* rsense_logo_recording_right.png in Resources */,
+				39A6D38417A2E92C0066D56E /* novis_photo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
