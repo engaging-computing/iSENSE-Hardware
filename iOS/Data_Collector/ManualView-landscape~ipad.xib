@@ -49,7 +49,7 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4wMTgzMTk5NjkxNCAwIDAuNDgzODU2ODI0AA</bytes>
+							<bytes key="NSRGB">MC4wMDA2Njk2NTgxNDM0IDAuMDM1NzY5MDcgMC4yOTU5OTgwODY3AA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -261,7 +261,7 @@
 					<object class="IBUIScrollView" id="153775314">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{20, 295}, {984, 433}}</string>
+						<string key="NSFrame">{{20, 280}, {984, 404}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -269,7 +269,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
 				</array>
-				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
+				<string key="NSFrame">{{0, 64}, {1024, 704}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="230007864"/>
@@ -279,6 +279,9 @@
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
+				</object>
+				<object class="IBUISimulatedNavigationBarMetrics" key="IBUISimulatedTopBarMetrics">
+					<bool key="IBUIPrompted">NO</bool>
 				</object>
 				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
 					<int key="IBUIInterfaceOrientation">3</int>
@@ -504,7 +507,7 @@
 						<string key="displayMenu:">id</string>
 						<string key="mediaOnClick:">id</string>
 						<string key="saveOnClick:">id</string>
-						<string key="textFieldFinished:">id</string>
+						<string key="showCameraUI">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="clearOnClick:">
@@ -523,8 +526,8 @@
 							<string key="name">saveOnClick:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="textFieldFinished:">
-							<string key="name">textFieldFinished:</string>
+						<object class="IBActionInfo" key="showCameraUI">
+							<string key="name">showCameraUI</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
@@ -585,7 +588,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="media_icon.png">{96, 96}</string>
-			<string key="rsense_logo.png">{507, 130}</string>
+			<string key="rsense_logo.png">{777, 189}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>

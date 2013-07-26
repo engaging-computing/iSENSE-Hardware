@@ -9,7 +9,7 @@
 #import "ViewController.h"
 
 #define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
-#define PROD_VIS_URL @"http://isenseproject.org/highvis.php?sessions="
+#define PROD_VIS_URL @"http://isense.cs.uml.edu/highvis.php?sessions="
 
 #define DEV_DEFAULT_EXP 596
 #define PROD_DEFAULT_EXP 409
@@ -30,7 +30,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -101,10 +101,34 @@
         return UIInterfaceOrientationMaskAll;
 }
 
+// returns the number of 'columns' to display.
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+    
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent: (NSInteger)component
+{
+    return 6;
+    
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [self.lengths objectAtIndex:row];
+}
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    lengthField.text = [self.lengths objectAtIndex:row];
+}
+
 
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
 	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [start addGestureRecognizer:longPress];
     
@@ -140,6 +164,7 @@
         saver->last = [[NSString alloc] init];;
         saver->user = [[NSString alloc] init];
         saver->pass = [[NSString alloc] init];
+        saver->saveMode = NO;
     }
     
     if (saver->hasName){
@@ -160,6 +185,8 @@
         
     }
     
+    saveModeEnabled = saver->saveMode;
+    
     [self login:userName withPassword:passWord];
     
     // Managed Object Context for Data_CollectorAppDelegate
@@ -178,7 +205,50 @@
     
     [image setAutoresizesSubviews:YES];
     
+    lengths = [[NSMutableArray alloc] initWithObjects:@"1 sec", @"2 sec", @"5 sec", @"10 sec", @"30 sec", @"60 sec", nil];
     
+    picker = [[UIPickerView alloc]init];
+    [picker setDataSource:self];
+    [picker setDelegate:self];
+    
+    [picker setShowsSelectionIndicator:YES];
+    
+    [self setPickerDefault];
+    
+    
+}
+
+- (void) setPickerDefault {
+    switch (countdown) {
+        case 1:
+            [picker selectRow:0 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:0 forComponent:0];
+            break;
+        case 2:
+            [picker selectRow:1 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:1 forComponent:0];
+            break;
+        case 5:
+            [picker selectRow:2 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:2 forComponent:0];
+            break;
+        case 10:
+            [picker selectRow:3 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:3 forComponent:0];
+            break;
+        case 30:
+            [picker selectRow:4 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:4 forComponent:0];
+            break;
+        case 60:
+            [picker selectRow:5 inComponent:0 animated:YES];
+            lengthField.text = [picker.delegate pickerView:picker titleForRow:5 forComponent:0];
+            break;
+        default:
+            break;
+    }
+    
+    [picker reloadComponent:0];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -217,13 +287,21 @@
         [dfm setEnabledField:z atIndex:fACCEL_Z];
         [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         
+        [self saveModeDialog];
+        
     }
     
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
 }
 
-
+- (void) saveModeDialog {
+    if (![iapi isConnectedToInternet]) {
+        saveMode = [[UIAlertView alloc] initWithTitle:@"No Connectivity" message:@"Could not connect to the Internet through either Wi-Fi or mobile service. You will not be able to upload data to iSENSE until either is enabled.\n* Turning on Save Mode will allow data to be saved until Internet is enabled." delegate:self cancelButtonTitle:@"Try Again" otherButtonTitles:@"Save Mode", nil];
+        
+        [saveMode show];
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -693,6 +771,9 @@
     } else if (buttonIndex == 1) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        lengthField = [alert textFieldAtIndex:0];
+        lengthField.inputView = picker;
+        [self setPickerDefault];
         [alert show];
     } else if (buttonIndex == 2){
         change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
@@ -741,20 +822,11 @@
         if([title isEqualToString:@"Done"])
         {
             UITextField *length = [alertView textFieldAtIndex:0];
-            NSCharacterSet *_NumericOnly = [NSCharacterSet decimalDigitCharacterSet];
-            NSCharacterSet *myStringSet = [NSCharacterSet characterSetWithCharactersInString:length.text];
             
-            if ([_NumericOnly isSupersetOfSet: myStringSet])
-            {
-                recordLength = countdown = [length.text intValue];
-                NSLog(@"Length is %d", recordLength);
-                
-            } else {
-                [self.view makeWaffle:@"Invalid Length"
-                             duration:WAFFLE_LENGTH_SHORT
-                             position:WAFFLE_BOTTOM
-                                image:WAFFLE_RED_X];
-            }
+            NSArray *lolcats = [length.text componentsSeparatedByString:@" "];
+            recordLength = countdown = [lolcats[0] intValue];
+            NSLog(@"Length is %d", recordLength);
+            
         }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
@@ -793,10 +865,10 @@
     } else if ([alertView.title isEqualToString:@"Enter Name"]) {
         if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
             if (alertView.tag == FIRST_TIME_NAME) {
-               change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+                change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
                 change_name.tag = FIRST_TIME_NAME;
             } else {
-              change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
+                change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
                 change_name.tag = ENTER_NAME;
             }
             
@@ -823,7 +895,7 @@
                 login_status.text = [login_status.text stringByAppendingString:lastInitial];
                 saver->hasName = true;
             } else {
-               [self changeName]; 
+                [self changeName];
             }
             
         }
@@ -845,6 +917,14 @@
             } else {
                 expNum = PROD_DEFAULT_EXP;
             }
+        }
+    } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
+        if ([title isEqualToString:@"Try Again"]){
+            [self saveModeDialog];
+        } else {
+            saveModeEnabled = YES;
+            saver->saveMode = YES;
+            [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
         }
     }
 }

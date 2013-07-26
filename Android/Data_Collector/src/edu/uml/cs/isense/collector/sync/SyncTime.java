@@ -9,10 +9,14 @@ import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +24,7 @@ import android.os.StrictMode;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -69,13 +74,32 @@ public class SyncTime extends Activity {
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		w = new Waffle(this);
-
+		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-
+		
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#111133")));
+			bar.setIcon(getResources()
+					.getDrawable(R.drawable.rsense_logo_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
+		}
+		
 		String dummyTime = "" + System.currentTimeMillis();
 		byteMessage = dummyTime.getBytes();
 		receivedMessage = dummyTime.getBytes();

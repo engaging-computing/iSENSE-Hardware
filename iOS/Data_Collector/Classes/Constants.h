@@ -20,6 +20,7 @@
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5
+#define MENU_MEDIA_AUTOMATIC          2
 
 // constants for manual dialog
 #define MANUAL_MENU_UPLOAD            0
@@ -53,13 +54,13 @@
 #define UI_FIELDCONTENTS        1
 
 // manual scrollview oddity patches
-#define PORTRAIT_BOTTOM_CUT         40
-#define LANDSCAPE_BOTTOM_CUT_IPAD   30
+#define PORTRAIT_BOTTOM_CUT         30
+#define LANDSCAPE_BOTTOM_CUT_IPAD   1
 #define LANDSCAPE_BOTTOM_CUT_IPHONE 80
 #define TOP_ELEMENT_ADJUSTMENT      30
-#define START_Y_PORTRAIT_IPAD       20
+#define START_Y_PORTRAIT_IPAD       50
 #define START_Y_PORTRAIT_IPHONE     50
-#define START_Y_LANDSCAPE_IPAD      5
+#define START_Y_LANDSCAPE_IPAD      40
 #define START_Y_LANDSCAPE_IPHONE    0
 
 // manual scrollview keyboard and other offset values
