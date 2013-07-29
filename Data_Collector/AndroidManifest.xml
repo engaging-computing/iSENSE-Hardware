@@ -7,7 +7,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <supports-screens
         android:anyDensity="true"
@@ -107,10 +107,6 @@
             android:label="Time Reset"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".dialogs.ExperimentDialog"
-            android:label="Experiment ID"
-            android:theme="@style/DialogTheme" />
-        <activity
             android:name=".dialogs.CanLogin"
             android:label="Would You Like to Login?"
             android:theme="@style/theme_dialog_white" />
@@ -157,15 +153,18 @@
             tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.exp.BrowseExperiments"
-            android:label="Experiments" />
+            android:label="Experiments" 
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.exp.NoQR"
             android:label="No QR Code Scanner Found"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white" 
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.exp.Setup"
             android:label="Select an Experiment"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
 
         <service android:name="edu.uml.cs.isense.collector.DataCollectorService" >
         </service>

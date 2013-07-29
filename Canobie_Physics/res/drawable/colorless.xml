@@ -40,7 +40,7 @@
         </shape>
     </item>
 
-    <item>        
+    <item>
         <shape>
             <gradient
                 android:endColor="#000000"
