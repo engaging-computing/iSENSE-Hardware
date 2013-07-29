@@ -45,6 +45,18 @@
             android:label="SettingsTwo"
              >
         </activity>
+        
+        <activity
+            android:name=".datawalk_v2.CustomOnItemSelectedListener"
+            android:label="SettingsTesting"
+             >
+        </activity>
+           <activity
+            android:name=".datawalk_v2.PrefsTwoClone"
+            android:label="Recording Interval"
+            android:theme="@style/theme_dialog_white" 
+             >
+        </activity>
          <activity
             android:name=".datawalk_v2.EnterNameActivity"
             android:label="Name Activity"
