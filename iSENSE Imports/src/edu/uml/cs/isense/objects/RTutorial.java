@@ -7,7 +7,6 @@ package edu.uml.cs.isense.objects;
  */
 public class RTutorial {
     public int tutorial_id;
-    public int like_count;
     public boolean hidden;
     public String name = "";
     public String url = "";
