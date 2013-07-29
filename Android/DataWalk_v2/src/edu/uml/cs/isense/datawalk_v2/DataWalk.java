@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
@@ -160,7 +161,8 @@ public class DataWalk extends Activity implements LocationListener,
 	static int mwidth = 1;
 	private Waffle w;
 	public static Context mContext;
-
+	
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -458,8 +460,9 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 		}
 		
-		
-	}
+	
+	}//ends onCreate
+
 
 	@Override
 	public void onPause() {
@@ -515,7 +518,6 @@ public class DataWalk extends Activity implements LocationListener,
 		uploadPoint = true;
 		uploadMode = true;
 		umbChecked = true;
-		w.make("Connected to Internet- new data will automatically be uploaded to iSENSE!", w.LENGTH_LONG, w.IMAGE_CHECK);
 		}
 		if (umbChecked)
 			uploadMode = true;
@@ -685,6 +687,7 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 		return true;
 	}
+	
 	
 	private void manageUploadQueue() {
 		if (!uq.emptyQueue()) {
@@ -973,6 +976,7 @@ public class DataWalk extends Activity implements LocationListener,
 			if(umbChecked)
 			w.make("Data will  automatically be uploaded to iSENSE!", Waffle.LENGTH_LONG);
 			return true;*/
+		
 		case R.id.Upload:
 			manageUploadQueue();
 			return true;
@@ -991,10 +995,11 @@ public class DataWalk extends Activity implements LocationListener,
 			Log.d("tag", "you clicked on NameChange");
 			return true;
 		case R.id.DataUploadRate:
-			startActivity(new Intent(this, PrefsTwo.class));
+			startActivity(new Intent(this, PrefsTwoClone.class));
 			Log.d("tag", "you clicked on Change Recording Rate");
 			return true;
 		case R.id.ExpNum:
+			//TODO
 			Intent setup = new Intent(this, Setup.class);
 			startActivityForResult(setup, EXPERIMENT_REQUESTED);
 			Log.d("tag", "you clicked on Change Exp Num");
