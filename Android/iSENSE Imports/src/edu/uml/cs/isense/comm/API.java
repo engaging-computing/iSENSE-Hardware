@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
+import edu.uml.cs.isense.objects.RTutorial;
 
 public class API {
 	private static API instance = null;
@@ -115,6 +116,57 @@ public class API {
 			e.printStackTrace();
 		}
 		return proj;
+	}
+
+	//Return many tutorials
+	/*@param page Which page of results to start from. 1-indexed*/
+	/*@param perPage How many results to display per page */
+	/*@param descending Whether to display the results in descending order (true) or ascending order (false) */
+	public ArrayList<RTutorial> getTutorials(int page, int perPage, boolean descending) {
+		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
+		try {
+			String sortMode = descending ? "DESC" : "ASC";
+			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET");
+			JSONArray j = new JSONArray(reqResult);
+			for(int i = 0; i < j.length(); i++) {
+				JSONObject inner = j.getJSONObject(i);
+				RTutorial tut = new RTutorial();
+
+				tut.tutorial_id = inner.getInt("id");
+				tut.name = inner.getString("name");
+				tut.url = inner.getString("url");
+				tut.hidden = inner.getBoolean("hidden");
+				tut.timecreated = inner.getString("createdAt");
+				tut.owner_name = inner.getString("ownerName");
+				tut.owner_url = inner.getString("ownerUrl");
+
+				result.add(tut);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	//Return one tutorial
+	public RTutorial getTutorial(int tutorialId) {
+		RTutorial tut = new RTutorial();
+		try {
+			String reqResult = makeRequest(baseURL, "tutorials/"+tutorialId, "", "GET");
+			JSONObject j = new JSONObject(reqResult);
+
+			tut.tutorial_id = j.getInt("id");
+			//proj.featured_media_id = j.getInt("featuredMediaId");
+			tut.name = j.getString("name");
+			tut.url = j.getString("url");
+			tut.hidden = j.getBoolean("hidden");
+			tut.timecreated = j.getString("createdAt");
+			tut.owner_name = j.getString("ownerName");
+			tut.owner_url = j.getString("ownerUrl");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return tut;
 	}
 
 	/*Authenticated function*/
