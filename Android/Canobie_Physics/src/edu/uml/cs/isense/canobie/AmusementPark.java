@@ -90,7 +90,7 @@ import edu.uml.cs.isense.canobie.objects.DataFieldManager;
 import edu.uml.cs.isense.canobie.objects.Fields;
 import edu.uml.cs.isense.canobie.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -1288,7 +1288,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 				// Saves data for later upload
 				if (!uploadSuccess) {
-					DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession
+					QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession
 							+ " - " + dateString, description, eid,
 							dataSet.toString(), null, sessionId, city, state,
 							country, addr);
@@ -1304,7 +1304,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 					// Saves pictures for later upload
 					if (!picSuccess) {
-						DataSet ds = new DataSet(DataSet.Type.PIC,
+						QDataSet ds = new QDataSet(QDataSet.Type.PIC,
 								nameOfSession + " - " + dateString,
 								description, eid, null,
 								pictureArray.get(pic - 1), sessionId, city,

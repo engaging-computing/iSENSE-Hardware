@@ -61,7 +61,7 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -869,7 +869,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			} else {
 
 				uploadSuccessful = false;
-				DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
 						"Car Ramp Physics", experimentNumber,
 						dataSet.toString(), null, sessionId, city, state,
 						country, addr);

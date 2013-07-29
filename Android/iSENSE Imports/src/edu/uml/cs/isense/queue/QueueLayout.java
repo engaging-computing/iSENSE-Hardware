@@ -60,7 +60,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private boolean uploadSuccess = true;
 	private static String parentName = "";
 
-	protected static DataSet lastDataSetLongClicked;
+	protected static QDataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
 	private Waffle w;
 	private RestAPI rapi;
@@ -104,7 +104,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	// Works through list of data to be uploaded and creates the list of blocks
 	private void fillScrollQueue() {
 
-		for (final DataSet ds : uq.mirrorQueue)
+		for (final QDataSet ds : uq.mirrorQueue)
 			addViewToScrollQueue(ds);
 
 	}
@@ -123,7 +123,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	}
 
 	// Fills the text fields in the list element blocks
-	private void makeBlock(View view, DataSet ds) {
+	private void makeBlock(View view, QDataSet ds) {
 		CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.name);
 		ctv.setText(ds.getName() + " - " + ds.getType());
 
@@ -161,7 +161,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				return;
 			} else
 				new UploadSDTask().execute();
-			uq.queue = new LinkedList<DataSet>();
+			uq.queue = new LinkedList<QDataSet>();
 		} else if (id == R.id.cancel) {
 			setResultAndFinish(RESULT_CANCELED);
 			finish();
@@ -184,7 +184,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		boolean dialogShow = true;
 		ProgressDialog dia = null;
-		DataSet uploadSet;
+		QDataSet uploadSet;
 		boolean doThings = true;
 
 		@Override
@@ -256,7 +256,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	}
 
 	// Create an uploader particular to the DataSet to be uploaded in the queue
-	private void createRunnable(final DataSet ds) {
+	private void createRunnable(final QDataSet ds) {
 		sdUploader = new Runnable() {
 
 			public void run() {
@@ -327,7 +327,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				String newName = data.getStringExtra("new_name");
 				if (!newName.equals("")) {
-					DataSet alter = lastDataSetLongClicked;
+					QDataSet alter = lastDataSetLongClicked;
 					alter.setName(newName); 
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
@@ -341,7 +341,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		} else if (requestCode == ALTER_DATA_DATA_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				DataSet alter = QueueEditData.alter;
+				QDataSet alter = QueueEditData.alter;
 			
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
@@ -354,7 +354,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("EID_QUEUE", 0);
 				
-				DataSet alter = lastDataSetLongClicked;
+				QDataSet alter = lastDataSetLongClicked;
 				alter.setExp(mPrefs.getString("experiment_id", "No Exp."));
 				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
@@ -368,7 +368,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	}
 
-	private void addViewToScrollQueue(final DataSet ds) {
+	private void addViewToScrollQueue(final QDataSet ds) {
 
 		String previous = "";
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

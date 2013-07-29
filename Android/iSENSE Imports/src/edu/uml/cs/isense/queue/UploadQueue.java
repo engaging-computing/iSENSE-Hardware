@@ -34,8 +34,8 @@ public class UploadQueue implements Serializable {
 	private static final long serialVersionUID = -3036173866992721309L;
 	public static final String SERIAL_ID = "upload_queue_object";
 	
-	protected Queue<DataSet> queue;
-	protected Queue<DataSet> mirrorQueue;
+	protected Queue<QDataSet> queue;
+	protected Queue<QDataSet> mirrorQueue;
 	private static String parentName;
 	private static Context mContext;
 	private static RestAPI rapi;
@@ -61,8 +61,8 @@ public class UploadQueue implements Serializable {
 	 */
 	public UploadQueue(String parentName, Context context,
 			RestAPI rapi) {
-		this.queue = new LinkedList<DataSet>();
-		this.mirrorQueue = new LinkedList<DataSet>();
+		this.queue = new LinkedList<QDataSet>();
+		this.mirrorQueue = new LinkedList<QDataSet>();
 		
 		UploadQueue.parentName = parentName;
 		UploadQueue.mContext = context;
@@ -95,7 +95,7 @@ public class UploadQueue implements Serializable {
 	 * @param ds
 	 * 			The DataSet object to be added to the UploadQueue.
 	 */
-	public void addDataSetToQueue(DataSet ds) {
+	public void addDataSetToQueue(QDataSet ds) {
 		queue.add(ds);
 		mirrorQueue.add(ds);
 		storeAndReRetrieveQueue(true);
@@ -104,7 +104,7 @@ public class UploadQueue implements Serializable {
 	// Saves Q_COUNT and uploadQueue into memory for later use
 	protected void storeAndReRetrieveQueue(boolean rebuildMirrorQueue) {
 
-		Queue<DataSet> backupQueue = new LinkedList<DataSet>();
+		Queue<QDataSet> backupQueue = new LinkedList<QDataSet>();
 		backupQueue.addAll(queue);
 		
 		// save Q_COUNT in SharedPrefs
@@ -134,7 +134,7 @@ public class UploadQueue implements Serializable {
 			
 			// serializes DataSets
 			while (Q_COUNT > 0) {
-				DataSet ds = backupQueue.remove();
+				QDataSet ds = backupQueue.remove();
 				out.writeObject(ds);
 				Q_COUNT--;
 			}
@@ -145,7 +145,7 @@ public class UploadQueue implements Serializable {
 		}
 
 		// re-retrieve the queue
-		queue = new LinkedList<DataSet>();
+		queue = new LinkedList<QDataSet>();
 		Q_COUNT = Q_COUNT_BACKUP;
 		
 		try {
@@ -155,7 +155,7 @@ public class UploadQueue implements Serializable {
 			
 			// Deserialize the objects one by one
 			for (int i = 0; i < Q_COUNT; i++) {
-				DataSet dataSet = (DataSet) in.readObject();
+				QDataSet dataSet = (QDataSet) in.readObject();
 				queue.add(dataSet);
 			}
 			in.close();
@@ -176,9 +176,9 @@ public class UploadQueue implements Serializable {
 	
 	// removes the dataset with the associated key: true if removed, false if not found
 	protected boolean removeItemWithKey(long keyVal) {
-		LinkedList<DataSet> backup = new LinkedList<DataSet>();
+		LinkedList<QDataSet> backup = new LinkedList<QDataSet>();
 		backup.addAll(queue);
-		for (DataSet ds : backup) {
+		for (QDataSet ds : backup) {
 			if (ds.key == keyVal) {
 				queue.remove(ds);
 				mirrorQueue.remove(ds);
@@ -201,10 +201,10 @@ public class UploadQueue implements Serializable {
 	public boolean buildQueueFromFile() {
 		
 		// reset the queues but save a backup
-		Queue<DataSet> backupQueue = new LinkedList<DataSet>();
+		Queue<QDataSet> backupQueue = new LinkedList<QDataSet>();
 		backupQueue.addAll(queue);
-		queue       = new LinkedList<DataSet>();
-		mirrorQueue = new LinkedList<DataSet>();
+		queue       = new LinkedList<QDataSet>();
+		mirrorQueue = new LinkedList<QDataSet>();
 		
 		// get Q_COUNT from the SharedPrefs
 		final SharedPreferences mPrefs = mContext.getSharedPreferences(
@@ -235,7 +235,7 @@ public class UploadQueue implements Serializable {
 			
 			// Deserialize the objects one by one
 			for (int i = 0; i < Q_COUNT; i++) {
-				DataSet dataSet = (DataSet) in.readObject();
+				QDataSet dataSet = (QDataSet) in.readObject();
 				queue.add(dataSet);
 			}
 			in.close();

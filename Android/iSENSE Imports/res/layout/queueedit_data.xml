@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     android:padding="10dp"
-    android:background="@android:color/transparent" >
+    tools:ignore="UnusedResources" >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
-        android:padding="5dp"
-        android:scrollbars="vertical"
         android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
-        android:scrollbarThumbVertical="@drawable/grey_scroll" >
+        android:padding="5dp"
+        android:scrollbarThumbVertical="@drawable/grey_scroll"
+        android:scrollbars="vertical" >
 
         <LinearLayout
             android:id="@+id/queueedit_data_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@android:color/transparent" >
+            android:background="@android:color/transparent"
+            android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>
 
@@ -29,9 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:background="@android:color/transparent" >
+        android:weightSum="2" >
 
         <Button
             android:id="@+id/queueedit_data_cancel"

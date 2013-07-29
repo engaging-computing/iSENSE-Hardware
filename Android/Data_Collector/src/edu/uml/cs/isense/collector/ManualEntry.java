@@ -67,7 +67,7 @@ import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.objects.ExperimentField;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -641,7 +641,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		ProgressDialog dia;
 		String city = "", state = "", country = "", addr = "";
 		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
-		DataSet ds;
+		QDataSet ds;
 
 		@Override
 		protected void onPreExecute() {
@@ -679,7 +679,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
-			ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
+			ds = new QDataSet(QDataSet.Type.DATA, sessionName.getText()
 					.toString(), uploadTime, eid, data, null, -1, city, state,
 					country, addr);
 
@@ -781,9 +781,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
-					DataSet picDS = new DataSet(DataSet.Type.PIC, name,
+					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
 							uploadTime, eid, null, picture,
-							DataSet.NO_SESSION_DEFINED, city, state, country,
+							QDataSet.NO_SESSION_DEFINED, city, state, country,
 							addr);
 					uq.addDataSetToQueue(picDS);
 

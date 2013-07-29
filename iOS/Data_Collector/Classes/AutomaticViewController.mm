@@ -877,6 +877,14 @@ dataToBeOrdered, backFromQueue;
     [step1Label setAlpha:1.0];
     [step3Label setAlpha:1.0];
     
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
+    NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
+    NSString *sesName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    [step1Label setText:[NSString stringWithFormat:@"Recording data for \"%@\" at a sample interval of %@ ms for %@ sec",
+                     sesName, sampleIntervalString, testLengthString]];
+    
+    
     [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"004400"]];
     [mainLogo setImage:[UIImage imageNamed:@"rsense_logo_recording"]];
     

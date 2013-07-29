@@ -3,15 +3,16 @@
     android:id="@+id/splash_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <RelativeLayout
         android:id="@+id/splash_main_encapsulator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@android:color/transparent" >
+        android:background="@android:color/transparent"
+        tools:ignore="UselessParent" >
 
         <edu.uml.cs.isense.supplements.FontFitTextView
             android:id="@+id/title_text"
@@ -23,7 +24,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/app_name"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            tools:ignore="MissingRegistered" />
 
         <TextView
             android:id="@+id/splash_prompt"

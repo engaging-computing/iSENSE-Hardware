@@ -21,7 +21,7 @@ import edu.uml.cs.isense.dfm.DataFieldManager;
  *
  */
 @SuppressLint("ParserError")
-public class DataSet implements Serializable {
+public class QDataSet implements Serializable {
 
 
 	// DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
@@ -131,7 +131,7 @@ public class DataSet implements Serializable {
 	 * @param country
 	 * @param addr
 	 */
-	public DataSet(Type type, String name, String desc, String eid,
+	public QDataSet(Type type, String name, String desc, String eid,
 			String data, File picture, int sid, String city, String state,
 			String country, String addr) {
 		this.type = type;

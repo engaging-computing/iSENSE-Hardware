@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    tools:ignore="UnusedResources" >
 
     <TextView
         android:id="@+id/experimentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:text="@string/chooseExperiment"
-        android:textSize="16sp"
-        android:background="@android:color/transparent" />
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/experimentInput"
@@ -50,14 +52,14 @@
             android:text="@string/scan_qr"
             android:textSize="18sp" />
     </LinearLayout>
-    
+
     <Button
         android:id="@+id/experiment_no_exp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginBottom="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text="@string/no_experiment_now"
         android:textSize="18sp" />
 

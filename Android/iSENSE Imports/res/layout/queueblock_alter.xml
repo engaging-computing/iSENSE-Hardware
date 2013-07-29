@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/transparent"
     android:scrollbarThumbVertical="@drawable/grey_scroll"
-    android:scrollbars="vertical" >
+    android:scrollbars="vertical"
+    tools:ignore="UnusedResources" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -44,7 +46,7 @@
             android:padding="10dp"
             android:text="@string/change_data"
             android:textSize="16sp" />
-        
+
         <Button
             android:id="@+id/queuealter_choose_exp"
             android:layout_width="match_parent"
