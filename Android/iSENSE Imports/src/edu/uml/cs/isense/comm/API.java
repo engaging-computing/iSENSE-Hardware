@@ -23,6 +23,7 @@ public class API {
 	private static API instance = null;
 	String baseURL = "http://129.63.17.17:3000";
 	String authToken = "";
+	RPerson currentUser;
 
 	public API() {
 		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
@@ -52,6 +53,7 @@ public class API {
 			JSONObject j =  new JSONObject(result);
 			authToken = j.getString("authenticity_token");
 			if( j.getString("status").equals("success")) {
+				currentUser = getUser(username);
 				return true;
 			} else {
 				return false;
@@ -219,6 +221,10 @@ public class API {
 			e.printStackTrace();
 		}
 		return person;
+	}
+	
+	public RPerson getCurrentUser() {
+		return currentUser;
 	}
 
 	public String makeRequest(String baseURL, String path, String parameters, String reqType) {
