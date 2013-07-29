@@ -15,18 +15,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RTutorial;
 
 public class API {
 	private static API instance = null;
-	String baseURL = "http://129.63.17.17:3000";
+	private String baseURL = "";
+	private final String publicURL = "http://129.63.17.17:3000";
+	private final String devURL = "";
+	private Context context;
 	String authToken = "";
 	RPerson currentUser;
 
 	public API() {
 		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+		baseURL = publicURL;
 	}
 
 	/**
@@ -36,10 +43,11 @@ public class API {
 	 * 
 	 * @return current or new API
 	 */
-	public static API getInstance() {
+	public static API getInstance(Context c) {
 		if(instance == null) {
 			instance = new API();
 		}
+		instance.context = c;
 		return instance;
 	}
 
@@ -256,5 +264,23 @@ public class API {
 		}
 
 		return "Error: status " + mstat;
+	}
+	
+	public void useDev(boolean use) {
+		baseURL = use ? devURL : publicURL;
+	}
+	
+	/**
+	 * Returns status on whether you are connected to the Internet.
+	 * 
+	 * @return current connection status
+	 */
+	public boolean hasConnectivity() {
+
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		
+		NetworkInfo info = cm.getActiveNetworkInfo();
+		return (info != null && info.isConnected());
+
 	}
 }
