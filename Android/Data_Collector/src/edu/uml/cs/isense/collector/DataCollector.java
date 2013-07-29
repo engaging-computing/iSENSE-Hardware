@@ -282,7 +282,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Set main context of application once
 		mContext = this;
 
-		// Action bar customization for API >= 11
+		// Action bar customization for API >= 14
 		setActionBarNormal();
 
 		// Load the main UI
@@ -832,8 +832,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dia.setMessage("Please wait while your data are saved...");
 			dia.setCancelable(false);
 			dia.show();
-			TextView tv = (TextView) dia.findViewById(android.R.id.message);
-			tv.setTextColor(Color.WHITE);
 		}
 
 		@Override
@@ -1150,7 +1148,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// UI variables initialized for onCreate
 	private void initMainUI() {
 		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			isenseLogo.setVisibility(View.GONE);
 		}
 
@@ -1171,6 +1169,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// UI variables to re-initialize onConfigurationChange
 	private void reInitMainUI() {
 		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			isenseLogo.setVisibility(View.GONE);
+		}
+		
 		step1 = (Button) findViewById(R.id.auto_step1);
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
@@ -1767,8 +1769,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	private void setActionBarNormal() {
-		// Action bar customization for API >= 11
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#111133")));
@@ -1789,8 +1791,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	private void setActionBarRecording() {
-		// Action bar customization for API >= 11
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#07420E")));

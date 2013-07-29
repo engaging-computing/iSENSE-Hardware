@@ -8,6 +8,19 @@
 
 #import "ViewController.h"
 
+#define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
+#define PROD_VIS_URL @"http://isense.cs.uml.edu/highvis.php?sessions="
+
+#define DEV_DEFAULT_EXP 596
+#define PROD_DEFAULT_EXP 409
+
+#define FIRST_NAME_FIELD 9001
+#define LAST_NAME_FIELD 9002
+#define LOGIN_USER 9003
+#define LOGIN_PASS 9004
+
+#define FIRST_TIME_NAME 9005
+#define ENTER_NAME 9006
 
 @interface ViewController ()
 
@@ -802,7 +815,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSLog(@"Hello");
-
+#define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
     NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {

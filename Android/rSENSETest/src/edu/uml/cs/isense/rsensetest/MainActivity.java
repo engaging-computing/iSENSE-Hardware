@@ -1,16 +1,6 @@
 package edu.uml.cs.isense.rsensetest;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import java.net.CookiePolicy;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -19,12 +9,17 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RPerson;
+import edu.uml.cs.isense.objects.RProject;
 
 public class MainActivity extends Activity implements OnClickListener {
 
 	Button login, getusers, getprojects;
 	TextView status;
+	EditText projID, userName;
 	API api;
 
 	@Override
@@ -36,12 +31,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers = (Button) findViewById(R.id.btn_getusers);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
 		status = (TextView) findViewById(R.id.txt_results);
+		projID = (EditText) findViewById(R.id.et_projectnum);
+		userName = (EditText) findViewById(R.id.et_username);
 
 		login.setOnClickListener(this);
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
+		getusers.setEnabled(false);
 		
-		api = new API();
+		api = API.getInstance();
 	}
 
 	@Override
@@ -74,33 +72,52 @@ public class MainActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(Boolean result) {
 			if(result) {
 				status.setText("Login Succeeded");
+				getusers.setEnabled(true);
 			} else {
 				status.setText("Login Failed");
 			}
 		}
 	}
 	
-	private class UsersTask extends AsyncTask<Void, Void, String> {
+	private class UsersTask extends AsyncTask<Void, Void, ArrayList<RPerson>> {
 		@Override
-		protected String doInBackground(Void... params) {
-			return api.getUsers();
+		protected ArrayList<RPerson> doInBackground(Void... params) {
+			if(userName.getText().toString().equals("")) {
+				return api.getUsers(1, 10, true);
+			} else {
+				ArrayList<RPerson> rp = new ArrayList<RPerson>();
+				rp.add(api.getUser(userName.getText().toString()));
+				return rp;
+			}
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-			status.setText(result);
+		protected void onPostExecute(ArrayList<RPerson> people) {
+			status.setText("People:\n");
+			for(RPerson p : people) {
+				status.append(p.name + "\n");
+			}
 		}
 	}
 	
-	private class ProjectsTask extends AsyncTask<Void, Void, String> {
+	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
 		@Override
-		protected String doInBackground(Void... params) {
-			return api.getProjects();
+		protected ArrayList<RProject> doInBackground(Void... params) {
+			if(projID.getText().toString().equals("")) {
+				return api.getProjects(1, 10, true);
+			} else {
+				ArrayList<RProject> rp = new ArrayList<RProject>();
+				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
+				return rp;
+			}
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-			status.setText(result);
+		protected void onPostExecute(ArrayList<RProject> projects) {
+			status.setText("Projects:\n");
+			for(RProject p : projects) {
+				status.append(p.name + "\n");
+			}
 		}
 	}
 	

@@ -10,13 +10,13 @@
 #import "iSENSE.h"
 #import "Reachability.h"
 
-static NSString *baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
+static NSString *baseURL = @"http://129.63.8.186/ws/api.php?";
 static iSENSE *_iSENSE = nil;
 
 
 @implementation iSENSE
 
-// Makes a request to iSENSE and parse the JSONObject it gets back (TODO)
+// Makes a request to iSENSE and parse the JSONObject it gets back
 -(NSDictionary *)isenseQuery:(NSString*)target {
     
 	NSString *final_target = [target stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -450,10 +450,6 @@ static iSENSE *_iSENSE = nil;
  * Sort: Sort results like on iSENSE.  Accepts "recent", "rating", "activity", and "popularity".
  */
 - (NSMutableArray *) getExperiments:(NSNumber *)fromPage withLimit:(NSNumber *)limit withQuery:(NSString *)query andSort:(NSString *)sort {
-    NSLog(@"fromPage: %@", fromPage);
-    NSLog(@"withPage: %@", limit);
-    NSLog(@"withQuery: %@", query);
-    NSLog(@"andSort: %@", sort);
     
 	NSDictionary *result  = [self isenseQuery:[NSString stringWithFormat:@"method=getExperiments&page=%@&limit=%@&query=%@&sort=%@", fromPage, limit, query, sort]];
 	NSArray *data = [result objectForKey:@"data"];
@@ -680,16 +676,14 @@ static iSENSE *_iSENSE = nil;
 // Use this method to toggle between using iSENSE and iSENSE dev
 - (void) toggleUseDev:(BOOL)toggle {
 	if (toggle) {
-		baseURL = @"http://isensedev.cs.uml.edu/ws/api.php?";
+		baseURL = @"http://129.63.8.185/ws/api.php?";
 	} else {
-		baseURL = @"http://isense.cs.uml.edu/ws/api.php?";
+		baseURL = @"http://129.63.8.186/ws/api.php?";
 	}
 }
 
 // Use this method to determine if internet connectivity is available
 - (bool) isConnectedToInternet {
-    // NSString *URLString = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://isenseproject.org"] encoding:NSASCIIStringEncoding error:nil];
-    // return ( URLString != NULL ) ? true : false;
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];
     return !(networkStatus == NotReachable);

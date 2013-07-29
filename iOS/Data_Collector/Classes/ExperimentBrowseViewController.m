@@ -7,44 +7,48 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
+// TODO SPINNER ON SEARCH AND IPAD
+
 #import "ExperimentBrowseViewController.h"
 
 @implementation ExperimentBrowseViewController
 
 @synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastExperimentClicked;
 
+#define SPINNER_HEIGHT 25
+
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
     UIView *mainView;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
-        mainView.backgroundColor = [UIColor blackColor];
+        mainView.backgroundColor = [HexColor colorWithHexString:@"EEEEEE"];
         self.view = mainView;
         [mainView release];
         
         // Prepare ExperimentInfo Frame
-        experimentInfo = [[UIView alloc] initWithFrame:CGRectMake(320, 50, 433, self.view.bounds.size.height - 100)];
+        experimentInfo = [[UIView alloc] initWithFrame:CGRectMake(325, 42, 433, self.view.bounds.size.height - 44)];
         experimentInfo.backgroundColor = [UIColor clearColor];
         experimentInfo.layer.borderWidth = 3;
-        experimentInfo.layer.borderColor = [[UIColor whiteColor] CGColor];
+        experimentInfo.layer.borderColor = [[UIColor blackColor] CGColor];
         experimentInfo.hidden = YES;
         [self.view addSubview:experimentInfo];
-        experimentInfoSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        experimentInfoSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
         
         // Prepare choose experiment button
         chooseExperiment = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
-        chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
-        [chooseExperiment setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [chooseExperiment setBackgroundImage:[UIImage imageNamed:@"button_light_long.png"] forState:UIControlStateNormal];
+        chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 170, experimentInfo.frame.size.width - 40, 100);
+        [chooseExperiment setTitleColor:[HexColor colorWithHexString:@"5C93DB"] forState:UIControlStateNormal];
         [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
         [chooseExperiment addTarget:self action:@selector(experimentChosen) forControlEvents:UIControlEventTouchUpInside];
 
     } else {
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
-        mainView.backgroundColor = [UIColor blackColor];
+        mainView.backgroundColor = [UIColor whiteColor];
         self.view = mainView;
         [mainView release];
     }
@@ -62,20 +66,19 @@
     }
     searchBarTextField.enablesReturnKeyAutomatically = NO;
     
-    // Prepare experimentSpinner for loading at bottom
-    bottomSpinnerBlock = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 60, 320, 40)];
-    [self.view addSubview:bottomSpinnerBlock];
-    experimentSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [bottomSpinnerBlock addSubview:experimentSpinner];
-    [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
-    [bottomSpinnerBlock release];
-    
     // Prepare scrollview
-    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, 320, self.view.bounds.size.height - 120)];
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 42, 320, self.view.bounds.size.height - 44)];
     scrollHeight = scrollView.bounds.size.height;
     scrollView.delaysContentTouches = NO;
     scrollView.delegate = self;
     [self.view addSubview:scrollView];
+    
+    // Prepare experimentSpinner for loading at bottom
+    bottomSpinnerBlock = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    experimentSpinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [bottomSpinnerBlock addSubview:experimentSpinner];
+    [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+    [scrollView addSubview:bottomSpinnerBlock];
     
     // Prepare rapi
     isenseAPI = [iSENSE getInstance];
@@ -89,8 +92,8 @@
 }
 
 // Is called every time ExperimentBrowser appears
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
     // UpdateExperimentNumber status
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
@@ -102,42 +105,38 @@
     return YES;
 }
 
-// iOS6
+// Enables rotation in iOS6
 - (BOOL)shouldAutorotate {
     return YES;
 }
 
-// iOS6
+// Enables rotation in iOS6
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
 }
 
-/** Todo */
+// Handles object resizing on rotation
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
             self.view.frame = CGRectMake(0, 0, 1024, 768 - NAVIGATION_CONTROLLER_HEIGHT);
-            experimentInfo.frame = CGRectMake(320, 50, self.view.bounds.size.width - 330, self.view.bounds.size.height - 100);
+            experimentInfo.frame = CGRectMake(325, 42, self.view.bounds.size.width - 330, self.view.bounds.size.height - 44);
             [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
-            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, 320, 40);
-            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
-            chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
+            chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 145, experimentInfo.frame.size.width - 40, 75);
             searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
-            scrollView.frame = CGRectMake(0, 50, 320, self.view.bounds.size.height - 120);
-            if (additionalInfo) additionalInfo.frame = CGRectMake(20, 405, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 475);
-            if (imageView) imageView.frame = CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300);
+            scrollView.frame = CGRectMake(0, 42, 320, self.view.bounds.size.height - 44);
+            if (additionalInfo) additionalInfo.frame = CGRectMake(20, 365, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 475);
+            if (imageView) imageView.frame = CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 250);
             if (experimentTitle) experimentTitle.frame = CGRectMake(20, 0, experimentInfo.frame.size.width - 40, 100);
         } else {
             self.view.frame = CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT);
-            experimentInfo.frame = CGRectMake(320, 50, 433, self.view.bounds.size.height - 100);
+            experimentInfo.frame = CGRectMake(325, 42, 433, self.view.bounds.size.height - 44);
             [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
-            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, 320, 40);
-            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
-            chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 160, experimentInfo.frame.size.width - 40, 50);
+            chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 170, experimentInfo.frame.size.width - 40, 100);
             searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
-            scrollView.frame = CGRectMake(0, 50, 320, self.view.bounds.size.height - 120);
-            if (additionalInfo) additionalInfo.frame = CGRectMake(20, 500, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 500);
+            scrollView.frame = CGRectMake(0, 42, 320, self.view.bounds.size.height - 44);
+            if (additionalInfo) additionalInfo.frame = CGRectMake(20, 450, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 400);
             if (imageView) imageView.frame = CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300);
             if (experimentTitle) experimentTitle.frame = CGRectMake(20, 0, experimentInfo.frame.size.width - 40, 100);
         }
@@ -146,21 +145,15 @@
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
             self.view.frame = CGRectMake(0, 0, 480, 320 - NAVIGATION_CONTROLLER_HEIGHT);
-            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, self.view.frame.size.width, 40);
-            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
             searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
-            scrollView.frame = CGRectMake(80, 50, self.view.bounds.size.width - 160, self.view.bounds.size.height - 120);
+            scrollView.frame = CGRectMake(80, 42, self.view.bounds.size.width - 160, self.view.bounds.size.height - 44);
         } else {
             self.view.frame = CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT);
-            bottomSpinnerBlock.frame = CGRectMake(0, self.view.bounds.size.height - 60, 320, 40);
-            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
             searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 40);
-            scrollView.frame = CGRectMake(0, 50, 320, self.view.bounds.size.height - 120);
+            scrollView.frame = CGRectMake(0, 42, 320, self.view.bounds.size.height - 44);
         }
     }
 }
-
-
 
 - (void)experimentChosen {
     *_chosenExperiment = lastExperimentClicked.experiment.experiment_id.intValue;
@@ -169,6 +162,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [experimentSpinner startAnimating];
     // Do any additional setup after loading the view.
 }
 
@@ -192,6 +186,9 @@
     
     [query release];
     
+    [scrollView addSubview:bottomSpinnerBlock];
+    [experimentSpinner startAnimating];
+    
     // Dismiss keyboard.
     [search resignFirstResponder];
 }
@@ -201,8 +198,7 @@
     [search resignFirstResponder];
 }
 
-- (IBAction)onExperimentButtonClicked:(id)caller {
-    [caller switchToDarkImage:TRUE];
+- (void)onExperimentButtonClicked:(id)caller {
     
     if (!(caller == lastExperimentClicked)) {
         if (lastExperimentClicked) {
@@ -230,19 +226,23 @@
 }
 
 // Extra experiment information for loading in background.
-- (void) loadExperimentInfomationForIPad {
+- (void)loadExperimentInfomationForIPad {
     
     NSMutableArray *imageArray = [isenseAPI getExperimentImages:lastExperimentClicked.experiment.experiment_id];
-    NSLog(@"Image count:%d", imageArray.count);
+    
+    if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300)];
+    } else {
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 250)];
+    }
     
     if (imageArray.count) {
-        
+                
         // Fetch Images
         Image *firstImage = imageArray[0];
         NSURL *url = [NSURL URLWithString:firstImage.provider_url];
         NSData *data = [NSData dataWithContentsOfURL:url];
         UIImage *image = [UIImage imageWithData:data];
-        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300)];
         imageView.image = image;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         
@@ -252,8 +252,7 @@
             [imageView release];
         });
     } else {
-        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 100, experimentInfo.frame.size.width - 30, 300)];
-        imageView.image = [UIImage imageNamed:@"noimagedata_normal.png"];
+        imageView.image = [UIImage imageNamed:@"novis_photo.png"];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         // Add image to experimentInfo
@@ -263,7 +262,6 @@
         });
 
     }
-    
         
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -272,25 +270,29 @@
         experimentTitle.backgroundColor = [UIColor clearColor];
         experimentTitle.text = lastExperimentClicked.experiment.name;
         experimentTitle.textAlignment = NSTextAlignmentCenter;
-        experimentTitle.textColor = [UIColor whiteColor];
+        experimentTitle.textColor = [UIColor blackColor];
         experimentTitle.numberOfLines = 0;
-        experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:24];
+        experimentTitle.font = [UIFont fontWithName:@"Helvetica" size:30];
         
         // Set additional information
-        additionalInfo = [[UITextView alloc] initWithFrame:CGRectMake(20, 450, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 500)];
-        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) additionalInfo.frame = CGRectMake(20, 405, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 475);
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
+            additionalInfo = [[UITextView alloc] initWithFrame:CGRectMake(20, 450, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 400)];
+        } else {
+            additionalInfo = [[UITextView alloc] initWithFrame:CGRectMake(20, 365, experimentInfo.frame.size.width - 40, experimentInfo.frame.size.height - 475)];
+        }
+        
         additionalInfo.text = [NSString stringWithFormat:@"Created by: %@\nNumber of Sessions: %@\nLast Modified: %@\n\nDescription: %@", lastExperimentClicked.experiment.firstname, lastExperimentClicked.experiment.session_count, lastExperimentClicked.experiment.timecreated, lastExperimentClicked.experiment.description];
         additionalInfo.textAlignment = NSTextAlignmentCenter;
         additionalInfo.font = [UIFont fontWithName:@"Arial" size:18];
-        additionalInfo.textColor = [UIColor whiteColor];
+        additionalInfo.textColor = [UIColor blackColor];
         additionalInfo.backgroundColor = [UIColor clearColor];
         additionalInfo.editable = FALSE;
-        
+                
         // Update experimentInfo
         [experimentInfo addSubview:additionalInfo];
         [experimentInfo addSubview:experimentTitle];
-        [experimentInfo addSubview:chooseExperiment];
-    
+        [experimentInfo addSubview:chooseExperiment];   
+
         // Release subviews
         [experimentTitle release];
         [additionalInfo release];
@@ -327,11 +329,15 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSMutableArray *experiments = [[isenseAPI getExperiments:[NSNumber numberWithInt:iSS.page]
-                                                       withLimit:[NSNumber numberWithInt:10]
+                                                       withLimit:[NSNumber numberWithInt:15]
                                                        withQuery:iSS.query
                                                          andSort:[iSS searchTypeToString]] retain];
                         
         dispatch_async(dispatch_get_main_queue(), ^{
+            // remove the spinner
+            [experimentSpinner stopAnimating];
+            [experimentSpinner removeFromSuperview];
+
             currentPage = iSS.page;
             currentQuery = iSS.query;
             
@@ -343,35 +349,48 @@
             }
             
             if (iSS.buildType == APPEND) {
-                maxHeight = contentHeight;
+                maxHeight = contentHeight - SPINNER_HEIGHT;
             }
             
             for (Experiment *exp in experiments) {
-                
+               
                 ExperimentBlock *block = [[ExperimentBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
                                                                      experiment:exp
                                                                          target:self
-                                                                         action:@selector(onExperimentButtonClicked:)];
-                
+                                                                         action:@selector(onExperimentButtonClicked:)];                
                 [scrollView addSubview:block];
                 [block release];
-                maxHeight += 60;
+                maxHeight += 54; // adds 4 pixels of padding
             }
+            
+            if (experiments.count == 0) {
+                UILabel *noExperimentsFound = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 310, 20)];
+                noExperimentsFound.text = @"No experiments found.";
+                [scrollView addSubview:noExperimentsFound];
+                [noExperimentsFound release];
+                maxHeight += 20;
+            }
+            
+            // Hopefully adds a spinner to the bottom of the view
+            bottomSpinnerBlock.frame = CGRectMake(0, maxHeight, 320, 25);
+            [scrollView addSubview:bottomSpinnerBlock];
+            [bottomSpinnerBlock addSubview:experimentSpinner];
+            [self setCenter:bottomSpinnerBlock forSpinner:experimentSpinner];
+            maxHeight += SPINNER_HEIGHT;
             
             CGSize scrollableSize = CGSizeMake(320, maxHeight);
             [scrollView setContentSize:scrollableSize];
             
             contentHeight = maxHeight;
             
-            NSLog(@"ScrollView Content size = %d. ScrollView size = %d", contentHeight, scrollHeight);
-            if (contentHeight <= scrollHeight && experiments.count == 10) {
+            if (contentHeight <= scrollHeight && experiments.count == 15) {
                 iSS.page++;
                 iSS.buildType = APPEND;
+                [experimentSpinner startAnimating];
                 [self updateScrollView:iSS];
             }
     
             [experiments release];
-            [experimentSpinner stopAnimating];
     
         });
         
