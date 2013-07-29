@@ -73,6 +73,8 @@
             android:textColor="#A8CFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+          
+    
          <TextView
             android:id="@+id/loginStatus"
             android:layout_width="fill_parent"

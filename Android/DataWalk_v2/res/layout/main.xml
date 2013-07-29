@@ -75,7 +75,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
+    	<TextView
             android:id="@+id/pointCount"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
