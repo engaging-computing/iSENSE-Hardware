@@ -130,15 +130,25 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
                 
-                UIActionSheet *popupQuery = [[UIActionSheet alloc]
-                                             initWithTitle:nil
-                                             delegate:self
-                                             cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:@"Delete"
-                                             otherButtonTitles:@"Rename", nil];
-                popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-                [popupQuery showInView:self.view];
-                
+                if (![cell dataSetHasInitialExperiment]) {
+                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                                 initWithTitle:nil
+                                                 delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:@"Delete"
+                                                 otherButtonTitles:@"Rename", @"Select Experiment", nil];
+                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                    [popupQuery showInView:self.view];
+                } else {
+                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                                 initWithTitle:nil
+                                                 delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 destructiveButtonTitle:@"Delete"
+                                                 otherButtonTitles:@"Rename", nil];
+                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+                    [popupQuery showInView:self.view];
+                }
             }
         }
     }
@@ -213,6 +223,22 @@
             break;
         }
             
+        case QUEUE_SELECT_EXP:
+            
+            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            if (![cell dataSetHasInitialExperiment]) {
+                
+                message = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:nil
+                                                    delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                message.tag = QUEUE_SELECT_EXP;
+                [message show];
+            }
+            
+			break;
+            
         default:
 			break;
 	}
@@ -262,6 +288,52 @@
             [cell setSessionName:newSessionName];
             [mTableView reloadData];
         }
+    }  else if (actionSheet.tag == QUEUE_SELECT_EXP) {
+        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+            
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                                    otherButtonTitles:@"Okay", nil];
+            
+            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+            [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_EXP;
+            [message textFieldAtIndex:0].delegate = self;
+            [message show];
+            
+        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+            
+            int expNum;
+            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            browseView.chosenExperiment = &expNum;
+            [self.navigationController pushViewController:browseView animated:YES];
+            
+        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
+            
+            if ([[UIApplication sharedApplication]
+                 canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+                NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=carPhysics%3A//EAN"];
+                [[UIApplication sharedApplication] openURL:urlp2s];
+            } else {
+                NSURL *urlapp = [NSURL URLWithString:
+                                 @"http://itunes.com/app/pic2shop"];
+                [[UIApplication sharedApplication] openURL:urlapp];
+            }
+            
+        }
+    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+        
+        if (buttonIndex != OPTION_CANCELED) {
+            
+            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setExpNum:expNumString];
+        }
+        
     }
 }
 

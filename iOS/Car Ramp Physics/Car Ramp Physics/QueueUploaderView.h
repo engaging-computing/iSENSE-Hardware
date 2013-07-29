@@ -12,6 +12,7 @@
 #import "QueueCell.h"
 #import "ExperimentBrowseViewController.h"
 #import "Waffle.h"
+#import "DataFieldManager.h"
 #import <DataSaver.h>
 
 @interface QueueUploaderView : UIViewController <UITextFieldDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> {

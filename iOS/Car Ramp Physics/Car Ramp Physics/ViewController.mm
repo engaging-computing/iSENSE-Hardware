@@ -8,19 +8,6 @@
 
 #import "ViewController.h"
 
-#define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
-#define PROD_VIS_URL @"http://isenseproject.org/highvis.php?sessions="
-
-#define DEV_DEFAULT_EXP 596
-#define PROD_DEFAULT_EXP 409
-
-#define FIRST_NAME_FIELD 9001
-#define LAST_NAME_FIELD 9002
-#define LOGIN_USER 9003
-#define LOGIN_PASS 9004
-
-#define FIRST_TIME_NAME 9005
-#define ENTER_NAME 9006
 
 @interface ViewController ()
 
@@ -141,21 +128,6 @@
     iapi = [iSENSE getInstance];
     [iapi toggleUseDev: useDev];
     
-    
-    running = NO;
-    timeOver = NO;
-    setupDone = NO;
-    
-    if (useDev) {
-        expNum = DEV_DEFAULT_EXP;
-    } else {
-        expNum = PROD_DEFAULT_EXP;
-    }
-    
-    dfm = [[DataFieldManager alloc] init];
-    //[dfm setEnabledField:YES atIndex:fACCEL_Y];
-    motionmanager = [[CMMotionManager alloc] init];
-    
     if (saver == nil) {
         saver = new RotationDataSaver;
         saver->hasName = false;
@@ -166,6 +138,19 @@
         saver->pass = [[NSString alloc] init];
         saver->saveMode = NO;
     }
+    
+    saveModeEnabled = saver->saveMode;
+    
+    
+    running = NO;
+    timeOver = NO;
+    setupDone = NO;
+    
+    dfm = [[DataFieldManager alloc] init];
+    //[dfm setEnabledField:YES atIndex:fACCEL_Y];
+    motionmanager = [[CMMotionManager alloc] init];
+    
+    
     
     if (saver->hasName){
         firstName = saver->first;
@@ -185,7 +170,19 @@
         
     }
     
-    saveModeEnabled = saver->saveMode;
+    
+    if (saveModeEnabled) {
+        expNum = -1;
+    } else {
+        if (useDev) {
+            expNum = DEV_DEFAULT_EXP;
+        } else {
+            expNum = PROD_DEFAULT_EXP;
+        }
+    }
+    
+    
+    
     
     [self login:userName withPassword:passWord];
     
@@ -413,15 +410,14 @@
     
     // Fill a new row of data starting with time
     double time = [[NSDate date] timeIntervalSince1970];
-    if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
-        fieldsRow.time_millis = [[NSNumber alloc] initWithDouble:time * 1000];
+    fieldsRow.time_millis = [[NSNumber alloc] initWithDouble:time * 1000];
     NSLog(@"Current time is: %@.", fieldsRow.time_millis);
     
     
     dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
     dispatch_async(queue, ^{
         // acceleration in meters per second squared
-        if ([dfm enabledFieldAtIndex:fACCEL_X]) {
+        if (x) {
             fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
             NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -429,34 +425,34 @@
             });
         }
         
-        if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
+        if (y) {
             fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([dfm enabledFieldAtIndex:fACCEL_X])
+                if (x)
                     vector_status.text = [vector_status.text stringByAppendingString:[@", Y: " stringByAppendingString:[fieldsRow.accel_y stringValue]]];
                 else
                     vector_status.text = [@"Y: " stringByAppendingString:[fieldsRow.accel_y stringValue]];
             });
             NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
         }
-        if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
+        if (z) {
             fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
             NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([dfm enabledFieldAtIndex:fACCEL_X] || [dfm enabledFieldAtIndex:fACCEL_Y]) {
+                if (x || y) {
                     vector_status.text = [vector_status.text stringByAppendingString:[@", Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]]];
                 } else
                     vector_status.text = [@"Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]];
             });
             
-            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
+            if (mag) {
                 fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
                                               + pow(fieldsRow.accel_y.doubleValue, 2)
                                               + pow(fieldsRow.accel_z.doubleValue, 2))];
                 NSLog(@"Current accel total is: %@.", fieldsRow.accel_total);
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([dfm enabledFieldAtIndex:fACCEL_X] || [dfm enabledFieldAtIndex:fACCEL_Y] || [dfm enabledFieldAtIndex:fACCEL_Z])
+                    if (x || y || z)
                         vector_status.text = [vector_status.text stringByAppendingString:[@", Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]]];
                     else
                         vector_status.text = [@"Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]];
@@ -465,13 +461,18 @@
         }
     });
     // Update parent JSON object
-    [dfm orderDataFromFields:fieldsRow];
-    
-    if (dfm.data != nil && dataToBeJSONed != nil)
-        [dataToBeJSONed addObject:dfm.data];
-    else {
-        NSLog(@"something is wrong");
+    if (!saveModeEnabled) {
+        [dfm orderDataFromFields:fieldsRow];
+        if (dfm.data != nil && dataToBeJSONed != nil)
+            [dataToBeJSONed addObject:dfm.data];
+        else {
+            NSLog(@"something is wrong");
+        }
+    } else {
+        [dataToBeJSONed addObject:fieldsRow];
     }
+    
+    
 }
 
 // This inits locations
@@ -681,9 +682,13 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
-        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
-        queueUploader.title = @"Upload saved data";
-        [self.navigationController pushViewController:queueUploader animated:YES];
+        if ([dataSaver count] > 0) {
+            QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
+            queueUploader.title = @"Upload saved data";
+            [self.navigationController pushViewController:queueUploader animated:YES];
+        } else {
+            [self.view makeWaffle:@"No data sets to upload!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+        }
         
     };
     void (^settingsBlock)() = ^() {
@@ -797,7 +802,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSLog(@"Hello");
-#define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+
     NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
@@ -863,41 +868,41 @@
         }
         
     } else if ([alertView.title isEqualToString:@"Enter Name"]) {
-        if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
-            if (alertView.tag == FIRST_TIME_NAME) {
-                change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-                change_name.tag = FIRST_TIME_NAME;
-            } else {
-                change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
-                change_name.tag = ENTER_NAME;
-            }
-            
-            
-            [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-            UITextField *last = [change_name textFieldAtIndex:1];
-            [last setSecureTextEntry:NO];
-            [change_name textFieldAtIndex:0].placeholder = @"First Name";
-            UITextField *first = [change_name textFieldAtIndex:0];
-            first.delegate = self;
-            first.tag = FIRST_NAME_FIELD;
-            last.placeholder = @"Last Initial";
-            last.delegate = self;
-            
-            [change_name show];
-            [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
+        
+        if ([title isEqualToString:@"Cancel"]) {
+            [change_name dismissWithClickedButtonIndex:0 animated:YES];
+            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+            login_status.text = [login_status.text stringByAppendingString:firstName];
+            login_status.text = [login_status.text stringByAppendingString:@" "];
+            login_status.text = [login_status.text stringByAppendingString:lastInitial];
+            saver->hasName = true;
         } else {
-            if ([title isEqualToString:@"Cancel"]) {
-                [change_name dismissWithClickedButtonIndex:0 animated:YES];
-                login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-                login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-                login_status.text = [login_status.text stringByAppendingString:firstName];
-                login_status.text = [login_status.text stringByAppendingString:@" "];
-                login_status.text = [login_status.text stringByAppendingString:lastInitial];
-                saver->hasName = true;
+            if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
+                if (alertView.tag == FIRST_TIME_NAME) {
+                    change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+                    change_name.tag = FIRST_TIME_NAME;
+                } else {
+                    change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
+                    change_name.tag = ENTER_NAME;
+                }
+                
+                
+                [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+                UITextField *last = [change_name textFieldAtIndex:1];
+                [last setSecureTextEntry:NO];
+                [change_name textFieldAtIndex:0].placeholder = @"First Name";
+                UITextField *first = [change_name textFieldAtIndex:0];
+                first.delegate = self;
+                first.tag = FIRST_NAME_FIELD;
+                last.placeholder = @"Last Initial";
+                last.delegate = self;
+                
+                [change_name show];
+                [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
             } else {
                 [self changeName];
             }
-            
         }
     } else if ([alertView.title isEqualToString:@"Experiment Code"]){
         if ([title isEqualToString:@"Enter Experiment #"]) {
@@ -912,10 +917,14 @@
     } else if ([alertView.title isEqualToString:@"Enter Experiment #"]) {
         expNum = [[alertView textFieldAtIndex:0].text intValue];
         if (expNum == 0) {
-            if (useDev) {
-                expNum = DEV_DEFAULT_EXP;
+            if (saveModeEnabled) {
+                expNum = -1;
             } else {
-                expNum = PROD_DEFAULT_EXP;
+                if (useDev) {
+                    expNum = DEV_DEFAULT_EXP;
+                } else {
+                    expNum = PROD_DEFAULT_EXP;
+                }
             }
         }
     } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
@@ -924,6 +933,7 @@
         } else {
             saveModeEnabled = YES;
             saver->saveMode = YES;
+            expNum = -1;
             [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
         }
     }

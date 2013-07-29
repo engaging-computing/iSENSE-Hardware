@@ -62,6 +62,7 @@
 		767B926E178C45A800F1C6FA /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926D178C45A800F1C6FA /* pencil.png */; };
 		767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9271178C526E00F1C6FA /* Accelerate.framework */; };
 		767B9274178C527500F1C6FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9273178C527500F1C6FA /* QuartzCore.framework */; };
+		76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4916617A1585A007F5E90 /* SystemConfiguration.framework */; };
 		76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */; };
 		76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */; };
 		76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */; };
@@ -177,6 +178,7 @@
 		767B926D178C45A800F1C6FA /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		767B9271178C526E00F1C6FA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		767B9273178C527500F1C6FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		76A4916617A1585A007F5E90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */,
 				76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */,
 				76785B9317937721001D6E3A /* CoreData.framework in Frameworks */,
 				765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */,
@@ -248,6 +251,7 @@
 		7669F01D178B275C00E51AD0 = {
 			isa = PBXGroup;
 			children = (
+				76A4916617A1585A007F5E90 /* SystemConfiguration.framework */,
 				760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */,
 				760D19721795861400C123D6 /* logoIOS_retina_ipad.png */,
 				760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */,
