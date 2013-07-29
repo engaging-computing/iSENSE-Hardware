@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
@@ -38,8 +39,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
 		getusers.setEnabled(false);
-		
-		api = API.getInstance();
+
+		api = API.getInstance(this);
 	}
 
 	@Override
@@ -50,15 +51,19 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if ( v == login ) {
-			status.setText("clicked login");
-			new LoginTask().execute("testguy", "1");
-		} else if ( v == getusers ) {
-			status.setText("clicked get users");
-			new UsersTask().execute();
-		} else if ( v == getprojects ) {
-			status.setText("clicked get projects");
-			new ProjectsTask().execute();
+		if(api.hasConnectivity()) {
+			if ( v == login ) {
+				status.setText("clicked login");
+				new LoginTask().execute("testguy", "1");
+			} else if ( v == getusers ) {
+				status.setText("clicked get users");
+				new UsersTask().execute();
+			} else if ( v == getprojects ) {
+				status.setText("clicked get projects");
+				new ProjectsTask().execute();
+			}
+		} else {
+			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -67,7 +72,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		protected Boolean doInBackground(String... params) {
 			return api.createSession(params[0], params[1]);
 		}
-		
+
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if(result) {
@@ -78,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	private class UsersTask extends AsyncTask<Void, Void, ArrayList<RPerson>> {
 		@Override
 		protected ArrayList<RPerson> doInBackground(Void... params) {
@@ -90,7 +95,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				return rp;
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(ArrayList<RPerson> people) {
 			status.setText("People:\n");
@@ -99,7 +104,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
@@ -111,7 +116,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				return rp;
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(ArrayList<RProject> projects) {
 			status.setText("Projects:\n");
@@ -120,5 +125,5 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 }
