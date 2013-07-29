@@ -37,7 +37,7 @@ public class QueueEditData extends Activity {
 	private Button okay, cancel;
 	private LinearLayout editDataList;
 	
-	public static DataSet alter;
+	public static QDataSet alter;
 	private RestAPI rapi;
 	
 	private Context mContext;
