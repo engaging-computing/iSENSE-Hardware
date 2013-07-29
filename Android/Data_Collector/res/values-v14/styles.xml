@@ -1,13 +1,6 @@
 <resources>
 
-    <color name="white_background">#FFFFFF</color>
-    <color name="black_text">#000000</color>
-
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-
-    </style>
-
-
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar" />
     <style name="DialogTheme" parent="android:Theme.Holo.Light.Dialog" />
 
 </resources>

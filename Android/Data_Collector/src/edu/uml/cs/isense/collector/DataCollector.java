@@ -89,7 +89,7 @@ import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -784,7 +784,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// First run through, save data with the picture
 					if (firstSave) {
-						DataSet ds = new DataSet(DataSet.Type.BOTH,
+						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
 								sessionName, description, eid,
 								dataSet.toString(),
 								MediaManager.pictureArray.get(pic - 1),
@@ -794,7 +794,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						// Next set of runs, save the remaining pictures
 					} else {
-						DataSet dsp = new DataSet(DataSet.Type.PIC,
+						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
 								sessionName, description, eid, null,
 								MediaManager.pictureArray.get(pic - 1),
 								sessionId, city, state, country, addr);
@@ -809,7 +809,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Else if no pictures, just save data
 			} else {
-				DataSet ds = new DataSet(DataSet.Type.DATA, sessionName,
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, sessionName,
 						description, eid, dataSet.toString(), null, sessionId,
 						city, state, country, addr);
 				uq.addDataSetToQueue(ds);
@@ -1426,6 +1426,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		step2.setOnLongClickListener(new OnLongClickListener() {
 
+			@SuppressLint("NewApi")
 			@Override
 			public boolean onLongClick(View arg0) {
 				if (!running) {
@@ -1464,25 +1465,28 @@ public class DataCollector extends Activity implements SensorEventListener,
 								.parseColor("#003300"));
 						setActionBarRecording();
 
-						final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
-						ll.setAlpha(1.0f);
-						AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
-						flash.setDuration(500);
-						flash.setAnimationListener(new AnimationListener() {
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								ll.setAlpha(0.0f);
-							}
+						if (android.os.Build.VERSION.SDK_INT >= 11) {
+							final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
+							ll.setAlpha(1.0f);
+							AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
+							flash.setDuration(500);
+							flash.setAnimationListener(new AnimationListener() {
+								@SuppressLint("NewApi")
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									ll.setAlpha(0.0f);
+								}
 
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
 
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-						});
-						ll.startAnimation(flash);
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+							});
+							ll.startAnimation(flash);
+						}
 
 						Intent iService = new Intent(mContext,
 								DataCollectorService.class);

@@ -27,11 +27,9 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
 	    can use the \"Reset\" button.</string>
-    <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="iSENSELogo">iSENSE Logo</string>
     <string name="picAndVidCount">Pictures/Videos For This Session: \0</string>
-    <string name="timeElapsed">Time Elapsed: 0:00</string>
     <string name="takePic">Take Picture</string>
     <string name="takeVid">Take Video"</string>
     <string name="instructions"><u>Instructions:</u></string>
@@ -42,11 +40,6 @@
     <string name="media_desc">Select one of the following options:</string>
     <string name="username">Username:&#160;&#160;</string>
     <string name="password">Password:&#160;&#160;&#160;</string>
-    <string name="no_isense">
-        You have not provided a valid Experiment ID to upload your data to.
-		You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set 
-		once you are logged in to iSENSE and provide a valid Experiment ID. 
-	</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gpsString">Enabling GPS satellite communication is recommended for this application.  Would you like to enable GPS?</string>
@@ -321,7 +314,6 @@
     <string name="qmark">\&#63;</string>
 	<string name="enterSessionName">Enter Session Name Here&#8230;</string>
 	<string name="session_name">Session Name</string>
-	<string name="required">(required)</string>
 	<string name="queue_alter">What would you like to do with this data set?</string>
 	<string name="rename">Rename</string>
 	<string name="change_data">Change Data</string>
