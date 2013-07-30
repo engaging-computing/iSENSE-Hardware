@@ -525,8 +525,7 @@ public class DataWalk extends Activity implements LocationListener,
 		
 		
 		
-		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate",
-						"10000"));
+		mInterval = CustomOnItemSelectedListener.mIntervalHack;
 
 		Log.d("tag", "this is name" + firstName + lastInitial);
 
@@ -894,6 +893,7 @@ public class DataWalk extends Activity implements LocationListener,
 				if (rapi.isConnectedToInternet())
 				ChkBoxChecked = true;
 				umbChecked = true;
+				CustomOnItemSelectedListener.mIntervalHack = 10000;
 				CustomOnItemSelectedListener.savedValueInt = 3;
 				CustomOnItemSelectedListener.savedValueString = "10 seconds";
 				SharedPreferences prefs = getSharedPreferences("EID", 0);
