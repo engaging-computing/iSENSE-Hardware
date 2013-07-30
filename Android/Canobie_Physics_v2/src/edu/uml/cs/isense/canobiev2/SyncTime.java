@@ -16,12 +16,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class SyncTime extends Activity {
 
@@ -48,6 +51,9 @@ public class SyncTime extends Activity {
 
 	boolean preInit = false;
 	boolean success = false;
+	
+	RestAPI rapi;
+	Waffle w;
 
 	ProgressDialog dia;
 
@@ -59,6 +65,11 @@ public class SyncTime extends Activity {
 		setContentView(R.layout.synctime);
 
 		mContext = this;
+		rapi = RestAPI
+				.getInstance(
+						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
+						getApplicationContext());
+		w = new Waffle(mContext);
 		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -77,10 +88,16 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				sendPack();
-				receivePack();
+				
+				if (rapi.isConnectedToInternet()) {
+					sendPack();
+					receivePack();
 
-				showDialog(DIALOG_SENT);
+					showDialog(DIALOG_SENT);	
+				} else {
+					w.make("Connect to internet first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				}
+				
 
 			}
 		});
@@ -89,7 +106,12 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				new ReceiveTask().execute();
+				if (rapi.isConnectedToInternet()) {
+					new ReceiveTask().execute();
+				} else {
+					w.make("Connect to internet first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				}
+				
 			}
 		});
 
@@ -170,7 +192,9 @@ public class SyncTime extends Activity {
 
 			builder.setTitle("Connection Timed Out")
 					.setMessage(
-							"Failed to synchronize time.  Please try again.")
+							"Failed to synchronize time.  Make sure all devices are on the same network " +
+							"and that the host device is hitting \"Send\" while your device waits to " +
+							"receive it\'s time.")
 					.setPositiveButton("Try Again",
 							new DialogInterface.OnClickListener() {
 								public void onClick(
