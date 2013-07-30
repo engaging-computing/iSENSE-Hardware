@@ -25,12 +25,16 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -53,6 +57,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
@@ -62,7 +67,7 @@ import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.objects.ExperimentField;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -94,6 +99,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private Button saveData;
 	private Button clearData;
 	private ImageButton mediaButton;
+	private ImageView manualLogo;
 
 	public static Context mContext;
 
@@ -115,6 +121,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private EditText sessionName;
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,6 +134,28 @@ public class ManualEntry extends Activity implements OnClickListener,
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(false);
+		
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#111133")));
+			bar.setIcon(getResources()
+					.getDrawable(R.drawable.rsense_logo_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
+			
+			manualLogo = (ImageView) findViewById(R.id.manual_logo);
+			manualLogo.setVisibility(View.GONE);
+		}
 		
 		initLocations();
 
@@ -612,7 +641,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		ProgressDialog dia;
 		String city = "", state = "", country = "", addr = "";
 		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
-		DataSet ds;
+		QDataSet ds;
 
 		@Override
 		protected void onPreExecute() {
@@ -650,7 +679,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
-			ds = new DataSet(DataSet.Type.DATA, sessionName.getText()
+			ds = new QDataSet(QDataSet.Type.DATA, sessionName.getText()
 					.toString(), uploadTime, eid, data, null, -1, city, state,
 					country, addr);
 
@@ -752,9 +781,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
-					DataSet picDS = new DataSet(DataSet.Type.PIC, name,
+					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
 							uploadTime, eid, null, picture,
-							DataSet.NO_SESSION_DEFINED, city, state, country,
+							QDataSet.NO_SESSION_DEFINED, city, state, country,
 							addr);
 					uq.addDataSetToQueue(picDS);
 

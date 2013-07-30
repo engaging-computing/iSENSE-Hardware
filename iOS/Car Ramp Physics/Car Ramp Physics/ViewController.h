@@ -36,10 +36,11 @@ typedef struct _RotationDataSaver{
     __unsafe_unretained NSString *pass;
     bool hasName;
     bool hasLogin;
+    bool saveMode;
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 {
     
     RotationDataSaver *saver;
@@ -56,9 +57,9 @@ typedef struct _RotationDataSaver{
 @property(nonatomic) int countdown;
 @property(nonatomic, retain) UIAlertView *change_name;
 @property(nonatomic, retain) UIAlertView *experiment;
-@property(nonatomic, retain) UIAlertView *view;
 @property(nonatomic, retain) UIAlertView *exp_num;
 @property(nonatomic, retain) UIAlertView *loginalert;
+@property(nonatomic, retain) UIAlertView *saveMode;
 @property(nonatomic, retain) iSENSE *iapi;
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
@@ -82,26 +83,30 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) NSString *firstName;
 @property (nonatomic) NSString *lastInitial;
 @property (nonatomic) NSNumber *session_num;
-@property (nonatomic) BOOL  setupDone;
+
 @property (nonatomic) NSString *userName;
 @property (nonatomic) NSString *passWord;
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) DataSaver *dataSaver;
 
-
-
+@property (nonatomic) UIPickerView *picker;
+@property (nonatomic) NSMutableArray *lengths;
+@property (nonatomic) UITextField *lengthField;
 
 @property(nonatomic, retain) NSArray *items;
 
 //Boolean variables
-@property(nonatomic) BOOL running;
-@property(nonatomic) BOOL timeOver;
-@property(nonatomic) BOOL useDev;
-@property(nonatomic) BOOL x;
-@property(nonatomic) BOOL y;
-@property(nonatomic) BOOL z;
-@property(nonatomic) BOOL mag;
+@property (nonatomic) BOOL running;
+@property (nonatomic) BOOL timeOver;
+@property (nonatomic) BOOL useDev;
+@property (nonatomic) BOOL x;
+@property (nonatomic) BOOL y;
+@property (nonatomic) BOOL z;
+@property (nonatomic) BOOL mag;
+@property (nonatomic) BOOL  setupDone;
+
+@property (nonatomic) BOOL saveModeEnabled;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (IBAction)showMenu:(id)sender;

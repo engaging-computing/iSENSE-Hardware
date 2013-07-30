@@ -13,7 +13,8 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
-sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate, dataToBeOrdered;
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate,
+dataToBeOrdered, backFromQueue;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -62,6 +63,29 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
         recordDataTimer = nil;
     }
     
+    // Check backFromQueue status to inform user of data set upload success or failure
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = [prefs boolForKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    if (backFromQueue) {
+        int uploaded = [prefs integerForKey:@"key_data_uploaded"];
+        switch (uploaded) {
+            case DATA_NONE_UPLOADED:
+                [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+                break;
+                
+            case DATA_UPLOAD_SUCCESS:
+                [self.view makeWaffle:@"All selected data sets uploaded successfully" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+                break;
+                
+            case DATA_UPLOAD_FAILED:
+                [self.view makeWaffle:@"At least one data set failed to upload" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+                break;
+        }
+        
+        // Set back_from_queue key to false again
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    }
+    
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
         managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
@@ -90,20 +114,23 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
     
     // Initialize buttons
+    bool step2Enabled = [prefs boolForKey:[StringGrabber grabString:@"key_step_2_enabled"]];
+    
     [self setEnabled:true forButton:step1];
-    [self setEnabled:false forButton:step2];
-    [self setEnabled:false forButton:step3];
     
-    // Enabled step 2
-    if (backFromSetup) [self setEnabled:true forButton:step2];
-    
-    // Enable upload depending on DataQueue
+    if (backFromSetup || step2Enabled) {
+        [self setEnabled:true forButton:step2]; 
+    } else {
+        [self setEnabled:false forButton:step2];
+    }
+
     if (dataSaver.count > 0) {
         [self setEnabled:true forButton:step3];
     } else {
         [self setEnabled:false forButton:step3];
     }
     
+    // Initialize locations
     [self initLocations];
     [self resetAddressFields];
     
@@ -121,7 +148,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Reinitialize setup to false
+    // Reinitialize setup and queue to false
     backFromSetup = false;
     
     // If true, then we're coming back from another ViewController
@@ -144,8 +171,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             
             expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
             
-            // Set setup_complete key to false again
+            // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
+            [prefs setBool:true forKey:[StringGrabber grabString:@"key_step_2_enabled"]];
             
         }
         
@@ -168,7 +196,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Login", nil];
+                                 otherButtonTitles:@"Login", @"Media", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 	[popupQuery release];
@@ -256,9 +284,9 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 // Catches long click, starts and stops recording and beeps
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer*)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         if (!isRecording) {
             // Get the experiment
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
             
             // Get Field Order
@@ -277,6 +305,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             
             // Stop Recording
             backFromSetup = false;
+            [prefs setBool:false forKey:[StringGrabber grabString:@"key_step_2_enabled"]];
             [self stopRecording:motionManager];
         }
         
@@ -492,6 +521,7 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
 	switch (buttonIndex) {
             
+        // Login
 		case 0:
             message = [[UIAlertView alloc] initWithTitle:@"Login"
                                                  message:nil
@@ -508,6 +538,13 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [message release];
             
             break;
+            
+        // Media
+        case 1:
+            [self.view makeWaffle:@"This feature is currently disabled."
+                         duration:WAFFLE_LENGTH_SHORT
+                         position:WAFFLE_BOTTOM
+                            image:WAFFLE_RED_X];
             
 		default:
 			break;
@@ -538,16 +575,14 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             [self saveDataSetWithDescription:description];
             [self setEnabled:true forButton:step3];
             
-            [self.view makeWaffle:@"Data Saved!"
-                        duration:WAFFLE_LENGTH_SHORT
-                        position:WAFFLE_BOTTOM
-                           image:WAFFLE_CHECKMARK];
                         
         } else {
             
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
+    } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
+        // TODO - media code
     }
 }
 
@@ -598,6 +633,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
             [ds release];
+            
+            [self.view makeWaffle:@"Data set saved"
+                         duration:WAFFLE_LENGTH_SHORT
+                         position:WAFFLE_BOTTOM
+                            image:WAFFLE_CHECKMARK];
             
             [message dismissWithClickedButtonIndex:nil animated:YES];
         });
@@ -662,6 +702,11 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
 
 // Launches a view that allows the user to upload and manage his/her datasets
 - (IBAction) uploadData:(UIButton *)sender {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = true;
+    [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
     
     QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
     queueUploader.title = @"Step 3: Manage and Upload Sessions";
@@ -831,6 +876,14 @@ sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContex
     
     [step1Label setAlpha:1.0];
     [step3Label setAlpha:1.0];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
+    NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
+    NSString *sesName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    [step1Label setText:[NSString stringWithFormat:@"Recording data for \"%@\" at a sample interval of %@ ms for %@ sec",
+                     sesName, sampleIntervalString, testLengthString]];
+    
     
     [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"004400"]];
     [mainLogo setImage:[UIImage imageNamed:@"rsense_logo_recording"]];

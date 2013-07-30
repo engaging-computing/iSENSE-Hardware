@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     
     <string name="contentDesc"></string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
@@ -20,9 +20,9 @@
 	<string name="browse">Browse</string>
 	<string name="scan_qr">Scan QR</string>
 	<string name="chooseExperiment">Uploading to experiment #:</string>
-	<string name="chooseExperimentAlt">
-	    Enter or select an experiment you would like to upload to.
-		Alternatively, select \"No Experiment\" to record all possible data and select an experiment later.    
+	<string name="chooseExperimentAlt" tools:ignore="UnusedResources">
+		Enter or select an experiment you would like to upload to.
+		Alternatively, select \"No Experiment\" to record all possible data and select an experiment later.
 	</string>
     <string name="search">Search</string>
     <string name="experiments_no_items">No experiments were found.</string>

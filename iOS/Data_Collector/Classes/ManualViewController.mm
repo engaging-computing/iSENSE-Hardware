@@ -781,82 +781,6 @@
     
 }
 
-// @Mike delete this after testing my code
-/* - (void) upload:(NSMutableArray *)results {
-    UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading data set..."];
-    [message show];
-      
-    dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
-    dispatch_async(queue, ^{
-        BOOL exp = TRUE, loggedIn = TRUE, hasSessionName = TRUE;
-        short uploadSuccess = -1;
-        
-        if (expNum == 0)
-            exp = FALSE;
-        
-        else
-            if (!([iapi isLoggedIn]))
-                loggedIn = FALSE;
-        
-            else
-                if ([[sessionNameInput text] isEqualToString:@""])
-                    hasSessionName = FALSE;
-        
-                else {
-                    
-                    NSString *name = [[[NSString alloc] initWithString:[sessionNameInput text]] autorelease];
-                    NSString *description = [[[NSString alloc] initWithString:@"Manual data entry from the iOS Data Collector application."] autorelease];
-                    NSString *street = [[[NSString alloc] initWithString:@"1 University Ave"] autorelease];
-                    NSString *city = [[[NSString alloc] initWithString:@"Lowell, MA"] autorelease];
-                    NSString *country = [[[NSString alloc] initWithString:@"United States"] autorelease];
-                    NSNumber *exp_num = [[[NSNumber alloc] initWithInt:expNum] autorelease];
-                    NSNumber *session_num = [iapi createSession:name withDescription:description Street:street City:city Country:country toExperiment:exp_num];
-                    NSError  *error = nil;
-                    NSData   *dataJSON = [NSJSONSerialization dataWithJSONObject:results options:0 error:&error];
-                    
-                    
-                    if (([iapi putSessionData:dataJSON forSession:session_num inExperiment:exp_num]))
-                        uploadSuccess = TRUE;
-                    else
-                        uploadSuccess = FALSE;
-                    
-                }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if (!exp)
-                [self.view makeWaffle:@"Please Enter an Experiment # First"
-                            duration:WAFFLE_LENGTH_LONG
-                            position:WAFFLE_BOTTOM
-                               image:WAFFLE_WARNING];
-            if (!loggedIn)
-                [self.view makeWaffle:@"Please Login First"
-                            duration:WAFFLE_LENGTH_LONG
-                            position:WAFFLE_BOTTOM
-                               image:WAFFLE_WARNING];
-            if (!hasSessionName)
-                [self.view makeWaffle:@"Please Enter a Session Name First"
-                            duration:WAFFLE_LENGTH_LONG
-                            position:WAFFLE_BOTTOM
-                               image:WAFFLE_WARNING];
-            if (uploadSuccess != -1) {
-                if (uploadSuccess)
-                    [self.view makeWaffle:@"Upload Success!"
-                                duration:WAFFLE_LENGTH_SHORT
-                                position:WAFFLE_BOTTOM
-                                   image:WAFFLE_CHECKMARK];
-                else
-                    [self.view makeWaffle:@"Upload Failed!"
-                                duration:WAFFLE_LENGTH_SHORT
-                                position:WAFFLE_BOTTOM
-                                   image:WAFFLE_RED_X];
-            }
-            
-            [message dismissWithClickedButtonIndex:nil animated:YES];
-        });
-    });
-} */
-
 - (void) fillDataFieldEntryList:(int)eid withData:(NSMutableArray *)data {
     
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -909,7 +833,10 @@
             if (scrollView.subviews.count == 0) {
                 
                 UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT)];
-                noFields.text = @"Invalid experiment.";
+                if ([iapi isConnectedToInternet])
+                    noFields.text = @"Invalid experiment.";
+                else
+                    noFields.text = @"Cannot find experiment fields while not connected to the internet.";
                 noFields.backgroundColor = [UIColor clearColor];
                 noFields.textColor = [HexColor colorWithHexString:@"000000"];
                 [scrollView addSubview: noFields];

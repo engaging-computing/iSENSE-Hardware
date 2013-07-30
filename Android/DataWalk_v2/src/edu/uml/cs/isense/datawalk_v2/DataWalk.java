@@ -52,7 +52,7 @@ import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -252,7 +252,7 @@ public class DataWalk extends Activity implements LocationListener,
 							experimentId = defaultExp;
 						}
 						
-						DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+						QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
 								"Data Point Uploaded from Android DataWalk",
 								experimentId, dataSet.toString(), null, -1, "",
 								"", "", "");

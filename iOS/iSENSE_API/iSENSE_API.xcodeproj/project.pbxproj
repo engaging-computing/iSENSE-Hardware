@@ -43,6 +43,9 @@
 		B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */; };
 		B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */; };
 		B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B73CFDBB179D8DE700B891B0 /* Fields.strings */; };
+		B7EBFDBF17A01715006B90A8 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = B7EBFDBD17A01715006B90A8 /* Reachability.h */; };
+		B7EBFDC017A01715006B90A8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B7EBFDBE17A01715006B90A8 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B7EBFDC217A0186A006B90A8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */; };
 		B7F09EF81794599100725483 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF51794599100725483 /* waffle_check.png */; };
 		B7F09EF91794599100725483 /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF61794599100725483 /* waffle_warn.png */; };
 		B7F09EFA1794599100725483 /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F09EF71794599100725483 /* waffle_x.png */; };
@@ -106,6 +109,9 @@
 		B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldGrabber.h; sourceTree = "<group>"; };
 		B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldGrabber.m; sourceTree = "<group>"; };
 		B73CFDBB179D8DE700B891B0 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		B7EBFDBD17A01715006B90A8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		B7EBFDBE17A01715006B90A8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B7F09EF51794599100725483 /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
 		B7F09EF61794599100725483 /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
 		B7F09EF71794599100725483 /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
@@ -130,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7EBFDC217A0186A006B90A8 /* SystemConfiguration.framework in Frameworks */,
 				39AD183A17553765002969FA /* CoreData.framework in Frameworks */,
 				39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */,
 			);
@@ -177,8 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				B712DE211796D17000A30CAC /* DataSaver.h */,
-				B712DE221796D17000A30CAC /* DataSet.h */,
-				39217009176F7ACA0070DFCC /* Queue.h */,
+				B73B842F179ED4B50003007F /* objects */,
 			);
 			name = queue_headers;
 			sourceTree = "<group>";
@@ -223,6 +229,7 @@
 		39FF25E216DFA28A0062C3DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */,
 				39AD183917553765002969FA /* CoreData.framework */,
 				39FF25E316DFA28A0062C3DC /* Foundation.framework */,
 				39216FDE176F5C790070DFCC /* CoreFoundation.framework */,
@@ -233,6 +240,7 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				B7EBFDB817A01419006B90A8 /* reachability */,
 				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
 				B7F09EF41794595700725483 /* waffle */,
 				B7F2D81C177B692200F9A58D /* sensor_compatability */,
@@ -293,6 +301,31 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		B73B842D179ED48E0003007F /* dataset */ = {
+			isa = PBXGroup;
+			children = (
+				B712DE221796D17000A30CAC /* DataSet.h */,
+			);
+			name = dataset;
+			sourceTree = "<group>";
+		};
+		B73B842E179ED4950003007F /* queue */ = {
+			isa = PBXGroup;
+			children = (
+				39217009176F7ACA0070DFCC /* Queue.h */,
+			);
+			name = queue;
+			sourceTree = "<group>";
+		};
+		B73B842F179ED4B50003007F /* objects */ = {
+			isa = PBXGroup;
+			children = (
+				B73B842D179ED48E0003007F /* dataset */,
+				B73B842E179ED4950003007F /* queue */,
+			);
+			name = objects;
+			sourceTree = "<group>";
+		};
 		B73CFDAE179D8CD700B891B0 /* data_field_manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -305,6 +338,15 @@
 				B73CFDBB179D8DE700B891B0 /* Fields.strings */,
 			);
 			name = data_field_manager;
+			sourceTree = "<group>";
+		};
+		B7EBFDB817A01419006B90A8 /* reachability */ = {
+			isa = PBXGroup;
+			children = (
+				B7EBFDBD17A01715006B90A8 /* Reachability.h */,
+				B7EBFDBE17A01715006B90A8 /* Reachability.m */,
+			);
+			name = reachability;
 			sourceTree = "<group>";
 		};
 		B7F09EF41794595700725483 /* waffle */ = {
@@ -353,6 +395,7 @@
 				B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */,
 				B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */,
 				B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */,
+				B7EBFDBF17A01715006B90A8 /* Reachability.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +509,7 @@
 				B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */,
 				B73CFDB6179D8D1D00B891B0 /* Fields.m in Sources */,
 				B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */,
+				B7EBFDC017A01715006B90A8 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

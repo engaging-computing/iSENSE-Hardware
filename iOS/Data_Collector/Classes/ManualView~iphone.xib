@@ -53,7 +53,7 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4wMTgzMTk5NjkxNCAwIDAuNDgzODU2ODI0AA</bytes>
+							<bytes key="NSRGB">MC4wMDA2Njk2NTgxNDM0IDAuMDM1NzY5MDcgMC4yOTU5OTgwODY3AA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -82,10 +82,10 @@
 					<object class="IBUIButton" id="892327490">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{255, 158}, {48, 39}}</string>
+						<string key="NSFrame">{{255, 154}, {48, 39}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="109375295"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -122,10 +122,10 @@
 					<object class="IBUITextField" id="589246441">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 162}, {227, 31}}</string>
+						<string key="NSFrame">{{20, 157}, {227, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="892327490"/>
+						<reference key="NSNextKeyView" ref="109375295"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -176,9 +176,10 @@
 					<object class="IBUIScrollView" id="109375295">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{20, 215}, {285, 225}}</string>
+						<string key="NSFrame">{{20, 172}, {285, 224}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="892327490"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -280,7 +281,7 @@
 						<reference key="IBUIFont" ref="709838475"/>
 					</object>
 				</object>
-				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
+				<string key="NSFrame">{{0, 64}, {320, 416}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="1040405194"/>
@@ -289,6 +290,9 @@
 					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
+				<object class="IBUISimulatedNavigationBarMetrics" key="IBUISimulatedTopBarMetrics">
+					<bool key="IBUIPrompted">NO</bool>
+				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</object>
@@ -421,14 +425,14 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="109375295"/>
-							<reference ref="589246441"/>
 							<reference ref="85172356"/>
 							<reference ref="295846778"/>
 							<reference ref="335552958"/>
 							<reference ref="311708404"/>
-							<reference ref="892327490"/>
 							<reference ref="1040405194"/>
 							<reference ref="529970625"/>
+							<reference ref="589246441"/>
+							<reference ref="892327490"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -556,11 +560,9 @@
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
 							<string>showCameraUI</string>
-							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -577,7 +579,6 @@
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
 							<string>showCameraUI</string>
-							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -599,10 +600,6 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">showCameraUI</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">textFieldFinished:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -706,7 +703,7 @@
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{96, 96}</string>
-				<string>{507, 130}</string>
+				<string>{777, 189}</string>
 			</object>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
