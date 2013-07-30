@@ -15,6 +15,7 @@ import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
+import edu.uml.cs.isense.objects.RProjectField;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -106,6 +107,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
+		ArrayList<RProjectField> rpfs;
+		
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
 			if(projID.getText().toString().equals("")) {
@@ -113,6 +116,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				ArrayList<RProject> rp = new ArrayList<RProject>();
 				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
+				rpfs = api.getProjectFields(Integer.parseInt(projID.getText().toString()));
 				return rp;
 			}
 		}
@@ -122,6 +126,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			status.setText("Projects:\n");
 			for(RProject p : projects) {
 				status.append(p.name + "\n");
+				if(rpfs.size() > 0) {
+					status.append("\nFields:\n");
+					for(RProjectField rp : rpfs) {
+						status.append(rp.name+"\n");
+					}
+				}
 			}
 		}
 	}
