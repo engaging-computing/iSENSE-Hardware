@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.canobiev2.objects.SensorCompatibility;
-import edu.uml.cs.isense.canobiev2.objects.SensorCompatibility.SensorTypes;
+import edu.uml.cs.isense.dfm.SensorCompatibility;
+import edu.uml.cs.isense.dfm.SensorCompatibility.SensorTypes;
 
 public class ChooseSensorDialog extends Activity implements OnClickListener {
 
@@ -178,7 +178,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			if (ctv.isChecked())
 				ctv.setCheckMarkDrawable(R.drawable.red_x);
 			else
-				ctv.setCheckMarkDrawable(R.drawable.bluechecksmall);
+				ctv.setCheckMarkDrawable(R.drawable.checkmark);
 			ctv.toggle();
 			break;
 		}

@@ -66,7 +66,6 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -86,10 +85,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.canobiev2.experiment.BrowseExperiments;
-import edu.uml.cs.isense.canobiev2.objects.DataFieldManager;
-import edu.uml.cs.isense.canobiev2.objects.Fields;
-import edu.uml.cs.isense.canobiev2.objects.SensorCompatibility;
 import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -112,6 +111,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static TextView rideName;
 	private static TextView time;
 	private static CheckBox canobieCheck;
+	private static CheckBox selectLater;
 	private static EditText sampleRate;
 
 	private Button startStop;
@@ -211,7 +211,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static RestAPI rapi;
 	static Waffle w;
 
-	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
+	DecimalFormat toThou = new DecimalFormat("######0.000");
 
 	ProgressDialog dia;
 	double partialProg = 1.0;
@@ -320,6 +320,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						return running;
 					} else {
 
+						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+						if (mPrefs.getString("experiment_id", "").equals("-1"))
+							enableAllFields();
+						
 						registerSensors();
 
 						dataSet = new JSONArray();
@@ -407,7 +411,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 								len++;
 								len2++;
-
+								
 								if (dfm.enabledFields[ACCEL_X])
 									f.accel_x = toThou.format(accel[0]);
 								if (dfm.enabledFields[ACCEL_Y])
@@ -426,26 +430,32 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									f.angle_rad = ""
 											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
 								if (dfm.enabledFields[MAG_X])
-									f.mag_x = mag[0];
+									f.mag_x = "" + mag[0];
 								if (dfm.enabledFields[MAG_Y])
-									f.mag_y = mag[1];
+									f.mag_y = "" + mag[1];
 								if (dfm.enabledFields[MAG_Z])
-									f.mag_z = mag[2];
+									f.mag_z = "" + mag[2];
 								if (dfm.enabledFields[MAG_TOTAL])
-									f.mag_total = Math.sqrt(Math
-											.pow(f.mag_x, 2)
-											+ Math.pow(f.mag_y, 2)
-											+ Math.pow(f.mag_z, 2));
+									f.mag_total = "" + Math.sqrt(Math
+											.pow(Double.parseDouble(f.mag_x), 2)
+											+ Math.pow(Double.parseDouble(f.mag_y), 2)
+											+ Math.pow(Double.parseDouble(f.mag_z), 2));
 								if (dfm.enabledFields[TIME])
 									f.timeMillis = currentTime + elapsedMillis;
 								if (dfm.enabledFields[TEMPERATURE_C])
 									f.temperature_c = temperature;
 								if (dfm.enabledFields[TEMPERATURE_F])
-									f.temperature_f = ""
-											+ ((Double.parseDouble(temperature) * 1.8) + 32);
+									if (temperature.equals(""))
+										f.temperature_f = temperature;
+									else
+										f.temperature_f = ""
+												+ ((Double.parseDouble(temperature) * 1.8) + 32);
 								if (dfm.enabledFields[TEMPERATURE_K])
-									f.temperature_k = ""
-											+ (Double.parseDouble(temperature) + 273.15);
+									if (temperature.equals(""))
+										f.temperature_k = temperature;
+									else
+										f.temperature_k = ""
+												+ (Double.parseDouble(temperature) + 273.15);
 								if (dfm.enabledFields[PRESSURE])
 									f.pressure = pressure;
 								if (dfm.enabledFields[ALTITUDE])
@@ -499,8 +509,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			sdFileName = rides.getSelectedItem() + "-" + stNumber + "-"
 					+ dateString + ".csv";
 			SDFile = new File(folder, sdFileName);
-			
-			Log.d("tag", "" + sdFileName);
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -779,11 +787,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						canobieBackup = canobieIsChecked;
 						rideName.setText("Ride/St#: " + rideNameString + " "
 								+ stNumber);
-						new SensorCheckTask().execute();
+						
+						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+						String expId = mPrefs.getString("experiment_id", "");
+						if (expId.equals("-1"))
+							startStop.setEnabled(true);
+						else
+							new SensorCheckTask().execute();
+						
 						break;
 					case DIALOG_CANCELED:
 						canobieIsChecked = canobieBackup;
 						startStop.setEnabled(true);
+						
 						break;
 					}
 					rideName.setText("Ride/St#: " + rideNameString + " "
@@ -1000,7 +1016,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		sessionName = (EditText) v.findViewById(R.id.sessionName);
 
 		experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
-		experimentInput.setText(mPrefs.getString("experiment_id", ""));
+		String expId = mPrefs.getString("experiment_id", "");
+		if (expId.equals("-1")) expId = "";
+		experimentInput.setText(expId);
 
 		sampleRate = (EditText) v.findViewById(R.id.srate);
 		sampleRate.setText(mPrefs.getString("sample_rate", ""));
@@ -1037,6 +1055,27 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			}
 
+		});
+		
+		selectLater = (CheckBox) v.findViewById(R.id.select_exp_later);
+		boolean select = mPrefs.getBoolean("select_later", false);
+		if (select) {
+			experimentInput.setEnabled(false);
+			browseButton.setEnabled(false);
+		} else
+			selectLater.toggle();
+		selectLater.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked) {
+					experimentInput.setEnabled(false);
+					browseButton.setEnabled(false);
+				} else {
+					experimentInput.setEnabled(true);
+					browseButton.setEnabled(true);
+				}
+			}
 		});
 
 		canobieCheck = (CheckBox) v.findViewById(R.id.isCanobie);
@@ -1093,9 +1132,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							sessionName.setError("Enter a Name");
 							pass = false;
 						}
-						if (experimentInput.getText().length() == 0) {
-							experimentInput.setError("Enter an Experiment");
-							pass = false;
+						if (!selectLater.isChecked()) {
+							if (experimentInput.getText().length() == 0) {
+								experimentInput.setError("Enter an Experiment");
+								pass = false;
+							}
 						}
 						if (seats.getText().length() == 0) {
 							seats.setError("Enter a St#");
@@ -1130,9 +1171,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							SharedPreferences mPrefs = getSharedPreferences(
 									"EID", 0);
 							SharedPreferences.Editor mEditor = mPrefs.edit();
-							mEditor.putString("experiment_id",
-									experimentInput.getText().toString())
-									.commit();
+							
+							if (selectLater.isChecked()) {
+								mEditor.putBoolean("select_later", true).commit();
+								mEditor.putString("experiment_id",
+										"-1")
+										.commit();
+							} else {
+								mEditor.putBoolean("select_later", false).commit();
+								mEditor.putString("experiment_id",
+										experimentInput.getText().toString())
+										.commit();
+							}
+							
 							mEditor.putString("sample_rate",
 									sampleRate.getText().toString()).commit();
 
@@ -1605,6 +1656,33 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (s.equals(getString(R.string.luminous_flux)))
 				dfm.enabledFields[LIGHT] = true;
 		}
+	}
+	
+	private void enableAllFields() {
+
+		dfm = new DataFieldManager(-1, rapi,
+				mContext, f);
+		dfm.getOrder();
+		
+		dfm.enabledFields[TIME] = true;
+		dfm.enabledFields[ACCEL_X] = true;
+		dfm.enabledFields[ACCEL_Y] = true;
+		dfm.enabledFields[ACCEL_Z] = true;
+		dfm.enabledFields[ACCEL_TOTAL] = true;
+		dfm.enabledFields[LATITUDE] = true;
+		dfm.enabledFields[LONGITUDE] = true;
+		dfm.enabledFields[MAG_X] = true;
+		dfm.enabledFields[MAG_Y] = true;
+		dfm.enabledFields[MAG_Z] = true;
+		dfm.enabledFields[MAG_TOTAL] = true;
+		dfm.enabledFields[HEADING_DEG] = true;
+		dfm.enabledFields[HEADING_RAD] = true;
+		dfm.enabledFields[TEMPERATURE_C] = true;
+		dfm.enabledFields[TEMPERATURE_F] = true;
+		dfm.enabledFields[TEMPERATURE_K] = true;
+		dfm.enabledFields[PRESSURE] = true;
+		dfm.enabledFields[ALTITUDE] = true;
+		dfm.enabledFields[LIGHT] = true;
 	}
 
 	// Prompts the user to upload the rest of their content
