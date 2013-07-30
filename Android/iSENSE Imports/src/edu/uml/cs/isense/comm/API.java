@@ -105,7 +105,13 @@ public class API {
 		}
 		return result;
 	}
-	//Return one project
+	
+	/**
+	 * Retrieves information about a single project on iSENSE
+	 * 
+	 * @param projectId The ID of the project to retrieve
+	 * @return A Project object
+	 */
 	public RProject getProject(int projectId) {
 		RProject proj = new RProject();
 		try {
@@ -129,6 +135,12 @@ public class API {
 		return proj;
 	}
 	
+	/** 
+	 * Gets all of the fields associated with a project
+	 * 
+	 * @param projectId The unique ID of the project whose fields you want to see
+	 * @return An ArrayList of ProjectField objects
+	 */
 	public ArrayList<RProjectField> getProjectFields(int projectId) {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 		
@@ -152,10 +164,14 @@ public class API {
 		return rpfs;
 	}
 
-	//Return many tutorials
-	/*@param page Which page of results to start from. 1-indexed*/
-	/*@param perPage How many results to display per page */
-	/*@param descending Whether to display the results in descending order (true) or ascending order (false) */
+	/**
+	 * 	Retrieves multiple tutorials off of iSENSE
+	 * 
+	 *@param page Which page of results to start from. 1-indexed
+	 *@param perPage How many results to display per page
+	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 *@return An ArrayList of Tutorial objects
+	 */
 	public ArrayList<RTutorial> getTutorials(int page, int perPage, boolean descending) {
 		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
 		try {
@@ -259,6 +275,16 @@ public class API {
 		return currentUser;
 	}
 
+	/**
+	 * Makes an HTTP request and for JSON-formatted data. This call is blocking, and so functions that 
+	 * call this function must not be run on the UI thread.
+	 * 
+	 * @param baseURL The base of the URL to which the request will be made
+	 * @param path The path to append to the request URL
+	 * @param parameters Parameters separated by ampersands (&)
+	 * @param reqType The request type as a string (i.e. GET or POST)
+	 * @return A String dump of a JSONObject representing the requested data
+	 */
 	public String makeRequest(String baseURL, String path, String parameters, String reqType) {
 
 		int mstat = 0;
