@@ -43,13 +43,15 @@
           android:weightSum="100"
           style="?android:attr/buttonBarStyle"
           >
-	   <Button 
+	   <!-- <Button 
+	       android:id="@+id/cancelSpinnerB"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Cancel"
             android:layout_weight="50"
-            style="?android:attr/buttonBarButtonStyle"/>
+            style="?android:attr/buttonBarButtonStyle"/> -->
        <Button 
+           android:id="@+id/confirmSpinnerB"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Okay"
