@@ -24,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:entries="@array/Interval"
-        android:entryValues="@array/dataRateVals"
         android:prompt="@string/rate_prompt"
         android:layout_weight="75"
         />
