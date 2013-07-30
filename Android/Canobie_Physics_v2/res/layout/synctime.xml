@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -16,7 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/instructions"
-            android:textSize="20dp" />
+            android:textColor="#0066FF"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <ScrollView
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/syncTime"
-                android:textSize="18dp" >
+                android:textSize="18sp" >
 
                 <requestFocus />
             </TextView>
@@ -62,27 +62,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
+                android:layout_margin="3dp"
+                android:background="@drawable/button_rsense"
                 android:text="@string/send"
-                android:textColor="#FFFFFF" />
+                android:textColor="#0066FF" />
 
             <Button
                 android:id="@+id/receiveButton"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="@drawable/colorless"
+                android:layout_margin="3dp"
+                android:background="@drawable/button_rsense"
                 android:text="@string/receive"
-                android:textColor="#FFFFFF" />
+                android:textColor="#0066FF" />
         </LinearLayout>
 
         <Button
             android:id="@+id/buttonGoBack"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/colorless"
+            android:layout_margin="3dp"
+            android:background="@drawable/button_rsense"
             android:text="@string/cancel"
-            android:textColor="#FFFFFF" />
+            android:textColor="#0066FF" />
     </LinearLayout>
 
 </RelativeLayout>
