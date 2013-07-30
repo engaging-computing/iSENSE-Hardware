@@ -20,6 +20,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
+import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.objects.RTutorial;
 
 public class API {
@@ -126,6 +127,29 @@ public class API {
 			e.printStackTrace();
 		}
 		return proj;
+	}
+	
+	public ArrayList<RProjectField> getProjectFields(int projectId) {
+		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
+		
+		try {
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken+"&recur=true", "GET");
+			JSONObject j = new JSONObject(reqResult);
+			JSONArray j2 = j.getJSONArray("fields");
+			for(int i = 0; i < j2.length(); i++) {
+				JSONObject inner = j2.getJSONObject(i);
+				RProjectField rpf = new RProjectField();
+				rpf.field_id = inner.getInt("id");
+				rpf.name = inner.getString("name");
+				rpf.type = inner.getInt("type");
+				rpf.unit = inner.getString("unit");
+				rpfs.add(rpf);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rpfs;
 	}
 
 	//Return many tutorials
