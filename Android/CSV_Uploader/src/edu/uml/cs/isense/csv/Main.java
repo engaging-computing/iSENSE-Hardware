@@ -28,7 +28,6 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,20 +38,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckedTextView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -62,13 +58,10 @@ import edu.uml.cs.isense.csv.fails.SdCardFailure;
 import edu.uml.cs.isense.csv.login.LoginActivity;
 import edu.uml.cs.isense.csv.objects.DataFieldManager;
 import edu.uml.cs.isense.csv.objects.Options;
-import edu.uml.cs.isense.csv.objects.SimpleGestureFilter;
-import edu.uml.cs.isense.csv.objects.SimpleGestureFilter.SimpleGestureListener;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
-@SuppressLint("NewApi")
-public class Main extends Activity implements SimpleGestureListener {
+public class Main extends Activity {
 
 	private enum SlideType {
 		NO_SLIDE, SLIDE_LEFT, SLIDE_RIGHT,
@@ -90,7 +83,6 @@ public class Main extends Activity implements SimpleGestureListener {
 	private Button refresh;
 	private Button upload;
 	private TextView noData;
-	private ImageView backImage;
 	private TextView curDir;
 
 	private static final int LOGIN_REQUESTED = 100;
@@ -102,9 +94,7 @@ public class Main extends Activity implements SimpleGestureListener {
 	private DataFieldManager dfm;
 
 	private ProgressDialog dia;
-	private SharedPreferences optionPrefs;
 
-	private static boolean canSwipe = true;
 	private static boolean clickEnabled = true;
 	private static boolean usingDataView1 = false;
 
@@ -113,14 +103,12 @@ public class Main extends Activity implements SimpleGestureListener {
 	public JSONArray data;
 
 	public static Context mContext;
-	private Handler mHandler;
 
 	private LinearLayout dataView;
 	private LinearLayout dataView2;
 	private ScrollView scrollWrapper;
 	private ScrollView scrollWrapper2;
 	private ArrayList<File> checkedFiles;
-	private SimpleGestureFilter detector;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -132,15 +120,11 @@ public class Main extends Activity implements SimpleGestureListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		detector = new SimpleGestureFilter(this, this);
-
 		rapi = RestAPI
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
 		rapi.useDev(true);
-
-		optionPrefs = getSharedPreferences("options", 0);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -165,15 +149,6 @@ public class Main extends Activity implements SimpleGestureListener {
 
 		noData = (TextView) findViewById(R.id.noItems);
 
-		backImage = (ImageView) findViewById(R.id.back_image);
-		backImage.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-
-				previousDirectory(currentDirectory);
-			}
-		});
-
 		curDir = (TextView) findViewById(R.id.cur_dir);
 
 		dataView = (LinearLayout) findViewById(R.id.dataView);
@@ -184,10 +159,11 @@ public class Main extends Activity implements SimpleGestureListener {
 		scrollWrapper2.setVisibility(View.VISIBLE);
 
 		rootDirectory = "/mnt";
-		
+
 		/* Restore current view upon rotation, or initialize the view to /mnt */
 		if (savedInstanceState != null) {
-			if (savedInstanceState.containsKey(PREV_DIR) && savedInstanceState.containsKey(CURR_DIR)) {
+			if (savedInstanceState.containsKey(PREV_DIR)
+					&& savedInstanceState.containsKey(CURR_DIR)) {
 				previousDirectory = savedInstanceState.getString(PREV_DIR);
 				currentDirectory = savedInstanceState.getString(CURR_DIR);
 			} else {
@@ -198,15 +174,6 @@ public class Main extends Activity implements SimpleGestureListener {
 			previousDirectory = rootDirectory;
 			currentDirectory = rootDirectory;
 		}
-
-		boolean success;
-		try {
-			success = getFiles(new File(currentDirectory), activeLayout());
-		} catch (Exception e) {
-			e.printStackTrace();
-			success = false;
-		}
-		didGetFiles(success, true, SlideType.NO_SLIDE);
 
 		refresh = (Button) findViewById(R.id.refresh);
 		refresh.setOnClickListener(new OnClickListener() {
@@ -266,40 +233,6 @@ public class Main extends Activity implements SimpleGestureListener {
 					new UploadTask().execute();
 			}
 		});
-		
-		Log.e("CSV", "going to test for chosen_file");
-		
-		Intent i = getIntent();
-		Bundle b = i.getExtras();
-		
-		if (b != null) {
-			if (b.containsKey(CHOSEN_FILE)) {
-				Log.e("CSV", "found chosen_file key" );
-				String chosenFile = b.getString(CHOSEN_FILE);
-				int nameStartPoint = chosenFile.lastIndexOf("/");
-				String directoryName = chosenFile.substring(0, nameStartPoint);
-				Log.e("CSV", chosenFile.substring(nameStartPoint));
-				String specificFileName = chosenFile.substring(nameStartPoint);
-				
-				try {
-					success = getFiles(new File(directoryName), activeLayout());
-				} catch (Exception e) {
-					e.printStackTrace();
-					success = false;
-				}
-				didGetFiles(success, true, SlideType.NO_SLIDE);
-				
-				for (int j = 0 ; j < activeLayout().getChildCount() ; j++ ) {
-						CheckedTextView ctv = (CheckedTextView) activeLayout().getChildAt(j);
-						if (ctv.getText().equals(specificFileName)) {
-								ctv.callOnClick();
-								break;
-						}
-				}
-			}
-		}
-		
-
 	}
 
 	private String getUploadTime() {
@@ -329,11 +262,64 @@ public class Main extends Activity implements SimpleGestureListener {
 	public void onResume() {
 		super.onResume();
 		login();
+
+		boolean success;
+		try {
+			success = getFiles(new File(currentDirectory), activeLayout());
+		} catch (Exception e) {
+			e.printStackTrace();
+			success = false;
+		}
+		didGetFiles(success, true, SlideType.NO_SLIDE);
+
+		Intent i = getIntent();
+		Bundle b = i.getExtras();
+
+		if (b != null) {
+			if (b.containsKey(CHOSEN_FILE)) {
+				Log.e("CSV", "found chosen_file key");
+				String chosenFile = b.getString(CHOSEN_FILE);
+				int nameStartPoint = chosenFile.lastIndexOf("/");
+				String directoryName = chosenFile.substring(0, nameStartPoint);
+				Log.e("CSV", chosenFile.substring(nameStartPoint));
+				String specificFileName = chosenFile.substring(nameStartPoint);
+
+				try {
+					success = getFiles(new File(directoryName), activeLayout());
+				} catch (Exception e) {
+					e.printStackTrace();
+					success = false;
+				}
+				didGetFiles(success, true, SlideType.NO_SLIDE);
+
+				for (int j = 0; j < activeLayout().getChildCount(); j++) {
+					CheckedTextView ctv = (CheckedTextView) activeLayout()
+							.getChildAt(j);
+					if (ctv.getText().equals(specificFileName)) {
+						ctv.callOnClick();
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		if (clickEnabled) {
+			if (currentDirectory.equals(rootDirectory)) {
+				super.onBackPressed();
+			} else
+				try {
+					boolean success = getFiles(new File(previousDirectory),
+							backgroundLayout());
+					didGetFiles(success, false, SlideType.SLIDE_RIGHT);
+					currentDirectory = previousDirectory;
+					previousDirectory = getParentDir(currentDirectory);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
 	}
 
 	@Override
@@ -515,7 +501,7 @@ public class Main extends Activity implements SimpleGestureListener {
 		}
 
 		File[] files = dir.listFiles();
-		if (files.equals(null))
+		if (files == null)
 			return false;
 		else {
 			dv.removeAllViews();
@@ -560,7 +546,7 @@ public class Main extends Activity implements SimpleGestureListener {
 										ctv.setCheckMarkDrawable(R.drawable.bluecheck);
 										checkedFiles.add(nextFile);
 									} else {
-										ctv.setCheckMarkDrawable(0); 
+										ctv.setCheckMarkDrawable(0);
 										checkedFiles.remove(nextFile);
 									}
 								} else
@@ -581,29 +567,14 @@ public class Main extends Activity implements SimpleGestureListener {
 	private void didGetFiles(boolean yes, boolean firstGrab, SlideType st) {
 		curDir.setText("Current directory: " + currentDirectory);
 
-		if (currentDirectory.equals(rootDirectory)) {
-			backImage.setVisibility(View.GONE);
-			canSwipe = false;
-		} else {
-			backImage.setVisibility(View.VISIBLE);
-			canSwipe = true;
-		}
-
 		if (yes) {
 			noData.setVisibility(View.GONE);
 			curDir.setVisibility(View.VISIBLE);
 
 			// No transition, just swap visible view
 			if (!(st == SlideType.NO_SLIDE)) {
-				new AnimateViews().execute(st);
-			}
-			
-			if (currentDirectory.equals(rootDirectory)) {
-				backImage.setVisibility(View.GONE);
-				canSwipe = false;
-			} else {
-				backImage.setVisibility(View.VISIBLE);
-				canSwipe = true;
+				// new AnimateViews().execute(st);
+				animateViews(st);
 			}
 
 		} else {
@@ -612,7 +583,6 @@ public class Main extends Activity implements SimpleGestureListener {
 			// we don't update the UI.
 			if (firstGrab) {
 				noData.setVisibility(View.VISIBLE);
-				backImage.setVisibility(View.GONE);
 				curDir.setVisibility(View.GONE);
 				Intent iSdFail = new Intent(mContext, SdCardFailure.class);
 				startActivity(iSdFail);
@@ -621,42 +591,6 @@ public class Main extends Activity implements SimpleGestureListener {
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
-		}
-	}
-
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent me) {
-		this.detector.onTouchEvent(me);
-		return super.dispatchTouchEvent(me);
-	}
-
-	public void onSwipe(int direction) {
-
-		switch (direction) {
-
-		case SimpleGestureFilter.SWIPE_RIGHT:
-			if (optionPrefs.getBoolean("swipe", true) && canSwipe)
-				previousDirectory(currentDirectory);
-			break;
-		default:
-			break;
-		}
-	}
-
-	private void previousDirectory(String curr) {
-		if (clickEnabled) {
-			if (curr.equals(rootDirectory)) {
-				w.make("Cannot go back from this point", Waffle.IMAGE_X);
-			} else
-				try {
-					boolean success = getFiles(new File(previousDirectory),
-							backgroundLayout());
-					didGetFiles(success, false, SlideType.SLIDE_RIGHT);
-					currentDirectory = previousDirectory;
-					previousDirectory = getParentDir(currentDirectory);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 		}
 	}
 
@@ -728,7 +662,8 @@ public class Main extends Activity implements SimpleGestureListener {
 				return false;
 
 			int sid = rapi.createSession(eid, sdFile.getName(),
-					"Automated .csv upload from Android.  Uploaded at " + getUploadTime() + ".", "Lowell", "MA", "US");
+					"Automated .csv upload from Android.  Uploaded at "
+							+ getUploadTime() + ".", "Lowell", "MA", "US");
 			if (sid <= 0)
 				return false;
 
@@ -855,85 +790,31 @@ public class Main extends Activity implements SimpleGestureListener {
 		usingDataView1 = !usingDataView1;
 	}
 
-	void bothVisibleScrollView() {
-		scrollWrapper.setVisibility(View.VISIBLE);
-		scrollWrapper2.setVisibility(View.VISIBLE);
+	public void slideLeft() {
+
+		Animation slideInFromRight = AnimationUtils.loadAnimation(mContext,
+				R.anim.slide_in_from_right);
+		backgroundLayout().startAnimation(slideInFromRight);
 	}
 
-	Runnable toggleScrollView = new Runnable() {
-		@Override
-		public void run() {
-			toggleVisibleScrollView();
-		}
-	};
+	public void slideRight() {
 
-	Runnable slideLeft = new Runnable() {
+		Animation slideInFromLeft = AnimationUtils.loadAnimation(mContext,
+				R.anim.slide_in_from_left);
+		backgroundLayout().startAnimation(slideInFromLeft);
 
-		@Override
-		public void run() {
-			/* Temp placeholder */
-			bothVisibleScrollView();
+	}
 
-			Animation slideOutToLeft = AnimationUtils.loadAnimation(mContext,
-					R.anim.slide_out_to_left);
-			activeLayout().startAnimation(slideOutToLeft);
+	public void animateViews(SlideType st) {
+		clickEnabled = false;
 
-			Animation slideInFromRight = AnimationUtils.loadAnimation(mContext,
-					R.anim.slide_in_from_right);
-			backgroundLayout().startAnimation(slideInFromRight);
-		}
+		if (st == SlideType.SLIDE_LEFT)
+			slideLeft();
+		else if (st == SlideType.SLIDE_RIGHT)
+			slideRight();
 
-	};
-
-	Runnable slideRight = new Runnable() {
-		@Override
-		public void run() {
-			/* Temp placeholder */
-			bothVisibleScrollView();
-
-			Animation slideOutToRight = AnimationUtils.loadAnimation(mContext,
-					R.anim.slide_out_to_right);
-			activeLayout().startAnimation(slideOutToRight);
-
-			Animation slideInFromLeft = AnimationUtils.loadAnimation(mContext,
-					R.anim.slide_in_from_left);
-			backgroundLayout().startAnimation(slideInFromLeft);
-		}
-	};
-
-	private class AnimateViews extends AsyncTask<SlideType, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			clickEnabled = false;
-			mHandler = new Handler();
-			super.onPreExecute();
-		}
-
-		@Override
-		protected Void doInBackground(SlideType... slideType) {
-			if (slideType[0] == SlideType.SLIDE_LEFT)
-				mHandler.post(slideLeft);
-			else if (slideType[0] == SlideType.SLIDE_RIGHT)
-				mHandler.post(slideRight);
-
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-
-			mHandler.post(toggleScrollView);
-			clickEnabled = true;
-
-			super.onPostExecute(result);
-		}
+		toggleVisibleScrollView();
+		clickEnabled = true;
 
 	}
 

@@ -401,6 +401,8 @@
             [cell setExpNum:expNumString];
     }
     
+    [tmp release];
+    
     return cell;
 }
 
