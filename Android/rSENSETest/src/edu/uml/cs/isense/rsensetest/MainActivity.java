@@ -19,7 +19,7 @@ import edu.uml.cs.isense.objects.RProjectField;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, getusers, getprojects;
+	Button login, logout, getusers, getprojects;
 	TextView status;
 	EditText projID, userName;
 	API api;
@@ -32,11 +32,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		login = (Button) findViewById(R.id.btn_login);
 		getusers = (Button) findViewById(R.id.btn_getusers);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
+		logout = (Button) findViewById(R.id.btn_logout);
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
 
 		login.setOnClickListener(this);
+		logout.setOnClickListener(this);
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
 		getusers.setEnabled(false);
@@ -59,6 +61,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == getusers ) {
 				status.setText("clicked get users");
 				new UsersTask().execute();
+			} if ( v == logout ) {
+				status.setText("clicked logout");
+				new LogoutTask().execute();
 			} else if ( v == getprojects ) {
 				status.setText("clicked get projects");
 				new ProjectsTask().execute();
@@ -82,6 +87,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				status.setText("Login Failed");
 			}
+		}
+	}
+	private class LogoutTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			api.deleteSession();
+			return null;
 		}
 	}
 
