@@ -27,7 +27,7 @@
 -(void)addDataSet:(DataSet *)dataSet;
 -(id)removeDataSet:(NSNumber *)key;
 -(void)editDataSetWithKey:(NSNumber *)key;
--(bool)upload;
+-(bool)upload:(NSString *)parentName;
 -(void)removeAllDataSets;
 -(id)getDataSet;
 
