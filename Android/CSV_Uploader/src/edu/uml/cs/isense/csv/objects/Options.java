@@ -20,18 +20,6 @@ public class Options extends Activity {
 		
 		final SharedPreferences mPrefs = getSharedPreferences("options", 0);
 		
-		final CheckBox swipe = (CheckBox) findViewById(R.id.no_swipe_check);
-		swipe.setChecked(mPrefs.getBoolean("swipe", true));
-		swipe.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				final SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putBoolean("swipe", isChecked).commit();
-				
-			}		
-		});
-		
 		final CheckBox usb = (CheckBox) findViewById(R.id.usb_check);
 		usb.setChecked(mPrefs.getBoolean("usb", true));
 		usb.setOnCheckedChangeListener(new OnCheckedChangeListener() {

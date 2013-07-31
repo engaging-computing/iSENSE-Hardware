@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/check_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,42 +8,43 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp"
+    tools:ignore="UnusedResources" >
 
     <CheckedTextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:checkMark="@drawable/checkmark"
         android:checked="true"
         android:gravity="left"
-        android:textSize="14sp"
-        android:background="@android:color/transparent" />
+        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
-        android:weightSum="4"
-        android:background="@android:color/transparent" >
+        android:weightSum="4" >
 
         <TextView
             android:id="@+id/experimentid"
-            android:textIsSelectable="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:textSize="13sp"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent"
+            android:textIsSelectable="false"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textIsSelectable="false"
             android:layout_weight="1"
-            android:textSize="13sp"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent"
+            android:textIsSelectable="false"
+            android:textSize="13sp" />
     </LinearLayout>
 
 </LinearLayout>

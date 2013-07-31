@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Canobie Physics</string>
+    
+    <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
+    <string name="otherConfig"><u><b>Other Configurations</b></u></string>
+    
+    <string name="rides_prompt">Choose a ride</string>
+    <string-array name="rides_array">
+        <item>Unknown</item>
+        <item>Bumper Cars</item>
+        <item>Carousel</item>
+        <item>Drop Tower</item>
+        <item>Ferris Wheel</item>
+        <item>Frisbee</item>
+        <item>Gravitron</item>
+        <item>Jump-and-Smile</item>
+        <item>Kiddie Ride</item>
+        <item>Log Flume</item>
+        <item>Matterhorn</item>
+        <item>Orbiter</item>
+        <item>Other</item>
+        <item>Pirate Ship</item>
+        <item>Railway</item>
+        <item>River Rafting</item>
+        <item>Roller Coaster (wooden)</item>
+        <item>Roller Coaster (steel)</item>
+        <item>Rotor</item>
+        <item>Scrambler</item>
+        <item>Slide</item>
+        <item>Speed</item>
+        <item>Swings</item>
+        <item>Teacups</item>
+        <item>Tilt-A-Whirl</item>
+        <item>Wipeout</item>
+        <item>Zero Gravity</item>
+        <item>Zipper</item>
+    </string-array>
+    <string-array name="canobie_array">
+    	<item>Unknown</item>
+    	<item>Alpine Swing</item>
+    	<item>Antique Carousel</item>
+        <item>Antique Cars</item>
+        <item>Canobie 500</item>
+        <item>Caterpillar</item>
+        <item>Corkscrew</item>
+        <item>Crazy Cups</item>
+        <item>daVinvi\'s Dream</item>
+        <item>Dodgems</item>
+        <item>Dragon Coaster</item>
+        <item>Equinox</item>
+        <item>Giant Sky Wheel</item>
+        <item>Jungle Bounce</item>
+        <item>Junior Sports Cars</item>
+        <item>Kiddie Carousel</item>
+        <item>Over the Rainbow</item>
+        <item>Pirata</item>
+        <item>Psychodrome</item>
+        <item>Skater</item>
+        <item>Star Blaster</item>
+        <item>Turkish Twist</item>
+        <item>Twist and Shout</item>
+        <item>Untamed</item>
+        <item>Wave Blaster</item>
+        <item>Wipeout</item>
+        <item>Xtreme Frisbee</item>
+        <item>Yankee Cannonball</item>
+        <item>Zero Gravity</item>
+    </string-array>
+    
+    <string name="experiments_no_items">No experiments were found.</string>
+	
+	<string name="xyz">X:\nY:\nZ:</string>
+	<string name="startString">START\n(Press and Hold)</string>
+	<string name="stopString">STOP\n(Press and Hold)</string>
+	<string name="notLoggedIn"> Not Logged In</string>
+	<string name="rideAndSeat">Ride/St#: </string>
+	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
+	<string name="menuDirections">Use Menu to Access Configurations</string>
+	<string name="timeElapsed">Time Elapsed: 0:00</string>
+	<string name="sessionName">Session Name: </string>
+	<string name="experimentNum">Expm #: </string>
+	<string name="browse">  Browse&#8230;  </string>
+	<string name="seatNum">Seat/Student #: </string>
+	<string name="seatNumber">1</string>
+	<string name="canobieRides">Canobie Lake Park Rides</string>
+	<string name="ride">Ride: </string>
+	<string name="takePic">Take a Picture</string>
+	<string name="takeVid">Take a Video"</string>
+	<string name="instructions">Instructions:</string>
+	<string name="send">Send</string>
+	<string name="receive">Receive</string>
+	<string name="cancel">Cancel</string>	
+	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+	<string name="retry">Try Again</string>
+	<string name="done">Done</string>
+	<string name="back">Back</string>
+	<string name="media_desc">Select one of the following options:</string>
+	<string name="upload">Upload</string>
+	<string name="okay">Okay</string>
+	<string name="sample_rate">Sample Interval: </string>
+	
+	<string name="syncTime">
+	    Synchronizing time is useful when using multiple devices on a ride at the
+	    same time.  By default, many Android devices\' clocks will not match one
+	    another\'s, thus making recording data at similar times difficult.  However,
+	    you have a choice to fix this issue by setting a device as a \"host\".
+	    This can be done by hitting the \"Send\" button.  Upon hitting \"Send\", 
+	    the time from that particular Android device will be broadcasted as a timeframe
+	    that all other phones in the local network can receive.  However, in order for
+	    a phone to receive a broadcasted time, that phone must be currently in 
+	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
+	    you intend on receiving a host\'s time, you must be in receive-mode before the
+	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
+	    broadcasted, should you be the host).  After pressing either \"Send\" or 
+	    \"Receive\", a dialog box will tell you the time that has been received from
+	    the host, along with the millisecond offset between 
+	    the received time and your Android device\'s actual clock.  If you do choose 
+	    to synchronize time, recording data will now use the received time as a label 
+	    for data points, rather than using your local time.  This now allows 
+	    simultaneous data recording across multiple devices on the same ride at the 
+	    same time.  Please note: synchronizing time will only work if all the Android
+	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
+	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
+	    allowed on some WiFi networks, but it generally works on small, password-secured 
+	    WiFi networks.
+	</string>
+	<string name="prompt">Would you like to retry uploading any of the following?</string>
+	<string name="username">Username:   </string>
+	<string name="password">Password:    </string>
+	<string name="loading">Loading&#x2026;</string>
+	<string name="contentDesc"></string>
+	<string name="search">Search</string>
+	<string name="select_later">I\'ll select one later</string>
+
+</resources>

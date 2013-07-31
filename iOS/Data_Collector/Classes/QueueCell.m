@@ -69,10 +69,10 @@
 - (void) toggleChecked {
     if (dataSet.uploadable.boolValue == false) {
         [self setCheckedSwitch:true];
-        dataSet.uploadable = [[NSNumber alloc] initWithBool:true];
+        dataSet.uploadable = [NSNumber numberWithBool:true];
     } else {
         [self setCheckedSwitch:false];
-        dataSet.uploadable = [[NSNumber alloc] initWithBool:false];
+        dataSet.uploadable = [NSNumber numberWithBool:false];
     }
 }
 

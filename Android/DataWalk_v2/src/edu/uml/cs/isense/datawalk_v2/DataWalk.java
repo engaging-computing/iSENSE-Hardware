@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
@@ -51,7 +52,7 @@ import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -160,7 +161,8 @@ public class DataWalk extends Activity implements LocationListener,
 	static int mwidth = 1;
 	private Waffle w;
 	public static Context mContext;
-
+	
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -250,7 +252,7 @@ public class DataWalk extends Activity implements LocationListener,
 							experimentId = defaultExp;
 						}
 						
-						DataSet ds = new DataSet(DataSet.Type.DATA, nameOfSession,
+						QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
 								"Data Point Uploaded from Android DataWalk",
 								experimentId, dataSet.toString(), null, -1, "",
 								"", "", "");
@@ -458,8 +460,9 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 		}
 		
-		
-	}
+	
+	}//ends onCreate
+
 
 	@Override
 	public void onPause() {
@@ -515,13 +518,14 @@ public class DataWalk extends Activity implements LocationListener,
 		uploadPoint = true;
 		uploadMode = true;
 		umbChecked = true;
-		w.make("Connected to Internet- new data will automatically be uploaded to iSENSE!", w.LENGTH_LONG, w.IMAGE_CHECK);
 		}
 		if (umbChecked)
 			uploadMode = true;
 		//uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
-		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate",
-						"10000"));
+		
+		
+		
+		mInterval = CustomOnItemSelectedListener.mIntervalHack;
 
 		Log.d("tag", "this is name" + firstName + lastInitial);
 
@@ -548,8 +552,7 @@ public class DataWalk extends Activity implements LocationListener,
 		i = 0;
 		expNumBox.setText("Experiment Number: " + experimentId);
 		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
-		rateBox.setText("Data is Recorded Every: " + mInterval / 1000
-				+ " seconds");
+		rateBox.setText("Data is Recorded Every: "+ CustomOnItemSelectedListener.savedValueString);
 		Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
 		
 		
@@ -685,6 +688,7 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 		return true;
 	}
+	
 	
 	private void manageUploadQueue() {
 		if (!uq.emptyQueue()) {
@@ -889,6 +893,9 @@ public class DataWalk extends Activity implements LocationListener,
 				if (rapi.isConnectedToInternet())
 				ChkBoxChecked = true;
 				umbChecked = true;
+				CustomOnItemSelectedListener.mIntervalHack = 10000;
+				CustomOnItemSelectedListener.savedValueInt = 3;
+				CustomOnItemSelectedListener.savedValueString = "10 seconds";
 				SharedPreferences prefs = getSharedPreferences("EID", 0);
 				SharedPreferences.Editor mEdit = prefs.edit();
 				mEdit.putString("experiment_id", defaultExp);
@@ -906,6 +913,15 @@ public class DataWalk extends Activity implements LocationListener,
 						+ data.getStringExtra("username")
 						+ " Name: "
 						+ firstName + " " + lastInitial);
+			}
+
+		}
+		else if (requestCode == SPINNER_STARTED) {
+			if (resultCode == RESULT_OK) {
+				//Here is what happens if they click okay on the spinner
+			Log.d("tag", "We clicked Okay on the Spinner");	
+			//w.make("you clicked okay!");
+			
 			}
 
 		}
@@ -962,17 +978,19 @@ public class DataWalk extends Activity implements LocationListener,
 	}
 
 	public static final int LOGIN_STATUS_REQUESTED = 45;
-
+	public static final int SPINNER_STARTED = 23; 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		//if you want a check-box option
 		/*case R.id.Settings:
 			startActivity(new Intent(this, Prefs.class));
 			if(!umbChecked)
-			w.make("The app will remain in Save Mode untill connected to the internet.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
+			w.make("The Application will remain in Save Mode until connected to the Internet.", Waffle.LENGTH_LONG,Waffle.IMAGE_WARN);
 			if(umbChecked)
 			w.make("Data will  automatically be uploaded to iSENSE!", Waffle.LENGTH_LONG);
 			return true;*/
+		
 		case R.id.Upload:
 			manageUploadQueue();
 			return true;
@@ -991,10 +1009,11 @@ public class DataWalk extends Activity implements LocationListener,
 			Log.d("tag", "you clicked on NameChange");
 			return true;
 		case R.id.DataUploadRate:
-			startActivity(new Intent(this, PrefsTwo.class));
+			startActivityForResult(new Intent(this, PrefsTwoClone.class),SPINNER_STARTED);
 			Log.d("tag", "you clicked on Change Recording Rate");
 			return true;
 		case R.id.ExpNum:
+			//TODO
 			Intent setup = new Intent(this, Setup.class);
 			startActivityForResult(setup, EXPERIMENT_REQUESTED);
 			Log.d("tag", "you clicked on Change Exp Num");
