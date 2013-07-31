@@ -504,7 +504,7 @@
         case MANUAL_MENU_UPLOAD:
             
             if (dataSaver.count > 0) {
-                queueUploader = [[QueueUploaderView alloc] init];
+                queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
                 queueUploader.title = @"Manage and Upload Sessions";
                 [self.navigationController pushViewController:queueUploader animated:YES];
                 [queueUploader release];
@@ -1090,7 +1090,7 @@
     
     DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionNameInput.text];
-    [ds setParentName:PARENT_MANUAL];
+    [ds setParentName:[[[NSString alloc] initWithString:PARENT_MANUAL] autorelease]];
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataJSON];

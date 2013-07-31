@@ -105,7 +105,7 @@
     [dataQueue enqueue:dataSet withKey:key];
 }
 
--(bool)upload {
+-(bool)upload:(NSString *)parentName {
     iSENSE *isenseAPI = [iSENSE getInstance];
     if (![isenseAPI isLoggedIn]) {
         
@@ -124,6 +124,9 @@
         
         // get the next dataset
         currentDS = [dataQueue objectForKey:currentKey];
+        
+        // prevent uploading datasets from other sources (e.g. manual vs automatic)
+        if (![currentDS.parentName isEqualToString:parentName]) continue;
         
         // prevent trying to upload with an invalid experiment
         if (currentDS.eid.intValue <= 0) continue;
