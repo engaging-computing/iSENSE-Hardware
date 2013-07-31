@@ -200,6 +200,7 @@
         case QUEUE_DELETE:
             
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [limitedTempQueue removeObjectForKey:[cell getKey]];
             [dataSaver removeDataSet:[cell getKey]];
             [self.mTableView reloadData];
             [mTableView reloadData];
