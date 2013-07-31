@@ -79,6 +79,7 @@
     int accel   = [sc getCompatibilityForSensorType:sACCELEROMETER];
     int light   = [sc getCompatibilityForSensorType:sAMBIENT_LIGHT];
     int gyro    = [sc getCompatibilityForSensorType:sGYROSCOPE];
+    [sc release];
     //int proxi   = [sc getCompatibilityForSensorType:sPROXIMITY];
     
     CMMotionManager *motionManager = [[CMMotionManager alloc] init];
@@ -115,6 +116,8 @@
             [compatible addObject:[NSNumber numberWithInt:NOT_AVAILABLE]];
         }
     }
+    
+    [motionManager release];
     
     table.backgroundColor = [UIColor clearColor];
     

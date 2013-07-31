@@ -13,7 +13,7 @@
         android:paddingLeft="5dp"
         android:paddingTop="8dp"
         android:text="@string/loggedInAs"
-        android:textSize="16sp" 
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -37,22 +37,26 @@
 
         <Button
             android:id="@+id/refresh"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_background"
             android:text="@string/refresh"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/upload"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_background"
             android:text="@string/upload"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -60,9 +64,7 @@
         android:id="@+id/listAndTextLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/back_image"
-        android:layout_alignLeft="@+id/experimentLabel"
-        android:layout_below="@+id/buttonLayout"
+        android:layout_below="@id/buttonLayout"
         android:layout_margin="5dp"
         android:background="@drawable/background"
         android:padding="5dp" >
@@ -108,18 +110,5 @@
             android:text="@string/needData"
             android:textSize="18sp" />
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/back_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/isense_logo_desc"
-        android:scaleType="center"
-        android:src="@drawable/back_button" />
 
 </RelativeLayout>

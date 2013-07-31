@@ -309,10 +309,10 @@
     if (textField.tag >= TAG_TEXT) {
         if (textField.text.length > 0) {
             int TAG_VAL = (lastField.tag >= TAG_NUMERIC) ? TAG_NUMERIC : TAG_TEXT;
-            NSString *text = lastField.text;
-            [text retain];
+            NSString *text = [lastField.text retain];
             rds->doesHaveData = true;
             [rds->data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:text];
+            [text release];
         } else {
             int TAG_VAL = (lastField.tag >= TAG_NUMERIC) ? TAG_NUMERIC : TAG_TEXT;
             [rds->data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:[NSNull null]];
@@ -433,6 +433,7 @@
             else {
                 NSMutableArray *dataJSON = [[self getDataFromFields] retain];
                 [self saveDataSet:dataJSON withDescription:@"Data set from iOS Data Collector - Manual Entry."];
+                [dataJSON release];
                 uploadSuccess = TRUE;
             }
         
@@ -911,8 +912,9 @@
     fieldContents.font = [UIFont systemFontOfSize:24];
     fieldContents.borderStyle = UITextBorderStyleRoundedRect;
     if (data != nil && !([data isKindOfClass:[NSNull class]])) {
-        NSString *tmp = [NSString stringWithString:data];
-        fieldContents.text = [tmp retain];
+        NSString *tmp = [[NSString stringWithString:data] retain];
+        fieldContents.text = tmp;
+        [tmp release];
     }
     
     if (type != TYPE_DEFAULT) {
