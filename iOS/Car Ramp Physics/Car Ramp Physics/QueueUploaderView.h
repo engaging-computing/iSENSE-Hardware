@@ -30,5 +30,6 @@
 @property (nonatomic, assign) iSENSE *iapi;
 @property (nonatomic, retain) UIBarButtonItem *edit;
 @property (nonatomic, retain) NSIndexPath *lastClickedCellIndex;
+@property (nonatomic, retain) IBOutlet UIButton *uploadButton;
 
 @end

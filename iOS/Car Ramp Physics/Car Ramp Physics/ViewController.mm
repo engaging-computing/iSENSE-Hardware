@@ -8,20 +8,6 @@
 
 #import "ViewController.h"
 
-#define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
-#define PROD_VIS_URL @"http://isense.cs.uml.edu/highvis.php?sessions="
-
-#define DEV_DEFAULT_EXP 596
-#define PROD_DEFAULT_EXP 409
-
-#define FIRST_NAME_FIELD 9001
-#define LAST_NAME_FIELD 9002
-#define LOGIN_USER 9003
-#define LOGIN_PASS 9004
-
-#define FIRST_TIME_NAME 9005
-#define ENTER_NAME 9006
-
 @interface ViewController ()
 
 - (IBAction)showMenu:(id)sender;
@@ -226,6 +212,8 @@
     [self setPickerDefault];
     
     
+    
+    
 }
 
 - (void) setPickerDefault {
@@ -297,10 +285,10 @@
         [dfm setEnabledField:z atIndex:fACCEL_Z];
         [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         
-        [self saveModeDialog];
+        
         
     }
-    
+    [self saveModeDialog];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
 }
@@ -815,7 +803,6 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSLog(@"Hello");
-#define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
     NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
@@ -860,8 +847,10 @@
                 [self uploadData: @""];
             });
             [dis dismissWithClickedButtonIndex:nil animated:YES];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
-            [alert show];
+            if (!saveModeEnabled){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
+                [alert show];
+            }
         }
     } else if ([alertView.title isEqualToString:@"View data on iSENSE?"]) {
         

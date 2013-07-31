@@ -13,7 +13,6 @@
 @interface QueueCell : CRTableViewCell
 
 - (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
-- (void) toggleChecked;
 - (void) setSessionName:(NSString *)name;
 - (NSNumber *)getKey;
 - (void) setExpNum:(NSString *)exp;

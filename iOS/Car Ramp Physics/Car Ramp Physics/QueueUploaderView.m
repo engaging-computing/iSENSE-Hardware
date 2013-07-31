@@ -10,7 +10,7 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource, iapi, edit, lastClickedCellIndex;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, selectedMarks, dataSource, iapi, edit, lastClickedCellIndex, uploadButton;
 
 // Initialize the view where the
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -113,6 +113,7 @@
     [self.mTableView addGestureRecognizer:lpgr];
     
     mTableView.allowsSelectionDuringEditing = YES;
+    mTableView.clipsToBounds = YES;
     
     currentIndex = 0;
     
