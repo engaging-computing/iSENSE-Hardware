@@ -23,12 +23,15 @@
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer;
 - (BOOL) handleNewQRCode:(NSURL *)url;
+- (id) initWithParentName:(NSString *)parentName;
 
 @property (nonatomic, assign) iSENSE *iapi;
+@property (nonatomic, copy) NSString *parent;
 @property (nonatomic, retain) DataSaver *dataSaver;
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (assign) int currentIndex;
 @property (nonatomic, retain) NSIndexPath *lastClickedCellIndex;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) NSMutableDictionary *limitedTempQueue;
 
 @end

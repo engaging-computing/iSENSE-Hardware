@@ -10,7 +10,7 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi, lastClickedCellIndex;
+@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi, lastClickedCellIndex, parent, limitedTempQueue;
 
 // Initialize the view
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -19,7 +19,15 @@
         iapi = [iSENSE getInstance];
     }
     return self;
-    
+}
+
+-(id)initWithParentName:(NSString *)parentName {
+    self = [super init];
+    if (self) {
+        iapi = [iSENSE getInstance];
+        parent = parentName;
+    }
+    return self;
 }
 
 // Upload button control
@@ -29,7 +37,7 @@
     if ([iapi isLoggedIn]) {
         
         // Do zee upload thang
-        bool uploadSuccessful = [dataSaver upload];
+        bool uploadSuccessful = [dataSaver upload:parent];
         if (!uploadSuccessful) NSLog(@"Upload Not Successful");
         
         [self.navigationController popViewControllerAnimated:YES];
@@ -129,7 +137,20 @@
     
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
-    mTableView.backgroundView = nil; // TODO frogs?
+    mTableView.backgroundView = nil;
+    
+    // Initialize My Limited Queue
+    limitedTempQueue = [[NSMutableDictionary alloc] init];
+    
+    NSArray *keys = [dataSaver.dataQueue allKeys];
+    for (int i = 0; i < keys.count; i++) {
+        DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        if ([tmp.parentName isEqualToString:parent]) {
+            [limitedTempQueue setObject:tmp forKey:keys[i]];
+        }
+        [tmp release];
+    }
+    
 }
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -375,8 +396,7 @@
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (dataSaver == nil) NSLog(@"Why am I nil?");
-    return dataSaver.count;
+    return limitedTempQueue.count;
 }
 
 // Initialize a single object in the table
@@ -390,8 +410,8 @@
         [tmpVC release];
     }
     
-    NSArray *keys = [dataSaver.dataQueue allKeys];
-    DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[indexPath.row]] retain];
+    NSArray *keys = [limitedTempQueue allKeys];
+    DataSet *tmp = [[limitedTempQueue objectForKey:keys[indexPath.row]] retain];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
@@ -439,7 +459,7 @@
             
             if ([iapi isLoggedIn]) {
                 // Do zee upload thang
-                bool uploadSuccessful = [dataSaver upload];
+                bool uploadSuccessful = [dataSaver upload:parent];
                 if (!uploadSuccessful) NSLog(@"Too bad 4 you");
             }
             
@@ -523,6 +543,11 @@
         default:
             return YES;
     }
+}
+
+-(void)dealloc {
+    [limitedTempQueue release];
+    [super dealloc];
 }
 
 @end

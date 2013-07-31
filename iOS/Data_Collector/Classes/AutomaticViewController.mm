@@ -618,7 +618,7 @@ dataToBeOrdered, backFromQueue;
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [ds setName:sessionName];
-            [ds setParentName:PARENT_AUTOMATIC];
+            [ds setParentName:[[[NSString alloc] initWithString:PARENT_AUTOMATIC] autorelease]];
             [ds setDataDescription:description];
             [ds setEid:[NSNumber numberWithInt:expNum]];
             [ds setData:dataToBeJSONed];
@@ -708,7 +708,7 @@ dataToBeOrdered, backFromQueue;
     [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
     [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
     
-    QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
+    QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
     queueUploader.title = @"Step 3: Manage and Upload Sessions";
     [self.navigationController pushViewController:queueUploader animated:YES];
     [queueUploader release];
