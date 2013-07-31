@@ -124,7 +124,18 @@ dataToBeOrdered, backFromQueue;
         [self setEnabled:false forButton:step2];
     }
 
-    if (dataSaver.count > 0) {
+    // Check if any dataSets from this view controller are here
+    BOOL enableStep3 = false;
+    NSArray *keys = [dataSaver.dataQueue allKeys];
+    for (int i = 0; i < keys.count; i++) {
+        DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        if ([tmp.parentName isEqualToString:PARENT_AUTOMATIC]) {
+            enableStep3 = true;
+        }
+        [tmp release];
+    }
+    
+    if (enableStep3) {
         [self setEnabled:true forButton:step3];
     } else {
         [self setEnabled:false forButton:step3];
