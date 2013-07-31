@@ -73,6 +73,11 @@ public class API {
 		return false;
 	}
 
+	public void deleteSession() {
+		makeRequest(baseURL, "login", "", "DELETE");
+		currentUser = null;
+	}
+
 	//Return many projects
 	/*@param page Which page of results to start from. 1-indexed*/
 	/*@param perPage How many results to display per page */
@@ -105,7 +110,7 @@ public class API {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Retrieves information about a single project on iSENSE
 	 * 
@@ -134,7 +139,7 @@ public class API {
 		}
 		return proj;
 	}
-	
+
 	/** 
 	 * Gets all of the fields associated with a project
 	 * 
@@ -143,7 +148,7 @@ public class API {
 	 */
 	public ArrayList<RProjectField> getProjectFields(int projectId) {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
-		
+
 		try {
 			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken+"&recur=true", "GET");
 			JSONObject j = new JSONObject(reqResult);
@@ -160,7 +165,7 @@ public class API {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return rpfs;
 	}
 
@@ -270,7 +275,11 @@ public class API {
 		}
 		return person;
 	}
-	
+
+	public void uploadDataSet(int projectId, JSONArray data) {
+
+	}
+
 	public RPerson getCurrentUser() {
 		return currentUser;
 	}
@@ -315,11 +324,11 @@ public class API {
 
 		return "Error: status " + mstat;
 	}
-	
+
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
 	}
-	
+
 	/**
 	 * Returns status on whether you are connected to the Internet.
 	 * 
@@ -328,7 +337,7 @@ public class API {
 	public boolean hasConnectivity() {
 
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		
+
 		NetworkInfo info = cm.getActiveNetworkInfo();
 		return (info != null && info.isConnected());
 
