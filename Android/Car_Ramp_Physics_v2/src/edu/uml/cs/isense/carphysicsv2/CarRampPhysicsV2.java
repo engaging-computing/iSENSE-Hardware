@@ -115,7 +115,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
 	public static boolean appTimedOut = false;
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 
 	private MediaPlayer mMediaPlayer;
 
