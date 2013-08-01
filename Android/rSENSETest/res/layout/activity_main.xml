@@ -68,6 +68,12 @@
             android:hint="Username" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btn_random"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Random Test" />
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"

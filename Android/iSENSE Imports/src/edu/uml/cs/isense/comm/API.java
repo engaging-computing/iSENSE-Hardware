@@ -277,7 +277,19 @@ public class API {
 	}
 
 	public void uploadDataSet(int projectId, JSONArray data) {
-
+		ArrayList<RProjectField> fields = getProjectFields(projectId);
+		JSONObject requestData = new JSONObject();
+		ArrayList<String> headers = new ArrayList<String>();
+		for(RProjectField rpf : fields) {
+			headers.add(rpf.name);
+		}
+		try {
+			requestData.put("headers", new JSONArray(headers));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(requestData);
+		makeRequest(baseURL, "projects/"+projectId+"/manualUpload","","POST");
 	}
 
 	public RPerson getCurrentUser() {
