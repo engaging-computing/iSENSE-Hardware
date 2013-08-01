@@ -13,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import "QueueUploaderView.h"
+#import <MobileCoreServices/UTCoreTypes.h>
 
 typedef struct _RotationDataSaver {
     NSString *sesName;
@@ -37,6 +38,7 @@ typedef struct _RotationDataSaver {
 	iSENSE   *iapi;
 	NSString *sessionName;
     RotationDataSaver *rds;
+    NSMutableArray *imageList;
     
     CLLocationManager *locationManager;
     
@@ -47,7 +49,6 @@ typedef struct _RotationDataSaver {
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
-- (IBAction) showCameraUI;
 
 // Behavioral functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
@@ -68,6 +69,9 @@ typedef struct _RotationDataSaver {
 
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation;
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error;
+
 
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView  *logo;
