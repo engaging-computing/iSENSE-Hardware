@@ -285,6 +285,8 @@ public class API {
 		}
 		try {
 			requestData.put("headers", new JSONArray(headers));
+			requestData.put("data", data);
+			requestData.put("id", ""+projectId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
