@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -56,7 +57,7 @@ public class API {
 	/*Once you've done this you'll be able to call authenticated functions and get data back*/
 	/*Returns true if login succeeds*/
 	public boolean createSession(String username, String password) {
-		String result = makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST");
+		String result = makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST", null);
 		try {
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
@@ -74,7 +75,7 @@ public class API {
 	}
 
 	public void deleteSession() {
-		makeRequest(baseURL, "login", "", "DELETE");
+		makeRequest(baseURL, "login", "", "DELETE", null);
 		currentUser = null;
 	}
 
@@ -86,7 +87,7 @@ public class API {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET");
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -120,7 +121,7 @@ public class API {
 	public RProject getProject(int projectId) {
 		RProject proj = new RProject();
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken, "GET");
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken, "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			proj.project_id = j.getInt("id");
@@ -150,7 +151,7 @@ public class API {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken+"&recur=true", "GET");
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken+"&recur=true", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for(int i = 0; i < j2.length(); i++) {
@@ -181,7 +182,7 @@ public class API {
 		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET");
+			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -206,7 +207,7 @@ public class API {
 	public RTutorial getTutorial(int tutorialId) {
 		RTutorial tut = new RTutorial();
 		try {
-			String reqResult = makeRequest(baseURL, "tutorials/"+tutorialId, "", "GET");
+			String reqResult = makeRequest(baseURL, "tutorials/"+tutorialId, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			tut.tutorial_id = j.getInt("id");
@@ -233,7 +234,7 @@ public class API {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET");
+			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -259,7 +260,7 @@ public class API {
 	public RPerson getUser(String username) {
 		RPerson person = new RPerson();
 		try {
-			String reqResult = makeRequest(baseURL, "users/"+username, "", "GET");
+			String reqResult = makeRequest(baseURL, "users/"+username, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			person.person_id = j.getInt("id");
@@ -291,7 +292,7 @@ public class API {
 			e.printStackTrace();
 		}
 		System.out.println(requestData);
-		makeRequest(baseURL, "projects/"+projectId+"/manualUpload","","POST");
+		makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+authToken, "POST", requestData);
 	}
 
 	public RPerson getCurrentUser() {
@@ -308,14 +309,26 @@ public class API {
 	 * @param reqType The request type as a string (i.e. GET or POST)
 	 * @return A String dump of a JSONObject representing the requested data
 	 */
-	public String makeRequest(String baseURL, String path, String parameters, String reqType) {
-
+	public String makeRequest(String baseURL, String path, String parameters, String reqType, JSONObject postData) {
+		
+		byte[] mPostData = null;
+		
 		int mstat = 0;
 		try {
 			URL url = new URL(baseURL+"/"+path+"?"+parameters);
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
+			
+			if(postData != null) {
+				mPostData = postData.toString().getBytes();
+				urlConnection.setRequestProperty("Content-Length",Integer.toString(mPostData.length));
+				urlConnection.setRequestProperty("Content-Type", "application/json");
+				OutputStream out = urlConnection.getOutputStream();
+			    out.write(mPostData);
+			    out.close();
+			}
+			
 			mstat = urlConnection.getResponseCode();
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 			try {

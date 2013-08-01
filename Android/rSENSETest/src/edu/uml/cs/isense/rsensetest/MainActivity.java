@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
-		ArrayList<RProjectField> rpfs;
+		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
