@@ -2,6 +2,8 @@ package edu.uml.cs.isense.rsensetest;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +21,7 @@ import edu.uml.cs.isense.objects.RProjectField;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects;
+	Button login, logout, getusers, getprojects, randomTest;
 	TextView status;
 	EditText projID, userName;
 	API api;
@@ -33,6 +35,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers = (Button) findViewById(R.id.btn_getusers);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
 		logout = (Button) findViewById(R.id.btn_logout);
+		randomTest = (Button) findViewById(R.id.btn_random);
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
@@ -41,6 +44,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		logout.setOnClickListener(this);
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
+		randomTest.setOnClickListener(this);
 		getusers.setEnabled(false);
 
 		api = API.getInstance(this);
@@ -67,6 +71,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == getprojects ) {
 				status.setText("clicked get projects");
 				new ProjectsTask().execute();
+			} else if ( v == randomTest ) {
+				status.setText("other button clicked");
+				new OtherTask().execute();
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
@@ -120,7 +127,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
 		ArrayList<RProjectField> rpfs;
-		
+
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
 			if(projID.getText().toString().equals("")) {
@@ -145,6 +152,20 @@ public class MainActivity extends Activity implements OnClickListener {
 					}
 				}
 			}
+		}
+	}
+	
+	private class OtherTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			JSONArray data = new JSONArray();
+			api.uploadDataSet(1, data);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
 		}
 	}
 
