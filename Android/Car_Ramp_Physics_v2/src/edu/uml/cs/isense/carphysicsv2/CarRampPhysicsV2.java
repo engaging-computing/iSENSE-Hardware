@@ -110,12 +110,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	static String firstName = "";
 	static String lastInitial = "";
-	private int resultGotName;
+	private int resultGotName = 1098;
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
 	public static boolean appTimedOut = false;
 	public static boolean useDev = true;
+	public static boolean saveMode = false;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -446,10 +447,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 
 		} else {
-			w.make(
 
-			"You are not connected to the Internet. Data saving enabled",
-					Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 		}
 
 		if (savedInstanceState == null) {
@@ -459,6 +457,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 							EnterNameActivity.class), resultGotName);
 				}
 			}
+		}
+		
+		if (!rapi.isConnectedToInternet()) {
+			startActivityForResult(new Intent(mContext, SaveModeDialog.class), SAVE_MODE_REQUESTED);
 		}
 
 	}
@@ -561,6 +563,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		if (uq != null)
 			uq.buildQueueFromFile();
+		
+		
 
 	}
 
@@ -702,6 +706,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final int EXPERIMENT_REQUESTED = 9000;
 	public static final int QUEUE_UPLOAD_REQUESTED = 5000;
 	public static final int RESET_REQUESTED = 6003;
+	public static final int SAVE_MODE_REQUESTED = 10005;
 
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -804,6 +809,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				Log.d("fantastag", "resetti");
 
 			}
+		} else if (reqCode == SAVE_MODE_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				saveMode = true;
+			} else {
+				if (!rapi.isConnectedToInternet()) {
+					startActivityForResult(new Intent(mContext, SaveModeDialog.class), SAVE_MODE_REQUESTED);
+				} else {
+					saveMode = false;
+				}
+			}
 		}
 	}
 
@@ -841,7 +856,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
 
-			if (rapi.isConnectedToInternet()) {
+			if (!saveMode) {
 
 				String experimentNumber = CarRampPhysicsV2.experimentNumber;
 				if (address == null || address.size() <= 0) {
