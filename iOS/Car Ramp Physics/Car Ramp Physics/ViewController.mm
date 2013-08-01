@@ -118,8 +118,7 @@
 	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [start addGestureRecognizer:longPress];
     
-    recordLength = 10;
-    countdown = 10;
+    
     
     useDev = TRUE;
     
@@ -214,6 +213,8 @@
     
     
     
+    
+    
 }
 
 - (void) setPickerDefault {
@@ -285,10 +286,13 @@
         [dfm setEnabledField:z atIndex:fACCEL_Z];
         [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         
+        recordLength = 10;
+        countdown = 10;
         
+        [self saveModeDialog];
         
     }
-    [self saveModeDialog];
+    
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
 }
