@@ -42,5 +42,13 @@
 	</string>
 	<string name="changename">Change Name</string>
 	<string name="reset">Reset</string>
+	<string-array name="lengths_array">
+		<item >1 sec</item>
+		<item >2 sec</item>
+		<item >5 sec</item>
+		<item >10 sec</item>
+		<item >30 sec</item>
+		<item >60 sec</item>
+	</string-array>
     
 </resources>
