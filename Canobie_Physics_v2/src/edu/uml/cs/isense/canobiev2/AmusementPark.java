@@ -231,6 +231,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static boolean status400 = false;
 	private static boolean sdCardError = false;
 	private static boolean uploadSuccess = false;
+	private static boolean writeCSVFile = true;
 
 	private Handler mHandler;
 	private boolean throughHandler = false;
@@ -290,7 +291,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 					if (running) {
 
-						writeToSDCard(null, 'f');
+						if (writeCSVFile)
+							writeToSDCard(null, 'f');
+						
 						setupDone = false;
 						useMenu = true;
 
@@ -321,8 +324,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					} else {
 
 						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-						if (mPrefs.getString("experiment_id", "").equals("-1"))
+						if (mPrefs.getString("experiment_id", "").equals("-1")) {
 							enableAllFields();
+							writeCSVFile = false;
+						} else
+							writeCSVFile = true;
+							
 						
 						registerSensors();
 
@@ -466,14 +473,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								dataSet.put(dfm.putData());
 								data = dfm.writeSdCardLine();
 
-								if (beginWrite) {
-									String header = dfm.writeHeaderLine();
-									writeToSDCard(header, 's');
-									writeToSDCard(data, 'u');
-								} else {
-									writeToSDCard(data, 'u');
+								if (writeCSVFile) {
+									if (beginWrite) {
+										String header = dfm.writeHeaderLine();
+										writeToSDCard(header, 's');
+										writeToSDCard(data, 'u');
+									} else {
+										writeToSDCard(data, 'u');
+									}
 								}
-
+								
 							}
 						}, 0, srate);
 					}
