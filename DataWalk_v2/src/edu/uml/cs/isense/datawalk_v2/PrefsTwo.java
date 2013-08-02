@@ -42,6 +42,7 @@ public class PrefsTwo extends PreferenceActivity implements OnSharedPreferenceCh
 		if (key.equals("Data UploadRate")) {
 			Log.d("tag", "Rajia you are STILL IN PREFSTWO CLASS");
 		}
+		
 	}
 	
 	
