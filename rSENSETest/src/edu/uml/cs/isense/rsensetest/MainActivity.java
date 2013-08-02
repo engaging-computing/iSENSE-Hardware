@@ -3,6 +3,7 @@ package edu.uml.cs.isense.rsensetest;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -154,18 +155,25 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	private class OtherTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			JSONArray data = new JSONArray();
-			api.uploadDataSet(1, data);
+			JSONObject data = new JSONObject();
+			try {
+				data.put("2", new JSONArray().put("-75"));
+				data.put("1", new JSONArray().put("45"));
+				data.put("0", new JSONArray().put("2013/08/02 09:50:01"));
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			api.uploadDataSet(5, data, "App Upload Test");
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			
+
 		}
 	}
 

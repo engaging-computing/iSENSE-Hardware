@@ -277,7 +277,7 @@ public class API {
 		return person;
 	}
 
-	public void uploadDataSet(int projectId, JSONArray data) {
+	public void uploadDataSet(int projectId, JSONObject data, String datasetName) {
 		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
 		ArrayList<String> headers = new ArrayList<String>();
@@ -288,6 +288,7 @@ public class API {
 			requestData.put("headers", new JSONArray(headers));
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
+			if(!datasetName.equals("")) requestData.put("name", datasetName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
