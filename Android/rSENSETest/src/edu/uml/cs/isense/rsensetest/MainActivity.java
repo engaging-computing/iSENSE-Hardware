@@ -154,16 +154,18 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class OtherTask extends AsyncTask<Void, Void, Void> {
+	private class OtherTask extends AsyncTask<Void, Void, ArrayList<RDataSet>> {
 		@Override
-		protected Void doInBackground(Void... params) {
-			RDataSet data = api.getDataSet(20);
-			return null;
+		protected ArrayList<RDataSet> doInBackground(Void... params) {
+			return api.getDataSets(5);
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-
+		protected void onPostExecute(ArrayList<RDataSet> result) {
+			status.setText("Datasets in project 5:\n");
+			for(RDataSet rds : result) {
+				status.append(rds.name+"\n");
+			}
 		}
 	}
 
