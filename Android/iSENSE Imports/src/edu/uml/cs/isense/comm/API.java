@@ -312,6 +312,30 @@ public class API {
 		}
 		return result;
 	}
+	
+	public ArrayList<RDataSet> getDataSets(int projectId) {
+		ArrayList<RDataSet> result = new ArrayList<RDataSet>();
+		try {
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "recur=true", "GET", null);
+			JSONObject j = new JSONObject(reqResult);
+			JSONArray dataSets = j.getJSONArray("dataSets");
+			for(int i = 0; i < dataSets.length(); i++) {
+				RDataSet rds = new RDataSet();
+				JSONObject inner = dataSets.getJSONObject(i);
+				rds.ds_id = inner.getInt("id");
+				rds.name = inner.getString("name");
+				rds.hidden = inner.getBoolean("hidden");
+				rds.url = inner.getString("url");
+				rds.timecreated = inner.getString("createdAt");
+				rds.fieldCount = inner.getInt("fieldCount");
+				rds.datapointCount = inner.getInt("datapointCount");
+				result.add(rds);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	/**
 	 * Uploads a new data set to a project on iSENSE
@@ -445,7 +469,6 @@ public class API {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(reformatted);
 		return reformatted;
 	}
 }
