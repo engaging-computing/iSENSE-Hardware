@@ -55,9 +55,13 @@ public class API {
 		return instance;
 	}
 
-	/*Call this function to log in to iSENSE*/
-	/*Once you've done this you'll be able to call authenticated functions and get data back*/
-	/*Returns true if login succeeds*/
+	/**
+	 * Log in to iSENSE. After calling this function, authenticated API functions will work properly
+	 * 
+	 * @param username The username of the user to log in as
+	 * @param password The password of the user to log in as
+	 * @return True if login succeeds, false if it doesn't
+	 */
 	public boolean createSession(String username, String password) {
 		String result = makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST", null);
 		try {
@@ -76,15 +80,22 @@ public class API {
 		return false;
 	}
 
+	/**
+	 * Log out of iSENSE
+	 */
 	public void deleteSession() {
-		makeRequest(baseURL, "login", "", "DELETE", null);
+		makeRequest(baseURL, "login", "authenticity_token="+authToken, "DELETE", null);
 		currentUser = null;
 	}
 
-	//Return many projects
-	/*@param page Which page of results to start from. 1-indexed*/
-	/*@param perPage How many results to display per page */
-	/*@param descending Whether to display the results in descending order (true) or ascending order (false) */
+	/**
+	 * 	Retrieves multiple projects off of iSENSE
+	 * 
+	 *@param page Which page of results to start from. 1-indexed
+	 *@param perPage How many results to display per page
+	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 *@return An ArrayList of Project objects
+	 */
 	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
@@ -205,7 +216,12 @@ public class API {
 		}
 		return result;
 	}
-	//Return one tutorial
+	/**
+	 * Get a tutorial from iSENSE
+	 * 
+	 * @param tutorialId The ID of the tutorial to retrieve
+	 * @return A Tutorial object
+	 */
 	public RTutorial getTutorial(int tutorialId) {
 		RTutorial tut = new RTutorial();
 		try {
@@ -261,8 +277,13 @@ public class API {
 		}
 		return people;
 	}
-	/*Authenticated function*/
-	/*Must have called createSession before calling this function*/
+	
+	/**
+	 * Gets a user off of iSENSE
+	 * 
+	 * @param username The username of the user to retrieve
+	 * @return A Person object
+	 */
 	public RPerson getUser(String username) {
 		RPerson person = new RPerson();
 		try {
@@ -285,7 +306,7 @@ public class API {
 
 	
 	/**
-	 * Retrieve a data set from iSENSE, with it's internal data JSONObject filled in
+	 * Retrieve a data set from iSENSE, with it's data field filled in
 	 * The internal data set will be converted to column-major format, to make it compatible with 
 	 * the uploadDataSet function
 	 * 
@@ -313,6 +334,13 @@ public class API {
 		return result;
 	}
 	
+	/**
+	 * Gets all the data sets associated with a project
+	 * The data sets returned by this function do not have their data field filled.
+	 * 
+	 * @param projectId The project ID whose data sets you want
+	 * @return An ArrayList of Data Set objects, with their data fields left null
+	 */
 	public ArrayList<RDataSet> getDataSets(int projectId) {
 		ArrayList<RDataSet> result = new ArrayList<RDataSet>();
 		try {
@@ -341,7 +369,7 @@ public class API {
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
-	 * @param data The data to be uploaded
+	 * @param data The data to be uploaded. Must be in column-major format to upload correctly
 	 * @param datasetName The name of the dataset
 	 */
 	public void uploadDataSet(int projectId, JSONObject data, String datasetName) {
