@@ -13,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import "QueueUploaderView.h"
+#import "CameraViewController.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 
 typedef struct _RotationDataSaver {

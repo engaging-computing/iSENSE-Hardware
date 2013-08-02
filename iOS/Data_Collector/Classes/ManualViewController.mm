@@ -1136,7 +1136,7 @@
     if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO) || (delegate == nil) || (controller == nil))
         return NO;
     
-    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
+    CameraViewController *cameraUI = [[CameraViewController alloc] init];
     cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
     
     // Displays a control that allows the user to choose picture or
