@@ -13,7 +13,6 @@
 #import "ExperimentBrowseViewController.h"
 #import <iSENSE_API/DataFieldManager.h>
 #import "Constants.h"
-#import <iSENSE_API/Fields.h>
 #import "HexColor.h"
 #import "VariablesViewController.h"
 #import "DataSaver.h"

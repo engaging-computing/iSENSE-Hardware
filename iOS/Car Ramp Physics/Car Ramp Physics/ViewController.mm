@@ -417,7 +417,9 @@
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[NSNumber alloc] initWithDouble:time * 1000];
     NSLog(@"Current time is: %@.", fieldsRow.time_millis);
-    
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setMaximumFractionDigits:1];
+    [formatter setMinimumFractionDigits:0];
     
     dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
     dispatch_async(queue, ^{
@@ -426,7 +428,8 @@
             fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
             NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
             dispatch_async(dispatch_get_main_queue(), ^{
-                vector_status.text = [@"X: " stringByAppendingString:[fieldsRow.accel_x stringValue]];
+                
+                vector_status.text = [@"X: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_x]];
             });
         }
         
@@ -434,9 +437,9 @@
             fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (x)
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Y: " stringByAppendingString:[fieldsRow.accel_y stringValue]]];
+                    vector_status.text = [vector_status.text stringByAppendingString:[@", Y: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]]];
                 else
-                    vector_status.text = [@"Y: " stringByAppendingString:[fieldsRow.accel_y stringValue]];
+                    vector_status.text = [@"Y: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]];
             });
             NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
         }
@@ -445,9 +448,9 @@
             NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (x || y) {
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]]];
+                    vector_status.text = [vector_status.text stringByAppendingString:[@", Z: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]]];
                 } else
-                    vector_status.text = [@"Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]];
+                    vector_status.text = [@"Z: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]];
             });
             
             if (mag) {
@@ -458,9 +461,9 @@
                 NSLog(@"Current accel total is: %@.", fieldsRow.accel_total);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (x || y || z)
-                        vector_status.text = [vector_status.text stringByAppendingString:[@", Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]]];
+                        vector_status.text = [vector_status.text stringByAppendingString:[@", Magnitude: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]]];
                     else
-                        vector_status.text = [@"Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]];
+                        vector_status.text = [@"Magnitude: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]];
                 });
             }
         }
