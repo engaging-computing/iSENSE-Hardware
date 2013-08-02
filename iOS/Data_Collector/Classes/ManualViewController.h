@@ -38,7 +38,6 @@ typedef struct _RotationDataSaver {
 	iSENSE   *iapi;
 	NSString *sessionName;
     RotationDataSaver *rds;
-    NSMutableArray *imageList;
     
     CLLocationManager *locationManager;
     
@@ -87,18 +86,20 @@ typedef struct _RotationDataSaver {
 @property (nonatomic, retain) UITextField           *lastField;
 
 // Non-UI Properties
-@property (nonatomic, copy)   NSString              *qrResults;
-@property (nonatomic, retain) CLLocationManager     *locationManager;
-@property (nonatomic, assign) int                    expNum;
-@property (nonatomic, assign) bool                   keyboardDismissProper;
-@property (nonatomic, assign) BOOL                   browsing;
-@property (nonatomic, assign) BOOL                   initialExpDialogOpen;
-@property (nonatomic, assign) CLGeocoder            *geoCoder;
-@property (nonatomic, copy)   NSString              *city;
-@property (nonatomic, copy)   NSString              *address;
-@property (nonatomic, copy)   NSString              *country;
-@property (nonatomic, retain) DataSaver             *dataSaver;
+@property (nonatomic, copy)   NSString               *qrResults;
+@property (nonatomic, retain) CLLocationManager      *locationManager;
+@property (nonatomic, assign) int                     expNum;
+@property (nonatomic, assign) bool                    keyboardDismissProper;
+@property (nonatomic, assign) BOOL                    browsing;
+@property (nonatomic, assign) BOOL                    initialExpDialogOpen;
+@property (nonatomic, assign) CLGeocoder             *geoCoder;
+@property (nonatomic, copy)   NSString               *city;
+@property (nonatomic, copy)   NSString               *address;
+@property (nonatomic, copy)   NSString               *country;
+@property (nonatomic, retain) DataSaver              *dataSaver;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) NSMutableArray         *imageList;
+
 
 @end
 
