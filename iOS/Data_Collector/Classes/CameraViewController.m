@@ -38,6 +38,8 @@
             imageToSave = originalImage;
         }
         
+        NSLog(@"About to save picture!");
+        
         // Save the new image (original or edited) to the Camera Roll (then send the image to the caller's image:didFinishSavingWithError: method);
         UIImageWriteToSavedPhotosAlbum (imageToSave, self.delegate, @selector(image:didFinishSavingWithError:), nil);
         

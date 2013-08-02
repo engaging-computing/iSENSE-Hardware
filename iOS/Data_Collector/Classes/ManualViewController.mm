@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext;
+@synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -88,6 +88,9 @@
         }
         
     }
+    
+    // prepare an empty image list
+    imageList = [[NSMutableArray alloc] init];
         
     // scrollview
     [self.view sendSubviewToBack:scrollView];
@@ -1088,7 +1091,7 @@
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataJSON];
-    [ds setPicturePaths:nil];
+    [ds setPicturePaths:imageList];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
@@ -1099,6 +1102,8 @@
     [dataSaver addDataSet:ds];
     [ds release];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
+    [imageList removeAllObjects];
     
 }
 
@@ -1159,7 +1164,12 @@
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error {
-    [image ];
+    NSLog(@"Got zee image!");
+    if  (error) {
+        NSLog(@"%@", error);
+    } else {
+        [imageList addObject:image];
+    }
 }
 
 

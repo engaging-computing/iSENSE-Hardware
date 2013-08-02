@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+	
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
@@ -33,11 +33,28 @@
         <activity
             android:name=".datawalk_v2.LoginActivity"
             android:label="@string/get_name"
-           	android:theme="@style/theme_dialog_white" >
+           	android:theme="@style/theme_dialog_white" 
+           	 >
         </activity>
         <activity
             android:name=".datawalk_v2.Prefs"
             android:label="Settings"
+            >
+        </activity>
+             <activity
+            android:name=".datawalk_v2.Setup2"
+            android:label="Change Experiment Number"
+            android:theme="@style/theme_dialog_white" 
+            >
+        </activity>
+             <activity
+            android:name=".datawalk_v2.NoQr2"
+            android:label="No Qr"
+            >
+        </activity>
+             <activity
+            android:name=".datawalk_v2.BrowseExperiments2"
+            android:label="Browse Experiments"
             >
         </activity>
         <activity

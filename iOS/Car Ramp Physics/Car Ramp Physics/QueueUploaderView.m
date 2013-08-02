@@ -45,7 +45,7 @@
     if ([iapi isLoggedIn]) {
         
         // Do zee upload thang
-        bool uploadSuccessful = [dataSaver upload];
+        bool uploadSuccessful = [dataSaver upload:@"CarRampPhysics"];
         if (!uploadSuccessful) NSLog(@"Upload Not Successful");
         
         [self.navigationController popViewControllerAnimated:YES];

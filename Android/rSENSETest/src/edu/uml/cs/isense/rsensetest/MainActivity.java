@@ -13,12 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
+import edu.uml.cs.isense.objects.RProjectField;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, getusers, getprojects;
+	Button login, logout, getusers, getprojects, randomTest;
 	TextView status;
 	EditText projID, userName;
 	API api;
@@ -31,13 +33,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		login = (Button) findViewById(R.id.btn_login);
 		getusers = (Button) findViewById(R.id.btn_getusers);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
+		logout = (Button) findViewById(R.id.btn_logout);
+		randomTest = (Button) findViewById(R.id.btn_random);
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
 
 		login.setOnClickListener(this);
+		logout.setOnClickListener(this);
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
+		randomTest.setOnClickListener(this);
 		getusers.setEnabled(false);
 
 		api = API.getInstance(this);
@@ -58,9 +64,15 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == getusers ) {
 				status.setText("clicked get users");
 				new UsersTask().execute();
+			} if ( v == logout ) {
+				status.setText("clicked logout");
+				new LogoutTask().execute();
 			} else if ( v == getprojects ) {
 				status.setText("clicked get projects");
 				new ProjectsTask().execute();
+			} else if ( v == randomTest ) {
+				status.setText("other button clicked");
+				new OtherTask().execute();
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
@@ -81,6 +93,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				status.setText("Login Failed");
 			}
+		}
+	}
+	private class LogoutTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			api.deleteSession();
+			return null;
 		}
 	}
 
@@ -106,6 +125,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
+		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
+
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
 			if(projID.getText().toString().equals("")) {
@@ -113,6 +134,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				ArrayList<RProject> rp = new ArrayList<RProject>();
 				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
+				rpfs = api.getProjectFields(Integer.parseInt(projID.getText().toString()));
 				return rp;
 			}
 		}
@@ -122,6 +144,27 @@ public class MainActivity extends Activity implements OnClickListener {
 			status.setText("Projects:\n");
 			for(RProject p : projects) {
 				status.append(p.name + "\n");
+				if(rpfs.size() > 0) {
+					status.append("\nFields:\n");
+					for(RProjectField rp : rpfs) {
+						status.append(rp.name+"\n");
+					}
+				}
+			}
+		}
+	}
+
+	private class OtherTask extends AsyncTask<Void, Void, ArrayList<RDataSet>> {
+		@Override
+		protected ArrayList<RDataSet> doInBackground(Void... params) {
+			return api.getDataSets(5);
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<RDataSet> result) {
+			status.setText("Datasets in project 5:\n");
+			for(RDataSet rds : result) {
+				status.append(rds.name+"\n");
 			}
 		}
 	}
