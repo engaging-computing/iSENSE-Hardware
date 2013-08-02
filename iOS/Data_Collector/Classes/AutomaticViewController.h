@@ -39,6 +39,8 @@
 - (void) getExperiments;
 - (void) recordData;
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error;
+
 @property (nonatomic, retain) iSENSE *isenseAPI;
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) BOOL backFromSetup;
