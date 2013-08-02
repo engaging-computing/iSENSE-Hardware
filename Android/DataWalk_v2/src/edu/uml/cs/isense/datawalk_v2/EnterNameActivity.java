@@ -70,6 +70,8 @@ public class EnterNameActivity extends Activity {
 		};
 		filters[1] = new InputFilter.LengthFilter(20);
 		firstNameInput.setFilters(filters);
+		firstNameInput.setText(DataWalk.firstName);
+		lastInitialInput.setText(DataWalk.lastInitial);
 		lastInitialInput.setFilters(new InputFilter[] { filters[0],
 				new InputFilter.LengthFilter(1) }); 
 
