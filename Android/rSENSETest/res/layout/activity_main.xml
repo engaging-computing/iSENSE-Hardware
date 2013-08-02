@@ -9,11 +9,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log In" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log In" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Out" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +46,6 @@
             android:layout_weight="1"
             android:hint="Project ID #"
             android:inputType="number" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -55,14 +66,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Username" />
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_random"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Random Test" />
 
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginTop="5dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >
 
         <TextView
             android:id="@+id/txt_results"
