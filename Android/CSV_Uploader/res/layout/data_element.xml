@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:checked="true"
-        android:checkMark="@drawable/bluecheck"
+        android:checkMark="@drawable/ic_checkmark"
         android:textSize="14sp"
         android:background="@android:color/transparent" />
 
