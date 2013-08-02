@@ -1,6 +1,6 @@
 package edu.uml.cs.isense.objects;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Class that includes information about a Data Set Field on iSENSE.
@@ -15,5 +15,5 @@ public class RDataSet {
     public String timecreated = "";
     public int fieldCount;
     public int datapointCount;
-    public JSONArray data;
+    public JSONObject data;
 }

@@ -11,6 +11,7 @@ import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -225,11 +227,15 @@ public class API {
 		return tut;
 	}
 
-	/*Authenticated function*/
-	/*Must have called createSession before calling this function*/
-	/*@param page Which page of results to start from. 1-indexed*/
-	/*@param perPage How many results to display per page */
-	/*@param descending Whether to display the results in descending order (true) or ascending order (false) */
+	/**
+	 * Retrieves a list of users on iSENSE
+	 * This is an authenticated function and requires that the createSession function was called earlier
+	 * 
+	 * @param page Which page of users to start the request from
+	 * @param perPage How many users per page to perform the search with
+	 * @param descending Whether the list of users should be in descending order or not
+	 * @return A list of Person objects
+	 */
 	public ArrayList<RPerson> getUsers(int page, int perPage, boolean descending) {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
@@ -277,6 +283,43 @@ public class API {
 		return person;
 	}
 
+	
+	/**
+	 * Retrieve a data set from iSENSE, with it's internal data JSONObject filled in
+	 * The internal data set will be converted to column-major format, to make it compatible with 
+	 * the uploadDataSet function
+	 * 
+	 * @param dataSetId The unique ID of the data set to retrieve from iSENSE
+	 * @return A DataSet object
+	 */
+	public RDataSet getDataSet(int dataSetId) {
+		RDataSet result = new RDataSet();
+		try {
+			String reqResult = makeRequest(baseURL, "data_sets/"+dataSetId, "recur=true", "GET", null);
+			JSONObject j = new JSONObject(reqResult);
+
+			result.ds_id = j.getInt("id");
+			result.name = j.getString("name");
+			result.hidden = j.getBoolean("hidden");
+			result.url = j.getString("url");
+			result.timecreated = j.getString("createdAt");
+			result.fieldCount = j.getInt("fieldCount");
+			result.datapointCount = j.getInt("datapointCount");
+			result.data = rowsToCols(j.getJSONObject("data"));
+
+		} catch (Exception e) {
+
+		}
+		return result;
+	}
+
+	/**
+	 * Uploads a new data set to a project on iSENSE
+	 * 
+	 * @param projectId The ID of the project to upload data to
+	 * @param data The data to be uploaded
+	 * @param datasetName The name of the dataset
+	 */
 	public void uploadDataSet(int projectId, JSONObject data, String datasetName) {
 		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
@@ -311,25 +354,25 @@ public class API {
 	 * @return A String dump of a JSONObject representing the requested data
 	 */
 	public String makeRequest(String baseURL, String path, String parameters, String reqType, JSONObject postData) {
-		
+
 		byte[] mPostData = null;
-		
+
 		int mstat = 0;
 		try {
 			URL url = new URL(baseURL+"/"+path+"?"+parameters);
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
-			
+
 			if(postData != null) {
 				mPostData = postData.toString().getBytes();
 				urlConnection.setRequestProperty("Content-Length",Integer.toString(mPostData.length));
 				urlConnection.setRequestProperty("Content-Type", "application/json");
 				OutputStream out = urlConnection.getOutputStream();
-			    out.write(mPostData);
-			    out.close();
+				out.write(mPostData);
+				out.close();
 			}
-			
+
 			mstat = urlConnection.getResponseCode();
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 			try {
@@ -353,6 +396,11 @@ public class API {
 		return "Error: status " + mstat;
 	}
 
+	/**
+	 * Switched the API instance between using the public iSENSE and the developer iSENSE
+	 * 
+	 * @param use Whether or not to use the developer iSENSE
+	 */
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
 	}
@@ -369,5 +417,35 @@ public class API {
 		NetworkInfo info = cm.getActiveNetworkInfo();
 		return (info != null && info.isConnected());
 
+	}
+	
+	/**
+	 * Reformats a row-major JSONObject into a column-major one
+	 * 
+	 * @param original The row-major formatted JSONObject
+	 * @return A column-major reformatted version of the original JSONObject
+	 */
+	public JSONObject rowsToCols(JSONObject original) {
+		JSONObject reformatted = new JSONObject();
+		try {
+			JSONArray inner = original.getJSONArray("data");
+			for(int i = 0; i < inner.length(); i++) {
+				JSONObject innermost = (JSONObject) inner.get(i);
+				Iterator<String> keys = innermost.keys();
+				while(keys.hasNext()) {
+					String currKey = keys.next();
+					JSONArray currArray = new JSONArray();
+					if(reformatted.has(currKey)) {
+						currArray = reformatted.getJSONArray(currKey);
+					}
+					currArray.put(innermost.getString(currKey));
+					reformatted.put(currKey, currArray);
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(reformatted);
+		return reformatted;
 	}
 }
