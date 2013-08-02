@@ -467,7 +467,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 								data = dfm.writeSdCardLine();
 
 								if (beginWrite) {
-									writeToSDCard(data, 's');
+									String header = dfm.writeHeaderLine();
+									writeToSDCard(header, 's');
+									writeToSDCard(data, 'u');
 								} else {
 									writeToSDCard(data, 'u');
 								}

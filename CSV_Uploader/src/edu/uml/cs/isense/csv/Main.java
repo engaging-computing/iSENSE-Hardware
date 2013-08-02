@@ -57,7 +57,6 @@ import edu.uml.cs.isense.csv.experiment.Experiment;
 import edu.uml.cs.isense.csv.fails.SdCardFailure;
 import edu.uml.cs.isense.csv.login.LoginActivity;
 import edu.uml.cs.isense.csv.objects.DataFieldManager;
-import edu.uml.cs.isense.csv.objects.Options;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -75,7 +74,7 @@ public class Main extends Activity {
 	private static String CURR_DIR = "currentDirectory";
 	public static String CHOSEN_FILE = "chosenFile";
 
-	private static final String baseUrl = "http://isensedev.cs.uml.edu/experiment.php?id=";
+	private static final String baseUrl = "http://isense.cs.uml.edu/experiment.php?id=";
 
 	private Vibrator vibrator;
 	private TextView loginInfo;
@@ -124,7 +123,7 @@ public class Main extends Activity {
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -160,7 +159,7 @@ public class Main extends Activity {
 
 		rootDirectory = "/mnt";
 
-		/* Restore current view upon rotation, or initialize the view to /mnt */
+		// Restore current view upon rotation, or initialize the view to /mnt
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(PREV_DIR)
 					&& savedInstanceState.containsKey(CURR_DIR)) {
@@ -342,10 +341,10 @@ public class Main extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_item_options:
-			Intent iOptions = new Intent(mContext, Options.class);
-			startActivity(iOptions);
-			return true;
+//		case R.id.menu_item_options:
+//			Intent iOptions = new Intent(mContext, Options.class);
+//			startActivity(iOptions);
+//			return true;
 
 		case R.id.menu_item_experiment:
 			Intent iExperiment = new Intent(mContext, Experiment.class);
@@ -490,6 +489,8 @@ public class Main extends Activity {
 				Intent iView = new Intent(mContext, ViewData.class);
 				startActivityForResult(iView, VIEW_DATA_REQUESTED);
 			}
+			
+			checkedFiles.clear();
 		}
 	}
 
@@ -543,7 +544,6 @@ public class Main extends Activity {
 								if (isCSV(ctv.getText().toString())) {
 									ctv.toggle();
 									if (ctv.isChecked()) {
-										ctv.setCheckMarkDrawable(R.drawable.bluecheck);
 										checkedFiles.add(nextFile);
 									} else {
 										ctv.setCheckMarkDrawable(0);
@@ -571,7 +571,7 @@ public class Main extends Activity {
 			noData.setVisibility(View.GONE);
 			curDir.setVisibility(View.VISIBLE);
 
-			// No transition, just swap visible view
+			// no transition, just swap visible view
 			if (!(st == SlideType.NO_SLIDE)) {
 				// new AnimateViews().execute(st);
 				animateViews(st);
@@ -615,10 +615,10 @@ public class Main extends Activity {
 		if (!rapi.isLoggedIn())
 			login();
 
-		if (!rapi.isLoggedIn()) {
-			// NO!
+		// if this fails, this is bad
+		if (!rapi.isLoggedIn())
 			return false;
-		}
+		
 
 		if (sdFile.isDirectory() || sdFile.isHidden() || !sdFile.canRead())
 			return false;
