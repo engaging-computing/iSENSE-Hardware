@@ -77,7 +77,7 @@ public class API {
 	}
 
 	public void deleteSession() {
-		makeRequest(baseURL, "login", "", "DELETE", null);
+		makeRequest(baseURL, "login", "authenticity_token="+authToken, "DELETE", null);
 		currentUser = null;
 	}
 
