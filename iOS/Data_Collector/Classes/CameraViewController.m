@@ -9,6 +9,7 @@
 
 #import "CameraViewController.h"
 
+
 @implementation UIImagePickerController (CameraDelegateMethods)
 
 // For responding to the user tapping Cancel.
@@ -37,24 +38,17 @@
             imageToSave = originalImage;
         }
         
-        // Save the new image (original or edited) to the Camera Roll
-        UIImageWriteToSavedPhotosAlbum (imageToSave, nil, nil , nil);
+        NSLog(@"About to save picture!");
         
-    }
-    
-    // Handle a movie capture
-    if (CFStringCompare ((CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) {        
+        // Save the new image (original or edited) to the Camera Roll (then send the image to the caller's image:didFinishSavingWithError: method);
+        UIImageWriteToSavedPhotosAlbum (imageToSave, self.delegate, @selector(image:didFinishSavingWithError:), nil);
         
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            UISaveVideoAtPathToSavedPhotosAlbum(moviePath, nil, nil, nil);
-        }
     }
     
     [[picker parentViewController] dismissModalViewControllerAnimated: YES];
     [picker release];
     
 }
+
 
 @end

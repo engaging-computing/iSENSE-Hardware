@@ -109,7 +109,7 @@
     iSENSE *isenseAPI = [iSENSE getInstance];
     if (![isenseAPI isLoggedIn]) {
         
-        NSLog(@"Not logged in."); // MIKE I KEN HAZ WAFFLES?
+        NSLog(@"Not logged in.");
         return false;
     }
     

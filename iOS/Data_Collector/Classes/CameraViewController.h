@@ -12,7 +12,6 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 
 @interface UIImagePickerController (CameraDelegateMethods) {
-
 }
 
 @end

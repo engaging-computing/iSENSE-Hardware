@@ -383,15 +383,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">showCameraUI</string>
-						<reference key="source" ref="352350226"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">25</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">saveOnClick:</string>
 						<reference key="source" ref="775253626"/>
 						<reference key="destination" ref="372490531"/>
@@ -523,7 +514,7 @@
 						<string key="displayMenu:">id</string>
 						<string key="mediaOnClick:">id</string>
 						<string key="saveOnClick:">id</string>
-						<string key="showCameraUI">id</string>
+						<string key="textFieldFinished:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="clearOnClick:">
@@ -542,8 +533,8 @@
 							<string key="name">saveOnClick:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="showCameraUI">
-							<string key="name">showCameraUI</string>
+						<object class="IBActionInfo" key="textFieldFinished:">
+							<string key="name">textFieldFinished:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
@@ -603,7 +594,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="media_icon.png">{96, 96}</string>
+			<string key="media_icon.png">{100, 80}</string>
 			<string key="rsense_logo.png">{777, 189}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>

@@ -13,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import "QueueUploaderView.h"
+#import <MobileCoreServices/UTCoreTypes.h>
 
 typedef struct _RotationDataSaver {
     NSString *sesName;
@@ -47,7 +48,6 @@ typedef struct _RotationDataSaver {
 - (IBAction) clearOnClick:(id)sender;
 - (IBAction) mediaOnClick:(id)sender;
 - (IBAction) displayMenu:(id)sender;
-- (IBAction) showCameraUI;
 
 // Behavioral functions
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
@@ -69,6 +69,9 @@ typedef struct _RotationDataSaver {
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation;
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error;
+
+
 // UI Properties
 @property (nonatomic, retain) IBOutlet UIImageView  *logo;
 @property (nonatomic, retain) IBOutlet UILabel      *loggedInAsLabel;
@@ -83,18 +86,20 @@ typedef struct _RotationDataSaver {
 @property (nonatomic, retain) UITextField           *lastField;
 
 // Non-UI Properties
-@property (nonatomic, copy)   NSString              *qrResults;
-@property (nonatomic, retain) CLLocationManager     *locationManager;
-@property (nonatomic, assign) int                    expNum;
-@property (nonatomic, assign) bool                   keyboardDismissProper;
-@property (nonatomic, assign) BOOL                   browsing;
-@property (nonatomic, assign) BOOL                   initialExpDialogOpen;
-@property (nonatomic, assign) CLGeocoder            *geoCoder;
-@property (nonatomic, copy)   NSString              *city;
-@property (nonatomic, copy)   NSString              *address;
-@property (nonatomic, copy)   NSString              *country;
-@property (nonatomic, retain) DataSaver             *dataSaver;
+@property (nonatomic, copy)   NSString               *qrResults;
+@property (nonatomic, retain) CLLocationManager      *locationManager;
+@property (nonatomic, assign) int                     expNum;
+@property (nonatomic, assign) bool                    keyboardDismissProper;
+@property (nonatomic, assign) BOOL                    browsing;
+@property (nonatomic, assign) BOOL                    initialExpDialogOpen;
+@property (nonatomic, assign) CLGeocoder             *geoCoder;
+@property (nonatomic, copy)   NSString               *city;
+@property (nonatomic, copy)   NSString               *address;
+@property (nonatomic, copy)   NSString               *country;
+@property (nonatomic, retain) DataSaver              *dataSaver;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) NSMutableArray         *imageList;
+
 
 @end
 

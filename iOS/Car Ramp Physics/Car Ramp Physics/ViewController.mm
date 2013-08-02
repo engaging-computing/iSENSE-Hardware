@@ -631,6 +631,7 @@
     [ds setCountry:country];
     [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    [ds setParentName:@"CarRampPhysics"];
     NSLog(@"Bla2");
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];

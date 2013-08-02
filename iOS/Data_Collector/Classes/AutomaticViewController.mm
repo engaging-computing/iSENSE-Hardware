@@ -977,4 +977,8 @@ dataToBeOrdered, backFromQueue;
     [self startCameraControllerFromViewController:self usingDelegate:self];
 }
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error {
+    
+}
+
 @end
