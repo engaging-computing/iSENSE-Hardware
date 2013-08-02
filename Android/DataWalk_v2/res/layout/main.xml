@@ -65,6 +65,17 @@
         android:orientation="vertical" >
 
         <TextView
+        android:id="@+id/NameStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000033"
+        android:text="Name: "
+        android:textColor="#A8CFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" 
+        android:layout_weight="50"/>
+        
+        <TextView
             android:id="@+id/timeElapsed"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -35,7 +35,7 @@
     <item
         android:id="@+id/login"
         android:showAsAction="ifRoom"
-        android:title="@string/iSenseLogin">
+        android:title="@string/login">
     </item>
     
     <item
