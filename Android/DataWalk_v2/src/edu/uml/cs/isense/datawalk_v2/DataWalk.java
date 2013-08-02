@@ -554,9 +554,14 @@ public class DataWalk extends Activity implements LocationListener,
 		i = 0;
 		expNumBox.setText("Experiment Number: " + experimentId);
 		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
+		if (mInterval == 1000){
+			rateBox.setText("Data Recorded Every: 1 second" );
+		}else if (mInterval == 60000){
+			rateBox.setText("Data Recorded Every: 1 Minute" );
+		}else {
 		rateBox.setText("Data Recorded Every: "+ mInterval/1000 + " seconds");
 		Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
-		
+		}
 		if (rapi.isConnectedToInternet()){
 			Experiment e = rapi.getExperiment(Integer.parseInt(experimentId));
 			if (e == null){
