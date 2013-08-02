@@ -22,19 +22,20 @@ public class LoginIsense extends Activity{
 	TextView loggedInAs;
 	Waffle w;
 	
-	public static String uName;
-	public static String password;
+	public static String uName = "sor";
+	public static String password = "sor";
 	
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.login_website);
-		
 		ok = (Button) findViewById(R.id.loginB);
 		cancel = (Button) findViewById(R.id.cancelB);
 		user = (EditText) findViewById(R.id.userNameET);
+		user.setText(uName);
 		pass = (EditText) findViewById(R.id.passwordET);
+		pass.setText(password);
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		
+		this.setTitle("iSENSE Login");
 		InputFilter[] filters = new InputFilter[1];
 		filters[0] = new InputFilter(){
 			

@@ -3,7 +3,8 @@
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="25dp" >
+     android:paddingLeft="25dp"
+    android:paddingRight="25dp" >
 
     <TextView
         android:id="@+id/nameLabel"
@@ -53,7 +54,7 @@
        
         <Button
             android:id="@+id/OK"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/OK" 
             style="?android:attr/buttonBarButtonStyle"

@@ -40,7 +40,6 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
@@ -52,14 +51,17 @@ import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
+import edu.uml.cs.isense.objects.Experiment;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener {
 	public static TextView loggedInAs;
+	public static TextView NameTxtBox;
 	public static Boolean inApp = false;
 	public static Boolean umbChecked = true; 
 	public static Boolean ChkBoxChecked = true;
@@ -168,7 +170,7 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+			
 		// Calling this during onCreate() ensures that your application is
 		// properly initialized with default settings,
 		// which your application may need to read in order to determine some
@@ -179,7 +181,7 @@ public class DataWalk extends Activity implements LocationListener,
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		mContext = this;
 		w = new Waffle(mContext);
-
+		OrientationManager.enableRotation(DataWalk.this);
 		Display deviceDisplay = getWindowManager().getDefaultDisplay();
 		mwidth = deviceDisplay.getWidth();
 		mheight = deviceDisplay.getHeight();
@@ -197,6 +199,7 @@ public class DataWalk extends Activity implements LocationListener,
 		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
 		expNumBox = (TextView) findViewById(R.id.expNumBx);
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
+		NameTxtBox = (TextView) findViewById(R.id.NameStatus);
 		rateBox = (TextView) findViewById(R.id.RateBx);
 
 		latLong = (TextView) findViewById(R.id.myLocation);
@@ -338,7 +341,7 @@ public class DataWalk extends Activity implements LocationListener,
 					useMenu = false;
 					running = true;
 					startStop.setText(getString(R.string.stopPrompt));
-
+					OrientationManager.disableRotation(DataWalk.this);
 					timeTimer = new Timer();
 					timeTimer.scheduleAtFixedRate(new TimerTask() {
 						public void run() {
@@ -523,9 +526,9 @@ public class DataWalk extends Activity implements LocationListener,
 			uploadMode = true;
 		//uploadMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode", true);
 		
-		
-		
-		mInterval = CustomOnItemSelectedListener.mIntervalHack;
+
+		mInterval = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("Data UploadRate","10000"));
+		//mInterval = CustomOnItemSelectedListener.mIntervalHack;
 
 		Log.d("tag", "this is name" + firstName + lastInitial);
 
@@ -543,20 +546,40 @@ public class DataWalk extends Activity implements LocationListener,
 
 		if (mTimer == null)
 			waitingForGPS();
-
+		NameTxtBox.setText("Name: " + firstName + " " + lastInitial);
 		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-				+ " " + loginName + "  " + " Name: " + firstName + " "
-				+ lastInitial);
+				+ " " + LoginIsense.uName );
 		dataPointCount = 0;
 		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
 		i = 0;
 		expNumBox.setText("Experiment Number: " + experimentId);
 		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
-		rateBox.setText("Data is Recorded Every: "+ CustomOnItemSelectedListener.savedValueString);
+		rateBox.setText("Data Recorded Every: "+ mInterval/1000 + " seconds");
 		Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
 		
+		if (rapi.isConnectedToInternet()){
+			Experiment e = rapi.getExperiment(Integer.parseInt(experimentId));
+			if (e == null){
+				Log.d("tag", "Invalid expiremnt number");
+				w.make("Experiment Number Invalid! Please enter a new one.",Waffle.LENGTH_LONG,Waffle.IMAGE_X);
+				startActivityForResult(new Intent(mContext, Setup.class), EXPERIMENT_REQUESTED);
+			}
 		
-	}
+		}
+		
+		if(rapi.isConnectedToInternet()){
+			boolean success = rapi.login(LoginIsense.uName, LoginIsense.password);
+			if (success){
+				//w.make("Login as  " + LoginIsense.uName + "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				Log.d("tag", "login as sor successful!!!!!!!!!!!!!!!!!!!!");
+				Intent i = new Intent();
+				i.putExtra("username", LoginIsense.uName);
+			}else{
+				w.make("Incorrect login credentials. Please try again.",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
+			}
+		
+		}
+	}//ends onCreate
 
 	@Override
 	public void onBackPressed() {
@@ -811,8 +834,18 @@ public class DataWalk extends Activity implements LocationListener,
 				dfm = new DataFieldManager(Integer.parseInt(experimentId),
 						rapi, mContext, f);
 				dfm.getOrder();
-			
-			}
+				if (rapi.isConnectedToInternet()){
+					Experiment e = rapi.getExperiment(Integer.parseInt(experimentId));
+					if (e == null){
+						Log.d("tag", "Invalid expirement number");
+						w.make("Experiment Number Invalid! Please enter a new one.",Waffle.LENGTH_LONG,Waffle.IMAGE_X);
+						//startActivityForResult(new Intent(mContext, Setup2.class), EXPERIMENT_REQUESTED);
+					}
+				
+				}
+			}else{
+						//experimentId = experimentId;
+					}
 		}else if (requestCode == DIALOG_NO_GPS) {
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
@@ -880,7 +913,7 @@ public class DataWalk extends Activity implements LocationListener,
 					finish();
 			}
 		} else if (requestCode == RESET_REQUESTED) {
-
+			
 			if (resultCode == RESULT_OK) {
 				Log.d("tag", "Re-setting settings");
 				mInterval = 10000;
@@ -1009,12 +1042,11 @@ public class DataWalk extends Activity implements LocationListener,
 			Log.d("tag", "you clicked on NameChange");
 			return true;
 		case R.id.DataUploadRate:
-			startActivityForResult(new Intent(this, PrefsTwoClone.class),SPINNER_STARTED);
+			startActivity(new Intent(this, PrefsTwo.class));
 			Log.d("tag", "you clicked on Change Recording Rate");
 			return true;
 		case R.id.ExpNum:
-			//TODO
-			Intent setup = new Intent(this, Setup.class);
+			Intent setup = new Intent(this, Setup2.class);
 			startActivityForResult(setup, EXPERIMENT_REQUESTED);
 			Log.d("tag", "you clicked on Change Exp Num");
 			return true;
