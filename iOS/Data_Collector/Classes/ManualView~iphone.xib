@@ -85,7 +85,6 @@
 						<string key="NSFrame">{{255, 154}, {48, 39}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -382,15 +381,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">showCameraUI</string>
-						<reference key="source" ref="892327490"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">49</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">saveOnClick:</string>
 						<reference key="source" ref="85172356"/>
 						<reference key="destination" ref="372490531"/>
@@ -559,7 +549,7 @@
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
-							<string>showCameraUI</string>
+							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -578,7 +568,7 @@
 							<string>displayMenu:</string>
 							<string>mediaOnClick:</string>
 							<string>saveOnClick:</string>
-							<string>showCameraUI</string>
+							<string>textFieldFinished:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -599,7 +589,7 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">showCameraUI</string>
+								<string key="name">textFieldFinished:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -702,7 +692,7 @@
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>{96, 96}</string>
+				<string>{100, 80}</string>
 				<string>{777, 189}</string>
 			</object>
 		</object>

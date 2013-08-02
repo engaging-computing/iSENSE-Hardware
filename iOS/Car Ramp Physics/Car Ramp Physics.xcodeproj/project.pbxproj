@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3921B42F17AC18B200E59515 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 765099A7178DCA6200425A27 /* iSENSE_API_Bundle.bundle */; };
 		760D196C179585FB00C123D6 /* logoIOS_Regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196B179585FB00C123D6 /* logoIOS_Regular.png */; };
 		760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196E179585FF00C123D6 /* logoIOS_Retina.png */; };
 		760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */; };
@@ -16,7 +17,6 @@
 		760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197E17958AF600C123D6 /* queue_layout~iphone.xib */; };
 		760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */; };
 		760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198217958AFF00C123D6 /* queue_layout~ipad.xib */; };
-		760D198B1795934300C123D6 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
@@ -100,13 +100,6 @@
 			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
 			remoteInfo = iSENSE_API_Bundle;
 		};
-		765099A8178DCA7F00425A27 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC;
-			remoteInfo = iSENSE_API;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -120,7 +113,6 @@
 		760D197E17958AF600C123D6 /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
 		760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		760D198217958AFF00C123D6 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
-		760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = iSENSE_API_Bundle.bundle; sourceTree = "<group>"; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		761D275D1795C1960056FA8C /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		761D27601795C1A30056FA8C /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
@@ -252,7 +244,6 @@
 			isa = PBXGroup;
 			children = (
 				76A4916617A1585A007F5E90 /* SystemConfiguration.framework */,
-				760D198A1795934300C123D6 /* iSENSE_API_Bundle.bundle */,
 				760D19721795861400C123D6 /* logoIOS_retina_ipad.png */,
 				760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */,
 				760D196E179585FF00C123D6 /* logoIOS_Retina.png */,
@@ -447,7 +438,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				765099A9178DCA7F00425A27 /* PBXTargetDependency */,
 			);
 			name = "Car Ramp Physics";
 			productName = "Car Ramp Physics";
@@ -508,7 +498,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				760D198B1795934300C123D6 /* iSENSE_API_Bundle.bundle in Resources */,
 				7669F034178B275C00E51AD0 /* InfoPlist.strings in Resources */,
 				7669F03C178B275C00E51AD0 /* Default.png in Resources */,
 				7669F03E178B275C00E51AD0 /* Default@2x.png in Resources */,
@@ -526,6 +515,7 @@
 				76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */,
 				76B58D83178C5D2D006E1425 /* waffle_warn.png in Resources */,
 				76B58D84178C5D2D006E1425 /* waffle_x.png in Resources */,
+				3921B42F17AC18B200E59515 /* iSENSE_API_Bundle.bundle in Resources */,
 				76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */,
 				76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */,
 				765099C2178DD92D00425A27 /* button_dark.png in Resources */,
@@ -587,14 +577,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		765099A9178DCA7F00425A27 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = iSENSE_API;
-			targetProxy = 765099A8178DCA7F00425A27 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */ = {
@@ -705,10 +687,10 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
-				HEADER_SEARCH_PATHS = "/Users/balabhv/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
+				HEADER_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
 				INFOPLIST_FILE = "Car Ramp Physics/Car Ramp Physics-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -719,10 +701,10 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
-				HEADER_SEARCH_PATHS = "/Users/balabhv/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
+				HEADER_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
 				INFOPLIST_FILE = "Car Ramp Physics/Car Ramp Physics-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
