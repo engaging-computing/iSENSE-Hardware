@@ -6,7 +6,8 @@
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
-#import "iSENSE.h"
+
+#import <iSENSE.h>
 #import "StringGrabber.h"
 #import "DataFieldManager.h"
 

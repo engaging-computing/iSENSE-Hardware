@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext;
+@synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -88,6 +88,9 @@
         }
         
     }
+    
+    // prepare an empty image list
+    imageList = [[NSMutableArray alloc] init];
         
     // scrollview
     [self.view sendSubviewToBack:scrollView];
@@ -472,15 +475,9 @@
 
 - (IBAction) mediaOnClick:(id)sender {
     
-    [self.view makeWaffle:@"This feature is currently disabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-    
-//    if (sessionNameInput.text.length != 0)
-//        [CameraUsage useCamera];
-//    else
-//        [self.view makeWaffle:@"Please Enter a Session Name First"
-//                    duration:WAFFLE_LENGTH_LONG
-//                    position:WAFFLE_BOTTOM
-//                       image:WAFFLE_WARNING];
+    if (![self startCameraControllerFromViewController:self usingDelegate:self])
+        [self.view makeWaffle:@"No camera found." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -1094,7 +1091,7 @@
     [ds setDataDescription:description];
     [ds setEid:[NSNumber numberWithInt:expNum]];
     [ds setData:dataJSON];
-    [ds setPicturePaths:nil];
+    [ds setPicturePaths:imageList];
     [ds setSid:[NSNumber numberWithInt:-1]];
     [ds setCity:city];
     [ds setCountry:country];
@@ -1105,6 +1102,8 @@
     [dataSaver addDataSet:ds];
     [ds release];
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    
+    [imageList removeAllObjects];
     
 }
 
@@ -1142,7 +1141,17 @@
     
     // Displays a control that allows the user to choose picture or
     // movie capture, if both are available:
-    cameraUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    BOOL hasCamera = false;
+    NSArray *tmp = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    for (int i = 0; i <tmp.count; i++) {
+        NSString *mediaType = [tmp objectAtIndex:i];
+        if (mediaType == (NSString *)kUTTypeImage) hasCamera = true;
+    }
+    
+    if (!hasCamera) return NO;
+    
+    cameraUI.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, nil];
+    NSLog(@"Media Types: %@", cameraUI.mediaTypes.description);
     
     // Hides the controls for moving & scaling pictures, or for
     // trimming movies. To instead show the controls, use YES.
@@ -1154,11 +1163,15 @@
     return YES;
 }
 
-// Performs the action for the Camera Button in the main UI
-- (IBAction) showCameraUI {
-    if ([self startCameraControllerFromViewController:self usingDelegate:self]) NSLog(@"Camera True");
-    else NSLog(@"No Camera!");
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error {
+    NSLog(@"Got zee image!");
+    if  (error) {
+        NSLog(@"%@", error);
+    } else {
+        [imageList addObject:image];
+    }
 }
+
 
 
 @end

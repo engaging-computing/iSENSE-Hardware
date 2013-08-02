@@ -238,6 +238,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static boolean sdCardError = false;
 	private static boolean showGpsDialog = true;
 	private static boolean throughUploadMenuItem = false;
+	private static boolean writeCSVFile = true;
 
 	/* Additional Objects */
 
@@ -1405,12 +1406,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		dataSet.put(dfm.putData());
 		data = dfm.writeSdCardLine();
 
-		if (beginWrite) {
-			String header = dfm.writeHeaderLine();
-			writeToSDCard(header, 's');
-			writeToSDCard(data, 'u');
-		} else {
-			writeToSDCard(data, 'u');
+		if (writeCSVFile) {
+			if (beginWrite) {
+				String header = dfm.writeHeaderLine();
+				writeToSDCard(header, 's');
+				writeToSDCard(data, 'u');
+			} else {
+				writeToSDCard(data, 'u');
+			}
 		}
 	}
 
@@ -1445,6 +1448,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						OrientationManager.disableRotation((Activity) mContext);
 
+						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+						String experimentInput = mPrefs.getString("experiment_id", "");
+						if (experimentInput.equals("-1"))
+							writeCSVFile = false;
+						else
+							writeCSVFile = true;
+						
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -1525,13 +1535,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					OrientationManager.enableRotation((Activity) mContext);
 
-					writeToSDCard(null, 'f');
+					if (writeCSVFile)
+						writeToSDCard(null, 'f');
+
 					setMenuStatus(true);
 
 					step2.setText(R.string.step2);
 					setTime(0);
 
-					if (sdCardError)
+					if (writeCSVFile && sdCardError)
 						w.make("Could not write file to SD Card",
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
