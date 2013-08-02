@@ -4,25 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>iSENSE_API.xcscheme</key>
+		<key>Data_Collector.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
-		</dict>
-		<key>iSENSE_API_Bundle.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>39216FDC176F5C790070DFCC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>39FF25DF16DFA28A0062C3DC</key>
+		<key>1D6058900D05DD3D006BFB54</key>
 		<dict>
 			<key>primary</key>
 			<true/>

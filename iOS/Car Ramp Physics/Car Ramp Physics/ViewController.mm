@@ -131,7 +131,7 @@
         saver->hasName = false;
         saver->hasLogin = false;
         saver->first =  [[NSString alloc] init];
-        saver->last = [[NSString alloc] init];;
+        saver->last = [[NSString alloc] init];
         saver->user = [[NSString alloc] init];
         saver->pass = [[NSString alloc] init];
         saver->saveMode = NO;
@@ -540,6 +540,55 @@
     });
     
 }
+
+-(void) stopRecordingWithoutPublishing:(CMMotionManager *)finalMotionManager {
+    
+    // Stop Timers
+    [timer invalidate];
+    [recordDataTimer invalidate];
+    
+    // Stop Sensors
+    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
+    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
+    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
+    
+    // Stop Recording
+    running = NO;
+    [vector_status setText:@"Y: "];
+    countdown = recordLength;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
+        [start setEnabled:YES];
+        
+    });
+    
+    NSString *name = firstName;
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:lastInitial];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"HH:mm:ss"];
+    
+    NSDate *now = [[NSDate alloc] init];
+    
+    NSString* timeString = [dateFormat stringFromDate:now];
+    
+    sessionName = [name stringByAppendingString:[@" " stringByAppendingString:timeString]];;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Publish to iSENSE?"
+                                                          message:nil
+                                                         delegate:self
+                                                cancelButtonTitle:@"Discard"
+                                                otherButtonTitles:@"Publish", nil];
+        
+        message.delegate = self;
+        [message show];
+    });
+    
+}
+
 
 // Enabled fields check
 - (void) getEnabledFields {
@@ -974,6 +1023,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 if (!saver->hasLogin){
+                    NSLog(@"%@", self.view);
                     [self.view makeWaffle:@"Login Successful!"
                                  duration:WAFFLE_LENGTH_SHORT
                                  position:WAFFLE_BOTTOM

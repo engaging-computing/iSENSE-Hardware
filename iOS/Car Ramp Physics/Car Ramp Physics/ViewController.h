@@ -7,14 +7,13 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "RNGridMenu.h"
-#import "Waffle.h"
 #import "AboutViewController.h"
 #import "iSENSE.h"
 #import "StringGrabber.h"
 #import "ExperimentBrowseViewController.h"
-#import "DataFieldManager.h"
+#import <iSENSE_API/DataFieldManager.h>
 #import "Constants.h"
-#import "Fields.h"
+#import <iSENSE_API/Fields.h>
 #import "HexColor.h"
 #import "VariablesViewController.h"
 #import "DataSaver.h"
@@ -116,6 +115,7 @@ typedef struct _RotationDataSaver{
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 - (void) updateElapsedTime;
+-(void) stopRecordingWithoutPublishing:(CMMotionManager *)finalMotionManager;
 
 @end
 

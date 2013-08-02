@@ -7,7 +7,7 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "AppDelegate.h"
-
+#import <iSENSE_API/Fields.h>
 #import "ViewController.h"
 
 @implementation AppDelegate
@@ -68,7 +68,12 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if (self.viewController.running) {
+        [self.viewController stopRecordingWithoutPublishing:self.viewController.motionmanager];
+        [self.viewController.view setNeedsLayout];
+        [self.viewController.view setNeedsDisplay];
+        [self.viewController.view makeWaffle:@"Data recording halted" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
