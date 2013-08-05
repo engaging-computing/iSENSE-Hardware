@@ -62,6 +62,7 @@ typedef struct _RotationDataSaver{
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, strong) NSMutableArray *dataToBeOrdered;
 @property (nonatomic, assign) int expNum;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic) float sampleInterval;
