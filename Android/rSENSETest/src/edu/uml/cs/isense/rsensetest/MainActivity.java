@@ -2,6 +2,10 @@ package edu.uml.cs.isense.rsensetest;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -154,18 +158,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class OtherTask extends AsyncTask<Void, Void, ArrayList<RDataSet>> {
+	private class OtherTask extends AsyncTask<Void, Void, Void> {
 		@Override
-		protected ArrayList<RDataSet> doInBackground(Void... params) {
-			return api.getDataSets(5);
+		protected Void doInBackground(Void... params) {
+			JSONObject toAppend = new JSONObject();
+			try {
+				toAppend.put("18", new JSONArray().put("2013/08/05 10:50:20"));
+				toAppend.put("19", new JSONArray().put("119"));
+				toAppend.put("20", new JSONArray().put("120"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			api.appendDataSetData(20, toAppend);
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<RDataSet> result) {
-			status.setText("Datasets in project 5:\n");
-			for(RDataSet rds : result) {
-				status.append(rds.name+"\n");
-			}
+		protected void onPostExecute(Void result) {
+			
 		}
 	}
 

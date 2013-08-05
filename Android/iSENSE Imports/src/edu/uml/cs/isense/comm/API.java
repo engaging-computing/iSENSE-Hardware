@@ -35,7 +35,12 @@ public class API {
 	String authToken = "";
 	RPerson currentUser;
 
-	public API() {
+	/**
+	 * Constructor not to be called by a user of the API
+	 * Users should call getInstance instead, which will call
+	 * this constructor if necessary
+	 */
+	private API() {
 		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 		baseURL = publicURL;
 	}
@@ -277,7 +282,7 @@ public class API {
 		}
 		return people;
 	}
-	
+
 	/**
 	 * Gets a user off of iSENSE
 	 * 
@@ -304,7 +309,7 @@ public class API {
 		return person;
 	}
 
-	
+
 	/**
 	 * Retrieve a data set from iSENSE, with it's data field filled in
 	 * The internal data set will be converted to column-major format, to make it compatible with 
@@ -327,13 +332,14 @@ public class API {
 			result.fieldCount = j.getInt("fieldCount");
 			result.datapointCount = j.getInt("datapointCount");
 			result.data = rowsToCols(j.getJSONObject("data"));
+			result.project_id = j.getJSONObject("project").getInt("id");
 
 		} catch (Exception e) {
 
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Gets all the data sets associated with a project
 	 * The data sets returned by this function do not have their data field filled.
@@ -387,8 +393,34 @@ public class API {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(requestData);
 		makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+authToken, "POST", requestData);
+	}
+
+	public void appendDataSetData(int dataSetId, JSONObject newData) {
+		JSONObject requestData = new JSONObject();
+		RDataSet existingDs = getDataSet(dataSetId);
+		JSONObject existing = existingDs.data;
+		Iterator<String> keys = newData.keys();
+		try {
+			while(keys.hasNext()) {
+				String currKey = keys.next();
+				JSONArray newDataPoints = newData.getJSONArray(currKey);
+				for(int i = 0; i < newDataPoints.length(); i++) {
+					existing.getJSONArray(currKey).put(newDataPoints.get(i));
+				}
+			}
+			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
+			ArrayList<String> headers = new ArrayList<String>();
+			for(RProjectField rpf : fields) {
+				headers.add(rpf.name);
+			}
+			requestData.put("headers", new JSONArray(headers));
+			requestData.put("data", existing);
+			requestData.put("id", ""+dataSetId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+authToken, "POST", requestData);
 	}
 
 	public RPerson getCurrentUser() {
@@ -470,7 +502,7 @@ public class API {
 		return (info != null && info.isConnected());
 
 	}
-	
+
 	/**
 	 * Reformats a row-major JSONObject into a column-major one
 	 * 
