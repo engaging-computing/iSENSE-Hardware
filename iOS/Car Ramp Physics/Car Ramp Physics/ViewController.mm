@@ -16,7 +16,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -131,7 +131,7 @@
         saver->hasName = false;
         saver->hasLogin = false;
         saver->first =  [[NSString alloc] init];
-        saver->last = [[NSString alloc] init];;
+        saver->last = [[NSString alloc] init];
         saver->user = [[NSString alloc] init];
         saver->pass = [[NSString alloc] init];
         saver->saveMode = NO;
@@ -147,7 +147,6 @@
     dfm = [[DataFieldManager alloc] init];
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
-    
     
     
     if (saver->hasName){
@@ -252,6 +251,20 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    BOOL x1 = [prefs boolForKey:@"X"];
+    BOOL y1 = [prefs boolForKey:@"Y"];
+    BOOL z1 = [prefs boolForKey:@"Z"];
+    BOOL mag1 = [prefs boolForKey:@"Magnitude"];
+    
+    
+    x = x1;
+    y = y1;
+    z = z1;
+    mag = mag1;
+    
     if (self.isMovingToParentViewController == YES) {
         
         change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
@@ -268,23 +281,13 @@
         change_name.tag = FIRST_TIME_NAME;
         [change_name show];
         
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         
-        BOOL x1 = [prefs boolForKey:@"X"];
-        BOOL y1 = [prefs boolForKey:@"Y"];
-        BOOL z1 = [prefs boolForKey:@"Z"];
-        BOOL mag1 = [prefs boolForKey:@"Magnitude"];
-        
-        
-        x = x1;
-        y = y1;
-        z = z1;
-        mag = mag1;
-        
-        [dfm setEnabledField:x atIndex:fACCEL_X];
-        [dfm setEnabledField:y atIndex:fACCEL_Y];
-        [dfm setEnabledField:z atIndex:fACCEL_Z];
-        [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
+        if (!iapi.isConnectedToInternet){
+            [dfm setEnabledField:x atIndex:fACCEL_X];
+            [dfm setEnabledField:y atIndex:fACCEL_Y];
+            [dfm setEnabledField:z atIndex:fACCEL_Z];
+            [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
+        }
         
         recordLength = 10;
         countdown = 10;
@@ -315,7 +318,14 @@
         NSLog(@"Long Press");
         if (!running) {
             // Get Field Order
-            [self getEnabledFields];
+            if (!iapi.isConnectedToInternet){
+                [dfm setEnabledField:x atIndex:fACCEL_X];
+                [dfm setEnabledField:y atIndex:fACCEL_Y];
+                [dfm setEnabledField:z atIndex:fACCEL_Z];
+                [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
+            } else {
+                [self getEnabledFields];
+            }
             // Record Data
             running = YES;
             [start setEnabled:NO];
@@ -358,6 +368,7 @@
     
     // New JSON array to hold data
     dataToBeJSONed = [[NSMutableArray alloc] init];
+    dataToBeOrdered = [[NSMutableArray alloc] init];
     
     // Start the new timers TODO - put them on dispatch?
     recordDataTimer = [NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES];
@@ -417,65 +428,60 @@
     double time = [[NSDate date] timeIntervalSince1970];
     fieldsRow.time_millis = [[NSNumber alloc] initWithDouble:time * 1000];
     NSLog(@"Current time is: %@.", fieldsRow.time_millis);
-    
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setMaximumFractionDigits:1];
+    [formatter setMinimumFractionDigits:0];
     
     dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
     dispatch_async(queue, ^{
         // acceleration in meters per second squared
-        if (x) {
-            fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
-            NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
+        
+        fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
+        NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
+        if ([dfm enabledFieldAtIndex:fACCEL_X]){
             dispatch_async(dispatch_get_main_queue(), ^{
-                vector_status.text = [@"X: " stringByAppendingString:[fieldsRow.accel_x stringValue]];
+                
+                vector_status.text = [@"X: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_x]];
             });
         }
         
-        if (y) {
-            fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
+        fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
+        if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (x)
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Y: " stringByAppendingString:[fieldsRow.accel_y stringValue]]];
+                if ([dfm enabledFieldAtIndex:fACCEL_X])
+                    vector_status.text = [vector_status.text stringByAppendingString:[@", Y: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]]];
                 else
-                    vector_status.text = [@"Y: " stringByAppendingString:[fieldsRow.accel_y stringValue]];
+                    vector_status.text = [@"Y: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]];
             });
-            NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
         }
-        if (z) {
-            fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
-            NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
+        NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
+        fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
+        NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
+        if ([dfm enabledFieldAtIndex:fACCEL_Z]){
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (x || y) {
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]]];
+                if ([dfm enabledFieldAtIndex:fACCEL_X] || [dfm enabledFieldAtIndex:fACCEL_Y]) {
+                    vector_status.text = [vector_status.text stringByAppendingString:[@", Z: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]]];
                 } else
-                    vector_status.text = [@"Z: " stringByAppendingString:[fieldsRow.accel_z stringValue]];
+                    vector_status.text = [@"Z: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]];
             });
-            
-            if (mag) {
-                fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
-                                         sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
-                                              + pow(fieldsRow.accel_y.doubleValue, 2)
-                                              + pow(fieldsRow.accel_z.doubleValue, 2))];
-                NSLog(@"Current accel total is: %@.", fieldsRow.accel_total);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (x || y || z)
-                        vector_status.text = [vector_status.text stringByAppendingString:[@", Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]]];
-                    else
-                        vector_status.text = [@"Magnitude: " stringByAppendingString:[fieldsRow.accel_total stringValue]];
-                });
-            }
+        }
+        fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
+                                 sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
+                                      + pow(fieldsRow.accel_y.doubleValue, 2)
+                                      + pow(fieldsRow.accel_z.doubleValue, 2))];
+        NSLog(@"Current accel total is: %@.", fieldsRow.accel_total);
+        if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([dfm enabledFieldAtIndex:fACCEL_X] || [dfm enabledFieldAtIndex:fACCEL_Y] || [dfm enabledFieldAtIndex:fACCEL_Z])
+                    vector_status.text = [vector_status.text stringByAppendingString:[@", Magnitude: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]]];
+                else
+                    vector_status.text = [@"Magnitude: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]];
+            });
         }
     });
     // Update parent JSON object
-    if (!saveModeEnabled) {
-        [dfm orderDataFromFields:fieldsRow];
-        if (dfm.data != nil && dataToBeJSONed != nil)
-            [dataToBeJSONed addObject:dfm.data];
-        else {
-            NSLog(@"something is wrong");
-        }
-    } else {
-        [dataToBeJSONed addObject:fieldsRow];
-    }
+    if (dataToBeOrdered != nil)
+        [dataToBeOrdered addObject:fieldsRow];
     
     
 }
@@ -540,6 +546,42 @@
     });
     
 }
+
+-(void) stopRecordingWithoutPublishing:(CMMotionManager *)finalMotionManager {
+    
+    // Stop Timers
+    [timer invalidate];
+    [recordDataTimer invalidate];
+    
+    // Stop Sensors
+    if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
+    if (finalMotionManager.gyroActive) [finalMotionManager stopGyroUpdates];
+    if (finalMotionManager.magnetometerActive) [finalMotionManager stopMagnetometerUpdates];
+    
+    // Stop Recording
+    running = NO;
+    [vector_status setText:@"Y: "];
+    countdown = recordLength;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
+        [start setEnabled:YES];
+        
+    });
+    
+    NSString *name = firstName;
+    name = [name stringByAppendingString:@" "];
+    name = [name stringByAppendingString:lastInitial];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"HH:mm:ss"];
+    
+    NSDate *now = [[NSDate alloc] init];
+    
+    NSString* timeString = [dateFormat stringFromDate:now];
+    
+    sessionName = [name stringByAppendingString:[@" " stringByAppendingString:timeString]];;
+}
+
 
 // Enabled fields check
 - (void) getEnabledFields {
@@ -618,7 +660,20 @@
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     bool uploadable = false;
+    
+    if (iapi.isConnectedToInternet)
+        expNum = -1;
+    
     if (expNum > 1) uploadable = true;
+    [dfm getFieldOrderOfExperiment:expNum];
+    
+    // Organize the data from dataToBeOrdered
+    for (int i = 0; i < [dataToBeOrdered count]; i++) {
+        Fields *f = [dataToBeOrdered objectAtIndex:i];
+        [dfm orderDataFromFields:f];
+        [dataToBeJSONed addObject:dfm.data];
+    }
+    
     NSLog(@"Bla");
     DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
@@ -642,15 +697,27 @@
 
 - (bool) uploadData:(NSString *) description {
     
-    if (![iapi isLoggedIn]) {
-        [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-        return false;
-        
-    }
-    
-    session_num = [iapi createSession:sessionName withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
-    
     if ([iapi isConnectedToInternet]) {
+        
+        if (![iapi isLoggedIn]) {
+            [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+            return false;
+            
+        }
+        
+        session_num = [iapi createSession:sessionName withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+        
+        
+        
+        [dfm getFieldOrderOfExperiment:expNum];
+        
+        // Organize the data from dataToBeOrdered
+        for (int i = 0; i < [dataToBeOrdered count]; i++) {
+            Fields *f = [dataToBeOrdered objectAtIndex:i];
+            [dfm orderDataFromFields:f];
+            [dataToBeJSONed addObject:dfm.data];
+        }
+        
         NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
         NSError *error = nil;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array options:0 error:&error];
@@ -660,14 +727,17 @@
         }
         
         bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
-        if (!success)
+        if (!success) {
             [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
-        else {
+        } else {
             [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
             
         }
-        [self saveDataSetWithDescription:sessionName];
+        
+        
+        
     } else {
+        NSLog(@"Derp");
         [self saveDataSetWithDescription:sessionName];
     }
     return true;
@@ -974,6 +1044,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 if (!saver->hasLogin){
+                    NSLog(@"%@", self.view);
                     [self.view makeWaffle:@"Login Successful!"
                                  duration:WAFFLE_LENGTH_SHORT
                                  position:WAFFLE_BOTTOM

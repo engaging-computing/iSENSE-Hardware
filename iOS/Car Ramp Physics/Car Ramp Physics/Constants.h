@@ -39,16 +39,6 @@
 // nav controller height
 #define NAVIGATION_CONTROLLER_HEIGHT 64
 
-// waffle constants
-#define WAFFLE_LENGTH_SHORT  2.0
-#define WAFFLE_LENGTH_LONG   3.5
-#define WAFFLE_BOTTOM @"bottom"
-#define WAFFLE_TOP @"top"
-#define WAFFLE_CENTER @"center"
-#define WAFFLE_CHECKMARK @"waffle_check"
-#define WAFFLE_RED_X @"waffle_x"
-#define WAFFLE_WARNING @"waffle_warn"
-
 // data recording constants
 #define S_INTERVAL      125
 #define TEST_LENGTH     600
@@ -57,8 +47,7 @@
 // constants for QueueUploaderView's actionSheet
 #define QUEUE_DELETE        0
 #define QUEUE_RENAME        1
-#define QUEUE_CHANGE_DESC   2
-#define QUEUE_SELECT_EXP    3
+#define QUEUE_SELECT_EXP    2
 #define QUEUE_LOGIN         500
 
 // other character restriction text field tags
