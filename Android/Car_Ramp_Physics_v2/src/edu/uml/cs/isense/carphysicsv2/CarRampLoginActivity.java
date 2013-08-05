@@ -9,15 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import edu.uml.cs.isense.carphysicsv2.R;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class CarRampLoginActivity extends Activity {
 
 	Button ok, cancel;
 	EditText user, pass;
-	RestAPI rapi;
+	API rapi;
 	TextView loggedInAs;
 	Waffle w;
 	public static String uName;
@@ -72,24 +71,20 @@ public class CarRampLoginActivity extends Activity {
 				uName = user.getText().toString();
 				password = pass.getText().toString();
 
-				rapi = RestAPI.getInstance();
+				rapi = API.getInstance(getApplicationContext());
 
-				if (rapi.isConnectedToInternet()) {
-					boolean success = rapi.login(uName, password);
-					if (success) {
-						w.make("Login as " + uName + " successful.",
-								Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-						Intent i = new Intent();
-						i.putExtra("username", uName);
-						setResult(RESULT_OK, i);
-						finish();
+				if (rapi.hasConnectivity()) {
+					rapi.createSession(uName, password);
+					w.make("Login as " + uName + " successful.",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					Intent i = new Intent();
+					i.putExtra("username", uName);
+					setResult(RESULT_OK, i);
+					finish();
 
-					} else {
-						w.make("Incorrect login credentials. Please try again.",
-								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-					}
 				} else {
-					w.make("Cannot login due to lack of internet connection. Please try again later.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					w.make("Cannot login due to lack of internet connection. Please try again later.",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					setResult(RESULT_CANCELED);
 					finish();
 				}
@@ -107,5 +102,4 @@ public class CarRampLoginActivity extends Activity {
 		});
 
 	}
-
 }
