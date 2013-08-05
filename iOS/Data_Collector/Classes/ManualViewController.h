@@ -13,7 +13,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import "QueueUploaderView.h"
-#import "CameraViewController.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 
 typedef struct _RotationDataSaver {
@@ -70,7 +69,7 @@ typedef struct _RotationDataSaver {
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation;
 
-- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error;
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error andContextInfo:(void *)contextInfo;
 
 
 // UI Properties
