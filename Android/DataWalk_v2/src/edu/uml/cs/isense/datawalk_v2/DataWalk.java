@@ -43,6 +43,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoConnect;
@@ -52,6 +53,7 @@ import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.objects.Experiment;
+import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -113,8 +115,8 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private MediaPlayer mMediaPlayer;
 
-	RestAPI rapi;
-
+	//RestAPI rapi;
+	API api;
 	String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
 	String nameOfSession = "";
 	String partialSessionName = "";
@@ -186,11 +188,8 @@ public class DataWalk extends Activity implements LocationListener,
 		mwidth = deviceDisplay.getWidth();
 		mheight = deviceDisplay.getHeight();
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(true);
+		api = API.getInstance(mContext);
+		api.useDev(true);
 
 		mHandler = new Handler();
 
@@ -204,7 +203,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		latLong = (TextView) findViewById(R.id.myLocation);
 
-		uq = new UploadQueue("data_walk", mContext, rapi);
+		uq = new UploadQueue("data_walk", mContext, API);
 		uq.buildQueueFromFile();
 		/*
 		 * This block useful for if onBackPressed - retains some things from
@@ -358,7 +357,7 @@ public class DataWalk extends Activity implements LocationListener,
 											+ " seconds");
 								}
 							});
-							if (!rapi.isConnectedToInternet())
+							if (!api.hasConnectivity())
 								uploadPoint = false;
 							
 							else if (uploadMode){
@@ -455,7 +454,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		attemptLogin();
 		
-		if (savedInstanceState == null && rapi.isConnectedToInternet()) {
+		if (savedInstanceState == null && api.hasConnectivity()) {
 			if (firstName.equals("") || lastInitial.equals("")) {
 				startActivityForResult(new Intent(mContext,
 						EnterNameActivity.class), resultGotName);
@@ -515,7 +514,7 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onResume() {
 		super.onResume();
 	
-		if(rapi.isConnectedToInternet()){
+		if(api.hasConnectivity()){
 			
 		savePoint = false;
 		uploadPoint = true;
@@ -562,8 +561,8 @@ public class DataWalk extends Activity implements LocationListener,
 		rateBox.setText("Data Recorded Every: "+ mInterval/1000 + " seconds");
 		Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
 		}
-		if (rapi.isConnectedToInternet()){
-			Experiment e = rapi.getExperiment(Integer.parseInt(experimentId));
+		if (api.hasConnectivity()){
+			RProject e = api.getProject(Integer.parseInt(experimentId));
 			if (e == null){
 				Log.d("tag", "Invalid expiremnt number");
 				w.make("Experiment Number Invalid! Please enter a new one.",Waffle.LENGTH_LONG,Waffle.IMAGE_X);
@@ -572,8 +571,8 @@ public class DataWalk extends Activity implements LocationListener,
 		
 		}
 		
-		if(rapi.isConnectedToInternet()){
-			boolean success = rapi.login(LoginIsense.uName, LoginIsense.password);
+		if(api.hasConnectivity()){
+			boolean success = api.createSession(LoginIsense.uName, LoginIsense.password);
 			if (success){
 				//w.make("Login as  " + LoginIsense.uName + "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
 				Log.d("tag", "login as sor successful!!!!!!!!!!!!!!!!!!!!");
@@ -655,26 +654,16 @@ public class DataWalk extends Activity implements LocationListener,
 			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
 
 			if (sessionId == -1) {
-				if (nameOfSession.equals("")) {
-					sessionId = rapi.createSession(experimentId,
-							"Session name not provided",
-							"Automated Submission Through Android App",
-							"801 Mt Vernon Place NW", "Washington D.C.",
-							"United States");
-					rapi.putSessionData(sessionId, experimentId, uploadSet);
-
-					sessionUrl = baseSessionUrl + sessionId;
-				} else {
-					sessionId = rapi.createSession(experimentId, nameOfSession,
+				 
+					sessionId = api.createSession(experimentId, nameOfSession,
 							"Automated Submission Through Android App",
 							"801 Mt Vernon Place NW", "Washington, DC",
 							"United States");
-					rapi.putSessionData(sessionId, experimentId, uploadSet);
+					api.putSessionData(sessionId, experimentId, uploadSet);
 
 					sessionUrl = baseSessionUrl + sessionId;
-				}
-			} else {
-				rapi.updateSessionData(sessionId, experimentId, uploadSet);
+				} else {
+				api.updateSessionData(sessionId, experimentId, uploadSet);
 			}
 
 		}
@@ -693,7 +682,7 @@ public class DataWalk extends Activity implements LocationListener,
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			rapi.login(loginName, loginPass);
+			api.createSession(loginName, loginPass);
 			uploader.run();
 			return null;
 
@@ -758,7 +747,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			if (rapi.isConnectedToInternet()) {
+			if (api.hasConnectivity()) {
 				Toast.makeText(DataWalk.this, "Connectivity found!",
 						Toast.LENGTH_SHORT).show();
 			} else {
@@ -836,11 +825,10 @@ public class DataWalk extends Activity implements LocationListener,
 				SharedPreferences prefs = getSharedPreferences("EID", 0);
 				experimentId = prefs.getString("experiment_id", null);
 				
-				dfm = new DataFieldManager(Integer.parseInt(experimentId),
-						rapi, mContext, f);
+				dfm = new DataFieldManager(Integer.parseInt(experimentId),api, mContext, f);
 				dfm.getOrder();
-				if (rapi.isConnectedToInternet()){
-					Experiment e = rapi.getExperiment(Integer.parseInt(experimentId));
+				if (api.hasConnectivity()){
+					RProject e = api.getProject(Integer.parseInt(experimentId));
 					if (e == null){
 						Log.d("tag", "Invalid expirement number");
 						w.make("Experiment Number Invalid! Please enter a new one.",Waffle.LENGTH_LONG,Waffle.IMAGE_X);
@@ -883,9 +871,9 @@ public class DataWalk extends Activity implements LocationListener,
 			else if (resultCode == RESULT_CANCELED) {
 				Log.d("Tag",
 						"Rajia you have indicated that you want to TRY TO CONNECT TO THE INTERNET AGAIN!!!!!");
-				if (rapi.isConnectedToInternet()) {
+				if (api.hasConnectivity()) {
 
-					boolean success = rapi.login(loginName, loginPass);
+					boolean success = api.createSession(loginName, loginPass);
 					if (success)
 						Toast.makeText(DataWalk.this, "Connectivity found!",
 								Toast.LENGTH_SHORT).show();
@@ -928,7 +916,7 @@ public class DataWalk extends Activity implements LocationListener,
 				firstName = " ";
 				lastInitial = "";
 				experimentId = defaultExp;
-				if (rapi.isConnectedToInternet())
+				if (api.hasConnectivity())
 				ChkBoxChecked = true;
 				umbChecked = true;
 				CustomOnItemSelectedListener.mIntervalHack = 10000;
@@ -967,16 +955,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {
-		if (rapi.isConnectedToInternet()) {
-			boolean success = rapi.login(loginName, loginPass);
-			if (!success) {
-				if (rapi.connection == "600") {
-					appTimedOut = true;
-				} else {
-
-				}
-
-			} else {
+		if (api.hasConnectivity()) {
+			boolean success = api.createSession(loginName, loginPass);
+			if (success) {
 
 				if (loginName.length() == 0 || loginPass.length() == 0)
 					startActivityForResult(new Intent(mContext,
