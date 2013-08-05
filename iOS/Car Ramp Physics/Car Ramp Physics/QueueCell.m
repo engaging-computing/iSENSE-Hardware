@@ -37,19 +37,7 @@
 }
 
 - (void) setExpNum:(NSString *)exp {
-    
-    NSMutableArray *dataToBeOrdered = dataSet.data;
-    NSMutableArray *dataToBeJSONed = [[NSMutableArray alloc] init];
-    DataFieldManager *dfm = [[DataFieldManager alloc] init];
-    [dfm getFieldOrderOfExperiment:[exp intValue]];
-    for (int i = 0; i < [dataToBeOrdered count]; i++) {
-        Fields *f = [dataToBeOrdered objectAtIndex:i];
-        [dfm orderDataFromFields:f];
-        [dataToBeJSONed addObject:dfm.data];
-    }
-    
-    [dataSet setData:dataToBeJSONed];
-    
+        
     [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
 }
 

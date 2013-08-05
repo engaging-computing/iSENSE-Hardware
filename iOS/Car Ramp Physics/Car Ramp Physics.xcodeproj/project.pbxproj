@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3921B42F17AC18B200E59515 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 765099A7178DCA6200425A27 /* iSENSE_API_Bundle.bundle */; };
 		760D196C179585FB00C123D6 /* logoIOS_Regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196B179585FB00C123D6 /* logoIOS_Regular.png */; };
 		760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196E179585FF00C123D6 /* logoIOS_Retina.png */; };
 		760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */; };
@@ -21,7 +20,6 @@
 		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7636B54E179EC3BC00DE6C7C /* QueueCell.m */; };
-		765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
 		765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */; };
 		765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B2178DD32200425A27 /* ExperimentBlock.m */; };
 		765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B5178DD34D00425A27 /* ISenseSearch.m */; };
@@ -34,8 +32,8 @@
 		765099C8178DD92D00425A27 /* underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099C1178DD92D00425A27 /* underline.png */; };
 		765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099C9178DF0CE00425A27 /* CoreLocation.framework */; };
 		765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099CB178DF0D500425A27 /* CoreMotion.framework */; };
-		765099CD178DF15C00425A27 /* Fields.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D7A178C5D16006E1425 /* Fields.m */; };
-		765099CE178DF52E00425A27 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D78178C5D16006E1425 /* DataFieldManager.m */; };
+		7655BCDA17AC2064005FA0AD /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
+		7655BCE117AC2B70005FA0AD /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 765099A7178DCA6200425A27 /* iSENSE_API_Bundle.bundle */; };
 		7669F02A178B275C00E51AD0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F029178B275C00E51AD0 /* UIKit.framework */; };
 		7669F02C178B275C00E51AD0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F02B178B275C00E51AD0 /* Foundation.framework */; };
 		7669F02E178B275C00E51AD0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F02D178B275C00E51AD0 /* CoreGraphics.framework */; };
@@ -72,7 +70,6 @@
 		76B58D83178C5D2D006E1425 /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D80178C5D2D006E1425 /* waffle_warn.png */; };
 		76B58D84178C5D2D006E1425 /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D81178C5D2D006E1425 /* waffle_x.png */; };
 		76B58D8B178C72B0006E1425 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D7C178C5D16006E1425 /* StringGrabber.m */; };
-		76B58D8C178C72B0006E1425 /* Waffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D7E178C5D16006E1425 /* Waffle.m */; };
 		76B58D90178C742C006E1425 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D8E178C742B006E1425 /* AboutViewController.m */; };
 		76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */; };
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
@@ -99,6 +96,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
 			remoteInfo = iSENSE_API_Bundle;
+		};
+		7655BCE217AC2B93005FA0AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39216FDC176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		7655BCE417AC2B98005FA0AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -176,14 +187,8 @@
 		76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
-		76B58D77178C5D16006E1425 /* DataFieldManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DataFieldManager.h; path = ../DataFieldManager.h; sourceTree = "<group>"; };
-		76B58D78178C5D16006E1425 /* DataFieldManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DataFieldManager.m; path = ../DataFieldManager.m; sourceTree = "<group>"; };
-		76B58D79178C5D16006E1425 /* Fields.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Fields.h; path = ../Fields.h; sourceTree = "<group>"; };
-		76B58D7A178C5D16006E1425 /* Fields.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Fields.m; path = ../Fields.m; sourceTree = "<group>"; };
 		76B58D7B178C5D16006E1425 /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringGrabber.h; path = ../StringGrabber.h; sourceTree = "<group>"; };
 		76B58D7C178C5D16006E1425 /* StringGrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = StringGrabber.m; path = ../StringGrabber.m; sourceTree = "<group>"; };
-		76B58D7D178C5D16006E1425 /* Waffle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Waffle.h; path = ../Waffle.h; sourceTree = "<group>"; };
-		76B58D7E178C5D16006E1425 /* Waffle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Waffle.m; path = ../Waffle.m; sourceTree = "<group>"; };
 		76B58D7F178C5D2D006E1425 /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
 		76B58D80178C5D2D006E1425 /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
 		76B58D81178C5D2D006E1425 /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
@@ -208,11 +213,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */,
+				7655BCDA17AC2064005FA0AD /* libiSENSE_API.a in Frameworks */,
 				76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */,
 				76785B9317937721001D6E3A /* CoreData.framework in Frameworks */,
 				765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */,
 				765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */,
-				765099AD178DCCAE00425A27 /* libiSENSE_API.a in Frameworks */,
 				767B9274178C527500F1C6FA /* QuartzCore.framework in Frameworks */,
 				767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */,
 				7669F02A178B275C00E51AD0 /* UIKit.framework in Frameworks */,
@@ -348,10 +353,7 @@
 				765099B4178DD34D00425A27 /* ISenseSearch.h */,
 				765099B1178DD32200425A27 /* ExperimentBlock.h */,
 				765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */,
-				76B58D77178C5D16006E1425 /* DataFieldManager.h */,
-				76B58D79178C5D16006E1425 /* Fields.h */,
 				76B58D7B178C5D16006E1425 /* StringGrabber.h */,
-				76B58D7D178C5D16006E1425 /* Waffle.h */,
 				76EF01A1178B571F00CBE38C /* RNGridMenu.h */,
 				7669F038178B275C00E51AD0 /* AppDelegate.h */,
 				7669F041178B275C00E51AD0 /* ViewController.h */,
@@ -373,10 +375,7 @@
 				765099B5178DD34D00425A27 /* ISenseSearch.m */,
 				765099B2178DD32200425A27 /* ExperimentBlock.m */,
 				765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */,
-				76B58D78178C5D16006E1425 /* DataFieldManager.m */,
-				76B58D7A178C5D16006E1425 /* Fields.m */,
 				76B58D7C178C5D16006E1425 /* StringGrabber.m */,
-				76B58D7E178C5D16006E1425 /* Waffle.m */,
 				76EF01A2178B571F00CBE38C /* RNGridMenu.m */,
 				7669F039178B275C00E51AD0 /* AppDelegate.m */,
 				7669F042178B275C00E51AD0 /* ViewController.mm */,
@@ -438,6 +437,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				7655BCE517AC2B98005FA0AD /* PBXTargetDependency */,
+				7655BCE317AC2B93005FA0AD /* PBXTargetDependency */,
 			);
 			name = "Car Ramp Physics";
 			productName = "Car Ramp Physics";
@@ -501,6 +502,7 @@
 				7669F034178B275C00E51AD0 /* InfoPlist.strings in Resources */,
 				7669F03C178B275C00E51AD0 /* Default.png in Resources */,
 				7669F03E178B275C00E51AD0 /* Default@2x.png in Resources */,
+				7655BCE117AC2B70005FA0AD /* iSENSE_API_Bundle.bundle in Resources */,
 				7669F040178B275C00E51AD0 /* Default-568h@2x.png in Resources */,
 				7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */,
 				7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */,
@@ -515,7 +517,6 @@
 				76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */,
 				76B58D83178C5D2D006E1425 /* waffle_warn.png in Resources */,
 				76B58D84178C5D2D006E1425 /* waffle_x.png in Resources */,
-				3921B42F17AC18B200E59515 /* iSENSE_API_Bundle.bundle in Resources */,
 				76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */,
 				76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */,
 				765099C2178DD92D00425A27 /* button_dark.png in Resources */,
@@ -554,11 +555,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				765099CE178DF52E00425A27 /* DataFieldManager.m in Sources */,
-				765099CD178DF15C00425A27 /* Fields.m in Sources */,
 				765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */,
 				76B58D8B178C72B0006E1425 /* StringGrabber.m in Sources */,
-				76B58D8C178C72B0006E1425 /* Waffle.m in Sources */,
 				7669F036178B275C00E51AD0 /* main.m in Sources */,
 				7669F03A178B275C00E51AD0 /* AppDelegate.m in Sources */,
 				7669F043178B275C00E51AD0 /* ViewController.mm in Sources */,
@@ -577,6 +575,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7655BCE317AC2B93005FA0AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API_Bundle;
+			targetProxy = 7655BCE217AC2B93005FA0AD /* PBXContainerItemProxy */;
+		};
+		7655BCE517AC2B98005FA0AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API;
+			targetProxy = 7655BCE417AC2B98005FA0AD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */ = {
@@ -687,10 +698,14 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
-				HEADER_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
+				HEADER_SEARCH_PATHS = (
+					"/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**",
+					"/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers",
+				);
 				INFOPLIST_FILE = "Car Ramp Physics/Car Ramp Physics-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -701,10 +716,14 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
-				HEADER_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers";
+				HEADER_SEARCH_PATHS = (
+					"/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**",
+					"/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/iSENSE_API/headers",
+				);
 				INFOPLIST_FILE = "Car Ramp Physics/Car Ramp Physics-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

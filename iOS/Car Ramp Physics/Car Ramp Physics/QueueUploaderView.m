@@ -212,7 +212,7 @@
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
+                                       otherButtonTitles:@"OK", nil];
             
             message.tag = QUEUE_RENAME;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
