@@ -28,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -57,6 +58,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -123,7 +125,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 
 	private String dateString;
-	RestAPI rapi;
+	API rapi;
 
 	private boolean x = false, y = false, z = false, mag = false;
 
@@ -182,10 +184,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		saved = savedInstanceState;
 		mContext = this;
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		rapi = API.getInstance(mContext);
 		rapi.useDev(useDev);
 		if (useDev) {
 			baseSessionUrl = baseSessionUrl_Dev;
@@ -221,7 +220,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 					+ userName + " Name: " + firstName + " " + lastInitial);
 		} else {
-			if (rapi.isConnectedToInternet())
+			if (rapi.hasConnectivity())
 				w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 		}
 
@@ -434,7 +433,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
-		if (rapi.isConnectedToInternet()) {
+		if (rapi.hasConnectivity()) {
 			success = rapi.login(userName, password);
 			if (!success) {
 				if (rapi.connection == "600") {
@@ -459,7 +458,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 		
-		if (!rapi.isConnectedToInternet()) {
+		if (!rapi.hasConnectivity()) {
 			startActivityForResult(new Intent(mContext, SaveModeDialog.class), SAVE_MODE_REQUESTED);
 		}
 
@@ -792,7 +791,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									+ " "
 									+ lastInitial);
 				} else {
-					if (rapi.isConnectedToInternet())
+					if (rapi.hasConnectivity())
 						w.make("Login Error", Waffle.LENGTH_SHORT,
 								Waffle.IMAGE_X);
 				}
@@ -813,7 +812,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				saveMode = true;
 			} else {
-				if (!rapi.isConnectedToInternet()) {
+				if (!rapi.hasConnectivity()) {
 					startActivityForResult(new Intent(mContext, SaveModeDialog.class), SAVE_MODE_REQUESTED);
 				} else {
 					saveMode = false;
@@ -859,7 +858,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (!saveMode) {
 
 				String experimentNumber = CarRampPhysicsV2.experimentNumber;
-				if (address == null || address.size() <= 0) {
+				/*if (address == null || address.size() <= 0) {
 					sessionId = rapi.createSession(experimentNumber,
 							nameOfSession + " (location not found)",
 							"Automated Submission Through Android App", "", "",
@@ -878,8 +877,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				CarRampPhysicsV2.sessionUrl = CarRampPhysicsV2.baseSessionUrl
 						+ sessionId;
-
-				rapi.putSessionData(sessionId, experimentNumber, dataSet);
+*/
+				JSONObject dataToBeUploaded;
+				rapi.uploadDataSet(Integer.parseInt(experimentNumber), dataSet, nameOfSession);
+				//rapi.putSessionData(sessionId, experimentNumber, dataSet);
 				uploadSuccessful = true;
 			} else {
 
