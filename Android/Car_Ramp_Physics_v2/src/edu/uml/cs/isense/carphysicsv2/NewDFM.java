@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.dfm;
+package edu.uml.cs.isense.carphysicsv2;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,25 +10,25 @@ import org.json.JSONException;
 import android.app.Application;
 import android.content.Context;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.objects.RProjectField;
 
-public class DataFieldManager extends Application {
+public class NewDFM extends Application {
 
 	int eid;
-	RestAPI rapi;
+	API rapi;
 	Context mContext;
 
-	ArrayList<ExperimentField> expFields;
+	ArrayList<RProjectField> expFields;
 	public LinkedList<String> order;
 	JSONArray dataSet;
 	Fields f;
-	SensorCompatibility sc = new SensorCompatibility();
 	public boolean[] enabledFields = {  false, false, false, false, false, false,
 			false, false, false, false, false, false, false, false, false,
 			false, false, false, false };
 
-	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
+	public NewDFM(int eid, API rapi, Context mContext, Fields f) {
 		this.eid = eid;
 		this.rapi = rapi;
 		this.order = new LinkedList<String>();
@@ -38,8 +38,8 @@ public class DataFieldManager extends Application {
 	}
 	
 	// Static class function strictly for getting the field order of any experiment
-	public static LinkedList<String> getOrder(int eid, RestAPI rapi, Context c) {
-		DataFieldManager d = new DataFieldManager(eid, rapi, c, null);
+	public static LinkedList<String> getOrder(int eid, API rapi, Context c) {
+		NewDFM d = new NewDFM(eid, rapi, c, null);
 		d.getOrder();
 		return d.order;
 	}
@@ -70,18 +70,18 @@ public class DataFieldManager extends Application {
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
 
-			expFields = rapi.getExperimentFields(eid);
+			expFields = rapi.getProjectFields(eid);
 
-			for (ExperimentField field : expFields) {
-				switch (field.type_id) {
+			for (RProjectField field : expFields) {
+				switch (field.type) {
 				
 				// Temperature
 				case 1:
-					if (field.unit_name.toLowerCase(Locale.US).contains("f"))
+					if (field.unit.toLowerCase(Locale.US).contains("f"))
 						order.add(mContext.getString(R.string.temperature_f));
-					else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
+					else if (field.unit.toLowerCase(Locale.US).contains("c")) {
 						order.add(mContext.getString(R.string.temperature_c));
-					} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
+					} else if (field.unit.toLowerCase(Locale.US).contains("k")) {
 						order.add(mContext.getString(R.string.temperature_k));
 					} else {
 						order.add(mContext.getString(R.string.null_string));
@@ -91,7 +91,7 @@ public class DataFieldManager extends Application {
 				// Potential Altitude
 				case 2:
 				case 3:
-					if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
+					if (field.name.toLowerCase(Locale.US).contains("altitude")) {
 						order.add(mContext.getString(R.string.altitude));
 					} else {
 						order.add(mContext.getString(R.string.null_string));
@@ -112,9 +112,9 @@ public class DataFieldManager extends Application {
 
 				// Angle
 				case 10:
-					if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
+					if (field.unit.toLowerCase(Locale.US).contains("deg")) {
 						order.add(mContext.getString(R.string.heading_deg));
-					} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
+					} else if (field.unit.toLowerCase(Locale.US).contains("rad")) {
 						order.add(mContext.getString(R.string.heading_rad));
 					} else {
 						order.add(mContext.getString(R.string.null_string));
@@ -123,9 +123,9 @@ public class DataFieldManager extends Application {
 
 				// Geospacial
 				case 19:
-					if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
+					if (field.name.toLowerCase(Locale.US).contains("lat")) {
 						order.add(mContext.getString(R.string.latitude));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
+					} else if (field.name.toLowerCase(Locale.US).contains("lon")) {
 						order.add(mContext.getString(R.string.longitude));
 					} else {
 						order.add(mContext.getString(R.string.null_string));
@@ -135,19 +135,19 @@ public class DataFieldManager extends Application {
 				// Numeric/Custom
 				case 21:
 				case 22:
-					if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
-						if (field.field_name.toLowerCase(Locale.US).contains("x")) {
+					if (field.name.toLowerCase(Locale.US).contains("mag")) {
+						if (field.name.toLowerCase(Locale.US).contains("x")) {
 							order.add(mContext.getString(R.string.magnetic_x));
-						} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
+						} else if (field.name.toLowerCase(Locale.US).contains("y")) {
 							order.add(mContext.getString(R.string.magnetic_y));
-						} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
+						} else if (field.name.toLowerCase(Locale.US).contains("z")) {
 							order.add(mContext.getString(R.string.magnetic_z));
-						} else if ((field.field_name.toLowerCase(Locale.US).contains("total"))
-								|| (field.field_name.toLowerCase(Locale.US).contains("average"))
-								|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
+						} else if ((field.name.toLowerCase(Locale.US).contains("total"))
+								|| (field.name.toLowerCase(Locale.US).contains("average"))
+								|| (field.name.toLowerCase(Locale.US).contains("mean"))) {
 							order.add(mContext.getString(R.string.magnetic_total));
 						}
-					} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
+					} else if (field.name.toLowerCase(Locale.US).contains("altitude")) {
 						order.add(mContext.getString(R.string.altitude));
 					} else
 						order.add(mContext.getString(R.string.null_string));
@@ -155,13 +155,13 @@ public class DataFieldManager extends Application {
 
 				// Acceleration
 				case 25:
-					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
+					if (field.name.toLowerCase(Locale.US).contains("x")) {
 						order.add(mContext.getString(R.string.accel_x));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
+					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
 						order.add(mContext.getString(R.string.accel_y));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
+					} else if (field.name.toLowerCase(Locale.US).contains("z")) {
 						order.add(mContext.getString(R.string.accel_z));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
+					} else if (field.name.toLowerCase(Locale.US).contains("accel")) {
 						order.add(mContext.getString(R.string.accel_total));
 					} else {
 						order.add(mContext.getString(R.string.null_string));
@@ -453,28 +453,6 @@ public class DataFieldManager extends Application {
 
 		return b.toString();
 	}
-
-	public SensorCompatibility checkCompatibility() {
-
-		int apiLevel = android.os.Build.VERSION.SDK_INT;
-		int apiVal = 0;
-		int[][] dispatch = sc.compatDispatch;
-
-		if (apiLevel <= 8)
-			apiVal = 0;
-		if (apiLevel > 8 && apiLevel < 14)
-			apiVal = 1;
-		if (apiLevel > 14)
-			apiVal = 2;
-
-		for (int i = 0; i <= 5; i++) {
-			int temp = dispatch[apiVal][i];
-			if (temp == 1)
-				sc.compatible[i] = true;
-		}
-
-		return sc;
-	}
 	
 	public String writeHeaderLine() {
 		StringBuilder b = new StringBuilder();
@@ -495,7 +473,7 @@ public class DataFieldManager extends Application {
 	}
 
 	// For use if a clump of data was recorded and needs to be cut down and re-ordered
-	public static String reOrderData(JSONArray data, String eid, RestAPI rapi, Context c) {
+	public static String reOrderData(JSONArray data, String eid, API rapi, Context c) {
 		JSONArray row, outData = new JSONArray(), outRow;
 		int len = data.length();
 		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(eid), rapi, c);
