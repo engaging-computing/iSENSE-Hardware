@@ -95,29 +95,6 @@ public class QDataSet implements Serializable {
 	 */
 	private File picture;
 
-	// Optional
-	/**
-	 * Optional: session ID to associate the data set with.  
-	 * One will be created if none is specified.
-	 */
-	private int sid = -1;
-//	/**
-//	 * Optional: city of where the data were recorded.
-//	 */
-//	private String city = "";
-//	/**
-//	 * Optional: state of where the data were recorded.
-//	 */
-//	private String state = "";
-//	/**
-//	 * Optional: country of where the data were recorded.
-//	 */
-//	private String country = "";
-//	/**
-//	 * Optional: address of where the data were recorded.
-//	 */
-//	private String addr = "";
-
 	/**
 	 * Contructs an object of type DataSet
 	 * @param type DataSet.PIC or DataSet.DATA
@@ -126,15 +103,9 @@ public class QDataSet implements Serializable {
 	 * @param eid
 	 * @param data If type is DataSet.DATA, we look here.
 	 * @param picture If type is DataSet.PIC, we look here.
-	 * @param sid Pass DataSet.NO_SESSION_DEFINED if you have not created a session.
-	 * @param city
-	 * @param state
-	 * @param country
-	 * @param addr
 	 */
 	public QDataSet(Type type, String name, String desc, String eid,
-			String data, File picture, int sid, String city, String state,
-			String country, String addr) {
+			String data, File picture) {
 		this.type = type;
 		this.name = name;
 		this.desc = desc;
@@ -144,11 +115,6 @@ public class QDataSet implements Serializable {
 		else
 			this.data = null;
 		this.picture = picture;
-		this.sid = sid;
-//		this.city = city;
-//		this.state = state;
-//		this.country = country;
-//		this.addr = addr;
 		this.key = new Random().nextLong();
 		this.hasInitialExperiment = eid.equals("-1") ? false : true;
 	}
@@ -323,25 +289,6 @@ public class QDataSet implements Serializable {
 		return this.hasInitialExperiment;
 	}
 
-	/**
-	 * Getter for session ID.
-	 * 
-	 * @return The session ID associated with this data set.
-	 */
-	public int getSid() {
-		return sid;
-	}
-
-	/**
-	 * Setter for session ID.
-	 * 
-	 * @param sid
-	 * 		The session ID the data should be uploaded to in the future.
-	 */
-	public void setSid(int sid) {
-		this.sid = sid;
-	}
-	
 	/**
 	 * Getter for experiment ID.
 	 * 

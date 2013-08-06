@@ -146,7 +146,7 @@ public class Step1Setup extends Activity {
 					}
 					
 					Intent iRet = new Intent();
-					iRet.putExtra(DataCollector.STEP_1_SESSION_NAME, sesName.getText().toString());
+					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME, sesName.getText().toString());
 					iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
 					iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
 					setResult(RESULT_OK, iRet);
