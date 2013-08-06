@@ -2,6 +2,10 @@ package edu.uml.cs.isense.rsensetest;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +24,7 @@ import edu.uml.cs.isense.objects.RProjectField;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, randomTest;
+	Button login, logout, getusers, getprojects, appendTest, uploadTest;
 	TextView status;
 	EditText projID, userName;
 	API api;
@@ -34,7 +38,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		getusers = (Button) findViewById(R.id.btn_getusers);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
 		logout = (Button) findViewById(R.id.btn_logout);
-		randomTest = (Button) findViewById(R.id.btn_random);
+		appendTest = (Button) findViewById(R.id.btn_append);
+		uploadTest = (Button) findViewById(R.id.btn_upload);
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
@@ -43,7 +48,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		logout.setOnClickListener(this);
 		getusers.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
-		randomTest.setOnClickListener(this);
+		appendTest.setOnClickListener(this);
+		uploadTest.setOnClickListener(this);
 		getusers.setEnabled(false);
 
 		api = API.getInstance(this);
@@ -60,7 +66,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		if(api.hasConnectivity()) {
 			if ( v == login ) {
 				status.setText("clicked login");
-				new LoginTask().execute("testguy", "1");
+				new LoginTask().execute("NickAVV", "Looping59");
 			} else if ( v == getusers ) {
 				status.setText("clicked get users");
 				new UsersTask().execute();
@@ -70,9 +76,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == getprojects ) {
 				status.setText("clicked get projects");
 				new ProjectsTask().execute();
-			} else if ( v == randomTest ) {
-				status.setText("other button clicked");
-				new OtherTask().execute();
+			} else if ( v == appendTest ) {
+				status.setText("append button clicked");
+				new AppendTask().execute();
+			} else if ( v == uploadTest ) {
+				status.setText("upload button clicked");
+				new UploadTask().execute();
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
@@ -154,18 +163,44 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class OtherTask extends AsyncTask<Void, Void, ArrayList<RDataSet>> {
+	private class AppendTask extends AsyncTask<Void, Void, Void> {
 		@Override
-		protected ArrayList<RDataSet> doInBackground(Void... params) {
-			return api.getDataSets(5);
+		protected Void doInBackground(Void... params) {
+			JSONObject toAppend = new JSONObject();
+			try {
+				toAppend.put("0", new JSONArray().put("2013/08/05 10:50:20"));
+				toAppend.put("1", new JSONArray().put("119"));
+				toAppend.put("2", new JSONArray().put("120"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			api.appendDataSetData(20, toAppend);
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<RDataSet> result) {
-			status.setText("Datasets in project 5:\n");
-			for(RDataSet rds : result) {
-				status.append(rds.name+"\n");
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class UploadTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			JSONObject newData = new JSONObject();
+			try {
+				newData.put("0", new JSONArray().put("2013/08/05 10:50:20"));
+				newData.put("1", new JSONArray().put("119"));
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
+			api.uploadDataSet(2, newData, "mobile upload test");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
 		}
 	}
 
