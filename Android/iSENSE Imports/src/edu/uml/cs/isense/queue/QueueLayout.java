@@ -127,7 +127,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		TextView eid = (TextView) view.findViewById(R.id.experimentid);
 		if (ds.getEID().equals("-1"))
-			eid.setText("No Exp.");
+			eid.setText("No Proj.");
 		else
 			eid.setText(ds.getEID());
 
@@ -350,10 +350,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == ALTER_DATA_EXP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences mPrefs = getSharedPreferences("EID_QUEUE", 0);
+				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
 				
 				QDataSet alter = lastDataSetLongClicked;
-				alter.setExp(mPrefs.getString("experiment_id", "No Exp."));
+				alter.setExp(mPrefs.getString("project_id", "No Proj."));
 				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
