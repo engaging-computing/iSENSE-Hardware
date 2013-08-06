@@ -52,7 +52,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -85,7 +84,7 @@ import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.sync.SyncTime;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
@@ -255,7 +254,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Context mContext;
 
 	// Custom
-	public static RestAPI rapi;
+	public static API api;
 	public static Waffle w;
 	public static DataFieldManager dfm;
 	public static Fields f;
@@ -740,7 +739,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
-			if (rapi.isConnectedToInternet()) {
+			if (api.hasConnectivity()) {
 				try {
 					if (loc != null) {
 						address = new Geocoder(DataCollector.this,
@@ -887,7 +886,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
-		boolean success = rapi.login(mPrefs.getString("username", ""),
+		boolean success = api.createSession(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 		if (!success) {
 			// This is crazy, so Waffle me maybe?
@@ -991,8 +990,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString("experiment_id", "-1").commit();
 
-		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-				"experiment_id", "-1")), rapi, mContext, f);
+//		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString( TODO
+//				"experiment_id", "-1")), rapi, mContext, f);
 		dfm.getOrder();
 
 		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
@@ -1029,8 +1028,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (experimentInput.equals("-1")) {
 			setUpDFMWithAllFields();
 		} else {
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
-					mContext, f);
+//			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi, TODO
+//					mContext, f);
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
@@ -1191,13 +1190,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
+		
+		api = API.getInstance(mContext);
 
-		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1225,13 +1221,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(true);
+		
+		api = API.getInstance(mContext);
 
-		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1568,7 +1561,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 										Context.MODE_PRIVATE));
 
 				if ((mPrefs.getString("username", "").equals(""))) {
-					if (rapi.isConnectedToInternet()) {
+					if (api.hasConnectivity()) {
 						manageUploadQueueAfterLogin = true;
 						Intent iCanLogin = new Intent(mContext, CanLogin.class);
 						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);

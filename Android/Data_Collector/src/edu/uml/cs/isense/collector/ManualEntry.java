@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -41,7 +43,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -64,9 +65,10 @@ import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Splash;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.exp.Setup;
-import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.objects.RDataSet;
+import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -80,10 +82,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public static final String activityName = "manualentry";
 	private static final String PREFERENCES_EXP_ID = "experiment_id";
 
-	private static final int TYPE_DEFAULT = 1;
-	private static final int TYPE_LATITUDE = 2;
-	private static final int TYPE_LONGITUDE = 3;
-	private static final int TYPE_TIME = 4;
+	private static final int TYPE_NUMBER_FIELD = 1;
+	private static final int TYPE_TEXT_FIELD = 2;
+	private static final int TYPE_LATITUDE = 3;
+	private static final int TYPE_LONGITUDE = 5;
+	private static final int TYPE_TIME = 5;
 
 	private static final int LOGIN_REQUESTED = 100;
 	private static final int EXPERIMENT_REQUESTED = 101;
@@ -94,7 +97,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static boolean showGpsDialog = true;
 
 	private Waffle w;
-	private RestAPI rapi;
+	private API api;
 
 	private Button saveData;
 	private Button clearData;
@@ -117,7 +120,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public static UploadQueue uq;
 	private static boolean throughUploadButton = false;
 
-	private ArrayList<ExperimentField> fieldOrder;
+	private ArrayList<RProjectField> fieldOrder;
 
 	private EditText sessionName;
 
@@ -128,12 +131,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 		setContentView(R.layout.manual_concept);
 
 		mContext = this;
-
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
+		
+		api = API.getInstance(mContext);
+		api.useDev(true);
+		
+		new GetDataSetTask().execute(); // remove TODO
 		
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
@@ -182,7 +184,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		mediaButton.setOnClickListener(this);
 
 		w = new Waffle(this);
-		uq = new UploadQueue("manualentry", mContext, rapi);
+		uq = new UploadQueue("manualentry", mContext, api);
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
@@ -211,9 +213,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 				sessionName.setError(null);
 
 			if (exp.equals("")) {
-				w.make("Invalid or no selected experiment.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				w.make("Invalid or no selected project.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			} else if (sessionName.getText().toString().length() == 0) {
-				sessionName.setError("Enter a session name");
+				sessionName.setError("Enter a data set name");
 			} else {
 				new SaveDataTask().execute();
 			}
@@ -225,7 +227,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				iMedia.putExtra("sessionName", sessionName.getText().toString());
 				startActivityForResult(iMedia, MEDIA_REQUESTED);
 			} else {
-				sessionName.setError("Enter a session name");
+				sessionName.setError("Enter a data set name");
 			}
 		}
 	}
@@ -293,7 +295,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void fillDataFieldEntryList(int eid) {
 		
 		if (fieldOrder.size() == 0) {
-			if (rapi.isConnectedToInternet()) {
+			if (api.hasConnectivity()) {
 				w.make("Experiment not found or has no fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
 				w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);	
@@ -307,41 +309,67 @@ public class ManualEntry extends Activity implements OnClickListener,
 			return;
 		
 		experimentLabel.setText(getResources().getString(
-				R.string.usingExperiment)
+				R.string.usingProject)
 				+ eid);
 
-		for (ExperimentField expField : fieldOrder) {
+		for (RProjectField projField : fieldOrder) {
 
-			if (expField.type_id == expField.GEOSPACIAL) {
-				if (expField.unit_id == expField.UNIT_LATITUDE) {
-					addDataField(expField, TYPE_LATITUDE);
-				} else {
-					addDataField(expField, TYPE_LONGITUDE);
-				}
-			} else if (expField.type_id == expField.TIME) {
-				addDataField(expField, TYPE_TIME);
-			} else {
-				addDataField(expField, TYPE_DEFAULT);
+//			if (expField.type_id == expField.GEOSPACIAL) {
+//				if (expField.unit_id == expField.UNIT_LATITUDE) {
+//					addDataField(expField, TYPE_LATITUDE);
+//				} else {
+//					addDataField(expField, TYPE_LONGITUDE);
+//				}
+//			} else if (expField.type_id == expField.TIME) {
+//				addDataField(expField, TYPE_TIME);
+//			} else {
+//				addDataField(expField, TYPE_DEFAULT);
+//			}
+			
+			switch (projField.type) {
+			
+			case RProjectField.TYPE_LAT:
+				addDataField(projField, TYPE_LATITUDE);
+				break;
+				
+			case RProjectField.TYPE_LON:
+				addDataField(projField, TYPE_LONGITUDE);
+				break;
+				
+			case RProjectField.TYPE_TIMESTAMP:
+				addDataField(projField, TYPE_TIME);
+				break;
+				
+			case RProjectField.TYPE_TEXT:
+				addDataField(projField, TYPE_TEXT_FIELD);
+				break;
+				
+			default:
+				addDataField(projField, TYPE_NUMBER_FIELD);
+				break;
+			
 			}
+			
 		}
 
 		checkLastImeOptions();
 
 	}
 
-	private void addDataField(ExperimentField expField, int type) {
+	private void addDataField(RProjectField projField, int type) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
 				.findViewById(R.id.manual_dataFieldName);
-		fieldName.setText(expField.field_name);
+		fieldName.setText(projField.name);
 		EditText fieldContents = (EditText) dataField
 				.findViewById(R.id.manual_dataFieldContents);
 
 		fieldContents.setSingleLine(true);
 		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-
-		if (type != TYPE_DEFAULT) {
+		fieldContents.setTag(projField.field_id); // TODO - new tags :D!
+		
+		if (type != TYPE_NUMBER_FIELD && type != TYPE_TEXT_FIELD) {
 			fieldContents.setText("Auto");
 			fieldContents.setEnabled(false);
 
@@ -367,7 +395,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 		};
 		fieldContents.setFilters(new InputFilter[]{filter});
 		*/
-		if (expField.type_id == expField.TEXT) {
+		
+		
+		
+		if (type == TYPE_TEXT_FIELD) {
 
 			// keyboard to text
 			fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -375,7 +406,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
 							60) });
 
-		} else {
+		} else if (type == TYPE_NUMBER_FIELD) { // TODO - need the if() part in this? is just "else" enough?
 			// keyboard to nums
 			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
 			fieldContents
@@ -453,7 +484,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			return true;
 
-		case R.id.menu_item_manual_experiment:
+		case R.id.menu_item_manual_project:
 			Intent iExperiment = new Intent(mContext, Setup.class);
 			iExperiment.putExtra("from_where", "manual");
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
@@ -486,7 +517,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private String getJSONData() {
 
-		JSONArray row = new JSONArray();
+		JSONObject row = new JSONObject();
 
 		for (int i = 0; i < dataFieldEntryList.getChildCount(); i++) {
 			EditText dataFieldContents = (EditText) dataFieldEntryList
@@ -496,31 +527,47 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String contents = dataFieldContents.getText().toString()
 					.toLowerCase(Locale.US);
 			String name = dataFieldName.getText().toString().toLowerCase(Locale.US);
+			String id = "" + dataFieldContents.getTag();
+			
+			try {
+			
 			if (contents.contains("auto")) {
 				// Need to auto-fill the data
 				if (name.contains("latitude")) {
-					row.put("" + loc.getLatitude());
+					//row.put("" + loc.getLatitude());
+					row.put(id, "" + loc.getLatitude());
 				} else if (name.contains("longitude")) {
-					row.put("" + loc.getLongitude());
+					//row.put("" + loc.getLongitude());
+					row.put(id, "" + loc.getLongitude());
 				} else if (name.contains("time")) {
-					row.put("" + System.currentTimeMillis());
-				} else {
-					// Shouldn't have gotten here... we'll insert -1 as a
-					// default
-					row.put("-1");
+					//row.put("" + System.currentTimeMillis());
+					row.put(id, "" + System.currentTimeMillis());
 				}
+//				} else {
+//					// Shouldn't have gotten here... we'll insert -1 as a
+//					// default
+//					row.put("-1");
+//				}
 			} else {
 				if (dataFieldContents.getText().toString().length() != 0)
-					row.put(dataFieldContents.getText().toString());
+					//row.put(dataFieldContents.getText().toString());
+					row.put(id, dataFieldContents.getText().toString());
 				else
-					// if no data, put a space as a place holder
-					row.put(" ");
+					// put a space as a placeholder
+					//row.put(" ");
+					row.put(id, " ");
+						
+			}
+			
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 		}
-
+		
 		JSONArray data = new JSONArray();
 		data.put(row);
 
+		System.out.println("Data are: " + data.toString());
 		return data.toString();
 	}
 
@@ -552,15 +599,15 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void manageUploadQueue() {
 
 		if (!uq.emptyQueue()) {
-			if (!rapi.isConnectedToInternet())  {
+			if (!api.hasConnectivity())  {
 				w.make("No internet connectivity found - can not upload data yet", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			} else {
-				if (!rapi.isLoggedIn()) {
+				if (api.getCurrentUser() == null) {
 					boolean success = false;
 					if (loginPrefs.getString("username", "").equals(""))
 						success = false;
 					else
-						success = rapi.login(loginPrefs.getString("username", ""),
+						success = api.createSession(loginPrefs.getString("username", ""),
 								loginPrefs.getString("password", ""));
 
 					if (!success)
@@ -607,7 +654,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID,
 					"-1"));
 			if (eid != -1) {
-				fieldOrder = rapi.getExperimentFields(eid);
+				//fieldOrder = rapi.getExperimentFields(eid);
+				fieldOrder = api.getProjectFields(eid);
 			} else {
 				// problem!
 			}
@@ -801,5 +849,36 @@ public class ManualEntry extends Activity implements OnClickListener,
 			super.onPostExecute(result);
 		}
 	}
+	
+	class GetDataSetTask extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
 
+		@Override
+		protected Void doInBackground(Void... params) {
+			api.createSession("sor", "sor");
+			RDataSet rds = api.getDataSet(508); // TODO remove
+			System.out.println("RDS: " + rds.name);
+			
+			ArrayList<RProjectField> alrpf = api.getProjectFields(23);
+			for (RProjectField rpf : alrpf) {
+				System.out.println("RPF: " + rpf.field_id);
+			}
+			
+			//EditText frog = null;
+			//frog.setTag(61);
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+		}
+	}
+
+	
+	
 }
