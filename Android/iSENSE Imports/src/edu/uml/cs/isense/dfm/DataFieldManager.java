@@ -231,7 +231,7 @@ public class DataFieldManager extends Application {
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.time))) {
-					dataJSON.put("" + i, f.timeMillis);
+					dataJSON.put("" + i, "u " + f.timeMillis);
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.luminous_flux))) {
@@ -537,7 +537,7 @@ public class DataFieldManager extends Application {
 							continue;
 						}
 						if (s.equals("Time")) {
-							outRow.put(j + "", row.getLong(Fields.TIME));
+							outRow.put(j + "", "u " + row.getLong(Fields.TIME));
 							continue;
 						}
 						if (s.equals("Luminous Flux")) {

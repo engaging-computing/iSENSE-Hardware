@@ -64,7 +64,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 	protected static QDataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
 	private Waffle w;
-	private RestAPI rapi;
 	private API api;
 	
 	@Override
@@ -75,10 +74,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
 		api = API.getInstance(mContext);
 
 		Bundle extras = getIntent().getExtras();
@@ -147,12 +142,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.upload) {
 				
-			if (!rapi.isConnectedToInternet()) {
+			if (!api.hasConnectivity()) {
 				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
 			
-			if (!rapi.isLoggedIn()) {
+			if (api.getCurrentUser() == null) {
 				w.make("Login information not found - please login again", Waffle.IMAGE_X);
 				return;
 			}
