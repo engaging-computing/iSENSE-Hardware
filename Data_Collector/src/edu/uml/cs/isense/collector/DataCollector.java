@@ -52,6 +52,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -85,6 +86,7 @@ import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
@@ -102,7 +104,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// String constants
 	public static final String activityName = "datacollector";
-	public static final String STEP_1_SESSION_NAME = "session_name";
+	public static final String STEP_1_DATASET_NAME = "dataset_name";
 	public static final String STEP_1_SAMPLE_INTERVAL = "sample_interval";
 	public static final String STEP_1_TEST_LENGTH = "test_length";
 
@@ -177,7 +179,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static int dataPointCount = 0;
 
 	// Recording Credentials
-	private static String sessionName;
+	private static String dataSetName;
 	private static long sampleInterval;
 	private static long recordingLength;
 
@@ -205,7 +207,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean manageUploadQueueAfterLogin = false;
 
 	// Strings
-	public static String textToSession = "";
+	public static String textToDataSet = "";
 	public static String toSendOut = "";
 	public static String sdFileName = "";
 
@@ -228,7 +230,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private String s_elapsedMinutes;
 	private String s_elapsedSeconds;
 	private String s_elapsedMillis;
-	private String sessionDescription = "";
+	private String dataSetDescription = "";
 
 	// Booleans
 	private static boolean useMenu = false;
@@ -307,9 +309,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, sessionName + "--" + csvDateString
+			SDFile = new File(folder, dataSetName + "--" + csvDateString
 					+ ".csv");
-			sdFileName = sessionName + " - " + csvDateString;
+			sdFileName = dataSetName + " - " + csvDateString;
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -500,7 +502,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case R.id.menu_item_media:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
-			iMedia.putExtra("sessionName", sessionName);
+			iMedia.putExtra("dataSetName", dataSetName);
 			startActivity(iMedia);
 			return true;
 		}
@@ -687,7 +689,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			disableStep2();
 
 			if (resultCode == RESULT_OK) {
-				sessionDescription = data.getStringExtra("description");
+				dataSetDescription = data.getStringExtra("description");
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
@@ -707,7 +709,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 
 				if (data != null) {
-					sessionName = data.getStringExtra(STEP_1_SESSION_NAME);
+					dataSetName = data.getStringExtra(STEP_1_DATASET_NAME);
 					sampleInterval = data.getLongExtra(STEP_1_SAMPLE_INTERVAL,
 							Step1Setup.S_INTERVAL);
 					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH,
@@ -733,7 +735,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-			int sessionId = -1;
 
 			// Try to obtain a location of upload
 			String city = "", state = "", country = "", addr = "";
@@ -759,16 +760,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			// Prepare description for data set
 			String description;
-			if (sessionDescription.equals(""))
+			if (dataSetDescription.equals(""))
 				description = "Automated Submission Through Android Data Collection App";
 			else
-				description = sessionDescription;
+				description = dataSetDescription;
 
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String eid = mPrefs.getString("experiment_id", "");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projID = mPrefs.getString("project_id", "");
 
 			// Reset the description
-			sessionDescription = "";
+			dataSetDescription = "";
 
 			// Start to upload media and data
 			int pic = MediaManager.pictureArray.size();
@@ -776,8 +777,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// Check for media
 			if (pic != 0) {
 
-				// Associates latest picture with data set, then associates rest
-				// to experiment
+				// Associates latest picture with the current dataSet, then associates rest
+				// to project
 				boolean firstSave = true;
 
 				while (pic > 0) {
@@ -785,19 +786,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// First run through, save data with the picture
 					if (firstSave) {
 						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
-								sessionName, description, eid,
+								dataSetName, description, projID,
 								dataSet.toString(),
-								MediaManager.pictureArray.get(pic - 1),
-								sessionId, city, state, country, addr);
+								MediaManager.pictureArray.get(pic - 1));
 						uq.addDataSetToQueue(ds);
 						firstSave = false;
 
 						// Next set of runs, save the remaining pictures
 					} else {
 						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
-								sessionName, description, eid, null,
-								MediaManager.pictureArray.get(pic - 1),
-								sessionId, city, state, country, addr);
+								dataSetName, description, projID, null,
+								MediaManager.pictureArray.get(pic - 1));
 						uq.addDataSetToQueue(dsp);
 					}
 
@@ -809,9 +808,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Else if no pictures, just save data
 			} else {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, sessionName,
-						description, eid, dataSet.toString(), null, sessionId,
-						city, state, country, addr);
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
+						description, projID, dataSet.toString(), null);
 				uq.addDataSetToQueue(ds);
 			}
 
@@ -852,7 +850,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			MediaManager.mediaCount = 0;
 
-			sessionName = "";
+			dataSetName = "";
 			recordingLength = TEST_LENGTH;
 			sampleInterval = S_INTERVAL;
 
@@ -986,12 +984,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void setUpDFMWithAllFields() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("experiment_id", "-1").commit();
+		mEdit.putString("project_id", "-1").commit();
 
-//		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString( TODO
-//				"experiment_id", "-1")), rapi, mContext, f);
+		// TODO
+		/*dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+				"project_id", "-1")), api, mContext, f);*/
 		dfm.getOrder();
 
 		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
@@ -1022,14 +1021,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private void initDfm() {
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String experimentInput = mPrefs.getString("experiment_id", "");
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
 
-		if (experimentInput.equals("-1")) {
+		if (projectInput.equals("-1")) {
 			setUpDFMWithAllFields();
 		} else {
-//			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi, TODO
-//					mContext, f);
+			// TODO
+			/* dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f); */
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
@@ -1050,7 +1050,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					break;
 			}
 		} catch (NullPointerException e) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 		}
@@ -1177,7 +1177,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
 		step2.setText(getResources().getString(R.string.step2));
-		if (sessionName.equals(""))
+		if (dataSetName.equals(""))
 			disableStep2();
 		step3 = (Button) findViewById(R.id.auto_step3);
 		step3.setText(getResources().getString(R.string.step3));
@@ -1190,8 +1190,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
-		
-		api = API.getInstance(mContext);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(true);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1201,7 +1201,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		sessionName = "";
+		dataSetName = "";
 		sampleInterval = S_INTERVAL;
 		recordingLength = TEST_LENGTH;
 
@@ -1221,8 +1221,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
-		
-		api = API.getInstance(mContext);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(true);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1306,7 +1306,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				Locale.US);
 		Date dt = new Date();
 		dateString = sdf.format(dt);
-		sessionName += " - " + dateString;
+		dataSetName += " - " + dateString;
 
 		// absolutely ensure the timer resets to 0
 		setTime(0);
@@ -1426,7 +1426,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 				if (!running) {
-					if (sessionName.equals("")
+					if (dataSetName.equals("")
 							|| ((1000 / sampleInterval) * recordingLength) > Step1Setup.MAX_DATA_POINTS) {
 						w.make("Some data not found - please setup again",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
@@ -1441,9 +1441,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						OrientationManager.disableRotation((Activity) mContext);
 
-						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-						String experimentInput = mPrefs.getString("experiment_id", "");
-						if (experimentInput.equals("-1"))
+						SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+						String projectInput = mPrefs.getString("project_id", "");
+						if (projectInput.equals("-1"))
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
@@ -1754,7 +1754,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setEnabled(false);
 		step1.setBackgroundColor(Color.TRANSPARENT);
 		step1.setTextColor(Color.parseColor("#555555"));
-		step1.setText("Recording data for \"" + sessionName
+		step1.setText("Recording data for \"" + dataSetName
 				+ "\" at a sample interval of " + sampleInterval + " ms for "
 				+ recordingLength + " sec.");
 

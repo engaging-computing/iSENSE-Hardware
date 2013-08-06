@@ -17,10 +17,8 @@
 package edu.uml.cs.isense.collector;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -37,9 +35,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -66,9 +62,9 @@ import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RProjectField;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -80,7 +76,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		LocationListener {
 
 	public static final String activityName = "manualentry";
-	private static final String PREFERENCES_EXP_ID = "experiment_id";
+	private static final String PREFERENCES_PROJ_ID = "project_id";
 
 	private static final int TYPE_NUMBER_FIELD = 1;
 	private static final int TYPE_TEXT_FIELD = 2;
@@ -188,7 +184,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
+		String exp = expPrefs.getString(PREFERENCES_PROJ_ID, "");
 		if (exp.equals("")) {
 			Intent iExperiment = new Intent(this, Setup.class);
 			iExperiment.putExtra("from_where", "manual");
@@ -206,7 +202,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			clearFields();
 			break;
 		case R.id.manual_save:
-			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
+			String exp = expPrefs.getString(PREFERENCES_PROJ_ID, "");
 
 			// Clear the setError if the user has finally entered a session name
 			if (sessionName.getText().toString().length() != 0)
@@ -260,7 +256,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("EID_MANUAL", 0);
-				loadExperimentData(mPrefs.getString("experiment_id", ""));
+				loadExperimentData(mPrefs.getString(PREFERENCES_PROJ_ID, ""));
 			} else {
 				// they may not have fields on screen now
 			}
@@ -651,7 +647,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID,
+			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_PROJ_ID,
 					"-1"));
 			if (eid != -1) {
 				//fieldOrder = rapi.getExperimentFields(eid);
@@ -667,7 +663,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected void onPostExecute(Void result) {
 
 			if (!error) {
-				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
+				String eid = expPrefs.getString(PREFERENCES_PROJ_ID, "-1");
 
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
@@ -687,8 +683,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog dia;
-		String city = "", state = "", country = "", addr = "";
-		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
+		String eid = expPrefs.getString(PREFERENCES_PROJ_ID, "");
 		QDataSet ds;
 
 		@Override
@@ -708,28 +703,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			try {
-				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(loc.getLatitude(),
-								loc.getLongitude(), 1);
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 			String data = getJSONData();
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
 			ds = new QDataSet(QDataSet.Type.DATA, sessionName.getText()
-					.toString(), uploadTime, eid, data, null, -1, city, state,
-					country, addr);
+					.toString(), uploadTime, eid, data, null);
 
 			return null;
 		}
@@ -806,33 +785,16 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			String city = "", state = "", country = "", addr = "";
-			try {
-				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(loc.getLatitude(),
-						loc.getLongitude(), 1);
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+	
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 			String name = (sessionName.getText().toString().equals("")) ? "(No name provided)"
 					: sessionName.getText().toString();
 
-			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
+			String eid = expPrefs.getString(PREFERENCES_PROJ_ID, null);
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
 					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
-							uploadTime, eid, null, picture,
-							QDataSet.NO_SESSION_DEFINED, city, state, country,
-							addr);
+							uploadTime, eid, null, picture);
 					uq.addDataSetToQueue(picDS);
 
 				}
