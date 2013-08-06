@@ -245,7 +245,7 @@ public class DataWalk extends Activity implements LocationListener,
 							w.make("Finished recording data! Click on Upload to publish data to iSENSE.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 					
 					//w.make("Finished recording data! Click on Upload to publish data to iSENSE.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-					pointsUploadedBox.setText("Points Recorded: " +"testing");
+					pointsUploadedBox.setText("Points Recorded: " +"0");
 					
 					if (savePoint) {
 						SimpleDateFormat sdf = new SimpleDateFormat(
