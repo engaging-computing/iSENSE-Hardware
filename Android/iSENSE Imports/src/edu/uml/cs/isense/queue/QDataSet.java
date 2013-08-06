@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
 /**
@@ -129,12 +129,12 @@ public class QDataSet implements Serializable {
 	 * 
 	 * @return if the upload was successful
 	 */
-	public boolean upload(RestAPI rapi, Context c) {
+	public boolean upload(API api, Context c) {
 		if (this.eid.equals("-1"))
 			return false;
 		
 		if (!this.hasInitialExperiment)
-			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, rapi, c);
+			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, api, c);
 		
 		return upload();
 	}

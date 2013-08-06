@@ -264,7 +264,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			public void run() {
 				if (ds.isUploadable()) {
-					uploadSuccess = ds.upload(rapi, mContext);
+					uploadSuccess = ds.upload(api, mContext);
 				} else {
 					uq.queue.add(ds);
 					uq.storeAndReRetrieveQueue(false);

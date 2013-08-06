@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
@@ -50,7 +49,7 @@ public class Step1Setup extends Activity {
 	public static final int TEST_LENGTH = 600;
 	public static final int MAX_DATA_POINTS = (1000/S_INTERVAL) *TEST_LENGTH;
 	
-	public static RestAPI rapi;
+	public static API api;
 	public static LinkedList<String> acceptedFields;
 	public static DataFieldManager dfm;
 	public static Fields f;
@@ -66,9 +65,7 @@ public class Step1Setup extends Activity {
 
 		mContext = this;
 		w = new Waffle(this);
-		rapi = RestAPI.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(getApplicationContext());
 		f = new Fields();
 		mPrefs = getSharedPreferences("EID", 0);
 		mEdit = mPrefs.edit();
@@ -159,7 +156,7 @@ public class Step1Setup extends Activity {
 		selExp.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!rapi.isConnectedToInternet())
+				if (!api.hasConnectivity())
 					w.make("No internet connectivity found - searching only cached experiments", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				Intent iSetup = new Intent(mContext, Setup.class);
 				iSetup.putExtra("enable_no_exp_button", false);
@@ -197,10 +194,10 @@ public class Step1Setup extends Activity {
 		String exp = mPrefs.getString("experiment_id", "");
 		if (!(exp.equals("") || exp.equals("-1"))) {
 			expLabel.setText("Experiment (currently " + exp + ")");
-			dfm = new DataFieldManager(Integer.parseInt(exp), rapi,
+			dfm = new DataFieldManager(Integer.parseInt(exp), api,
 					mContext, f);
 		} else {
-			dfm = new DataFieldManager(-1, rapi, mContext, f);
+			dfm = new DataFieldManager(-1, api, mContext, f);
 			if (exp.equals("-1"))
 				expCheck.toggle();
 		}
@@ -351,7 +348,7 @@ public class Step1Setup extends Activity {
 			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 			String experimentInput = mPrefs.getString("experiment_id", "");
 
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+			dfm = new DataFieldManager(Integer.parseInt(experimentInput), api,
 					mContext, f);
 			dfm.getOrder();
 			
@@ -376,7 +373,7 @@ public class Step1Setup extends Activity {
 		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
 		String expNum = mPrefs.getString("experiment_id", "");
 		Intent i = new Intent(mContext, ChooseSensorDialog.class);
-		Experiment e = rapi.getExperiment(Integer.parseInt(expNum));
+		Experiment e = api.getExperiment(Integer.parseInt(expNum));
 		i.putExtra("expnum", expNum);
 		if (e != null)
 			i.putExtra("expname", e.name);
