@@ -12,7 +12,7 @@
 #import "ISenseSearch.h"
 #import "StringGrabber.h"
 #import "Constants.h"
-#import "DataFieldManager.h"
+#import <iSENSE_API/DataFieldManager.h>
 #import "iSENSE.h"
 
 @interface ExperimentBrowseViewController : UIViewController <UISearchBarDelegate, UIScrollViewDelegate> {
