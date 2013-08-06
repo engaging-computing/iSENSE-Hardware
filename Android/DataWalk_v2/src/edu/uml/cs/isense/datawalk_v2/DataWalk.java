@@ -42,7 +42,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.datawalk_v2.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoConnect;
@@ -134,8 +134,9 @@ public class DataWalk extends Activity implements LocationListener,
 	static boolean useMenu = true;
 	static boolean beginWrite = true;
 	static boolean uploadPoint = false;
-	static boolean uploadMode = true;
-	static boolean savePoint = false;
+	//TODO
+	static boolean uploadMode = false;
+	static boolean savePoint = true;
 	static boolean thruUpload = false;
 
 	private Handler mHandler;
@@ -147,12 +148,14 @@ public class DataWalk extends Activity implements LocationListener,
 	// private static String loginPass = "iSENSErUS";
 	private static String loginName = "sor";
 	private static String loginPass = "sor";
-	public static String experimentId = "592";
-	public static String defaultExp = "592";
-	private static String baseSessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=";
+	public static String experimentId = "590";
+	public static String defaultExp = "590";
+	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
 	// private static String marketUrl =
 	// "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=406";
+	private static String sessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=406";
+	private static String experimentUrl = "http://isense.cs.uml.edu/experiment.php?id=";
+	private static String baseExperimentUrl = "http://isense.cs.uml.edu/experiment.php?id=";
 
 	private static int waitingCounter = 0;
 	public static final int RESET_REQUESTED = 102;
@@ -189,7 +192,7 @@ public class DataWalk extends Activity implements LocationListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		mHandler = new Handler();
 
@@ -220,7 +223,8 @@ public class DataWalk extends Activity implements LocationListener,
 			public boolean onLongClick(View arg0) {
 
 				timeElapsedBox.setText("Time Elapsed:" + " seconds");
-
+				
+				
 				if (appTimedOut)
 					return false;
 
@@ -233,11 +237,16 @@ public class DataWalk extends Activity implements LocationListener,
 					running = false;
 					thruUpload = false;
 					startStop.setText(getString(R.string.startPrompt));
-
+					
 					timeTimer.cancel();
 					running = false;
 					useMenu = true;
-
+					//TODO
+							w.make("Finished recording data! Click on Upload to publish data to iSENSE.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					
+					//w.make("Finished recording data! Click on Upload to publish data to iSENSE.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					pointsUploadedBox.setText("Points Recorded: " +"testing");
+					
 					if (savePoint) {
 						SimpleDateFormat sdf = new SimpleDateFormat(
 								"MM/dd/yyyy, HH:mm:ss", Locale.US);
@@ -253,6 +262,8 @@ public class DataWalk extends Activity implements LocationListener,
 						if (experimentId.equals("")) {
 							experimentId = defaultExp;
 						}
+						
+						experimentUrl = baseExperimentUrl + experimentId;
 
 						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
 								nameOfSession,
@@ -282,6 +293,7 @@ public class DataWalk extends Activity implements LocationListener,
 						if (dataPointCount >= 1) {
 							Intent i = new Intent(DataWalk.this, ViewData.class);
 							startActivityForResult(i, DIALOG_VIEW_DATA);
+							
 						}
 					}
 
@@ -410,14 +422,15 @@ public class DataWalk extends Activity implements LocationListener,
 									// "592", dataSet.toString(), null, -1,
 									// "", "", "", "");
 									// uq.addDataSetToQueue(ds);
-									mHandler.post(new Runnable() {
+									//TODO
+									/*mHandler.post(new Runnable() {
 										@Override
 										public void run() {
 											w.make("Data Point Saved!",
 													Waffle.LENGTH_SHORT,
 													Waffle.IMAGE_CHECK);
 										}
-									});
+									});*/
 
 								}
 
@@ -516,13 +529,13 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		//TODO
 		if (rapi.isConnectedToInternet()) {
 
-			savePoint = false;
-			uploadPoint = true;
-			uploadMode = true;
-			umbChecked = true;
+			savePoint = true;
+			uploadPoint = false;
+			uploadMode = false;
+			umbChecked = false;
 		}
 		if (umbChecked)
 			uploadMode = true;
@@ -841,7 +854,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 			if (resultCode == RESULT_OK) {
 				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(sessionUrl));
+				i.setData(Uri.parse(experimentUrl));
 				startActivity(i);
 			}
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
@@ -923,6 +936,9 @@ public class DataWalk extends Activity implements LocationListener,
 		}// ends resultCode = dialog_no_connect
 		else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
+			//TODO
+			Intent i = new Intent(DataWalk.this, ViewData.class);
+			startActivityForResult(i, DIALOG_VIEW_DATA);
 		} else if (requestCode == resultGotName) {
 			if (resultCode == RESULT_OK) {
 				if (!inApp)
@@ -1077,6 +1093,10 @@ public class DataWalk extends Activity implements LocationListener,
 			return true;
 		case R.id.About:
 			startActivity(new Intent(this, About.class));
+			return true;
+		case R.id.help:
+			startActivity(new Intent(this, Help.class));
+			Log.d("tag", "!!Help Has been Clicked!!");
 			return true;
 		}
 		return false;

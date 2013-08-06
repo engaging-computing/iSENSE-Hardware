@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.uml.cs.isense"
-    android:versionCode="2"
-    android:versionName="1.1" >
+    package="edu.uml.cs.isense.datawalk_v2"
+    android:versionCode="3"
+    android:versionName="1.2" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,7 +21,7 @@
         android:icon="@drawable/datawalk_logo"
         android:label="@string/app_name" >
         <activity
-            android:name=".datawalk_v2.DataWalk"
+            android:name=".DataWalk"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
@@ -31,89 +31,95 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".datawalk_v2.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/get_name"
            	android:theme="@style/theme_dialog_white" 
            	 >
         </activity>
         <activity
-            android:name=".datawalk_v2.Prefs"
+            android:name=".Prefs"
             android:label="Settings"
             >
         </activity>
-             <activity
-            android:name=".datawalk_v2.Setup2"
+             <activity 
+            android:name=".Setup2"
             android:label="Change Experiment Number"
             android:theme="@style/theme_dialog_white" 
             >
         </activity>
              <activity
-            android:name=".datawalk_v2.NoQr2"
+            android:name=".NoQr2"
             android:label="No Qr"
             >
         </activity>
              <activity
-            android:name=".datawalk_v2.BrowseExperiments2"
+            android:name=".BrowseExperiments2"
             android:label="Browse Experiments"
             >
         </activity>
         <activity
-            android:name=".datawalk_v2.PrefsTwo"
+            android:name=".PrefsTwo"
             android:label="SettingsTwo"
+            android:theme="@style/theme_dialog_white" 
              >
-        </activity>
-        
+        </activity>   
         <activity
-            android:name=".datawalk_v2.CustomOnItemSelectedListener"
+            android:name=".Help"
+            android:label="Help"
+            android:theme="@style/theme_dialog_white">
+             
+        </activity>     
+        <activity
+            android:name=".CustomOnItemSelectedListener"
             android:label="SettingsTesting"
              >
         </activity>
            <activity
-            android:name=".datawalk_v2.PrefsTwoClone"
+            android:name=".PrefsTwoClone"
             android:label="Recording Interval"
             android:theme="@style/theme_dialog_white" 
              >
         </activity>
          <activity
-            android:name=".datawalk_v2.EnterNameActivity"
+            android:name=".EnterNameActivity"
             android:label="Name Activity"
             android:theme="@style/theme_dialog_white" >
         </activity>
          <activity
-            android:name=".datawalk_v2.About"
+            android:name=".About"
             android:label="About" 
             android:theme="@style/theme_dialog_white">
         </activity>
         <activity
-            android:name=".datawalk_v2.LoginIsense"
+            android:name=".LoginIsense"
             android:label="Login to Isense" 
             android:theme="@style/theme_dialog_white">
         </activity>
           <activity
-            android:name=".datawalk_v2.Reset"
+            android:name=".Reset"
             android:label="Reset Settings"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".datawalk_v2.dialogs.NoGps"
+            android:name=".dialogs.NoGps"
             android:label="No Gps Satellites found" 
             android:theme="@style/theme_dialog_white">
         </activity>
         <activity
-            android:name=".datawalk_v2.dialogs.ViewData"
+            android:name=".dialogs.ViewData"
             android:label="View Data"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".datawalk_v2.dialogs.ForceStop"
+            android:name=".dialogs.ForceStop"
             android:label="Data Recording Halted" >
         </activity>
         <activity
-            android:name=".datawalk_v2.dialogs.MenuItemAbout"
+            android:name=".dialogs.MenuItemAbout"
             android:label="About" >
         </activity>
         <activity
-            android:name=".datawalk_v2.dialogs.NoConnect"
+            android:name=".dialogs.NoConnect"
             android:label="No Connectivity" 
             android:theme="@style/theme_dialog_white">
         </activity>
@@ -134,14 +140,14 @@
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".exp.Setup"
+            android:name="edu.uml.cs.isense.exp.Setup"
             android:label="Choose Experiment"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".exp.BrowseExperiments"
+            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
             android:label="@string/select_exp" />
         <activity
-            android:name=".exp.NoQR"
+            android:name="edu.uml.cs.isense.exp.NoQR"
             android:label="No QR Code found" />
     </application>
 
