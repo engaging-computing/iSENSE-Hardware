@@ -161,7 +161,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 				Splash.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
-		expPrefs = getSharedPreferences("EID_MANUAL", 0);
+		expPrefs = getSharedPreferences("PROJID_MANUAL", 0);
 
 		loginLabel = (TextView) findViewById(R.id.loginLabel);
 		loginLabel.setText(getResources().getString(R.string.loggedInAs)
@@ -255,7 +255,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences mPrefs = getSharedPreferences("EID_MANUAL", 0);
+				SharedPreferences mPrefs = getSharedPreferences("PROJID_MANUAL", 0);
 				loadExperimentData(mPrefs.getString(PREFERENCES_PROJ_ID, ""));
 			} else {
 				// they may not have fields on screen now

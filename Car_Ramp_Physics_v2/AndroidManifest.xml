@@ -50,13 +50,13 @@
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name="edu.uml.cs.isense.exp.Setup"
+            android:name="edu.uml.cs.isense.proj.Setup"
             android:label="@string/chooseExperimentTitle"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
-            android:label="@string/select_exp" >
+            android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:label="@string/select_proj" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.exp.NoQR"

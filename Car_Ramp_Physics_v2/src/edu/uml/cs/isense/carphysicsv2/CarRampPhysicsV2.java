@@ -48,7 +48,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,9 +59,8 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.exp.Setup;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -78,7 +76,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private static String password = "sor";
 
 	public static final String baseSessionUrl_Prod = "http://isenseproject.org/highvis.php?sessions=";
-	public static final String baseSessionUrl_Dev = "http://isensedev.cs.uml.edu/highvis.php?sessions=";
+	public static final String baseSessionUrl_Dev = "http://129.63.16.128/projects/25/data_sets/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";
 
@@ -193,14 +191,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		}
 
 		f = new Fields();
-		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
-				mContext, f);
-		dfm.getOrder();
-		//uq = new UploadQueue("carrampphysics", mContext, rapi);
+		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi, mContext, f);
+		uq = new UploadQueue("carrampphysics", mContext, rapi);
 		uq.buildQueueFromFile();
 
-		dateString = "";
+		w = new Waffle(mContext);
 
+		dateString = "";
 
 		mHandler = new Handler();
 
@@ -213,17 +210,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 
-		rapi.deleteSession();
-		rapi.createSession(userName, password);
-			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-					+ userName + " Name: " + firstName + " " + lastInitial);
+		new LoginTask().execute();
+		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+				+ userName + " Name: " + firstName + " " + lastInitial);
 		SharedPreferences prefs2 = getSharedPreferences("EID", 0);
 		experimentNumber = prefs2.getString("experiment_id", null);
 		if (experimentNumber == null)
 			experimentNumber = defaultExp;
-		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
-				mContext, f);
-		dfm.getOrder();
+		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi, mContext, f);
 
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -384,10 +378,15 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								}
 								if (mag) {
 									f.accel_total = toThou.format(accel[3]);
-									Log.d("fantastag", "Magnitude¯ added");
+									Log.d("fantastag", "Magnitude added");
 								}
 
-								dataSet.put(dfm.makeJSONObject());
+								if (rapi.hasConnectivity())
+									dataSet.put(dfm.makeJSONObject());
+								else {
+									dfm.getOrder();
+									dataSet.put(dfm.makeJSONArray());
+								}
 
 							}
 
@@ -427,8 +426,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		if (rapi.hasConnectivity()) {
-			rapi.deleteSession();
-			rapi.createSession(userName, password);
+			new LoginTask().execute();
 
 		} else {
 
@@ -442,9 +440,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 			}
 		}
-		
+
 		if (!rapi.hasConnectivity()) {
-			startActivityForResult(new Intent(mContext, SaveModeDialog.class), SAVE_MODE_REQUESTED);
+			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
+					SAVE_MODE_REQUESTED);
 		}
 
 	}
@@ -541,14 +540,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			choiceViaMenu = false;
 			startStop.setEnabled(true);
 			dataSet = new JSONArray();
-			
-			w.make("Data recording halted.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+
+			w.make("Data recording halted.", Waffle.LENGTH_SHORT,
+					Waffle.IMAGE_X);
 		}
 
 		if (uq != null)
 			uq.buildQueueFromFile();
-		
-		
 
 	}
 
@@ -585,7 +583,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case R.id.login:
-			startActivityForResult(new Intent(this, CarRampLoginActivity.class),LOGIN_STATUS_REQUESTED);
+			startActivityForResult(
+					new Intent(this, CarRampLoginActivity.class),
+					LOGIN_STATUS_REQUESTED);
 			return true;
 		case R.id.record_settings:
 			startActivity(new Intent(this, RecordSettings.class));
@@ -703,9 +703,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				experimentNumber = prefs.getString("experiment_id", null);
 				if (experimentNumber == null)
 					experimentNumber = defaultExp;
-				dfm = new NewDFM(Integer.parseInt(experimentNumber),
-						rapi, mContext, f);
-				dfm.getOrder();
+				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+						mContext, f);
 			}
 		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
@@ -731,6 +730,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						+ data.getStringExtra("username")
 						+ " Name: "
 						+ firstName + " " + lastInitial);
+				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+						mContext, f);
 			}
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -764,16 +765,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
 						0);
 				countdown = length = prefs.getInt("length", 10);
-				rapi.deleteSession();
-				rapi.createSession("sor", "sor");
-					loggedInAs
-							.setText(getResources().getString(
-									R.string.logged_in_as)
-									+ "sor"
-									+ " Name: "
-									+ firstName
-									+ " "
-									+ lastInitial);
+				userName = password = "sor";
+				new LoginTask().execute();
+				loggedInAs.setText(getResources().getString(
+						R.string.logged_in_as)
+						+ "sor" + " Name: " + firstName + " " + lastInitial);
 
 				SharedPreferences eprefs = getSharedPreferences("EID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -790,9 +786,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		} else if (reqCode == SAVE_MODE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				saveMode = true;
+				CarRampPhysicsV2.experimentNumber = "-1";
 			} else {
 				if (!rapi.hasConnectivity()) {
-					startActivityForResult(new Intent(mContext, SaveModeDialog.class), SAVE_MODE_REQUESTED);
+					startActivityForResult(new Intent(mContext,
+							SaveModeDialog.class), SAVE_MODE_REQUESTED);
 				} else {
 					saveMode = false;
 				}
@@ -837,44 +835,25 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (!saveMode) {
 
 				String experimentNumber = CarRampPhysicsV2.experimentNumber;
-				/*if (address == null || address.size() <= 0) {
-					sessionId = rapi.createSession(experimentNumber,
-							nameOfSession + " (location not found)",
-							"Automated Submission Through Android App", "", "",
-							"");
-				} else if (firstName.equals("") || lastInitial.equals("")) {
-					sessionId = rapi.createSession(experimentNumber,
-							"No Name Provided - " + dateString,
-							"Automated Submission Through Android App", "",
-							city + ", " + state, country);
-				} else {
-					sessionId = rapi.createSession(experimentNumber,
-							nameOfSession,
-							"Automated Submission Through Android App", "",
-							city + ", " + state, country);
-				}
-
-				CarRampPhysicsV2.sessionUrl = CarRampPhysicsV2.baseSessionUrl
-						+ sessionId;
-					
-						*/
 				JSONObject data = new JSONObject();
 				try {
 					data.put("data", dataSet);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 
-				rapi.uploadDataSet(Integer.parseInt(experimentNumber), data, nameOfSession);
+				data = rapi.rowsToCols(data);
+
+				rapi.uploadDataSet(Integer.parseInt(experimentNumber), data,
+						nameOfSession);
 				uploadSuccessful = true;
 			} else {
 
 				uploadSuccessful = false;
 				QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
 						"Car Ramp Physics", experimentNumber,
-						dataSet.toString(), null, sessionId, city, state,
-						country, addr);
+						dataSet.toString(), null);
 				CarRampPhysicsV2.uq.addDataSetToQueue(ds);
 
 				return;
@@ -1000,6 +979,43 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
+	}
+
+	public class LoginTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			boolean success = rapi.createSession(userName, password);
+			if (success) {
+				mHandler.post(new Runnable() {
+
+					@Override
+					public void run() {
+						w.make("Login Successful", Waffle.LENGTH_SHORT,
+								Waffle.IMAGE_CHECK);
+
+					}
+
+				});
+
+			} else {
+				if (rapi.hasConnectivity()) {
+					mHandler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							w.make("Login failed!", Waffle.LENGTH_SHORT,
+									Waffle.IMAGE_X);
+
+						}
+
+					});
+
+				}
+			}
+			return null;
+		}
+
 	}
 
 }

@@ -31,7 +31,7 @@ public class API {
 	private static API instance = null;
 	private String baseURL = "";
 	private final String publicURL = "http://129.63.17.17:3000";
-	private final String devURL = "http://rsense.cs.uml.edu";
+	private final String devURL = "http://129.63.16.128";
 	private Context context;
 	String authToken = "";
 	RPerson currentUser;

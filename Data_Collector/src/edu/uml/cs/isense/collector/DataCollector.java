@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -45,14 +44,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -86,7 +82,6 @@ import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
@@ -735,28 +730,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-
-			// Try to obtain a location of upload
-			String city = "", state = "", country = "", addr = "";
-			List<Address> address = null;
-
-			if (api.hasConnectivity()) {
-				try {
-					if (loc != null) {
-						address = new Geocoder(DataCollector.this,
-								Locale.getDefault()).getFromLocation(
-								loc.getLatitude(), loc.getLongitude(), 1);
-						if (address.size() > 0) {
-							city = address.get(0).getLocality();
-							state = address.get(0).getAdminArea();
-							country = address.get(0).getCountryName();
-							addr = address.get(0).getAddressLine(0);
-						}
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 
 			// Prepare description for data set
 			String description;
