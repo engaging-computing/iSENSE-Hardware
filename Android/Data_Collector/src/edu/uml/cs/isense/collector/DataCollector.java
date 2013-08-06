@@ -502,7 +502,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case R.id.menu_item_media:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
-			iMedia.putExtra("sessionName", sessionName);
+			iMedia.putExtra("dataSetName", dataSetName);
 			startActivity(iMedia);
 			return true;
 		}
@@ -689,7 +689,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			disableStep2();
 
 			if (resultCode == RESULT_OK) {
-				sessionDescription = data.getStringExtra("description");
+				dataSetDescription = data.getStringExtra("description");
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
@@ -709,7 +709,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 
 				if (data != null) {
-					sessionName = data.getStringExtra(STEP_1_SESSION_NAME);
+					dataSetName = data.getStringExtra(STEP_1_DATASET_NAME);
 					sampleInterval = data.getLongExtra(STEP_1_SAMPLE_INTERVAL,
 							Step1Setup.S_INTERVAL);
 					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH,
@@ -735,7 +735,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-			int sessionId = -1;
 
 			// Try to obtain a location of upload
 			String city = "", state = "", country = "", addr = "";
@@ -761,16 +760,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			// Prepare description for data set
 			String description;
-			if (sessionDescription.equals(""))
+			if (dataSetDescription.equals(""))
 				description = "Automated Submission Through Android Data Collection App";
 			else
-				description = sessionDescription;
+				description = dataSetDescription;
 
 			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			String projID = mPrefs.getString("project_id", "");
 
 			// Reset the description
-			sessionDescription = "";
+			dataSetDescription = "";
 
 			// Start to upload media and data
 			int pic = MediaManager.pictureArray.size();
@@ -787,19 +786,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// First run through, save data with the picture
 					if (firstSave) {
 						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
-								sessionName, description, projID,
+								dataSetName, description, projID,
 								dataSet.toString(),
 								MediaManager.pictureArray.get(pic - 1),
-								sessionId, city, state, country, addr);
+								dataSetId, city, state, country, addr);
 						uq.addDataSetToQueue(ds);
 						firstSave = false;
 
 						// Next set of runs, save the remaining pictures
 					} else {
 						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
-								sessionName, description, projID, null,
+								dataSetName, description, projID, null,
 								MediaManager.pictureArray.get(pic - 1),
-								sessionId, city, state, country, addr);
+								dataSetId, city, state, country, addr);
 						uq.addDataSetToQueue(dsp);
 					}
 
@@ -811,8 +810,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Else if no pictures, just save data
 			} else {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, sessionName,
-						description, projID, dataSet.toString(), null, sessionId,
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
+						description, projID, dataSet.toString(), null, dataSetId,
 						city, state, country, addr);
 				uq.addDataSetToQueue(ds);
 			}
