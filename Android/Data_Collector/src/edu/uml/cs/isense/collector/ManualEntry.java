@@ -687,7 +687,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog dia;
-		String city = "", state = "", country = "", addr = "";
 		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
 		QDataSet ds;
 
@@ -708,28 +707,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			try {
-				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(loc.getLatitude(),
-								loc.getLongitude(), 1);
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 			String data = getJSONData();
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
 			ds = new QDataSet(QDataSet.Type.DATA, sessionName.getText()
-					.toString(), uploadTime, eid, data, null, -1, city, state,
-					country, addr);
+					.toString(), uploadTime, eid, data, null);
 
 			return null;
 		}
@@ -806,22 +789,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			String city = "", state = "", country = "", addr = "";
-			try {
-				List<Address> address = new Geocoder(ManualEntry.this,
-						Locale.getDefault()).getFromLocation(loc.getLatitude(),
-						loc.getLongitude(), 1);
-				if (address.size() > 0) {
-					city = address.get(0).getLocality();
-					state = address.get(0).getAdminArea();
-					country = address.get(0).getCountryName();
-					addr = address.get(0).getAddressLine(0);
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+	
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 			String name = (sessionName.getText().toString().equals("")) ? "(No name provided)"
 					: sessionName.getText().toString();
@@ -830,9 +798,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
 					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
-							uploadTime, eid, null, picture,
-							QDataSet.NO_SESSION_DEFINED, city, state, country,
-							addr);
+							uploadTime, eid, null, picture);
 					uq.addDataSetToQueue(picDS);
 
 				}
