@@ -50,7 +50,7 @@
     for (ExperimentField *field in fields) {
         
         switch (field.type_id.intValue) {
-            // Temperature (1)
+                // Temperature (1)
             case TEMPERATURE:
                 if (!([field.field_name.lowercaseString rangeOfString:@"f"].location == NSNotFound)) {
                     [order addObject:[FieldGrabber grabField:@"temperature_f"]];
@@ -63,7 +63,7 @@
                 }
                 break;
                 
-            // Potential Altitude (2, 3)
+                // Potential Altitude (2, 3)
             case LENGTH:
             case DISTANCE:
                 if (!([field.field_name.lowercaseString rangeOfString:@"altitude"].location == NSNotFound)) {
@@ -73,19 +73,19 @@
                 }
                 break;
                 
-            // Time (7)
+                // Time (7)
             case TIME:
                 [order addObject:[FieldGrabber grabField:@"time"]];
                 break;
                 
-            // Light (8, 9, 29)
+                // Light (8, 9, 29)
             case LUMINOUS_FLUX:
             case LUMINOUS_INTENSITY:
             case LIGHT:
                 [order addObject:[FieldGrabber grabField:@"luminous_flux"]];
                 break;
                 
-            // Angle (10)
+                // Angle (10)
             case ANGLE:
                 if (!([field.field_name.lowercaseString rangeOfString:@"deg"].location == NSNotFound)) {
                     [order addObject:[FieldGrabber grabField:@"heading_deg"]];
@@ -96,7 +96,7 @@
                 }
                 break;
                 
-            // Geospacial (19)
+                // Geospacial (19)
             case GEOSPACIAL:
                 if (!([field.field_name.lowercaseString rangeOfString:@"lat"].location == NSNotFound)) {
                     [order addObject:[FieldGrabber grabField:@"latitude"]];
@@ -107,7 +107,7 @@
                 }
                 break;
                 
-            // Numeric/Custom (21, 22)
+                // Numeric/Custom (21, 22)
             case NUMERIC:
             case CUSTOM:
                 if (!([field.field_name.lowercaseString rangeOfString:@"mag"].location == NSNotFound)) {
@@ -137,7 +137,7 @@
                 }
                 break;
                 
-            // Acceleration (25)
+                // Acceleration (25)
             case ACCELERATION:
                 if (!([field.field_name.lowercaseString rangeOfString:@"accel"].location == NSNotFound)) {
                     if (!([field.field_name.lowercaseString rangeOfString:@"x"].location == NSNotFound)) {
@@ -154,12 +154,12 @@
                 }
                 break;
                 
-            // Pressure (27)
+                // Pressure (27)
             case PRESSURE:
                 [order addObject:[FieldGrabber grabField:@"pressure"]];
                 break;
                 
-            // No match
+                // No match
             default:
                 [order addObject:[FieldGrabber grabField:@"null_string"]];
                 break;
@@ -171,11 +171,9 @@
 
 
 - (NSMutableArray *) orderDataFromFields:(Fields *)f {
-        
+    
     if (data) data = nil;
     data = [[NSMutableArray alloc] init];
-    
-    NSLog(@"Fields accel_x = %@", [f accel_x]);
     
     for (NSString *s in order) {
         if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]]) {
@@ -355,9 +353,12 @@
     
     for (NSMutableArray *row in oldData) {
         
+        NSLog(@"%@", row.description);
+        
         NSMutableArray *outRow = [[NSMutableArray alloc] init];
         
         for (NSString *s in order) {
+            NSLog(@"World");
             if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]])
                 [outRow addObject:[row objectAtIndex:fACCEL_X]];
             else if ([s isEqualToString:[FieldGrabber grabField:@"accel_y"]])
@@ -404,7 +405,9 @@
                 [outRow addObject:[row objectAtIndex:fGYRO_Z]];
             else
                 [outRow addObject:@""];
+            NSLog(@"NULLFROGS");
         }
+        
         
         [outData addObject:outRow];
     }
