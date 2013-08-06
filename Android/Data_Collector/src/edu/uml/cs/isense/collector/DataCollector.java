@@ -961,9 +961,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString("project_id", "-1").commit();
 
-		// TODO
-		/*dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-				"project_id", "-1")), api, mContext, f);*/
+		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+				"project_id", "-1")), api, mContext, f);
 		dfm.getOrder();
 
 		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
@@ -1000,9 +999,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (projectInput.equals("-1")) {
 			setUpDFMWithAllFields();
 		} else {
-			// TODO
-			/* dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
-					mContext, f); */
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
