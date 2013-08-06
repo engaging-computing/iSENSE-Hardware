@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.exp;
+package edu.uml.cs.isense.proj;
 
 import java.util.ArrayList;
 
@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Experiment;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RProject;
 
-public class ExperimentAdapter extends ArrayAdapter<Experiment> {
-	public ArrayList<Experiment> items;
+public class ProjectAdapter extends ArrayAdapter<RProject> {
+	public ArrayList<RProject> items;
 	private Context mContext;
 	private int resourceID;
 	private int loadingRow;
@@ -23,15 +23,14 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 	private Boolean loading;
 	private UIUpdateTask updateTask;
 	private Handler uiHandler = new Handler();
-	private RestAPI rapi;
+	private API api;
 	public static final int pageSize = 10;
 	public int page = 0;
 	public String action = "browse";
 	public String query = "";
-	private final String sort = "recent";
 
-	public ExperimentAdapter(Context context, int textViewResourceId,
-			int loadingRow, ArrayList<Experiment> items) {
+	public ProjectAdapter(Context context, int textViewResourceId,
+			int loadingRow, ArrayList<RProject> items) {
 		super(context, textViewResourceId, items);
 		this.items = items;
 		mContext = context;
@@ -41,7 +40,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 		allItemsLoaded = false;
 		loading = false;
 		updateTask = new UIUpdateTask();
-		rapi = RestAPI.getInstance();
+		api = API.getInstance(context);
 	}
 
 	public int getCount() {
@@ -51,8 +50,8 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 		return count;
 	}
 
-	public Experiment getItem(int position) {
-		Experiment result;
+	public RProject getItem(int position) {
+		RProject result;
 		synchronized (items) {
 			result = items.get(position);
 		}
@@ -77,19 +76,18 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 		}
 
 		if (!isLastRow && items.size() != 0) {
-			Experiment e = items.get(position);
-			if (e != null) {
+			RProject p = items.get(position);
+			if (p != null) {
 				TextView tt = (TextView) v.findViewById(R.id.toptext);
 				TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 				if (tt != null) {
-					tt.setText(e.name);
+					tt.setText(p.name);
 				}
 				if (bt != null) {
-					if (e.firstname == "" && e.lastname == "") {
+					if (p.owner_name.equals("")) {
 						bt.setVisibility(View.GONE);
 					} else {
-						bt.setText("Created By: " + e.firstname + " "
-								+ e.lastname);
+						bt.setText("Created By: " + p.owner_name);
 					}
 				}
 			}
@@ -112,7 +110,8 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment> {
 
 	class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<Experiment> new_items = rapi.getExperiments(page, pageSize, query, sort);
+			ArrayList<RProject> new_items = api.getProjects(page, pageSize, true);
+
 			if (new_items.size() == 0) {
 				allItemsLoaded = true;
 			} else {

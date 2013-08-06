@@ -29,6 +29,6 @@
         android:id="@+id/android:empty"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="@string/experiments_no_items" />
+        android:text="@string/project_no_items" />
 
 </LinearLayout>
