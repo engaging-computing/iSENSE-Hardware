@@ -76,7 +76,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		LocationListener {
 
 	public static final String activityName = "manualentry";
-	private static final String PREFERENCES_EXP_ID = "experiment_id";
+	private static final String PREFERENCES_PROJ_ID = "project_id";
 
 	private static final int TYPE_NUMBER_FIELD = 1;
 	private static final int TYPE_TEXT_FIELD = 2;
@@ -184,7 +184,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
+		String exp = expPrefs.getString(PREFERENCES_PROJ_ID, "");
 		if (exp.equals("")) {
 			Intent iExperiment = new Intent(this, Setup.class);
 			iExperiment.putExtra("from_where", "manual");
@@ -202,7 +202,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			clearFields();
 			break;
 		case R.id.manual_save:
-			String exp = expPrefs.getString(PREFERENCES_EXP_ID, "");
+			String exp = expPrefs.getString(PREFERENCES_PROJ_ID, "");
 
 			// Clear the setError if the user has finally entered a session name
 			if (sessionName.getText().toString().length() != 0)
@@ -256,7 +256,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("EID_MANUAL", 0);
-				loadExperimentData(mPrefs.getString("experiment_id", ""));
+				loadExperimentData(mPrefs.getString(PREFERENCES_PROJ_ID, ""));
 			} else {
 				// they may not have fields on screen now
 			}
@@ -647,7 +647,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_EXP_ID,
+			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_PROJ_ID,
 					"-1"));
 			if (eid != -1) {
 				//fieldOrder = rapi.getExperimentFields(eid);
@@ -663,7 +663,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected void onPostExecute(Void result) {
 
 			if (!error) {
-				String eid = expPrefs.getString(PREFERENCES_EXP_ID, "-1");
+				String eid = expPrefs.getString(PREFERENCES_PROJ_ID, "-1");
 
 				try {
 					fillDataFieldEntryList(Integer.parseInt(eid));
@@ -683,7 +683,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog dia;
-		String eid = expPrefs.getString(PREFERENCES_EXP_ID, "");
+		String eid = expPrefs.getString(PREFERENCES_PROJ_ID, "");
 		QDataSet ds;
 
 		@Override
@@ -790,7 +790,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String name = (sessionName.getText().toString().equals("")) ? "(No name provided)"
 					: sessionName.getText().toString();
 
-			String eid = expPrefs.getString(PREFERENCES_EXP_ID, null);
+			String eid = expPrefs.getString(PREFERENCES_PROJ_ID, null);
 			if (eid != null) {
 				for (File picture : MediaManager.pictureArray) {
 					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,

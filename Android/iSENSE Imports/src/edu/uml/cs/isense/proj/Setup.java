@@ -88,7 +88,7 @@ public class Setup extends Activity implements OnClickListener {
 		}
 		
 		mPrefs = getSharedPreferences(prefsString, 0);
-		String eid = mPrefs.getString("experiment_id", "").equals("-1") ? "" : mPrefs.getString("experiment_id", "");
+		String eid = mPrefs.getString("project_id", "").equals("-1") ? "" : mPrefs.getString("project_id", "");
 		
 		eidInput = (EditText) findViewById(R.id.experimentInput);
 		eidInput.setText(eid);
@@ -107,7 +107,7 @@ public class Setup extends Activity implements OnClickListener {
 			if (pass) {
 				
 				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putString("experiment_id",
+				mEditor.putString("project_id",
 						eidInput.getText().toString()).commit();
 
 				setResult(RESULT_OK);
