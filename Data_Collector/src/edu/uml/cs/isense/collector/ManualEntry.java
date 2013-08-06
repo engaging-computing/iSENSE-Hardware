@@ -135,7 +135,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		api = API.getInstance(mContext);
 		api.useDev(true);
 		
-		new GetDataSetTask().execute(); // remove TODO
+		//new GetDataSetTask().execute(); // remove TODO
 		
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
