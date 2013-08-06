@@ -42,7 +42,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.datawalk_v2.R;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoConnect;
@@ -147,12 +147,12 @@ public class DataWalk extends Activity implements LocationListener,
 	// private static String loginPass = "iSENSErUS";
 	private static String loginName = "sor";
 	private static String loginPass = "sor";
-	public static String experimentId = "592";
-	public static String defaultExp = "592";
-	private static String baseSessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=";
+	public static String experimentId = "588";
+	public static String defaultExp = "588";
+	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
 	// private static String marketUrl =
 	// "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "http://isensedev.cs.uml.edu/highvis.php?sessions=406";
+	private static String sessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=406";
 
 	private static int waitingCounter = 0;
 	public static final int RESET_REQUESTED = 102;
@@ -189,7 +189,7 @@ public class DataWalk extends Activity implements LocationListener,
 				.getInstance(
 						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
 						getApplicationContext());
-		rapi.useDev(true);
+		rapi.useDev(false);
 
 		mHandler = new Handler();
 
@@ -282,6 +282,7 @@ public class DataWalk extends Activity implements LocationListener,
 						if (dataPointCount >= 1) {
 							Intent i = new Intent(DataWalk.this, ViewData.class);
 							startActivityForResult(i, DIALOG_VIEW_DATA);
+							
 						}
 					}
 
@@ -1077,6 +1078,10 @@ public class DataWalk extends Activity implements LocationListener,
 			return true;
 		case R.id.About:
 			startActivity(new Intent(this, About.class));
+			return true;
+		case R.id.help:
+			startActivity(new Intent(this, Help.class));
+			Log.d("tag", "!!Help Has been Clicked!!");
 			return true;
 		}
 		return false;
