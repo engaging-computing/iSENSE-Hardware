@@ -777,7 +777,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// Check for media
 			if (pic != 0) {
 
-				// Associates latest picture with data set, then associates rest
+				// Associates latest picture with the current dataSet, then associates rest
 				// to project
 				boolean firstSave = true;
 
@@ -788,8 +788,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
 								dataSetName, description, projID,
 								dataSet.toString(),
-								MediaManager.pictureArray.get(pic - 1),
-								dataSetId, city, state, country, addr);
+								MediaManager.pictureArray.get(pic - 1));
 						uq.addDataSetToQueue(ds);
 						firstSave = false;
 
@@ -797,8 +796,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
 								dataSetName, description, projID, null,
-								MediaManager.pictureArray.get(pic - 1),
-								dataSetId, city, state, country, addr);
+								MediaManager.pictureArray.get(pic - 1));
 						uq.addDataSetToQueue(dsp);
 					}
 
@@ -811,8 +809,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				// Else if no pictures, just save data
 			} else {
 				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
-						description, projID, dataSet.toString(), null, dataSetId,
-						city, state, country, addr);
+						description, projID, dataSet.toString(), null);
 				uq.addDataSetToQueue(ds);
 			}
 
@@ -853,7 +850,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			MediaManager.mediaCount = 0;
 
-			sessionName = "";
+			dataSetName = "";
 			recordingLength = TEST_LENGTH;
 			sampleInterval = S_INTERVAL;
 
@@ -1180,7 +1177,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
 		step2.setText(getResources().getString(R.string.step2));
-		if (sessionName.equals(""))
+		if (dataSetName.equals(""))
 			disableStep2();
 		step3 = (Button) findViewById(R.id.auto_step3);
 		step3.setText(getResources().getString(R.string.step3));
@@ -1196,7 +1193,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		api = API.getInstance(getApplicationContext());
 		api.useDev(true);
 
-		uq = new UploadQueue("datacollector", mContext);
+		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1204,7 +1201,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		sessionName = "";
+		dataSetName = "";
 		sampleInterval = S_INTERVAL;
 		recordingLength = TEST_LENGTH;
 
@@ -1309,7 +1306,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				Locale.US);
 		Date dt = new Date();
 		dateString = sdf.format(dt);
-		sessionName += " - " + dateString;
+		dataSetName += " - " + dateString;
 
 		// absolutely ensure the timer resets to 0
 		setTime(0);
@@ -1429,7 +1426,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 				if (!running) {
-					if (sessionName.equals("")
+					if (dataSetName.equals("")
 							|| ((1000 / sampleInterval) * recordingLength) > Step1Setup.MAX_DATA_POINTS) {
 						w.make("Some data not found - please setup again",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
