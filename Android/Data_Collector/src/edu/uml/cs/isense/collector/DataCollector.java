@@ -85,6 +85,7 @@ import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.sync.SyncTime;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -103,7 +104,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// String constants
 	public static final String activityName = "datacollector";
-	public static final String STEP_1_SESSION_NAME = "session_name";
+	public static final String STEP_1_DATASET_NAME = "dataset_name";
 	public static final String STEP_1_SAMPLE_INTERVAL = "sample_interval";
 	public static final String STEP_1_TEST_LENGTH = "test_length";
 
@@ -178,7 +179,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static int dataPointCount = 0;
 
 	// Recording Credentials
-	private static String sessionName;
+	private static String dataSetName;
 	private static long sampleInterval;
 	private static long recordingLength;
 
@@ -206,7 +207,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean manageUploadQueueAfterLogin = false;
 
 	// Strings
-	public static String textToSession = "";
+	public static String textToDataSet = "";
 	public static String toSendOut = "";
 	public static String sdFileName = "";
 
@@ -229,7 +230,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private String s_elapsedMinutes;
 	private String s_elapsedSeconds;
 	private String s_elapsedMillis;
-	private String sessionDescription = "";
+	private String dataSetDescription = "";
 
 	// Booleans
 	private static boolean useMenu = false;
@@ -255,7 +256,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Context mContext;
 
 	// Custom
-	public static RestAPI rapi;
+	public static API api;
 	public static Waffle w;
 	public static DataFieldManager dfm;
 	public static Fields f;
@@ -308,9 +309,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, sessionName + "--" + csvDateString
+			SDFile = new File(folder, dataSetName + "--" + csvDateString
 					+ ".csv");
-			sdFileName = sessionName + " - " + csvDateString;
+			sdFileName = dataSetName + " - " + csvDateString;
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -740,7 +741,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			String city = "", state = "", country = "", addr = "";
 			List<Address> address = null;
 
-			if (rapi.isConnectedToInternet()) {
+			if (api.hasConnectivity()) {
 				try {
 					if (loc != null) {
 						address = new Geocoder(DataCollector.this,
@@ -765,8 +766,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			else
 				description = sessionDescription;
 
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String eid = mPrefs.getString("experiment_id", "");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projID = mPrefs.getString("project_id", "");
 
 			// Reset the description
 			sessionDescription = "";
@@ -778,7 +779,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (pic != 0) {
 
 				// Associates latest picture with data set, then associates rest
-				// to experiment
+				// to project
 				boolean firstSave = true;
 
 				while (pic > 0) {
@@ -786,7 +787,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// First run through, save data with the picture
 					if (firstSave) {
 						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
-								sessionName, description, eid,
+								sessionName, description, projID,
 								dataSet.toString(),
 								MediaManager.pictureArray.get(pic - 1),
 								sessionId, city, state, country, addr);
@@ -796,7 +797,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						// Next set of runs, save the remaining pictures
 					} else {
 						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
-								sessionName, description, eid, null,
+								sessionName, description, projID, null,
 								MediaManager.pictureArray.get(pic - 1),
 								sessionId, city, state, country, addr);
 						uq.addDataSetToQueue(dsp);
@@ -811,7 +812,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				// Else if no pictures, just save data
 			} else {
 				QDataSet ds = new QDataSet(QDataSet.Type.DATA, sessionName,
-						description, eid, dataSet.toString(), null, sessionId,
+						description, projID, dataSet.toString(), null, sessionId,
 						city, state, country, addr);
 				uq.addDataSetToQueue(ds);
 			}
@@ -887,7 +888,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				DataCollector.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
-		boolean success = rapi.login(mPrefs.getString("username", ""),
+		boolean success = api.createSession(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 		if (!success) {
 			// This is crazy, so Waffle me maybe?
@@ -987,12 +988,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void setUpDFMWithAllFields() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("experiment_id", "-1").commit();
+		mEdit.putString("project_id", "-1").commit();
 
-		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-				"experiment_id", "-1")), rapi, mContext, f);
+		// TODO
+		/*dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+				"project_id", "-1")), api, mContext, f);*/
 		dfm.getOrder();
 
 		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
@@ -1023,14 +1025,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private void initDfm() {
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String experimentInput = mPrefs.getString("experiment_id", "");
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
 
-		if (experimentInput.equals("-1")) {
+		if (projectInput.equals("-1")) {
 			setUpDFMWithAllFields();
 		} else {
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
-					mContext, f);
+			// TODO
+			/* dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f); */
 			dfm.getOrder();
 
 			sc = dfm.checkCompatibility();
@@ -1051,7 +1054,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					break;
 			}
 		} catch (NullPointerException e) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 		}
@@ -1191,13 +1194,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(true);
 
-		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq = new UploadQueue("datacollector", mContext);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1225,13 +1225,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(true);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(true);
 
-		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1448,9 +1445,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						OrientationManager.disableRotation((Activity) mContext);
 
-						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-						String experimentInput = mPrefs.getString("experiment_id", "");
-						if (experimentInput.equals("-1"))
+						SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+						String projectInput = mPrefs.getString("project_id", "");
+						if (projectInput.equals("-1"))
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
@@ -1568,7 +1565,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 										Context.MODE_PRIVATE));
 
 				if ((mPrefs.getString("username", "").equals(""))) {
-					if (rapi.isConnectedToInternet()) {
+					if (api.hasConnectivity()) {
 						manageUploadQueueAfterLogin = true;
 						Intent iCanLogin = new Intent(mContext, CanLogin.class);
 						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
@@ -1761,7 +1758,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setEnabled(false);
 		step1.setBackgroundColor(Color.TRANSPARENT);
 		step1.setTextColor(Color.parseColor("#555555"));
-		step1.setText("Recording data for \"" + sessionName
+		step1.setText("Recording data for \"" + dataSetName
 				+ "\" at a sample interval of " + sampleInterval + " ms for "
 				+ recordingLength + " sec.");
 
