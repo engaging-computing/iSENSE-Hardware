@@ -9,6 +9,7 @@ import org.json.JSONObject;
  */
 public class RDataSet {
     public int ds_id;
+    public int project_id;
     public boolean hidden = false;
     public String name = "";
     public String url = "";
