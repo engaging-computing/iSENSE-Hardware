@@ -34,7 +34,7 @@ public class Setup extends Activity implements OnClickListener {
 	private static final int EXPERIMENT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
 	
-	private static String prefsString = "EID";
+	private static String prefsString = "PROJID";
 
 	
 	@Override
@@ -73,14 +73,14 @@ public class Setup extends Activity implements OnClickListener {
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
-					prefsString = "EID_MANUAL";
+					prefsString = "PROJID_MANUAL";
 				} else if (fromWhere.equals("queue")) {
-					prefsString = "EID_QUEUE";
+					prefsString = "PROJID_QUEUE";
 				} else {
-					prefsString = "EID";
+					prefsString = "PROJID";
 				}
 			} else {
-				prefsString = "EID";
+				prefsString = "PROJID";
 			}
 			
 		} else {

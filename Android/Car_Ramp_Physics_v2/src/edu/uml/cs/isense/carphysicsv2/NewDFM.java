@@ -9,12 +9,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.objects.RProjectField;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class NewDFM extends Application {
 
@@ -37,7 +41,8 @@ public class NewDFM extends Application {
 		this.mContext = mContext;
 		this.dataSet = new JSONArray();
 		this.f = f;
-		expFields = rapi.getProjectFields(eid);
+		if (rapi.hasConnectivity())
+			new getFieldsTask().execute();
 	}
 
 	// Static class function strictly for getting the field order of any
@@ -213,12 +218,15 @@ public class NewDFM extends Application {
 		JSONObject thisRow = new JSONObject();
 
 		try {
-			for (RProjectField field : expFields) {
+			System.out.println("Fields:" + expFields);
+			for (int i = 0; i < expFields.size(); i++) {
+				RProjectField field = expFields.get(i);
+				System.out.println("Type: " + field.type);
 				switch (field.type) {
 
 				// Time
 				case 1:
-					thisRow.put("" + field.field_id, f.timeMillis);
+					thisRow.put(Integer.toString(i), "u " + f.timeMillis);
 					break;
 
 				// Number
@@ -229,21 +237,21 @@ public class NewDFM extends Application {
 							.contains("accel")) {
 						if (field.name.toLowerCase(Locale.ENGLISH)
 								.contains("x")) {
-							thisRow.put("" + field.field_id, f.accel_x);
+							thisRow.put(Integer.toString(i), f.accel_x);
 						}
 						if (field.name.toLowerCase(Locale.ENGLISH)
 								.contains("y")) {
-							thisRow.put("" + field.field_id, f.accel_y);
+							thisRow.put(Integer.toString(i), f.accel_y);
 						}
 						if (field.name.toLowerCase(Locale.ENGLISH)
 								.contains("z")) {
-							thisRow.put("" + field.field_id, f.accel_z);
+							thisRow.put(Integer.toString(i), f.accel_z);
 						}
 						if (field.name.toLowerCase(Locale.ENGLISH).contains(
 								"total")
 								|| field.name.toLowerCase(Locale.ENGLISH)
 										.contains("mag")) {
-							thisRow.put("" + field.field_id, f.accel_z);
+							thisRow.put(Integer.toString(i), f.accel_z);
 						}
 					}
 					// Magnetic
@@ -251,21 +259,21 @@ public class NewDFM extends Application {
 							"mag")) {
 						if (field.name.toLowerCase(Locale.ENGLISH)
 								.contains("x")) {
-							thisRow.put("" + field.field_id, f.mag_x);
+							thisRow.put(Integer.toString(i), f.mag_x);
 						}
 						if (field.name.toLowerCase(Locale.ENGLISH)
 								.contains("y")) {
-							thisRow.put("" + field.field_id, f.mag_y);
+							thisRow.put(Integer.toString(i), f.mag_y);
 						}
 						if (field.name.toLowerCase(Locale.ENGLISH)
 								.contains("z")) {
-							thisRow.put("" + field.field_id, f.mag_z);
+							thisRow.put(Integer.toString(i), f.mag_z);
 						}
 						if (field.name.toLowerCase(Locale.ENGLISH).contains(
 								"total")
 								|| field.name.toLowerCase(Locale.ENGLISH)
 										.contains("mag")) {
-							thisRow.put("" + field.field_id, f.mag_total);
+							thisRow.put(Integer.toString(i), f.mag_total);
 						}
 					}
 					// Angle
@@ -275,10 +283,10 @@ public class NewDFM extends Application {
 									"head")) {
 						if (field.unit.toLowerCase(Locale.ENGLISH).contains(
 								"deg")) {
-							thisRow.put("" + field.field_id, f.angle_deg);
+							thisRow.put(Integer.toString(i), f.angle_deg);
 						} else if (field.unit.toLowerCase(Locale.ENGLISH)
 								.contains("rad")) {
-							thisRow.put("" + field.field_id, f.angle_rad);
+							thisRow.put(Integer.toString(i), f.angle_rad);
 						}
 					}
 					// Temperature
@@ -286,13 +294,13 @@ public class NewDFM extends Application {
 							"temp")) {
 						if (field.unit.toLowerCase(Locale.ENGLISH)
 								.contains("f")) {
-							thisRow.put("" + field.field_id, f.temperature_f);
+							thisRow.put(Integer.toString(i), f.temperature_f);
 						} else if (field.unit.toLowerCase(Locale.ENGLISH)
 								.contains("c")) {
-							thisRow.put("" + field.field_id, f.temperature_c);
+							thisRow.put(Integer.toString(i), f.temperature_c);
 						} else if (field.unit.toLowerCase(Locale.ENGLISH)
 								.contains("k")) {
-							thisRow.put("" + field.field_id, f.temperature_k);
+							thisRow.put(Integer.toString(i), f.temperature_k);
 						}
 					}
 					// Pressure
@@ -302,17 +310,17 @@ public class NewDFM extends Application {
 									"ppi")
 							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
 									"psi")) {
-						thisRow.put("" + field.field_id, f.pressure);
+						thisRow.put(Integer.toString(i), f.pressure);
 					}
 					// Altitude
 					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
 							"alt")) {
-						thisRow.put("" + field.field_id, f.altitude);
+						thisRow.put(Integer.toString(i), f.altitude);
 					}
 					// Luminous Flux
 					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
 							"flux")) {
-						thisRow.put("" + field.field_id, f.lux);
+						thisRow.put(Integer.toString(i), f.lux);
 					}
 
 					break;
@@ -324,12 +332,12 @@ public class NewDFM extends Application {
 
 				// Latitude
 				case 4:
-					order.add(mContext.getString(R.string.latitude));
+					thisRow.put(Integer.toString(i), f.latitude);
 					break;
 
 				// Longitude
 				case 5:
-					order.add(mContext.getString(R.string.longitude));
+					thisRow.put(Integer.toString(i), f.longitude);
 					break;
 
 				}
@@ -338,10 +346,12 @@ public class NewDFM extends Application {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("Data:" + thisRow);
 		return thisRow;
 	}
 
-	public JSONArray putData() {
+	public JSONArray makeJSONArray() {
 
 		JSONArray dataJSON = new JSONArray();
 
@@ -612,99 +622,108 @@ public class NewDFM extends Application {
 
 	// For use if a clump of data was recorded and needs to be cut down and
 	// re-ordered
-	public static String reOrderData(JSONArray data, String eid, API rapi,
+	public static String reOrderData(JSONArray data, String projID, API api,
 			Context c) {
-		JSONArray row, outData = new JSONArray(), outRow;
+		JSONArray row, outData = new JSONArray();
+		JSONObject outRow;
 		int len = data.length();
-		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(eid), rapi, c);
+		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(projID), api,
+				c);
 
 		for (int i = 0; i < len; i++) {
 			try {
 				row = data.getJSONArray(i);
-				outRow = new JSONArray();
+				outRow = new JSONObject();
 
-				for (String s : fieldOrder) {
+				for (int j = 0; j < fieldOrder.size(); j++) {
+					String s = fieldOrder.get(j);
 					try {
 						// Future TODO - I want to get the android
 						// R.string.accel_x for e.g. here but I need a context,
 						// so find a fix later
 						if (s.equals("Accel-X")) {
-							outRow.put(row.getString(Fields.ACCEL_X));
+							outRow.put(j + "", row.getString(Fields.ACCEL_X));
 							continue;
 						}
 						if (s.equals("Accel-Y")) {
-							outRow.put(row.getString(Fields.ACCEL_Y));
+							outRow.put(j + "", row.getString(Fields.ACCEL_Y));
 							continue;
 						}
 						if (s.equals("Accel-Z")) {
-							outRow.put(row.getString(Fields.ACCEL_Z));
+							outRow.put(j + "", row.getString(Fields.ACCEL_Z));
 							continue;
 						}
 						if (s.equals("Accel-Total")) {
-							outRow.put(row.getString(Fields.ACCEL_TOTAL));
+							outRow.put(j + "",
+									row.getString(Fields.ACCEL_TOTAL));
 							continue;
 						}
 						if (s.equals("Temperature-C")) {
-							outRow.put(row.getString(Fields.TEMPERATURE_C));
+							outRow.put(j + "",
+									row.getString(Fields.TEMPERATURE_C));
 							continue;
 						}
 						if (s.equals("Temperature-F")) {
-							outRow.put(row.getString(Fields.TEMPERATURE_F));
+							outRow.put(j + "",
+									row.getString(Fields.TEMPERATURE_F));
 							continue;
 						}
 						if (s.equals("Temperature-K")) {
-							outRow.put(row.getString(Fields.TEMPERATURE_K));
+							outRow.put(j + "",
+									row.getString(Fields.TEMPERATURE_K));
 							continue;
 						}
 						if (s.equals("Time")) {
-							outRow.put(row.getLong(Fields.TIME));
+							outRow.put(j + "", row.getLong(Fields.TIME));
 							continue;
 						}
 						if (s.equals("Luminous Flux")) {
-							outRow.put(row.getString(Fields.LIGHT));
+							outRow.put(j + "", row.getString(Fields.LIGHT));
 							continue;
 						}
 						if (s.equals("Heading-Deg")) {
-							outRow.put(row.getString(Fields.HEADING_DEG));
+							outRow.put(j + "",
+									row.getString(Fields.HEADING_DEG));
 							continue;
 						}
 						if (s.equals("Heading-Rad")) {
-							outRow.put(row.getString(Fields.HEADING_RAD));
+							outRow.put(j + "",
+									row.getString(Fields.HEADING_RAD));
 							continue;
 						}
 						if (s.equals("Latitude")) {
-							outRow.put(row.getDouble(Fields.LATITUDE));
+							outRow.put(j + "", row.getDouble(Fields.LATITUDE));
 							continue;
 						}
 						if (s.equals("Longitude")) {
-							outRow.put(row.getDouble(Fields.LONGITUDE));
+							outRow.put(j + "", row.getDouble(Fields.LONGITUDE));
 							continue;
 						}
 						if (s.equals("Magnetic-X")) {
-							outRow.put(row.getString(Fields.MAG_X));
+							outRow.put(j + "", row.getString(Fields.MAG_X));
 							continue;
 						}
 						if (s.equals("Magnetic-Y")) {
-							outRow.put(row.getString(Fields.MAG_Y));
+							outRow.put(j + "", row.getString(Fields.MAG_Y));
 							continue;
 						}
 						if (s.equals("Magnetic-Z")) {
-							outRow.put(row.getString(Fields.MAG_Z));
+							outRow.put(j + "", row.getString(Fields.MAG_Z));
 							continue;
 						}
 						if (s.equals("Magnetic-Total")) {
-							outRow.put(row.getString(Fields.MAG_TOTAL));
+							outRow.put(j + "", row.getString(Fields.MAG_TOTAL));
 							continue;
 						}
 						if (s.equals("Altitude")) {
-							outRow.put(row.getString(Fields.ALTITUDE));
+							outRow.put(j + "", row.getString(Fields.ALTITUDE));
 							continue;
 						}
 						if (s.equals("Pressure")) {
-							outRow.put(row.getString(Fields.PRESSURE));
+							outRow.put(j + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
-						outRow.put(null);
+						outRow.put(j + "", null);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -725,6 +744,28 @@ public class NewDFM extends Application {
 
 	public void setContext(Context c) {
 		this.mContext = c;
+	}
+
+	public class getFieldsTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+
+			expFields = rapi.getProjectFields(eid);
+			return null;
+
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+
+		}
+
 	}
 
 }
