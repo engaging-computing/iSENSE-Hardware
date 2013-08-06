@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text="@string/session_name"
+            android:text="@string/data_set_name"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="@android:color/transparent"
-            android:text="@string/menu_experiment"
+            android:text="@string/menu_project"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -89,7 +89,7 @@
             android:id="@+id/step1_select_exp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_exp" />
+            android:text="@string/select_proj" />
 
         <CheckBox
             android:id="@+id/step1_checkbox"

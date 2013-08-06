@@ -17,7 +17,7 @@
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:text="@string/chooseExperiment"
+            android:text="@string/chooseProject"
             android:textSize="16sp" />
 
         <EditText
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/no_experiment_now"
+        android:text="@string/no_project_now"
         android:textSize="18sp" />
 
     <View
