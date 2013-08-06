@@ -131,7 +131,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		api = API.getInstance(mContext);
 		api.useDev(true);
 		
-		new GetDataSetTask().execute(); // remove TODO
+		//new GetDataSetTask().execute(); // remove TODO
 		
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
@@ -308,6 +308,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 				R.string.usingProject)
 				+ eid);
 
+		int tagIndex = 0;
+		
 		for (RProjectField projField : fieldOrder) {
 
 //			if (expField.type_id == expField.GEOSPACIAL) {
@@ -325,26 +327,28 @@ public class ManualEntry extends Activity implements OnClickListener,
 			switch (projField.type) {
 			
 			case RProjectField.TYPE_LAT:
-				addDataField(projField, TYPE_LATITUDE);
+				addDataField(projField, TYPE_LATITUDE, tagIndex);
 				break;
 				
 			case RProjectField.TYPE_LON:
-				addDataField(projField, TYPE_LONGITUDE);
+				addDataField(projField, TYPE_LONGITUDE, tagIndex);
 				break;
 				
 			case RProjectField.TYPE_TIMESTAMP:
-				addDataField(projField, TYPE_TIME);
+				addDataField(projField, TYPE_TIME, tagIndex);
 				break;
 				
 			case RProjectField.TYPE_TEXT:
-				addDataField(projField, TYPE_TEXT_FIELD);
+				addDataField(projField, TYPE_TEXT_FIELD, tagIndex);
 				break;
 				
 			default:
-				addDataField(projField, TYPE_NUMBER_FIELD);
+				addDataField(projField, TYPE_NUMBER_FIELD, tagIndex);
 				break;
 			
 			}
+			
+			tagIndex++;
 			
 		}
 
@@ -352,7 +356,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	}
 
-	private void addDataField(RProjectField projField, int type) {
+	private void addDataField(RProjectField projField, int type, int tagIndex) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
@@ -363,7 +367,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		fieldContents.setSingleLine(true);
 		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		fieldContents.setTag(projField.field_id); // TODO - new tags :D!
+		fieldContents.setTag(tagIndex); // TODO - new tags :D!
 		
 		if (type != TYPE_NUMBER_FIELD && type != TYPE_TEXT_FIELD) {
 			fieldContents.setText("Auto");
@@ -537,7 +541,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 					row.put(id, "" + loc.getLongitude());
 				} else if (name.contains("time")) {
 					//row.put("" + System.currentTimeMillis());
-					row.put(id, "" + System.currentTimeMillis());
+					row.put(id, "u " + System.currentTimeMillis());
 				}
 //				} else {
 //					// Shouldn't have gotten here... we'll insert -1 as a
