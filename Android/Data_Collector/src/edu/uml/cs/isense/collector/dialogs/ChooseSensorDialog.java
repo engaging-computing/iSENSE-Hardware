@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -214,7 +215,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	}
 	
 	private void buildPrefsString() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		
 		StringBuilder sb = new StringBuilder();
