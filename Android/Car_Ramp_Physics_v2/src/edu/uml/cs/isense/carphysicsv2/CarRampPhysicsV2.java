@@ -60,7 +60,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.exp.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -105,7 +104,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	static final public int CAMERA_PIC_REQUESTED = 1;
 	static final public int CAMERA_VID_REQUESTED = 2;
 
-	public DataFieldManager dfm;
+	public NewDFM dfm;
 	public Fields f;
 
 	private int countdown;
@@ -117,7 +116,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
 	public static boolean appTimedOut = false;
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 	public static boolean saveMode = false;
 
 	private MediaPlayer mMediaPlayer;
@@ -193,15 +192,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		}
 
 		f = new Fields();
-		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
+		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
 				mContext, f);
 		dfm.getOrder();
-		uq = new UploadQueue("carrampphysics", mContext, rapi);
+		//uq = new UploadQueue("carrampphysics", mContext, rapi);
 		uq.buildQueueFromFile();
 
 		dateString = "";
 
-		w = new Waffle(mContext);
 
 		mHandler = new Handler();
 
@@ -214,21 +212,15 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 
-		boolean success = rapi.login(userName, password);
-
-		if (success) {
+		rapi.deleteSession();
+		rapi.createSession(userName, password);
 			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 					+ userName + " Name: " + firstName + " " + lastInitial);
-		} else {
-			if (rapi.hasConnectivity())
-				w.make("Login Error", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-		}
-
 		SharedPreferences prefs2 = getSharedPreferences("EID", 0);
 		experimentNumber = prefs2.getString("experiment_id", null);
 		if (experimentNumber == null)
 			experimentNumber = defaultExp;
-		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
+		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
 				mContext, f);
 		dfm.getOrder();
 
@@ -434,16 +426,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		if (rapi.hasConnectivity()) {
-			success = rapi.login(userName, password);
-			if (!success) {
-				if (rapi.connection == "600") {
-					w.make("Connection timed out.", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_X);
-					appTimedOut = true;
-				} else {
-
-				}
-			}
+			rapi.deleteSession();
+			rapi.createSession(userName, password);
 
 		} else {
 
@@ -718,7 +702,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				experimentNumber = prefs.getString("experiment_id", null);
 				if (experimentNumber == null)
 					experimentNumber = defaultExp;
-				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
+				dfm = new NewDFM(Integer.parseInt(experimentNumber),
 						rapi, mContext, f);
 				dfm.getOrder();
 			}
@@ -779,9 +763,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
 						0);
 				countdown = length = prefs.getInt("length", 10);
-				boolean success = rapi.login("sor", "sor");
-
-				if (success) {
+				rapi.deleteSession();
+				rapi.createSession("sor", "sor");
 					loggedInAs
 							.setText(getResources().getString(
 									R.string.logged_in_as)
@@ -790,11 +773,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									+ firstName
 									+ " "
 									+ lastInitial);
-				} else {
-					if (rapi.hasConnectivity())
-						w.make("Login Error", Waffle.LENGTH_SHORT,
-								Waffle.IMAGE_X);
-				}
 
 				SharedPreferences eprefs = getSharedPreferences("EID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -879,6 +857,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						+ sessionId;
 */
 				JSONObject dataToBeUploaded;
+				dataToBeUploaded = rapi.
 				rapi.uploadDataSet(Integer.parseInt(experimentNumber), dataSet, nameOfSession);
 				//rapi.putSessionData(sessionId, experimentNumber, dataSet);
 				uploadSuccessful = true;
