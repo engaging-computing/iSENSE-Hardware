@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.datawalk_v2.R;
 
 public class PrefsTwoClone extends Activity{
 	private Spinner spinner1;

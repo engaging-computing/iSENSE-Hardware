@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.datawalk_v2.R;
 
 public class Reset extends Activity {
 	Button resetYes, resetNo;

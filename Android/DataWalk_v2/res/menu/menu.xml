@@ -49,5 +49,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/ResetDefaults_Title">
     </item>
+    <item
+        android:id="@+id/help"
+        android:showAsAction="ifRoom"
+        android:title="Help">
+    </item>
 
 </menu>

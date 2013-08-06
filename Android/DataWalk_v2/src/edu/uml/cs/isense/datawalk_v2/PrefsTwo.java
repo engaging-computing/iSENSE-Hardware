@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.datawalk_v2.R;
 
 public class PrefsTwo extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
@@ -41,6 +41,8 @@ public class PrefsTwo extends PreferenceActivity implements OnSharedPreferenceCh
 			String key) {
 		if (key.equals("Data UploadRate")) {
 			Log.d("tag", "Rajia you are STILL IN PREFSTWO CLASS");
+			setResult(RESULT_CANCELED);
+			finish();
 		}
 		
 	}
