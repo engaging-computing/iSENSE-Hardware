@@ -7,14 +7,12 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "RNGridMenu.h"
-#import "Waffle.h"
 #import "AboutViewController.h"
 #import "iSENSE.h"
 #import "StringGrabber.h"
 #import "ExperimentBrowseViewController.h"
-#import "DataFieldManager.h"
+#import <iSENSE_API/DataFieldManager.h>
 #import "Constants.h"
-#import "Fields.h"
 #import "HexColor.h"
 #import "VariablesViewController.h"
 #import "DataSaver.h"
@@ -64,6 +62,7 @@ typedef struct _RotationDataSaver{
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
+@property (nonatomic, strong) NSMutableArray *dataToBeOrdered;
 @property (nonatomic, assign) int expNum;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic) float sampleInterval;
@@ -116,6 +115,7 @@ typedef struct _RotationDataSaver{
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 - (void) updateElapsedTime;
+-(void) stopRecordingWithoutPublishing:(CMMotionManager *)finalMotionManager;
 
 @end
 
