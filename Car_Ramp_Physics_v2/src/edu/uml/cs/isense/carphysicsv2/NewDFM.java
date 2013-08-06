@@ -6,9 +6,11 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.Fields;
@@ -24,9 +26,9 @@ public class NewDFM extends Application {
 	public LinkedList<String> order;
 	JSONArray dataSet;
 	Fields f;
-	public boolean[] enabledFields = {  false, false, false, false, false, false,
+	public boolean[] enabledFields = { false, false, false, false, false,
 			false, false, false, false, false, false, false, false, false,
-			false, false, false, false };
+			false, false, false, false, false };
 
 	public NewDFM(int eid, API rapi, Context mContext, Fields f) {
 		this.eid = eid;
@@ -35,9 +37,11 @@ public class NewDFM extends Application {
 		this.mContext = mContext;
 		this.dataSet = new JSONArray();
 		this.f = f;
+		expFields = rapi.getProjectFields(eid);
 	}
-	
-	// Static class function strictly for getting the field order of any experiment
+
+	// Static class function strictly for getting the field order of any
+	// experiment
 	public static LinkedList<String> getOrder(int eid, API rapi, Context c) {
 		NewDFM d = new NewDFM(eid, rapi, c, null);
 		d.getOrder();
@@ -47,7 +51,7 @@ public class NewDFM extends Application {
 	public void getOrder() {
 		if (!order.isEmpty())
 			return;
-			
+
 		if (eid == -1) {
 			order.add(mContext.getString(R.string.time));
 			order.add(mContext.getString(R.string.accel_x));
@@ -74,108 +78,127 @@ public class NewDFM extends Application {
 
 			for (RProjectField field : expFields) {
 				switch (field.type) {
-				
-				// Temperature
-				case 1:
-					if (field.unit.toLowerCase(Locale.US).contains("f"))
-						order.add(mContext.getString(R.string.temperature_f));
-					else if (field.unit.toLowerCase(Locale.US).contains("c")) {
-						order.add(mContext.getString(R.string.temperature_c));
-					} else if (field.unit.toLowerCase(Locale.US).contains("k")) {
-						order.add(mContext.getString(R.string.temperature_k));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-				
-				// Potential Altitude
-				case 2:
-				case 3:
-					if (field.name.toLowerCase(Locale.US).contains("altitude")) {
-						order.add(mContext.getString(R.string.altitude));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
 
 				// Time
-				case 7:
+				case 1:
 					order.add(mContext.getString(R.string.time));
 					break;
 
-				// Light
-				case 8:
-				case 9:
-				case 29:
-					order.add(mContext.getString(R.string.luminous_flux));
-					break;
+				// Number
+				case 2:
 
-				// Angle
-				case 10:
-					if (field.unit.toLowerCase(Locale.US).contains("deg")) {
-						order.add(mContext.getString(R.string.heading_deg));
-					} else if (field.unit.toLowerCase(Locale.US).contains("rad")) {
-						order.add(mContext.getString(R.string.heading_rad));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-
-				// Geospacial
-				case 19:
-					if (field.name.toLowerCase(Locale.US).contains("lat")) {
-						order.add(mContext.getString(R.string.latitude));
-					} else if (field.name.toLowerCase(Locale.US).contains("lon")) {
-						order.add(mContext.getString(R.string.longitude));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-
-				// Numeric/Custom
-				case 21:
-				case 22:
-					if (field.name.toLowerCase(Locale.US).contains("mag")) {
-						if (field.name.toLowerCase(Locale.US).contains("x")) {
-							order.add(mContext.getString(R.string.magnetic_x));
-						} else if (field.name.toLowerCase(Locale.US).contains("y")) {
-							order.add(mContext.getString(R.string.magnetic_y));
-						} else if (field.name.toLowerCase(Locale.US).contains("z")) {
-							order.add(mContext.getString(R.string.magnetic_z));
-						} else if ((field.name.toLowerCase(Locale.US).contains("total"))
-								|| (field.name.toLowerCase(Locale.US).contains("average"))
-								|| (field.name.toLowerCase(Locale.US).contains("mean"))) {
-							order.add(mContext.getString(R.string.magnetic_total));
+					// Acceleration
+					if (field.name.toLowerCase(Locale.ENGLISH)
+							.contains("accel")) {
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("x")) {
+							order.add(mContext.getString(R.string.accel_x));
 						}
-					} else if (field.name.toLowerCase(Locale.US).contains("altitude")) {
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("y")) {
+							order.add(mContext.getString(R.string.accel_y));
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("z")) {
+							order.add(mContext.getString(R.string.accel_z));
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH).contains(
+								"total")
+								|| field.name.toLowerCase(Locale.ENGLISH)
+										.contains("mag")) {
+							order.add(mContext.getString(R.string.accel_total));
+						}
+					}
+					// Magnetic
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"mag")) {
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("x")) {
+							order.add(mContext.getString(R.string.magnetic_x));
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("y")) {
+							order.add(mContext.getString(R.string.magnetic_y));
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("z")) {
+							order.add(mContext.getString(R.string.magnetic_z));
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH).contains(
+								"total")
+								|| field.name.toLowerCase(Locale.ENGLISH)
+										.contains("mag")) {
+							order.add(mContext
+									.getString(R.string.magnetic_total));
+						}
+					}
+					// Angle
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"angle")
+							|| field.name.toLowerCase(Locale.ENGLISH).contains(
+									"deg")) {
+						if (field.unit.toLowerCase(Locale.ENGLISH).contains(
+								"deg")) {
+							order.add(mContext.getString(R.string.heading_deg));
+						} else if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("rad")) {
+							order.add(mContext.getString(R.string.heading_rad));
+						}
+					}
+					// Temperature
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"temp")) {
+						if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("f")) {
+							order.add(mContext
+									.getString(R.string.temperature_f));
+						} else if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("c")) {
+							order.add(mContext
+									.getString(R.string.temperature_c));
+						} else if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("k")) {
+							order.add(mContext
+									.getString(R.string.temperature_k));
+						}
+					}
+					// Pressure
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"pressure")
+							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
+									"ppi")
+							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
+									"psi")) {
+						order.add(mContext.getString(R.string.pressure));
+					}
+					// Altitude
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"alt")) {
 						order.add(mContext.getString(R.string.altitude));
-					} else
-						order.add(mContext.getString(R.string.null_string));
-					break;
-
-				// Acceleration
-				case 25:
-					if (field.name.toLowerCase(Locale.US).contains("x")) {
-						order.add(mContext.getString(R.string.accel_x));
-					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
-						order.add(mContext.getString(R.string.accel_y));
-					} else if (field.name.toLowerCase(Locale.US).contains("z")) {
-						order.add(mContext.getString(R.string.accel_z));
-					} else if (field.name.toLowerCase(Locale.US).contains("accel")) {
-						order.add(mContext.getString(R.string.accel_total));
+					}
+					// Luminous Flux
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"flux")) {
+						order.add(mContext.getString(R.string.luminous_flux));
 					} else {
 						order.add(mContext.getString(R.string.null_string));
 					}
+
 					break;
 
-				// Pressure
-				case 27:
-					order.add(mContext.getString(R.string.pressure));
+				// Text
+				case 3:
+					Log.i("u is nub", "Nothing happenin' here!");
 					break;
 
-				// No match (Just about every other category)
-				default:
-					order.add(mContext.getString(R.string.null_string));
+				// Latitude
+				case 4:
+					order.add(mContext.getString(R.string.latitude));
+					break;
+
+				// Longitude
+				case 5:
+					order.add(mContext.getString(R.string.longitude));
 					break;
 
 				}
@@ -183,6 +206,139 @@ public class NewDFM extends Application {
 			}
 		}
 
+	}
+
+	public JSONObject makeJSONObject() {
+
+		JSONObject thisRow = new JSONObject();
+
+		try {
+			for (RProjectField field : expFields) {
+				switch (field.type) {
+
+				// Time
+				case 1:
+					thisRow.put("" + field.field_id, f.timeMillis);
+					break;
+
+				// Number
+				case 2:
+
+					// Acceleration
+					if (field.name.toLowerCase(Locale.ENGLISH)
+							.contains("accel")) {
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("x")) {
+							thisRow.put("" + field.field_id, f.accel_x);
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("y")) {
+							thisRow.put("" + field.field_id, f.accel_y);
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("z")) {
+							thisRow.put("" + field.field_id, f.accel_z);
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH).contains(
+								"total")
+								|| field.name.toLowerCase(Locale.ENGLISH)
+										.contains("mag")) {
+							thisRow.put("" + field.field_id, f.accel_z);
+						}
+					}
+					// Magnetic
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"mag")) {
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("x")) {
+							thisRow.put("" + field.field_id, f.mag_x);
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("y")) {
+							thisRow.put("" + field.field_id, f.mag_y);
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH)
+								.contains("z")) {
+							thisRow.put("" + field.field_id, f.mag_z);
+						}
+						if (field.name.toLowerCase(Locale.ENGLISH).contains(
+								"total")
+								|| field.name.toLowerCase(Locale.ENGLISH)
+										.contains("mag")) {
+							thisRow.put("" + field.field_id, f.mag_total);
+						}
+					}
+					// Angle
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"angle")
+							|| field.name.toLowerCase(Locale.ENGLISH).contains(
+									"head")) {
+						if (field.unit.toLowerCase(Locale.ENGLISH).contains(
+								"deg")) {
+							thisRow.put("" + field.field_id, f.angle_deg);
+						} else if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("rad")) {
+							thisRow.put("" + field.field_id, f.angle_rad);
+						}
+					}
+					// Temperature
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"temp")) {
+						if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("f")) {
+							thisRow.put("" + field.field_id, f.temperature_f);
+						} else if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("c")) {
+							thisRow.put("" + field.field_id, f.temperature_c);
+						} else if (field.unit.toLowerCase(Locale.ENGLISH)
+								.contains("k")) {
+							thisRow.put("" + field.field_id, f.temperature_k);
+						}
+					}
+					// Pressure
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"pressure")
+							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
+									"ppi")
+							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
+									"psi")) {
+						thisRow.put("" + field.field_id, f.pressure);
+					}
+					// Altitude
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"alt")) {
+						thisRow.put("" + field.field_id, f.altitude);
+					}
+					// Luminous Flux
+					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
+							"flux")) {
+						thisRow.put("" + field.field_id, f.lux);
+					}
+
+					break;
+
+				// Text
+				case 3:
+					Log.i("u is nub", "Nothing happenin' here!");
+					break;
+
+				// Latitude
+				case 4:
+					order.add(mContext.getString(R.string.latitude));
+					break;
+
+				// Longitude
+				case 5:
+					order.add(mContext.getString(R.string.longitude));
+					break;
+
+				}
+
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return thisRow;
 	}
 
 	public JSONArray putData() {
@@ -284,7 +440,7 @@ public class NewDFM extends Application {
 		boolean firstLineWritten = false;
 
 		for (String s : this.order) {
-			
+
 			if (s.equals(mContext.getString(R.string.accel_x))) {
 				firstLineWritten = true;
 				if (start)
@@ -292,144 +448,126 @@ public class NewDFM extends Application {
 				else
 					b.append(", ").append(f.accel_x);
 
-			}
-			else if (s.equals(mContext.getString(R.string.accel_y))) {
+			} else if (s.equals(mContext.getString(R.string.accel_y))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_y);
 				else
 					b.append(", ").append(f.accel_y);
 
-			}
-			else if (s.equals(mContext.getString(R.string.accel_z))) {
+			} else if (s.equals(mContext.getString(R.string.accel_z))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_z);
 				else
 					b.append(", ").append(f.accel_z);
 
-			}
-			else if (s.equals(mContext.getString(R.string.accel_total))) {
+			} else if (s.equals(mContext.getString(R.string.accel_total))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_total);
 				else
 					b.append(", ").append(f.accel_total);
 
-			}
-			else if (s.equals(mContext.getString(R.string.temperature_c))) {
+			} else if (s.equals(mContext.getString(R.string.temperature_c))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.temperature_c);
 				else
 					b.append(", ").append(f.temperature_c);
 
-			}
-			else if (s.equals(mContext.getString(R.string.temperature_f))) {
+			} else if (s.equals(mContext.getString(R.string.temperature_f))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.temperature_f);
 				else
 					b.append(", ").append(f.temperature_f);
 
-			}
-			else if (s.equals(mContext.getString(R.string.temperature_k))) {
+			} else if (s.equals(mContext.getString(R.string.temperature_k))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.temperature_k);
 				else
 					b.append(", ").append(f.temperature_k);
 
-			}
-			else if (s.equals(mContext.getString(R.string.time))) {
+			} else if (s.equals(mContext.getString(R.string.time))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.timeMillis);
 				else
 					b.append(", ").append(f.timeMillis);
 
-			}
-			else if (s.equals(mContext.getString(R.string.luminous_flux))) {
+			} else if (s.equals(mContext.getString(R.string.luminous_flux))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.lux);
 				else
 					b.append(", ").append(f.lux);
 
-			}
-			else if (s.equals(mContext.getString(R.string.heading_deg))) {
+			} else if (s.equals(mContext.getString(R.string.heading_deg))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.angle_deg);
 				else
 					b.append(", ").append(f.angle_deg);
 
-			}
-			else if (s.equals(mContext.getString(R.string.heading_rad))) {
+			} else if (s.equals(mContext.getString(R.string.heading_rad))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.angle_rad);
 				else
 					b.append(", ").append(f.angle_rad);
 
-			}
-			else if (s.equals(mContext.getString(R.string.latitude))) {
+			} else if (s.equals(mContext.getString(R.string.latitude))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.latitude);
 				else
 					b.append(", ").append(f.latitude);
 
-			}
-			else if (s.equals(mContext.getString(R.string.longitude))) {
+			} else if (s.equals(mContext.getString(R.string.longitude))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.longitude);
 				else
 					b.append(", ").append(f.longitude);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_x))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_x))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_x);
 				else
 					b.append(", ").append(f.mag_x);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_y))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_y))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_y);
 				else
 					b.append(", ").append(f.mag_y);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_z))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_z))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_z);
 				else
 					b.append(", ").append(f.mag_z);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_total))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_total))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_total);
 				else
 					b.append(", ").append(f.mag_total);
 
-			}
-			else if (s.equals(mContext.getString(R.string.altitude))) {
+			} else if (s.equals(mContext.getString(R.string.altitude))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.altitude);
 				else
 					b.append(", ").append(f.altitude);
 
-			}
-			else if (s.equals(mContext.getString(R.string.pressure))) {
+			} else if (s.equals(mContext.getString(R.string.pressure))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.pressure);
@@ -443,49 +581,53 @@ public class NewDFM extends Application {
 				else
 					b.append(", ").append("");
 			}
-			
+
 			if (firstLineWritten)
 				start = false;
-			
+
 		}
 
 		b.append("\n");
 
 		return b.toString();
 	}
-	
+
 	public String writeHeaderLine() {
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
-		
+
 		for (String unitName : this.order) {
 			if (start)
-				b.append(unitName);			
-			else 
+				b.append(unitName);
+			else
 				b.append(", ").append(unitName);
-			
+
 			start = false;
 		}
-		
+
 		b.append("\n");
-		
+
 		return b.toString();
 	}
 
-	// For use if a clump of data was recorded and needs to be cut down and re-ordered
-	public static String reOrderData(JSONArray data, String eid, API rapi, Context c) {
+	// For use if a clump of data was recorded and needs to be cut down and
+	// re-ordered
+	public static String reOrderData(JSONArray data, String eid, API rapi,
+			Context c) {
 		JSONArray row, outData = new JSONArray(), outRow;
 		int len = data.length();
 		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(eid), rapi, c);
-		
+
 		for (int i = 0; i < len; i++) {
 			try {
 				row = data.getJSONArray(i);
 				outRow = new JSONArray();
-				
+
 				for (String s : fieldOrder) {
 					try {
-						// Future TODO - I want to get the android R.string.accel_x for e.g. here but I need a context, so find a fix later
+						// Future TODO - I want to get the android
+						// R.string.accel_x for e.g. here but I need a context,
+						// so find a fix later
 						if (s.equals("Accel-X")) {
 							outRow.put(row.getString(Fields.ACCEL_X));
 							continue;
@@ -569,17 +711,18 @@ public class NewDFM extends Application {
 				}
 
 				outData.put(outRow);
-				
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		// TODO: backup plan - if nothing was re-ordered, just hand back the data as-is?
-		
+
+		// TODO: backup plan - if nothing was re-ordered, just hand back the
+		// data as-is?
+
 		return outData.toString();
 	}
-	
+
 	public void setContext(Context c) {
 		this.mContext = c;
 	}

@@ -28,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -386,7 +387,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									Log.d("fantastag", "Magnitude¯ added");
 								}
 
-								dataSet.put(dfm.putData());
+								dataSet.put(dfm.makeJSONObject());
 
 							}
 
@@ -855,11 +856,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				CarRampPhysicsV2.sessionUrl = CarRampPhysicsV2.baseSessionUrl
 						+ sessionId;
-*/
-				JSONObject dataToBeUploaded;
-				dataToBeUploaded = rapi.
-				rapi.uploadDataSet(Integer.parseInt(experimentNumber), dataSet, nameOfSession);
-				//rapi.putSessionData(sessionId, experimentNumber, dataSet);
+					
+						*/
+				JSONObject data = new JSONObject();
+				try {
+					data.put("data", dataSet);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				rapi.uploadDataSet(Integer.parseInt(experimentNumber), data, nameOfSession);
 				uploadSuccessful = true;
 			} else {
 
