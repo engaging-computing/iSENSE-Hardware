@@ -30,7 +30,7 @@ public class API {
 	private static API instance = null;
 	private String baseURL = "";
 	private final String publicURL = "http://129.63.17.17:3000";
-	private final String devURL = "";
+	private final String devURL = "http://rsense.cs.uml.edu";
 	private Context context;
 	String authToken = "";
 	RPerson currentUser;
@@ -327,6 +327,9 @@ public class API {
 			result.fieldCount = j.getInt("fieldCount");
 			result.datapointCount = j.getInt("datapointCount");
 			result.data = rowsToCols(j.getJSONObject("data"));
+			
+			// TODO - remove println
+			System.out.println(j.getJSONObject("data"));
 
 		} catch (Exception e) {
 
@@ -405,13 +408,17 @@ public class API {
 	 * @param reqType The request type as a string (i.e. GET or POST)
 	 * @return A String dump of a JSONObject representing the requested data
 	 */
-	public String makeRequest(String baseURL, String path, String parameters, String reqType, JSONObject postData) {
+	private String makeRequest(String baseURL, String path, String parameters, String reqType, JSONObject postData) {
 
 		byte[] mPostData = null;
 
 		int mstat = 0;
 		try {
 			URL url = new URL(baseURL+"/"+path+"?"+parameters);
+			
+			// TODO remove
+			System.out.println("Connect to: " + url);
+			
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");

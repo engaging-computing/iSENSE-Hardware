@@ -14,18 +14,18 @@
     <string name="numbers_restriction">
 	    1234567890.-
 	</string>
-	<string name="select_exp">Select Experiment</string>
+	<string name="select_proj">Select Project</string>
 	
-	<string name="no_experiment_now">No Experiment</string>
+	<string name="no_project_now">No Project</string>
 	<string name="browse">Browse</string>
 	<string name="scan_qr">Scan QR</string>
-	<string name="chooseExperiment">Uploading to experiment #:</string>
-	<string name="chooseExperimentAlt" tools:ignore="UnusedResources">
-		Enter or select an experiment you would like to upload to.
-		Alternatively, select \"No Experiment\" to record all possible data and select an experiment later.
+	<string name="chooseProject">Uploading to project #:</string>
+	<string name="chooseProjectAlt" tools:ignore="UnusedResources">
+		Enter or select a project you would like to upload to.
+		Alternatively, select \"No Project\" to record all possible data and select a project later.
 	</string>
     <string name="search">Search</string>
-    <string name="experiments_no_items">No experiments were found.</string>
+    <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
     <string name="qr_prompt">
         Your device does not have the proper Barcode Scanner application installed

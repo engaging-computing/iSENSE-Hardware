@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.exp;
+package edu.uml.cs.isense.proj;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -40,7 +40,7 @@ public class Setup extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.experiment_id);
+		setContentView(R.layout.project_id);
 
 		mContext = this;
 
@@ -68,7 +68,7 @@ public class Setup extends Activity implements OnClickListener {
 				noExp.setVisibility(View.GONE);
 			} else {
 				TextView t = (TextView) findViewById(R.id.experimentText);
-				t.setText(getResources().getString(R.string.chooseExperimentAlt));
+				t.setText(getResources().getString(R.string.chooseProjectAlt));
 			}
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
@@ -101,7 +101,7 @@ public class Setup extends Activity implements OnClickListener {
 		if (id == R.id.experiment_ok) {
 			boolean pass = true;
 			if (eidInput.getText().length() == 0) {
-				eidInput.setError("Enter an Experiment");
+				eidInput.setError("Enter a project ID");
 				pass = false;
 			}
 			if (pass) {
@@ -131,7 +131,7 @@ public class Setup extends Activity implements OnClickListener {
 			}
 		} else if (id == R.id.experiment_browse) {
 			Intent experimentIntent = new Intent(getApplicationContext(),
-					BrowseExperiments.class);
+					BrowseProjects.class);
 			experimentIntent.putExtra(
 					"edu.uml.cs.isense.amusement.experiments.propose",
 					EXPERIMENT_CODE);

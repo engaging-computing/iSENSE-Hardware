@@ -55,7 +55,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
             android:padding="10dp"
-            android:text="@string/select_exp"
+            android:text="@string/select_proj"
             android:textSize="16sp" />
 
         <Button

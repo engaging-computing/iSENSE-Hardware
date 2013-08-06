@@ -33,7 +33,7 @@
         android:layout_below="@+id/loginLabel"
         android:layout_marginLeft="2dp"
         android:paddingBottom="8dp"
-        android:text="@string/usingExperiment"
+        android:text="@string/usingProject"
         android:textSize="16sp" />
 
     <LinearLayout
@@ -82,7 +82,7 @@
             android:layout_weight=".2"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
             android:gravity="left"
-            android:hint="@string/enterSessionName"
+            android:hint="@string/enterDataSetName"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLength="150"

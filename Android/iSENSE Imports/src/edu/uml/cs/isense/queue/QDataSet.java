@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -100,22 +101,22 @@ public class QDataSet implements Serializable {
 	 * One will be created if none is specified.
 	 */
 	private int sid = -1;
-	/**
-	 * Optional: city of where the data were recorded.
-	 */
-	private String city = "";
-	/**
-	 * Optional: state of where the data were recorded.
-	 */
-	private String state = "";
-	/**
-	 * Optional: country of where the data were recorded.
-	 */
-	private String country = "";
-	/**
-	 * Optional: address of where the data were recorded.
-	 */
-	private String addr = "";
+//	/**
+//	 * Optional: city of where the data were recorded.
+//	 */
+//	private String city = "";
+//	/**
+//	 * Optional: state of where the data were recorded.
+//	 */
+//	private String state = "";
+//	/**
+//	 * Optional: country of where the data were recorded.
+//	 */
+//	private String country = "";
+//	/**
+//	 * Optional: address of where the data were recorded.
+//	 */
+//	private String addr = "";
 
 	/**
 	 * Contructs an object of type DataSet
@@ -144,10 +145,10 @@ public class QDataSet implements Serializable {
 			this.data = null;
 		this.picture = picture;
 		this.sid = sid;
-		this.city = city;
-		this.state = state;
-		this.country = country;
-		this.addr = addr;
+//		this.city = city;
+//		this.state = state;
+//		this.country = country;
+//		this.addr = addr;
 		this.key = new Random().nextLong();
 		this.hasInitialExperiment = eid.equals("-1") ? false : true;
 	}
@@ -181,89 +182,106 @@ public class QDataSet implements Serializable {
 	
 		boolean success = true;
 		if (this.rdyForUpload) {
-			switch (type) {
-			case DATA:
+//			switch (type) {
+//			case DATA:
 
-				if (sid == -1) {
-
-					if (addr.equals("")) {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								"N/A", "N/A", "United States");
-					} else {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								addr, city + ", " + state, country);
-					}
-
-					// Failure to create session or not logged in
-					if (sid == -1) {
-						success = false;
-						break;
-					} else QueueLayout.lastSID = sid;
-				}
-
-				// Experiment Closed Checker
-				if (sid == -400) {
-					success = false;
-					break;
-				} else {
-					JSONArray dataJSON = prepDataForUpload();
-					if (!(dataJSON.isNull(0))) {
-						
-						success = UploadQueue.getRapi().putSessionData(sid, eid,
-								dataJSON);
+				// TODO - check for closed experiment
+//				if (sid == -1) {
+//
+//					if (addr.equals("")) {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								"N/A", "N/A", "United States");
+//					} else {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								addr, city + ", " + state, country);
+//					}
+//
+//					// Failure to create session or not logged in
+//					if (sid == -1) {
+//						success = false;
+//						break;
+//					} else QueueLayout.lastSID = sid;
+//				}
+//
+//				// Experiment Closed Checker
+//				if (sid == -400) {
+//					success = false;
+//					break;
+//				} else {
+				JSONArray dataJSON = prepDataForUpload();
+				if (!(dataJSON.isNull(0))) {
 					
-					}
-				}
-				break;
-
-			case PIC:
-				if (sid == -1) sid = QueueLayout.lastSID;
-				if (name.equals("")) {
-					success = UploadQueue.getRapi().uploadPictureToSession(
-							picture, eid, sid, "*Session Name Not Provided*",
-							"N/A");
-				} else {
-					success = UploadQueue.getRapi().uploadPictureToSession(
-							picture, eid, sid, name, "N/A");
-				}
-				
-				break;
-				
-			case BOTH:
-				if (sid == -1) {
-
-					if (addr.equals("")) {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								"N/A", "N/A", "United States");
-					} else {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								addr, city + ", " + state, country);
-					}
-
-					if (sid == -1) {
-						success = false;
-						break;
-					} else QueueLayout.lastSID = sid;
-				}
-
-				// Experiment Closed Checker
-				if (sid == -400) {
-					success = false;
-					break;
-				} else {
-					JSONArray dataJSON = prepDataForUpload();
-					if (!(dataJSON.isNull(0))) {
-						
-						success = UploadQueue.getRapi().putSessionData(sid, eid,
-								dataJSON);
-						success = UploadQueue.getRapi().uploadPictureToSession(
-								picture, eid, sid, name, "N/A");
+//					success = UploadQueue.getRapi().putSessionData(sid, eid,
+//							dataJSON);
 					
+					//System.out.println("Prepared: " + dataJSON.toString());
+					
+					JSONObject jobj = new JSONObject();
+					try {
+						jobj.put("data", dataJSON);
+					} catch (JSONException e) {
+						// uh oh
+						e.printStackTrace();
 					}
-				}
+					jobj = UploadQueue.getAPI().rowsToCols(jobj);
+					
+					System.out.println("JOBJ: " + jobj.toString());
+					
+					// TODO - success :(?
+					/*success =*/ UploadQueue.getAPI().uploadDataSet(Integer.parseInt(eid), jobj, name);
 				
-				break;
-			}
+				}
+//				}
+//				break;
+// TODO - pictures and stuff
+//			case PIC:
+//				if (sid == -1) sid = QueueLayout.lastSID;
+//				if (name.equals("")) {
+//					success = UploadQueue.getRapi().uploadPictureToSession(
+//							picture, eid, sid, "*Session Name Not Provided*",
+//							"N/A");
+//				} else {
+//					success = UploadQueue.getRapi().uploadPictureToSession(
+//							picture, eid, sid, name, "N/A");
+//				}
+//				
+//				break;
+//				
+//			case BOTH:
+//				if (sid == -1) {
+//
+//					if (addr.equals("")) {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								"N/A", "N/A", "United States");
+//					} else {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								addr, city + ", " + state, country);
+//					}
+//
+//					if (sid == -1) {
+//						success = false;
+//						break;
+//					} else QueueLayout.lastSID = sid;
+//				}
+//
+//				// Experiment Closed Checker
+//				if (sid == -400) {
+//					success = false;
+//					break;
+//				} else {
+//					JSONArray dataJSON = prepDataForUpload();
+//					if (!(dataJSON.isNull(0))) {
+//						
+//						success = UploadQueue.getRapi().putSessionData(sid, eid,
+//								dataJSON);
+//						success = UploadQueue.getRapi().uploadPictureToSession(
+//								picture, eid, sid, name, "N/A");
+//					
+//					}
+//				}
+//				
+//				break;
+//			}
 		}
 
 		return success;
