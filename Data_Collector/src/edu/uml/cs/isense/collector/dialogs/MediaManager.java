@@ -64,7 +64,7 @@ public class MediaManager extends Activity {
 		nameOfSession = null;
 		
 		if (extras != null)
-			nameOfSession = extras.getString("sessionName");
+			nameOfSession = extras.getString("projectName");
 		
 		if (nameOfSession == null)
 			nameOfSession = "";

@@ -34,7 +34,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/experimentLabel"
+            android:id="@+id/projectLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/loginLabel"
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/experimentLabel"
+            android:layout_below="@id/projectLabel"
             android:orientation="vertical" >
 
             <Button
@@ -82,13 +82,13 @@
         android:layout_weight=".4" >
 
         <LinearLayout
-            android:id="@+id/session_name_wrapper"
+            android:id="@+id/dataset_name_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
             <EditText
-                android:id="@+id/manual_session_name"
+                android:id="@+id/manual_dataset_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -117,7 +117,7 @@
             android:id="@+id/scroll_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/session_name_wrapper"
+            android:layout_below="@id/dataset_name_wrapper"
             android:layout_margin="5dp" >
 
             <LinearLayout

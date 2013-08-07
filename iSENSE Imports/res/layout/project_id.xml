@@ -7,7 +7,7 @@
     tools:ignore="UnusedResources" >
 
     <TextView
-        android:id="@+id/experimentText"
+        android:id="@+id/projectText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -16,7 +16,7 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/experimentInput"
+        android:id="@+id/projectInput"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -35,7 +35,7 @@
         android:background="@android:color/transparent" >
 
         <Button
-            android:id="@+id/experiment_browse"
+            android:id="@+id/project_browse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -44,7 +44,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/experiment_qr"
+            android:id="@+id/project_qr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
@@ -53,16 +53,6 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/experiment_no_exp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:text="@string/no_project_now"
-        android:textSize="18sp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +60,7 @@
         android:background="@android:color/transparent" >
 
         <Button
-            android:id="@+id/experiment_cancel"
+            android:id="@+id/project_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -78,7 +68,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/experiment_ok"
+            android:id="@+id/project_ok"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

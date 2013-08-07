@@ -160,7 +160,7 @@ public class Step1Setup extends Activity {
 				if (!api.hasConnectivity())
 					w.make("No internet connectivity found - searching only cached projects", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				Intent iSetup = new Intent(mContext, Setup.class);
-				iSetup.putExtra("enable_no_exp_button", false);
+				iSetup.putExtra("from_where", "automatic");
 				startActivityForResult(iSetup, SETUP_REQUESTED);
 			}
 		});
@@ -218,9 +218,9 @@ public class Step1Setup extends Activity {
 		if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				String exp = mPrefs.getString("project_id", "");
-				if (!(exp.equals("") || exp.equals("-1"))) {
-					expLabel.setText("Project (currently " + exp + ")");
+				String projID = mPrefs.getString("project_id", "");
+				if (!(projID.equals("") || projID.equals("-1"))) {
+					expLabel.setText("Project (currently " + projID + ")");
 				} else {
 					expLabel.setText("Project");
 				}
@@ -231,11 +231,11 @@ public class Step1Setup extends Activity {
 			if (resultCode == RESULT_OK) {
 				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
 					Intent iSetup = new Intent(mContext, Setup.class);
-					iSetup.putExtra("enable_no_exp_button", false);
+					iSetup.putExtra("from_where", "automatic");
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else if (!ChooseSensorDialog.compatible) {
 					Intent iSetup = new Intent(mContext, Setup.class);
-					iSetup.putExtra("enable_no_exp_button", true);
+					iSetup.putExtra("from_where", "automatic");
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else {
 					acceptedFields = ChooseSensorDialog.acceptedFields;
