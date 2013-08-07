@@ -170,13 +170,27 @@ public class API {
 	 * @param projectName The name of the new project to be created
 	 * @return The ID of the created project
 	 */
-	public int createProject(String projectName) {
+	public int createProject(String projectName, ArrayList<RProjectField> fields) {
 		try {
 			JSONObject postData = new JSONObject();
 			postData.put("project_name", projectName);
 			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData);
 			JSONObject jobj = new JSONObject(reqResult);
-			return jobj.getInt("id");
+			int pid = jobj.getInt("id");
+			
+			for(RProjectField rpf : fields) {
+				JSONObject mField = new JSONObject();
+				mField.put("project_id", pid);
+				mField.put("field_type", rpf.type);
+				mField.put("name", rpf.name);
+				mField.put("unit", rpf.unit);
+				JSONObject postData2 = new JSONObject();
+				postData2.put("field", mField);
+				postData2.put("project_id", pid);
+				makeRequest(baseURL, "fields", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData2);
+			}
+			
+			return pid;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
