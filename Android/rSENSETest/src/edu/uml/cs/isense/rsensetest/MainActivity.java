@@ -211,7 +211,20 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class CreateProjectTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			api.createProject("Project from Mobile");
+			ArrayList<RProjectField> fields = new ArrayList<RProjectField>();
+			
+			RProjectField time = new RProjectField();
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			time.name = "Time";
+			fields.add(time);
+			
+			RProjectField amount = new RProjectField();
+			amount.type = RProjectField.TYPE_NUMBER;
+			amount.name = "Amount";
+			amount.unit = "units";
+			fields.add(amount);
+			
+			api.createProject("Project from Mobile", fields);
 			return null;
 		}
 
