@@ -71,6 +71,8 @@ public class Setup extends Activity implements OnClickListener {
 			} else {
 				prefsString = "PROJID";
 			}	
+		} else {
+			prefsString = "PROJID";
 		}
 		
 		
