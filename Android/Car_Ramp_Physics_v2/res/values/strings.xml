@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Car Ramp Physics V2</string>
+    <string name="app_name">iSENSE Car Ramp Physics</string>
     
     <string name="promptForName">Please enter your name</string>
     
@@ -15,7 +15,7 @@
         After recording, you may publish your data to isenseproject.org.
         You are also given an option to view your data.
         
-        You may modify various settings -- explore the menus.
+        You may modify various settings – explore the menus.
         
         If setting up your own project: create fields named \"Time\" (time/milliseconds) and
         any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
@@ -50,7 +50,7 @@
 		<item >30 sec</item>
 		<item >60 sec</item>
 	</string-array>
-	<string name="InternetMsg">Could not connect to the internet through either wifi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
+	<string name="InternetMsg">Could not connect to the Internet through either Wi-Fi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
 	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
 	
     

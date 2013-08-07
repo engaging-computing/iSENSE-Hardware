@@ -2,6 +2,7 @@ package edu.uml.cs.isense.carphysicsv2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -72,22 +73,8 @@ public class CarRampLoginActivity extends Activity {
 				password = pass.getText().toString();
 
 				rapi = API.getInstance(getApplicationContext());
-
-				if (rapi.hasConnectivity()) {
-					rapi.createSession(uName, password);
-					w.make("Login as " + uName + " successful.",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-					Intent i = new Intent();
-					i.putExtra("username", uName);
-					setResult(RESULT_OK, i);
-					finish();
-
-				} else {
-					w.make("Cannot login due to lack of internet connection. Please try again later.",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-					setResult(RESULT_CANCELED);
-					finish();
-				}
+				
+				new LoginTask().execute();
 
 			}
 		});
@@ -100,6 +87,45 @@ public class CarRampLoginActivity extends Activity {
 				finish();
 			}
 		});
+
+	}
+	
+	public class LoginTask extends AsyncTask<Void, Integer, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... arg0) {
+			Boolean success = rapi.createSession(uName, password);
+			return success;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			if (rapi.hasConnectivity()) {
+				if (result) {			
+					w.make("Login as " + uName + " successful.",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					Intent i = new Intent();
+					i.putExtra("username", uName);
+					setResult(RESULT_OK, i);
+					finish();
+				} else {
+					w.make("Login as " + uName + " failed.",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					setResult(RESULT_CANCELED);
+					finish();
+				}
+
+			} else {
+				w.make("Cannot login due to lack of internet connection. Please try again later.",
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+			
+		}
+		
+		
 
 	}
 }
