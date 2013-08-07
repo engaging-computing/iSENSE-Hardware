@@ -67,7 +67,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
 	public static String experimentNumber = "409";
-	public static String defaultExp = "409";
+	public static final String DEFAULT_PROJ_PROD = "409";
+	public static final String DEFAULT_PROJ_DEV = "32";
+	
 	private static String userName = "sor";
 	private static String password = "sor";
 
@@ -94,19 +96,24 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	static final public int DIALOG_CANCELED = 0;
 	static final public int DIALOG_OK = 1;
-	static final public int DIALOG_PICTURE = 2;
-
-	static final public int CAMERA_PIC_REQUESTED = 1;
-	static final public int CAMERA_VID_REQUESTED = 2;
 
 	public NewDFM dfm;
 	public Fields f;
+	API rapi;
 
 	private int countdown;
 
 	static String firstName = "";
 	static String lastInitial = "";
-	private int resultGotName = 1098;
+	
+	public static final int resultGotName = 1098;
+	public static final int UPLOAD_OK_REQUESTED = 90000;
+	public static final int LOGIN_STATUS_REQUESTED = 6005;
+	public static final int RECORDING_LENGTH_REQUESTED = 4009;
+	public static final int EXPERIMENT_REQUESTED = 9000;
+	public static final int QUEUE_UPLOAD_REQUESTED = 5000;
+	public static final int RESET_REQUESTED = 6003;
+	public static final int SAVE_MODE_REQUESTED = 10005;
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
@@ -119,7 +126,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 
 	private String dateString;
-	API rapi;
+	
 
 	private boolean x = false, y = false, z = false, mag = false;
 
@@ -166,7 +173,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static UploadQueue uq;
 
-	public static final int UPLOAD_OK_REQUESTED = 90000;
+	
 
 	public static Bundle saved;
 
@@ -211,8 +218,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				+ userName + " Name: " + firstName + " " + lastInitial);
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		experimentNumber = prefs2.getString("project_id", null);
-		if (experimentNumber == null)
-			experimentNumber = defaultExp;
+		if (experimentNumber == null) {
+			if (useDev) {
+				experimentNumber = DEFAULT_PROJ_DEV;
+			} else {
+				experimentNumber = DEFAULT_PROJ_PROD;
+			}
+		}
 		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi, mContext, f);
 
 		startStop.setOnLongClickListener(new OnLongClickListener() {
@@ -222,6 +234,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
+				
+				if (!rapi.hasConnectivity() && !saveMode) {
+					startActivityForResult(new Intent(mContext,
+							SaveModeDialog.class), SAVE_MODE_REQUESTED);
+					return false;
+				}
 
 				if (running) {
 
@@ -569,8 +587,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		return true;
 	}
 
-	public static final int LOGIN_STATUS_REQUESTED = 6005;
-	public static final int RECORDING_LENGTH_REQUESTED = 4009;
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -683,10 +700,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		return android.os.Build.VERSION.SDK_INT;
 	}
 
-	public static final int EXPERIMENT_REQUESTED = 9000;
-	public static final int QUEUE_UPLOAD_REQUESTED = 5000;
-	public static final int RESET_REQUESTED = 6003;
-	public static final int SAVE_MODE_REQUESTED = 10005;
+
 
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -697,8 +711,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				experimentNumber = prefs.getString("project_id", null);
-				if (experimentNumber == null)
-					experimentNumber = defaultExp;
+				if (experimentNumber == null) {
+					if (useDev) {
+						experimentNumber = DEFAULT_PROJ_DEV;
+					} else {
+						experimentNumber = DEFAULT_PROJ_PROD;
+					}
+				}
 				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
 						mContext, f);
 			}
@@ -769,7 +788,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
-				experimentNumber = defaultExp;
+				if (useDev) {
+					experimentNumber = DEFAULT_PROJ_DEV;
+				} else {
+					experimentNumber = DEFAULT_PROJ_PROD;
+				}
 				editor.putString("project_id", experimentNumber);
 				editor.commit();
 				INTERVAL = 50;
@@ -783,6 +806,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				saveMode = true;
 				CarRampPhysicsV2.experimentNumber = "-1";
+				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+						mContext, f);
 			} else {
 				if (!rapi.hasConnectivity()) {
 					startActivityForResult(new Intent(mContext,
@@ -837,6 +862,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
 						"Car Ramp Physics", experimentNumber,
 						dataSet.toString(), null);
+				Log.d("data", "Data: " + dataSet.toString());
 				CarRampPhysicsV2.uq.addDataSetToQueue(ds);
 
 				return;

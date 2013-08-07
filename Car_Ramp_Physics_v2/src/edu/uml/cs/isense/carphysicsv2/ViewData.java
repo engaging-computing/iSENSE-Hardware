@@ -28,6 +28,7 @@ public class ViewData extends Activity {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(CarRampPhysicsV2.sessionUrl));
 				startActivity(i);
+				finish();
 				
 			}
 		});
