@@ -17,12 +17,10 @@
 
 package edu.uml.cs.isense.carphysicsv2;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,9 +39,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -803,32 +799,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		@Override
 		public void run() {
 
-			int sessionId = -1;
-			String city = "", state = "", country = "";
-			List<Address> address = null;
-			String addr = "";
+			int dataSetID = -1;
 
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
 					Locale.ENGLISH);
 			Date dt = new Date();
 			dateString = sdf.format(dt);
-
-			try {
-				if (loc != null) {
-					address = new Geocoder(mContext, Locale.getDefault())
-							.getFromLocation(loc.getLatitude(),
-									loc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getThoroughfare();
-
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 
 			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
 

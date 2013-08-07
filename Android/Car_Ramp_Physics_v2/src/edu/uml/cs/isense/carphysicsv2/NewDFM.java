@@ -9,24 +9,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.waffle.Waffle;
 
 public class NewDFM extends Application {
 
-	int eid;
+	int projID;
 	API rapi;
 	Context mContext;
 
-	ArrayList<RProjectField> expFields;
+	ArrayList<RProjectField> projFields;
 	public LinkedList<String> order;
 	JSONArray dataSet;
 	Fields f;
@@ -34,8 +31,8 @@ public class NewDFM extends Application {
 			false, false, false, false, false, false, false, false, false,
 			false, false, false, false, false };
 
-	public NewDFM(int eid, API rapi, Context mContext, Fields f) {
-		this.eid = eid;
+	public NewDFM(int projID, API rapi, Context mContext, Fields f) {
+		this.projID = projID;
 		this.rapi = rapi;
 		this.order = new LinkedList<String>();
 		this.mContext = mContext;
@@ -57,7 +54,7 @@ public class NewDFM extends Application {
 		if (!order.isEmpty())
 			return;
 
-		if (eid == -1) {
+		if (projID == -1) {
 			order.add(mContext.getString(R.string.time));
 			order.add(mContext.getString(R.string.accel_x));
 			order.add(mContext.getString(R.string.accel_y));
@@ -79,131 +76,122 @@ public class NewDFM extends Application {
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
 
-			expFields = rapi.getProjectFields(eid);
+			projFields = rapi.getProjectFields(projID);
 
-			for (RProjectField field : expFields) {
+			for (RProjectField field : projFields) {
 				switch (field.type) {
 
-				// Time
-				case 1:
-					order.add(mContext.getString(R.string.time));
-					break;
-
 				// Number
-				case 2:
+				case RProjectField.TYPE_NUMBER:
 
-					// Acceleration
-					if (field.name.toLowerCase(Locale.ENGLISH)
-							.contains("accel")) {
-						if (field.name.toLowerCase(Locale.ENGLISH)
-								.contains("x")) {
-							order.add(mContext.getString(R.string.accel_x));
+					// Temperature
+					if (field.name.toLowerCase(Locale.US).contains("temp")) {
+						if (field.unit.toLowerCase(Locale.US).contains("c")) {
+							order.add(mContext
+									.getString(R.string.temperature_c));
+						} else if (field.unit.toLowerCase(Locale.US).contains(
+								"k")) {
+							order.add(mContext
+									.getString(R.string.temperature_k));
+						} else {
+							order.add(mContext
+									.getString(R.string.temperature_f));
 						}
-						if (field.name.toLowerCase(Locale.ENGLISH)
-								.contains("y")) {
-							order.add(mContext.getString(R.string.accel_y));
-						}
-						if (field.name.toLowerCase(Locale.ENGLISH)
-								.contains("z")) {
-							order.add(mContext.getString(R.string.accel_z));
-						}
-						if (field.name.toLowerCase(Locale.ENGLISH).contains(
-								"total")
-								|| field.name.toLowerCase(Locale.ENGLISH)
-										.contains("mag")) {
-							order.add(mContext.getString(R.string.accel_total));
-						}
+						break;
 					}
-					// Magnetic
-					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
-							"mag")) {
-						if (field.name.toLowerCase(Locale.ENGLISH)
-								.contains("x")) {
+
+					// Potential Altitude
+					else if (field.name.toLowerCase(Locale.US).contains(
+							"altitude")) {
+						order.add(mContext.getString(R.string.altitude));
+						break;
+					}
+
+					// Light
+					else if (field.name.toLowerCase(Locale.US)
+							.contains("light")) {
+						order.add(mContext.getString(R.string.luminous_flux));
+						break;
+					}
+
+					// Heading
+					else if (field.name.toLowerCase(Locale.US).contains(
+							"heading")
+							|| field.name.toLowerCase(Locale.US).contains(
+									"angle")) {
+						if (field.unit.toLowerCase(Locale.US).contains("rad")) {
+							order.add(mContext.getString(R.string.heading_rad));
+						} else {
+							order.add(mContext.getString(R.string.heading_deg));
+						}
+						break;
+					}
+
+					// Numeric/Custom
+					else if (field.name.toLowerCase(Locale.US).contains(
+							"magnetic")) {
+						if (field.name.toLowerCase(Locale.US).contains("x")) {
 							order.add(mContext.getString(R.string.magnetic_x));
-						}
-						if (field.name.toLowerCase(Locale.ENGLISH)
-								.contains("y")) {
+						} else if (field.name.toLowerCase(Locale.US).contains(
+								"y")) {
 							order.add(mContext.getString(R.string.magnetic_y));
-						}
-						if (field.name.toLowerCase(Locale.ENGLISH)
-								.contains("z")) {
+						} else if (field.name.toLowerCase(Locale.US).contains(
+								"z")) {
 							order.add(mContext.getString(R.string.magnetic_z));
-						}
-						if (field.name.toLowerCase(Locale.ENGLISH).contains(
-								"total")
-								|| field.name.toLowerCase(Locale.ENGLISH)
-										.contains("mag")) {
+						} else {
 							order.add(mContext
 									.getString(R.string.magnetic_total));
 						}
+						break;
 					}
-					// Angle
-					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
-							"angle")
-							|| field.name.toLowerCase(Locale.ENGLISH).contains(
-									"deg")) {
-						if (field.unit.toLowerCase(Locale.ENGLISH).contains(
-								"deg")) {
-							order.add(mContext.getString(R.string.heading_deg));
-						} else if (field.unit.toLowerCase(Locale.ENGLISH)
-								.contains("rad")) {
-							order.add(mContext.getString(R.string.heading_rad));
+
+					// Acceleration
+					else if (field.name.toLowerCase(Locale.US)
+							.contains("accel")) {
+						if (field.name.toLowerCase(Locale.US).contains("x")) {
+							order.add(mContext.getString(R.string.accel_x));
+						} else if (field.name.toLowerCase(Locale.US).contains(
+								"y")) {
+							order.add(mContext.getString(R.string.accel_y));
+						} else if (field.name.toLowerCase(Locale.US).contains(
+								"z")) {
+							order.add(mContext.getString(R.string.accel_z));
+						} else {
+							order.add(mContext.getString(R.string.accel_total));
 						}
+						break;
 					}
-					// Temperature
-					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
-							"temp")) {
-						if (field.unit.toLowerCase(Locale.ENGLISH)
-								.contains("f")) {
-							order.add(mContext
-									.getString(R.string.temperature_f));
-						} else if (field.unit.toLowerCase(Locale.ENGLISH)
-								.contains("c")) {
-							order.add(mContext
-									.getString(R.string.temperature_c));
-						} else if (field.unit.toLowerCase(Locale.ENGLISH)
-								.contains("k")) {
-							order.add(mContext
-									.getString(R.string.temperature_k));
-						}
-					}
+					
 					// Pressure
-					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
-							"pressure")
-							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
-									"ppi")
-							|| field.unit.toLowerCase(Locale.ENGLISH).contains(
-									"psi")) {
+					else if (field.name.toLowerCase(Locale.US)
+							.contains("pressure")) {
 						order.add(mContext.getString(R.string.pressure));
+						break;
 					}
-					// Altitude
-					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
-							"alt")) {
-						order.add(mContext.getString(R.string.altitude));
-					}
-					// Luminous Flux
-					else if (field.name.toLowerCase(Locale.ENGLISH).contains(
-							"flux")) {
-						order.add(mContext.getString(R.string.luminous_flux));
-					} else {
+					
+					else {
 						order.add(mContext.getString(R.string.null_string));
+						break;
 					}
 
-					break;
-
-				// Text
-				case 3:
-					Log.i("u is nub", "Nothing happenin' here!");
+				// Time
+				case RProjectField.TYPE_TIMESTAMP:
+					order.add(mContext.getString(R.string.time));
 					break;
 
 				// Latitude
-				case 4:
+				case RProjectField.TYPE_LAT:
 					order.add(mContext.getString(R.string.latitude));
 					break;
 
 				// Longitude
-				case 5:
+				case RProjectField.TYPE_LON:
 					order.add(mContext.getString(R.string.longitude));
+					break;
+
+				// No match (Just about every other category)
+				default:
+					order.add(mContext.getString(R.string.null_string));
 					break;
 
 				}
@@ -212,15 +200,14 @@ public class NewDFM extends Application {
 		}
 
 	}
-
 	public JSONObject makeJSONObject() {
 
 		JSONObject thisRow = new JSONObject();
 
 		try {
-			System.out.println("Fields:" + expFields);
-			for (int i = 0; i < expFields.size(); i++) {
-				RProjectField field = expFields.get(i);
+			System.out.println("Fields:" + projFields);
+			for (int i = 0; i < projFields.size(); i++) {
+				RProjectField field = projFields.get(i);
 				System.out.println("Type: " + field.type);
 				switch (field.type) {
 
@@ -756,7 +743,7 @@ public class NewDFM extends Application {
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			expFields = rapi.getProjectFields(eid);
+			projFields = rapi.getProjectFields(projID);
 			return null;
 
 		}
