@@ -394,11 +394,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									Log.d("fantastag", "Magnitude added");
 								}
 
-								if (rapi.hasConnectivity())
+								if (rapi.hasConnectivity()) {
 									dataSet.put(dfm.makeJSONObject());
+									Log.d("tag", "NULLFROG");
+								}
 								else {
-									dfm.getOrder();
 									dataSet.put(dfm.makeJSONArray());
+									Log.d("tag", "NULLTOAD");
 								}
 
 							}

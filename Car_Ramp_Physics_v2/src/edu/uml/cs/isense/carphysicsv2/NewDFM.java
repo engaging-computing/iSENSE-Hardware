@@ -76,7 +76,7 @@ public class NewDFM extends Application {
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
 
-			projFields = rapi.getProjectFields(projID);
+			new getFieldsTask().execute();
 
 			for (RProjectField field : projFields) {
 				switch (field.type) {
@@ -750,6 +750,7 @@ public class NewDFM extends Application {
 
 		@Override
 		protected void onPostExecute(Void voids) {
+			getOrder();
 
 		}
 
