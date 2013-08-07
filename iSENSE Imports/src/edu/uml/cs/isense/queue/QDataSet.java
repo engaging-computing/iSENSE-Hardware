@@ -6,10 +6,11 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
 /**
@@ -94,29 +95,6 @@ public class QDataSet implements Serializable {
 	 */
 	private File picture;
 
-	// Optional
-	/**
-	 * Optional: session ID to associate the data set with.  
-	 * One will be created if none is specified.
-	 */
-	private int sid = -1;
-	/**
-	 * Optional: city of where the data were recorded.
-	 */
-	private String city = "";
-	/**
-	 * Optional: state of where the data were recorded.
-	 */
-	private String state = "";
-	/**
-	 * Optional: country of where the data were recorded.
-	 */
-	private String country = "";
-	/**
-	 * Optional: address of where the data were recorded.
-	 */
-	private String addr = "";
-
 	/**
 	 * Contructs an object of type DataSet
 	 * @param type DataSet.PIC or DataSet.DATA
@@ -125,15 +103,9 @@ public class QDataSet implements Serializable {
 	 * @param eid
 	 * @param data If type is DataSet.DATA, we look here.
 	 * @param picture If type is DataSet.PIC, we look here.
-	 * @param sid Pass DataSet.NO_SESSION_DEFINED if you have not created a session.
-	 * @param city
-	 * @param state
-	 * @param country
-	 * @param addr
 	 */
 	public QDataSet(Type type, String name, String desc, String eid,
-			String data, File picture, int sid, String city, String state,
-			String country, String addr) {
+			String data, File picture) {
 		this.type = type;
 		this.name = name;
 		this.desc = desc;
@@ -143,11 +115,6 @@ public class QDataSet implements Serializable {
 		else
 			this.data = null;
 		this.picture = picture;
-		this.sid = sid;
-		this.city = city;
-		this.state = state;
-		this.country = country;
-		this.addr = addr;
 		this.key = new Random().nextLong();
 		this.hasInitialExperiment = eid.equals("-1") ? false : true;
 	}
@@ -162,12 +129,12 @@ public class QDataSet implements Serializable {
 	 * 
 	 * @return if the upload was successful
 	 */
-	public boolean upload(RestAPI rapi, Context c) {
+	public boolean upload(API api, Context c) {
 		if (this.eid.equals("-1"))
 			return false;
 		
 		if (!this.hasInitialExperiment)
-			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, rapi, c);
+			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, api, c);
 		
 		return upload();
 	}
@@ -181,89 +148,106 @@ public class QDataSet implements Serializable {
 	
 		boolean success = true;
 		if (this.rdyForUpload) {
-			switch (type) {
-			case DATA:
+//			switch (type) {
+//			case DATA:
 
-				if (sid == -1) {
-
-					if (addr.equals("")) {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								"N/A", "N/A", "United States");
-					} else {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								addr, city + ", " + state, country);
-					}
-
-					// Failure to create session or not logged in
-					if (sid == -1) {
-						success = false;
-						break;
-					} else QueueLayout.lastSID = sid;
-				}
-
-				// Experiment Closed Checker
-				if (sid == -400) {
-					success = false;
-					break;
-				} else {
-					JSONArray dataJSON = prepDataForUpload();
-					if (!(dataJSON.isNull(0))) {
-						
-						success = UploadQueue.getRapi().putSessionData(sid, eid,
-								dataJSON);
+				// TODO - check for closed experiment
+//				if (sid == -1) {
+//
+//					if (addr.equals("")) {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								"N/A", "N/A", "United States");
+//					} else {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								addr, city + ", " + state, country);
+//					}
+//
+//					// Failure to create session or not logged in
+//					if (sid == -1) {
+//						success = false;
+//						break;
+//					} else QueueLayout.lastSID = sid;
+//				}
+//
+//				// Experiment Closed Checker
+//				if (sid == -400) {
+//					success = false;
+//					break;
+//				} else {
+				JSONArray dataJSON = prepDataForUpload();
+				if (!(dataJSON.isNull(0))) {
 					
-					}
-				}
-				break;
-
-			case PIC:
-				if (sid == -1) sid = QueueLayout.lastSID;
-				if (name.equals("")) {
-					success = UploadQueue.getRapi().uploadPictureToSession(
-							picture, eid, sid, "*Session Name Not Provided*",
-							"N/A");
-				} else {
-					success = UploadQueue.getRapi().uploadPictureToSession(
-							picture, eid, sid, name, "N/A");
-				}
-				
-				break;
-				
-			case BOTH:
-				if (sid == -1) {
-
-					if (addr.equals("")) {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								"N/A", "N/A", "United States");
-					} else {
-						sid = UploadQueue.getRapi().createSession(eid, name, desc,
-								addr, city + ", " + state, country);
-					}
-
-					if (sid == -1) {
-						success = false;
-						break;
-					} else QueueLayout.lastSID = sid;
-				}
-
-				// Experiment Closed Checker
-				if (sid == -400) {
-					success = false;
-					break;
-				} else {
-					JSONArray dataJSON = prepDataForUpload();
-					if (!(dataJSON.isNull(0))) {
-						
-						success = UploadQueue.getRapi().putSessionData(sid, eid,
-								dataJSON);
-						success = UploadQueue.getRapi().uploadPictureToSession(
-								picture, eid, sid, name, "N/A");
+//					success = UploadQueue.getRapi().putSessionData(sid, eid,
+//							dataJSON);
 					
+					//System.out.println("Prepared: " + dataJSON.toString());
+					
+					JSONObject jobj = new JSONObject();
+					try {
+						jobj.put("data", dataJSON);
+					} catch (JSONException e) {
+						// uh oh
+						e.printStackTrace();
 					}
-				}
+					jobj = UploadQueue.getAPI().rowsToCols(jobj);
+					
+					System.out.println("JOBJ: " + jobj.toString());
+					
+					// TODO - success :(?
+					/*success =*/ UploadQueue.getAPI().uploadDataSet(Integer.parseInt(eid), jobj, name);
 				
-				break;
-			}
+				}
+//				}
+//				break;
+// TODO - pictures and stuff
+//			case PIC:
+//				if (sid == -1) sid = QueueLayout.lastSID;
+//				if (name.equals("")) {
+//					success = UploadQueue.getRapi().uploadPictureToSession(
+//							picture, eid, sid, "*Session Name Not Provided*",
+//							"N/A");
+//				} else {
+//					success = UploadQueue.getRapi().uploadPictureToSession(
+//							picture, eid, sid, name, "N/A");
+//				}
+//				
+//				break;
+//				
+//			case BOTH:
+//				if (sid == -1) {
+//
+//					if (addr.equals("")) {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								"N/A", "N/A", "United States");
+//					} else {
+//						sid = UploadQueue.getRapi().createSession(eid, name, desc,
+//								addr, city + ", " + state, country);
+//					}
+//
+//					if (sid == -1) {
+//						success = false;
+//						break;
+//					} else QueueLayout.lastSID = sid;
+//				}
+//
+//				// Experiment Closed Checker
+//				if (sid == -400) {
+//					success = false;
+//					break;
+//				} else {
+//					JSONArray dataJSON = prepDataForUpload();
+//					if (!(dataJSON.isNull(0))) {
+//						
+//						success = UploadQueue.getRapi().putSessionData(sid, eid,
+//								dataJSON);
+//						success = UploadQueue.getRapi().uploadPictureToSession(
+//								picture, eid, sid, name, "N/A");
+//					
+//					}
+//				}
+//				
+//				break;
+//			}
 		}
 
 		return success;
@@ -305,25 +289,6 @@ public class QDataSet implements Serializable {
 		return this.hasInitialExperiment;
 	}
 
-	/**
-	 * Getter for session ID.
-	 * 
-	 * @return The session ID associated with this data set.
-	 */
-	public int getSid() {
-		return sid;
-	}
-
-	/**
-	 * Setter for session ID.
-	 * 
-	 * @param sid
-	 * 		The session ID the data should be uploaded to in the future.
-	 */
-	public void setSid(int sid) {
-		this.sid = sid;
-	}
-	
 	/**
 	 * Getter for experiment ID.
 	 * 

@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.exp;
+package edu.uml.cs.isense.proj;
 
 import edu.uml.cs.isense.R;
 import android.app.Activity;
