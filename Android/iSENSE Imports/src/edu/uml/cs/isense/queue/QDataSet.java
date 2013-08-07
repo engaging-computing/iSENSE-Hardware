@@ -256,12 +256,12 @@ public class QDataSet implements Serializable {
 	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
 		// If the string isn't a complete JSONArray, trim off the incomplete portion
-		if (!(this.data.charAt(this.data.length() -1) == ']')) {
-			int endIndex = this.data.lastIndexOf(']');
-			if (endIndex != -1)
-				this.data = this.data.substring(0, endIndex);
-				this.data = this.data + ']';
-		}
+//		if (!(this.data.charAt(this.data.length() -1) == '}')) {
+//			int endIndex = this.data.lastIndexOf(']');
+//			if (endIndex != -1)
+//				this.data = this.data.substring(0, endIndex);
+//				this.data = this.data + ']';
+//		}
 		
 		JSONArray dataJSON = null;
 		try {
