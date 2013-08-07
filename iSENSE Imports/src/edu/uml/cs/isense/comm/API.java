@@ -385,8 +385,9 @@ public class API {
 	 * @param projectId The ID of the project to upload data to
 	 * @param data The data to be uploaded. Must be in column-major format to upload correctly
 	 * @param datasetName The name of the dataset
+	 * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
 	 */
-	public void uploadDataSet(int projectId, JSONObject data, String datasetName) {
+	public int uploadDataSet(int projectId, JSONObject data, String datasetName) {
 		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
 		ArrayList<String> headers = new ArrayList<String>();
@@ -398,10 +399,13 @@ public class API {
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
 			if(!datasetName.equals("")) requestData.put("name", datasetName);
-			makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			JSONObject jobj = new JSONObject(reqResult);
+			return jobj.getInt("id");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return -1;
 	}
 
 	public void appendDataSetData(int dataSetId, JSONObject newData) {
