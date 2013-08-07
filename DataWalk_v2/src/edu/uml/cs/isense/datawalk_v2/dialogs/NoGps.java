@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.datawalk_v2.R;
 
 public class NoGps extends Activity {
 	
