@@ -6,16 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import edu.uml.cs.isense.datawalk_v2.R;
-public class About extends Activity{
+public class Help extends Activity{
 
 	private Button okButton;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceBundle) {
 		super.onCreate(savedInstanceBundle);
-		setContentView(R.layout.about);
-	
-		okButton = (Button) findViewById(R.id.loginButton);
+		setContentView(R.layout.help_dialog);
+		this.setTitle("How to Create a New Experiment: ");
+		okButton = (Button) findViewById(R.id.helpOkButton);
 		
 		okButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -30,4 +30,4 @@ public class About extends Activity{
 	
 	}
 
-}//ends About class
+}//ends Help class
