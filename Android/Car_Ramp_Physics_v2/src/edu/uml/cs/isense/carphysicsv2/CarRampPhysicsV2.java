@@ -71,8 +71,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private static String userName = "sor";
 	private static String password = "sor";
 
-	public static final String baseSessionUrl_Prod = "http://isenseproject.org/highvis.php?sessions=";
-	public static final String baseSessionUrl_Dev = "http://129.63.16.128/projects/25/data_sets/";
+	public static final String baseSessionUrl_Prod = "http://isenseproject.org/projects/";
+	public static final String baseSessionUrl_Dev = "http://rsense.cs.uml.edu/projects/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";
 
@@ -821,9 +821,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				data = rapi.rowsToCols(data);
 
-				rapi.uploadDataSet(Integer.parseInt(experimentNumber), data,
-						nameOfSession);
-				uploadSuccessful = true;
+				dataSetID = rapi
+						.uploadDataSet(Integer.parseInt(experimentNumber),
+								data, nameOfSession);
+				Log.d("fantagstag", "Data Set: " + dataSetID);
+				if (dataSetID != -1) {
+					sessionUrl = baseSessionUrl + experimentNumber
+							+ "/data_sets/" + dataSetID;
+					Log.d("fantastag", sessionUrl);
+					uploadSuccessful = true;
+				}
 			} else {
 
 				uploadSuccessful = false;
