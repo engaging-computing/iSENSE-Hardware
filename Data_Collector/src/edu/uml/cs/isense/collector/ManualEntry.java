@@ -62,7 +62,6 @@ import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Splash;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -85,7 +84,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private static final int TYPE_TIME = 5;
 
 	private static final int LOGIN_REQUESTED = 100;
-	private static final int EXPERIMENT_REQUESTED = 101;
+	private static final int PROJECT_REQUESTED = 101;
 	private static final int GPS_REQUESTED = 102;
 	private static final int QUEUE_UPLOAD_REQUESTED = 103;
 	private static final int MEDIA_REQUESTED = 104;
@@ -103,10 +102,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public static Context mContext;
 
 	private TextView loginLabel;
-	private TextView experimentLabel;
+	private TextView projectLabel;
 
 	private SharedPreferences loginPrefs;
-	private SharedPreferences expPrefs;
+	private SharedPreferences projPrefs;
 
 	private LinearLayout dataFieldEntryList;
 
@@ -118,7 +117,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	private ArrayList<RProjectField> fieldOrder;
 
-	private EditText sessionName;
+	private EditText dataSetName;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -130,8 +129,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 		
 		api = API.getInstance(mContext);
 		api.useDev(true);
-		
-		//new GetDataSetTask().execute(); // remove TODO
 		
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
@@ -161,15 +158,15 @@ public class ManualEntry extends Activity implements OnClickListener,
 				Splash.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
-		expPrefs = getSharedPreferences("PROJID_MANUAL", 0);
+		projPrefs = getSharedPreferences("PROJID_MANUAL", 0);
 
 		loginLabel = (TextView) findViewById(R.id.loginLabel);
 		loginLabel.setText(getResources().getString(R.string.loggedInAs)
 				+ loginPrefs.getString("username", ""));
 
-		experimentLabel = (TextView) findViewById(R.id.experimentLabel);
+		projectLabel = (TextView) findViewById(R.id.projectLabel);
 
-		sessionName = (EditText) findViewById(R.id.manual_session_name);
+		dataSetName = (EditText) findViewById(R.id.manual_dataset_name);
 
 		saveData = (Button) findViewById(R.id.manual_save);
 		clearData = (Button) findViewById(R.id.manual_clear);
@@ -184,13 +181,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		String exp = expPrefs.getString(PREFERENCES_PROJ_ID, "");
-		if (exp.equals("")) {
-			Intent iExperiment = new Intent(this, Setup.class);
-			iExperiment.putExtra("from_where", "manual");
-			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+		String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
+		if (projID.equals("")) {
+			Intent iProject = new Intent(this, Setup.class);
+			iProject.putExtra("from_where", "manual");
+			startActivityForResult(iProject, PROJECT_REQUESTED);
 		} else {
-			loadExperimentData(exp);
+			loadProjectData(projID);
 		}
 
 	}
@@ -202,28 +199,28 @@ public class ManualEntry extends Activity implements OnClickListener,
 			clearFields();
 			break;
 		case R.id.manual_save:
-			String exp = expPrefs.getString(PREFERENCES_PROJ_ID, "");
+			String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
 
-			// Clear the setError if the user has finally entered a session name
-			if (sessionName.getText().toString().length() != 0)
-				sessionName.setError(null);
+			// Clear the setError if the user has finally entered a data set name
+			if (dataSetName.getText().toString().length() != 0)
+				dataSetName.setError(null);
 
-			if (exp.equals("")) {
+			if (projID.equals("")) {
 				w.make("Invalid or no selected project.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-			} else if (sessionName.getText().toString().length() == 0) {
-				sessionName.setError("Enter a data set name");
+			} else if (dataSetName.getText().toString().length() == 0) {
+				dataSetName.setError("Enter a data set name");
 			} else {
 				new SaveDataTask().execute();
 			}
 			break;
 		case R.id.manual_media_button:
-			if (sessionName.getText().toString().length() != 0) {
-				sessionName.setError(null);
+			if (dataSetName.getText().toString().length() != 0) {
+				dataSetName.setError(null);
 				Intent iMedia = new Intent(mContext, MediaManager.class);
-				iMedia.putExtra("sessionName", sessionName.getText().toString());
+				iMedia.putExtra("projectName", dataSetName.getText().toString());
 				startActivityForResult(iMedia, MEDIA_REQUESTED);
 			} else {
-				sessionName.setError("Enter a data set name");
+				dataSetName.setError("Enter a data set name");
 			}
 		}
 	}
@@ -253,10 +250,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 					// should never get here
 				}
 			}
-		} else if (requestCode == EXPERIMENT_REQUESTED) {
+		} else if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID_MANUAL", 0);
-				loadExperimentData(mPrefs.getString(PREFERENCES_PROJ_ID, ""));
+				loadProjectData(mPrefs.getString(PREFERENCES_PROJ_ID, ""));
 			} else {
 				// they may not have fields on screen now
 			}
@@ -281,20 +278,20 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 	}
 
-	private void loadExperimentData(String eidString) {
+	private void loadProjectData(String projString) {
 
-		if (eidString != null) {
-			new LoadExperimentFieldsTask().execute();
+		if (projString != null) {
+			new LoadProjectFieldsTask().execute();
 		}
 	}
 
-	private void fillDataFieldEntryList(int eid) {
+	private void fillDataFieldEntryList(int projID) {
 		
 		if (fieldOrder.size() == 0) {
 			if (api.hasConnectivity()) {
-				w.make("Experiment not found or has no fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Project not found or has no fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Cannot retrieve experiment fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);	
+				w.make("Cannot retrieve project fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);	
 			}
 			return;
 		}
@@ -304,25 +301,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 		else
 			return;
 		
-		experimentLabel.setText(getResources().getString(
+		projectLabel.setText(getResources().getString(
 				R.string.usingProject)
-				+ eid);
+				+ projID);
 
 		int tagIndex = 0;
 		
 		for (RProjectField projField : fieldOrder) {
-
-//			if (expField.type_id == expField.GEOSPACIAL) {
-//				if (expField.unit_id == expField.UNIT_LATITUDE) {
-//					addDataField(expField, TYPE_LATITUDE);
-//				} else {
-//					addDataField(expField, TYPE_LONGITUDE);
-//				}
-//			} else if (expField.type_id == expField.TIME) {
-//				addDataField(expField, TYPE_TIME);
-//			} else {
-//				addDataField(expField, TYPE_DEFAULT);
-//			}
 			
 			switch (projField.type) {
 			
@@ -367,7 +352,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		fieldContents.setSingleLine(true);
 		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		fieldContents.setTag(tagIndex); // TODO - new tags :D!
+		fieldContents.setTag(tagIndex);
 		
 		if (type != TYPE_NUMBER_FIELD && type != TYPE_TEXT_FIELD) {
 			fieldContents.setText("Auto");
@@ -380,33 +365,14 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setTextColor(Color.GRAY);
 		}
 		
-		/*InputFilter filter = new InputFilter() { 
-			@Override
-			public CharSequence filter(CharSequence source, int start, int end, 
-					Spanned dest, int dstart, int dend) { 
-				if ((dend - dstart) > 20) return "";
-				for (int i = start; i < end; i++) { 
-					if (!(getResources().getString(R.string.digits_restriction).contains("" + source.charAt(i)))) {
-						return "";
-					}
-				} 
-				return null; 
-			}
-		};
-		fieldContents.setFilters(new InputFilter[]{filter});
-		*/
-		
-		
-		
 		if (type == TYPE_TEXT_FIELD) {
-
 			// keyboard to text
 			fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
 			fieldContents
 					.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
 							60) });
 
-		} else if (type == TYPE_NUMBER_FIELD) { // TODO - need the if() part in this? is just "else" enough?
+		} else if (type == TYPE_NUMBER_FIELD) {
 			// keyboard to nums
 			fieldContents.setInputType(InputType.TYPE_CLASS_PHONE);
 			fieldContents
@@ -443,7 +409,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			if (dataFieldContents.isEnabled())
 				dataFieldContents.setText("");
 		}
-		sessionName.setText("");
+		dataSetName.setText("");
 	}
 
 	private void uploadFields() {
@@ -485,9 +451,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 			return true;
 
 		case R.id.menu_item_manual_project:
-			Intent iExperiment = new Intent(mContext, Setup.class);
-			iExperiment.putExtra("from_where", "manual");
-			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+			Intent iProject = new Intent(mContext, Setup.class);
+			iProject.putExtra("from_where", "manual");
+			startActivityForResult(iProject, PROJECT_REQUESTED);
 
 			return true;
 
@@ -629,7 +595,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	}
 
-	private class LoadExperimentFieldsTask extends
+	private class LoadProjectFieldsTask extends
 			AsyncTask<Void, Integer, Void> {
 		ProgressDialog dia;
 		private boolean error = false;
@@ -651,11 +617,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			int eid = Integer.parseInt(expPrefs.getString(PREFERENCES_PROJ_ID,
+			int projID = Integer.parseInt(projPrefs.getString(PREFERENCES_PROJ_ID,
 					"-1"));
-			if (eid != -1) {
-				//fieldOrder = rapi.getExperimentFields(eid);
-				fieldOrder = api.getProjectFields(eid);
+			if (projID != -1) {
+				fieldOrder = api.getProjectFields(projID);
 			} else {
 				// problem!
 			}
@@ -667,10 +632,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected void onPostExecute(Void result) {
 
 			if (!error) {
-				String eid = expPrefs.getString(PREFERENCES_PROJ_ID, "-1");
+				String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "-1");
 
 				try {
-					fillDataFieldEntryList(Integer.parseInt(eid));
+					fillDataFieldEntryList(Integer.parseInt(projID));
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
@@ -687,7 +652,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog dia;
-		String eid = expPrefs.getString(PREFERENCES_PROJ_ID, "");
+		String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
 		QDataSet ds;
 
 		@Override
@@ -711,8 +676,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
-			ds = new QDataSet(QDataSet.Type.DATA, sessionName.getText()
-					.toString(), uploadTime, eid, data, null);
+			ds = new QDataSet(QDataSet.Type.DATA, dataSetName.getText()
+					.toString(), uploadTime, projID, data, null);
 
 			return null;
 		}
@@ -791,14 +756,14 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected Void doInBackground(Void... params) {
 	
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
-			String name = (sessionName.getText().toString().equals("")) ? "(No name provided)"
-					: sessionName.getText().toString();
+			String name = (dataSetName.getText().toString().equals("")) ? "(No name provided)"
+					: dataSetName.getText().toString();
 
-			String eid = expPrefs.getString(PREFERENCES_PROJ_ID, null);
-			if (eid != null) {
+			String projID = projPrefs.getString(PREFERENCES_PROJ_ID, null);
+			if (projID != null) {
 				for (File picture : MediaManager.pictureArray) {
 					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
-							uploadTime, eid, null, picture);
+							uploadTime, projID, null, picture);
 					uq.addDataSetToQueue(picDS);
 
 				}
@@ -815,36 +780,5 @@ public class ManualEntry extends Activity implements OnClickListener,
 			super.onPostExecute(result);
 		}
 	}
-	
-	class GetDataSetTask extends AsyncTask<Void, Integer, Void> {
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			api.createSession("sor", "sor");
-			RDataSet rds = api.getDataSet(508); // TODO remove
-			System.out.println("RDS: " + rds.name);
-			
-			ArrayList<RProjectField> alrpf = api.getProjectFields(23);
-			for (RProjectField rpf : alrpf) {
-				System.out.println("RPF: " + rpf.field_id);
-			}
-			
-			//EditText frog = null;
-			//frog.setTag(61);
-			
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-		}
-	}
-
-	
 	
 }
