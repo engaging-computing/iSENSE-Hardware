@@ -66,8 +66,8 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
-	public static String experimentNumber = "409";
-	public static final String DEFAULT_PROJ_PROD = "409";
+	public static String experimentNumber = "32";
+	public static final String DEFAULT_PROJ_PROD = "32";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	
 	private static String userName = "sor";
