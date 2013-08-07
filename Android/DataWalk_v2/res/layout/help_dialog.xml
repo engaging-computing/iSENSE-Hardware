@@ -5,6 +5,7 @@
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -15,21 +16,9 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/aboutApp"
-            android:textSize="16sp" />
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Help"
+            android:text="@string/HelpText"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/HelpContinued"
-            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/LinearLayout2"
@@ -38,10 +27,10 @@
             android:background="@android:color/transparent" >
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/helpOkButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-8dip"
+                android:layout_marginBottom="8dip"
                 android:text="@android:string/ok" />
         </LinearLayout>
     </LinearLayout>
