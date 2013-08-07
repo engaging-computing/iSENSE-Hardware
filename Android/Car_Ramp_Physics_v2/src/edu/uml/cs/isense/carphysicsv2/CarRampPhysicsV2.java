@@ -209,8 +209,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		new LoginTask().execute();
 		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 				+ userName + " Name: " + firstName + " " + lastInitial);
-		SharedPreferences prefs2 = getSharedPreferences("EID", 0);
-		experimentNumber = prefs2.getString("experiment_id", null);
+		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
+		experimentNumber = prefs2.getString("project_id", null);
 		if (experimentNumber == null)
 			experimentNumber = defaultExp;
 		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi, mContext, f);
@@ -695,8 +695,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		if (reqCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences prefs = getSharedPreferences("EID", 0);
-				experimentNumber = prefs.getString("experiment_id", null);
+				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
+				experimentNumber = prefs.getString("project_id", null);
 				if (experimentNumber == null)
 					experimentNumber = defaultExp;
 				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
@@ -767,10 +767,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						R.string.logged_in_as)
 						+ "sor" + " Name: " + firstName + " " + lastInitial);
 
-				SharedPreferences eprefs = getSharedPreferences("EID", 0);
+				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
 				experimentNumber = defaultExp;
-				editor.putString("experiment_id", experimentNumber);
+				editor.putString("project_id", experimentNumber);
 				editor.commit();
 				INTERVAL = 50;
 				x = z = mag = false;
