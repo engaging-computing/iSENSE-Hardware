@@ -67,7 +67,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
 	public static String experimentNumber = "409";
-	public static final String DEFAULT_PROJ_PROD = "409";
+	public static final String DEFAULT_PROJ_PROD = "32";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	
 	private static String userName = "sor";
@@ -194,7 +194,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		}
 
 		f = new Fields();
-		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi, mContext, f);
 		uq = new UploadQueue("carrampphysics", mContext, rapi);
 		uq.buildQueueFromFile();
 
