@@ -163,6 +163,25 @@ public class API {
 		}
 		return proj;
 	}
+	
+	/**
+	 * Creates a new project on iSENSE
+	 * 
+	 * @param projectName The name of the new project to be created
+	 * @return The ID of the created project
+	 */
+	public int createProject(String projectName) {
+		try {
+			JSONObject postData = new JSONObject();
+			postData.put("project_name", projectName);
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData);
+			JSONObject jobj = new JSONObject(reqResult);
+			return jobj.getInt("id");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	/** 
 	 * Gets all of the fields associated with a project
@@ -405,6 +424,12 @@ public class API {
 		return -1;
 	}
 
+	/**
+	 * Append new rows of data to the end of an existing data set
+	 * 
+	 * @param dataSetId The ID of the data set to append to
+	 * @param newData The new data to append
+	 */
 	public void appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
