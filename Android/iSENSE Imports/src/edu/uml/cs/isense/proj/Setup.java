@@ -11,19 +11,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Setup extends Activity implements OnClickListener {
 
-	private EditText eidInput;
+	private EditText projInput;
 
 	private Button okay;
 	private Button cancel;
 	private Button qrCode;
 	private Button browse;
-	private Button noExp;
 
 	private Context mContext;
 	private Waffle w;
@@ -31,7 +29,7 @@ public class Setup extends Activity implements OnClickListener {
 	private SharedPreferences mPrefs;
 
 	private static final int QR_CODE_REQUESTED = 100;
-	private static final int EXPERIMENT_CODE = 101;
+	private static final int PROJECT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
 	
 	private static String prefsString = "PROJID";
@@ -46,30 +44,21 @@ public class Setup extends Activity implements OnClickListener {
 
 		w = new Waffle(mContext);
 
-		okay = (Button) findViewById(R.id.experiment_ok);
+		okay = (Button) findViewById(R.id.project_ok);
 		okay.setOnClickListener(this);
 
-		cancel = (Button) findViewById(R.id.experiment_cancel);
+		cancel = (Button) findViewById(R.id.project_cancel);
 		cancel.setOnClickListener(this);
 
-		qrCode = (Button) findViewById(R.id.experiment_qr);
+		qrCode = (Button) findViewById(R.id.project_qr);
 		qrCode.setOnClickListener(this);
 
-		browse = (Button) findViewById(R.id.experiment_browse);
+		browse = (Button) findViewById(R.id.project_browse);
 		browse.setOnClickListener(this);
 		
-		noExp = (Button) findViewById(R.id.experiment_no_exp);
-		noExp.setOnClickListener(this);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			boolean enableNoExpButton = extras.getBoolean("enable_no_exp_button");
-			if (!enableNoExpButton) {
-				noExp.setVisibility(View.GONE);
-			} else {
-				TextView t = (TextView) findViewById(R.id.experimentText);
-				t.setText(getResources().getString(R.string.chooseProjectAlt));
-			}
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
@@ -81,42 +70,42 @@ public class Setup extends Activity implements OnClickListener {
 				}
 			} else {
 				prefsString = "PROJID";
-			}
-			
+			}	
 		} else {
-			noExp.setVisibility(View.GONE);
+			prefsString = "PROJID";
 		}
 		
-		mPrefs = getSharedPreferences(prefsString, 0);
-		String eid = mPrefs.getString("project_id", "").equals("-1") ? "" : mPrefs.getString("project_id", "");
 		
-		eidInput = (EditText) findViewById(R.id.experimentInput);
-		eidInput.setText(eid);
+		mPrefs = getSharedPreferences(prefsString, 0);
+		String projID = mPrefs.getString("project_id", "").equals("-1") ? "" : mPrefs.getString("project_id", "");
+		
+		projInput = (EditText) findViewById(R.id.projectInput);
+		projInput.setText(projID);
 
 	}
 
 	public void onClick(View v) {
 
 		int id = v.getId();
-		if (id == R.id.experiment_ok) {
+		if (id == R.id.project_ok) {
 			boolean pass = true;
-			if (eidInput.getText().length() == 0) {
-				eidInput.setError("Enter a project ID");
+			if (projInput.getText().length() == 0) {
+				projInput.setError("Enter a project ID");
 				pass = false;
 			}
 			if (pass) {
 				
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putString("project_id",
-						eidInput.getText().toString()).commit();
+						projInput.getText().toString()).commit();
 
 				setResult(RESULT_OK);
 				finish();
 			}
-		} else if (id == R.id.experiment_cancel) {
+		} else if (id == R.id.project_cancel) {
 			setResult(RESULT_CANCELED);
 			finish();
-		} else if (id == R.id.experiment_qr) {
+		} else if (id == R.id.project_qr) {
 			try {
 				Intent intent = new Intent(
 						"com.google.zxing.client.android.SCAN");
@@ -129,18 +118,10 @@ public class Setup extends Activity implements OnClickListener {
 				Intent iNoQR = new Intent(Setup.this, NoQR.class);
 				startActivityForResult(iNoQR, NO_QR_REQUESTED);
 			}
-		} else if (id == R.id.experiment_browse) {
-			Intent experimentIntent = new Intent(getApplicationContext(),
-					BrowseProjects.class);
-			experimentIntent.putExtra(
-					"edu.uml.cs.isense.amusement.experiments.propose",
-					EXPERIMENT_CODE);
-			startActivityForResult(experimentIntent, EXPERIMENT_CODE);
-		} else if (id == R.id.experiment_no_exp) {
-			Intent iRet = new Intent();
-			iRet.putExtra("no_exp", true);
-			setResult(RESULT_OK, iRet);
-			finish();
+		} else if (id == R.id.project_browse) {
+			Intent iProject = new Intent(getApplicationContext(),
+					BrowseProjects.class);;
+			startActivityForResult(iProject, PROJECT_CODE);
 		}
 
 	}
@@ -154,11 +135,11 @@ public class Setup extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 				String contents = data.getStringExtra("SCAN_RESULT");
 
-				String delimiter = "id=";
+				String delimiter = "projects/";
 				String[] split = contents.split(delimiter);
 
 				try {
-					eidInput.setText(split[1]);
+					projInput.setText(split[1]);
 					Integer.parseInt(split[1]);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					w.make("Invalid QR code scanned", Waffle.LENGTH_LONG,
@@ -169,11 +150,10 @@ public class Setup extends Activity implements OnClickListener {
 				}
 
 			}
-		} else if (requestCode == EXPERIMENT_CODE) {
+		} else if (requestCode == PROJECT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
-				int eid = data.getExtras().getInt(
-						"edu.uml.cs.isense.pictures.experiments.exp_id");
-				eidInput.setText("" + eid);
+				int projID = data.getExtras().getInt("project_id");
+				projInput.setText("" + projID);
 
 			}
 		} else if (requestCode == NO_QR_REQUESTED) {

@@ -115,10 +115,7 @@ public class BrowseProjects extends ListActivity {
 		RProject p = m_projects.get(position);
 
 		Intent intent = new Intent();
-		intent.putExtra("edu.uml.cs.isense.pictures.experiments.exp_id",
-				p.project_id);
-		//intent.putExtra("edu.uml.cs.isense.pictures.experiments.srate",
-		//		p.srate);
+		intent.putExtra("project_id", p.project_id);
 
 		setResult(Activity.RESULT_OK, intent);
 		finish();
