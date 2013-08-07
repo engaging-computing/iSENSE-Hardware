@@ -165,9 +165,11 @@ public class API {
 	}
 	
 	/**
-	 * Creates a new project on iSENSE
+	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
+	 * at a type and a name, and can optionally have a unit.
 	 * 
 	 * @param projectName The name of the new project to be created
+	 * @param fields An ArrayList of field objects that will become the fields on iSENSE. 
 	 * @return The ID of the created project
 	 */
 	public int createProject(String projectName, ArrayList<RProjectField> fields) {
