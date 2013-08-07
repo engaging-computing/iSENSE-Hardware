@@ -163,6 +163,41 @@ public class API {
 		}
 		return proj;
 	}
+	
+	/**
+	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
+	 * at a type and a name, and can optionally have a unit.
+	 * 
+	 * @param projectName The name of the new project to be created
+	 * @param fields An ArrayList of field objects that will become the fields on iSENSE. 
+	 * @return The ID of the created project
+	 */
+	public int createProject(String projectName, ArrayList<RProjectField> fields) {
+		try {
+			JSONObject postData = new JSONObject();
+			postData.put("project_name", projectName);
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData);
+			JSONObject jobj = new JSONObject(reqResult);
+			int pid = jobj.getInt("id");
+			
+			for(RProjectField rpf : fields) {
+				JSONObject mField = new JSONObject();
+				mField.put("project_id", pid);
+				mField.put("field_type", rpf.type);
+				mField.put("name", rpf.name);
+				mField.put("unit", rpf.unit);
+				JSONObject postData2 = new JSONObject();
+				postData2.put("field", mField);
+				postData2.put("project_id", pid);
+				makeRequest(baseURL, "fields", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData2);
+			}
+			
+			return pid;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	/** 
 	 * Gets all of the fields associated with a project
@@ -405,6 +440,12 @@ public class API {
 		return -1;
 	}
 
+	/**
+	 * Append new rows of data to the end of an existing data set
+	 * 
+	 * @param dataSetId The ID of the data set to append to
+	 * @param newData The new data to append
+	 */
 	public void appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
