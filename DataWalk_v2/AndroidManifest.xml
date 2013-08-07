@@ -126,7 +126,7 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
-            android:theme="@style/theme_queue_layout" />
+            android:theme="@style/theme_dialog_white" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueAlter"
             android:label="Alter Data Set"
@@ -140,14 +140,14 @@
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name="edu.uml.cs.isense.exp.Setup"
-            android:label="Choose Experiment"
+            android:name="edu.uml.cs.isense.proj.Setup"
+            android:label="Choose Project"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
-            android:label="@string/select_exp" />
+            android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:label="@string/select_proj" />
         <activity
-            android:name="edu.uml.cs.isense.exp.NoQR"
+            android:name="edu.uml.cs.isense.proj.NoQR"
             android:label="No QR Code found" />
     </application>
 

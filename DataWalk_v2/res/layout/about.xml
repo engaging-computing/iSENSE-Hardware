@@ -24,12 +24,6 @@
             android:text="@string/Help"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/HelpContinued"
-            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/LinearLayout2"
