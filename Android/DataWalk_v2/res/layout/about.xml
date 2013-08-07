@@ -3,39 +3,47 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-<LinearLayout 
-    android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp"
-   >
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp" >
 
-
-		
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/aboutApp"
             android:textSize="16sp" />
-        
-		 
-    <LinearLayout
-        android:id="@+id/LinearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent" >
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Help"
+            android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/loginButton"
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/HelpContinued"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@android:string/ok" 
-            android:layout_marginBottom="-8dip"
-            />
+            android:background="@android:color/transparent" >
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-8dip"
+                android:text="@android:string/ok" />
+        </LinearLayout>
     </LinearLayout>
-   
-</LinearLayout>
+
 </ScrollView>

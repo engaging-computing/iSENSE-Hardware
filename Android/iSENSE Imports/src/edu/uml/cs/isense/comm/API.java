@@ -10,6 +10,7 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -35,7 +36,12 @@ public class API {
 	String authToken = "";
 	RPerson currentUser;
 
-	public API() {
+	/**
+	 * Constructor not to be called by a user of the API
+	 * Users should call getInstance instead, which will call
+	 * this constructor if necessary
+	 */
+	private API() {
 		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 		baseURL = publicURL;
 	}
@@ -55,12 +61,16 @@ public class API {
 		return instance;
 	}
 
-	/*Call this function to log in to iSENSE*/
-	/*Once you've done this you'll be able to call authenticated functions and get data back*/
-	/*Returns true if login succeeds*/
+	/**
+	 * Log in to iSENSE. After calling this function, authenticated API functions will work properly
+	 * 
+	 * @param username The username of the user to log in as
+	 * @param password The password of the user to log in as
+	 * @return True if login succeeds, false if it doesn't
+	 */
 	public boolean createSession(String username, String password) {
-		String result = makeRequest(baseURL, "login", "username_or_email="+username+"&password="+password, "POST", null);
 		try {
+			String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
 			authToken = j.getString("authenticity_token");
@@ -70,26 +80,37 @@ public class API {
 			} else {
 				return false;
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
+	/**
+	 * Log out of iSENSE
+	 */
 	public void deleteSession() {
-		makeRequest(baseURL, "login", "", "DELETE", null);
-		currentUser = null;
+		try {
+			makeRequest(baseURL, "login", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "DELETE", null);
+			currentUser = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	//Return many projects
-	/*@param page Which page of results to start from. 1-indexed*/
-	/*@param perPage How many results to display per page */
-	/*@param descending Whether to display the results in descending order (true) or ascending order (false) */
+	/**
+	 * 	Retrieves multiple projects off of iSENSE
+	 * 
+	 *@param page Which page of results to start from. 1-indexed
+	 *@param perPage How many results to display per page
+	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 *@return An ArrayList of Project objects
+	 */
 	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET", null);
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -108,7 +129,7 @@ public class API {
 
 				result.add(proj);
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
@@ -123,7 +144,7 @@ public class API {
 	public RProject getProject(int projectId) {
 		RProject proj = new RProject();
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken, "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			proj.project_id = j.getInt("id");
@@ -137,7 +158,7 @@ public class API {
 			proj.owner_name = j.getString("ownerName");
 			proj.owner_url = j.getString("ownerUrl");
 
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return proj;
@@ -153,7 +174,7 @@ public class API {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+authToken+"&recur=true", "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&recur=true", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for(int i = 0; i < j2.length(); i++) {
@@ -184,7 +205,7 @@ public class API {
 		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+authToken+"&page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET", null);
+			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -200,12 +221,17 @@ public class API {
 
 				result.add(tut);
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	//Return one tutorial
+	/**
+	 * Get a tutorial from iSENSE
+	 * 
+	 * @param tutorialId The ID of the tutorial to retrieve
+	 * @return A Tutorial object
+	 */
 	public RTutorial getTutorial(int tutorialId) {
 		RTutorial tut = new RTutorial();
 		try {
@@ -240,7 +266,7 @@ public class API {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+sortMode, "GET", null);
+			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -256,13 +282,18 @@ public class API {
 
 				people.add(person);
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return people;
 	}
-	/*Authenticated function*/
-	/*Must have called createSession before calling this function*/
+
+	/**
+	 * Gets a user off of iSENSE
+	 * 
+	 * @param username The username of the user to retrieve
+	 * @return A Person object
+	 */
 	public RPerson getUser(String username) {
 		RPerson person = new RPerson();
 		try {
@@ -283,9 +314,9 @@ public class API {
 		return person;
 	}
 
-	
+
 	/**
-	 * Retrieve a data set from iSENSE, with it's internal data JSONObject filled in
+	 * Retrieve a data set from iSENSE, with it's data field filled in
 	 * The internal data set will be converted to column-major format, to make it compatible with 
 	 * the uploadDataSet function
 	 * 
@@ -306,13 +337,21 @@ public class API {
 			result.fieldCount = j.getInt("fieldCount");
 			result.datapointCount = j.getInt("datapointCount");
 			result.data = rowsToCols(j.getJSONObject("data"));
+			result.project_id = j.getJSONObject("project").getInt("id");
 
 		} catch (Exception e) {
 
 		}
 		return result;
 	}
-	
+
+	/**
+	 * Gets all the data sets associated with a project
+	 * The data sets returned by this function do not have their data field filled.
+	 * 
+	 * @param projectId The project ID whose data sets you want
+	 * @return An ArrayList of Data Set objects, with their data fields left null
+	 */
 	public ArrayList<RDataSet> getDataSets(int projectId) {
 		ArrayList<RDataSet> result = new ArrayList<RDataSet>();
 		try {
@@ -341,7 +380,7 @@ public class API {
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
-	 * @param data The data to be uploaded
+	 * @param data The data to be uploaded. Must be in column-major format to upload correctly
 	 * @param datasetName The name of the dataset
 	 */
 	public void uploadDataSet(int projectId, JSONObject data, String datasetName) {
@@ -356,11 +395,37 @@ public class API {
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
 			if(!datasetName.equals("")) requestData.put("name", datasetName);
+			makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(requestData);
-		makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+authToken, "POST", requestData);
+	}
+
+	public void appendDataSetData(int dataSetId, JSONObject newData) {
+		JSONObject requestData = new JSONObject();
+		RDataSet existingDs = getDataSet(dataSetId);
+		JSONObject existing = existingDs.data;
+		Iterator<String> keys = newData.keys();
+		try {
+			while(keys.hasNext()) {
+				String currKey = keys.next();
+				JSONArray newDataPoints = newData.getJSONArray(currKey);
+				for(int i = 0; i < newDataPoints.length(); i++) {
+					existing.getJSONArray(currKey).put(newDataPoints.get(i));
+				}
+			}
+			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
+			ArrayList<String> headers = new ArrayList<String>();
+			for(RProjectField rpf : fields) {
+				headers.add(rpf.name);
+			}
+			requestData.put("headers", new JSONArray(headers));
+			requestData.put("data", existing);
+			requestData.put("id", ""+dataSetId);
+			makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public RPerson getCurrentUser() {
@@ -442,7 +507,7 @@ public class API {
 		return (info != null && info.isConnected());
 
 	}
-	
+
 	/**
 	 * Reformats a row-major JSONObject into a column-major one
 	 * 

@@ -5,19 +5,19 @@
     
     <string name="promptForName">Please enter your name</string>
     
-    <string name="experiments_no_items">No experiments were found.</string>
+    <string name="experiments_no_items">No projects were found.</string>
     
     <string name="about_app">
-        Enter your first name and last initial so that you can later identify your session on iSENSE.
+        Enter your first name and last initial so that you can later identify your data set on iSENSE.
         
         Press and hold the Start button, and the app will record 10 seconds of acceleration data.
         
-        After recording, you may publish your data to isense.cs.uml.edu.
+        After recording, you may publish your data to isenseproject.org.
         You are also given an option to view your data.
         
         You may modify various settings -- explore the menus.
         
-        If setting up your own experiment: create fields named \"Time\" (time/milliseconds) and
+        If setting up your own project: create fields named \"Time\" (time/milliseconds) and
         any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
     </string>
     
@@ -32,7 +32,7 @@
 	<string name="mag">Magnitude</string>
 	<string name="done">Done</string>
 	<string name="upload_or_trash">Upload Data or Throw It Away</string>
-	<string name="chooseExperimentTitle">Experiment Code</string>
+	<string name="chooseExperimentTitle">Project Code</string>
 	<string name="no_qr">No QR Scanner</string>
 	<string name="first_name">First Name: </string>
 	<string name="record_length">Recording Length</string>
@@ -50,5 +50,8 @@
 		<item >30 sec</item>
 		<item >60 sec</item>
 	</string-array>
+	<string name="InternetMsg">Could not connect to the internet through either wifi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
+	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
+	
     
 </resources>
