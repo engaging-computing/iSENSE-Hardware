@@ -851,19 +851,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Deals with login and UI display
-	boolean login() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
+	void login() {
+		new LoginTask().execute();
+	}
+	
+	// Attempts to login with current user information
+	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
-		boolean success = api.createSession(mPrefs.getString("username", ""),
-				mPrefs.getString("password", ""));
-		if (!success) {
-			// This is crazy, so Waffle me maybe?
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					DataCollector.mContext,
+					DataCollector.mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+			
+			boolean success = api.createSession(mPrefs.getString("username", ""),
+					mPrefs.getString("password", ""));
+			return success;
 		}
-
-		return success;
+		
 	}
 
 	// Gets the milliseconds since Epoch
