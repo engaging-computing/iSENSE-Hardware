@@ -27,20 +27,20 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/experimentLabel"
+        android:id="@+id/projectLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginLabel"
         android:layout_marginLeft="2dp"
         android:paddingBottom="8dp"
-        android:text="@string/usingExperiment"
+        android:text="@string/usingProject"
         android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/experimentLabel" >
+        android:layout_below="@id/projectLabel" >
 
         <Button
             android:id="@+id/manual_save"
@@ -68,21 +68,21 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/session_name_wrapper"
+        android:id="@+id/dataset_name_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonLayout"
         android:orientation="horizontal" >
 
         <EditText
-            android:id="@+id/manual_session_name"
+            android:id="@+id/manual_dataset_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight=".2"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
             android:gravity="left"
-            android:hint="@string/enterSessionName"
+            android:hint="@string/enterDataSetName"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLength="150"
@@ -104,7 +104,7 @@
         android:id="@+id/scroll_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/session_name_wrapper"
+        android:layout_below="@id/dataset_name_wrapper"
         android:layout_margin="5dp" >
 
         <LinearLayout

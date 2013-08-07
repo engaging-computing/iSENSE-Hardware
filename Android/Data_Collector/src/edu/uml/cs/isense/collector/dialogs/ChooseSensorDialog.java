@@ -121,7 +121,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		if (nullViewCount == scrollViewLayout.getChildCount()) {
 			errorTV = new TextView(mContext);
 			errorTV.setBackgroundColor(Color.TRANSPARENT);
-			if (isEmpty) errorTV.setText(getString(R.string.invalidExperiment));
+			if (isEmpty) errorTV.setText(getString(R.string.invalidProject));
 			else {
 				errorTV.setText(getString(R.string.noCompatibleFields));
 				compatible = false;
@@ -214,7 +214,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	}
 	
 	private void buildPrefsString() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		
 		StringBuilder sb = new StringBuilder();

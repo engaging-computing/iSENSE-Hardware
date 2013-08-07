@@ -7,9 +7,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
@@ -21,12 +21,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
-import edu.uml.cs.isense.exp.Setup;
-import edu.uml.cs.isense.objects.Experiment;
+import edu.uml.cs.isense.objects.RProject;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -50,7 +50,7 @@ public class Step1Setup extends Activity {
 	public static final int TEST_LENGTH = 600;
 	public static final int MAX_DATA_POINTS = (1000/S_INTERVAL) *TEST_LENGTH;
 	
-	public static RestAPI rapi;
+	public static API api;
 	public static LinkedList<String> acceptedFields;
 	public static DataFieldManager dfm;
 	public static Fields f;
@@ -66,11 +66,9 @@ public class Step1Setup extends Activity {
 
 		mContext = this;
 		w = new Waffle(this);
-		rapi = RestAPI.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(getApplicationContext());
 		f = new Fields();
-		mPrefs = getSharedPreferences("EID", 0);
+		mPrefs = getSharedPreferences("PROJID", 0);
 		mEdit = mPrefs.edit();
 		
 		cancel = (Button) findViewById(R.id.step1_cancel);
@@ -123,18 +121,18 @@ public class Step1Setup extends Activity {
 					testLen.setError(null);
 				}
 				if (!expCheck.isChecked()) {
-					String eid = mPrefs.getString("experiment_id", "");
+					String eid = mPrefs.getString("project_id", "");
 					String fields = mPrefs.getString("accepted_fields", "");
 					if (eid.equals("") || eid.equals("-1")) {
-						w.make("Please select an experiment", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+						w.make("Please select a project", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 						ready = false;
 					} else if (fields.equals("")) {
-						w.make("Please re-select your experiment and fields", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+						w.make("Please re-select your project and fields", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 						ready = false;
 					}
 				}
 				if (ready) {
-					if (expCheck.isChecked()) mEdit.putString("experiment_id", "-1").commit();
+					if (expCheck.isChecked()) mEdit.putString("project_id", "-1").commit();
 					mEdit.putString("session_name", sesName.getText().toString()).commit();
 					
 					if (remember.isChecked()) {
@@ -146,7 +144,7 @@ public class Step1Setup extends Activity {
 					}
 					
 					Intent iRet = new Intent();
-					iRet.putExtra(DataCollector.STEP_1_SESSION_NAME, sesName.getText().toString());
+					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME, sesName.getText().toString());
 					iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
 					iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
 					setResult(RESULT_OK, iRet);
@@ -159,10 +157,10 @@ public class Step1Setup extends Activity {
 		selExp.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!rapi.isConnectedToInternet())
-					w.make("No internet connectivity found - searching only cached experiments", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				if (!api.hasConnectivity())
+					w.make("No internet connectivity found - searching only cached projects", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				Intent iSetup = new Intent(mContext, Setup.class);
-				iSetup.putExtra("enable_no_exp_button", false);
+				iSetup.putExtra("from_where", "automatic");
 				startActivityForResult(iSetup, SETUP_REQUESTED);
 			}
 		});
@@ -174,14 +172,14 @@ public class Step1Setup extends Activity {
 					boolean isChecked) {
 				if (expCheck.isChecked()) {
 					selExp.setEnabled(false);
-					expLabel.setText("Experiment");
+					expLabel.setText("Project");
 				} else {
 					selExp.setEnabled(true);
-					String exp = mPrefs.getString("experiment_id", "");
+					String exp = mPrefs.getString("project_id", "");
 					if (!(exp.equals("") || exp.equals("-1"))) {
-						expLabel.setText("Experiment (currently " + exp + ")");
+						expLabel.setText("Project (currently " + exp + ")");
 					} else {
-						expLabel.setText("Experiment");
+						expLabel.setText("Project");
 					}
 				}
 			}
@@ -194,13 +192,13 @@ public class Step1Setup extends Activity {
 		testLen = (EditText) findViewById(R.id.step1_test_length);
 
 		expLabel = (TextView) findViewById(R.id.step1_exp_num_label);
-		String exp = mPrefs.getString("experiment_id", "");
+		String exp = mPrefs.getString("project_id", "");
 		if (!(exp.equals("") || exp.equals("-1"))) {
-			expLabel.setText("Experiment (currently " + exp + ")");
-			dfm = new DataFieldManager(Integer.parseInt(exp), rapi,
+			expLabel.setText("Project (currently " + exp + ")");
+			dfm = new DataFieldManager(Integer.parseInt(exp), api,
 					mContext, f);
 		} else {
-			dfm = new DataFieldManager(-1, rapi, mContext, f);
+			dfm = new DataFieldManager(-1, api, mContext, f);
 			if (exp.equals("-1"))
 				expCheck.toggle();
 		}
@@ -220,11 +218,11 @@ public class Step1Setup extends Activity {
 		if (requestCode == SETUP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				String exp = mPrefs.getString("experiment_id", "");
-				if (!(exp.equals("") || exp.equals("-1"))) {
-					expLabel.setText("Experiment (currently " + exp + ")");
+				String projID = mPrefs.getString("project_id", "");
+				if (!(projID.equals("") || projID.equals("-1"))) {
+					expLabel.setText("Project (currently " + projID + ")");
 				} else {
-					expLabel.setText("Experiment");
+					expLabel.setText("Project");
 				}
 				new SensorCheckTask().execute();
 
@@ -233,11 +231,11 @@ public class Step1Setup extends Activity {
 			if (resultCode == RESULT_OK) {
 				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
 					Intent iSetup = new Intent(mContext, Setup.class);
-					iSetup.putExtra("enable_no_exp_button", false);
+					iSetup.putExtra("from_where", "automatic");
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else if (!ChooseSensorDialog.compatible) {
 					Intent iSetup = new Intent(mContext, Setup.class);
-					iSetup.putExtra("enable_no_exp_button", true);
+					iSetup.putExtra("from_where", "automatic");
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else {
 					acceptedFields = ChooseSensorDialog.acceptedFields;
@@ -253,7 +251,7 @@ public class Step1Setup extends Activity {
 		try {
 			for (String s : acceptedFields) { if (s.length() != 0) break; }
 		} catch (NullPointerException e) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 		}
@@ -340,7 +338,7 @@ public class Step1Setup extends Activity {
 
 			dia = new ProgressDialog(Step1Setup.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Gathering experiment fields...");
+			dia.setMessage("Gathering project fields...");
 			dia.setCancelable(false);
 			dia.show();
 		}
@@ -348,10 +346,12 @@ public class Step1Setup extends Activity {
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String experimentInput = mPrefs.getString("experiment_id", "");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projectInput = mPrefs.getString("project_id", "");
 
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+			Log.d("SensorCheck", "ProjectId = " + projectInput);
+			
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
 			dfm.getOrder();
 			
@@ -373,13 +373,13 @@ public class Step1Setup extends Activity {
 	}
 	
 	private void chooseSensorIntent() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String expNum = mPrefs.getString("experiment_id", "");
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String expNum = mPrefs.getString("project_id", "");
 		Intent i = new Intent(mContext, ChooseSensorDialog.class);
-		Experiment e = rapi.getExperiment(Integer.parseInt(expNum));
+		RProject p = api.getProject(Integer.parseInt(expNum));
 		i.putExtra("expnum", expNum);
-		if (e != null)
-			i.putExtra("expname", e.name);
+		if (p != null)
+			i.putExtra("expname", p.name);
 		else
 			i.putExtra("expname", "");
 		startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);	

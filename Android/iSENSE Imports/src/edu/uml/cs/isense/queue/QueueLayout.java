@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +17,8 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.exp.Setup;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -63,7 +62,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	protected static QDataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
 	private Waffle w;
-	private RestAPI rapi;
+	private API api;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +72,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(mContext);
 
 		Bundle extras = getIntent().getExtras();
 		parentName = extras.getString(PARENT_NAME);
@@ -84,7 +80,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			w.make("Parent name not passed!", Waffle.IMAGE_X);
 		}
 
-		uq = new UploadQueue(parentName, mContext, rapi);
+		uq = new UploadQueue(parentName, mContext, api);
 		boolean success = uq.buildQueueFromFile();
 
 		if (uq == null || !success) {
@@ -129,7 +125,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		TextView eid = (TextView) view.findViewById(R.id.experimentid);
 		if (ds.getEID().equals("-1"))
-			eid.setText("No Exp.");
+			eid.setText("No Proj.");
 		else
 			eid.setText(ds.getEID());
 
@@ -144,12 +140,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.upload) {
 				
-			if (!rapi.isConnectedToInternet()) {
+			if (!api.hasConnectivity()) {
 				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
 			
-			if (!rapi.isLoggedIn()) {
+			if (api.getCurrentUser() == null) {
 				w.make("Login information not found - please login again", Waffle.IMAGE_X);
 				return;
 			}
@@ -261,7 +257,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			public void run() {
 				if (ds.isUploadable()) {
-					uploadSuccess = ds.upload(rapi, mContext);
+					uploadSuccess = ds.upload(api, mContext);
 				} else {
 					uq.queue.add(ds);
 					uq.storeAndReRetrieveQueue(false);
@@ -352,10 +348,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == ALTER_DATA_EXP_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences mPrefs = getSharedPreferences("EID_QUEUE", 0);
+				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
 				
 				QDataSet alter = lastDataSetLongClicked;
-				alter.setExp(mPrefs.getString("experiment_id", "No Exp."));
+				alter.setExp(mPrefs.getString("project_id", "No Proj."));
 				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);

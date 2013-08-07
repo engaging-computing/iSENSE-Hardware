@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.exp;
+package edu.uml.cs.isense.proj;
 
 import java.util.ArrayList;
 
@@ -13,22 +13,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.Experiment;
+import edu.uml.cs.isense.objects.RProject;
 
-public class BrowseExperiments extends ListActivity {
-	private ExperimentAdapter m_adapter;
-	@SuppressWarnings("unused")
-	private RestAPI rapi;
+public class BrowseProjects extends ListActivity {
+	private ProjectAdapter m_adapter;
 	@SuppressWarnings("unused")
 	private Context mContext;
 	@SuppressWarnings("unused")
 	private boolean finish = false;
-	private ArrayList<Experiment> m_experiments;
+	private ArrayList<RProject> m_projects;
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		final ArrayList<Experiment> list = m_adapter.items;
+		final ArrayList<RProject> list = m_adapter.items;
 		final int loaded = m_adapter.itemsLoaded;
 		final boolean allLoaded = m_adapter.allItemsLoaded;
 		final int page = m_adapter.page;
@@ -45,8 +42,7 @@ public class BrowseExperiments extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.experiments);
-		rapi = RestAPI.getInstance();
+		setContentView(R.layout.projects);
 		mContext = this;
 
 		Bundle extras = getIntent().getExtras();
@@ -63,13 +59,13 @@ public class BrowseExperiments extends ListActivity {
 		// site
 		if (data != null) {
 			// The activity was destroyed/created automatically
-			m_experiments = (ArrayList<Experiment>) dataList[0];
+			m_projects = (ArrayList<RProject>) dataList[0];
 		} else {
-			m_experiments = new ArrayList<Experiment>();
+			m_projects = new ArrayList<RProject>();
 		}
 
-		this.m_adapter = new ExperimentAdapter(getBaseContext(),
-				R.layout.experimentrow, R.layout.loadrow, m_experiments);
+		this.m_adapter = new ProjectAdapter(getBaseContext(),
+				R.layout.projectrow, R.layout.loadrow, m_projects);
 
 		if (data != null) {
 			m_adapter.itemsLoaded = (Integer) dataList[1];
@@ -93,16 +89,16 @@ public class BrowseExperiments extends ListActivity {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				if (s == null || s.length() == 0) {
-					m_experiments = new ArrayList<Experiment>();
-					m_adapter = new ExperimentAdapter(getBaseContext(),
-							R.layout.experimentrow, R.layout.loadrow,
-							m_experiments);
+					m_projects = new ArrayList<RProject>();
+					m_adapter = new ProjectAdapter(getBaseContext(),
+							R.layout.projectrow, R.layout.loadrow,
+							m_projects);
 					setListAdapter(m_adapter);
 				} else {
-					m_experiments = new ArrayList<Experiment>();
-					m_adapter = new ExperimentAdapter(getBaseContext(),
-							R.layout.experimentrow, R.layout.loadrow,
-							m_experiments);
+					m_projects = new ArrayList<RProject>();
+					m_adapter = new ProjectAdapter(getBaseContext(),
+							R.layout.projectrow, R.layout.loadrow,
+							m_projects);
 					m_adapter.action = "search";
 					m_adapter.query = s.toString();
 					setListAdapter(m_adapter);
@@ -116,13 +112,10 @@ public class BrowseExperiments extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Experiment e = m_experiments.get(position);
+		RProject p = m_projects.get(position);
 
 		Intent intent = new Intent();
-		intent.putExtra("edu.uml.cs.isense.pictures.experiments.exp_id",
-				e.experiment_id);
-		intent.putExtra("edu.uml.cs.isense.pictures.experiments.srate",
-				e.srate);
+		intent.putExtra("project_id", p.project_id);
 
 		setResult(Activity.RESULT_OK, intent);
 		finish();

@@ -11,17 +11,17 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/experimentText"
+            android:id="@+id/projectText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:text="@string/chooseExperiment"
+            android:text="@string/chooseProject"
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/experimentInput"
+            android:id="@+id/projectInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -39,7 +39,7 @@
         android:background="@android:color/transparent" >
 
         <Button
-            android:id="@+id/experiment_browse"
+            android:id="@+id/project_browse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -53,7 +53,7 @@
             android:text="@string/or" />
 
         <Button
-            android:id="@+id/experiment_qr"
+            android:id="@+id/project_qr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
@@ -61,15 +61,6 @@
             android:text="@string/scan_qr"
             android:textSize="18sp" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/experiment_no_exp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/no_experiment_now"
-        android:textSize="18sp" />
 
     <View
         android:layout_width="fill_parent"
@@ -84,7 +75,7 @@
         android:background="@android:color/transparent" >
 
         <Button
-            android:id="@+id/experiment_cancel"
+            android:id="@+id/project_cancel"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,7 +84,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/experiment_ok"
+            android:id="@+id/project_ok"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
