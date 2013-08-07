@@ -88,6 +88,12 @@
             android:text="Upload Test" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btn_newproj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Project" />
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
