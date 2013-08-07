@@ -16,14 +16,9 @@
 	</string>
 	<string name="select_proj">Select Project</string>
 	
-	<string name="no_project_now">No Project</string>
 	<string name="browse">Browse</string>
 	<string name="scan_qr">Scan QR</string>
 	<string name="chooseProject">Uploading to project #:</string>
-	<string name="chooseProjectAlt" tools:ignore="UnusedResources">
-		Enter or select a project you would like to upload to.
-		Alternatively, select \"No Project\" to record all possible data and select a project later.
-	</string>
     <string name="search">Search</string>
     <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
