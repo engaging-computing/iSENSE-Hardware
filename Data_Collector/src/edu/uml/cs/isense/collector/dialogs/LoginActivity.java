@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,14 +12,14 @@ import android.widget.EditText;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.splash.Splash;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class LoginActivity extends Activity {
 
 	private Context mContext;
 	
-	private RestAPI rapi;
+	private API api;
 
 	static final public int NAME_SUCCESSFUL = 1;
 	static final public int NAME_FAILED = 0;
@@ -43,10 +42,7 @@ public class LoginActivity extends Activity {
 
 		mContext = this;
 		
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(mContext);
 
 		final EditText username = (EditText) findViewById(R.id.usernameInput);
 		final EditText password = (EditText) findViewById(R.id.passwordInput);
@@ -63,7 +59,7 @@ public class LoginActivity extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				success = rapi.login(username.getText().toString(), password.getText().toString());
+				success = api.createSession(username.getText().toString(), password.getText().toString());
        			   
 				if (success) {
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -102,7 +98,7 @@ public class LoginActivity extends Activity {
 		//	message = unknownUser;
 		//}
 		
-		if (rapi.isConnectedToInternet()) {
+		if (api.hasConnectivity()) {
 			message = unknownUser;
 		} else {
 			message = noConnection;
