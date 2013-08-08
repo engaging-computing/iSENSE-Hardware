@@ -115,18 +115,6 @@
             android:label="Connectivity Not Found"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".dialogs.CanRecord"
-            android:label="Connectivity Not Found"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name=".dialogs.UploadFailSave"
-            android:label="Upload Failed - Saving Instead"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name=".dialogs.FirstTimeUse"
-            android:label="iSENSE Data Collector"
-            android:theme="@style/theme_dialog_white" />
-        <activity
             android:name=".dialogs.Step1Setup"
             android:label="Step 1: Setup"
             android:theme="@style/theme_dialog_white" />

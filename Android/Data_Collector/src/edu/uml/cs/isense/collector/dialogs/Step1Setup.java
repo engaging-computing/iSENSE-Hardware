@@ -32,10 +32,10 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class Step1Setup extends Activity {
 
-	private static Button cancel, ok, selExp;
+	private static Button cancel, ok, selProj;
 	private static CheckBox expCheck, remember;
-	private static EditText sesName, sInterval, testLen;
-	private static TextView expLabel;
+	private static EditText dataSetName, sInterval, testLen;
+	private static TextView projLabel;
 
 	private static Context mContext;
 	private static Waffle w;
@@ -87,12 +87,12 @@ public class Step1Setup extends Activity {
 				
 				boolean ready = true;
 				
-				if (sesName.getText().toString().equals("")) {
-					sesName.setError("Enter a data set name");
+				if (dataSetName.getText().toString().equals("")) {
+					dataSetName.setError("Enter a data set name");
 					w.make("Please enter a data set name first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					ready = false;
 				} else {
-					sesName.setError(null);
+					dataSetName.setError(null);
 				}
 				long sint;
 				if (sInterval.getText().toString().equals("")) {
@@ -133,7 +133,7 @@ public class Step1Setup extends Activity {
 				}
 				if (ready) {
 					if (expCheck.isChecked()) mEdit.putString("project_id", "-1").commit();
-					mEdit.putString("session_name", sesName.getText().toString()).commit();
+					mEdit.putString("data_set_name", dataSetName.getText().toString()).commit();
 					
 					if (remember.isChecked()) {
 						mEdit.putString("s_interval", sInterval.getText().toString()).commit();
@@ -144,7 +144,7 @@ public class Step1Setup extends Activity {
 					}
 					
 					Intent iRet = new Intent();
-					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME, sesName.getText().toString());
+					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME, dataSetName.getText().toString());
 					iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
 					iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
 					setResult(RESULT_OK, iRet);
@@ -153,8 +153,8 @@ public class Step1Setup extends Activity {
 			}
 		});
 
-		selExp = (Button) findViewById(R.id.step1_select_exp);
-		selExp.setOnClickListener(new OnClickListener() {
+		selProj = (Button) findViewById(R.id.step1_select_proj);
+		selProj.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (!api.hasConnectivity())
@@ -171,30 +171,30 @@ public class Step1Setup extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (expCheck.isChecked()) {
-					selExp.setEnabled(false);
-					expLabel.setText("Project");
+					selProj.setEnabled(false);
+					projLabel.setText("Project");
 				} else {
-					selExp.setEnabled(true);
+					selProj.setEnabled(true);
 					String exp = mPrefs.getString("project_id", "");
 					if (!(exp.equals("") || exp.equals("-1"))) {
-						expLabel.setText("Project (currently " + exp + ")");
+						projLabel.setText("Project (currently " + exp + ")");
 					} else {
-						expLabel.setText("Project");
+						projLabel.setText("Project");
 					}
 				}
 			}
 		});
 
-		sesName = (EditText) findViewById(R.id.step1_session_name);
-		sesName.setText(mPrefs.getString("session_name", ""));
+		dataSetName = (EditText) findViewById(R.id.step1_data_set_name);
+		dataSetName.setText(mPrefs.getString("data_set_name", ""));
 		
 		sInterval = (EditText) findViewById(R.id.step1_sample_interval);
 		testLen = (EditText) findViewById(R.id.step1_test_length);
 
-		expLabel = (TextView) findViewById(R.id.step1_exp_num_label);
+		projLabel = (TextView) findViewById(R.id.step1_proj_num_label);
 		String exp = mPrefs.getString("project_id", "");
 		if (!(exp.equals("") || exp.equals("-1"))) {
-			expLabel.setText("Project (currently " + exp + ")");
+			projLabel.setText("Project (currently " + exp + ")");
 			dfm = new DataFieldManager(Integer.parseInt(exp), api,
 					mContext, f);
 		} else {
@@ -220,9 +220,9 @@ public class Step1Setup extends Activity {
 
 				String projID = mPrefs.getString("project_id", "");
 				if (!(projID.equals("") || projID.equals("-1"))) {
-					expLabel.setText("Project (currently " + projID + ")");
+					projLabel.setText("Project (currently " + projID + ")");
 				} else {
-					expLabel.setText("Project");
+					projLabel.setText("Project");
 				}
 				new SensorCheckTask().execute();
 
