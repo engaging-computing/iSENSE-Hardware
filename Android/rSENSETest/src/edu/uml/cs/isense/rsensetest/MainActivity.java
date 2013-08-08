@@ -143,7 +143,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
 			if(projID.getText().toString().equals("")) {
-				return api.getProjects(1, 10, true);
+				return api.getProjects(1, 10, true, "");
 			} else {
 				ArrayList<RProject> rp = new ArrayList<RProject>();
 				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
