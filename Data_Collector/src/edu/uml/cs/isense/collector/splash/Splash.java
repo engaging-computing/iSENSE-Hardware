@@ -64,7 +64,7 @@ public class Splash extends FragmentActivity {
 			}
 		}
 
-		// Set up the fragment pager (tab swipey thing)
+		// Set up the fragment pager
 		ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 		PagerTabStrip mTitles = (PagerTabStrip) findViewById(R.id.pager_title_strip);
 		mTitles.setDrawFullUnderline(true);
@@ -83,42 +83,6 @@ public class Splash extends FragmentActivity {
 		mAdapter.addFragment(fragGuide, "Guide");
 
 		mViewPager.setAdapter(mAdapter);
-
-		//
-		// TabHost tabHost = getTabHost();
-		//
-		// // Main Tab
-		// TabSpec mainSpec = tabHost.newTabSpec("Welcome");
-		// mainSpec.setIndicator("Welcome",
-		// getResources().getDrawable(R.drawable.icon_splash_main));
-		// Intent iMain = new Intent(mContext, SplashMain.class);
-		// mainSpec.setContent(iMain);
-		//
-		// // About Tab
-		// TabSpec aboutSpec = tabHost.newTabSpec("About");
-		// aboutSpec.setIndicator("About",
-		// getResources().getDrawable(R.drawable.icon_splash_about));
-		// Intent iAbout = new Intent(mContext, SplashAbout.class);
-		// aboutSpec.setContent(iAbout);
-		//
-		// // Guide Tab
-		// TabSpec guideSpec = tabHost.newTabSpec("Guide");
-		// guideSpec.setIndicator("Guide",
-		// getResources().getDrawable(R.drawable.icon_splash_guide));
-		// Intent iGuide = new Intent(mContext, SplashGuide.class);
-		// guideSpec.setContent(iGuide);
-		//
-		// // Add specs to host
-		// tabHost.addTab(mainSpec);
-		// tabHost.addTab(aboutSpec);
-		// tabHost.addTab(guideSpec);
-		//
-		// // Change tab text colors
-		// for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-		// TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i)
-		// .findViewById(android.R.id.title);
-		// tv.setTextColor(Color.parseColor("#666666"));
-		// }
 
 		// Set listeners for the "Automatic" and "Manual" buttons
 		final Button automatic = (Button) findViewById(R.id.splash_auto);
@@ -144,27 +108,11 @@ public class Splash extends FragmentActivity {
 			}
 		});
 
-		// SharedPreferences mPrefs = getSharedPreferences("first_time_use", 0);
-		// if (mPrefs.getBoolean("first_use", false) == false) {
-		// SharedPreferences.Editor mEdit = mPrefs.edit();
-		// mEdit.putBoolean("first_use", true);
-		// mEdit.commit();
-		// Intent iFirstTimeUse = new Intent(Splash.this, FirstTimeUse.class);
-		// startActivity(iFirstTimeUse);
-		// }
-
 	}
 
-	// Overridden to prevent user from exiting app unless back button is pressed
-	// twice
 	@Override
 	public void onBackPressed() {
-
-		// if (!w.isDisplaying)
-		// w.make("Double press \"Back\" to exit");
-		// else if (w.canPerformTask)
 		super.onBackPressed();
-
 	}
 
 }
