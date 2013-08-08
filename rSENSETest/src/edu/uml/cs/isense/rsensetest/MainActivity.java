@@ -24,7 +24,7 @@ import edu.uml.cs.isense.objects.RProjectField;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, appendTest, uploadTest;
+	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj;
 	TextView status;
 	EditText projID, userName;
 	API api;
@@ -43,6 +43,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
+		newProj = (Button) findViewById(R.id.btn_newproj);
 
 		login.setOnClickListener(this);
 		logout.setOnClickListener(this);
@@ -50,7 +51,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		getprojects.setOnClickListener(this);
 		appendTest.setOnClickListener(this);
 		uploadTest.setOnClickListener(this);
-		getusers.setEnabled(false);
+		newProj.setOnClickListener(this);
 
 		api = API.getInstance(this);
 	}
@@ -82,6 +83,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == uploadTest ) {
 				status.setText("upload button clicked");
 				new UploadTask().execute();
+			} else if ( v == newProj ) {
+				status.setText("create project button clicked");
+				new CreateProjectTask().execute();
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
@@ -195,6 +199,32 @@ public class MainActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 			api.uploadDataSet(2, newData, "mobile upload test");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class CreateProjectTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			ArrayList<RProjectField> fields = new ArrayList<RProjectField>();
+			
+			RProjectField time = new RProjectField();
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			time.name = "Time";
+			fields.add(time);
+			
+			RProjectField amount = new RProjectField();
+			amount.type = RProjectField.TYPE_NUMBER;
+			amount.name = "Amount";
+			amount.unit = "units";
+			fields.add(amount);
+			
+			api.createProject("Project from Mobile", fields);
 			return null;
 		}
 
