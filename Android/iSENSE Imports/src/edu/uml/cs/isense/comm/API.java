@@ -104,13 +104,16 @@ public class API {
 	 *@param page Which page of results to start from. 1-indexed
 	 *@param perPage How many results to display per page
 	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 *@param search A string to search all projects for
 	 *@return An ArrayList of Project objects
 	 */
-	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending) {
+	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, String search) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
+																+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
