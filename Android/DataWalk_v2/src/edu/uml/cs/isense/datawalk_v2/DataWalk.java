@@ -151,9 +151,9 @@ public class DataWalk extends Activity implements LocationListener,
 	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
 	// private static String marketUrl =
 	// "https://play.google.com/store/apps/developer?id=UMass+Lowell";
-	private static String sessionUrl = "http://isenseproject.org/highvis.php?sessions=406";
-	private static String experimentUrl = "http://rsense.cs.uml.edu/projects/";
-	private static String baseExperimentUrl = "http://rsense.cs.uml.edu/projects/";
+	public static String sessionUrl = "";
+	private static String experimentUrl = "http://rsensedev.cs.uml.edu/projects/";
+	private static String baseExperimentUrl = "http://rsensedev.cs.uml.edu/projects/";
 
 	private static int waitingCounter = 0;
 	public static final int RESET_REQUESTED = 102;
