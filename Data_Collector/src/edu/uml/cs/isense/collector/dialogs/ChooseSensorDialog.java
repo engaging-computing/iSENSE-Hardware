@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -229,6 +230,8 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		prefString = prefString.substring(0, prefString.length() - 1);
 		
 		mEdit.putString("accepted_fields", prefString).commit();
+		
+		Log.d("Jeremy", prefString);
 		
 	}
 	
