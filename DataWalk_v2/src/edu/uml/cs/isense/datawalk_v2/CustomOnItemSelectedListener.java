@@ -2,7 +2,6 @@ package edu.uml.cs.isense.datawalk_v2;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class CustomOnItemSelectedListener implements OnItemSelectedListener {

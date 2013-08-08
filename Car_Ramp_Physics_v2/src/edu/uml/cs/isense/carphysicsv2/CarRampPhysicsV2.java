@@ -74,7 +74,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private static String password = "sor";
 
 	public static final String baseSessionUrl_Prod = "http://isenseproject.org/projects/";
-	public static final String baseSessionUrl_Dev = "http://rsense.cs.uml.edu/projects/";
+	public static final String baseSessionUrl_Dev = "http://rsensedev.cs.uml.edu/projects/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";
 

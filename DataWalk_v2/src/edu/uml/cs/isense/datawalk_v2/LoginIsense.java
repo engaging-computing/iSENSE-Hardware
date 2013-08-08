@@ -12,8 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.datawalk_v2.dialogs.NoConnect;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class LoginIsense extends Activity{
