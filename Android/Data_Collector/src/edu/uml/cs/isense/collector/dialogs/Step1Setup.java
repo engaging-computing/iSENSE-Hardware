@@ -88,8 +88,8 @@ public class Step1Setup extends Activity {
 				boolean ready = true;
 				
 				if (sesName.getText().toString().equals("")) {
-					sesName.setError("Enter a session name");
-					w.make("Please enter a session name first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					sesName.setError("Enter a data set name");
+					w.make("Please enter a data set name first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					ready = false;
 				} else {
 					sesName.setError(null);

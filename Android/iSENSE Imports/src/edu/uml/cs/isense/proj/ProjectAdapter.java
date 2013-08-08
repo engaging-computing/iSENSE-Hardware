@@ -26,7 +26,6 @@ public class ProjectAdapter extends ArrayAdapter<RProject> {
 	private API api;
 	public static final int pageSize = 10;
 	public int page = 0;
-	public String action = "browse";
 	public String query = "";
 
 	public ProjectAdapter(Context context, int textViewResourceId,
@@ -110,7 +109,7 @@ public class ProjectAdapter extends ArrayAdapter<RProject> {
 
 	class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<RProject> new_items = api.getProjects(page, pageSize, true);
+			ArrayList<RProject> new_items = api.getProjects(page, pageSize, true, query);
 
 			if (new_items.size() == 0) {
 				allItemsLoaded = true;
