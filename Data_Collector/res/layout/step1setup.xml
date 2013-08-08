@@ -19,7 +19,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/step1_session_name"
+            android:id="@+id/step1_data_set_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
@@ -76,7 +76,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/step1_exp_num_label"
+            android:id="@+id/step1_proj_num_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -86,7 +86,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/step1_select_exp"
+            android:id="@+id/step1_select_proj"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/select_proj" />
