@@ -104,8 +104,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final String STEP_1_TEST_LENGTH = "test_length";
 
 	// Numerical constants
-	static final int S_INTERVAL = 50;
-	static final int TEST_LENGTH = 600;
+	public static final int S_INTERVAL = 50;
+	public static final int TEST_LENGTH = 600;
 
 	private static final int MENU_ITEM_LOGIN = 0;
 	private static final int MENU_ITEM_MEDIA = 1;
@@ -198,7 +198,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Booleans
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
-	// private static boolean performExpNumCheckOnReturn = false;
 	public static boolean manageUploadQueueAfterLogin = false;
 
 	// Strings

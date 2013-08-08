@@ -44,7 +44,7 @@ public class MediaManager extends Activity {
 
 	public static int mediaCount;
 	
-	private static String nameOfSession = "";
+	private static String nameOfDataSet = "";
 	
 	public static ArrayList<File> pictureArray = new ArrayList<File>();
 	public static ArrayList<File> pictures = new ArrayList<File>();
@@ -61,13 +61,12 @@ public class MediaManager extends Activity {
 		w = new Waffle(mContext);
 		
 		Bundle extras = getIntent().getExtras();
-		nameOfSession = null;
-		
+		nameOfDataSet = null;
 		if (extras != null)
-			nameOfSession = extras.getString("projectName");
+			nameOfDataSet = extras.getString("projectName");
 		
-		if (nameOfSession == null)
-			nameOfSession = "";
+		if (nameOfDataSet == null)
+			nameOfDataSet = "";
 
 		mediaCountLabel = (TextView) findViewById(R.id.mediaCounter);
 		mediaCountLabel.setText(mContext.getString(R.string.picAndVidCount)
@@ -262,8 +261,7 @@ public class MediaManager extends Activity {
 				String[] proj = { MediaStore.Video.Media.DATA,
 						MediaStore.Video.Media._ID };
 				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(videoUri, proj,  // Which columns
-																// to return
+				cursor = cr.query(videoUri, proj,  // Which columns to return
 						null,  // WHERE clause; which rows to return (all rows)
 						null,  // WHERE clause selection arguments (none)
 						null); // Order-by clause (ascending by name)
@@ -283,23 +281,22 @@ public class MediaManager extends Activity {
 	}
 
 	// Assists with differentiating between displays for dialogues
-	@SuppressWarnings("deprecation")
 	private static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
+		return android.os.Build.VERSION.SDK_INT;
 	}
 
 	// Adds pictures to the SD Card
 	public void pushPicture() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
-		String uploadSessionString;
+		String uploadDataSetString;
 
 		String dateString = sdf.format(dt);
 
-		if (nameOfSession.equals(""))
-			uploadSessionString = "Session Name Not Provided";
+		if (nameOfDataSet.equals(""))
+			uploadDataSetString = "Data Set Name Not Provided";
 		else
-			uploadSessionString = nameOfSession;
+			uploadDataSetString = nameOfDataSet;
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -310,7 +307,7 @@ public class MediaManager extends Activity {
 
 		for (int i = 0; i < pictures.size(); i++) {
 			File f = pictures.get(i);
-			File newFile = new File(folder, uploadSessionString + "-"
+			File newFile = new File(folder, uploadDataSetString + "-"
 					+ dateString + ".jpeg");
 			f.renameTo(newFile);
 			pictureArray.add(newFile);
@@ -322,14 +319,14 @@ public class MediaManager extends Activity {
 	public void pushVideo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
-		String uploadSessionString;
+		String uploadDataSetString;
 
 		String dateString = sdf.format(dt);
 
-		if (nameOfSession.equals(""))
-			uploadSessionString = "Session Name Not Provided";
+		if (nameOfDataSet.equals(""))
+			uploadDataSetString = "Data Set Name Not Provided";
 		else
-			uploadSessionString = nameOfSession;
+			uploadDataSetString = nameOfDataSet;
 			
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -340,7 +337,7 @@ public class MediaManager extends Activity {
 
 		for (int i = 0; i < videos.size(); i++) {
 			File f = videos.get(i);
-			File newFile = new File(folder, uploadSessionString + " - "
+			File newFile = new File(folder, uploadDataSetString + " - "
 					+ dateString + ".3gp");
 			f.renameTo(newFile);
 		}
