@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="50"
             android:background="#000033"
-            android:text="Name"
+            android:text="@string/name"
             android:textColor="#A8CFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
