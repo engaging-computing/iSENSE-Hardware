@@ -12,26 +12,26 @@
 
         <Button
             android:id="@+id/btn_bread1"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="left|center_vertical"
             android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btn_bread2"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:gravity="left|center_vertical"
             android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btn_bread3"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:gravity="left|center_vertical"
             android:textColor="@android:color/white" />
     </LinearLayout>

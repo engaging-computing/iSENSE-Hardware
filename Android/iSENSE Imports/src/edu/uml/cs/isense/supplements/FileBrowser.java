@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import edu.uml.cs.isense.R;
@@ -48,7 +50,7 @@ public class FileBrowser extends Activity implements OnClickListener {
 			//handle error here
 		} else {
 			//Show the files in the list
-			ArrayList<File> currDir = new ArrayList<File>(Arrays.asList(newDir.listFiles()));
+			final ArrayList<File> currDir = new ArrayList<File>(Arrays.asList(newDir.listFiles()));
 			FileAdapter adapter = new FileAdapter(this, R.layout.filerow, currDir);
 			fileList.setAdapter(adapter);
 			//get references to the directories up the tree
@@ -59,7 +61,7 @@ public class FileBrowser extends Activity implements OnClickListener {
 				parent2 = null;
 			}
 			//Build the breadcrumbs
-			if(parent2 != null) { 
+			if(parent2 != null) {
 				bread3.setText(" "+newDir.getName());
 				bread3.setVisibility(View.VISIBLE);
 				bread2.setText(" "+parent1.getName()+" >");
@@ -75,6 +77,15 @@ public class FileBrowser extends Activity implements OnClickListener {
 				bread2.setVisibility(View.GONE);
 				bread1.setText(" "+newDir.getName());
 			}
+			
+			fileList.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> adapter, View v, int pos, long l) {
+					File f = currDir.get(pos);
+					if(f.isDirectory()) {
+						changeDir(f);
+					}
+				}
+			});
 		}
 	}
 
