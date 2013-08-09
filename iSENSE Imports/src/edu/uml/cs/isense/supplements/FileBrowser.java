@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -21,11 +22,15 @@ public class FileBrowser extends Activity implements OnClickListener {
 	File parent1, parent2;
 	ListView fileList;
 	Button OKBtn, cancelBtn;
+	String selectedFilePath = null;
+	View selectedItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_filebrowser);
+
+		setResult(RESULT_CANCELED);
 
 		bread1 = (Button) findViewById(R.id.btn_bread1);
 		bread2 = (Button) findViewById(R.id.btn_bread2);
@@ -39,6 +44,9 @@ public class FileBrowser extends Activity implements OnClickListener {
 		bread1.setOnClickListener(this);
 		bread2.setOnClickListener(this);
 		bread3.setOnClickListener(this);
+
+		OKBtn.setEnabled(false);
+		fileList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 		File sdBase = Environment.getExternalStorageDirectory();
 		changeDir(sdBase);
@@ -77,12 +85,16 @@ public class FileBrowser extends Activity implements OnClickListener {
 				bread2.setVisibility(View.GONE);
 				bread1.setText(" "+newDir.getName());
 			}
-			
+
 			fileList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> adapter, View v, int pos, long l) {
 					File f = currDir.get(pos);
 					if(f.isDirectory()) {
 						changeDir(f);
+					} else {
+						v.setSelected(true);
+						OKBtn.setEnabled(true);
+						selectedFilePath = f.getAbsolutePath();
 					}
 				}
 			});
@@ -96,6 +108,14 @@ public class FileBrowser extends Activity implements OnClickListener {
 			changeDir(parent1);
 		} else if( v == bread1 && parent2 == null && parent1 != null ) {
 			changeDir(parent1);
+		} else if ( v == OKBtn ) {
+			Intent result = new Intent();
+			result.putExtra("filepath", selectedFilePath);
+			setResult(RESULT_OK, result);
+			finish();
+		} else if ( v == cancelBtn ) {
+			setResult(RESULT_CANCELED);
+			finish();
 		}
 	}
 
