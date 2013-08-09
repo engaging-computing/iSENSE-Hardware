@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.rsensetest;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -29,6 +30,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	TextView status;
 	EditText projID, userName;
 	API api;
+	
+	int FILEPICK = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +94,24 @@ public class MainActivity extends Activity implements OnClickListener {
 				new CreateProjectTask().execute();
 			} else if ( v == uploadCSV ) {
 				Intent i = new Intent(this, FileBrowser.class);
-				startActivity(i);
+				startActivityForResult(i, FILEPICK);
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+		if(resultCode == RESULT_OK) {
+			if(requestCode == FILEPICK) {
+				String filepath = data.getStringExtra("filepath");
+				File f = new File(filepath);
+				
+			}
+		}
+	}
+	
 	private class LoginTask extends AsyncTask<String, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(String... params) {
