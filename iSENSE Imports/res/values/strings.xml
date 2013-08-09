@@ -29,5 +29,7 @@
 	</string>
 	<string name="loading">Loading&#x2026;</string>
 	<string name="or">OR</string>
+	
+	<string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
     
 </resources>
