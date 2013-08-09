@@ -69,6 +69,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
         android:paddingTop="10dp"
-        android:text="@string/OK" />
+        android:text="@android:string/ok" />
 
 </RelativeLayout>

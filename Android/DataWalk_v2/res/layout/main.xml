@@ -69,7 +69,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:background="#000033"
-        android:text="Name: "
+        android:text="@string/nameWithColon"
         android:textColor="#A8CFFF"
         android:textSize="18sp"
         android:textStyle="bold" 

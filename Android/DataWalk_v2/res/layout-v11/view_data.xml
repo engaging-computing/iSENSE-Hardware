@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/iSenseQstion"
+        android:text="@string/iSenseQuestion"
         android:textSize="18sp"
         android:padding="5dp" />
 
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/No" />
+            android:text="@android:string/no" />
 
         <Button
             android:id="@+id/view_data_yes"
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/Yes" />
+            android:text="@android:string/yes" />
     </LinearLayout>
 
 </LinearLayout>

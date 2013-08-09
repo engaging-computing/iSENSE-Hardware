@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight=".5"
-        android:text="@string/Cancel" />
+        android:text="@android:string/cancel" />
 
     <Button
         android:id="@+id/reset"

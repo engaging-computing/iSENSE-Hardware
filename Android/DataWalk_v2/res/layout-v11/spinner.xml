@@ -16,7 +16,7 @@
     <TextView 
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:text="Record Data Every:"
+        android:text="@string/recordDataEvery"
         android:layout_weight="25"/>
     
       <Spinner 
