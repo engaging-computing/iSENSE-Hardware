@@ -34,7 +34,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -210,9 +209,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH", 0);
 		length = countdown = prefs.getInt("length", 10);
 
+		new OnCreateLoginTask().execute();
+		
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-
-		new LoginTask().execute();
 		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 				+ userName + " Name: " + firstName + " " + lastInitial);
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
@@ -254,7 +253,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						startStop.setText("Hold to Start");
 
 						timeTimer.cancel();
-						startStop.getBackground().clearColorFilter();
 						choiceViaMenu = false;
 
 						if (!appTimedOut)
@@ -282,7 +280,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						startStop.setText("Hold to Start");
 
 						timeTimer.cancel();
-						startStop.getBackground().clearColorFilter();
 						choiceViaMenu = false;
 						startStop.setEnabled(true);
 					}
@@ -407,8 +404,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 						}
 					}, 0, INTERVAL);
-					startStop.getBackground().setColorFilter(0xFF00FF00,
-							PorterDuff.Mode.MULTIPLY);
+
 				}
 
 				return running;
@@ -440,12 +436,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
-		if (rapi.hasConnectivity()) {
-			new LoginTask().execute();
-
-		} else {
-
-		}
+		if (rapi.hasConnectivity())
+			new OnCreateLoginTask().execute();
 
 		if (savedInstanceState == null) {
 			if (firstName.equals("") || lastInitial.equals("")) {
@@ -551,7 +543,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startStop.setText("Hold to Start");
 
 			timeTimer.cancel();
-			startStop.getBackground().clearColorFilter();
 			choiceViaMenu = false;
 			startStop.setEnabled(true);
 			dataSet = new JSONArray();
@@ -782,7 +773,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						0);
 				countdown = length = prefs.getInt("length", 10);
 				userName = password = "sor";
-				new LoginTask().execute();
+				new OnCreateLoginTask().execute();
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
 						+ "sor" + " Name: " + firstName + " " + lastInitial);
@@ -993,39 +984,37 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public class LoginTask extends AsyncTask<Void, Integer, Void> {
 
+		boolean success;
+		
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			boolean success = rapi.createSession(userName, password);
-			if (success) {
-				mHandler.post(new Runnable() {
-
-					@Override
-					public void run() {
-						w.make("Login Successful", Waffle.LENGTH_SHORT,
-								Waffle.IMAGE_CHECK);
-
-					}
-
-				});
-
-			} else {
-				if (rapi.hasConnectivity()) {
-					mHandler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							w.make("Login failed!", Waffle.LENGTH_SHORT,
-									Waffle.IMAGE_X);
-
-						}
-
-					});
-
-				}
-			}
+			success = rapi.createSession(userName, password);
 			return null;
 		}
+		
+		@Override
+		protected void onPostExecute(Void voids) {
+			if (success) {
+				w.make("Login Successful", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
 
+			} else {
+				if (rapi.hasConnectivity())
+					w.make("Login failed!", Waffle.LENGTH_SHORT,
+							Waffle.IMAGE_X);
+			}
+		}
+
+	}
+	
+	public class OnCreateLoginTask extends AsyncTask<Void, Integer, Void> {
+		
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			rapi.createSession(userName, password);
+			return null;
+		}
+		
 	}
 
 }
