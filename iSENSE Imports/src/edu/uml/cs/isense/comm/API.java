@@ -104,13 +104,16 @@ public class API {
 	 *@param page Which page of results to start from. 1-indexed
 	 *@param perPage How many results to display per page
 	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 *@param search A string to search all projects for
 	 *@return An ArrayList of Project objects
 	 */
-	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending) {
+	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, String search) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
+																+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -163,6 +166,41 @@ public class API {
 		}
 		return proj;
 	}
+	
+	/**
+	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
+	 * at a type and a name, and can optionally have a unit.
+	 * 
+	 * @param projectName The name of the new project to be created
+	 * @param fields An ArrayList of field objects that will become the fields on iSENSE. 
+	 * @return The ID of the created project
+	 */
+	public int createProject(String projectName, ArrayList<RProjectField> fields) {
+		try {
+			JSONObject postData = new JSONObject();
+			postData.put("project_name", projectName);
+			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData);
+			JSONObject jobj = new JSONObject(reqResult);
+			int pid = jobj.getInt("id");
+			
+			for(RProjectField rpf : fields) {
+				JSONObject mField = new JSONObject();
+				mField.put("project_id", pid);
+				mField.put("field_type", rpf.type);
+				mField.put("name", rpf.name);
+				mField.put("unit", rpf.unit);
+				JSONObject postData2 = new JSONObject();
+				postData2.put("field", mField);
+				postData2.put("project_id", pid);
+				makeRequest(baseURL, "fields", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData2);
+			}
+			
+			return pid;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	/** 
 	 * Gets all of the fields associated with a project
@@ -199,13 +237,15 @@ public class API {
 	 *@param page Which page of results to start from. 1-indexed
 	 *@param perPage How many results to display per page
 	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 *@param search A string to search all tutorials for
 	 *@return An ArrayList of Tutorial objects
 	 */
-	public ArrayList<RTutorial> getTutorials(int page, int perPage, boolean descending) {
+	public ArrayList<RTutorial> getTutorials(int page, int perPage, boolean descending, String search) {
 		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -260,13 +300,15 @@ public class API {
 	 * @param page Which page of users to start the request from
 	 * @param perPage How many users per page to perform the search with
 	 * @param descending Whether the list of users should be in descending order or not
+	 * @param search A string to search all users for
 	 * @return A list of Person objects
 	 */
-	public ArrayList<RPerson> getUsers(int page, int perPage, boolean descending) {
+	public ArrayList<RPerson> getUsers(int page, int perPage, boolean descending, String search) {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+													+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -382,8 +424,9 @@ public class API {
 	 * @param projectId The ID of the project to upload data to
 	 * @param data The data to be uploaded. Must be in column-major format to upload correctly
 	 * @param datasetName The name of the dataset
+	 * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
 	 */
-	public void uploadDataSet(int projectId, JSONObject data, String datasetName) {
+	public int uploadDataSet(int projectId, JSONObject data, String datasetName) {
 		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
 		ArrayList<String> headers = new ArrayList<String>();
@@ -395,12 +438,21 @@ public class API {
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
 			if(!datasetName.equals("")) requestData.put("name", datasetName);
-			makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			JSONObject jobj = new JSONObject(reqResult);
+			return jobj.getInt("id");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return -1;
 	}
 
+	/**
+	 * Append new rows of data to the end of an existing data set
+	 * 
+	 * @param dataSetId The ID of the data set to append to
+	 * @param newData The new data to append
+	 */
 	public void appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
