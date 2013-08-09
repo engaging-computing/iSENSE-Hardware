@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,14 +19,12 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.comm.RestAPI;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class Splash extends FragmentActivity {
 
 	public static Context mContext;
 	public static Waffle w;
-	public static RestAPI rapi;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -36,12 +33,6 @@ public class Splash extends FragmentActivity {
 		setContentView(R.layout.splash);
 
 		mContext = this;
-
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
 
 		w = new Waffle(mContext);
 		
