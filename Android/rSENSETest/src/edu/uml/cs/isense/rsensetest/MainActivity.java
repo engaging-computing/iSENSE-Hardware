@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.rsensetest;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -7,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,17 +19,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
+import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, appendTest, uploadTest;
+	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj, uploadCSV;
 	TextView status;
 	EditText projID, userName;
 	API api;
+	
+	int FILEPICK = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
+		newProj = (Button) findViewById(R.id.btn_newproj);
+		uploadCSV = (Button) findViewById(R.id.btn_uploadCSV);
 
 		login.setOnClickListener(this);
 		logout.setOnClickListener(this);
@@ -50,7 +56,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		getprojects.setOnClickListener(this);
 		appendTest.setOnClickListener(this);
 		uploadTest.setOnClickListener(this);
-		getusers.setEnabled(false);
+		newProj.setOnClickListener(this);
+		uploadCSV.setOnClickListener(this);
 
 		api = API.getInstance(this);
 	}
@@ -82,12 +89,29 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == uploadTest ) {
 				status.setText("upload button clicked");
 				new UploadTask().execute();
+			} else if ( v == newProj ) {
+				status.setText("create project button clicked");
+				new CreateProjectTask().execute();
+			} else if ( v == uploadCSV ) {
+				Intent i = new Intent(this, FileBrowser.class);
+				startActivityForResult(i, FILEPICK);
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+		if(resultCode == RESULT_OK) {
+			if(requestCode == FILEPICK) {
+				String filepath = data.getStringExtra("filepath");
+				File f = new File(filepath);
+				
+			}
+		}
+	}
+	
 	private class LoginTask extends AsyncTask<String, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(String... params) {
@@ -116,7 +140,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected ArrayList<RPerson> doInBackground(Void... params) {
 			if(userName.getText().toString().equals("")) {
-				return api.getUsers(1, 10, true);
+				return api.getUsers(1, 10, true, "");
 			} else {
 				ArrayList<RPerson> rp = new ArrayList<RPerson>();
 				rp.add(api.getUser(userName.getText().toString()));
@@ -139,7 +163,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
 			if(projID.getText().toString().equals("")) {
-				return api.getProjects(1, 10, true);
+				return api.getProjects(1, 10, true, "");
 			} else {
 				ArrayList<RProject> rp = new ArrayList<RProject>();
 				rp.add(api.getProject(Integer.parseInt(projID.getText().toString())));
@@ -195,6 +219,32 @@ public class MainActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 			api.uploadDataSet(2, newData, "mobile upload test");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class CreateProjectTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			ArrayList<RProjectField> fields = new ArrayList<RProjectField>();
+			
+			RProjectField time = new RProjectField();
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			time.name = "Time";
+			fields.add(time);
+			
+			RProjectField amount = new RProjectField();
+			amount.type = RProjectField.TYPE_NUMBER;
+			amount.name = "Amount";
+			amount.unit = "units";
+			fields.add(amount);
+			
+			api.createProject("Project from Mobile", fields);
 			return null;
 		}
 
