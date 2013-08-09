@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
     android:versionCode="6"
     android:versionName="2.0" >
@@ -11,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	
+
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
@@ -31,79 +32,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/get_name"
-           	android:theme="@style/theme_dialog_white" 
-           	 >
+            android:name=".Prefs"
+            android:label="Settings" >
         </activity>
         <activity
-            android:name=".Prefs"
-            android:label="Settings"
-            >
-        </activity>
-             <activity 
-            android:name=".Setup2"
-            android:label="Change Experiment Number"
-            android:theme="@style/theme_dialog_white" 
-            >
-        </activity>
-             <activity
             android:name=".NoQr2"
-            android:label="No Qr"
-            >
-        </activity>
-             <activity
-            android:name=".BrowseExperiments2"
-            android:label="Browse Experiments"
-            >
+            android:label="No Qr" >
         </activity>
         <activity
             android:name=".PrefsTwo"
             android:label="SettingsTwo"
-            android:theme="@style/theme_dialog_white" 
-             >
-        </activity>   
+            android:theme="@style/theme_dialog_white" >
+        </activity>
         <activity
             android:name=".Help"
             android:label="Help"
-            android:theme="@style/theme_dialog_white">
-             
-        </activity>     
+            android:theme="@style/theme_dialog_white" >
+        </activity>
         <activity
             android:name=".CustomOnItemSelectedListener"
-            android:label="SettingsTesting"
-             >
+            android:label="SettingsTesting" >
         </activity>
-           <activity
+        <activity
             android:name=".PrefsTwoClone"
             android:label="Recording Interval"
-            android:theme="@style/theme_dialog_white" 
-             >
+            android:theme="@style/theme_dialog_white" >
         </activity>
-         <activity
+        <activity
             android:name=".EnterNameActivity"
             android:label="Name Activity"
             android:theme="@style/theme_dialog_white" >
         </activity>
-         <activity
+        <activity
             android:name=".About"
-            android:label="About" 
-            android:theme="@style/theme_dialog_white">
+            android:label="About"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".LoginIsense"
-            android:label="Login to Isense" 
-            android:theme="@style/theme_dialog_white">
+            android:label="Login to Isense"
+            android:theme="@style/theme_dialog_white" >
         </activity>
-          <activity
+        <activity
             android:name=".Reset"
             android:label="Reset Settings"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".dialogs.NoGps"
-            android:label="No Gps Satellites found" 
-            android:theme="@style/theme_dialog_white">
+            android:label="No Gps Satellites found"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".dialogs.ViewData"
@@ -112,7 +90,8 @@
         </activity>
         <activity
             android:name=".dialogs.ForceStop"
-            android:label="Data Recording Halted" >
+            android:label="Data Recording Halted"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".dialogs.MenuItemAbout"
@@ -120,35 +99,42 @@
         </activity>
         <activity
             android:name=".dialogs.NoConnect"
-            android:label="No Connectivity" 
-            android:theme="@style/theme_dialog_white">
+            android:label="No Connectivity"
+            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueAlter"
             android:label="Alter Data Set"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditData"
             android:label="Edit Data"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.proj.Setup"
             android:label="Choose Project"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
-            android:label="@string/select_proj" />
+            android:label="@string/select_proj"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.proj.NoQR"
-            android:label="No QR Code found" />
+            android:label="No QR Code found"
+            tools:ignore="MissingRegistered" />
     </application>
 
 </manifest>

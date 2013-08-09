@@ -43,9 +43,9 @@
             android:layout_weight="50"/> -->
        <Button 
             android:id="@+id/confirmSpinnerB"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Okay"
+            android:text="@android:string/ok"
             android:layout_weight="50"/>
 	</LinearLayout>
 </LinearLayout>   

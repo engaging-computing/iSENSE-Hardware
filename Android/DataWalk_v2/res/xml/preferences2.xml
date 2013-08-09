@@ -6,7 +6,7 @@
 
     <ListPreference
         android:key="Data UploadRate"
-        android:title="Record Data Every: "
+        android:title="@string/Rate_Is"
         android:entries="@array/dataRate"
         android:entryValues="@array/dataRateVals"
         android:defaultValue="10000" /> 
