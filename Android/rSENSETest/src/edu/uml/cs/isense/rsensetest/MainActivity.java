@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,14 +18,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
+import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj;
+	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj, uploadCSV;
 	TextView status;
 	EditText projID, userName;
 	API api;
@@ -44,6 +45,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		projID = (EditText) findViewById(R.id.et_projectnum);
 		userName = (EditText) findViewById(R.id.et_username);
 		newProj = (Button) findViewById(R.id.btn_newproj);
+		uploadCSV = (Button) findViewById(R.id.btn_uploadCSV);
 
 		login.setOnClickListener(this);
 		logout.setOnClickListener(this);
@@ -52,6 +54,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		appendTest.setOnClickListener(this);
 		uploadTest.setOnClickListener(this);
 		newProj.setOnClickListener(this);
+		uploadCSV.setOnClickListener(this);
 
 		api = API.getInstance(this);
 	}
@@ -86,6 +89,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == newProj ) {
 				status.setText("create project button clicked");
 				new CreateProjectTask().execute();
+			} else if ( v == uploadCSV ) {
+				Intent i = new Intent(this, FileBrowser.class);
+				startActivity(i);
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
