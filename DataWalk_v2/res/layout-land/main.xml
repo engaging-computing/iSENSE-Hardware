@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#A8CFFF"
     android:baselineAligned="false"
     android:keepScreenOn="true"
     android:orientation="vertical" >
@@ -108,10 +107,11 @@
     </LinearLayout>
 
     <Button
-       android:layout_above="@+id/LinearLayout10"
         android:id="@+id/startStop"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/LinearLayout10"
+        android:layout_below="@id/LinearLayout9"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -120,8 +120,7 @@
         android:text="@string/startPrompt"
         android:textColor="#3E94D1"
         android:textSize="30sp"
-        android:textStyle="bold" 
-        android:layout_below="@id/LinearLayout9"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@id/LinearLayout10"
