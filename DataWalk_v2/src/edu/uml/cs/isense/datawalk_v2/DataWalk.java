@@ -112,7 +112,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private MediaPlayer mMediaPlayer;
 
-	//RestAPI rapi;
+	// RestAPI rapi;
 	API api;
 	String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
 	String nameOfSession = "";
@@ -218,8 +218,7 @@ public class DataWalk extends Activity implements LocationListener,
 			public boolean onLongClick(View arg0) {
 
 				timeElapsedBox.setText("Time Elapsed:" + " seconds");
-				
-				
+
 				if (appTimedOut)
 					return false;
 
@@ -232,15 +231,17 @@ public class DataWalk extends Activity implements LocationListener,
 					running = false;
 					thruUpload = false;
 					startStop.setText(getString(R.string.startPrompt));
-					
+
 					timeTimer.cancel();
 					running = false;
 					useMenu = true;
-							w.make("Finished recording data! Click on Upload to publish data to iSENSE.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-					
-					//w.make("Finished recording data! Click on Upload to publish data to iSENSE.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-					pointsUploadedBox.setText("Points Recorded: " +"0");
-					
+					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+
+					// w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
+					// Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					pointsUploadedBox.setText("Points Recorded: " + "0");
+
 					if (savePoint) {
 						SimpleDateFormat sdf = new SimpleDateFormat(
 								"MM/dd/yyyy, HH:mm:ss", Locale.US);
@@ -251,12 +252,13 @@ public class DataWalk extends Activity implements LocationListener,
 								+ dateString;
 
 						// get user's experiment #, or default if there is none
-						SharedPreferences prefs = getSharedPreferences("PROJID", 0);
+						SharedPreferences prefs = getSharedPreferences(
+								"PROJID", 0);
 						experimentId = prefs.getString("project_id", "");
 						if (experimentId.equals("")) {
 							experimentId = defaultExp;
 						}
-						
+
 						experimentUrl = baseExperimentUrl + experimentId;
 
 						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
@@ -286,15 +288,15 @@ public class DataWalk extends Activity implements LocationListener,
 						if (dataPointCount >= 1) {
 							Intent i = new Intent(DataWalk.this, ViewData.class);
 							startActivityForResult(i, DIALOG_VIEW_DATA);
-							
+
 						}
 					}
 
 				} else {
 
-					Log.d("sessionId", sessionId+"= reseting session id");
+					Log.d("sessionId", sessionId + "= reseting session id");
 					sessionId = -1;
-					
+
 					// THIS ALLOWS THE START BUTTON TO CONTINUOUSLY CALL THE
 					// NAME ACTIVITY IF SOMEONE DID NOT ENTER A NAME!!!!
 					if (!setupDone) {
@@ -375,8 +377,9 @@ public class DataWalk extends Activity implements LocationListener,
 								savePoint = true;
 								ChkBoxChecked = false;
 							}
-							
-							// Every n seconds which is determined by interval (not including time 0)
+
+							// Every n seconds which is determined by interval
+							// (not including time 0)
 							if ((i % (mInterval / 1000)) == 0 && i != 0) {
 								Log.d("tag", "saving point");
 								JSONObject dataJSON = new JSONObject();
@@ -402,7 +405,8 @@ public class DataWalk extends Activity implements LocationListener,
 									dataJSON.put("0", "u " + time);
 
 									dataSet.put(dataJSON);
-									Log.d("Recording", "Number of points: " + dataSet.length());
+									Log.d("Recording", "Number of points: "
+											+ dataSet.length());
 
 								} catch (JSONException e) {
 									e.printStackTrace();
@@ -417,18 +421,19 @@ public class DataWalk extends Activity implements LocationListener,
 									// "", "", "", "");
 									// uq.addDataSetToQueue(ds);
 									// todo
-									/*mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											w.make("Data Point Saved!",
-													Waffle.LENGTH_SHORT,
-													Waffle.IMAGE_CHECK);
-										}
-									});*/
+									/*
+									 * mHandler.post(new Runnable() {
+									 * 
+									 * @Override public void run() {
+									 * w.make("Data Point Saved!",
+									 * Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+									 * } });
+									 */
 
 								}
 
-								// upload points every 10 seconds (i is the number of seconds)
+								// upload points every 10 seconds (i is the
+								// number of seconds)
 								if (uploadMode && ((i % 10) == 0 && i > 9)) {
 									Log.d("tag", "preparing to upload");
 									uploadSet = dataSet;
@@ -465,7 +470,7 @@ public class DataWalk extends Activity implements LocationListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		new AttemptLoginTask().execute();
-		
+
 		if (savedInstanceState == null && api.hasConnectivity()) {
 			if (firstName.equals("") || lastInitial.equals("")) {
 				startActivityForResult(new Intent(mContext,
@@ -473,7 +478,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 			}
 		}
-		
+
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString("project_id", defaultExp).commit();
@@ -527,13 +532,13 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-	
-		if(api.hasConnectivity()){
-			
-		savePoint = true;
-		uploadPoint = false;
-		uploadMode = false;
-		umbChecked = false;
+
+		if (api.hasConnectivity()) {
+
+			savePoint = true;
+			uploadPoint = false;
+			uploadMode = false;
+			umbChecked = false;
 		}
 		if (umbChecked)
 			uploadMode = true;
@@ -579,7 +584,7 @@ public class DataWalk extends Activity implements LocationListener,
 					+ " seconds");
 			Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
 		}
-		
+
 		new OnResumeLoginTask().execute();
 	}// ends onCreate
 
@@ -649,35 +654,36 @@ public class DataWalk extends Activity implements LocationListener,
 			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
 
 			if (sessionId == -1) {
-				 
-//					sessionId = api.createSession(experimentId, nameOfSession,
-//							"Automated Submission Through Android App",
-//							"801 Mt Vernon Place NW", "Washington, DC",
-//							"United States");
-//					api.putSessionData(sessionId, experimentId, uploadSet);
-				
-					JSONObject jobj = new JSONObject();
-					try {
-						jobj.put("data", uploadSet);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					jobj = api.rowsToCols(jobj);
-					
-					api.uploadDataSet(Integer.parseInt(experimentId), jobj, nameOfSession);
 
-					sessionUrl = baseSessionUrl + sessionId;
-				} else {
-				//api.updateSessionData(sessionId, experimentId, uploadSet);
-					JSONObject jobj = new JSONObject();
-					try {
-						jobj.put("data", uploadSet);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					jobj = api.rowsToCols(jobj);
-					
-					api.appendDataSetData(sessionId, jobj);
+				// sessionId = api.createSession(experimentId, nameOfSession,
+				// "Automated Submission Through Android App",
+				// "801 Mt Vernon Place NW", "Washington, DC",
+				// "United States");
+				// api.putSessionData(sessionId, experimentId, uploadSet);
+
+				JSONObject jobj = new JSONObject();
+				try {
+					jobj.put("data", uploadSet);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				jobj = api.rowsToCols(jobj);
+
+				api.uploadDataSet(Integer.parseInt(experimentId), jobj,
+						nameOfSession);
+
+				sessionUrl = baseSessionUrl + sessionId;
+			} else {
+				// api.updateSessionData(sessionId, experimentId, uploadSet);
+				JSONObject jobj = new JSONObject();
+				try {
+					jobj.put("data", uploadSet);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				jobj = api.rowsToCols(jobj);
+
+				api.appendDataSetData(sessionId, jobj);
 			}
 
 		}
@@ -730,21 +736,6 @@ public class DataWalk extends Activity implements LocationListener,
 			w.make("No Data to Upload.", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 		}
 	}
-
-	/*
-	 * private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
-	 * 
-	 * @Override protected void onPreExecute() { dontToastMeTwice = true; if
-	 * (!thruUpload) exitAppViaBack = true; }
-	 * 
-	 * @Override protected Void doInBackground(Void... voids) { try {
-	 * Thread.sleep(1500); exitAppViaBack = false; Thread.sleep(2000); } catch
-	 * (InterruptedException e) { exitAppViaBack = false; e.printStackTrace(); }
-	 * return null; }
-	 * 
-	 * @Override protected void onPostExecute(Void voids) { dontToastMeTwice =
-	 * false; } }
-	 */
 
 	private class NotConnectedTask extends AsyncTask<Void, Integer, Void> {
 
@@ -839,11 +830,11 @@ public class DataWalk extends Activity implements LocationListener,
 			if (resultCode == RESULT_OK) {
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				experimentId = prefs.getString("project_id", null);
-				
-				if (api.hasConnectivity()){
+
+				if (api.hasConnectivity()) {
 					new GetProjectTask().execute();
 				}
-				
+
 			} else {
 				// experimentId = experimentId;
 			}
@@ -903,10 +894,10 @@ public class DataWalk extends Activity implements LocationListener,
 		}// ends resultCode = dialog_no_connect
 		else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
-			//TODO
-			if (resultCode == RESULT_OK){
-			Intent i = new Intent(DataWalk.this, ViewData.class);
-			startActivityForResult(i, DIALOG_VIEW_DATA);
+			// TODO
+			if (resultCode == RESULT_OK) {
+				Intent i = new Intent(DataWalk.this, ViewData.class);
+				startActivityForResult(i, DIALOG_VIEW_DATA);
 			}
 		} else if (requestCode == resultGotName) {
 			if (resultCode == RESULT_OK) {
@@ -931,7 +922,7 @@ public class DataWalk extends Activity implements LocationListener,
 				lastInitial = "";
 				experimentId = defaultExp;
 				if (api.hasConnectivity())
-				ChkBoxChecked = true;
+					ChkBoxChecked = true;
 				umbChecked = true;
 				CustomOnItemSelectedListener.mIntervalHack = 10000;
 				CustomOnItemSelectedListener.savedValueInt = 3;
@@ -1045,13 +1036,12 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 		return false;
 	}// ENDS ON OPTIONS ITEM SELECTED
-	
-	
+
 	public class AttemptLoginTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean connect = false;
 		boolean success = false;
-		
+
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			if (api.hasConnectivity()) {
@@ -1060,14 +1050,14 @@ public class DataWalk extends Activity implements LocationListener,
 			} else {
 				connect = false;
 			}
-			
+
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
+
 			if (connect) {
 				if (!success) {
 					if (loginName.length() == 0 || loginPass.length() == 0)
@@ -1078,36 +1068,37 @@ public class DataWalk extends Activity implements LocationListener,
 				Intent i = new Intent(DataWalk.this, NoConnect.class);
 				startActivityForResult(i, DIALOG_NO_CONNECT);
 			}
-		
-			
+
 		}
 
 	}
-	
+
 	public class OnResumeLoginTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean connect = false;
 		boolean success = false;
-		
+
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			if (api.hasConnectivity()) {
 				connect = true;
-				success = api.createSession(LoginIsense.uName, LoginIsense.password);
+				success = api.createSession(LoginIsense.uName,
+						LoginIsense.password);
 			} else {
 				connect = false;
 			}
-			
+
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
+
 			if (connect) {
 				if (success) {
-					//w.make("Login as  " + LoginIsense.uName + "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					// w.make("Login as  " + LoginIsense.uName +
+					// "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
 					Log.d("tag", "login as sor successful!!!!!!!!!!!!!!!!!!!!");
 					Intent i = new Intent();
 					i.putExtra("username", LoginIsense.uName);
@@ -1118,28 +1109,28 @@ public class DataWalk extends Activity implements LocationListener,
 			} else {
 				// do nothing
 			}
-			
+
 		}
 
 	}
-	
+
 	public class GetProjectTask extends AsyncTask<Void, Integer, Void> {
-		
+
 		RProject proj;
-		
+
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			proj = api.getProject(Integer.parseInt(experimentId));
 			Log.d("tag", "Project name is: " + proj.name);
-			
+
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
-			if (proj.name == null || proj.name.equals("")){
+
+			if (proj.name == null || proj.name.equals("")) {
 				Log.d("tag", "Invalid expiremnt number");
 				w.make("Experiment Number Invalid! Please enter a new one.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
@@ -1149,5 +1140,5 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 
 	}
-	
+
 }// Ends DataWalk.java Class

@@ -1,60 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<LinearLayout
-    xmlns:android= "http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-     android:paddingLeft="25dp"
-    android:paddingRight="25dp">
-    
-    <TextView 
+    android:orientation="vertical" >
+
+    <TextView
         android:id="@+id/userNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-     	android:text="@string/user_name"
+        android:layout_marginLeft="5dp"
+        android:text="@string/user_name"
         android:textStyle="bold" />
-    
-    <EditText 
+
+    <EditText
         android:id="@+id/userNameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"/>
-   
-    <TextView 
+        android:inputType="text" />
+
+    <TextView
         android:id="@+id/passwordTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       	android:text="@string/password"
+        android:layout_marginLeft="5dp"
+        android:text="@string/password"
         android:textStyle="bold" />
-    
-    
-    <EditText 
+
+    <EditText
         android:id="@+id/passwordET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"/>
-    
-    <TextView 
-        android:id="@+id/loginErrorTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textStyle="bold"
-        />
-      <View
+        android:inputType="textPassword" />
+
+    <View
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/dividerVertical" />
-    
-    <LinearLayout 
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle"
-        >
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/cancelB"
@@ -64,17 +53,13 @@
             android:layout_weight="50"
             android:text="@string/cancel" />
 
-          
         <Button
             android:id="@+id/loginB"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:text="@string/login"
-            style="?android:attr/buttonBarButtonStyle"
-            />
-
+            android:text="@string/login" />
     </LinearLayout>
-    
-    
+
 </LinearLayout>
