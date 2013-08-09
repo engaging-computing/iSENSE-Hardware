@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/layout_breadcrumbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/navy_light"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_bread1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="?android:selectableItemBackground"
+            android:gravity="left|center_vertical"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_bread2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:gravity="left|center_vertical"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_bread3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:gravity="left|center_vertical"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/buttondivider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_above="@id/buttons"
+        android:background="?android:attr/dividerVertical" />
+
+    <ListView
+        android:id="@+id/list_files"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttondivider"
+        android:layout_below="@id/layout_breadcrumbs"
+        android:choiceMode="singleChoice" >
+    </ListView>
+
+</RelativeLayout>

@@ -34,5 +34,9 @@
         android:name="edu.uml.cs.isense.exp.Setup"
         android:label="Select an Experiment"
         android:theme="@style/theme_dialog_white" />
+    <activity
+        android:name="edu.uml.cs.isense.supplements.FileBrowser"
+        android:label="Select a File"
+        android:theme="@style/theme_dialog_white" />
 
 </manifest>
