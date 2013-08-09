@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white" >
+    android:orientation="vertical" >
 
     <ImageView
         android:id="@+id/ImageViewLogo"
@@ -11,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="#000033"
+        android:contentDescription="@string/blankContentDesc"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:scaleType="center"
@@ -28,7 +28,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@android:color/black"
             android:gravity="center"
-            android:text="Y: "
+            android:text="@string/yString"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -39,25 +39,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:background="@android:color/white"
             android:gravity="center"
-            android:text="Place device on its back with the top edge facing the direction of displacement."
+            android:text="@string/placeDevice"
             android:textColor="@android:color/black"
-            android:textSize="16dip" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/startStop"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
+        android:layout_height="0dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:text="Hold to Start"
-        android:textColor="@android:color/black"
-        android:textSize="30dp" />
+        android:background="@drawable/button_rsense"
+        android:text="@string/holdToStart"
+        android:textColor="#0066FF"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/loginStatus"
@@ -69,6 +69,6 @@
         android:gravity="center"
         android:text="@string/logged_in_as"
         android:textColor="@android:color/black"
-        android:textSize="16dip" />
+        android:textSize="16sp" />
 
 </LinearLayout>
