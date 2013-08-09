@@ -17,16 +17,16 @@ import android.widget.Button;
  */
 public class QueueAlter extends Activity {
 	
-	private Button rename, changeData, selectExp, delete, cancel;
+	private Button rename, changeData, selectProj, delete, cancel;
 	
 	protected final static String RETURN_CODE = "return_code";
 	protected final static String IS_ALTERABLE = "is_alterable";
-	protected final static String SELECT_EXP = "select_experiment";
+	protected final static String SELECT_PROJ = "select_project";
 	
 	protected final static int RENAME = 100;
 	protected final static int CHANGE_DATA = 101;
 	protected final static int DELETE = 102;
-	protected final static int SELECT_EXPERIMENT = 103;
+	protected final static int SELECT_PROJECT = 103;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class QueueAlter extends Activity {
 		
 		rename     = (Button) findViewById(R.id.queuealter_rename     );
 		changeData = (Button) findViewById(R.id.queuealter_change_data);
-		selectExp  = (Button) findViewById(R.id.queuealter_choose_exp );
+		selectProj = (Button) findViewById(R.id.queuealter_choose_proj);
 		delete     = (Button) findViewById(R.id.queuealter_delete     );
 		cancel     = (Button) findViewById(R.id.queuealter_cancel     );
 		
@@ -47,9 +47,9 @@ public class QueueAlter extends Activity {
 				changeData.setVisibility(View.GONE);
 			}
 			
-			boolean showSelectExp = extras.getBoolean(SELECT_EXP);
-			if (!showSelectExp) {
-				selectExp.setVisibility(View.GONE);
+			boolean showSelectProj = extras.getBoolean(SELECT_PROJ);
+			if (!showSelectProj) {
+				selectProj.setVisibility(View.GONE);
 			}
 		}
 		
@@ -71,10 +71,10 @@ public class QueueAlter extends Activity {
 			}	
 		});
 		
-		selectExp.setOnClickListener(new OnClickListener() {
+		selectProj.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent iRet = new Intent(QueueAlter.this, QueueLayout.class);
-				iRet.putExtra(RETURN_CODE, SELECT_EXPERIMENT);
+				iRet.putExtra(RETURN_CODE, SELECT_PROJ);
 				setResult(RESULT_OK, iRet);
 				finish();
 			}

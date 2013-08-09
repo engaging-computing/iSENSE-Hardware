@@ -45,11 +45,11 @@ public class Step1Setup extends Activity {
 
 	private static final int SETUP_REQUESTED = 100;
 	private static final int CHOOSE_SENSORS_REQUESTED = 101;
-	
+
 	public static final int S_INTERVAL = 50;
 	public static final int TEST_LENGTH = 600;
-	public static final int MAX_DATA_POINTS = (1000/S_INTERVAL) *TEST_LENGTH;
-	
+	public static final int MAX_DATA_POINTS = (1000 / S_INTERVAL) * TEST_LENGTH;
+
 	public static API api;
 	public static LinkedList<String> acceptedFields;
 	public static DataFieldManager dfm;
@@ -60,9 +60,10 @@ public class Step1Setup extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.step1setup);
-		
+
 		if (android.os.Build.VERSION.SDK_INT < 11)
-			getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			getWindow().setLayout(LayoutParams.MATCH_PARENT,
+					LayoutParams.WRAP_CONTENT);
 
 		mContext = this;
 		w = new Waffle(this);
@@ -70,7 +71,7 @@ public class Step1Setup extends Activity {
 		f = new Fields();
 		mPrefs = getSharedPreferences("PROJID", 0);
 		mEdit = mPrefs.edit();
-		
+
 		cancel = (Button) findViewById(R.id.step1_cancel);
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
@@ -84,12 +85,13 @@ public class Step1Setup extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				boolean ready = true;
-				
+
 				if (dataSetName.getText().toString().equals("")) {
 					dataSetName.setError("Enter a data set name");
-					w.make("Please enter a data set name first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					w.make("Please enter a data set name first",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					ready = false;
 				} else {
 					dataSetName.setError(null);
@@ -101,8 +103,10 @@ public class Step1Setup extends Activity {
 					sint = Integer.parseInt(sInterval.getText().toString());
 				}
 				if (sint < S_INTERVAL) {
-					sInterval.setError("Enter a sample interval >= " + S_INTERVAL + " ms");
-					w.make("Please enter a valid sample interval", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					sInterval.setError("Enter a sample interval >= "
+							+ S_INTERVAL + " ms");
+					w.make("Please enter a valid sample interval",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					ready = false;
 				} else {
 					sInterval.setError(null);
@@ -113,9 +117,11 @@ public class Step1Setup extends Activity {
 				} else {
 					tlen = Integer.parseInt(testLen.getText().toString());
 				}
-				if (tlen * (1000/sint) > MAX_DATA_POINTS) {
-					testLen.setError("Enter a test length <= " + (long)MAX_DATA_POINTS/(1000/sint) + " s");
-					w.make("Please enter a valid test length", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				if (tlen * (1000 / sint) > MAX_DATA_POINTS) {
+					testLen.setError("Enter a test length <= "
+							+ (long) MAX_DATA_POINTS / (1000 / sint) + " s");
+					w.make("Please enter a valid test length",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 					ready = false;
 				} else {
 					testLen.setError(null);
@@ -124,31 +130,38 @@ public class Step1Setup extends Activity {
 					String eid = mPrefs.getString("project_id", "");
 					String fields = mPrefs.getString("accepted_fields", "");
 					if (eid.equals("") || eid.equals("-1")) {
-						w.make("Please select a project", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+						w.make("Please select a project", Waffle.LENGTH_SHORT,
+								Waffle.IMAGE_X);
 						ready = false;
 					} else if (fields.equals("")) {
-						w.make("Please re-select your project and fields", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+						w.make("Please re-select your project and fields",
+								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 						ready = false;
 					}
 				}
 				if (ready) {
-					if (expCheck.isChecked()) mEdit.putString("project_id", "-1").commit();
-					mEdit.putString("data_set_name", dataSetName.getText().toString()).commit();
-					
+					if (expCheck.isChecked())
+						mEdit.putString("project_id", "-1").commit();
+					mEdit.putString("data_set_name",
+							dataSetName.getText().toString()).commit();
+
 					if (remember.isChecked()) {
-						mEdit.putString("s_interval", sInterval.getText().toString()).commit();
-						mEdit.putString("t_length", testLen.getText().toString()).commit();
+						mEdit.putString("s_interval",
+								sInterval.getText().toString()).commit();
+						mEdit.putString("t_length",
+								testLen.getText().toString()).commit();
 						mEdit.putBoolean("remember", true).commit();
 					} else {
 						mEdit.putBoolean("remember", false).commit();
 					}
-					
+
 					Intent iRet = new Intent();
-					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME, dataSetName.getText().toString());
+					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME,
+							dataSetName.getText().toString());
 					iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
 					iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
 					setResult(RESULT_OK, iRet);
-					finish();	
+					finish();
 				}
 			}
 		});
@@ -158,7 +171,8 @@ public class Step1Setup extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (!api.hasConnectivity())
-					w.make("No internet connectivity found - searching only cached projects", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+					w.make("No internet connectivity found - searching only cached projects",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				Intent iSetup = new Intent(mContext, Setup.class);
 				iSetup.putExtra("from_where", "automatic");
 				startActivityForResult(iSetup, SETUP_REQUESTED);
@@ -187,7 +201,7 @@ public class Step1Setup extends Activity {
 
 		dataSetName = (EditText) findViewById(R.id.step1_data_set_name);
 		dataSetName.setText(mPrefs.getString("data_set_name", ""));
-		
+
 		sInterval = (EditText) findViewById(R.id.step1_sample_interval);
 		testLen = (EditText) findViewById(R.id.step1_test_length);
 
@@ -195,21 +209,20 @@ public class Step1Setup extends Activity {
 		String exp = mPrefs.getString("project_id", "");
 		if (!(exp.equals("") || exp.equals("-1"))) {
 			projLabel.setText("Project (currently " + exp + ")");
-			dfm = new DataFieldManager(Integer.parseInt(exp), api,
-					mContext, f);
+			dfm = new DataFieldManager(Integer.parseInt(exp), api, mContext, f);
 		} else {
 			dfm = new DataFieldManager(-1, api, mContext, f);
 			if (exp.equals("-1"))
 				expCheck.toggle();
 		}
-		
+
 		remember = (CheckBox) findViewById(R.id.step1_remember);
 		remember.setChecked(mPrefs.getBoolean("remember", false));
 		if (remember.isChecked()) {
 			sInterval.setText(mPrefs.getString("s_interval", ""));
 			testLen.setText(mPrefs.getString("t_length", ""));
 		}
-		
+
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -245,17 +258,20 @@ public class Step1Setup extends Activity {
 
 		}
 	}
-	
+
 	private void getEnabledFields() {
 
 		try {
-			for (String s : acceptedFields) { if (s.length() != 0) break; }
+			for (String s : acceptedFields) {
+				if (s.length() != 0)
+					break;
+			}
 		} catch (NullPointerException e) {
 			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 		}
-		
+
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[Fields.TIME] = true;
@@ -316,7 +332,7 @@ public class Step1Setup extends Activity {
 
 		}
 	}
-	
+
 	private void getFieldsFromPrefsString(String fieldList) {
 
 		String[] fields = fieldList.split(",");
@@ -331,7 +347,7 @@ public class Step1Setup extends Activity {
 	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog dia;
-		
+
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(Step1Setup.this);
@@ -350,11 +366,11 @@ public class Step1Setup extends Activity {
 			String projectInput = mPrefs.getString("project_id", "");
 
 			Log.d("SensorCheck", "ProjectId = " + projectInput);
-			
+
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
 			dfm.getOrder();
-			
+
 			sc = dfm.checkCompatibility();
 
 			publishProgress(100);
@@ -368,21 +384,34 @@ public class Step1Setup extends Activity {
 
 			OrientationManager.enableRotation(Step1Setup.this);
 
-			chooseSensorIntent();
+			new ChooseSensorTask().execute();
 		}
 	}
-	
-	private void chooseSensorIntent() {
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		String expNum = mPrefs.getString("project_id", "");
-		Intent i = new Intent(mContext, ChooseSensorDialog.class);
-		RProject p = api.getProject(Integer.parseInt(expNum));
-		i.putExtra("expnum", expNum);
-		if (p != null)
-			i.putExtra("expname", p.name);
-		else
-			i.putExtra("expname", "");
-		startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);	
+
+	// Task for checking sensor availability along with enabling/disabling
+	private class ChooseSensorTask extends AsyncTask<Void, Integer, Void> {
+		RProject p;
+		Intent i;
+		String projNum;
+		@Override
+		protected Void doInBackground(Void... voids) {
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			projNum = mPrefs.getString("project_id", "");
+			i = new Intent(mContext, ChooseSensorDialog.class);
+			p = api.getProject(Integer.parseInt(projNum));
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			i.putExtra("expnum", projNum);
+			if (p != null)
+				i.putExtra("expname", p.name);
+			else
+				i.putExtra("expname", "");
+			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
+		}
 	}
 
 }

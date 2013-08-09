@@ -46,7 +46,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATASET_REQUESTED   = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
-	private static final int ALTER_DATA_EXP_REQUESTED  = 9004;
+	private static final int ALTER_DATA_PROJ_REQUESTED  = 9004;
 
 	private static int QUEUE_PARENT = -1;
 
@@ -105,7 +105,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	}
 
-	// Adds empty space after experiment groups
+	// Adds empty space after project groups
 	private String checkPrevious(String previous, LinearLayout scrollQueue,
 			String ds) {
 
@@ -123,11 +123,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 		CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.name);
 		ctv.setText(ds.getName() + " - " + ds.getType());
 
-		TextView eid = (TextView) view.findViewById(R.id.experimentid);
-		if (ds.getEID().equals("-1"))
-			eid.setText("No Proj.");
+		TextView projIDText = (TextView) view.findViewById(R.id.project_id);
+		if (ds.getProjID().equals("-1"))
+			projIDText.setText("No Proj.");
 		else
-			eid.setText(ds.getEID());
+			projIDText.setText(ds.getProjID());
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());
@@ -230,7 +230,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
-				w.make("Upload failed - no experiment selected or experiment is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Upload failed - no project selected or project is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			}
@@ -298,11 +298,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 					break;
 					
-				case QueueAlter.SELECT_EXPERIMENT:
+				case QueueAlter.SELECT_PROJECT:
 					
-					Intent iExp = new Intent(mContext, Setup.class);
-					iExp.putExtra("from_where", "queue");
-					startActivityForResult(iExp, ALTER_DATA_EXP_REQUESTED);
+					Intent iProj = new Intent(mContext, Setup.class);
+					iProj.putExtra("from_where", "queue");
+					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
 					
 					break;
 
@@ -346,12 +346,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 				addViewToScrollQueue(alter);
 				
 			}
-		} else if (requestCode == ALTER_DATA_EXP_REQUESTED) {
+		} else if (requestCode == ALTER_DATA_PROJ_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
 				
 				QDataSet alter = lastDataSetLongClicked;
-				alter.setExp(mPrefs.getString("project_id", "No Proj."));
+				alter.setProj(mPrefs.getString("project_id", "No Proj."));
 				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
@@ -414,7 +414,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, !isFromDataCollector);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, !lastDataSetLongClicked.getHasInitialExperiment());
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, !lastDataSetLongClicked.getHasInitialProject());
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
@@ -464,7 +464,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, false);
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
@@ -515,7 +515,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, lastDataSetLongClicked.getEID().equals("-1"));
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, lastDataSetLongClicked.getProjID().equals("-1"));
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
