@@ -72,15 +72,15 @@ public class QDataSet implements Serializable {
 	 */
 	private String desc;
 	/**
-	 * Experiment ID# to upload the data set to.
+	 * Project ID# to upload the data set to.
 	 */
-	private String eid;
+	private String projID;
 	
 	private boolean rdyForUpload = true;
 	
 	protected long key;
 	
-	private boolean hasInitialExperiment = true;
+	private boolean hasInitialProject = true;
 
 	// Data Only
 	/**
@@ -100,27 +100,27 @@ public class QDataSet implements Serializable {
 	 * @param type DataSet.PIC or DataSet.DATA
 	 * @param name
 	 * @param desc
-	 * @param eid
+	 * @param projID
 	 * @param data If type is DataSet.DATA, we look here.
 	 * @param picture If type is DataSet.PIC, we look here.
 	 */
-	public QDataSet(Type type, String name, String desc, String eid,
+	public QDataSet(Type type, String name, String desc, String projID,
 			String data, File picture) {
 		this.type = type;
 		this.name = name;
 		this.desc = desc;
-		this.eid = eid;
+		this.projID = projID;
 		if (data != null)
 			this.data = data;
 		else
 			this.data = null;
 		this.picture = picture;
 		this.key = new Random().nextLong();
-		this.hasInitialExperiment = eid.equals("-1") ? false : true;
+		this.hasInitialProject = projID.equals("-1") ? false : true;
 	}
 	
 	/**
-	 * Upload function specifically for when eid = -1 initially
+	 * Upload function specifically for when projID = -1 initially
 	 * In this scenario, you'll need to provide a RestAPI instance
 	 * along with a context.  Should really only be called by
 	 * 
@@ -130,11 +130,11 @@ public class QDataSet implements Serializable {
 	 * @return if the upload was successful
 	 */
 	public boolean upload(API api, Context c) {
-		if (this.eid.equals("-1"))
+		if (this.projID.equals("-1"))
 			return false;
 		
-		if (!this.hasInitialExperiment)
-			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.eid, api, c);
+		if (!this.hasInitialProject)
+			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.projID, api, c);
 		
 		return upload();
 	}
@@ -194,7 +194,7 @@ public class QDataSet implements Serializable {
 					System.out.println("JOBJ: " + jobj.toString());
 					
 					// TODO - success :(?
-					/*success =*/ UploadQueue.getAPI().uploadDataSet(Integer.parseInt(eid), jobj, name);
+					/*success =*/ UploadQueue.getAPI().uploadDataSet(Integer.parseInt(projID), jobj, name);
 				
 				}
 //				}
@@ -281,31 +281,31 @@ public class QDataSet implements Serializable {
 		return this.rdyForUpload;
 	}
 	
-	protected void setHasInitialExperiment(boolean hie) {
-		this.hasInitialExperiment = hie;
+	protected void setHasInitialProject(boolean hip) {
+		this.hasInitialProject = hip;
 	}
 	
-	protected boolean getHasInitialExperiment() {
-		return this.hasInitialExperiment;
+	protected boolean getHasInitialProject() {
+		return this.hasInitialProject;
 	}
 
 	/**
-	 * Getter for experiment ID.
+	 * Getter for project ID.
 	 * 
-	 * @return The experiment ID associated with this data set.
+	 * @return The project ID associated with this data set.
 	 */
-	public String getEID() {
-		return this.eid;
+	public String getProjID() {
+		return this.projID;
 	}
 	
 	/**
-	 * Setter for experiment ID.
+	 * Setter for project ID.
 	 * 
-	 * @param eid
-	 * 		The experiment ID the session should be created under.
+	 * @param projID
+	 * 		The project ID the session should be created under.
 	 */
-	public void setExp(String eid) {
-		this.eid = eid;
+	public void setProj(String projID) {
+		this.projID = projID;
 	}
 
 	/**
