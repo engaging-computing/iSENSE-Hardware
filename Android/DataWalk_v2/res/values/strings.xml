@@ -1,81 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Data Walk V2</string>   
-	<string name="aboutApp">\n\n This app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. When the app is activated, your GPS coordinates are saved once every 10 seconds and are then shared on the iSENSE web system (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\n     Instructions: \n\n     In order to begin recording and sharing data, press and hold the button that says "Hold to Start". This allows data to be recorded and saved every 10 seconds (provided that the GPS on your mobile device has a satellite fix). When you are ready to stop recording, press and hold the button that says "Hold to Stop".  While data is being recorded, you will not be permitted to exit the app by pressing the Back button. However, pressing the Home button will interrupt the recording. When the app resumes, a dialog box will appear indicating that data recording was halted.</string>
-	<string name="saveMode">Save Mode</string>
-	<string name="saveModeInstructions">* Turning on Save Mode will allow data to be saved until internet is enabled.</string>
-	<string name="HelpText">\n Go to isenseproject.org \n\n Login or Register for an Account. \n\n Click on Projects. \n\n Create a new project. \n\n Fill out the appropriate fields in Description.\n\n When formatting the experiment,  the fields should be as follows: Accel-Magnitude (m/s^2), Latitude (deg), Longitude (deg), time (ms) in that order. \n\n Next click Create Experiment.  \n\n Click on where it says here to get started. This will take you to your experiment and give you a QR code. Your experiment number will be the last three numbers in the url. \n\n Remember to change your experiment code in the app to match your experiment number!\n</string>
-	<string name="recordingInterval">Recording Interval</string>
-	<string name="recordDataEvery">Record Data Every:</string>
-	<string name="user_name">User Name:</string>
-	<string name="password">Password</string>
-	<string name="login">Login</string>
-	<string name="enableGPS">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
-	<string name="try_again">Try Again</string>
-	<string name="Rate_Is">Set Recording Interval</string>
-	<string name="Exp_Num_Is">Experiment Number: </string>
-	<string name="logged_in_as">Logged in As: </string>
-	<string name="Upload">Upload</string>
-	<string name="Back">Back</string>
-	<string name="help">Help</string>
-	<string name="iSenseQuestion">Would you like to view your data on the iSENSE website?</string>
-	<string name="InternetMsg">Could not connect to the internet through either wifi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
-	<string name="NoGpsMsg">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
-	<string name="ExitMsg">You exited the app while data was still being recorded.  Data has stopped recording.</string>
-	<string name="About">About</string>
-	<string name="firstNameLabel"> First Name: </string>
-	<string name="lastInitialLabel"> Last Initial: </string>
-	<string name="startPrompt">Hold to Start</string>
-	<string name="logoDescription">iSense Logo</string>
-	<string name="stopPrompt">Hold to Stop</string>
-	<string name="timeElapsed">Time Elapsed:   seconds</string>
-	<string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
-	<string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
-	<string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
-	<string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
-	<string name="noLocation4">Lat: waiting for GPS . . . .\nLong: waiting for GPS . . . .</string>
-	<string name="pointsUploaded">Points Uploaded: 0</string>
-	<string name="nameWithColon">Name: </string>
-	<string name="name">Name</string>
-	<string name="Reset">Reset</string>
-	<!-- RAJIA'S STRINGS FOR MENU... -->
-		<string name="settings_label">Collection Mode</string>
-		<string name="settings_title">DataWalk Settings</string>
-		<string name="settings_shortcut">S</string>
-		
-		<string name="Upload_Title">Upload Mode</string>
-		<string name="Upload_Summary_Auto">Automatically Upload Data Sets</string>
-		<string name="Upload_Summary_Save">Save Data Rather than Uploading to iSENSE</string>
-		
-		<string name="Preferences_Title">Preferences</string>
-		<string name="Preferences_Summary">Gives you the option to change first name/last initial, change the experiment number you would like to upload to, change login information, change data-saving rate, and the option to reset all preferences to default?</string>
-	
-		<string name="NameChange_Title">Name Settings</string>
-   		<string name="NameChange">Change Name </string>
+
+    <string name="app_name">Data Walk V2</string>
+    <string name="aboutApp">\n\n This app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. When the app is activated, your GPS coordinates are saved once every 10 seconds and are then shared on the iSENSE web system (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\n     Instructions: \n\n     In order to begin recording and sharing data, press and hold the button that says "Hold to Start". This allows data to be recorded and saved every 10 seconds (provided that the GPS on your mobile device has a satellite fix). When you are ready to stop recording, press and hold the button that says "Hold to Stop".  While data is being recorded, you will not be permitted to exit the app by pressing the Back button. However, pressing the Home button will interrupt the recording. When the app resumes, a dialog box will appear indicating that data recording was halted.</string>
+    <string name="saveMode">Save Mode</string>
+    <string name="saveModeInstructions">* Turning on Save Mode will allow data to be saved until internet is enabled.</string>
+    <string name="HelpText">\n Go to isenseproject.org \n\n Login or Register for an Account. \n\n Click on Projects. \n\n Create a new project. \n\n Fill out the appropriate fields in Description.\n\n When formatting the experiment,  the fields should be as follows: Accel-Magnitude (m/s^2), Latitude (deg), Longitude (deg), time (ms) in that order. \n\n Next click Create Experiment.  \n\n Click on where it says here to get started. This will take you to your experiment and give you a QR code. Your experiment number will be the last three numbers in the url. \n\n Remember to change your experiment code in the app to match your experiment number!\n</string>
+    <string name="recordingInterval">Recording Interval</string>
+    <string name="recordDataEvery">Record Data Every:</string>
+    <string name="user_name">User Name:</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="enableGPS">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
+    <string name="try_again">Try Again</string>
+    <string name="Rate_Is">Set Recording Interval</string>
+    <string name="Exp_Num_Is">Experiment Number: </string>
+    <string name="logged_in_as">Logged in As: </string>
+    <string name="Upload">Upload</string>
+    <string name="Back">Back</string>
+    <string name="help">Help</string>
+    <string name="iSenseQuestion">Would you like to view your data on the iSENSE website?</string>
+    <string name="InternetMsg">Could not connect to the internet through either wifi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
+    <string name="NoGpsMsg">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
+    <string name="ExitMsg">You exited the app while data was still being recorded.  Data has stopped recording.</string>
+    <string name="About">About</string>
+    <string name="firstNameLabel"> First Name: </string>
+    <string name="lastInitialLabel"> Last Initial: </string>
+    <string name="startPrompt">Hold to Start</string>
+    <string name="logoDescription">iSense Logo</string>
+    <string name="stopPrompt">Hold to Stop</string>
+    <string name="timeElapsed">Time Elapsed:   seconds</string>
+    <string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
+    <string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
+    <string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
+    <string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
+    <string name="noLocation4">Lat: waiting for GPS . . . .\nLong: waiting for GPS . . . .</string>
+    <string name="pointsUploaded">Points Uploaded: 0</string>
+    <string name="nameWithColon">Name: </string>
+    <string name="name">Name</string>
+    <string name="Reset">Reset</string>
     
-    	<string name="Exp_Num_Title">Project Code</string>
-    	<string name="Exp_Num_Summary">Change the number of the experiment you would like to upload to</string>
-    
-    	<string name="Login_Title">Login Settings</string>
-    	<string name="Login_Summary">Change Your Login Information</string>
-		
-		
-		<string name="DataSavings_Title"> Change Rate Data is Saved </string>
-    	<string name="DataSavings_Summary">Change Rate that data is saved</string>
-    	
-    	<string name="DataUpload_Title">Change Rate Data Uploaded </string>
-    	<string name="DataUpload_Summary">Change Rate that data is uploaded</string>
-    
-    	
-		
-		<string name="About_Title">About</string>
-		<string name="About_Summary">\n\nThis app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. 
-	   \n\n When the app is activated, your GPS coordinates are saved once every 10 seconds, and are then shared on the iSENSE website (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.	</string>
-		
-		<string name="Hel">\n Help: \n\n This app has two modes: Upload and Collection Mode. \n\n When you are connected to the internet, the app is automatically set to upload mode.In this case, the app records the specified data at the interval of your choice. Next, it automatically uploads the recorded points to iSENSE every 10 seconds and all the additional points once you are finished recording data.</string>
-		<string name="HelpContinued"> When there is no internet connection, the app gives you the option to turn save mode on. This allows data to be saved until internet is enabled. After finished recording data, the points you recorded will remain saved. Later, when you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
-		<string name="Help">\n\n This app can record data regardless of internet or wifi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
-		<string name="ResetDefaults_Title">Reset Settings</string>
-		<string name="ResetDefaults_Summary">Changes the Experiment Number back to Original, Sets Data Recording Rate back to 10 seconds per point, and Changes username back to Sor S. </string>
+    <!-- RAJIA'S STRINGS FOR MENU... -->
+    <string name="NameChange">Change Name </string>
+    <string name="Exp_Num_Title">Project Code</string>
+    <string name="About_Title">About</string>
+    <string name="Help">\n\n This app can record data regardless of internet or wifi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
+    <string name="ResetDefaults_Title">Reset Settings</string>
 
 </resources>
