@@ -11,14 +11,9 @@
         android:text="@string/InternetMsg"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/dividerVertical" />
-
     <TextView
         android:id="@+id/textView2"
+        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/SaveMsg"
@@ -40,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Try Again"
+            android:text="@string/tryAgain"
             style="?android:attr/buttonBarButtonStyle" />
 
         <Button
@@ -48,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Save Mode"
+            android:text="@string/saveMode"
             style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>

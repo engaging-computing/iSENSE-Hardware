@@ -2,11 +2,7 @@
 <resources>
 
     <string name="app_name">iSENSE Car Ramp Physics</string>
-    
     <string name="promptForName">Please enter your name</string>
-    
-    <string name="experiments_no_items">No projects were found.</string>
-    
     <string name="about_app">
         Enter your first name and last initial so that you can later identify your data set on iSENSE.
         
@@ -21,7 +17,6 @@
         any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
     </string>
     
-    <string name="updates">Please carefully review the following agreement for this version of this app:</string>
 	<string name="about_title">About</string>
 	<string name="login_title">Login</string>
 	<string name="logged_in_as">Logged In As:</string>
@@ -34,7 +29,6 @@
 	<string name="upload_or_trash">Upload Data or Throw It Away</string>
 	<string name="chooseExperimentTitle">Project Code</string>
 	<string name="no_qr">No QR Scanner</string>
-	<string name="first_name">First Name: </string>
 	<string name="record_length">Recording Length</string>
 	<string name="upload">Upload</string>
 	<string name="digits_restriction">
@@ -52,6 +46,18 @@
 	</string-array>
 	<string name="InternetMsg">Could not connect to the Internet through either Wi-Fi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
 	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
-	
+	<string name="blankContentDesc"></string>
+    <string name="yString">Y: </string>
+    <string name="placeDevice">Place device on its back with the top edge facing the direction of displacement.</string>
+    <string name="holdToStart">Hold to Start</string>
+    <string name="firstName"> First Name: </string>
+    <string name="lastInitial"> Last Initial: </string>
+    <string name="userName">User Name</string>
+    <string name="password">Password</string>
+    <string name="saveMode">Save Mode</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="publish">Publish</string>
+	<string name="discard">Discard</string>
+	<string name="view">View</string>
     
 </resources>

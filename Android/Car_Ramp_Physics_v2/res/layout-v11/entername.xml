@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="5dip"
-        android:text=" First Name: " />
+        android:text="@string/firstName" />
 
     <EditText
         android:id="@+id/nameInput"
@@ -30,7 +30,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/nameInput"
         android:layout_marginTop="5dip"
-        android:text=" Last Initial: " />
+        android:text="@string/lastInitial" />
 
     <EditText
         android:id="@+id/initialInput"
@@ -72,7 +72,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OK" />
+            android:text="@android:string/ok" />
     </LinearLayout>
 
 </RelativeLayout>

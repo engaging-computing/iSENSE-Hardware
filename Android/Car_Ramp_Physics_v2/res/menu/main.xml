@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/upload"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/upload">
     </item>
     <item
         android:id="@+id/record_settings"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/recordSettings">
     </item>
     <item
         android:id="@+id/record_length"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/record_length">
     </item>
     <item
