@@ -32,7 +32,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -112,7 +111,6 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private MediaPlayer mMediaPlayer;
 
-	// RestAPI rapi;
 	API api;
 	String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
 	String nameOfSession = "";
@@ -142,18 +140,14 @@ public class DataWalk extends Activity implements LocationListener,
 	public static String textToSession = "";
 	public static String toSendOut = "";
 
-	// private static String loginName = "usasef.datawalk.app.user@gmail.com";
-	// private static String loginPass = "iSENSErUS";
 	private static String loginName = "sor";
 	private static String loginPass = "sor";
 	public static String experimentId = "31";
 	public static String defaultExp = "31";
 	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
-	// private static String marketUrl =
-	// "https://play.google.com/store/apps/developer?id=UMass+Lowell";
 	public static String sessionUrl = "";
-	private static String experimentUrl = "http://rsensedev.cs.uml.edu/projects/";
-	private static String baseExperimentUrl = "http://rsensedev.cs.uml.edu/projects/";
+	private static String experimentUrl = "http://129.63.16.30/projects/";
+	private static String baseExperimentUrl = "http://129.63.16.30/projects/";
 
 	private static int waitingCounter = 0;
 	public static final int RESET_REQUESTED = 102;
@@ -165,7 +159,6 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 	public static Context mContext;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -182,9 +175,6 @@ public class DataWalk extends Activity implements LocationListener,
 		mContext = this;
 		w = new Waffle(mContext);
 		OrientationManager.enableRotation(DataWalk.this);
-		Display deviceDisplay = getWindowManager().getDefaultDisplay();
-		mwidth = deviceDisplay.getWidth();
-		mheight = deviceDisplay.getHeight();
 
 		api = API.getInstance(mContext);
 		api.useDev(true);
