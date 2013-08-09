@@ -2,6 +2,8 @@ package edu.uml.cs.isense.comm;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -112,8 +114,8 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
-																+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+					+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -166,7 +168,7 @@ public class API {
 		}
 		return proj;
 	}
-	
+
 	/**
 	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
 	 * at a type and a name, and can optionally have a unit.
@@ -182,7 +184,7 @@ public class API {
 			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData);
 			JSONObject jobj = new JSONObject(reqResult);
 			int pid = jobj.getInt("id");
-			
+
 			for(RProjectField rpf : fields) {
 				JSONObject mField = new JSONObject();
 				mField.put("project_id", pid);
@@ -194,7 +196,7 @@ public class API {
 				postData2.put("project_id", pid);
 				makeRequest(baseURL, "fields", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData2);
 			}
-			
+
 			return pid;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -245,7 +247,7 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -308,7 +310,7 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-													+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -480,6 +482,36 @@ public class API {
 		}
 	}
 
+	public int uploadCSV(int projectId, File csvToUpload) {
+		try {			
+			URL url = new URL(baseURL+"/projects/"+projectId+"/CSVUpload?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestMethod("POST");
+			urlConnection.setRequestProperty("Accept", "application/json");
+			urlConnection.setRequestProperty("Content-Type", "text/csv");
+
+			byte[] mPostData = convertFileToByteArray(csvToUpload);
+			urlConnection.setRequestProperty("Content-Length",Integer.toString(mPostData.length));
+			OutputStream out = urlConnection.getOutputStream();
+			out.write(mPostData);
+			out.close();
+
+			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+			ByteArrayOutputStream bo = new ByteArrayOutputStream();
+			int i = in.read();
+			while(i != -1) {
+				bo.write(i);
+				i = in.read();
+			}
+			//return bo.toString();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+
+	}
+
 	public RPerson getCurrentUser() {
 		return currentUser;
 	}
@@ -587,5 +619,29 @@ public class API {
 			e.printStackTrace();
 		}
 		return reformatted;
+	}
+
+	private static byte[] convertFileToByteArray(File f)
+	{
+		byte[] byteArray = null;
+		try
+		{
+			InputStream inputStream = new FileInputStream(f);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			byte[] b = new byte[1024*8];
+			int bytesRead =0;
+
+			while ((bytesRead = inputStream.read(b)) != -1)
+			{
+				bos.write(b, 0, bytesRead);
+			}
+
+			byteArray = bos.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return byteArray;
 	}
 }
