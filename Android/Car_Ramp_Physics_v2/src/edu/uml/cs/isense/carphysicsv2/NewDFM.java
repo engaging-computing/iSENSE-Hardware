@@ -38,6 +38,7 @@ public class NewDFM extends Application {
 		this.mContext = mContext;
 		this.dataSet = new JSONArray();
 		this.f = f;
+		this.projFields = new ArrayList<RProjectField>();
 		if (rapi.hasConnectivity())
 			new getFieldsTask().execute();
 	}
