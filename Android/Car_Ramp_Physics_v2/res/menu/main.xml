@@ -17,11 +17,6 @@
         android:title="@string/record_length">
     </item>
     <item
-        android:id="@+id/changename"
-        android:showAsAction="ifRoom"
-        android:title="@string/changename">
-    </item>
-    <item
         android:id="@+id/experiment_select"
         android:showAsAction="ifRoom"
         android:title="@string/chooseExperimentTitle">
@@ -30,6 +25,11 @@
         android:id="@+id/login"
         android:showAsAction="ifRoom"
         android:title="@string/login_title">
+    </item>
+    <item
+        android:id="@+id/changename"
+        android:showAsAction="ifRoom"
+        android:title="@string/changename">
     </item>
     <item
         android:id="@+id/about_app"

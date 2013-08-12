@@ -65,10 +65,10 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
-	public static String experimentNumber = "409";
+	public static String experimentNumber = "32";
 	public static final String DEFAULT_PROJ_PROD = "32";
 	public static final String DEFAULT_PROJ_DEV = "32";
-	
+
 	private static String userName = "sor";
 	private static String password = "sor";
 
@@ -104,7 +104,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	static String firstName = "";
 	static String lastInitial = "";
-	
+
 	public static final int resultGotName = 1098;
 	public static final int UPLOAD_OK_REQUESTED = 90000;
 	public static final int LOGIN_STATUS_REQUESTED = 6005;
@@ -116,7 +116,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
-	public static boolean appTimedOut = false;
 	public static boolean useDev = true;
 	public static boolean saveMode = false;
 
@@ -125,11 +124,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 
 	private String dateString;
-	
 
 	private boolean x = false, y = false, z = false, mag = false;
 
-	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
+	DecimalFormat toThou = new DecimalFormat("######0.000");
 
 	int i = 0;
 	int len = 0;
@@ -172,8 +170,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static UploadQueue uq;
 
-	
-
 	public static Bundle saved;
 
 	@Override
@@ -210,7 +206,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		length = countdown = prefs.getInt("length", 10);
 
 		new OnCreateLoginTask().execute();
-		
+
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 				+ userName + " Name: " + firstName + " " + lastInitial);
@@ -232,7 +228,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
-				
+
 				if (!rapi.hasConnectivity() && !saveMode) {
 					startActivityForResult(new Intent(mContext,
 							SaveModeDialog.class), SAVE_MODE_REQUESTED);
@@ -255,20 +251,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						timeTimer.cancel();
 						choiceViaMenu = false;
 
-						if (!appTimedOut)
-							try {
-								Intent dataIntent = new Intent(mContext,
-										DataActivity.class);
-
-								startActivityForResult(dataIntent,
-										UPLOAD_OK_REQUESTED);
-							} catch (Exception e) {
-
-							}
-
-						else
-							w.make("Your app has timed out, you may not upload data any longer.",
-									Waffle.LENGTH_LONG);
+						Intent dataIntent = new Intent(mContext,
+								DataActivity.class);
+						startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
 
 					} else if (usedHomeButton) {
 						setupDone = false;
@@ -295,6 +280,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					len2 = 0;
 					i = 0;
 					currentTime = getUploadTime(0);
+
+					if (saveMode) {
+						dfm.getOrder();
+						System.out
+								.println("Honk frogs@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+					}
 
 					if (mLocationManager
 							.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
@@ -391,11 +382,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									Log.d("fantastag", "Magnitude added");
 								}
 
-								if (rapi.hasConnectivity()) {
+								// TODO if (!saveMode) or if (rapi.hasConnectivity)
+								if (!saveMode) {
 									dataSet.put(dfm.makeJSONObject());
 									Log.d("tag", "NULLFROG");
-								}
-								else {
+								} else {
 									dataSet.put(dfm.makeJSONArray());
 									Log.d("tag", "NULLTOAD");
 								}
@@ -436,8 +427,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
-		if (rapi.hasConnectivity())
-			new OnCreateLoginTask().execute();
+		// if (rapi.hasConnectivity())
+		// new OnCreateLoginTask().execute();
 
 		if (savedInstanceState == null) {
 			if (firstName.equals("") || lastInitial.equals("")) {
@@ -554,6 +545,23 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		if (uq != null)
 			uq.buildQueueFromFile();
 
+		if (rapi.hasConnectivity() && saveMode) {
+			SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
+			experimentNumber = prefs2.getString("project_id", null);
+			if (experimentNumber == null) {
+				if (useDev) {
+					experimentNumber = DEFAULT_PROJ_DEV;
+				} else {
+					experimentNumber = DEFAULT_PROJ_PROD;
+				}
+			}
+			dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+					mContext, f);
+
+			saveMode = false;
+			System.out.println("Switching off save mode");
+		}
+
 	}
 
 	@Override
@@ -578,8 +586,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
-	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -692,8 +698,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		return android.os.Build.VERSION.SDK_INT;
 	}
 
-
-
 	@Override
 	public void onActivityResult(int reqCode, int resultCode, Intent data) {
 		super.onActivityResult(reqCode, resultCode, data);
@@ -725,8 +729,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				else
 					new UploadTask().execute();
 			} else {
-				w.make("Data thrown away!", Waffle.LENGTH_LONG,
-						Waffle.IMAGE_CHECK);
+				w.make("Data set discarded", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_WARN);
 			}
 		} else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -985,13 +989,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public class LoginTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean success;
-		
+
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			success = rapi.createSession(userName, password);
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void voids) {
 			if (success) {
@@ -1000,21 +1004,21 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			} else {
 				if (rapi.hasConnectivity())
-					w.make("Login failed!", Waffle.LENGTH_SHORT,
-							Waffle.IMAGE_X);
+					w.make("Login failed!", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			}
 		}
 
 	}
-	
+
 	public class OnCreateLoginTask extends AsyncTask<Void, Integer, Void> {
-		
+
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			rapi.createSession(userName, password);
+			if (rapi.hasConnectivity())
+				rapi.createSession(userName, password);
 			return null;
 		}
-		
+
 	}
 
 }
