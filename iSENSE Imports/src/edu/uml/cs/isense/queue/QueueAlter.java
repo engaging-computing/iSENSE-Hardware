@@ -74,7 +74,7 @@ public class QueueAlter extends Activity {
 		selectProj.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent iRet = new Intent(QueueAlter.this, QueueLayout.class);
-				iRet.putExtra(RETURN_CODE, SELECT_PROJ);
+				iRet.putExtra(RETURN_CODE, SELECT_PROJECT);
 				setResult(RESULT_OK, iRet);
 				finish();
 			}

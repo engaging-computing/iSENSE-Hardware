@@ -41,8 +41,9 @@ public class DataFieldManager extends Application {
 	// Static class function strictly for getting the field order of any
 	// experiment
 	public static LinkedList<String> getOrder(int projID, API api, Context c) {
+		api = API.getInstance(c);
 		DataFieldManager d = new DataFieldManager(projID, api, c, null);
-		d.getOrder();
+		d.getOrderWithExternalAsyncTask();
 		return d.order;
 	}
 
@@ -71,9 +72,42 @@ public class DataFieldManager extends Application {
 			order.add(mContext.getString(R.string.temperature_f));
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
+			// Execute a new task
 			new GetOrderTask().execute();
 		}
+	}
+	
+	public void getOrderWithExternalAsyncTask() {
+		if (!order.isEmpty())
+			return;
 
+		if (projID == -1) {
+			order.add(mContext.getString(R.string.time));
+			order.add(mContext.getString(R.string.accel_x));
+			order.add(mContext.getString(R.string.accel_y));
+			order.add(mContext.getString(R.string.accel_z));
+			order.add(mContext.getString(R.string.accel_total));
+			order.add(mContext.getString(R.string.latitude));
+			order.add(mContext.getString(R.string.longitude));
+			order.add(mContext.getString(R.string.magnetic_x));
+			order.add(mContext.getString(R.string.magnetic_y));
+			order.add(mContext.getString(R.string.magnetic_z));
+			order.add(mContext.getString(R.string.magnetic_total));
+			order.add(mContext.getString(R.string.heading_deg));
+			order.add(mContext.getString(R.string.heading_rad));
+			order.add(mContext.getString(R.string.temperature_c));
+			order.add(mContext.getString(R.string.pressure));
+			order.add(mContext.getString(R.string.altitude));
+			order.add(mContext.getString(R.string.luminous_flux));
+			order.add(mContext.getString(R.string.temperature_f));
+			order.add(mContext.getString(R.string.temperature_k));
+		} else {
+			// Function is being called within an AsyncTask already, so
+			// no need to create a new task for the API call
+			projFields = api.getProjectFields(projID);
+			getProjectFieldOrder();
+
+		}
 	}
 
 	public JSONObject putData() {
@@ -561,125 +595,113 @@ public class DataFieldManager extends Application {
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			for (RProjectField field : projFields) {
-				switch (field.type) {
+			getProjectFieldOrder();
+		}
+	}
 
-				// Number
-				case RProjectField.TYPE_NUMBER:
+	private void getProjectFieldOrder() {
+		for (RProjectField field : projFields) {
+			switch (field.type) {
 
-					// Temperature
-					if (field.name.toLowerCase(Locale.US).contains("temp")) {
-						if (field.unit.toLowerCase(Locale.US).contains("c")) {
-							order.add(mContext
-									.getString(R.string.temperature_c));
-						} else if (field.unit.toLowerCase(Locale.US).contains(
-								"k")) {
-							order.add(mContext
-									.getString(R.string.temperature_k));
-						} else {
-							order.add(mContext
-									.getString(R.string.temperature_f));
-						}
-						break;
+			// Number
+			case RProjectField.TYPE_NUMBER:
+
+				// Temperature
+				if (field.name.toLowerCase(Locale.US).contains("temp")) {
+					if (field.unit.toLowerCase(Locale.US).contains("c")) {
+						order.add(mContext.getString(R.string.temperature_c));
+					} else if (field.unit.toLowerCase(Locale.US).contains("k")) {
+						order.add(mContext.getString(R.string.temperature_k));
+					} else {
+						order.add(mContext.getString(R.string.temperature_f));
 					}
-
-					// Potential Altitude
-					else if (field.name.toLowerCase(Locale.US).contains(
-							"altitude")) {
-						order.add(mContext.getString(R.string.altitude));
-						break;
-					}
-
-					// Light
-					else if (field.name.toLowerCase(Locale.US)
-							.contains("light")) {
-						order.add(mContext.getString(R.string.luminous_flux));
-						break;
-					}
-
-					// Heading
-					else if (field.name.toLowerCase(Locale.US).contains(
-							"heading")
-							|| field.name.toLowerCase(Locale.US).contains(
-									"angle")) {
-						if (field.unit.toLowerCase(Locale.US).contains("rad")) {
-							order.add(mContext.getString(R.string.heading_rad));
-						} else {
-							order.add(mContext.getString(R.string.heading_deg));
-						}
-						break;
-					}
-
-					// Numeric/Custom
-					else if (field.name.toLowerCase(Locale.US).contains(
-							"magnetic")) {
-						if (field.name.toLowerCase(Locale.US).contains("x")) {
-							order.add(mContext.getString(R.string.magnetic_x));
-						} else if (field.name.toLowerCase(Locale.US).contains(
-								"y")) {
-							order.add(mContext.getString(R.string.magnetic_y));
-						} else if (field.name.toLowerCase(Locale.US).contains(
-								"z")) {
-							order.add(mContext.getString(R.string.magnetic_z));
-						} else {
-							order.add(mContext
-									.getString(R.string.magnetic_total));
-						}
-						break;
-					}
-
-					// Acceleration
-					else if (field.name.toLowerCase(Locale.US)
-							.contains("accel")) {
-						if (field.name.toLowerCase(Locale.US).contains("x")) {
-							order.add(mContext.getString(R.string.accel_x));
-						} else if (field.name.toLowerCase(Locale.US).contains(
-								"y")) {
-							order.add(mContext.getString(R.string.accel_y));
-						} else if (field.name.toLowerCase(Locale.US).contains(
-								"z")) {
-							order.add(mContext.getString(R.string.accel_z));
-						} else {
-							order.add(mContext.getString(R.string.accel_total));
-						}
-						break;
-					}
-
-					// Pressure
-					else if (field.name.toLowerCase(Locale.US).contains(
-							"pressure")) {
-						order.add(mContext.getString(R.string.pressure));
-						break;
-					}
-
-					else {
-						order.add(mContext.getString(R.string.null_string));
-						break;
-					}
-
-				// Time
-				case RProjectField.TYPE_TIMESTAMP:
-					order.add(mContext.getString(R.string.time));
 					break;
-
-				// Latitude
-				case RProjectField.TYPE_LAT:
-					order.add(mContext.getString(R.string.latitude));
-					break;
-
-				// Longitude
-				case RProjectField.TYPE_LON:
-					order.add(mContext.getString(R.string.longitude));
-					break;
-
-				// No match (Just about every other category)
-				default:
-					order.add(mContext.getString(R.string.null_string));
-					break;
-
 				}
 
+				// Potential Altitude
+				else if (field.name.toLowerCase(Locale.US).contains("altitude")) {
+					order.add(mContext.getString(R.string.altitude));
+					break;
+				}
+
+				// Light
+				else if (field.name.toLowerCase(Locale.US).contains("light")) {
+					order.add(mContext.getString(R.string.luminous_flux));
+					break;
+				}
+
+				// Heading
+				else if (field.name.toLowerCase(Locale.US).contains("heading")
+						|| field.name.toLowerCase(Locale.US).contains("angle")) {
+					if (field.unit.toLowerCase(Locale.US).contains("rad")) {
+						order.add(mContext.getString(R.string.heading_rad));
+					} else {
+						order.add(mContext.getString(R.string.heading_deg));
+					}
+					break;
+				}
+
+				// Numeric/Custom
+				else if (field.name.toLowerCase(Locale.US).contains("magnetic")) {
+					if (field.name.toLowerCase(Locale.US).contains("x")) {
+						order.add(mContext.getString(R.string.magnetic_x));
+					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
+						order.add(mContext.getString(R.string.magnetic_y));
+					} else if (field.name.toLowerCase(Locale.US).contains("z")) {
+						order.add(mContext.getString(R.string.magnetic_z));
+					} else {
+						order.add(mContext.getString(R.string.magnetic_total));
+					}
+					break;
+				}
+
+				// Acceleration
+				else if (field.name.toLowerCase(Locale.US).contains("accel")) {
+					if (field.name.toLowerCase(Locale.US).contains("x")) {
+						order.add(mContext.getString(R.string.accel_x));
+					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
+						order.add(mContext.getString(R.string.accel_y));
+					} else if (field.name.toLowerCase(Locale.US).contains("z")) {
+						order.add(mContext.getString(R.string.accel_z));
+					} else {
+						order.add(mContext.getString(R.string.accel_total));
+					}
+					break;
+				}
+
+				// Pressure
+				else if (field.name.toLowerCase(Locale.US).contains("pressure")) {
+					order.add(mContext.getString(R.string.pressure));
+					break;
+				}
+
+				else {
+					order.add(mContext.getString(R.string.null_string));
+					break;
+				}
+
+			// Time
+			case RProjectField.TYPE_TIMESTAMP:
+				order.add(mContext.getString(R.string.time));
+				break;
+
+			// Latitude
+			case RProjectField.TYPE_LAT:
+				order.add(mContext.getString(R.string.latitude));
+				break;
+
+			// Longitude
+			case RProjectField.TYPE_LON:
+				order.add(mContext.getString(R.string.longitude));
+				break;
+
+			// No match (Just about every other category)
+			default:
+				order.add(mContext.getString(R.string.null_string));
+				break;
+
 			}
+
 		}
 	}
 

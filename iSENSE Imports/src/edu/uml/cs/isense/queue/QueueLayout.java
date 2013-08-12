@@ -281,7 +281,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 
 				int returnCode = data.getIntExtra(QueueAlter.RETURN_CODE, -1);
-
+				
 				switch (returnCode) {
 
 				case QueueAlter.RENAME:
@@ -410,7 +410,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = data;
-					boolean isFromDataCollector = (parentName.equals("datacollector"));
+					boolean isFromDataCollector = (parentName.equals("datacollector")) || (parentName.equals("carrampphysics"))
+							|| (parentName.equals("data_walk"));
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, !isFromDataCollector);
