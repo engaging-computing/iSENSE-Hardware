@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		if(api.hasConnectivity()) {
 			if ( v == login ) {
 				status.setText("clicked login");
-				new LoginTask().execute("NickAVV", "Looping59");
+				new LoginTask().execute("sor", "sor");
 			} else if ( v == getusers ) {
 				status.setText("clicked get users");
 				new UsersTask().execute();
@@ -200,7 +200,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			api.appendDataSetData(20, toAppend);
 			return null;
 		}
-
 		@Override
 		protected void onPostExecute(Void result) {
 			

@@ -11,11 +11,21 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -484,27 +494,15 @@ public class API {
 
 	public int uploadCSV(int projectId, File csvToUpload) {
 		try {			
-			URL url = new URL(baseURL+"/projects/"+projectId+"/CSVUpload?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
-			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-			urlConnection.setRequestMethod("POST");
-			urlConnection.setRequestProperty("Accept", "application/json");
-			urlConnection.setRequestProperty("Content-Type", "text/csv");
-
-			byte[] mPostData = convertFileToByteArray(csvToUpload);
-			urlConnection.setRequestProperty("Content-Length",Integer.toString(mPostData.length));
-			OutputStream out = urlConnection.getOutputStream();
-			out.write(mPostData);
-			out.close();
-
-			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			int i = in.read();
-			while(i != -1) {
-				bo.write(i);
-				i = in.read();
-			}
-			//return bo.toString();
-			in.close();
+			URI url = new URI(baseURL+"/projects/"+projectId+"/CSVUpload");
+			HttpClient client = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(url);
+			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null,Charset.forName(HTTP.UTF_8));
+			entity.addPart("authenticity_token", new StringBody(authToken));
+			entity.addPart("csv", new FileBody(csvToUpload));
+			entity.addPart("utf8", new StringBody("\u2713", "text/plain", Charset.forName("UTF-8")));
+			httpPost.setEntity(entity);
+			client.execute(httpPost);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
