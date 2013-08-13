@@ -6,16 +6,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.carphysicsv2.R;
 
 public class ViewData extends Activity {
 
 	Button view, dont;
-
+	
 	public void onCreate(Bundle b) {
 		super.onCreate(b);
 		setContentView(R.layout.view_data);
-		
+			
 		view = (Button) findViewById(R.id.view);
 		dont = (Button) findViewById(R.id.noview);
 		

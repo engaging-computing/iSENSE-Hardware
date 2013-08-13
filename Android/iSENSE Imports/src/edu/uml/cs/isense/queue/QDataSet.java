@@ -180,8 +180,6 @@ public class QDataSet implements Serializable {
 //					success = UploadQueue.getRapi().putSessionData(sid, eid,
 //							dataJSON);
 					
-					//System.out.println("Prepared: " + dataJSON.toString());
-					
 					JSONObject jobj = new JSONObject();
 					try {
 						jobj.put("data", dataJSON);

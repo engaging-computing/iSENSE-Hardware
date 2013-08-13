@@ -48,6 +48,9 @@ import android.widget.Toast;
 
 // iSENSE data upload
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class ColorBlobDetectionActivity extends Activity implements OnTouchListener, CvCameraViewListener2 {
@@ -59,7 +62,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
     // use development site
     Boolean useDevSite = true; 
 	// iSENSE uploader
-	RestAPI rapi;
+	API api;
 	
 	// iSENSE login
 	private static String userName = "videoAnalytics";
@@ -146,8 +149,8 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
         //mOpenCvCameraView.setMaxFrameSize(320, 240);
         
         // iSENSE network connectivity stuff
-        rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
-        rapi.useDev(useDevSite);
+        api = API.getInstance(mContext);
+        api.useDev(useDevSite);
         
              
     }
@@ -299,14 +302,14 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
  	   case R.id.menu_upload:
  			
  		   // login to iSENSE if not already
- 		   if(rapi.isConnectedToInternet())
+ 		   if(api.hasConnectivity())
  		   {
  			   Log.i(TAG, "Connected to the 'net.");
  			   Boolean status;
  			   // attempt to upload data if logged in
- 			   if(!rapi.isLoggedIn())
+ 			   if(api.getCurrentUser() == null)
  			   {
- 				   status = rapi.login(userName, password);
+ 				   status = api.createSession(userName, password);
  				   
  				   if(!status)
  				   {
@@ -316,7 +319,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
  				   }
  			   }
  			   
- 			   if(rapi.isLoggedIn())
+ 			   if(api.getCurrentUser() != null)
  			   {
  				   // upload data backgrounded in a thread
  				   // onActivity		   
@@ -445,10 +448,33 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 			String nameOfSession = firstName + " " +  lastInitial + ". - " + dateString;
 			//String nameOfSession = "underpantsGnomes";
 			 
-			sessionId = rapi.createSession(experimentNumber, 
-											nameOfSession + " (location not found)", 
-											"Automated Submission Through Android App", 
-											"", "", "");
+			// Old API Uploading Code
+//			sessionId = rapi.createSession(experimentNumber, 
+//											nameOfSession + " (location not found)", 
+//											"Automated Submission Through Android App", 
+//											"", "", "");
+//			if(useDevSite)
+//			{
+//				sessionUrl = baseSessionUrlDev + sessionId; 
+//				Log.i(TAG, sessionUrl);
+//			}
+//			else
+//				sessionUrl = baseSessionUrl + sessionId;
+//				
+//			Log.i(TAG, "Putting session data...");
+//			rapi.putSessionData(sessionId, experimentNumber, mDataSet);
+			
+			// New API Uploading Code
+			Log.i(TAG, "Uploading data set...");
+			
+			JSONObject jobj = new JSONObject();
+			jobj.put("data", mDataSet);
+			jobj = api.rowsToCols(jobj);
+			
+			int projectID = Integer.parseInt(experimentNumber);
+			
+			sessionId = api.uploadDataSet(projectID, jobj, nameOfSession + " (location not found)");
+			
 			if(useDevSite)
 			{
 				sessionUrl = baseSessionUrlDev + sessionId; 
@@ -456,9 +482,6 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 			}
 			else
 				sessionUrl = baseSessionUrl + sessionId;
-				
-			Log.i(TAG, "Putting session data...");
-			rapi.putSessionData(sessionId, experimentNumber, mDataSet);
 	
 		}
 		

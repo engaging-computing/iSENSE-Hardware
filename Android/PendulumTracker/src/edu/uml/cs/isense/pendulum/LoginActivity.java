@@ -75,7 +75,7 @@ public class LoginActivity extends Activity {
 	}
 
 	static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
+		return android.os.Build.VERSION.SDK_INT;
 	}
 
 	public class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
