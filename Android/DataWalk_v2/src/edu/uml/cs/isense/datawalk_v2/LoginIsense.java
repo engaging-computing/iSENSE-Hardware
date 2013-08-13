@@ -22,8 +22,8 @@ public class LoginIsense extends Activity{
 	TextView loggedInAs;
 	Waffle w;
 	
-	public static String uName = "sor";
-	public static String password = "sor";
+	public static String uName = "test";
+	public static String password = "test";
 	
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
