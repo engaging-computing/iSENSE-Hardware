@@ -19,8 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/nameLabel"
         android:gravity="left"
-        android:inputType="textEmailAddress"
-        android:maxLength="12"
+        android:inputType="textCapSentences"
         android:paddingLeft="6dip"
         android:textColor="@android:color/black" />
 
@@ -42,7 +41,7 @@
         android:layout_below="@id/nameInput"
         android:ems="10"
         android:gravity="left"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:maxLength="1"
         android:maxWidth="40sp"
         android:paddingLeft="6dip"

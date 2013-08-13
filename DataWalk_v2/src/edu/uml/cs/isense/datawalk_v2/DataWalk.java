@@ -42,6 +42,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoConnect;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
@@ -207,8 +208,6 @@ public class DataWalk extends Activity implements LocationListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 
-				timeElapsedBox.setText("Time Elapsed:" + " seconds");
-
 				if (appTimedOut)
 					return false;
 
@@ -228,10 +227,6 @@ public class DataWalk extends Activity implements LocationListener,
 					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 
-					// w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
-					// Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-					pointsUploadedBox.setText("Points Recorded: " + "0");
-
 					if (savePoint) {
 						SimpleDateFormat sdf = new SimpleDateFormat(
 								"MM/dd/yyyy, HH:mm:ss", Locale.US);
@@ -241,7 +236,7 @@ public class DataWalk extends Activity implements LocationListener,
 						nameOfSession = firstName + " " + lastInitial + ". - "
 								+ dateString;
 
-						// get user's experiment #, or default if there is none
+						// get user's project #, or default if there is none
 						SharedPreferences prefs = getSharedPreferences(
 								"PROJID", 0);
 						experimentId = prefs.getString("project_id", "");
@@ -283,6 +278,10 @@ public class DataWalk extends Activity implements LocationListener,
 					}
 
 				} else {
+
+					pointsUploadedBox.setText("Points Recorded: " + "0");
+					timeElapsedBox.setText("Time Elapsed:" + " 0 seconds");
+					dataPointCount = 0;
 
 					Log.d("sessionId", sessionId + "= reseting session id");
 					sessionId = -1;
@@ -352,8 +351,13 @@ public class DataWalk extends Activity implements LocationListener,
 
 								@Override
 								public void run() {
-									timeElapsedBox.setText("Time Elapsed: " + i
-											+ " seconds");
+									if (i == 1) {
+										timeElapsedBox.setText("Time Elapsed: "
+												+ i + " second");
+									} else {
+										timeElapsedBox.setText("Time Elapsed: "
+												+ i + " seconds");
+									}
 								}
 							});
 							if (!api.hasConnectivity())
@@ -371,21 +375,8 @@ public class DataWalk extends Activity implements LocationListener,
 							// Every n seconds which is determined by interval
 							// (not including time 0)
 							if ((i % (mInterval / 1000)) == 0 && i != 0) {
-								Log.d("tag", "saving point");
 								JSONObject dataJSON = new JSONObject();
 								elapsedMillis += mInterval;
-
-								dataPointCount++;
-								runOnUiThread(new Runnable() {
-
-									@Override
-									public void run() {
-										pointsUploadedBox
-												.setText("Points Recorded: "
-														+ dataPointCount);
-									}
-
-								});
 
 								try {
 									long time = startTime + elapsedMillis;
@@ -394,9 +385,24 @@ public class DataWalk extends Activity implements LocationListener,
 									dataJSON.put("3", loc.getLongitude());
 									dataJSON.put("0", "u " + time);
 
-									dataSet.put(dataJSON);
-									Log.d("Recording", "Number of points: "
-											+ dataSet.length());
+									if (loc.getLatitude() != 0
+											&& loc.getLongitude() != 0) {
+										dataSet.put(dataJSON);
+										Log.d("Recording", "Number of points: "
+												+ dataSet.length());
+
+										dataPointCount++;
+										runOnUiThread(new Runnable() {
+
+											@Override
+											public void run() {
+												pointsUploadedBox
+														.setText("Points Recorded: "
+																+ dataPointCount);
+											}
+
+										});
+									}
 
 								} catch (JSONException e) {
 									e.printStackTrace();
@@ -536,12 +542,8 @@ public class DataWalk extends Activity implements LocationListener,
 		// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode",
 		// true);
 
-		mInterval = Integer.parseInt(PreferenceManager
-				.getDefaultSharedPreferences(this).getString("Data UploadRate",
-						"10000"));
-		// mInterval = CustomOnItemSelectedListener.mIntervalHack;
-
-		Log.d("tag", "this is name" + firstName + lastInitial);
+		mInterval = Integer.parseInt(getSharedPreferences("RecordingPrefs", 0)
+				.getString("DataUploadRate", "10000"));
 
 		if (uq != null)
 			uq.buildQueueFromFile();
@@ -557,13 +559,14 @@ public class DataWalk extends Activity implements LocationListener,
 
 		if (mTimer == null)
 			waitingForGPS();
+
 		NameTxtBox.setText("Name: " + firstName + " " + lastInitial);
 		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 				+ " " + LoginIsense.uName);
 		dataPointCount = 0;
 		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
 		i = 0;
-		expNumBox.setText("Experiment Number: " + experimentId);
+		expNumBox.setText("Project Number: " + experimentId);
 		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
 		if (mInterval == 1000) {
 			rateBox.setText("Data Recorded Every: 1 second");
@@ -572,7 +575,7 @@ public class DataWalk extends Activity implements LocationListener,
 		} else {
 			rateBox.setText("Data Recorded Every: " + mInterval / 1000
 					+ " seconds");
-			Log.d("tag", "!!!!!!!The Experiment Number Is:" + experimentId);
+			Log.d("tag", "!!!!!!!The Project Id Is:" + experimentId);
 		}
 
 		new OnResumeLoginTask().execute();
@@ -777,8 +780,8 @@ public class DataWalk extends Activity implements LocationListener,
 					@Override
 					public void run() {
 						if (gpsWorking)
-							latLong.setText("Lat: " + latitude + "\nLong: "
-									+ longitude);
+							latLong.setText("Latitude: " + latitude
+									+ "\nLongitude: " + longitude);
 						else {
 							switch (waitingCounter % 5) {
 							case (0):
@@ -884,7 +887,6 @@ public class DataWalk extends Activity implements LocationListener,
 		}// ends resultCode = dialog_no_connect
 		else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
-			// TODO
 			if (resultCode == RESULT_OK) {
 				Intent i = new Intent(DataWalk.this, ViewData.class);
 				startActivityForResult(i, DIALOG_VIEW_DATA);
@@ -914,9 +916,7 @@ public class DataWalk extends Activity implements LocationListener,
 				if (api.hasConnectivity())
 					ChkBoxChecked = true;
 				umbChecked = true;
-				CustomOnItemSelectedListener.mIntervalHack = 10000;
-				CustomOnItemSelectedListener.savedValueInt = 3;
-				CustomOnItemSelectedListener.savedValueString = "10 seconds";
+
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor mEdit = prefs.edit();
 				mEdit.putString("project_id", defaultExp);
@@ -980,15 +980,6 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// if you want a check-box option
-		/*
-		 * case R.id.Settings: startActivity(new Intent(this, Prefs.class));
-		 * if(!umbChecked) w.make(
-		 * "The Application will remain in Save Mode until connected to the Internet."
-		 * , Waffle.LENGTH_LONG,Waffle.IMAGE_WARN); if(umbChecked)
-		 * w.make("Data will  automatically be uploaded to iSENSE!",
-		 * Waffle.LENGTH_LONG); return true;
-		 */
 
 		case R.id.Upload:
 			manageUploadQueue();
@@ -1008,7 +999,7 @@ public class DataWalk extends Activity implements LocationListener,
 			Log.d("tag", "you clicked on NameChange");
 			return true;
 		case R.id.DataUploadRate:
-			startActivity(new Intent(this, PrefsTwo.class));
+			startActivity(new Intent(this, DataRateDialog.class));
 			Log.d("tag", "you clicked on Change Recording Rate");
 			return true;
 		case R.id.ExpNum:
@@ -1122,7 +1113,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 			if (proj.name == null || proj.name.equals("")) {
 				Log.d("tag", "Invalid expiremnt number");
-				w.make("Experiment Number Invalid! Please enter a new one.",
+				w.make("Project Number Invalid! Please enter a new one.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				startActivityForResult(new Intent(mContext, Setup.class),
 						EXPERIMENT_REQUESTED);

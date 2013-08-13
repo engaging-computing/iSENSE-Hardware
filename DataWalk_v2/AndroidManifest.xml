@@ -41,8 +41,8 @@
             android:label="No Qr" >
         </activity>
         <activity
-            android:name=".PrefsTwo"
-            android:label="SettingsTwo"
+            android:name="edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog"
+            android:label="Set Recording Interval"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
