@@ -44,7 +44,10 @@
 		<item >30 sec</item>
 		<item >60 sec</item>
 	</string-array>
-	<string name="InternetMsg">Could not connect to the Internet through either Wi-Fi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
+	<string name="InternetMsg">
+	    Cannot establish internet connectivity with this device.  You will not be able to upload data to iSENSE
+	    until this device is connected to the internet.
+	</string>
 	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
 	<string name="blankContentDesc"></string>
     <string name="yString">Y: </string>
