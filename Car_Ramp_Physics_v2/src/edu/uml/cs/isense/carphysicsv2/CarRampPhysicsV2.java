@@ -72,8 +72,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private static String userName = "sor";
 	private static String password = "sor";
 
-	public static final String baseSessionUrl_Prod = "http://isenseproject.org/projects/";
-	public static final String baseSessionUrl_Dev = "http://129.63.16.30/projects/";
+	public static final String baseSessionUrl_Prod = "http://beta.isenseproject.org/projects/";
+	public static final String baseSessionUrl_Dev = "http://rsense-dev.cs.uml.edu/projects/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";
 
@@ -238,8 +238,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (running) {
 
 					if (timeHasElapsed) {
-						OrientationManager
-								.enableRotation(CarRampPhysicsV2.this);
+						
 						setupDone = false;
 						timeHasElapsed = false;
 						useMenu = true;
@@ -254,6 +253,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						Intent dataIntent = new Intent(mContext,
 								DataActivity.class);
 						startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
+						
 
 					} else if (usedHomeButton) {
 						setupDone = false;
@@ -722,15 +722,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		} else if (reqCode == UPLOAD_OK_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				if (len == 0 || len2 == 0)
+				if (len == 0 || len2 == 0) {
 					w.make("There are no data to upload!", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
+					OrientationManager.enableRotation(CarRampPhysicsV2.this);
+				}
 
 				else
 					new UploadTask().execute();
 			} else {
 				w.make("Data set discarded", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_WARN);
+				OrientationManager.enableRotation(CarRampPhysicsV2.this);
 			}
 		} else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -895,7 +898,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 
 			dia.setMessage("Done");
-			dia.dismiss();
+			if (dia != null && dia.isShowing())
+				dia.dismiss();
 
 			len = 0;
 			len2 = 0;
@@ -907,6 +911,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			} else {
 				w.make("Data saved.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 			}
+			
+			OrientationManager.enableRotation(CarRampPhysicsV2.this);
 
 		}
 	}
