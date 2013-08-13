@@ -77,7 +77,7 @@ public class DataFieldManager extends Application {
 			new GetOrderTask().execute();
 		}
 	}
-	
+
 	public void getOrderWithExternalAsyncTask() {
 		if (!order.isEmpty())
 			return;
@@ -136,6 +136,8 @@ public class DataFieldManager extends Application {
 				if (s.equals(mContext.getString(R.string.accel_z))) {
 					if (enabledFields[Fields.ACCEL_Z])
 						dataJSON.put("" + i, f.accel_z);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.accel_total))) {
@@ -255,6 +257,117 @@ public class DataFieldManager extends Application {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		}
+
+		Log.d("Jeremy", dataJSON.toString());
+
+		return dataJSON;
+
+	}
+
+	public JSONArray putDataForNoProjectID() {
+
+		JSONArray dataJSON = new JSONArray();
+
+		try {
+			if (enabledFields[Fields.TIME])
+				dataJSON.put("u " + f.timeMillis);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_X])
+				dataJSON.put(f.accel_x);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_Y])
+				dataJSON.put(f.accel_y);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_Z])
+				dataJSON.put(f.accel_z);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_TOTAL])
+				dataJSON.put(f.accel_total);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.LATITUDE])
+				dataJSON.put(f.latitude);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.LONGITUDE])
+				dataJSON.put(f.longitude);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.MAG_X])
+				dataJSON.put(f.mag_x);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.MAG_Y])
+				dataJSON.put(f.mag_y);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.MAG_Z])
+				dataJSON.put(f.mag_z);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.MAG_TOTAL])
+				dataJSON.put(f.mag_total);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.HEADING_DEG])
+				dataJSON.put(f.angle_deg);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.HEADING_RAD])
+				dataJSON.put(f.angle_rad);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.TEMPERATURE_C])
+				dataJSON.put(f.temperature_c);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.PRESSURE])
+				dataJSON.put(f.pressure);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ALTITUDE])
+
+				dataJSON.put(f.altitude);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.LIGHT])
+				dataJSON.put(f.lux);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.TEMPERATURE_F])
+				dataJSON.put(f.temperature_f);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.TEMPERATURE_K])
+				dataJSON.put(f.temperature_k);
+			else
+				dataJSON.put("");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 
 		Log.d("Jeremy", dataJSON.toString());
@@ -481,86 +594,105 @@ public class DataFieldManager extends Application {
 				for (int j = 0; j < fieldOrder.size(); j++) {
 					String s = fieldOrder.get(j);
 					try {
-						// Compare against hard-coded strings.  make sure this a.getResources() thing works
-						if (s.equals(a.getResources().getString(R.string.accel_x))) {
+						// Compare against hard-coded strings. make sure this
+						// a.getResources() thing works
+						if (s.equals(a.getResources().getString(
+								R.string.accel_x))) {
 							outRow.put(j + "", row.getString(Fields.ACCEL_X));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.accel_y))) {
+						if (s.equals(a.getResources().getString(
+								R.string.accel_y))) {
 							outRow.put(j + "", row.getString(Fields.ACCEL_Y));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.accel_z))) {
+						if (s.equals(a.getResources().getString(
+								R.string.accel_z))) {
 							outRow.put(j + "", row.getString(Fields.ACCEL_Z));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.accel_total))) {
+						if (s.equals(a.getResources().getString(
+								R.string.accel_total))) {
 							outRow.put(j + "",
 									row.getString(Fields.ACCEL_TOTAL));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.temperature_c))) {
+						if (s.equals(a.getResources().getString(
+								R.string.temperature_c))) {
 							outRow.put(j + "",
 									row.getString(Fields.TEMPERATURE_C));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.temperature_f))) {
+						if (s.equals(a.getResources().getString(
+								R.string.temperature_f))) {
 							outRow.put(j + "",
 									row.getString(Fields.TEMPERATURE_F));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.temperature_k))) {
+						if (s.equals(a.getResources().getString(
+								R.string.temperature_k))) {
 							outRow.put(j + "",
 									row.getString(Fields.TEMPERATURE_K));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(R.string.time))) {
-							outRow.put(j + "", "u " + row.getLong(Fields.TIME));
+							outRow.put(j + "", "u " + row.getString(Fields.TIME));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.luminous_flux))) {
+						if (s.equals(a.getResources().getString(
+								R.string.luminous_flux))) {
 							outRow.put(j + "", row.getString(Fields.LIGHT));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.heading_deg))) {
+						if (s.equals(a.getResources().getString(
+								R.string.heading_deg))) {
 							outRow.put(j + "",
 									row.getString(Fields.HEADING_DEG));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.heading_rad))) {
+						if (s.equals(a.getResources().getString(
+								R.string.heading_rad))) {
 							outRow.put(j + "",
 									row.getString(Fields.HEADING_RAD));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.latitude))) {
+						if (s.equals(a.getResources().getString(
+								R.string.latitude))) {
 							outRow.put(j + "", row.getDouble(Fields.LATITUDE));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.longitude))) {
+						if (s.equals(a.getResources().getString(
+								R.string.longitude))) {
 							outRow.put(j + "", row.getDouble(Fields.LONGITUDE));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.magnetic_x))) {
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_x))) {
 							outRow.put(j + "", row.getString(Fields.MAG_X));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.magnetic_y))) {
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_y))) {
 							outRow.put(j + "", row.getString(Fields.MAG_Y));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.magnetic_z))) {
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_z))) {
 							outRow.put(j + "", row.getString(Fields.MAG_Z));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.magnetic_total))) {
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_total))) {
 							outRow.put(j + "", row.getString(Fields.MAG_TOTAL));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.altitude))) {
+						if (s.equals(a.getResources().getString(
+								R.string.altitude))) {
 							outRow.put(j + "", row.getString(Fields.ALTITUDE));
 							continue;
 						}
-						if (s.equals(a.getResources().getString(R.string.pressure))) {
+						if (s.equals(a.getResources().getString(
+								R.string.pressure))) {
 							outRow.put(j + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
@@ -680,7 +812,7 @@ public class DataFieldManager extends Application {
 					break;
 				}
 
-			// Time
+				// Time
 			case RProjectField.TYPE_TIMESTAMP:
 				order.add(mContext.getString(R.string.time));
 				break;
