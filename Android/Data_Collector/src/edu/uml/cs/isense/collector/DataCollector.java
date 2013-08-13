@@ -177,6 +177,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static String dataSetName;
 	private static long sampleInterval;
 	private static long recordingLength;
+	private static int currentProjID;
 
 	// Raw data variables
 	private static String temperature = "";
@@ -1372,7 +1373,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (dfm.enabledFields[Fields.LIGHT])
 			f.lux = light;
 
-		dataSet.put(dfm.putData());
+		if (currentProjID != -1)
+			dataSet.put(dfm.putData());
+		else
+			dataSet.put(dfm.putDataForNoProjectID());
+		
 		data = dfm.writeSdCardLine();
 
 		if (writeCSVFile) {
@@ -1423,7 +1428,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
-						
+						currentProjID = Integer.parseInt(projectInput);
+							
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
