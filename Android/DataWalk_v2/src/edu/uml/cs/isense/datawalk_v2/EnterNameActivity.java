@@ -38,7 +38,7 @@ public class EnterNameActivity extends Activity {
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
 		final Button okButton = (Button) findViewById(R.id.OK);
 
-		this.setTitle("Please enter your name");
+		this.setTitle("Please Enter Your Name");
 
 		InputFilter[] filters = new InputFilter[2];
 		filters[0] = new InputFilter() {
