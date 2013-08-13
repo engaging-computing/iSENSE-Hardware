@@ -15,7 +15,7 @@ public class ResetToDefaults extends Activity {
 		super.onCreate(b);
 		this.setContentView(R.layout.reset);
 		
-		setTitle("Are You Sure?");
+		setTitle("Are You Sure ?");
 		
 		reset = (Button) findViewById(R.id.reset);
 		noreset = (Button) findViewById(R.id.noreset);
@@ -28,8 +28,7 @@ public class ResetToDefaults extends Activity {
 				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
 						0);
 				SharedPreferences.Editor editor = prefs.edit();
-				editor.putInt("length", length);
-				editor.commit();
+				editor.putInt("length", length).commit();
 				setResult(RESULT_OK);
 				finish();
 				

@@ -51,9 +51,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -68,6 +70,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static String experimentNumber = "32";
 	public static final String DEFAULT_PROJ_PROD = "32";
 	public static final String DEFAULT_PROJ_DEV = "32";
+	private static final String DEFAULT_USER = "sor";
 
 	private static String userName = "sor";
 	private static String password = "sor";
@@ -96,7 +99,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	static final public int DIALOG_CANCELED = 0;
 	static final public int DIALOG_OK = 1;
 
-	public NewDFM dfm;
+	public DataFieldManager dfm;
 	public Fields f;
 	API rapi;
 
@@ -125,7 +128,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private String dateString;
 
-	private boolean x = false, y = false, z = false, mag = false;
+	private boolean x = false, y = true, z = false, mag = false;
 
 	DecimalFormat toThou = new DecimalFormat("######0.000");
 
@@ -219,8 +222,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				experimentNumber = DEFAULT_PROJ_PROD;
 			}
 		}
-		dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi, mContext, f);
-
+		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi, mContext, f);
+		dfm.getOrder();
+		
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
@@ -238,6 +242,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (running) {
 
 					if (timeHasElapsed) {
+						
+						getWindow().clearFlags(
+								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 						
 						setupDone = false;
 						timeHasElapsed = false;
@@ -273,6 +280,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				} else {
 
 					OrientationManager.disableRotation(CarRampPhysicsV2.this);
+					getWindow().addFlags(
+							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+					
 					startStop.setEnabled(false);
 					dataSet = new JSONArray();
 					elapsedMillis = 0;
@@ -280,6 +290,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					len2 = 0;
 					i = 0;
 					currentTime = getUploadTime(0);
+					
+					SharedPreferences prefs = getSharedPreferences(
+							RecordSettings.RECORD_SETTINGS, 0);
+
+					x = prefs.getBoolean("X", false);
+					y = prefs.getBoolean("Y", true);
+					z = prefs.getBoolean("Z", false);
+					mag = prefs.getBoolean("Magnitude", false);
+					
+					setEnabledFields();
 
 					if (saveMode) {
 						dfm.getOrder();
@@ -358,13 +378,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 								f.timeMillis = currentTime + elapsedMillis;
 								Log.d("fantastag", "time added");
-								SharedPreferences prefs = getSharedPreferences(
-										RecordSettings.RECORD_SETTINGS, 0);
-
-								x = prefs.getBoolean("X", true);
-								y = prefs.getBoolean("Y", true);
-								z = prefs.getBoolean("Z", true);
-								mag = prefs.getBoolean("Magnitude", mag);
+								
 								if (x) {
 									f.accel_x = toThou.format(accel[0]);
 									Log.d("fantastag", "X added");
@@ -382,12 +396,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									Log.d("fantastag", "Magnitude added");
 								}
 
-								// TODO if (!saveMode) or if (rapi.hasConnectivity)
 								if (!saveMode) {
-									dataSet.put(dfm.makeJSONObject());
+									dataSet.put(dfm.putData());
 									Log.d("tag", "NULLFROG");
 								} else {
-									dataSet.put(dfm.makeJSONArray());
+									dataSet.put(dfm.putDataForNoProjectID());
 									Log.d("tag", "NULLTOAD");
 								}
 
@@ -439,11 +452,19 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!rapi.hasConnectivity()) {
+		if (!rapi.hasConnectivity() && !saveMode) {
 			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
 					SAVE_MODE_REQUESTED);
 		}
 
+	}
+	
+	private void setEnabledFields() {
+		if (x) dfm.enabledFields[Fields.ACCEL_X] = true;
+		if (y) dfm.enabledFields[Fields.ACCEL_Y] = true;
+		if (z) dfm.enabledFields[Fields.ACCEL_Z] = true;
+		if (mag) dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
+		dfm.enabledFields[Fields.TIME] = true;
 	}
 
 	long getUploadTime(int millisecond) {
@@ -492,10 +513,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs = getSharedPreferences(
 				RecordSettings.RECORD_SETTINGS, 0);
 
-		x = prefs.getBoolean("X", x);
-		y = prefs.getBoolean("Y", y);
-		z = prefs.getBoolean("Z", z);
-		mag = prefs.getBoolean("Magnitude", mag);
+		x = prefs.getBoolean("X", false);
+		y = prefs.getBoolean("Y", true);
+		z = prefs.getBoolean("Z", false);
+		mag = prefs.getBoolean("Magnitude", false);
 
 		String dataLabel = "";
 
@@ -555,8 +576,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					experimentNumber = DEFAULT_PROJ_PROD;
 				}
 			}
-			dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+			dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
 					mContext, f);
+			dfm.getOrder();
 
 			saveMode = false;
 			System.out.println("Switching off save mode");
@@ -714,8 +736,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						experimentNumber = DEFAULT_PROJ_PROD;
 					}
 				}
-				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
 						mContext, f);
+				dfm.getOrder();
 			}
 		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
@@ -744,8 +767,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						+ data.getStringExtra("username")
 						+ " Name: "
 						+ firstName + " " + lastInitial);
-				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
 						mContext, f);
+				dfm.getOrder();
 			}
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -779,11 +803,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
 						0);
 				countdown = length = prefs.getInt("length", 10);
-				userName = password = "sor";
+				userName = password = DEFAULT_USER;
 				new OnCreateLoginTask().execute();
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ "sor" + " Name: " + firstName + " " + lastInitial);
+						+ " " + userName + " Name: " + firstName + " " + lastInitial);
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -795,6 +819,15 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				editor.putString("project_id", experimentNumber);
 				editor.commit();
 				INTERVAL = 50;
+				
+				SharedPreferences rprefs = getSharedPreferences("RECORD_SETTINGS", 0) ;
+				SharedPreferences.Editor mEdit = rprefs.edit();
+				mEdit.putBoolean("X", false);
+				mEdit.putBoolean("Y", true);
+				mEdit.putBoolean("Z", false);
+				mEdit.putBoolean("Magnitude", false);
+				mEdit.commit();
+
 				x = z = mag = false;
 				y = true;
 				values.setText("Y: " + accel[1]);
@@ -805,8 +838,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				saveMode = true;
 				CarRampPhysicsV2.experimentNumber = "-1";
-				dfm = new NewDFM(Integer.parseInt(experimentNumber), rapi,
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
 						mContext, f);
+				dfm.getOrder();
 			} else {
 				if (!rapi.hasConnectivity()) {
 					startActivityForResult(new Intent(mContext,
@@ -834,7 +868,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			if (!saveMode) {
 
-				String experimentNumber = CarRampPhysicsV2.experimentNumber;
+				//String experimentNumber = CarRampPhysicsV2.experimentNumber;
 				JSONObject data = new JSONObject();
 				try {
 					data.put("data", dataSet);
@@ -854,6 +888,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 							+ "/data_sets/" + dataSetID;
 					Log.d("fantastag", sessionUrl);
 					uploadSuccessful = true;
+				} else {
+					uploadSuccessful = false;
+					QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
+							"Car Ramp Physics", experimentNumber,
+							dataSet.toString(), null);
+					Log.d("data", "Data: " + dataSet.toString());
+					CarRampPhysicsV2.uq.addDataSetToQueue(ds);
 				}
 			} else {
 
