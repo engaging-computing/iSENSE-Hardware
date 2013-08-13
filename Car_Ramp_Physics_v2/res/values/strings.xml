@@ -19,15 +19,15 @@
     
 	<string name="about_title">About</string>
 	<string name="login_title">Login</string>
-	<string name="logged_in_as">Logged In As:</string>
-	<string name="recordSettings">Record Settings</string>
+	<string name="logged_in_as">Logged in as: </string>
+	<string name="recordSettings">Recording Fields</string>
 	<string name="X">X</string>
 	<string name="Y">Y</string>
 	<string name="Z">Z</string>
 	<string name="mag">Magnitude</string>
 	<string name="done">Done</string>
 	<string name="upload_or_trash">Upload Data or Throw It Away</string>
-	<string name="chooseExperimentTitle">Project Code</string>
+	<string name="chooseExperimentTitle">Select Project</string>
 	<string name="no_qr">No QR Scanner</string>
 	<string name="record_length">Recording Length</string>
 	<string name="upload">Upload</string>
@@ -35,7 +35,7 @@
 	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
 	</string>
 	<string name="changename">Change Name</string>
-	<string name="reset">Reset</string>
+	<string name="reset">Reset Settings</string>
 	<string-array name="lengths_array">
 		<item >1 sec</item>
 		<item >2 sec</item>
@@ -44,7 +44,10 @@
 		<item >30 sec</item>
 		<item >60 sec</item>
 	</string-array>
-	<string name="InternetMsg">Could not connect to the Internet through either Wi-Fi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
+	<string name="InternetMsg">
+	    Cannot establish internet connectivity with this device.  You will not be able to upload data to iSENSE
+	    until this device is connected to the internet.
+	</string>
 	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
 	<string name="blankContentDesc"></string>
     <string name="yString">Y: </string>
@@ -52,7 +55,7 @@
     <string name="holdToStart">Hold to Start</string>
     <string name="firstName"> First Name: </string>
     <string name="lastInitial"> Last Initial: </string>
-    <string name="userName">User Name</string>
+    <string name="userName">Username</string>
     <string name="password">Password</string>
     <string name="saveMode">Save Mode</string>
     <string name="tryAgain">Try Again</string>

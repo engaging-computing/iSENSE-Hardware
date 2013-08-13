@@ -41,6 +41,10 @@ public class NewDFM extends Application {
 		this.projFields = new ArrayList<RProjectField>();
 		if (rapi.hasConnectivity())
 			new getFieldsTask().execute();
+		else { // TODO - this else statement OK?
+			projID = -1;
+			getOrder();
+		}
 	}
 
 	// Static class function strictly for getting the field order of any
@@ -77,7 +81,9 @@ public class NewDFM extends Application {
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
 
-			new getFieldsTask().execute();
+			if (projFields == null) {
+				new RetrieveFieldsFromGetOrderTask().execute();
+			}
 
 			for (RProjectField field : projFields) {
 				switch (field.type) {
@@ -342,6 +348,8 @@ public class NewDFM extends Application {
 	public JSONArray makeJSONArray() {
 
 		JSONArray dataJSON = new JSONArray();
+		
+		System.out.println("Order:" + order.toString());
 
 		for (String s : this.order) {
 			try {
@@ -724,9 +732,6 @@ public class NewDFM extends Application {
 			}
 		}
 
-		// TODO: backup plan - if nothing was re-ordered, just hand back the
-		// data as-is?
-
 		return outData.toString();
 	}
 
@@ -752,6 +757,28 @@ public class NewDFM extends Application {
 		@Override
 		protected void onPostExecute(Void voids) {
 			getOrder();
+
+		}
+
+	}
+	
+	public class RetrieveFieldsFromGetOrderTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+
+			projFields = rapi.getProjectFields(projID);
+			return null;
+
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
 
 		}
 
