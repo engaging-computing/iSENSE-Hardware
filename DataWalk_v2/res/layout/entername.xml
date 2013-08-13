@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="5dip"
+        android:layout_marginTop="12dip"
         android:text="@string/firstNameLabel" />
 
     <EditText
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/nameInput"
-        android:layout_marginTop="5dip"
+        android:layout_marginTop="12dip"
         android:text="@string/lastInitialLabel" />
 
     <LinearLayout

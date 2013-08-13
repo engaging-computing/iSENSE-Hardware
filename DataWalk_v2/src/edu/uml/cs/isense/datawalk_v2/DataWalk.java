@@ -2,6 +2,7 @@ package edu.uml.cs.isense.datawalk_v2;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +21,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Criteria;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
+import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -58,7 +62,7 @@ import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataWalk extends Activity implements LocationListener,
-		SensorEventListener {
+		SensorEventListener, Listener {
 	public static TextView loggedInAs;
 	public static TextView NameTxtBox;
 	public static Boolean inApp = false;
@@ -79,9 +83,6 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private Boolean appTimedOut = false;
 	private Boolean gpsWorking = false;
-
-	private double latitude;
-	private double longitude;
 
 	private SensorManager mSensorManager;
 
@@ -141,8 +142,8 @@ public class DataWalk extends Activity implements LocationListener,
 	public static String textToSession = "";
 	public static String toSendOut = "";
 
-	private static String loginName = "sor";
-	private static String loginPass = "sor";
+	private static String loginName = "test";
+	private static String loginPass = "test";
 	public static String experimentId = "31";
 	public static String defaultExp = "31";
 	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
@@ -385,8 +386,7 @@ public class DataWalk extends Activity implements LocationListener,
 									dataJSON.put("3", loc.getLongitude());
 									dataJSON.put("0", "u " + time);
 
-									if (loc.getLatitude() != 0
-											&& loc.getLongitude() != 0) {
+									if (gpsWorking) {
 										dataSet.put(dataJSON);
 										Log.d("Recording", "Number of points: "
 												+ dataSet.length());
@@ -595,31 +595,17 @@ public class DataWalk extends Activity implements LocationListener,
 
 	@Override
 	public void onLocationChanged(Location location) {
-		loc = location;
-		if (((latitude = location.getLatitude()) != 0)
-				&& ((longitude = location.getLongitude()) != 0)) {
-			if (gpsWorking == false) {
-				vibrator.vibrate(100);
-			}
-
-			/*
-			 * if (uploadMode) { uploadPoint = true; } else { savePoint = true;
-			 * gpsWorking = true; }
-			 */
-
+		if (location.getLatitude() != 0 && location.getLongitude() != 0) {
+			loc = location;
 			gpsWorking = true;
-
 		} else {
-			/*
-			 * if(!uploadMode) { savePoint = true; } else { uploadPoint = false;
-			 * gpsWorking = false; }
-			 */
 			gpsWorking = false;
 		}
 	}
-
+	
 	@Override
 	public void onProviderDisabled(String provider) {
+		gpsWorking = false;
 	}
 
 	@Override
@@ -628,6 +614,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+
 	}
 
 	static int getApiLevel() {
@@ -756,19 +743,22 @@ public class DataWalk extends Activity implements LocationListener,
 	}
 
 	private void initLocationManager() {
-		Criteria c = new Criteria();
-		c.setAccuracy(Criteria.ACCURACY_FINE);
-
+		
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		
+		mLocationManager.addGpsStatusListener(this);
+			
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
 			mLocationManager.requestLocationUpdates(
-					mLocationManager.getBestProvider(c, true), 0, 0,
+					mLocationManager.getBestProvider(criteria, true), 0, 0,
 					DataWalk.this);
 		else {
 			Intent i = new Intent(DataWalk.this, NoGps.class);
 			startActivityForResult(i, DIALOG_NO_GPS);
 		}
 
-		loc = new Location(mLocationManager.getBestProvider(c, true));
+		loc = new Location(mLocationManager.getBestProvider(criteria, true));
 	}
 
 	private void waitingForGPS() {
@@ -779,10 +769,10 @@ public class DataWalk extends Activity implements LocationListener,
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						if (gpsWorking)
-							latLong.setText("Latitude: " + latitude
-									+ "\nLongitude: " + longitude);
-						else {
+						if (gpsWorking) {
+							latLong.setText("Latitude: " + loc.getLatitude()
+									+ "\nLongitude: " + loc.getLongitude());
+						} else {
 							switch (waitingCounter % 5) {
 							case (0):
 								latLong.setText(R.string.noLocation0);
@@ -897,7 +887,7 @@ public class DataWalk extends Activity implements LocationListener,
 					inApp = true;
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ "sor" + " Name: " + firstName + " " + lastInitial);
+						+ "test" + " Name: " + firstName + " " + lastInitial);
 			} else {
 				if (!inApp)
 					finish();
@@ -908,8 +898,8 @@ public class DataWalk extends Activity implements LocationListener,
 				Log.d("tag", "Re-setting settings");
 				mInterval = 10000;
 				Log.d("tag", "!!!!!!!!! MInterval is:" + mInterval / 1000);
-				loginName = "sor";
-				loginPass = "sor";
+				loginName = "test";
+				loginPass = "test";
 				firstName = " ";
 				lastInitial = "";
 				experimentId = defaultExp;
@@ -1080,7 +1070,7 @@ public class DataWalk extends Activity implements LocationListener,
 				if (success) {
 					// w.make("Login as  " + LoginIsense.uName +
 					// "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-					Log.d("tag", "login as sor successful!!!!!!!!!!!!!!!!!!!!");
+					Log.d("tag", "login as test successful!!!!!!!!!!!!!!!!!!!!");
 					Intent i = new Intent();
 					i.putExtra("username", LoginIsense.uName);
 				} else {
@@ -1120,6 +1110,19 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 		}
 
+	}
+
+	@Override
+	public void onGpsStatusChanged(int event) {
+			GpsStatus status = mLocationManager.getGpsStatus(null);
+			int count = 0;
+			Iterable<GpsSatellite> sats = status.getSatellites();
+			
+            for (Iterator<GpsSatellite> i = sats.iterator(); i.hasNext(); i.next()) {
+            	count++;
+            }
+            
+            if (count < 4) gpsWorking = false;
 	}
 
 }// Ends DataWalk.java Class
