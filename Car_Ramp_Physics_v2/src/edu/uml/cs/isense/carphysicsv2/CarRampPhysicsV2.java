@@ -61,6 +61,7 @@ import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -72,8 +73,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "sor";
 
-	private static String userName = "sor";
-	private static String password = "sor";
+//	private static String userName = "sor";
+//	private static String password = "sor";
 
 	public static final String baseSessionUrl_Prod = "http://beta.isenseproject.org/projects/";
 	public static final String baseSessionUrl_Dev = "http://rsense-dev.cs.uml.edu/projects/";
@@ -196,6 +197,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		uq.buildQueueFromFile();
 
 		w = new Waffle(mContext);
+		
+		// Save the default login info
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				CarRampPhysicsV2.mContext,
+				CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+						Context.MODE_PRIVATE));
+		if (mPrefs.getString("username", "").equals("")) {
+			SharedPreferences.Editor mEdit = mPrefs.edit();
+			mEdit.putString("username", DEFAULT_USER).commit();
+			mEdit.putString("password", DEFAULT_USER).commit();
+		}
 
 		dateString = "";
 
@@ -211,8 +223,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		new OnCreateLoginTask().execute();
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-				+ userName + " Name: " + firstName + " " + lastInitial);
+		loggedInAs.setText(getResources().getString(R.string.logged_in_as) + " "
+				+ mPrefs.getString("username", "") + ", Name: " + firstName + " " + lastInitial);
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		experimentNumber = prefs2.getString("project_id", null);
 		if (experimentNumber == null) {
@@ -763,9 +775,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (loggedInAs == null)
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
 				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
+						R.string.logged_in_as) + " "
 						+ data.getStringExtra("username")
-						+ " Name: "
+						+ ", Name: "
 						+ firstName + " " + lastInitial);
 				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), rapi,
 						mContext, f);
@@ -793,7 +805,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					inApp = true;
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ "sor" + " Name: " + firstName + " " + lastInitial);
+						+ " " + DEFAULT_USER + ", Name: " + firstName + " " + lastInitial);
 			} else {
 				if (!inApp)
 					finish();
@@ -803,11 +815,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
 						0);
 				countdown = length = prefs.getInt("length", 10);
-				userName = password = DEFAULT_USER;
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						CarRampPhysicsV2.mContext,
+						CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+								Context.MODE_PRIVATE));
+				SharedPreferences.Editor mOSPEdit = mPrefs.edit();
+				mOSPEdit.putString("username", DEFAULT_USER).commit();
+				mOSPEdit.putString("password", DEFAULT_USER).commit();
+				
 				new OnCreateLoginTask().execute();
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ " " + userName + " Name: " + firstName + " " + lastInitial);
+						+ " " + mPrefs.getString("username", "") + ", Name: " + firstName + " " + lastInitial);
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -1039,7 +1058,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			success = rapi.createSession(userName, password);
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					CarRampPhysicsV2.mContext,
+					CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+			success = rapi.createSession(mPrefs.getString("username", ""),
+					mPrefs.getString("password", ""));
+			//success = rapi.createSession(userName, password);
 			return null;
 		}
 
@@ -1061,8 +1086,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (rapi.hasConnectivity())
-				rapi.createSession(userName, password);
+			if (rapi.hasConnectivity()) {
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						CarRampPhysicsV2.mContext,
+						CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+								Context.MODE_PRIVATE));
+				rapi.createSession(mPrefs.getString("username", ""),
+						mPrefs.getString("password", ""));
+			}
 			return null;
 		}
 
