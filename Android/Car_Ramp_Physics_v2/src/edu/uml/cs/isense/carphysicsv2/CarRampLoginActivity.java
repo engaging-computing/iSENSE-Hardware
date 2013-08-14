@@ -20,7 +20,7 @@ public class CarRampLoginActivity extends Activity {
 
 	Button ok, cancel;
 	EditText user, pass;
-	API rapi;
+	API api;
 	TextView loggedInAs;
 	Waffle w;
 	public static String uName;
@@ -82,7 +82,7 @@ public class CarRampLoginActivity extends Activity {
 				uName = user.getText().toString();
 				password = pass.getText().toString();
 
-				rapi = API.getInstance(getApplicationContext());
+				api = API.getInstance(getApplicationContext());
 				
 				new LoginTask().execute();
 
@@ -104,14 +104,14 @@ public class CarRampLoginActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... arg0) {
-			Boolean success = rapi.createSession(uName, password);
+			Boolean success = api.createSession(uName, password);
 			return success;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			if (rapi.hasConnectivity()) {
+			if (api.hasConnectivity()) {
 				if (result) {			
 					w.make("Login as " + uName + " successful.",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);

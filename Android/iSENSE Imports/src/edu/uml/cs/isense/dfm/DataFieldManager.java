@@ -12,7 +12,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -259,7 +258,7 @@ public class DataFieldManager extends Application {
 			}
 		}
 
-		Log.d("Jeremy", dataJSON.toString());
+		System.out.println("Data line: " + dataJSON.toString());
 
 		return dataJSON;
 
@@ -370,7 +369,7 @@ public class DataFieldManager extends Application {
 			e.printStackTrace();
 		}
 
-		Log.d("Jeremy", dataJSON.toString());
+		System.out.println("Data line: " + dataJSON.toString());
 
 		return dataJSON;
 

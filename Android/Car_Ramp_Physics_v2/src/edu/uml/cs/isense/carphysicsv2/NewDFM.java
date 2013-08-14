@@ -20,7 +20,7 @@
 //public class NewDFM extends Application {
 //
 //	int projID;
-//	API rapi;
+//	API api;
 //	Context mContext;
 //
 //	ArrayList<RProjectField> projFields;
@@ -31,15 +31,15 @@
 //			false, false, false, false, false, false, false, false, false,
 //			false, false, false, false, false };
 //
-//	public NewDFM(int projID, API rapi, Context mContext, Fields f) {
+//	public NewDFM(int projID, API api, Context mContext, Fields f) {
 //		this.projID = projID;
-//		this.rapi = rapi;
+//		this.api = api;
 //		this.order = new LinkedList<String>();
 //		this.mContext = mContext;
 //		this.dataSet = new JSONArray();
 //		this.f = f;
 //		this.projFields = new ArrayList<RProjectField>();
-//		if (rapi.hasConnectivity())
+//		if (api.hasConnectivity())
 //			new getFieldsTask().execute();
 //		else {
 //			projID = -1;
@@ -49,8 +49,8 @@
 //
 //	// Static class function strictly for getting the field order of any
 //	// experiment
-//	public static LinkedList<String> getOrder(int eid, API rapi, Context c) {
-//		NewDFM d = new NewDFM(eid, rapi, c, null);
+//	public static LinkedList<String> getOrder(int eid, API api, Context c) {
+//		NewDFM d = new NewDFM(eid, api, c, null);
 //		d.getOrder();
 //		return d.order;
 //	}
@@ -750,7 +750,7 @@
 //		@Override
 //		protected Void doInBackground(Void... voids) {
 //
-//			projFields = rapi.getProjectFields(projID);
+//			projFields = api.getProjectFields(projID);
 //			return null;
 //
 //		}
@@ -773,7 +773,7 @@
 //		@Override
 //		protected Void doInBackground(Void... voids) {
 //
-//			projFields = rapi.getProjectFields(projID);
+//			projFields = api.getProjectFields(projID);
 //			return null;
 //
 //		}
