@@ -141,7 +141,7 @@ public class MarkerDetector {
 		//final double upScale = 3.125;
 		final double upScale = 1;
 		//final double upScale = 6;
-		final Size greyImgSize = new Size(mGrey.cols()*upScale*scale, mGrey.rows()*upScale*scale); // downscale upscale 
+		final Size greyImgSize = new Size(mGrey.cols()*upScale*downScale, mGrey.rows()*upScale*downScale); // downscale upscale 
 
 		Point center = new Point(0,0);
 		center = getBlobCentroid(mResult);

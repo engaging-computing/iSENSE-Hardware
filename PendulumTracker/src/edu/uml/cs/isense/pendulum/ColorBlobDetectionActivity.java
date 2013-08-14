@@ -454,7 +454,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// Log.i(TAG, "Putting session data...");
 			// rapi.putSessionData(sessionId, experimentNumber, mDataSet);
 
-			// New API Uploading Code
 			Log.i(TAG, "Uploading data set...");
 
 			JSONObject jobj = new JSONObject();
