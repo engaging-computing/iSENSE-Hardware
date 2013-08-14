@@ -2,6 +2,7 @@ package edu.uml.cs.isense.carphysicsv2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -34,11 +35,18 @@ public class EnterNameActivity extends Activity {
 		mContext = this;
 
 		w = new Waffle(mContext);
+		
+		SharedPreferences mPrefs = getSharedPreferences("NAME", 0);
+		String defaultFirstName = mPrefs.getString("first_name", "");
+		String defaultLastInitial = mPrefs.getString("last_initial", "");
 
 		final EditText firstNameInput = (EditText) findViewById(R.id.nameInput);
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
 		final Button okButton = (Button) findViewById(R.id.OkButton);
-
+		
+		firstNameInput.setText(defaultFirstName);
+		lastInitialInput.setText(defaultLastInitial);
+		
 		InputFilter[] filters = new InputFilter[2];
 		filters[0] = new InputFilter() {
 			@Override
@@ -79,10 +87,16 @@ public class EnterNameActivity extends Activity {
 						|| lastInitialInput.length() == 0) {
 					showFailure();
 				} else {
+					SharedPreferences mPrefs = getSharedPreferences("NAME", 0);
+					SharedPreferences.Editor mEdit = mPrefs.edit();
+					mEdit.putString("first_name", firstNameInput.getText().toString()).commit();
+					mEdit.putString("last_initial", lastInitialInput.getText().toString()).commit();
+					
 					CarRampPhysicsV2.firstName = firstNameInput.getText()
 							.toString();
 					CarRampPhysicsV2.lastInitial = lastInitialInput.getText()
 							.toString();
+					
 					setResult(RESULT_OK, null);
 					finish();
 				}
@@ -102,8 +116,10 @@ public class EnterNameActivity extends Activity {
 			CarRampPhysicsV2.setupDone = false;
 			setResult(RESULT_CANCELED);
 			super.onBackPressed();
-		} else
-			w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
+		} else {
+			super.onBackPressed();
+		}
+			//w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
 
 	}
 

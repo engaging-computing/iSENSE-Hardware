@@ -15,7 +15,7 @@ import java.util.Queue;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 
 /**
  * Class that represents the queue of data sets.  This object
@@ -38,7 +38,7 @@ public class UploadQueue implements Serializable {
 	protected Queue<QDataSet> mirrorQueue;
 	private static String parentName;
 	private static Context mContext;
-	private static RestAPI rapi;
+	private static API api;
 
 	/**
 	 * This is the default/only constructor for an UploadQueue object.
@@ -60,14 +60,14 @@ public class UploadQueue implements Serializable {
 	 * 
 	 */
 	public UploadQueue(String parentName, Context context,
-			RestAPI rapi) {
+			API api) {
 		this.queue = new LinkedList<QDataSet>();
 		this.mirrorQueue = new LinkedList<QDataSet>();
 		
 		UploadQueue.parentName = parentName;
 		UploadQueue.mContext = context;
 
-		UploadQueue.rapi = rapi;
+		UploadQueue.api = api;
 	}
 	
 	/**
@@ -262,12 +262,12 @@ public class UploadQueue implements Serializable {
 	}
 
 	/**
-	 * Getter for the RestAPI object.
+	 * Getter for the API object.
 	 * 
-	 * @return The RestAPI object the UploadQueue was instantiated with.
+	 * @return The API object the UploadQueue was instantiated with.
 	 */
-	public static RestAPI getRapi() {
-		return rapi;
+	public static API getAPI() {
+		return api;
 	}
 	
 	/**

@@ -2,44 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding="25dp">
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/iSenseQstion"
+        android:text="@string/iSenseQuestion"
         android:textSize="18sp"
-        />
+        android:padding="5dp" />
+
     <View
-    	android:id="@+id/view1"
-    	android:layout_width="match_parent"
-    	android:layout_height="1dp"
-    	android:background="?android:attr/dividerVertical" />
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical" />
+
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle">
-        
-        <Button 
+        android:orientation="horizontal" >
+
+        <Button
             android:id="@+id/view_data_no"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/No"
             android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            />
-        
-        <Button 
+            android:text="@android:string/no" />
+
+        <Button
             android:id="@+id/view_data_yes"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Yes"
             android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            />
+            android:text="@android:string/yes" />
     </LinearLayout>
 
 </LinearLayout>

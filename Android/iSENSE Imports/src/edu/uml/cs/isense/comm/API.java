@@ -30,8 +30,8 @@ import edu.uml.cs.isense.objects.RTutorial;
 public class API {
 	private static API instance = null;
 	private String baseURL = "";
-	private final String publicURL = "http://129.63.17.17:3000";
-	private final String devURL = "";
+	private final String publicURL = "http://129.63.16.128";
+	private final String devURL = "http://129.63.16.30";
 	private Context context;
 	String authToken = "";
 	RPerson currentUser;
@@ -382,7 +382,7 @@ public class API {
 			result.project_id = j.getJSONObject("project").getInt("id");
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -457,10 +457,10 @@ public class API {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
 		JSONObject existing = existingDs.data;
-		Iterator<String> keys = newData.keys();
+		Iterator<?> keys = newData.keys();
 		try {
 			while(keys.hasNext()) {
-				String currKey = keys.next();
+				String currKey = (String) keys.next();
 				JSONArray newDataPoints = newData.getJSONArray(currKey);
 				for(int i = 0; i < newDataPoints.length(); i++) {
 					existing.getJSONArray(currKey).put(newDataPoints.get(i));
@@ -494,13 +494,15 @@ public class API {
 	 * @param reqType The request type as a string (i.e. GET or POST)
 	 * @return A String dump of a JSONObject representing the requested data
 	 */
-	public String makeRequest(String baseURL, String path, String parameters, String reqType, JSONObject postData) {
+	private String makeRequest(String baseURL, String path, String parameters, String reqType, JSONObject postData) {
 
 		byte[] mPostData = null;
 
 		int mstat = 0;
 		try {
 			URL url = new URL(baseURL+"/"+path+"?"+parameters);
+			System.out.println("Connect to: " + url);
+			
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
@@ -572,9 +574,9 @@ public class API {
 			JSONArray inner = original.getJSONArray("data");
 			for(int i = 0; i < inner.length(); i++) {
 				JSONObject innermost = (JSONObject) inner.get(i);
-				Iterator<String> keys = innermost.keys();
+				Iterator<?> keys = innermost.keys();
 				while(keys.hasNext()) {
-					String currKey = keys.next();
+					String currKey = (String) keys.next();
 					JSONArray currArray = new JSONArray();
 					if(reformatted.has(currKey)) {
 						currArray = reformatted.getJSONArray(currKey);

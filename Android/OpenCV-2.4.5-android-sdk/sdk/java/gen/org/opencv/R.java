@@ -78,7 +78,7 @@ containing a value of this type.
 <tr><td><code>back</code></td><td>0</td><td></td></tr>
 <tr><td><code>front</code></td><td>1</td><td></td></tr>
 </table>
-          @attr name android:camera_id
+          @attr name org.opencv:camera_id
         */
         public static final int CameraBridgeViewBase_camera_id = 1;
         /**
@@ -92,7 +92,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:show_fps
+          @attr name org.opencv:show_fps
         */
         public static final int CameraBridgeViewBase_show_fps = 0;
     };
