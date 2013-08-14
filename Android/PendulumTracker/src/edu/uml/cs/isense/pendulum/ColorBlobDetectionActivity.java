@@ -18,6 +18,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -58,8 +59,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 	API api;
 
 	// iSENSE login
-	private static String userName = "sor"; // "videoAnalytics";
-	private static String password = "sor"; // "videoAnalytics";
+	//private static String userName = "sor"; // "videoAnalytics";
+	// private static String password = "sor"; // "videoAnalytics";
+	private static String userName = "videoAnalytics";
+	private static String password = "videoAnalytics";
+	
 
 	// create session name based upon first name and last initial user enters
 	static String firstName = "";
@@ -68,11 +72,13 @@ public class ColorBlobDetectionActivity extends Activity implements
 	Boolean sessionNameEntered = false;
 
 	// private static String experimentNumber = ""; // production
-	private static String experimentNumber = "38"; // dev
+	//private static String experimentNumber = "38"; // dev
+	private static String experimentNumber = "39"; // dev
 	private static String baseSessionUrl = "http://beta.isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
-	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/"
-			+ experimentNumber + "data_sets/";
+	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/" 
+			+ experimentNumber + "/data_sets/";
+	//private static String baseSessionUrlDev = "http://129.63.16.30/projects/" 
 	private static String sessionUrl = "";
 	private String dateString;
 
@@ -80,7 +86,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 	ProgressDialog dia;
 	// JSON array for uploading pendulum position data,
 	// accessed from ColorBlobDetectionView
-	public static JSONArray mDataSet;
+	public static JSONArray mDataSet = new JSONArray();
 
 	// OpenCV
 	private boolean mIsColorSelected = false;
@@ -140,8 +146,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		mOpenCvCameraView.enableFpsMeter();
 		// mOpenCvCameraView.setMaxFrameSize(1280,720);
-		mOpenCvCameraView.setMaxFrameSize(640, 480);
-		// mOpenCvCameraView.setMaxFrameSize(320, 240);
+		//mOpenCvCameraView.setMaxFrameSize(640, 480);
+		mOpenCvCameraView.setMaxFrameSize(320, 240);
 
 		// iSENSE network connectivity stuff
 		api = API.getInstance(mContext);
@@ -250,33 +256,48 @@ public class ColorBlobDetectionActivity extends Activity implements
 	// invoked when camera frame delivered
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) { // processFrame(VideoCapture
 																// vc)
-
-		mRgba = inputFrame.rgba();
-
-		if (mIsColorSelected) {
-			mDetector.process(mRgba);
-			List<MatOfPoint> contours = mDetector.getContours();
-			Log.e(TAG, "Contours count: " + contours.size());
-			Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
-
-			Mat colorLabel = mRgba.submat(4, 68, 4, 68);
-			colorLabel.setTo(mBlobColorRgba);
-
-			Mat spectrumLabel = mRgba.submat(4, 4 + mSpectrum.rows(), 70,
-					70 + mSpectrum.cols());
-			mSpectrum.copyTo(spectrumLabel);
-
-			/*
-			 * if(mEnableDataCollection == true) { try { double xScale =
-			 * upScale*center.x; double yScale = upScale*center.y;
-			 * 
-			 * if(xScale != 0 || yScale != 0) { // TODO: current order: col,
-			 * -row (x and y backwards!) this.addDataPoint(yScale, -xScale); }
-			 * //this.addDataPoint(5, 5); } catch (JSONException e) { // TODO
-			 * Auto-generated catch block Log.e(TAG,
-			 * "Adding a data point throws a JSONException: " + e.getMessage());
-			 * } }
-			 */
+		boolean useGrey = true;
+		
+		if(useGrey)
+		{
+			mRgba = inputFrame.gray();
+			Point point = mDetector.processGrey(mRgba);
+			
+			Log.i(TAG, "(x,y) = (" + point.x + "," + point.y + ")");
+			
+			Core.circle(mRgba, new Point(point.x, -point.y) , 10, new Scalar(255, 0, 0, 255), 3);
+			
+			this.addDataPoint(point.x, -point.y);	
+		}
+		else 
+		{
+			mRgba = inputFrame.rgba();
+	
+			if (mIsColorSelected) {
+				mDetector.process(mRgba);
+				List<MatOfPoint> contours = mDetector.getContours();;
+				Log.e(TAG, "Contours count: " + contours.size());
+				Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
+	
+				Mat colorLabel = mRgba.submat(4, 68, 4, 68);
+				colorLabel.setTo(mBlobColorRgba);
+	
+				Mat spectrumLabel = mRgba.submat(4, 4 + mSpectrum.rows(), 70,
+						70 + mSpectrum.cols());
+				mSpectrum.copyTo(spectrumLabel);
+	
+				/*
+				 * if(mEnableDataCollection == true) { try { double xScale =
+				 * upScale*center.x; double yScale = upScale*center.y;
+				 * 
+				 * if(xScale != 0 || yScale != 0) { // TODO: current order: col,
+				 * -row (x and y backwards!) this.addDataPoint(yScale, -xScale); }
+				 * //this.addDataPoint(5, 5); } catch (JSONException e) { // TODO
+				 * Auto-generated catch block Log.e(TAG,
+				 * "Adding a data point throws a JSONException: " + e.getMessage());
+				 * } }
+				 */
+		}
 
 		}
 
@@ -323,19 +344,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 						ENTERNAME_REQUEST);
 			}
 
-			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); // 'this'
-																				// is
-																				// an
-																				// Activity
-																				// -
-																				// can
-																				// add
-																				// an
-																				// ID
-																				// to
-																				// this
-																				// like
-																				// CRP
+			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); 
 			// chain together various setter methods to set the dialog
 			// characteristics
 			startBuilder
@@ -376,19 +385,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			String strInstruct = "Center at-rest pendulum in center of image. Select 'Start data collection button' to start. Pull pendulum back to left or right edge of image and release when selecting 'OK'. Select 'Stop and upload to iSENSE' to stop. ";
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(this); // 'this'
-																			// is
-																			// an
-																			// Activity
-																			// -
-																			// can
-																			// add
-																			// an
-																			// ID
-																			// to
-																			// this
-																			// like
-																			// CRP
+			AlertDialog.Builder builder = new AlertDialog.Builder(this); 
+			
 			// chain together various setter methods to set the dialog
 			// characteristics
 			builder.setMessage(strInstruct)
@@ -421,11 +419,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 		public void run() {
 
 			// stop data collection for upload to iSENSE
-			mDataSet = new JSONArray();
+			//mDataSet = new JSONArray();
 			// mDataSet = mView.stopDataCollection();
 
 			// ----- HACKY TEST DATA ----
-			addTestPoint(mDataSet);
+			//addTestPoint(mDataSet);
 			// ---- END HACKY TEST DATA ----
 
 			// Create location-less session (for now)
@@ -454,7 +452,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// Log.i(TAG, "Putting session data...");
 			// rapi.putSessionData(sessionId, experimentNumber, mDataSet);
 
-			// New API Uploading Code
 			Log.i(TAG, "Uploading data set...");
 
 			JSONObject jobj = new JSONObject();
@@ -469,6 +466,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			sessionId = api.uploadDataSet(projectID, jobj, nameOfSession
 					+ " (location not found)");
+			
+			if(sessionId == -1)
+				Log.i(TAG, "Dataset failed to upload!");
+				
 
 			if (useDevSite) {
 				sessionUrl = baseSessionUrlDev + sessionId;
@@ -488,7 +489,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			dia = new ProgressDialog(ColorBlobDetectionActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data is uploaded to rSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 		}
@@ -525,7 +526,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			try {
 				/* Posn-x */dataJSON.put("1", i);
 				/* Posn-y */dataJSON.put("2", i);
-				/* Time */dataJSON.put("0", "u " + currentTime);
+				/* Time */	dataJSON.put("0", "u " + currentTime);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -537,6 +538,28 @@ public class ColorBlobDetectionActivity extends Activity implements
 		}
 
 	}
+	
+
+	void addDataPoint(double x, double y) {
+	
+		JSONObject dataJSON = new JSONObject();
+		Calendar c = Calendar.getInstance();
+		long currentTime = (long) (c.getTimeInMillis() /*- 14400000*/);
+
+		/* Convert floating point to String to send data via HTML */
+		try {
+			/* Posn-x */dataJSON.put("1", x);
+			/* Posn-y */dataJSON.put("2", y);
+			/* Time */	dataJSON.put("0", "u " + currentTime);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		mDataSet.put(dataJSON);
+
+		Log.i(TAG, "--------------- ADDING DATA POINT ---------------");
+		
+	}
 
 	// ---- END HACKY TEST DATA -----
 
@@ -544,63 +567,79 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private class LoginBeforeUploadTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean status;
+		boolean loginStatus = false;
 		boolean connect = false;
 		boolean upload = false;
 
+		// network thread!
 		@Override
 		protected Void doInBackground(Void... voids) {
-			// login to iSENSE if not already
-			if (api.hasConnectivity()) {
-				connect = true;
-				Log.i(TAG, "Connected to the 'net.");
-				// attempt to upload data if logged in
-				if (api.getCurrentUser() == null) {
-					status = api.createSession(userName, password);
+	
+			// login to iSENSE if not already			
+		
+			connect = api.hasConnectivity();
+			// if connected log into rSENSE
+			if (connect) 
+			{
+				Log.i(TAG, "Connected to the 'net. Now attempting to log into rSENSE and create a session.");
+				
+				// log into rSENSE
+				if (api.getCurrentUser() == null) {			
+					loginStatus = api.createSession(userName, password);					
 				}
-
-				if (api.getCurrentUser() != null) {
-					upload = true;
-				}
-
-			} else {
-				connect = false;
-			}
-
+				else
+					loginStatus = true;
+			 }
+	
 			return null;
+			
+		
+		
+		
 		}
 
+		// UI need to run in main thread - ALL UI ELEMENTS MUST BE IN THIS THREAD!!
 		@Override
 		protected void onPostExecute(Void voids) {
-			if (!status) {
-				Toast.makeText(
-						ColorBlobDetectionActivity.this,
-						"Unable to log into iSENSE. Invalid user id? Try again.",
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
+		
+			// am i connected to the internet?
+			
 			if (connect) {
-				if (upload) {
-					// upload data
-					if (firstName.length() > 0 || lastInitial.length() > 0) {
-						
-						new uploadTask().execute();
-						
-					} else {
-						Toast.makeText(
-								ColorBlobDetectionActivity.this,
-								"You must first start data collection to create session name.",
-								Toast.LENGTH_LONG).show();
-						return;
-					}
+				
+				// check to see if a session name has been created before we 
+				// start collecting data.
+				if ( !(firstName.length() > 0 && lastInitial.length() > 0) ) {
+					Toast.makeText(
+							ColorBlobDetectionActivity.this,
+							"You must first START data collection to create session name.",
+							Toast.LENGTH_LONG).show();
+					return;
 				}
-			} else {
+				
+				// am I logged in/session created to rSENSE?
+				if (loginStatus) {
+					// yes! yes! yes! so upload my data
+					new uploadTask().execute();	
+				}
+				else {
+					// no! no! no! try again.
+					Toast.makeText(
+							ColorBlobDetectionActivity.this,
+							"Not logged into rSENSE. Try again.",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+			
+			 }
+			 else {
 				Toast.makeText(
 						ColorBlobDetectionActivity.this,
-						"You are not connected to the Intertubes. Check connectivity and try again.",
+						"You are not connected to the Intertubes. Check connectivity and try again (previously recorded data will be saved).",
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			
+		
 
 		}
 

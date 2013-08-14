@@ -1,9 +1,12 @@
 package edu.uml.cs.isense.pendulum;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -17,6 +20,9 @@ import org.opencv.imgproc.Imgproc;
 import android.util.Log;
 
 public class MarkerDetector {
+	
+	private static final String  TAG              = "PendulumTracker::MarkerDetector";
+	
     // Lower and Upper bounds for range checking in HSV color space
     private Scalar mLowerBound = new Scalar(0);
     private Scalar mUpperBound = new Scalar(0);
@@ -35,7 +41,6 @@ public class MarkerDetector {
     Mat mHierarchy = new Mat();
     Mat mResult = new Mat();
     
-
     public void setColorRadius(Scalar radius) {
         mColorRadius = radius;
     }
@@ -74,97 +79,88 @@ public class MarkerDetector {
         mMinContourArea = area;
     }
 
-    
-    public void processGrey(Mat mGrey)
+    // this processes one frame and return the location of the detected marker (e.g. pendulum) 
+    public Point processGrey(Mat mGrey)
     {
-    	
-		double scale = 1.0;
-		final Size imgSize = new Size(mGrey.cols()*scale, mGrey.rows()*scale);
-		
-		//result = mRgba.clone();
+		double downScale = 1.0;
+		final Size imgSize = new Size(mGrey.cols()*downScale, mGrey.rows()*downScale);
+	
 		/*Mat */ ///result = new Mat();
 		mResult = mGrey.clone(); // use when doing image processing on original grabbed image
-		///Imgproc.resize(mRgba, result, imgSize);
+		///Imgproc.resize(mResult, mResult, imgSize);
 		Mat mask = new Mat(mResult.size(), CvType.CV_8U);
-		// COLOR THRESHOLDING
-		// output mask needs to be 8UC
-		///mDetector.createColorMask(result, result);
-		////mBmp = Bitmap.createBitmap(result.cols(),result.rows(), Bitmap.Config.RGB_565);
-		///Core.inRange(mask,new Scalar(0), new Scalar(100), result);
+
+		Core.inRange(mResult, new Scalar(0), new Scalar(64), mResult);
 		
-		// TODO: move this to ColorBlobDetector.java
-		/// ---- original contour blob detect ------------
-		boolean doContourDetect = true;
+		// Canny edge detection
+		//Imgproc.Canny(result, result, 80, 100);
+		Imgproc.Canny(mResult, mResult, 200, 255);
 		
-		if(doContourDetect)
+		// AND results
+		//Core.bitwise_and(result, mask, result);
+					
+		// ========= contours --------------
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        Mat hierarchy = new Mat();
+        Mat resultCopy = mResult.clone();;
+        
+        // Detect contours
+        Imgproc.findContours(resultCopy, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        // Find max contour area
+        List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
+        double maxArea = 0;
+        double mMinContourArea = 0.2;
+        double mMaxContourArea = 0.9;
+        Iterator<MatOfPoint> each = contours.iterator();
+        // look for contour with maximum area
+        while (each.hasNext())
+        {
+        	MatOfPoint wrapper = each.next();
+        	double area = Imgproc.contourArea(wrapper);
+        	if (area > maxArea)
+        		maxArea = area;
+        }
+        
+        // Filter contours by area and resize to fit the original image size
+        mContours.clear();
+        each = contours.iterator();
+        while (each.hasNext())
+        {
+        	MatOfPoint contour = each.next();
+       // 	if (Imgproc.contourArea(contour) > mMinContourArea*maxArea && Imgproc.contourArea(contour) < mMaxContourArea*maxArea)
+        	{
+        		Core.multiply(contour, new Scalar(5,5), contour);
+        		mContours.add(contour);
+        	}
+        }
+           
+        // ------- end contours ----------------
+		
+        // imgSize = (640x320) * 0.4 * 3.125 = (800x400) <--- larger than grabbed image.
+		//final double upScale = 3.125;
+		final double upScale = 1;
+		//final double upScale = 6;
+		final Size greyImgSize = new Size(mGrey.cols()*upScale*downScale, mGrey.rows()*upScale*downScale); // downscale upscale 
+
+		Point center = new Point(0,0);
+		center = getBlobCentroid(mResult);
+		
+		// scale point and add to dataset (only if processing on downscaled image)
+		double xScale = upScale*center.x;
+		double yScale = upScale*center.y;
+		
+		if(xScale != 0 || yScale != 0)
 		{
-			Core.inRange(mResult, new Scalar(0), new Scalar(64), mResult);
-			
-			// Canny edge detection
-			//Imgproc.Canny(result, edgeMask, 80, 100);
-			//Imgproc.Canny(result, result, 80, 100);
-			Imgproc.Canny(mResult, mResult, 200, 255);
-			
-			// AND results
-			//Core.bitwise_and(result, mask, result);
-			
-			
-			// ========= contours --------------
-	        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
-	        Mat hierarchy = new Mat();
-	        Mat resultCopy = mResult.clone();;
-	        
-	        // Detect contours
-	        Imgproc.findContours(resultCopy, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-
-	        // Find max contour area
-	        List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
-	        double maxArea = 0;
-	        double mMinContourArea = 0.2;
-	        double mMaxContourArea = 0.9;
-	        Iterator<MatOfPoint> each = contours.iterator();
-	        // look for contour with maximum area
-	        while (each.hasNext())
-	        {
-	        	MatOfPoint wrapper = each.next();
-	        	double area = Imgproc.contourArea(wrapper);
-	        	if (area > maxArea)
-	        		maxArea = area;
-	        }
-	        
-	        // Filter contours by area and resize to fit the original image size
-	        mContours.clear();
-	        each = contours.iterator();
-	        while (each.hasNext())
-	        {
-	        	MatOfPoint contour = each.next();
-	       // 	if (Imgproc.contourArea(contour) > mMinContourArea*maxArea && Imgproc.contourArea(contour) < mMaxContourArea*maxArea)
-	        	{
-	        		// TODO: fix hard-coded upscale
-	        		Core.multiply(contour, new Scalar(5,5), contour);
-	        		mContours.add(contour);
-	        	}
-	        }
-	        
-	   
-	        // ------- end contours ----------------
-			
-	        // imgSize = (640x320) * 0.4 * 3.125 = (800x400) <--- larger than grabbed image.
-			//final double upScale = 3.125;
-			final double upScale = 1;
-			//final double upScale = 6;
-			final Size greyImgSize = new Size(mGrey.cols()*upScale*scale, mGrey.rows()*upScale*scale); // downscale upscale 
-
-			Point center = new Point(0,0);
-			center = getBlobCentroid(mResult);
+			// TODO: current order: col, -row (x and y backwards!)
+			//this.addDataPoint(yScale, -xScale);	
+			return new Point(yScale, -xScale);							
 		}
-	
+		else
+			return new Point(0,0);
 
-			// HACKY
-			//Imgproc.pyrUp(result, result);
-	    	//Imgproc.pyrUp(result, result);
-			
     }
+    
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);
         Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
@@ -203,7 +199,6 @@ public class MarkerDetector {
     public List<MatOfPoint> getContours() {
         return mContours;
     }
-    
     
 	public Point getBlobCentroid(Mat mask)
 	{
@@ -248,4 +243,6 @@ public class MarkerDetector {
 		
 		return new Point(cy, cx);
 	}
+
+	
 }
