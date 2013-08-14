@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
-    android:versionCode="8"
-    android:versionName="2.0.3" >
+    android:versionCode="9"
+    android:versionName="2.0.4" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -65,6 +65,7 @@
         <activity
             android:name="edu.uml.cs.isense.exp.NoQR"
             android:label="@string/no_qr"
+            android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" >
         </activity>
         <activity
@@ -85,11 +86,6 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
-            android:theme="@style/theme_dialog_white"
-            tools:ignore="MissingRegistered" />
-        <activity
-            android:name=".EulaActivity"
-            android:label=""
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <activity

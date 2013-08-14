@@ -9,14 +9,14 @@ import android.widget.Button;
 
 public class ViewData extends Activity {
 
-	Button view, dont;
+	Button view, cancel;
 	
 	public void onCreate(Bundle b) {
 		super.onCreate(b);
 		setContentView(R.layout.view_data);
 			
 		view = (Button) findViewById(R.id.view);
-		dont = (Button) findViewById(R.id.noview);
+		cancel = (Button) findViewById(R.id.noview);
 		
 		setTitle("View Your Data On iSENSE?");
 		
@@ -32,7 +32,7 @@ public class ViewData extends Activity {
 			}
 		});
 		
-		dont.setOnClickListener(new View.OnClickListener() {
+		cancel.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
