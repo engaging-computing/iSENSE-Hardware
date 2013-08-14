@@ -9,7 +9,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?" 
+        android:text="@string/enableGPS" 
         android:textSize="18sp"
         />
     <LinearLayout
@@ -21,7 +21,7 @@
             android:id="@+id/no_gps_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/No"
+            android:text="@android:string/no"
             android:layout_weight="1"
             />
         
@@ -29,7 +29,7 @@
             android:id="@+id/no_gps_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Yes"
+            android:text="@android:string/yes"
             android:layout_weight="1"
             />
     </LinearLayout>

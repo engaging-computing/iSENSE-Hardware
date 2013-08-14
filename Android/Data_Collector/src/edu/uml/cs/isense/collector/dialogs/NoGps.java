@@ -14,8 +14,6 @@ public class NoGps extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_gps);
 		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
 		final Button yes = (Button) findViewById(R.id.no_gps_yes);
 		yes.setOnClickListener(new OnClickListener() {
 			@Override

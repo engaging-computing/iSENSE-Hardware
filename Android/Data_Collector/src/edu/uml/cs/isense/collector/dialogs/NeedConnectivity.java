@@ -14,8 +14,6 @@ public class NeedConnectivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.need_connectivity);
 		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
 		final Button ok = (Button) findViewById(R.id.no_connectivity_ok);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override

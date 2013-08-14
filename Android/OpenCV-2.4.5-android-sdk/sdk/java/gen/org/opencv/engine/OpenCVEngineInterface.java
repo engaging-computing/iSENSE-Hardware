@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /Users/beej/android_dev/OpenCV-2.4.5-android-sdk/sdk/java/src/org/opencv/engine/OpenCVEngineInterface.aidl
+ * Original file: /Users/stowellm/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/src/org/opencv/engine/OpenCVEngineInterface.aidl
  */
 package org.opencv.engine;
 /**

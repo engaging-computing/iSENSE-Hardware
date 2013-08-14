@@ -8,14 +8,12 @@ import android.widget.Button;
 import edu.uml.cs.isense.datawalk_v2.R;
 
 public class ForceStop extends Activity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.view_data);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+		setContentView(R.layout.force_stop);
+
 		final Button ok = (Button) findViewById(R.id.force_stop_ok);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
@@ -24,15 +22,13 @@ public class ForceStop extends Activity {
 				finish();
 			}
 		});
-		
-		
-		
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);
 		finish();
 	}
-	
+
 }

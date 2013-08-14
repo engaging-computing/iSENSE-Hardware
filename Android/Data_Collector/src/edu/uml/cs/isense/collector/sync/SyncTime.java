@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -26,7 +25,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -58,7 +57,7 @@ public class SyncTime extends Activity {
 	boolean success = false;
 
 	private ProgressDialog dia;
-	private RestAPI rapi;
+	private API api;
 	private Waffle w;
 
 	@SuppressLint("NewApi")
@@ -69,10 +68,7 @@ public class SyncTime extends Activity {
 
 		mContext = this;
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(mContext);
 		w = new Waffle(this);
 		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -114,7 +110,7 @@ public class SyncTime extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				if (rapi.isConnectedToInternet()) {
+				if (api.hasConnectivity()) {
 
 					sendPack();
 
@@ -138,7 +134,7 @@ public class SyncTime extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (rapi.isConnectedToInternet()) {
+				if (api.hasConnectivity()) {
 					new ReceiveTask().execute();
 				} else {
 					w.make("No internet connection found.", Waffle.IMAGE_X);

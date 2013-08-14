@@ -14,12 +14,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text="@string/session_name"
+            android:text="@string/data_set_name"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/step1_session_name"
+            android:id="@+id/step1_data_set_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
@@ -76,20 +76,20 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/step1_exp_num_label"
+            android:id="@+id/step1_proj_num_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="@android:color/transparent"
-            android:text="@string/menu_experiment"
+            android:text="@string/menu_project"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/step1_select_exp"
+            android:id="@+id/step1_select_proj"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_exp" />
+            android:text="@string/select_proj" />
 
         <CheckBox
             android:id="@+id/step1_checkbox"

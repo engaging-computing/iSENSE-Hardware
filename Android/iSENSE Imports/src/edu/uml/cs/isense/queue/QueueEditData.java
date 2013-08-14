@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,8 +18,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.supplements.OrientationManager;
 
 /**
@@ -38,10 +37,10 @@ public class QueueEditData extends Activity {
 	private LinearLayout editDataList;
 	
 	public static QDataSet alter;
-	private RestAPI rapi;
+	private API api;
 	
 	private Context mContext;
-	private ArrayList<ExperimentField> fieldOrder;
+	private ArrayList<RProjectField> fieldOrder;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,12 +51,9 @@ public class QueueEditData extends Activity {
 		
 		mContext = this;
 		
-		fieldOrder = new ArrayList<ExperimentField>();
+		fieldOrder = new ArrayList<RProjectField>();
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(mContext);
 
 		okay = (Button) findViewById(R.id.queueedit_data_okay);
 		cancel = (Button) findViewById(R.id.queueedit_data_cancel);
@@ -79,7 +75,7 @@ public class QueueEditData extends Activity {
 		
 		editDataList = (LinearLayout) findViewById(R.id.queueedit_data_layout);
 
-		new LoadExperimentFieldsTask().execute();
+		new LoadProjectFieldsTask().execute();
 
 	}
 
@@ -93,12 +89,12 @@ public class QueueEditData extends Activity {
 		for (int j = 0; j < fieldData.length; j++)
 			if (fieldData[j].equalsIgnoreCase(" ")) fieldData[j] = "";
 
-		for (ExperimentField ef : fieldOrder) {
+		for (RProjectField rpf : fieldOrder) {
 			
 			final View dataRow = View.inflate(mContext, R.layout.edit_row, null);
 			
 			TextView label = (TextView) dataRow.findViewById(R.id.edit_row_label);
-			label.setText(ef.field_name);
+			label.setText(rpf.name);
 			label.setBackgroundColor(Color.TRANSPARENT);
 			label.setPadding(0, 10, 0, 0);
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) label.getLayoutParams();
@@ -143,7 +139,7 @@ public class QueueEditData extends Activity {
 		
 	}
 
-	private class LoadExperimentFieldsTask extends
+	private class LoadProjectFieldsTask extends
 			AsyncTask<Void, Integer, Void> {
 		ProgressDialog dia;
 		private boolean error = false;
@@ -165,9 +161,9 @@ public class QueueEditData extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			int eid = Integer.parseInt(alter.getEID());
-			if (eid != -1) {
-				fieldOrder = rapi.getExperimentFields(eid);
+			int projID = Integer.parseInt(alter.getProjID());
+			if (projID != -1) {
+				fieldOrder = api.getProjectFields(projID);
 			}
 
 			return null;

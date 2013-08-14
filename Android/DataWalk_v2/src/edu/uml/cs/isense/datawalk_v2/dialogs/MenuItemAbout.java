@@ -12,9 +12,7 @@ public class MenuItemAbout extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_item_about);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+				
 		final Button ok = (Button) findViewById(R.id.menu_item_about_back);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override

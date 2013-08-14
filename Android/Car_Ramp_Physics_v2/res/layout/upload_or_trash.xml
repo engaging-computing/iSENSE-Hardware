@@ -2,27 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
-    <LinearLayout
+    <Button
+        android:id="@+id/iSENSE_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent" >
+        android:layout_weight="1"
+        android:text="@string/publish" />
 
-        <Button
-            android:id="@+id/iSENSE_Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Publish" />
-
-        <Button
-            android:id="@+id/discard_Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Discard" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/discard_Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/discard" />
 
 </LinearLayout>

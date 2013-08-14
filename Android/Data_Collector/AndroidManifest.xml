@@ -88,7 +88,7 @@
             android:theme="@style/theme_dialog_white" />
         <activity
             android:name=".dialogs.Description"
-            android:label="Enter Session Description"
+            android:label="Enter Data Set Description"
             android:theme="@style/theme_dialog_white" />
         <activity
             android:name=".sync.TimeSent"
@@ -113,18 +113,6 @@
         <activity
             android:name=".dialogs.NeedConnectivity"
             android:label="Connectivity Not Found"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name=".dialogs.CanRecord"
-            android:label="Connectivity Not Found"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name=".dialogs.UploadFailSave"
-            android:label="Upload Failed - Saving Instead"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name=".dialogs.FirstTimeUse"
-            android:label="iSENSE Data Collector"
             android:theme="@style/theme_dialog_white" />
         <activity
             android:name=".dialogs.Step1Setup"
@@ -152,17 +140,17 @@
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <activity
-            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
-            android:label="Experiments" 
+            android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:label="Projects" 
             tools:ignore="MissingRegistered" />
         <activity
-            android:name="edu.uml.cs.isense.exp.NoQR"
+            android:name="edu.uml.cs.isense.proj.NoQR"
             android:label="No QR Code Scanner Found"
             android:theme="@style/theme_dialog_white" 
             tools:ignore="MissingRegistered" />
         <activity
-            android:name="edu.uml.cs.isense.exp.Setup"
-            android:label="Select an Experiment"
+            android:name="edu.uml.cs.isense.proj.Setup"
+            android:label="Select a Project"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
 
