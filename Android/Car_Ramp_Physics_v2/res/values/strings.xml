@@ -2,19 +2,19 @@
 <resources>
 
     <string name="app_name">iSENSE Car Ramp Physics</string>
-    <string name="promptForName">Please enter your name</string>
+    <string name="promptForName">Please Enter Your Name</string>
     <string name="about_app">
         Enter your first name and last initial so that you can later identify your data set on iSENSE.
         
-        Press and hold the Start button, and the app will record 10 seconds of acceleration data.
+        \n\nPress and hold the Start button, and the app will record acceleration data.
         
-        After recording, you may publish your data to isenseproject.org.
+        \n\nAfter recording, you may publish your data to isenseproject.org.
         You are also given an option to view your data.
         
-        You may modify various settings – explore the menus.
+        \n\nYou may modify various settings – explore the menus.
         
-        If setting up your own project: create fields named \"Time\" (time/milliseconds) and
-        any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
+        \n\nIf you are setting up your own project: create fields named \"Time\" (time/milliseconds) and
+        any of \"Accel-X\", \"Accel-Y\", \"Accel-Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
     </string>
     
 	<string name="about_title">About</string>
