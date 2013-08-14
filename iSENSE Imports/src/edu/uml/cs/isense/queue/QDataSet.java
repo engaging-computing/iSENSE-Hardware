@@ -133,9 +133,11 @@ public class QDataSet implements Serializable {
 		if (this.projID.equals("-1"))
 			return false;
 		
-		if (!this.hasInitialProject)
+		if (!this.hasInitialProject) {
+			System.out.println("Need to re-order some data");
 			this.data = DataFieldManager.reOrderData(prepDataForUpload(), this.projID, api, c);
-		
+		}
+			
 		return upload();
 	}
 
@@ -192,8 +194,9 @@ public class QDataSet implements Serializable {
 					System.out.println("JOBJ: " + jobj.toString());
 					
 					// TODO - success :(?
-					/*success =*/ UploadQueue.getAPI().uploadDataSet(Integer.parseInt(projID), jobj, name);
-				
+					int dataSetID = UploadQueue.getAPI().uploadDataSet(Integer.parseInt(projID), jobj, name);
+					System.out.println("Data set ID from Upload is: " + dataSetID);
+					
 				}
 //				}
 //				break;

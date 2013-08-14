@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dip"
+        android:layout_marginTop="10dp"
         android:text="@string/firstName" />
 
     <EditText
@@ -36,7 +36,7 @@
         android:layout_below="@id/nameInput"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dip"
+        android:layout_marginTop="10dp"
         android:text="@string/lastInitial" />
 
     <EditText
