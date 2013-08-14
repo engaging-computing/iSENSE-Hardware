@@ -559,9 +559,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 	// Control task for uploading data
 	private class LoginBeforeUploadTask extends AsyncTask<Void, Integer, Void> {
 
-		boolean loginStatus = false;
+		boolean status;
+		//boolean loginStatus = false;
 		boolean connect = false;
-		//boolean upload = false;
+		boolean upload = false;
 
 		// network thread!
 		@Override
@@ -591,7 +592,39 @@ public class ColorBlobDetectionActivity extends Activity implements
 		@Override
 		protected void onPostExecute(Void voids) {
 
+			if (!status) {
+				Toast.makeText(
+						ColorBlobDetectionActivity.this,
+						"Unable to log into iSENSE. Invalid user id? Try again.",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (connect) {
+				if (upload) {
+					// upload data
+					if (firstName.length() > 0 || lastInitial.length() > 0) {
+						
+						new uploadTask().execute();
+						
+					} else {
+						Toast.makeText(
+								ColorBlobDetectionActivity.this,
+								"You must first start data collection to create session name.",
+								Toast.LENGTH_LONG).show();
+						return;
+					}
+				}
+			} else {
+				Toast.makeText(
+						ColorBlobDetectionActivity.this,
+						"You are not connected to the Intertubes. Check connectivity and try again.",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			
 			// am i connected to the internet?
+		/*
 			if (connect) {
 				
 				// check to see if a session name has been created before we 
@@ -617,6 +650,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 							Toast.LENGTH_LONG).show();
 					return;
 				}
+			*/
 	
 			 }
 			 else {
