@@ -8,19 +8,19 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text="@string/InternetMsg"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/dividerVertical" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="15dp"
         android:text="@string/SaveMsg"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -29,28 +29,27 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/dividerVertical" />
-    
+
     <LinearLayout
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="?android:buttonBarStyle" >
+        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/button2"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Try Again"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:text="@string/tryAgain" />
 
         <Button
             android:id="@+id/button1"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Save Mode"
-            style="?android:attr/buttonBarButtonStyle" />
-
+            android:text="@string/saveMode" />
     </LinearLayout>
 
 </LinearLayout>

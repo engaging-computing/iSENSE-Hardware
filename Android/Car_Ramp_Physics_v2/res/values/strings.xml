@@ -1,47 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Car Ramp Physics V2</string>
-    
-    <string name="promptForName">Please enter your name</string>
-    
-    <string name="experiments_no_items">No projects were found.</string>
-    
+    <string name="app_name">iSENSE Car Ramp Physics</string>
+    <string name="promptForName">Please Enter Your Name</string>
     <string name="about_app">
         Enter your first name and last initial so that you can later identify your data set on iSENSE.
         
-        Press and hold the Start button, and the app will record 10 seconds of acceleration data.
+        \n\nPress and hold the Start button, and the app will record acceleration data.
         
-        After recording, you may publish your data to isenseproject.org.
+        \n\nAfter recording, you may publish your data to isenseproject.org.
         You are also given an option to view your data.
         
-        You may modify various settings -- explore the menus.
+        \n\nYou may modify various settings – explore the menus.
         
-        If setting up your own project: create fields named \"Time\" (time/milliseconds) and
-        any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
+        \n\nIf you are setting up your own project: create fields named \"Time\" (time/milliseconds) and
+        any of \"Accel-X\", \"Accel-Y\", \"Accel-Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
     </string>
     
-    <string name="updates">Please carefully review the following agreement for this version of this app:</string>
 	<string name="about_title">About</string>
 	<string name="login_title">Login</string>
-	<string name="logged_in_as">Logged In As:</string>
-	<string name="recordSettings">Record Settings</string>
+	<string name="logged_in_as">Logged in as: </string>
+	<string name="recordSettings">Recording Fields</string>
 	<string name="X">X</string>
 	<string name="Y">Y</string>
 	<string name="Z">Z</string>
 	<string name="mag">Magnitude</string>
 	<string name="done">Done</string>
 	<string name="upload_or_trash">Upload Data or Throw It Away</string>
-	<string name="chooseExperimentTitle">Project Code</string>
+	<string name="chooseExperimentTitle">Select Project</string>
 	<string name="no_qr">No QR Scanner</string>
-	<string name="first_name">First Name: </string>
 	<string name="record_length">Recording Length</string>
 	<string name="upload">Upload</string>
 	<string name="digits_restriction">
 	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
 	</string>
 	<string name="changename">Change Name</string>
-	<string name="reset">Reset</string>
+	<string name="reset">Reset Settings</string>
 	<string-array name="lengths_array">
 		<item >1 sec</item>
 		<item >2 sec</item>
@@ -50,8 +44,23 @@
 		<item >30 sec</item>
 		<item >60 sec</item>
 	</string-array>
-	<string name="InternetMsg">Could not connect to the internet through either wifi or mobile service.You will not be able to upload data to iSENSE until either is enabled. </string>
+	<string name="InternetMsg">
+	    Cannot establish internet connectivity with this device.  You will not be able to upload data to iSENSE
+	    until this device is connected to the internet.
+	</string>
 	<string name="SaveMsg">Would you like to use the app in save mode instead?</string>
-	
+	<string name="blankContentDesc"></string>
+    <string name="yString">Y: </string>
+    <string name="placeDevice">Place device on its back with the top edge facing the direction of displacement.</string>
+    <string name="holdToStart">Hold to Start</string>
+    <string name="firstName"> First Name: </string>
+    <string name="lastInitial"> Last Initial: </string>
+    <string name="userName">Username</string>
+    <string name="password">Password</string>
+    <string name="saveMode">Save Mode</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="publish">Publish</string>
+	<string name="discard">Discard</string>
+	<string name="view">View</string>
     
 </resources>

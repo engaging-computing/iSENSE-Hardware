@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,14 +13,14 @@ import android.widget.EditText;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.collector.splash.Splash;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class LoginActivity extends Activity {
 
 	private Context mContext;
 	
-	private RestAPI rapi;
+	private API api;
 
 	static final public int NAME_SUCCESSFUL = 1;
 	static final public int NAME_FAILED = 0;
@@ -32,7 +32,9 @@ public class LoginActivity extends Activity {
 	
 	private String message = "";
 	private String returnCode = "";
-
+	
+	private EditText username, password;
+	
 	private static final String unknownUser    = "Connection to internet has been found, but the username or password was incorrect.  Please try again.";
 	private static final String noConnection   = "No connection to internet through either wifi or mobile found.  Please enable one to continue, then try again."; 
 
@@ -43,13 +45,10 @@ public class LoginActivity extends Activity {
 
 		mContext = this;
 		
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(mContext);
 
-		final EditText username = (EditText) findViewById(R.id.usernameInput);
-		final EditText password = (EditText) findViewById(R.id.passwordInput);
+		username = (EditText) findViewById(R.id.usernameInput);
+		password = (EditText) findViewById(R.id.passwordInput);
 		final Button ok = (Button) findViewById(R.id.login_ok);
 		final Button cancel = (Button) findViewById(R.id.login_cancel);
 		
@@ -63,23 +62,7 @@ public class LoginActivity extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				success = rapi.login(username.getText().toString(), password.getText().toString());
-       			   
-				if (success) {
-					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-							Splash.mContext, Splash.mContext
- 						   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
- 				   	mPrefs.edit().putString("username", username.getText().toString()).commit();
- 				   	mPrefs.edit().putString("password", password.getText().toString()).commit();
- 				   	
- 				   	returnCode = "Success";
- 				   	Intent ret = new Intent(LoginActivity.this, DataCollector.class);
- 				   	ret.putExtra("returnCode", returnCode);
- 				   	setResult(RESULT_OK, ret);
- 				   	finish();
-				} else {
-					showFailure();
-				}
+				new LoginTask().execute();
 			}
 		});
 		
@@ -102,7 +85,7 @@ public class LoginActivity extends Activity {
 		//	message = unknownUser;
 		//}
 		
-		if (rapi.isConnectedToInternet()) {
+		if (api.hasConnectivity()) {
 			message = unknownUser;
 		} else {
 			message = noConnection;
@@ -128,6 +111,35 @@ public class LoginActivity extends Activity {
 			setResult(RESULT_OK, ret);
 			finish();
 		}
+	}
+	
+	private class LoginTask extends AsyncTask<Void, Integer, Void> {
+		
+		@Override
+		protected Void doInBackground(Void... voids) {
+			success = api.createSession(username.getText().toString(), password.getText().toString());
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			if (success) {
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						Splash.mContext, Splash.mContext
+						   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
+				   	mPrefs.edit().putString("username", username.getText().toString()).commit();
+				   	mPrefs.edit().putString("password", password.getText().toString()).commit();
+				   	
+				   	returnCode = "Success";
+				   	Intent ret = new Intent(LoginActivity.this, DataCollector.class);
+				   	ret.putExtra("returnCode", returnCode);
+				   	setResult(RESULT_OK, ret);
+				   	finish();
+			} else {
+				showFailure();
+			}
+		}
+
 	}
 
 }
