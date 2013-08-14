@@ -514,22 +514,29 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 	// ---- HACKY TEST DATA ----
 	void addTestPoint(JSONArray dataSet)
 	{
-		JSONArray dataJSON = new JSONArray();
-	    Calendar c = Calendar.getInstance();
-	    long currentTime =  (long) (c.getTimeInMillis() /*- 14400000*/);
+	    int i = 0;
+	    
+	    while(i < 10)
+	    {
+            	JSONArray dataJSON = new JSONArray();
+		Calendar c = Calendar.getInstance();
+		long currentTime =  (long) (c.getTimeInMillis() /*- 14400000*/);
 	   
 		/* Convert floating point to String to send data via HTML 
-		/* Posn-x    */  dataJSON.put(-1);
+		/* Posn-x    */  dataJSON.put(i);
 		
-		/* Posn-y    */  dataJSON.put(-1);
+		/* Posn-y    */  dataJSON.put(i);
 	
 		/* Time       */ dataJSON.put(currentTime); 
 										                 
 		dataSet.put(dataJSON);
+		i++;
 
 		Log.i(TAG, "--------------- ADDING DATA POINT ---------------");
+	    }
 	}
 	// ---- END HACKY TEST DATA -----
+}
 	
 	
 }

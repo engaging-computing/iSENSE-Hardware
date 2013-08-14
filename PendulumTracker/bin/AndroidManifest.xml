@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="edu.uml.cs.isense.pendulum"
+          android:versionCode="21"
+          android:versionName="2.1">
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@drawable/button_mushroom_kitten_icon"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Holo" >
+
+        <activity android:name=".ColorBlobDetectionActivity"
+                  android:label="@string/app_name"
+                  android:screenOrientation="landscape"
+                  android:configChanges="keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/promptForName"
+            android:theme="@android:style/Theme.Holo.Dialog">
+        </activity>
+        
+    </application>
+
+    <!-- supports-screens android:resizeable="true"
+                      android:smallScreens="true"
+                      android:normalScreens="true"
+                      android:largeScreens="true"
+                      android:anyDensity="true" /-->
+
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front.autofocus" android:required="false"/>
+      
+    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+</manifest>
