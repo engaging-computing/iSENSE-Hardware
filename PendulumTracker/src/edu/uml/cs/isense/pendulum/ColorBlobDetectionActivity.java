@@ -323,19 +323,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 						ENTERNAME_REQUEST);
 			}
 
-			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); // 'this'
-																				// is
-																				// an
-																				// Activity
-																				// -
-																				// can
-																				// add
-																				// an
-																				// ID
-																				// to
-																				// this
-																				// like
-																				// CRP
+			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); 
 			// chain together various setter methods to set the dialog
 			// characteristics
 			startBuilder
@@ -376,19 +364,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			String strInstruct = "Center at-rest pendulum in center of image. Select 'Start data collection button' to start. Pull pendulum back to left or right edge of image and release when selecting 'OK'. Select 'Stop and upload to iSENSE' to stop. ";
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(this); // 'this'
-																			// is
-																			// an
-																			// Activity
-																			// -
-																			// can
-																			// add
-																			// an
-																			// ID
-																			// to
-																			// this
-																			// like
-																			// CRP
+			AlertDialog.Builder builder = new AlertDialog.Builder(this); 
+			
 			// chain together various setter methods to set the dialog
 			// characteristics
 			builder.setMessage(strInstruct)
@@ -487,7 +464,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			dia = new ProgressDialog(ColorBlobDetectionActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data is uploaded to rSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 		}
@@ -524,7 +501,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			try {
 				/* Posn-x */dataJSON.put("1", i);
 				/* Posn-y */dataJSON.put("2", i);
-				/* Time */dataJSON.put("0", "u " + currentTime);
+				/* Time */	dataJSON.put("0", "u " + currentTime);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -542,61 +519,70 @@ public class ColorBlobDetectionActivity extends Activity implements
 	// Control task for uploading data
 	private class LoginBeforeUploadTask extends AsyncTask<Void, Integer, Void> {
 
-		boolean status;
+		boolean loginStatus = false;
 		boolean connect = false;
-		boolean upload = false;
+		//boolean upload = false;
 
+		// network thread!
 		@Override
 		protected Void doInBackground(Void... voids) {
+			
 			// login to iSENSE if not already
-			if (api.hasConnectivity()) {
-				connect = true;
-				Log.i(TAG, "Connected to the 'net.");
-				// attempt to upload data if logged in
-				if (api.getCurrentUser() == null) {
-					status = api.createSession(userName, password);
+			
+			// check for internet connectivity
+			connect = api.hasConnectivity();
+			// if connected log into rSENSE
+			if (connect) 
+			{
+				Log.i(TAG, "Connected to the 'net. Now attempting to log into rSENSE and create a session.");
+				
+				// log into rSENSE
+				if (api.getCurrentUser() == null) {			
+					loginStatus = api.createSession(userName, password);					
 				}
-
-				if (api.getCurrentUser() != null) {
-					upload = true;
-				}
-
-			} else {
-				connect = false;
-			}
+				else
+					loginStatus = true;
+			 }
 
 			return null;
 		}
 
+		// UI need to run in main thread - ALL UI ELEMENTS MUST BE IN THIS THREAD!!
 		@Override
 		protected void onPostExecute(Void voids) {
-			if (!status) {
-				Toast.makeText(
-						ColorBlobDetectionActivity.this,
-						"Unable to log into iSENSE. Invalid user id? Try again.",
-						Toast.LENGTH_LONG).show();
-				return;
-			}
 
+			// am i connected to the internet?
 			if (connect) {
-				if (upload) {
-					// upload data
-					if (firstName.length() > 0 || lastInitial.length() > 0) {
-						
-						new uploadTask().execute();
-						
-					} else {
-						Toast.makeText(
-								ColorBlobDetectionActivity.this,
-								"You must first start data collection to create session name.",
-								Toast.LENGTH_LONG).show();
-						return;
-					}
+				
+				// check to see if a session name has been created before we 
+				// start collecting data.
+				if ( !(firstName.length() > 0 && lastInitial.length() > 0) ) {
+					Toast.makeText(
+							ColorBlobDetectionActivity.this,
+							"You must first START data collection to create session name.",
+							Toast.LENGTH_LONG).show();
+					return;
 				}
-			} else {
+				
+				// am I logged in/session created to rSENSE?
+				if (loginStatus) {
+					// yes! yes! yes! so upload my data
+					new uploadTask().execute();	
+				}
+				else {
+					// no! no! no! try again.
+					Toast.makeText(
+							ColorBlobDetectionActivity.this,
+							"Not logged into rSENSE. Try again.",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+	
+			 }
+			 else {
 				Toast.makeText(
 						ColorBlobDetectionActivity.this,
-						"You are not connected to the Intertubes. Check connectivity and try again.",
+						"You are not connected to the Intertubes. Check connectivity and try again (previously recorded data will be saved).",
 						Toast.LENGTH_LONG).show();
 				return;
 			}
