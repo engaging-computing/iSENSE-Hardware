@@ -574,35 +574,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 		// network thread!
 		@Override
 		protected Void doInBackground(Void... voids) {
-			
+	
+			// login to iSENSE if not already			
 		
-			// login to iSENSE if not already
-			if (api.hasConnectivity()) {
-				connect = true;
-				Log.i(TAG, "Connected to the 'net.");
-				// attempt to upload data if logged in
-				if (api.getCurrentUser() == null) {
-					status = api.createSession(userName, password);
-				}
-
-				if (api.getCurrentUser() != null) {
-					upload = true;
-				}
-
-				Log.i(TAG, "createSession success = " + status);
-				
-			} else {
-				connect = false;
-			}
-
-			return null;
-		
-			
-			// login to iSENSE if not already
-			
-			// check for internet connectivity
-		
-			/*
 			connect = api.hasConnectivity();
 			// if connected log into rSENSE
 			if (connect) 
@@ -619,7 +593,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 	
 			return null;
 			
-		*/
+		
 		
 		
 		}
@@ -627,43 +601,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 		// UI need to run in main thread - ALL UI ELEMENTS MUST BE IN THIS THREAD!!
 		@Override
 		protected void onPostExecute(Void voids) {
-
-			if (connect) {
-				
-				if (!status) {
-					Toast.makeText(
-							ColorBlobDetectionActivity.this,
-							"Unable to log into iSENSE. Invalid user id? Try again.",
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-				
-				if (upload) {
-					// upload data
-					if (firstName.length() > 0 || lastInitial.length() > 0) {
-						
-						new uploadTask().execute();
-						
-					} else {
-						Toast.makeText(
-								ColorBlobDetectionActivity.this,
-								"You must first start data collection to create session name.",
-								Toast.LENGTH_LONG).show();
-						return;
-					}
-				}
-			} else {
-				Toast.makeText(
-						ColorBlobDetectionActivity.this,
-						"You are not connected to the Intertubes. Check connectivity and try again.",
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			
-			// am i connected to the internet?
 		
-			/*
+			// am i connected to the internet?
+			
 			if (connect) {
 				
 				// check to see if a session name has been created before we 
@@ -690,7 +630,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 					return;
 				}
 			
-	
 			 }
 			 else {
 				Toast.makeText(
@@ -700,7 +639,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 				return;
 			}
 			
-			*/
 		
 
 		}
