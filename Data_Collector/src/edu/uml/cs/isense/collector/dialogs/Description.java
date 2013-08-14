@@ -15,7 +15,6 @@ import edu.uml.cs.isense.collector.R;
 @SuppressLint("NewApi")
 public class Description extends Activity {
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,7 +22,7 @@ public class Description extends Activity {
 		
 		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
-		if (Integer.valueOf(android.os.Build.VERSION.SDK) >= 11) {
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			this.setFinishOnTouchOutside(false);
 		}
 		

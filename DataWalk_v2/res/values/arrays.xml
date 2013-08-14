@@ -14,7 +14,15 @@
         <item name="5">5000</item>
         <item name="10">10000</item>
         <item name="30">30000</item>
-        <item name="1 minute">60000</item>
-        
+        <item name="1 minute">60000</item>        
+    </string-array>
+    <string name="rate_prompt">Choose an Interval</string>
+	   <string-array name="Interval">
+        <item name="1">1 second </item>
+        <item name="2">2 seconds </item>
+        <item name="5">5 seconds </item>
+        <item name="10">10 seconds </item>
+        <item name="30">30 seconds </item>
+        <item name="1 minute">1 minute </item>
     </string-array>
 </resources>
