@@ -48,6 +48,8 @@ import android.widget.Toast;
 
 // iSENSE data upload
 import org.json.JSONArray;
+import org.json.JSONException;
+
 import edu.uml.cs.isense.comm.RestAPI;
 
 public class ColorBlobDetectionActivity extends Activity implements OnTouchListener, CvCameraViewListener2 {
@@ -85,16 +87,16 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 	public static JSONArray mDataSet;
 		
 	// OpenCV
-	
     private boolean              mIsColorSelected = false;
     private Mat                  mRgba;
     private Scalar               mBlobColorRgba;
     private Scalar               mBlobColorHsv;
-    private ColorBlobDetector    mDetector;
+    //private ColorBlobDetector    mDetector;
+    private MarkerDetector    	 mDetector;
     private Mat                  mSpectrum;
     private Size                 SPECTRUM_SIZE;
     private Scalar               CONTOUR_COLOR;
-    private FpsMeter			 mFps;
+
     
     private CameraBridgeViewBase mOpenCvCameraView;
 
@@ -182,15 +184,14 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 
     public void onCameraViewStarted(int width, int height) {
         mRgba = new Mat(height, width, CvType.CV_8UC4);
-        mDetector = new ColorBlobDetector();
+        mDetector = new MarkerDetector();
+        
         mSpectrum = new Mat();
         mBlobColorRgba = new Scalar(255);
         mBlobColorHsv = new Scalar(255);
         SPECTRUM_SIZE = new Size(200, 64);
         CONTOUR_COLOR = new Scalar(255,0,0,255);
-        
-        mFps = new FpsMeter();
-        mFps.init();
+
     }
 
     public void onCameraViewStopped() {
@@ -248,7 +249,7 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
     }
 
     // invoked when camera frame delivered
-    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+    public Mat onCameraFrame(CvCameraViewFrame inputFrame) { // processFrame(VideoCapture vc)
         
     	mRgba = inputFrame.rgba();
 
@@ -263,13 +264,30 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 
             Mat spectrumLabel = mRgba.submat(4, 4 + mSpectrum.rows(), 70, 70 + mSpectrum.cols());
             mSpectrum.copyTo(spectrumLabel);
+            
+ /*
+			if(mEnableDataCollection == true)
+			{
+				try 
+				{
+					double xScale = upScale*center.x;
+					double yScale = upScale*center.y;
+					
+					if(xScale != 0 || yScale != 0)
+					{
+						// TODO: current order: col, -row (x and y backwards!)
+						this.addDataPoint(yScale, -xScale);	
+					}
+					//this.addDataPoint(5, 5);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					Log.e(TAG, "Adding a data point throws a JSONException: " + e.getMessage());
+				}
+			}
+	*/
+
         }
 
-        mFps.measure();
-        
-        Core.putText(mRgba, mFps.strfps, new Point(200, 200), 
- 				3/* CV_FONT_HERSHEY_COMPLEX */, 1, new Scalar(255, 0, 0, 255), 2);
-        
         return mRgba;
     }
 
@@ -496,20 +514,29 @@ public class ColorBlobDetectionActivity extends Activity implements OnTouchListe
 	// ---- HACKY TEST DATA ----
 	void addTestPoint(JSONArray dataSet)
 	{
-		JSONArray dataJSON = new JSONArray();
-	    Calendar c = Calendar.getInstance();
-	    long currentTime =  (long) (c.getTimeInMillis() /*- 14400000*/);
-	   
-		/* Convert floating point to String to send data via HTML 
-		/* Posn-x    */  dataJSON.put(-1);
+	    int i = 0;
+	    
+	    while(i < 10)
+	    {
+            JSONArray dataJSON = new JSONArray();
+			Calendar c = Calendar.getInstance();
+			long currentTime =  (long) (c.getTimeInMillis() /*- 14400000*/);
+		   
+			/* Convert floating point to String to send data via HTML 
+			/* Posn-x    */  dataJSON.put(i);
+			
+			/* Posn-y    */  dataJSON.put(i);
 		
-		/* Posn-y    */  dataJSON.put(-1);
-	
-		/* Time       */ dataJSON.put(currentTime); 
-										                 
-		dataSet.put(dataJSON);
+			/* Time       */ dataJSON.put(currentTime); 
+											                 
+			dataSet.put(dataJSON);
+			i++;
 
 		Log.i(TAG, "--------------- ADDING DATA POINT ---------------");
+	    }
+	
 	}
 	// ---- END HACKY TEST DATA -----
 }
+	
+	
