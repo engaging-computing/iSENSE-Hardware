@@ -635,12 +635,6 @@ public class DataWalk extends Activity implements LocationListener,
 
 			if (sessionId == -1) {
 
-				// sessionId = api.createSession(experimentId, nameOfSession,
-				// "Automated Submission Through Android App",
-				// "801 Mt Vernon Place NW", "Washington, DC",
-				// "United States");
-				// api.putSessionData(sessionId, experimentId, uploadSet);
-
 				JSONObject jobj = new JSONObject();
 				try {
 					jobj.put("data", uploadSet);
@@ -654,7 +648,6 @@ public class DataWalk extends Activity implements LocationListener,
 
 				sessionUrl = baseSessionUrl + sessionId;
 			} else {
-				// api.updateSessionData(sessionId, experimentId, uploadSet);
 				JSONObject jobj = new JSONObject();
 				try {
 					jobj.put("data", uploadSet);
