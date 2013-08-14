@@ -59,8 +59,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 	API api;
 
 	// iSENSE login
-	private static String userName = "sor"; // "videoAnalytics";
-	private static String password = "sor"; // "videoAnalytics";
+	//private static String userName = "sor"; // "videoAnalytics";
+	// private static String password = "sor"; // "videoAnalytics";
+	private static String userName = "videoAnalytics";
+	private static String password = "videoAnalytics";
+	
 
 	// create session name based upon first name and last initial user enters
 	static String firstName = "";
@@ -69,12 +72,13 @@ public class ColorBlobDetectionActivity extends Activity implements
 	Boolean sessionNameEntered = false;
 
 	// private static String experimentNumber = ""; // production
-	private static String experimentNumber = "38"; // dev
+	//private static String experimentNumber = "38"; // dev
+	private static String experimentNumber = "39"; // dev
 	private static String baseSessionUrl = "http://beta.isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
 	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/" 
-			//private static String baseSessionUrlDev = "http://129.63.16.30/projects/" 
-			+ experimentNumber + "data_sets/";
+			+ experimentNumber + "/data_sets/";
+	//private static String baseSessionUrlDev = "http://129.63.16.30/projects/" 
 	private static String sessionUrl = "";
 	private String dateString;
 
@@ -263,8 +267,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			
 			Core.circle(mRgba, new Point(point.x, -point.y) , 10, new Scalar(255, 0, 0, 255), 3);
 			
-			//this.addDataPoint(point.x, point.y);
-			
+			this.addDataPoint(point.x, -point.y);	
 		}
 		else 
 		{
@@ -416,11 +419,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 		public void run() {
 
 			// stop data collection for upload to iSENSE
-			mDataSet = new JSONArray();
+			//mDataSet = new JSONArray();
 			// mDataSet = mView.stopDataCollection();
 
 			// ----- HACKY TEST DATA ----
-			addTestPoint(mDataSet);
+			//addTestPoint(mDataSet);
 			// ---- END HACKY TEST DATA ----
 
 			// Create location-less session (for now)
@@ -463,6 +466,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			sessionId = api.uploadDataSet(projectID, jobj, nameOfSession
 					+ " (location not found)");
+			
+			if(sessionId == -1)
+				Log.i(TAG, "Dataset failed to upload!");
+				
 
 			if (useDevSite) {
 				sessionUrl = baseSessionUrlDev + sessionId;
@@ -560,7 +567,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private class LoginBeforeUploadTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean status;
-		//boolean loginStatus = false;
+		boolean loginStatus = false;
 		boolean connect = false;
 		boolean upload = false;
 
@@ -568,9 +575,34 @@ public class ColorBlobDetectionActivity extends Activity implements
 		@Override
 		protected Void doInBackground(Void... voids) {
 			
+		
+			// login to iSENSE if not already
+			if (api.hasConnectivity()) {
+				connect = true;
+				Log.i(TAG, "Connected to the 'net.");
+				// attempt to upload data if logged in
+				if (api.getCurrentUser() == null) {
+					status = api.createSession(userName, password);
+				}
+
+				if (api.getCurrentUser() != null) {
+					upload = true;
+				}
+
+				Log.i(TAG, "createSession success = " + status);
+				
+			} else {
+				connect = false;
+			}
+
+			return null;
+		
+			
 			// login to iSENSE if not already
 			
 			// check for internet connectivity
+		
+			/*
 			connect = api.hasConnectivity();
 			// if connected log into rSENSE
 			if (connect) 
@@ -584,23 +616,28 @@ public class ColorBlobDetectionActivity extends Activity implements
 				else
 					loginStatus = true;
 			 }
-
+	
 			return null;
+			
+		*/
+		
+		
 		}
 
 		// UI need to run in main thread - ALL UI ELEMENTS MUST BE IN THIS THREAD!!
 		@Override
 		protected void onPostExecute(Void voids) {
 
-			if (!status) {
-				Toast.makeText(
-						ColorBlobDetectionActivity.this,
-						"Unable to log into iSENSE. Invalid user id? Try again.",
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
 			if (connect) {
+				
+				if (!status) {
+					Toast.makeText(
+							ColorBlobDetectionActivity.this,
+							"Unable to log into iSENSE. Invalid user id? Try again.",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				
 				if (upload) {
 					// upload data
 					if (firstName.length() > 0 || lastInitial.length() > 0) {
@@ -623,8 +660,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 				return;
 			}
 			
+			
 			// am i connected to the internet?
-		/*
+		
+			/*
 			if (connect) {
 				
 				// check to see if a session name has been created before we 
@@ -650,7 +689,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-			*/
+			
 	
 			 }
 			 else {
@@ -660,6 +699,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			
+			*/
+		
 
 		}
 
