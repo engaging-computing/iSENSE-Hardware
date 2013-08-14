@@ -69,7 +69,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
 	public static String experimentNumber = "32";
-	public static final String DEFAULT_PROJ_PROD = "32";
+	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "sor";
 
