@@ -16,11 +16,7 @@ public class NoConnect extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_connect);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
-		
-		
+	
 		final Button no = (Button) findViewById(R.id.no_connect_try_again);
 		no.setOnClickListener(new OnClickListener() {
 			@Override

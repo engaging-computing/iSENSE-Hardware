@@ -12,7 +12,6 @@ import android.widget.EditText;
 import edu.uml.cs.isense.datawalk_v2.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
-
 public class EnterNameActivity extends Activity {
 
 	private Context mContext;
@@ -39,8 +38,8 @@ public class EnterNameActivity extends Activity {
 		final EditText lastInitialInput = (EditText) findViewById(R.id.initialInput);
 		final Button okButton = (Button) findViewById(R.id.OK);
 
-		this.setTitle("Please enter your name");
-		
+		this.setTitle("Please Enter Your Name");
+
 		InputFilter[] filters = new InputFilter[2];
 		filters[0] = new InputFilter() {
 			@Override
@@ -73,16 +72,17 @@ public class EnterNameActivity extends Activity {
 		firstNameInput.setText(DataWalk.firstName);
 		lastInitialInput.setText(DataWalk.lastInitial);
 		lastInitialInput.setFilters(new InputFilter[] { filters[0],
-				new InputFilter.LengthFilter(1) }); 
+				new InputFilter.LengthFilter(1) });
 
 		okButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (firstNameInput.length() == 0|| lastInitialInput.length() == 0) {
+				if (firstNameInput.length() == 0
+						|| lastInitialInput.length() == 0) {
 					showFailure();
 				} else {
-					//DataWalk.setupDone = true;
+					// DataWalk.setupDone = true;
 					DataWalk.firstName = firstNameInput.getText().toString();
 					DataWalk.lastInitial = lastInitialInput.getText()
 							.toString();
@@ -96,17 +96,17 @@ public class EnterNameActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		//DataWalk.setupDone = false;
-		//setResult(RESULT_CANCELED);
-		//super.onBackPressed();
+		// DataWalk.setupDone = false;
+		// setResult(RESULT_CANCELED);
+		// super.onBackPressed();
 		if (DataWalk.inApp == true) {
 			DataWalk.setupDone = false;
 			setResult(RESULT_CANCELED);
 			super.onBackPressed();
-		
-		} //ends if DataWalk.inApp
-	
-	}//ends onBackPressed
+
+		} // ends if DataWalk.inApp
+
+	}// ends onBackPressed
 
 	private void showFailure() {
 		w.make(blankFields, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
@@ -115,5 +115,5 @@ public class EnterNameActivity extends Activity {
 	static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
-	
+
 }
