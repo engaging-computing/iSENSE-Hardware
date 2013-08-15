@@ -5,8 +5,8 @@
 
     <!-- use wrap_content to maintain original frame size! -->
     <org.opencv.android.JavaCameraView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/color_blob_detection_activity_surface_view" />
     <!--  LinearLayout
         android:layout_width="match_parent"
