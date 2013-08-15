@@ -129,9 +129,9 @@ public class QDataSet implements Serializable {
 	 * 
 	 * @return if the upload was successful
 	 */
-	public boolean upload(API api, Context c) {
+	public int upload(API api, Context c) {
 		if (this.projID.equals("-1"))
-			return false;
+			return -1;
 		
 		if (!this.hasInitialProject) {
 			System.out.println("Need to re-order some data");
@@ -146,9 +146,9 @@ public class QDataSet implements Serializable {
 	 * 
 	 * @return if the upload was successful
 	 */
-	public boolean upload() {
+	public int upload() {
 	
-		boolean success = true;
+		int dataSetID = -1;
 		if (this.rdyForUpload) {
 //			switch (type) {
 //			case DATA:
@@ -193,8 +193,7 @@ public class QDataSet implements Serializable {
 					
 					System.out.println("JOBJ: " + jobj.toString());
 					
-					// TODO - success :(?
-					int dataSetID = UploadQueue.getAPI().uploadDataSet(Integer.parseInt(projID), jobj, name);
+					dataSetID = UploadQueue.getAPI().uploadDataSet(Integer.parseInt(projID), jobj, name);
 					System.out.println("Data set ID from Upload is: " + dataSetID);
 					
 				}
@@ -251,7 +250,7 @@ public class QDataSet implements Serializable {
 //			}
 		}
 
-		return success;
+		return dataSetID;
 	}
 	
 	// Creates a JSON array out of the parsed string
