@@ -54,7 +54,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 	// iSENSE member variables
 	// use development site
-	Boolean useDevSite = true;
+	Boolean useDevSite = false;
 	// iSENSE uploader
 	API api;
 
@@ -71,9 +71,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private final int ENTERNAME_REQUEST = -4;
 	Boolean sessionNameEntered = false;
 
-	// private static String experimentNumber = ""; // production
+	private static String experimentNumber = "29"; // production
 	//private static String experimentNumber = "38"; // dev
-	private static String experimentNumber = "39"; // dev
+	//private static String experimentNumber = "39"; // dev
 	private static String baseSessionUrl = "http://beta.isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
 	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/" 
@@ -100,7 +100,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private Scalar CONTOUR_COLOR;
 
 	private CameraBridgeViewBase mOpenCvCameraView;
-
+	boolean mDataCollectionEnabled = true;
+	private boolean mDisplayStatus = false;
+	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
 		public void onManagerConnected(int status) {
@@ -198,7 +200,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 		mRgba.release();
 	}
 
+	
 	public boolean onTouch(View v, MotionEvent event) {
+		
+	/*
 		int cols = mRgba.cols();
 		int rows = mRgba.rows();
 
@@ -251,7 +256,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 		touchedRegionHsv.release();
 
 		return false; // don't need subsequent touch events
+	*/
+		return true;
 	}
+
 
 	// invoked when camera frame delivered
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) { // processFrame(VideoCapture
@@ -260,14 +268,35 @@ public class ColorBlobDetectionActivity extends Activity implements
 		
 		if(useGrey)
 		{
+			Point point = new Point(0,0);
+			
+			// get latest camera frame
 			mRgba = inputFrame.gray();
-			Point point = mDetector.processGrey(mRgba);
 			
-			Log.i(TAG, "(x,y) = (" + point.x + "," + point.y + ")");
+			// get location of detected points
+			point = mDetector.processGrey(mRgba);
 			
-			Core.circle(mRgba, new Point(point.x, -point.y) , 10, new Scalar(255, 0, 0, 255), 3);
+			// convert grey image to color so we can draw color overlay
+			Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_GRAY2RGB); // current frame
+		  
+			mDataCollectionEnabled = false;
 			
-			this.addDataPoint(point.x, -point.y);	
+			if(mDataCollectionEnabled)
+			{
+				this.addBoxOverlay(mRgba);
+				this.addStatusOverlay(mRgba);
+			}
+			else
+			{	
+				// add data point to final data set
+				// this.addDataPoint(point.x, -point.y);	
+			}
+			
+			// TODO: fix flipping of y-axis 
+			Log.i(TAG, "(x,y) = (" + point.x + "," + -point.y + ")");
+			Core.circle(mRgba, new Point(point.x, -point.y) , 7, new Scalar(255, 0, 0, 255), 2);
+			
+		
 		}
 		else 
 		{
@@ -297,10 +326,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 				 * "Adding a data point throws a JSONException: " + e.getMessage());
 				 * } }
 				 */
-		}
+			}
 
 		}
 
+		//return clone;
 		return mRgba;
 	}
 
@@ -311,6 +341,44 @@ public class ColorBlobDetectionActivity extends Activity implements
 				4);
 
 		return new Scalar(pointMatRgba.get(0, 0));
+	
+	}
+	
+	// ------ screen overlays ------------------------
+	
+	void addBoxOverlay(Mat img)
+	{
+		// makes this 10% of width? 
+		//final int boxSize = 10;
+		int boxSize = (int) (0.1 * img.width());
+		
+	
+		final Point centerUL = new Point(img.width()/2 - boxSize, img.height()/2 - boxSize/8);
+		final Point centerLR = new Point(img.width()/2 + boxSize, img.height() - 5);	
+		
+		Core.rectangle(img,centerUL, centerLR, new Scalar(255, 0, 0, 255), 2);
+		
+		Core.putText(img, new String("center pendulum in box"), new Point(img.width()/2 - 3*boxSize, img.height()/2 - boxSize), 
+				0/* don't know what font this is!x */, 0.5, new Scalar(255, 0, 0, 255), 1);
+	}
+	
+	void addStatusOverlay(Mat img)
+	{	
+		if(mDisplayStatus == true)
+		{
+			//Core.putText(img, new String("[COLLECTING DATA]"), new Point(0, img.height() - 10 ), 
+				//0/* CV_FONT_HERSHEY_COMPLEX */, 0.15, new Scalar(0, 255, 0, 255), 2);
+			Core.circle(mRgba, new Point(10, mRgba.height() - 10) , 2, new Scalar(0, 255, 0, 255), -1);
+			mDisplayStatus = false;
+		}
+		else
+		{
+			//Core.putText(img, new String("[COLLECTING DATA]"), new Point(0, img.height() - 10 ), 
+					//0/* CV_FONT_HERSHEY_COMPLEX */, 0.15, new Scalar(0, 255, 0, 255), 1);
+			Core.circle(mRgba, new Point(10, mRgba.height() - 10) , 3, new Scalar(0, 255, 0, 255), -1);
+				
+			mDisplayStatus = true;
+		}
 	}
 
 	// ------ iSENSE upload/ActionBar/menu stuff-------
@@ -419,11 +487,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 		public void run() {
 
 			// stop data collection for upload to iSENSE
-			//mDataSet = new JSONArray();
+			mDataSet = new JSONArray();
 			// mDataSet = mView.stopDataCollection();
 
 			// ----- HACKY TEST DATA ----
-			//addTestPoint(mDataSet);
+			addTestPoint(mDataSet);
 			// ---- END HACKY TEST DATA ----
 
 			// Create location-less session (for now)
@@ -539,7 +607,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 	}
 	
-
+	// ---- END HACKY TEST DATA -----
+	
 	void addDataPoint(double x, double y) {
 	
 		JSONObject dataJSON = new JSONObject();
@@ -561,7 +630,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		
 	}
 
-	// ---- END HACKY TEST DATA -----
+	// 
 
 	// Control task for uploading data
 	private class LoginBeforeUploadTask extends AsyncTask<Void, Integer, Void> {
@@ -578,27 +647,45 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// login to iSENSE if not already			
 		
 			connect = api.hasConnectivity();
+			
+			Log.i(TAG, "Connectivity status = " + connect);
+			
 			// if connected log into rSENSE
 			if (connect) 
 			{
 				Log.i(TAG, "Connected to the 'net. Now attempting to log into rSENSE and create a session.");
 				
+				Log.i(TAG, "getCurrentUser = " + api.getCurrentUser());
+				
 				// log into rSENSE
 				if (api.getCurrentUser() == null) {			
-					loginStatus = api.createSession(userName, password);					
+					
+					//try {
+						Log.i(TAG, "Connected to the 'net: initial iSENSE loginStatus = " + loginStatus);
+						loginStatus = api.createSession(userName, password);
+						//Log.i(TAG, "Connected to the 'net: iSENSE loginStatus = " + loginStatus);	
+					//}
+					//catch(Exception e)
+					//{
+					//	Log.i(TAG, "Couldn't connect to iSENSE: iSENSE loginStatus = " + loginStatus);
+					//}
 				}
 				else
 					loginStatus = true;
+				
+				Log.i(TAG, "Connected to the 'net: final iSENSE loginStatus = " + loginStatus);
+				
 			 }
+			else {
+				Log.i(TAG, "NOT Connected to the 'net. What happened?");
+			}
+			
 	
 			return null;
 			
-		
-		
-		
 		}
 
-		// UI need to run in main thread - ALL UI ELEMENTS MUST BE IN THIS THREAD!!
+		// UI needs to run in main thread - ALL UI ELEMENTS MUST BE IN THIS THREAD!!
 		@Override
 		protected void onPostExecute(Void voids) {
 		
