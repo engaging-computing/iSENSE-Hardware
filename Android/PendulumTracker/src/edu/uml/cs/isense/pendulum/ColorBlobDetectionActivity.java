@@ -289,7 +289,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			else
 			{	
 				// add data point to final data set
-				// this.addDataPoint(point.x, -point.y);	
+				this.addDataPoint(point.x, -point.y);	
 			}
 			
 			// TODO: fix flipping of y-axis 
@@ -487,11 +487,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 		public void run() {
 
 			// stop data collection for upload to iSENSE
-			mDataSet = new JSONArray();
+			//mDataSet = new JSONArray();
 			// mDataSet = mView.stopDataCollection();
 
 			// ----- HACKY TEST DATA ----
-			addTestPoint(mDataSet);
+			//addTestPoint(mDataSet);
 			// ---- END HACKY TEST DATA ----
 
 			// Create location-less session (for now)
