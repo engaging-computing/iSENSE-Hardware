@@ -19,7 +19,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -30,8 +29,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 //import org.opencv.example.colorblobdetect.R;
@@ -50,6 +52,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 		OnTouchListener, CvCameraViewListener2 {
 
 	private static final String TAG = "PendulumTracker::Activity";
+	
+	Paint paint;
+	
 	public static Context mContext;
 
 	// iSENSE member variables
@@ -61,10 +66,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 	// iSENSE login
 	//private static String userName = "sor"; // "videoAnalytics";
 	// private static String password = "sor"; // "videoAnalytics";
-	private static String userName = "videoAnalytics";
-	private static String password = "videoAnalytics";
+	private static String userName = "mobile";
+	private static String password = "mobile";
 	
-
+	private TextView initInstr;
+	
 	// create session name based upon first name and last initial user enters
 	static String firstName = "";
 	static String lastInitial = "";
@@ -100,8 +106,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private Scalar CONTOUR_COLOR;
 
 	private CameraBridgeViewBase mOpenCvCameraView;
-	boolean mDataCollectionEnabled = true;
+	static boolean mDataCollectionEnabled = false;
 	private boolean mDisplayStatus = false;
+
+	Handler mHandler ;
 	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
@@ -154,9 +162,14 @@ public class ColorBlobDetectionActivity extends Activity implements
 		// iSENSE network connectivity stuff
 		api = API.getInstance(mContext);
 		api.useDev(useDevSite);
-
+		
+		initInstr = (TextView) findViewById(R.id.instructions);
+		initInstr.setVisibility(View.VISIBLE);	
+		
+		 mHandler = new Handler();
+		
 	}
-
+    
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -279,17 +292,38 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// convert grey image to color so we can draw color overlay
 			Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_GRAY2RGB); // current frame
 		  
-			mDataCollectionEnabled = false;
+			//mDataCollectionEnabled = false;
 			
 			if(mDataCollectionEnabled)
 			{
-				this.addBoxOverlay(mRgba);
+				
 				this.addStatusOverlay(mRgba);
+				// add data point to final data set
+				
+				// yScale, -xScale
+				this.addDataPoint(point.x, point.y);	
+				//this.addDataPoint(point.y, -point.x);	
+				
+				// Make TextView disappear
+				mHandler.post( new Runnable() { 
+						@Override 
+						public void run() { 
+							initInstr.setVisibility(View.GONE); } } );	
+				
+				
 			}
 			else
 			{	
-				// add data point to final data set
-				this.addDataPoint(point.x, -point.y);	
+				this.addBoxOverlay(mRgba);
+				
+				// Make TextView disappear
+				// Make TextView disappear
+				mHandler.post( new Runnable() { 
+						@Override 
+						public void run() { 
+							initInstr.setVisibility(View.VISIBLE); } } );	
+				
+				
 			}
 			
 			// TODO: fix flipping of y-axis 
@@ -358,12 +392,14 @@ public class ColorBlobDetectionActivity extends Activity implements
 		
 		Core.rectangle(img,centerUL, centerLR, new Scalar(255, 0, 0, 255), 2);
 		
-		Core.putText(img, new String("center pendulum in box"), new Point(img.width()/2 - 3*boxSize, img.height()/2 - boxSize), 
-				0/* don't know what font this is!x */, 0.5, new Scalar(255, 0, 0, 255), 1);
+		//Core.putText(img, new String("center pendulum in box"), new Point(img.width()/2 - 3*boxSize, img.height()/2 - boxSize), 
+			//	0/* don't know what font this is!x */, 0.5, new Scalar(255, 0, 0, 255), 1);	
+	
 	}
 	
 	void addStatusOverlay(Mat img)
 	{	
+		
 		if(mDisplayStatus == true)
 		{
 			//Core.putText(img, new String("[COLLECTING DATA]"), new Point(0, img.height() - 10 ), 
@@ -411,7 +447,14 @@ public class ColorBlobDetectionActivity extends Activity implements
 						new Intent(mContext, LoginActivity.class),
 						ENTERNAME_REQUEST);
 			}
+										
+			// clear existing data in JSON array (for
+			// upload to iSENSE)
+			//mDataSet = new JSONArray();
+			
+			this.mDataCollectionEnabled = true;
 
+/*
 			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); 
 			// chain together various setter methods to set the dialog
 			// characteristics
@@ -433,7 +476,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 									mDataSet = new JSONArray();
 
 									// start data collection
-									// mView.startDataCollection(mDataSet);
+									mDataCollectionEnabled = true;
 								}
 
 							});
@@ -441,17 +484,23 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// get the AlertDialog from create()
 			AlertDialog startDialog = startBuilder.create();
 			startDialog.show(); // make me appear!
+	
+	*/
 
 			return true;
 
 		case R.id.menu_exit:
+			
 			// Exit app neatly
-			this.finish();
+			//this.finish();  // this only exits Activity not app completely.
+			exitNeatly();
 			return true;
 
 		case R.id.menu_instructions:
 
 			String strInstruct = "Center at-rest pendulum in center of image. Select 'Start data collection button' to start. Pull pendulum back to left or right edge of image and release when selecting 'OK'. Select 'Stop and upload to iSENSE' to stop. ";
+
+			
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this); 
 			
@@ -481,6 +530,13 @@ public class ColorBlobDetectionActivity extends Activity implements
 		return true;
 	}
 
+	void exitNeatly()
+	{
+		// kill process so app completely restarts next time & maintains no state
+		int pid = android.os.Process.myPid(); 
+		android.os.Process.killProcess(pid); 
+	}
+	
 	private Runnable uploader = new Runnable() {
 
 		// @Override
@@ -489,6 +545,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// stop data collection for upload to iSENSE
 			//mDataSet = new JSONArray();
 			// mDataSet = mView.stopDataCollection();
+			mDataCollectionEnabled = false;
 
 			// ----- HACKY TEST DATA ----
 			//addTestPoint(mDataSet);
@@ -532,6 +589,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			int projectID = Integer.parseInt(experimentNumber);
 
+			Log.i(TAG, "Uploading new dataset"); 
+			
 			sessionId = api.uploadDataSet(projectID, jobj, nameOfSession
 					+ " (location not found)");
 			
@@ -572,6 +631,9 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 		@Override
 		protected void onPostExecute(Void voids) {
+			
+			// reset data array
+			mDataSet = new JSONArray();
 
 			dia.setMessage("Done");
 			dia.cancel();
