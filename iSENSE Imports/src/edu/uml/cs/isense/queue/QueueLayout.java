@@ -123,13 +123,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 	// Fills the text fields in the list element blocks
 	private void makeBlock(View view, QDataSet ds) {
 		CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.name);
-		ctv.setText(ds.getName() + " - " + ds.getType());
+		ctv.setText(ds.getName() + " -- " + "Type: " + ds.getType());
 
 		TextView projIDText = (TextView) view.findViewById(R.id.project_id);
 		if (ds.getProjID().equals("-1"))
-			projIDText.setText("No Proj.");
+			projIDText.setText("No Project");
 		else
-			projIDText.setText(ds.getProjID());
+			projIDText.setText("Project: " + ds.getProjID());
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());

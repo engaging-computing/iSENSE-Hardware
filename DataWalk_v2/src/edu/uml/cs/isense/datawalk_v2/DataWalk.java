@@ -248,7 +248,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
 								nameOfSession,
-								"Data Point Uploaded from Android DataWalk",
+								"Data Points: " + dataPointCount,
 								experimentId, dataSet.toString(), null);
 						uq.addDataSetToQueue(ds);
 					} else if (uploadMode) {
