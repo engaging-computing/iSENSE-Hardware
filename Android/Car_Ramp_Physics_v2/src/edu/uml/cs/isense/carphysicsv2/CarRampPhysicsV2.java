@@ -68,10 +68,11 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
-	public static String experimentNumber = "32";
+	public static String experimentNumber = "12";
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
-	private static final String DEFAULT_USER = "sor";
+	private static final String DEFAULT_USER = "mobile";
+	public static boolean useDev = false;
 
 	public static final String baseSessionUrl_Prod = "http://beta.isenseproject.org/projects/";
 	public static final String baseSessionUrl_Dev = "http://rsense-dev.cs.uml.edu/projects/";
@@ -117,7 +118,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
-	public static boolean useDev = true;
 	public static boolean saveMode = false;
 
 	private MediaPlayer mMediaPlayer;
@@ -785,8 +785,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						0);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putInt("length", length);
+				// Below is a math fail
 //				if (length <= 25) {
-//					INTERVAL = 50; // TODO did this actually matter?
+//					INTERVAL = 50; 
 //				} else {
 //					INTERVAL = 2 * length;
 //				}
@@ -795,11 +796,15 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		} else if (reqCode == resultGotName) {
 			if (resultCode == RESULT_OK) {
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						CarRampPhysicsV2.mContext,
+						CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+								Context.MODE_PRIVATE));
 				if (!inApp)
 					inApp = true;
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ " " + DEFAULT_USER + ", Name: " + firstName + " " + lastInitial);
+						+ " " + mPrefs.getString("username", "") + ", Name: " + firstName + " " + lastInitial);
 			} else {
 				if (!inApp)
 					finish();
@@ -898,7 +903,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				Log.d("fantagstag", "Data Set: " + dataSetID);
 				if (dataSetID != -1) {
 					sessionUrl = baseSessionUrl + experimentNumber
-							+ "/data_sets/" + dataSetID;
+							+ "/data_sets/" + dataSetID + "?embed=true";
 					Log.d("fantastag", sessionUrl);
 					uploadSuccessful = true;
 				} else {

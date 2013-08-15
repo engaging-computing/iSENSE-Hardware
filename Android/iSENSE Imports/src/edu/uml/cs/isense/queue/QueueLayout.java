@@ -47,6 +47,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
 	private static final int ALTER_DATA_PROJ_REQUESTED  = 9004;
+	
+	public static final String LAST_UPLOADED_DATA_SET_ID = "lastuploadeddatasetid";
 
 	private static int QUEUE_PARENT = -1;
 
@@ -56,7 +58,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static LinearLayout scrollQueue;
 	private Runnable sdUploader;
 	private static UploadQueue uq;
-	private boolean uploadSuccess = true;
+	private int dataSetID = -1;
 	private static String parentName = "";
 
 	protected static QDataSet lastDataSetLongClicked;
@@ -167,7 +169,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private void setResultAndFinish(int result_code) {
 		if (result_code == RESULT_OK) {
 			uq.storeAndReRetrieveQueue(true);
-			setResult(RESULT_OK);
+			Intent iRet = new Intent();
+			iRet.putExtra(LAST_UPLOADED_DATA_SET_ID, dataSetID);
+			setResult(RESULT_OK, iRet);
 		} else {
 			setResult(RESULT_CANCELED);
 		}
@@ -226,7 +230,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("\"" + uploadSet.getName() + "\" chosen not to upload", Waffle.LENGTH_SHORT);
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
-			} else if (uploadSuccess)
+			} else if (dataSetID != -1)
 				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
@@ -257,7 +261,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			public void run() {
 				if (ds.isUploadable()) {
-					uploadSuccess = ds.upload(api, mContext);
+					dataSetID = ds.upload(api, mContext);
 				} else {
 					uq.queue.add(ds);
 					uq.storeAndReRetrieveQueue(false);

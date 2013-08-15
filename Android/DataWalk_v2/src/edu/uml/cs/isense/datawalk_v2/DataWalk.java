@@ -142,14 +142,13 @@ public class DataWalk extends Activity implements LocationListener,
 	public static String textToSession = "";
 	public static String toSendOut = "";
 
-	private static String loginName = "test";
-	private static String loginPass = "test";
-	public static String experimentId = "31";
-	public static String defaultExp = "31";
-	private static String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
-	public static String sessionUrl = "";
-	private static String experimentUrl = "http://129.63.16.30/projects/";
-	private static String baseExperimentUrl = "http://129.63.16.30/projects/";
+	private static String loginName = "mobile";
+	private static String loginPass = "mobile";
+	public static String experimentId = "13";
+	public static String defaultExp = "13";
+	private static String experimentUrl = "";
+	private static String baseExperimentUrl = "http://beta.isenseproject.org/projects/";
+	private int dataSetID = -1;
 
 	private static int waitingCounter = 0;
 	public static final int RESET_REQUESTED = 102;
@@ -179,7 +178,7 @@ public class DataWalk extends Activity implements LocationListener,
 		OrientationManager.enableRotation(DataWalk.this);
 
 		api = API.getInstance(mContext);
-		api.useDev(true);
+		api.useDev(false);
 
 		mHandler = new Handler();
 
@@ -245,7 +244,7 @@ public class DataWalk extends Activity implements LocationListener,
 							experimentId = defaultExp;
 						}
 
-						experimentUrl = baseExperimentUrl + experimentId;
+						experimentUrl = baseExperimentUrl + experimentId + "/data_sets/";
 
 						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
 								nameOfSession,
@@ -646,7 +645,7 @@ public class DataWalk extends Activity implements LocationListener,
 				api.uploadDataSet(Integer.parseInt(experimentId), jobj,
 						nameOfSession);
 
-				sessionUrl = baseSessionUrl + sessionId;
+				//sessionUrl = baseSessionUrl + sessionId;
 			} else {
 				JSONObject jobj = new JSONObject();
 				try {
@@ -798,6 +797,7 @@ public class DataWalk extends Activity implements LocationListener,
 		if (requestCode == DIALOG_VIEW_DATA) {
 
 			if (resultCode == RESULT_OK) {
+				experimentUrl += dataSetID + "?embed=true";
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(experimentUrl));
 				startActivity(i);
@@ -871,8 +871,11 @@ public class DataWalk extends Activity implements LocationListener,
 		else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
 			if (resultCode == RESULT_OK) {
-				Intent i = new Intent(DataWalk.this, ViewData.class);
-				startActivityForResult(i, DIALOG_VIEW_DATA);
+				if (data != null) {
+					dataSetID = data.getIntExtra(QueueLayout.LAST_UPLOADED_DATA_SET_ID, -1);
+					Intent i = new Intent(DataWalk.this, ViewData.class);
+					startActivityForResult(i, DIALOG_VIEW_DATA);
+				}
 			}
 		} else if (requestCode == resultGotName) {
 			if (resultCode == RESULT_OK) {
