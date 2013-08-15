@@ -251,7 +251,10 @@ public class DataWalk extends Activity implements LocationListener,
 								nameOfSession,
 								"Data Points: " + dataPointCount,
 								experimentId, dataSet.toString(), null);
-						uq.addDataSetToQueue(ds);
+						if (dataPointCount > 0) uq.addDataSetToQueue(ds);
+						else {
+							w.make("Data not saved because no points were recorded.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						}
 					} else if (uploadMode) {
 						if (dataSet.length() != 0) {
 							Log.d("tag", "" + sessionId);
