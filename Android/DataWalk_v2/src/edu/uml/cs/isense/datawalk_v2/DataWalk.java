@@ -16,6 +16,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -279,6 +280,8 @@ public class DataWalk extends Activity implements LocationListener,
 
 						}
 					}
+					
+					OrientationManager.enableRotation(DataWalk.this);
 
 				} else {
 
@@ -480,7 +483,11 @@ public class DataWalk extends Activity implements LocationListener,
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString("project_id", defaultExp).commit();
-
+		
+		// was in onresume
+		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
+		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
+		
 	}// ends onCreate
 
 	@Override
@@ -565,11 +572,10 @@ public class DataWalk extends Activity implements LocationListener,
 		NameTxtBox.setText("Name: " + firstName + " " + lastInitial);
 		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
 				+ " " + LoginIsense.uName);
-		dataPointCount = 0;
-		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
-		i = 0;
+		//dataPointCount = 0;
+		
+		//i = 0;
 		expNumBox.setText("Project Number: " + experimentId);
-		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
 		if (mInterval == 1000) {
 			rateBox.setText("Data Recorded Every: 1 second");
 		} else if (mInterval == 60000) {
@@ -581,7 +587,7 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 
 		new OnResumeLoginTask().execute();
-	}// ends onCreate
+	}// ends onResume
 
 	@Override
 	public void onBackPressed() {
@@ -876,8 +882,10 @@ public class DataWalk extends Activity implements LocationListener,
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
 					dataSetID = data.getIntExtra(QueueLayout.LAST_UPLOADED_DATA_SET_ID, -1);
-					Intent i = new Intent(DataWalk.this, ViewData.class);
-					startActivityForResult(i, DIALOG_VIEW_DATA);
+					if (dataSetID != -1) {
+						Intent i = new Intent(DataWalk.this, ViewData.class);
+						startActivityForResult(i, DIALOG_VIEW_DATA);
+					}
 				}
 			}
 		} else if (requestCode == resultGotName) {
