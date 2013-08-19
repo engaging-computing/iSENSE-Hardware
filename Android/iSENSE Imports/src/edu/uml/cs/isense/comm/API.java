@@ -493,9 +493,10 @@ public class API {
 	 *
 	 * @param projectId The ID of the project to upload data to
 	 * @param csvToUpload The CSV as a File object
+	 * @param datasetName The name of the dataset
 	 * @return The ID of the data set created on iSENSE 
 	 */ 
-	public int uploadCSV(int projectId, File csvToUpload) {
+	public int uploadCSV(int projectId, File csvToUpload, String datasetName) {
 		try {
 			URL url = new URL(baseURL+"/projects/"+projectId+"/CSVUpload?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -504,6 +505,7 @@ public class API {
 
 			MultipartEntity entity = new MultipartEntity();
 			entity.addPart("utf8", new StringBody("\u2713", "text/plain", Charset.forName("UTF-8")));
+			entity.addPart("dataset_name", new StringBody(datasetName));
 			entity.addPart("csv", new FileBody(csvToUpload, "text/csv"));
 			
 			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
