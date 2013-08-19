@@ -5,6 +5,7 @@
     android:background="@drawable/filerow_state_selector"
     android:drawableLeft="@drawable/icon_file"
     android:drawablePadding="5dp"
+    android:enabled="true"
     android:gravity="center_vertical"
     android:padding="10dp"
     android:textColor="@android:color/black"

@@ -14,13 +14,39 @@
         android:background="@android:color/transparent"
         android:padding="5dp"
         android:text="@string/prompt" />
+    
+    <LinearLayout
+        android:id="@+id/queue_top_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/prompt"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/delete_selected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:text="@string/delete_selected" />
+
+        <Button
+            android:id="@+id/select_deselect_all"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:text="@string/select_all" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
-        android:layout_below="@+id/prompt"
-        android:background="@android:color/transparent"
+        android:layout_below="@+id/queue_top_buttons"
+        android:background="#BBBBBB"
         android:padding="5dp"
         android:scrollbarThumbVertical="@drawable/grey_scroll"
         android:scrollbars="vertical" >
