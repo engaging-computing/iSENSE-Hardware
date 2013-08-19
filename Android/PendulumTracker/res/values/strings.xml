@@ -3,4 +3,6 @@
     <string name="app_name">iSENSE Pendulum Tracker</string>
     <string name="promptForName">Enter name for session:</string>
     <string name="startInstructions">(1) center pendulum in box\n(2) pull pendulum to edge of screen</string>
+    <string name="startCollection">Start data collection</string>
+    <string name="stopCollection">Stop data collection</string>
 </resources>

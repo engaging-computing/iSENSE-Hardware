@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -114,6 +115,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 	static boolean mDataCollectionEnabled = false;
 	private boolean mDisplayStatus = false;
 
+	// start / stop icons
+	Drawable startIcon;
+	Drawable stopIcon;
+	
 	Handler mHandler ;
 	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -168,9 +173,19 @@ public class ColorBlobDetectionActivity extends Activity implements
 		api = API.getInstance(mContext);
 		api.useDev(useDevSite);
 		
+		// TextView for instruction overlay
 		initInstr = (TextView) findViewById(R.id.instructions);
 		initInstr.setVisibility(View.VISIBLE);	
 		
+		// set start and stop icons for data collections
+		startIcon = getResources().getDrawable(R.drawable.start_icon);
+		stopIcon = getResources().getDrawable(R.drawable.stop_icon);
+		
+		//Menu menu = (Menu) findViewById(R.layout.menu);
+		//menu.getItem(R.id.menu_start).setIcon(startIcon);
+
+		
+		// Event handler
 		 mHandler = new Handler();
 		
 	}
@@ -307,16 +322,12 @@ public class ColorBlobDetectionActivity extends Activity implements
 				this.addStatusOverlay(mRgba);
 				// add data point to final data set
 				
-				// yScale, -xScale
-				
+				// yScale, -xScale		
 				if(point.x != 0 && point.y != 0)
 				{
 					// shift x-axis so center vertical axis is set to x=0 in pendulum coordinates
 					final int shiftX = (int) (mImgWidth/2);
 					this.addDataPoint(point.x - shiftX, point.y);	
-
-					Log.i(TAG, "mImgWidth = " + mImgWidth + " " + shiftX); 
-					
 				}
 				
 				
@@ -324,9 +335,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				mHandler.post( new Runnable() { 
 						@Override 
 						public void run() { 
-							initInstr.setVisibility(View.GONE); } } );	
-				
-				
+							initInstr.setVisibility(View.GONE); } } );			
 			}
 			else
 			{	
@@ -336,9 +345,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				mHandler.post( new Runnable() { 
 						@Override 
 						public void run() { 
-							initInstr.setVisibility(View.VISIBLE); } } );	
-				
-				
+							initInstr.setVisibility(View.VISIBLE); } } );		
 			}
 			
 			// TODO: fix flipping of y-axis 
@@ -363,17 +370,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 						70 + mSpectrum.cols());
 				mSpectrum.copyTo(spectrumLabel);
 	
-				/*
-				 * if(mEnableDataCollection == true) { try { double xScale =
-				 * upScale*center.x; double yScale = upScale*center.y;
-				 * 
-				 * if(xScale != 0 || yScale != 0) { // TODO: current order: col,
-				 * -row (x and y backwards!) this.addDataPoint(yScale, -xScale); }
-				 * //this.addDataPoint(5, 5); } catch (JSONException e) { // TODO
-				 * Auto-generated catch block Log.e(TAG,
-				 * "Adding a data point throws a JSONException: " + e.getMessage());
-				 * } }
-				 */
 			}
 
 		}
@@ -442,62 +438,52 @@ public class ColorBlobDetectionActivity extends Activity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
+		
+		//item.set
 		switch (item.getItemId()) {
 		// STOP experiment and data collection and
 		// UPLOAD data
-		case R.id.menu_upload:
+/*		case R.id.menu_upload:
 
 			mDataCollectionEnabled = false;
 			
 			new LoginBeforeUploadTask().execute();
 			return true;
-
+*/
 			// START experiment and data collection
 		case R.id.menu_start:
-
-			// create session name with user first name and last initial
-			// if we are logged in
-			if (firstName.length() == 0 || lastInitial.length() == 0) {
-				// Boolean dontPromptMeTwice = true;
-				startActivityForResult(
-						new Intent(mContext, LoginActivity.class),
-						ENTERNAME_REQUEST);
+				
+			// START data collction
+			if(this.mDataCollectionEnabled == false)
+			{
+				
+				// create session name with user first name and last initial
+				// if we are logged in
+				if (firstName.length() == 0 || lastInitial.length() == 0) {
+					// Boolean dontPromptMeTwice = true;
+					startActivityForResult(
+							new Intent(mContext, LoginActivity.class),
+							ENTERNAME_REQUEST);
+				}
+				
+				// disable data collection before uploading data to iSENSE
+				this.mDataCollectionEnabled = true;
+				// set STOP button and text
+				item.setIcon(stopIcon);
+				item.setTitle(R.string.stopCollection);
+			
 			}
-										
-			// disable data collection before uploading data to iSENSE
-			this.mDataCollectionEnabled = true;
-/*
-			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); 
-			// chain together various setter methods to set the dialog
-			// characteristics
-			startBuilder
-					.setMessage(
-							"Pull pendulum to edge of screen and hit 'OK' to start collecting data.")
-					.setTitle("Instructions:")
-					.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								// @Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									// grab position of target and pass it along
-									// If this were Cancel for
-									// setNegativeButton() , just do nothin'!
-
-									// clear existing data in JSON array (for
-									// upload to iSENSE)
-									mDataSet = new JSONArray();
-
-									// start data collection
-									mDataCollectionEnabled = true;
-								}
-
-							});
-
-			// get the AlertDialog from create()
-			AlertDialog startDialog = startBuilder.create();
-			startDialog.show(); // make me appear!
-	
-	*/
+			else
+			{
+				// enable data collection before uploading data to iSENSE
+				mDataCollectionEnabled = false;
+				// set START button and text
+				item.setIcon(startIcon);
+				item.setTitle(R.string.startCollection);
+				
+				new LoginBeforeUploadTask().execute();			
+			
+			}
 
 			return true;
 
@@ -559,23 +545,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			String nameOfSession = firstName + " " + lastInitial + ". - "
 					+ dateString;
-			// String nameOfSession = "underpantsGnomes";
-
-			// Old API Uploading Code
-			// sessionId = rapi.createSession(experimentNumber,
-			// nameOfSession + " (location not found)",
-			// "Automated Submission Through Android App",
-			// "", "", "");
-			// if(useDevSite)
-			// {
-			// sessionUrl = baseSessionUrlDev + sessionId;
-			// Log.i(TAG, sessionUrl);
-			// }
-			// else
-			// sessionUrl = baseSessionUrl + sessionId;
-			//
-			// Log.i(TAG, "Putting session data...");
-			// rapi.putSessionData(sessionId, experimentNumber, mDataSet);
+			
 
 			Log.i(TAG, "Uploading data set...");
 
