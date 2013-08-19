@@ -60,6 +60,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		uploadCSV.setOnClickListener(this);
 
 		api = API.getInstance(this);
+		api.setBaseUrl("http://129.63.17.17:3000");
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		if(api.hasConnectivity()) {
 			if ( v == login ) {
 				status.setText("clicked login");
-				new LoginTask().execute("NickAVV", "Looping59");
+				new LoginTask().execute("sor", "sor");
 			} else if ( v == getusers ) {
 				status.setText("clicked get users");
 				new UsersTask().execute();
@@ -106,8 +107,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		if(resultCode == RESULT_OK) {
 			if(requestCode == FILEPICK) {
 				String filepath = data.getStringExtra("filepath");
-				File f = new File(filepath);
-				
+				new CSVTask().execute(filepath);
 			}
 		}
 	}
@@ -201,7 +201,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			api.appendDataSetData(20, toAppend);
 			return null;
 		}
-
 		@Override
 		protected void onPostExecute(Void result) {
 			
@@ -219,6 +218,19 @@ public class MainActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 			api.uploadDataSet(2, newData, "mobile upload test");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class CSVTask extends AsyncTask<String, Void, Void> {
+		@Override
+		protected Void doInBackground(String... params) {
+			api.uploadCSV(7, new File(params[0]));
 			return null;
 		}
 

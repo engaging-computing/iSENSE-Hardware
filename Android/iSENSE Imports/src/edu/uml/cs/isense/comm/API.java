@@ -2,6 +2,8 @@ package edu.uml.cs.isense.comm;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,11 +11,21 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,8 +124,8 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
-																+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+					+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -166,7 +178,7 @@ public class API {
 		}
 		return proj;
 	}
-	
+
 	/**
 	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
 	 * at a type and a name, and can optionally have a unit.
@@ -182,7 +194,7 @@ public class API {
 			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData);
 			JSONObject jobj = new JSONObject(reqResult);
 			int pid = jobj.getInt("id");
-			
+
 			for(RProjectField rpf : fields) {
 				JSONObject mField = new JSONObject();
 				mField.put("project_id", pid);
@@ -194,7 +206,7 @@ public class API {
 				postData2.put("project_id", pid);
 				makeRequest(baseURL, "fields", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", postData2);
 			}
-			
+
 			return pid;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -212,7 +224,7 @@ public class API {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&recur=true", "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for(int i = 0; i < j2.length(); i++) {
@@ -245,7 +257,7 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-																+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -308,7 +320,7 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-													+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -480,6 +492,25 @@ public class API {
 		}
 	}
 
+	public int uploadCSV(int projectId, File csvToUpload) {
+		try {			
+			URI url = new URI(baseURL+"/projects/"+projectId+"/CSVUpload");
+			HttpClient client = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(url);
+			MultipartEntity entity = new MultipartEntity();
+			entity.addPart("utf8", new StringBody("\u2713", "text/plain", Charset.forName("UTF-8")));
+			entity.addPart("authenticity_token", new StringBody(authToken, "text/plain", Charset.forName("UTF-8")));
+			entity.addPart("csv", new FileBody(csvToUpload, "text/csv"));
+			httpPost.setHeader("Accept", "*/*");
+			httpPost.setHeader("X-CSRF-Token", authToken);
+			httpPost.setEntity(entity);
+			client.execute(httpPost);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
 	public RPerson getCurrentUser() {
 		return currentUser;
 	}
@@ -547,6 +578,15 @@ public class API {
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
 	}
+	
+	/**
+	 * Directly set the base URL, rather than using the dev or production URLs
+	 * 
+	 * @param newUrl The URL to use as a base
+	 */
+	public void setBaseUrl(String newUrl) {
+		baseURL = newUrl;
+	}
 
 	/**
 	 * Returns status on whether you are connected to the Internet.
@@ -589,5 +629,29 @@ public class API {
 			e.printStackTrace();
 		}
 		return reformatted;
+	}
+
+	private static byte[] convertFileToByteArray(File f)
+	{
+		byte[] byteArray = null;
+		try
+		{
+			InputStream inputStream = new FileInputStream(f);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			byte[] b = new byte[1024*8];
+			int bytesRead =0;
+
+			while ((bytesRead = inputStream.read(b)) != -1)
+			{
+				bos.write(b, 0, bytesRead);
+			}
+
+			byteArray = bos.toByteArray();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return byteArray;
 	}
 }
