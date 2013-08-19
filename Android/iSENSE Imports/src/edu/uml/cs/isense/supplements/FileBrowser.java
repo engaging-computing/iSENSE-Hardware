@@ -19,7 +19,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.R;
 
 public class FileBrowser extends Activity implements OnClickListener {
-	
+
 	ImageButton breadUp;
 	File parentDir;
 	ListView fileList;
@@ -35,7 +35,7 @@ public class FileBrowser extends Activity implements OnClickListener {
 		setContentView(R.layout.dialog_filebrowser);
 
 		fileFilters = getIntent().getStringArrayExtra("filefilter");
-		
+
 		setResult(RESULT_CANCELED);
 
 		breadUp = (ImageButton) findViewById(R.id.btn_up);
@@ -63,6 +63,7 @@ public class FileBrowser extends Activity implements OnClickListener {
 			//Show the files in the list
 			final ArrayList<File> currDir = new ArrayList<File>(Arrays.asList(newDir.listFiles()));
 			FileAdapter adapter = new FileAdapter(this, R.layout.filerow, currDir);
+			adapter.setFileFilters(fileFilters);
 			fileList.setAdapter(adapter);
 			//Disable the parent button if there is no parent directory
 			parentDir = newDir.getParentFile();
@@ -71,7 +72,7 @@ public class FileBrowser extends Activity implements OnClickListener {
 			} else {
 				breadUp.setEnabled(true);
 			}
-			
+
 			String crumbPath = newDir.getName();
 			if(parentDir != null) {
 				crumbPath = parentDir.getName() + " > " + crumbPath;
@@ -85,13 +86,15 @@ public class FileBrowser extends Activity implements OnClickListener {
 			//Handle clicking on a file
 			fileList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> adapter, View v, int pos, long l) {
-					File f = currDir.get(pos);
-					if(f.isDirectory()) {
-						changeDir(f);
-					} else {
-						v.setSelected(true);
-						OKBtn.setEnabled(true);
-						selectedFilePath = f.getAbsolutePath();
+					if(v.isEnabled()) {
+						File f = currDir.get(pos);
+						if(f.isDirectory()) {
+							changeDir(f);
+						} else {
+							v.setSelected(true);
+							OKBtn.setEnabled(true);
+							selectedFilePath = f.getAbsolutePath();
+						}
 					}
 				}
 			});
