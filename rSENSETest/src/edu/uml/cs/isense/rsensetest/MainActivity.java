@@ -230,7 +230,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class CSVTask extends AsyncTask<String, Void, Void> {
 		@Override
 		protected Void doInBackground(String... params) {
-			api.uploadCSV(7, new File(params[0]));
+			api.uploadCSV(7, new File(params[0]), "csv from app");
 			return null;
 		}
 
