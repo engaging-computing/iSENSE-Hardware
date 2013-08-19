@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
         android:layout_below="@+id/prompt"
-        android:background="@android:color/transparent"
+        android:background="#BBBBBB"
         android:padding="5dp"
         android:scrollbarThumbVertical="@drawable/grey_scroll"
         android:scrollbars="vertical" >
