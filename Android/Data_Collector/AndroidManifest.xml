@@ -118,7 +118,6 @@
             android:name=".dialogs.Step1Setup"
             android:label="Step 1: Setup"
             android:theme="@style/theme_dialog_white" />
-        
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
@@ -140,13 +139,18 @@
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected Data Sets"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
-            android:label="Projects" 
+            android:label="Projects"
             tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.proj.NoQR"
             android:label="No QR Code Scanner Found"
-            android:theme="@style/theme_dialog_white" 
+            android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <activity
             android:name="edu.uml.cs.isense.proj.Setup"
@@ -156,7 +160,6 @@
 
         <service android:name="edu.uml.cs.isense.collector.DataCollectorService" >
         </service>
-        
     </application>
 
 </manifest>

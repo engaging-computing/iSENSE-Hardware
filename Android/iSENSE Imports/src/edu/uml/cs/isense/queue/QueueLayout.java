@@ -27,7 +27,7 @@ import edu.uml.cs.isense.waffle.Waffle;
  * sets to upload, rename them, change their data, delete them,
  * or attempt to upload them to iSENSE.
  * 
- * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
+ * @author Mike Stowell and Jeremy Poulin of the iSENSE team.
  *
  */
 public class QueueLayout extends Activity implements OnClickListener {
@@ -42,10 +42,14 @@ public class QueueLayout extends Activity implements OnClickListener {
 	public static final String PARENT_NAME = "parentName";
 	public static final String LOGIN_CONTEXT ="logincontext";
 
-	private static final int ALTER_DATASET_REQUESTED   = 9001;
-	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
-	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
-	private static final int ALTER_DATA_PROJ_REQUESTED  = 9004;
+	private static final int ALTER_DATASET_REQUESTED   		 = 9001;
+	private static final int ALTER_DATA_NAME_REQUESTED 		 = 9002;
+	private static final int ALTER_DATA_DATA_REQUESTED 	 	 = 9003;
+	private static final int ALTER_DATA_PROJ_REQUESTED 		 = 9004;
+	private static final int QUEUE_DELETE_SELECTED_REQUESTED = 9005;
+	
+	private static final int QUEUE_BOX_DESELECTED = 0;
+	private static final int QUEUE_BOX_SELECTED   = 1;
 	
 	public static final String LAST_UPLOADED_DATA_SET_ID = "lastuploadeddatasetid";
 
@@ -93,6 +97,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		Button cancel = (Button) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
+		
+		Button select = (Button) findViewById(R.id.select_deselect_all);
+		select.setOnClickListener(this);
+		
+		Button delete = (Button) findViewById(R.id.delete_selected);
+		delete.setOnClickListener(this);
 
 		scrollQueue = (LinearLayout) findViewById(R.id.scrollqueue);
 		fillScrollQueue();
@@ -165,6 +175,29 @@ public class QueueLayout extends Activity implements OnClickListener {
 		} else if (id == R.id.cancel) {
 			setResultAndFinish(RESULT_CANCELED);
 			finish();
+		} else if (id == R.id.select_deselect_all) {
+			Button select = (Button) findViewById(R.id.select_deselect_all);
+			if (select.getText().equals(getResources().getString(R.string.select_all))) {
+				select.setText(getResources().getString(R.string.deselect_all));
+				for (int i = 0; i < scrollQueue.getChildCount(); i++) {
+					View view = scrollQueue.getChildAt(i);
+					if (view.getTag() == Integer.valueOf(QUEUE_BOX_DESELECTED)) {
+						view.performClick();
+					}
+				}
+			} else {
+				select.setText(getResources().getString(R.string.select_all));
+				for (int i = 0; i < scrollQueue.getChildCount(); i++) {
+					View view = scrollQueue.getChildAt(i);
+					if (view.getTag() == Integer.valueOf(QUEUE_BOX_SELECTED)) {
+						view.performClick();
+					}
+				}
+			}
+			
+		} else if (id == R.id.delete_selected) {
+			Intent iDelSel = new Intent(QueueLayout.this, QueueDeleteSelected.class);
+			startActivityForResult(iDelSel, QUEUE_DELETE_SELECTED_REQUESTED);
 		}
 	}
 
@@ -366,10 +399,24 @@ public class QueueLayout extends Activity implements OnClickListener {
 				addViewToScrollQueue(alter);
 				
 			}
+		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				for (int i = 0; i < scrollQueue.getChildCount(); i++) {
+					View view = scrollQueue.getChildAt(i);
+					if (view.getTag() == Integer.valueOf(QUEUE_BOX_SELECTED)) {
+						uq.removeItemWithKey(Long.parseLong((String) view.getContentDescription()));
+						scrollQueue.removeView(view);
+					}
+				}
+			}
 		}
 
 	}
 
+	// Adds ds to the scrollQueue object
+	// Each block in the scrollQueue gets 2 additional (and confusing) properties:
+	//		tag: the selection state of the queue block
+	//		content description: the key of the associated data set
 	private void addViewToScrollQueue(final QDataSet ds) {
 
 		String previous = "";
@@ -392,16 +439,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			scrollQueue.addView(data, layoutParams);
 			ds.setUploadable(false);
-
+			data.setContentDescription("" + ds.key);
+			data.setTag(QUEUE_BOX_DESELECTED);
+			
 			data.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
 					if (ds.isUploadable()) {
 						data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
 						ds.setUploadable(false);
+						data.setTag(QUEUE_BOX_DESELECTED);
 					} else {
 						data.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
 						ds.setUploadable(true);
+						data.setTag(QUEUE_BOX_SELECTED);
 					}
 
 				}
@@ -441,6 +492,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			scrollQueue.addView(pic, layoutParams);
 			ds.setUploadable(false);
+			pic.setContentDescription("" + ds.key);
+			pic.setTag(QUEUE_BOX_DESELECTED);
 
 			pic.setOnClickListener(new OnClickListener() {
 
@@ -448,9 +501,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 					if (ds.isUploadable()) {
 						pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
 						ds.setUploadable(false);
+						pic.setTag(QUEUE_BOX_DESELECTED);
 					} else {
 						pic.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
 						ds.setUploadable(true);
+						pic.setTag(QUEUE_BOX_SELECTED);
 					}
 
 				}
@@ -489,6 +544,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			scrollQueue.addView(both, layoutParams);
 			ds.setUploadable(false);
+			both.setContentDescription("" + ds.key);
+			both.setTag(QUEUE_BOX_DESELECTED);
 
 			both.setOnClickListener(new OnClickListener() {
 
@@ -496,9 +553,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 					if (ds.isUploadable()) {
 						both.setBackgroundResource(R.drawable.listelement_bkgd_changer);
 						ds.setUploadable(false);
+						both.setTag(QUEUE_BOX_DESELECTED);
 					} else {
 						both.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
 						ds.setUploadable(true);
+						both.setTag(QUEUE_BOX_SELECTED);
 					}
 
 				}
