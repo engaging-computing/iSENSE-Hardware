@@ -31,5 +31,6 @@
 	<string name="or">OR</string>
 	
 	<string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
+	<string name="contentDescBack">Back</string>
     
 </resources>
