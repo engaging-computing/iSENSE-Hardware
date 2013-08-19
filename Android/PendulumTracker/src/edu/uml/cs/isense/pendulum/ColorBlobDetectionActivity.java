@@ -95,6 +95,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 	public static JSONArray mDataSet = new JSONArray();
 
 	// OpenCV
+	
+	// displayed image width and height
+	private int mImgWidth = 0;
+	private int mImgHeight = 0;
+	
 	private boolean mIsColorSelected = false;
 	private Mat mRgba;
 	private Scalar mBlobColorRgba;
@@ -158,7 +163,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		// mOpenCvCameraView.setMaxFrameSize(1280,720);
 		//mOpenCvCameraView.setMaxFrameSize(640, 480);
 		mOpenCvCameraView.setMaxFrameSize(320, 240);
-
+		
 		// iSENSE network connectivity stuff
 		api = API.getInstance(mContext);
 		api.useDev(useDevSite);
@@ -198,6 +203,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 	}
 
 	public void onCameraViewStarted(int width, int height) {
+		
+		mImgWidth = width;
+		mImgHeight = height;
+		
 		mRgba = new Mat(height, width, CvType.CV_8UC4);
 		mDetector = new MarkerDetector();
 
@@ -292,8 +301,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// convert grey image to color so we can draw color overlay
 			Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_GRAY2RGB); // current frame
 		  
-			//mDataCollectionEnabled = false;
-			
 			if(mDataCollectionEnabled)
 			{
 				
@@ -301,8 +308,17 @@ public class ColorBlobDetectionActivity extends Activity implements
 				// add data point to final data set
 				
 				// yScale, -xScale
-				this.addDataPoint(point.x, point.y);	
-				//this.addDataPoint(point.y, -point.x);	
+				
+				if(point.x != 0 && point.y != 0)
+				{
+					// shift x-axis so center vertical axis is set to x=0 in pendulum coordinates
+					final int shiftX = (int) (mImgWidth/2);
+					this.addDataPoint(point.x - shiftX, point.y);	
+
+					Log.i(TAG, "mImgWidth = " + mImgWidth + " " + shiftX); 
+					
+				}
+				
 				
 				// Make TextView disappear
 				mHandler.post( new Runnable() { 
@@ -317,7 +333,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 				this.addBoxOverlay(mRgba);
 				
 				// Make TextView disappear
-				// Make TextView disappear
 				mHandler.post( new Runnable() { 
 						@Override 
 						public void run() { 
@@ -328,8 +343,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			
 			// TODO: fix flipping of y-axis 
 			Log.i(TAG, "(x,y) = (" + point.x + "," + -point.y + ")");
-			Core.circle(mRgba, new Point(point.x, -point.y) , 7, new Scalar(255, 0, 0, 255), 2);
-			
+			Core.circle(mRgba, new Point(point.x, -point.y) , 7, new Scalar(255, 0, 0, 255), 2);		
 		
 		}
 		else 
@@ -433,6 +447,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 		// UPLOAD data
 		case R.id.menu_upload:
 
+			mDataCollectionEnabled = false;
+			
 			new LoginBeforeUploadTask().execute();
 			return true;
 
@@ -448,12 +464,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 						ENTERNAME_REQUEST);
 			}
 										
-			// clear existing data in JSON array (for
-			// upload to iSENSE)
-			//mDataSet = new JSONArray();
-			
+			// disable data collection before uploading data to iSENSE
 			this.mDataCollectionEnabled = true;
-
 /*
 			AlertDialog.Builder startBuilder = new AlertDialog.Builder(this); 
 			// chain together various setter methods to set the dialog
@@ -499,9 +511,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 		case R.id.menu_instructions:
 
 			String strInstruct = "Center at-rest pendulum in center of image. Select 'Start data collection button' to start. Pull pendulum back to left or right edge of image and release when selecting 'OK'. Select 'Stop and upload to iSENSE' to stop. ";
-
-			
-
 			AlertDialog.Builder builder = new AlertDialog.Builder(this); 
 			
 			// chain together various setter methods to set the dialog
@@ -541,15 +550,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 		// @Override
 		public void run() {
-
-			// stop data collection for upload to iSENSE
-			//mDataSet = new JSONArray();
-			// mDataSet = mView.stopDataCollection();
-			mDataCollectionEnabled = false;
-
-			// ----- HACKY TEST DATA ----
-			//addTestPoint(mDataSet);
-			// ---- END HACKY TEST DATA ----
 
 			// Create location-less session (for now)
 			int sessionId = -1;
@@ -721,16 +721,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 				
 				// log into rSENSE
 				if (api.getCurrentUser() == null) {			
-					
-					//try {
+			
 						Log.i(TAG, "Connected to the 'net: initial iSENSE loginStatus = " + loginStatus);
 						loginStatus = api.createSession(userName, password);
-						//Log.i(TAG, "Connected to the 'net: iSENSE loginStatus = " + loginStatus);	
-					//}
-					//catch(Exception e)
-					//{
-					//	Log.i(TAG, "Couldn't connect to iSENSE: iSENSE loginStatus = " + loginStatus);
-					//}
+	
 				}
 				else
 					loginStatus = true;
@@ -752,7 +746,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 		protected void onPostExecute(Void voids) {
 		
 			// am i connected to the internet?
-			
 			if (connect) {
 				
 				// check to see if a session name has been created before we 
@@ -765,10 +758,20 @@ public class ColorBlobDetectionActivity extends Activity implements
 					return;
 				}
 				
-				// am I logged in/session created to rSENSE?
+				// am I logged in/session created to iSENSE?
 				if (loginStatus) {
 					// yes! yes! yes! so upload my data
-					new uploadTask().execute();	
+					
+					if( !mDataCollectionEnabled && mDataSet.length() > 0)
+					{	
+						new uploadTask().execute();
+					}
+					else {
+						Toast.makeText(
+								ColorBlobDetectionActivity.this,
+								"You must first START data collection to upload data.",
+								Toast.LENGTH_LONG).show();
+					}
 				}
 				else {
 					// no! no! no! try again.
@@ -780,6 +783,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				}
 			
 			 }
+			 // I am not connected to the internet - oops.
 			 else {
 				Toast.makeText(
 						ColorBlobDetectionActivity.this,
