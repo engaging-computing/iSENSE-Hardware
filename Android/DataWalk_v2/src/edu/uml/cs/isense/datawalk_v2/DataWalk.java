@@ -198,10 +198,6 @@ public class DataWalk extends Activity implements LocationListener,
 					// Cancel the recording timer
 					recordTimer.cancel();
 
-					// Tell the user recording has stopped
-					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-
 					// Create the name of the session using the entered name and
 					// the current time
 					SimpleDateFormat sdf = new SimpleDateFormat(
@@ -226,6 +222,8 @@ public class DataWalk extends Activity implements LocationListener,
 							dataSet.toString(), null);
 					if (dataPointCount > 0) {
 						uq.addDataSetToQueue(ds);
+						
+						// Tell the user recording has stopped
 						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 					} else {
