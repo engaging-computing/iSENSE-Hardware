@@ -586,7 +586,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			dia = new ProgressDialog(ColorBlobDetectionActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data is uploaded to rSENSE...");
+			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 		}
