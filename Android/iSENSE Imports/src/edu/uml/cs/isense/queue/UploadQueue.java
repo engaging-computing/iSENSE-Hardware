@@ -128,7 +128,7 @@ public class UploadQueue implements Serializable {
 				+ parentName + ".ser");
 
 		// writes the queue to a serializable file
-		ObjectOutput out;
+		ObjectOutput out = null;
 		try {
 			out = new ObjectOutputStream(new FileOutputStream(uploadQueueFile));
 			
@@ -139,7 +139,8 @@ public class UploadQueue implements Serializable {
 				Q_COUNT--;
 			}
 
-			out.close();
+			out.flush();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -171,6 +172,14 @@ public class UploadQueue implements Serializable {
 		if (rebuildMirrorQueue) {
 			mirrorQueue.clear();
 			mirrorQueue.addAll(queue);
+		}
+		
+		
+		try {
+			if (out != null)
+				out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
