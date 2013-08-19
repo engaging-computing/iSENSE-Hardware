@@ -6,15 +6,7 @@
         android:id="@+id/Upload"
         android:showAsAction="always"
         android:title="@string/Upload">
-    </item>
-    
-    <!-- <item
-        android:id="@+id/Settings"
-        android:showAsAction="always"
-        android:title="@string/settings_label">
-    </item> -->
-    
-    
+    </item>   
     <item
         android:id="@+id/DataUploadRate"
         android:showAsAction="always"

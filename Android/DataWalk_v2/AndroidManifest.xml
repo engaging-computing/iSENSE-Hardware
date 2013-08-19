@@ -33,14 +33,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Prefs"
-            android:label="Settings" >
-        </activity>
-        <activity
-            android:name=".NoQr2"
-            android:label="No Qr" >
-        </activity>
-        <activity
             android:name="edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog"
             android:label="Set Recording Interval"
             android:theme="@style/theme_dialog_white" >
@@ -53,11 +45,6 @@
         <activity
             android:name=".CustomOnItemSelectedListener"
             android:label="SettingsTesting" >
-        </activity>
-        <activity
-            android:name=".PrefsTwoClone"
-            android:label="Recording Interval"
-            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".EnterNameActivity"
@@ -97,11 +84,6 @@
         <activity
             android:name=".dialogs.MenuItemAbout"
             android:label="About" >
-        </activity>
-        <activity
-            android:name=".dialogs.NoConnect"
-            android:label="No Connectivity"
-            android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"

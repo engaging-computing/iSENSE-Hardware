@@ -2,7 +2,8 @@ package edu.uml.cs.isense.datawalk_v2;
 
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class LoginIsense extends Activity{
@@ -22,19 +24,29 @@ public class LoginIsense extends Activity{
 	TextView loggedInAs;
 	Waffle w;
 	
-	public static String uName = "mobile";
-	public static String password = "mobile";
+	private String username;
+	private String password;
 	
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.login_website);
+		
 		ok = (Button) findViewById(R.id.loginB);
 		cancel = (Button) findViewById(R.id.cancelB);
 		user = (EditText) findViewById(R.id.userNameET);
-		user.setText(uName);
 		pass = (EditText) findViewById(R.id.passwordET);
-		pass.setText(password);
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
+		
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				   DataWalk.mContext, DataWalk.mContext
+				   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
+		
+		username = mPrefs.getString(DataWalk.USERNAME_KEY, "");
+		password = mPrefs.getString(DataWalk.PASSWORD_KEY, "");
+		
+		user.setText(username);
+		pass.setText(password);
+		
 		this.setTitle("iSENSE Login");
 		InputFilter[] filters = new InputFilter[1];
 		filters[0] = new InputFilter(){
@@ -71,7 +83,7 @@ public class LoginIsense extends Activity{
 			@Override
 			public void onClick(View v) {
 				// This is what happens if the user clicks okay to enter new login info. 
-				uName = user.getText().toString();
+				username = user.getText().toString();
 				password = pass.getText().toString();
 				
 				api = API.getInstance(LoginIsense.this);
@@ -100,7 +112,7 @@ public class LoginIsense extends Activity{
 		protected Void doInBackground(Void... arg0) {
 			if(api.hasConnectivity()){
 				connect = true;
-				success = api.createSession(uName, password);
+				success = api.createSession(username, password);
 			}else {
 				connect = false;
 			}
@@ -114,10 +126,18 @@ public class LoginIsense extends Activity{
 		
 			if (connect) {
 				if (success){
-					w.make("Login as  " + uName + "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-					Intent i = new Intent();
-					i.putExtra("username", uName);
-					setResult(RESULT_OK, i);
+					w.make("Login as  " + username + "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							   DataWalk.mContext, DataWalk.mContext
+							   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
+					
+					SharedPreferences.Editor mEditor = mPrefs.edit();
+					mEditor.putString(DataWalk.USERNAME_KEY, username);
+					mEditor.putString(DataWalk.PASSWORD_KEY, password);
+					mEditor.commit();
+										
+					setResult(RESULT_OK);
 					finish();
 				} else {
 					w.make("Incorrect login credentials. Please try again.",Waffle.LENGTH_SHORT,Waffle.IMAGE_X);
@@ -133,4 +153,4 @@ public class LoginIsense extends Activity{
 
 	}
 	
-}//LoginIsense
+}
