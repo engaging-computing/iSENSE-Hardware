@@ -28,7 +28,7 @@
             android:id="@+id/no_gps_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/No"
+            android:text="@android:string/no"
             android:layout_weight="1"
             style="?android:attr/buttonBarButtonStyle"
             />
@@ -37,7 +37,7 @@
             android:id="@+id/no_gps_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Yes"
+            android:text="@android:string/yes"
             android:layout_weight="1"
             style="?android:attr/buttonBarButtonStyle"
             />

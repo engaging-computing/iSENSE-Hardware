@@ -19,7 +19,6 @@ public class SplashMain extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		//super.onCreateView(savedInstanceState);
 		View rootView = inflater.inflate(R.layout.splash_main, container, false);
 		Context c = getActivity().getApplicationContext();
 

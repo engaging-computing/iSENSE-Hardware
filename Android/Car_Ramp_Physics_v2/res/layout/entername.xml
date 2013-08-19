@@ -9,17 +9,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="5dip"
-        android:text=" First Name: " />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/firstName" />
 
     <EditText
         android:id="@+id/nameInput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_toRightOf="@id/nameLabel"
         android:background="@android:drawable/editbox_background"
         android:gravity="left"
-        android:inputType="textEmailAddress"
+        android:inputType="textCapSentences"
         android:maxLength="12"
         android:paddingLeft="6dip"
         android:textColor="@android:color/black" />
@@ -30,8 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/nameInput"
-        android:layout_marginTop="5dip"
-        android:text=" Last Initial: " />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/lastInitial" />
 
     <EditText
         android:id="@+id/initialInput"
@@ -39,10 +45,11 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/nameInput"
         android:layout_below="@+id/nameInput"
+        android:layout_marginRight="5dp"
         android:background="@android:drawable/editbox_background"
         android:ems="10"
         android:gravity="left"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:maxLength="1"
         android:maxWidth="40sp"
         android:paddingLeft="6dip"
@@ -66,7 +73,7 @@
             android:id="@+id/OkButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OK" />
+            android:text="@android:string/ok" />
     </LinearLayout>
 
 </RelativeLayout>

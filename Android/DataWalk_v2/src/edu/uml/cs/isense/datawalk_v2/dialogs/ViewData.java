@@ -13,9 +13,7 @@ public class ViewData extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_data);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+				
 		final Button yes = (Button) findViewById(R.id.view_data_yes);
 		yes.setOnClickListener(new OnClickListener() {
 			@Override

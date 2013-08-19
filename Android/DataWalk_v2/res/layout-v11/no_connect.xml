@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-    
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="25dp" >
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView1"
@@ -13,48 +10,46 @@
         android:layout_height="wrap_content"
         android:text="@string/InternetMsg"
         android:textSize="18sp"
-        />
-   
-   <TextView 
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
+
+    <TextView
         android:id="@+id/instructionsTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/saveModeInstructions"
-        android:textSize="18sp"/>
-   
-      <View
+        android:textSize="18sp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/dividerVertical"
         android:orientation="vertical" >
     </View>
-    
+
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="100"
-        style="?android:attr/buttonBarStyle">
-        
-       
-        <Button 
+        android:orientation="horizontal" >
+
+        <Button
             android:id="@+id/no_connect_try_again"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/try_again"
-            android:layout_weight="60"
-            style="?android:attr/buttonBarButtonStyle"
-            />
-         <Button 
+            android:layout_weight="1"
+            android:text="@string/try_again" />
+
+        <Button
             android:id="@+id/yes_save"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/saveMode"
-            android:layout_weight="40"
-            style="?android:attr/buttonBarButtonStyle"
-            />
-        
+            android:layout_weight="1"
+            android:text="@string/saveMode" />
     </LinearLayout>
-    
-   
-    </LinearLayout>
+
+</LinearLayout>

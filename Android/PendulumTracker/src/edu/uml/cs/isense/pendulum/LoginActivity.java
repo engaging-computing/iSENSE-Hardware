@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -52,7 +53,12 @@ public class LoginActivity extends Activity {
 				} else {
 					ColorBlobDetectionActivity.firstName   = firstNameInput.getText().toString();
 					ColorBlobDetectionActivity.lastInitial = lastInitialInput.getText().toString();
+					ColorBlobDetectionActivity.mDataCollectionEnabled = true;
 					setResult(NAME_SUCCESSFUL, null);
+					// make keyboard disappear
+					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.hideSoftInputFromWindow(lastInitialInput.getWindowToken(), 0);
+					
 					finish();
 				}
 			}
@@ -75,7 +81,7 @@ public class LoginActivity extends Activity {
 	}
 
 	static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
+		return android.os.Build.VERSION.SDK_INT;
 	}
 
 	public class NoToastTwiceTask extends AsyncTask <Void, Integer, Void> {
