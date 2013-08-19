@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				new CreateProjectTask().execute();
 			} else if ( v == uploadCSV ) {
 				Intent i = new Intent(this, FileBrowser.class);
-				i.putExtra("filefilter", new String[]{"csv"});
+				i.putExtra("filefilter", new String[]{"CSV"});
 				startActivityForResult(i, FILEPICK);
 			}
 		} else {
