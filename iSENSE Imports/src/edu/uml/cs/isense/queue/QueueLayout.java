@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
@@ -122,14 +121,17 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	// Fills the text fields in the list element blocks
 	private void makeBlock(View view, QDataSet ds) {
-		CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.name);
-		ctv.setText(ds.getName() + " -- " + "Type: " + ds.getType());
+		TextView tv = (TextView) view.findViewById(R.id.name);
+		tv.setText(ds.getName());
 
 		TextView projIDText = (TextView) view.findViewById(R.id.project_id);
 		if (ds.getProjID().equals("-1"))
 			projIDText.setText("No Project");
 		else
 			projIDText.setText("Project: " + ds.getProjID());
+		
+		TextView uploadType = (TextView) view.findViewById(R.id.upload_type);
+		uploadType.setText("Type: " + ds.getType());
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());
@@ -227,7 +229,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			Waffle w = new Waffle(mContext);
 
 			if (!doThings) {
-				w.make("\"" + uploadSet.getName() + "\" chosen not to upload", Waffle.LENGTH_SHORT);
+				w.make("\"" + uploadSet.getName() + "\" chosen not to upload", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			} else if (dataSetID != -1)
@@ -374,7 +376,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 			     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-		layoutParams.setMargins(1, 1, 1, 1);
+		layoutParams.setMargins(5, 5, 5, 5);
 
 		switch (ds.type) {
 		case DATA:
@@ -389,21 +391,18 @@ public class QueueLayout extends Activity implements OnClickListener {
 					(String) ds.getName());
 
 			scrollQueue.addView(data, layoutParams);
-			ds.setUploadable(true);
+			ds.setUploadable(false);
 
 			data.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					CheckedTextView ctv = (CheckedTextView) v
-							.findViewById(R.id.name);
-					ctv.toggle();
-
-					if (ctv.isChecked())
-						ctv.setCheckMarkDrawable(R.drawable.checkmark);
-					else
-						ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-					ds.setUploadable(ctv.isChecked());
+					if (ds.isUploadable()) {
+						data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+						ds.setUploadable(false);
+					} else {
+						data.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+						ds.setUploadable(true);
+					}
 
 				}
 
@@ -441,21 +440,18 @@ public class QueueLayout extends Activity implements OnClickListener {
 					(String) ds.getName());
 
 			scrollQueue.addView(pic, layoutParams);
-			ds.setUploadable(true);
+			ds.setUploadable(false);
 
 			pic.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					CheckedTextView ctv = (CheckedTextView) v
-							.findViewById(R.id.name);
-					ctv.toggle();
-
-					if (ctv.isChecked())
-						ctv.setCheckMarkDrawable(R.drawable.checkmark);
-					else
-						ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-					ds.setUploadable(ctv.isChecked());
+					if (ds.isUploadable()) {
+						pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+						ds.setUploadable(false);
+					} else {
+						pic.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+						ds.setUploadable(true);
+					}
 
 				}
 
@@ -492,21 +488,18 @@ public class QueueLayout extends Activity implements OnClickListener {
 					(String) ds.getName());
 
 			scrollQueue.addView(both, layoutParams);
-			ds.setUploadable(true);
+			ds.setUploadable(false);
 
 			both.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					CheckedTextView ctv = (CheckedTextView) v
-							.findViewById(R.id.name);
-					ctv.toggle();
-
-					if (ctv.isChecked())
-						ctv.setCheckMarkDrawable(R.drawable.checkmark);
-					else
-						ctv.setCheckMarkDrawable(R.drawable.red_x);
-
-					ds.setUploadable(ctv.isChecked());
+					if (ds.isUploadable()) {
+						both.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+						ds.setUploadable(false);
+					} else {
+						both.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+						ds.setUploadable(true);
+					}
 
 				}
 
