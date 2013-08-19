@@ -11,13 +11,53 @@
         android:background="@android:color/transparent"
         android:padding="5dp"
         android:text="@string/prompt" />
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/prompt"
+        android:background="?android:attr/dividerVertical" />
 
+    <LinearLayout
+        android:id="@+id/queue_top_buttons"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+		android:layout_below="@id/prompt"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+        
+        <Button
+            android:id="@+id/delete_selected"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/delete_selected" />
+
+        <Button
+            android:id="@+id/select_deselect_all"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/select_all" />
+        
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/prompt"
+        android:background="?android:attr/dividerVertical" />
+    
     <ScrollView
         android:id="@+id/queueprompt_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
-        android:layout_below="@+id/prompt"
+        android:layout_below="@+id/queue_top_buttons"
         android:background="#BBBBBB"
         android:padding="5dp"
         android:scrollbarThumbVertical="@drawable/grey_scroll"
