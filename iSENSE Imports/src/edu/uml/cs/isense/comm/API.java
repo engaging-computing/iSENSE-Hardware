@@ -497,17 +497,18 @@ public class API {
 			URI url = new URI(baseURL+"/projects/"+projectId+"/CSVUpload");
 			HttpClient client = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url);
-			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null,Charset.forName(HTTP.UTF_8));
-			entity.addPart("authenticity_token", new StringBody(authToken));
-			entity.addPart("csv", new FileBody(csvToUpload));
+			MultipartEntity entity = new MultipartEntity();
 			entity.addPart("utf8", new StringBody("\u2713", "text/plain", Charset.forName("UTF-8")));
+			entity.addPart("authenticity_token", new StringBody(authToken, "text/plain", Charset.forName("UTF-8")));
+			entity.addPart("csv", new FileBody(csvToUpload, "text/csv"));
+			httpPost.setHeader("Accept", "*/*");
+			httpPost.setHeader("X-CSRF-Token", authToken);
 			httpPost.setEntity(entity);
 			client.execute(httpPost);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return -1;
-
 	}
 
 	public RPerson getCurrentUser() {
