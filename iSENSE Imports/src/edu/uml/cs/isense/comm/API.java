@@ -224,7 +224,7 @@ public class API {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&recur=true", "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for(int i = 0; i < j2.length(); i++) {
