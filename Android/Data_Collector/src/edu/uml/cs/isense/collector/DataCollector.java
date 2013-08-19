@@ -409,8 +409,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = false;
 
-		if (uq != null)
-			uq.buildQueueFromFile();
+//		if (uq != null)
+//			uq.buildQueueFromFile();
 
 		// keeps menu buttons disabled while running
 		if (running)
@@ -734,7 +734,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// Prepare description for data set
 			String description;
 			if (dataSetDescription.equals(""))
-				description = "Automated Submission Through Android Data Collection App";
+				description = "Automated Submission Through Android Data Collector App";
 			else
 				description = dataSetDescription;
 
@@ -1492,6 +1492,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
+					
+					stopService(new Intent(mContext, DataCollectorService.class));
 
 					isenseLogo.setImageResource(R.drawable.rsense_logo);
 					isenseLogo.setBackgroundColor(Color.parseColor("#000033"));
@@ -1505,8 +1507,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					getWindow().clearFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-					stopService(new Intent(mContext, DataCollectorService.class));
 
 					OrientationManager.enableRotation((Activity) mContext);
 
