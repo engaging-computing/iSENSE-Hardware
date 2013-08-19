@@ -224,9 +224,11 @@ public class DataWalk extends Activity implements LocationListener,
 					QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
 							"Data Points: " + dataPointCount, projectID,
 							dataSet.toString(), null);
-					if (dataPointCount > 0)
+					if (dataPointCount > 0) {
 						uq.addDataSetToQueue(ds);
-					else {
+						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					} else {
 						w.make("Data not saved because no points were recorded.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					}
@@ -630,7 +632,7 @@ public class DataWalk extends Activity implements LocationListener,
 		} else if (requestCode == RESET_REQUESTED) {
 
 			if (resultCode == RESULT_OK) {
-				
+
 				// Set variables to default
 				mInterval = DEFAULT_INTERVAL;
 				loginName = DEFAULT_USERNAME;
@@ -639,15 +641,15 @@ public class DataWalk extends Activity implements LocationListener,
 				lastInitial = "";
 				projectID = DEFAULT_PROJECT;
 
-				//TODO
+				// TODO
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor mEdit = prefs.edit();
 				mEdit.putString("project_id", DEFAULT_PROJECT);
 				mEdit.commit();
-				
+
 				w.make("Settings have been reset to default.",
 						Waffle.LENGTH_SHORT);
-				
+
 				startActivityForResult(new Intent(mContext,
 						EnterNameActivity.class), NAME_REQUESTED);
 

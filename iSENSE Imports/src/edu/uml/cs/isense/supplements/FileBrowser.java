@@ -13,37 +13,40 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import edu.uml.cs.isense.R;
 
 public class FileBrowser extends Activity implements OnClickListener {
 
-	Button bread1, bread2, bread3;
-	File parent1, parent2;
+	ImageButton breadUp;
+	File parentDir;
 	ListView fileList;
+	TextView breadCrumbs;
 	Button OKBtn, cancelBtn;
 	String selectedFilePath = null;
 	View selectedItem;
+	String[] fileFilters;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_filebrowser);
 
+		fileFilters = getIntent().getStringArrayExtra("filefilter");
+
 		setResult(RESULT_CANCELED);
 
-		bread1 = (Button) findViewById(R.id.btn_bread1);
-		bread2 = (Button) findViewById(R.id.btn_bread2);
-		bread3 = (Button) findViewById(R.id.btn_bread3);
+		breadUp = (ImageButton) findViewById(R.id.btn_up);
+		breadCrumbs = (TextView) findViewById(R.id.txt_path);
 		fileList = (ListView) findViewById(R.id.list_files);
 		OKBtn = (Button) findViewById(R.id.btn_ok);
 		cancelBtn = (Button) findViewById(R.id.btn_cancel);
 
 		OKBtn.setOnClickListener(this);
 		cancelBtn.setOnClickListener(this);
-		bread1.setOnClickListener(this);
-		bread2.setOnClickListener(this);
-		bread3.setOnClickListener(this);
+		breadUp.setOnClickListener(this);
 
 		OKBtn.setEnabled(false);
 		fileList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -60,41 +63,38 @@ public class FileBrowser extends Activity implements OnClickListener {
 			//Show the files in the list
 			final ArrayList<File> currDir = new ArrayList<File>(Arrays.asList(newDir.listFiles()));
 			FileAdapter adapter = new FileAdapter(this, R.layout.filerow, currDir);
+			adapter.setFileFilters(fileFilters);
 			fileList.setAdapter(adapter);
-			//get references to the directories up the tree
-			parent1 = newDir.getParentFile();
-			if(parent1 != null)	{
-				parent2 = parent1.getParentFile();
+			//Disable the parent button if there is no parent directory
+			parentDir = newDir.getParentFile();
+			if(parentDir == null) {
+				breadUp.setEnabled(false);
 			} else {
-				parent2 = null;
-			}
-			//Build the breadcrumbs
-			if(parent2 != null) {
-				bread3.setText(" "+newDir.getName());
-				bread3.setVisibility(View.VISIBLE);
-				bread2.setText(" "+parent1.getName()+" >");
-				bread2.setVisibility(View.VISIBLE);
-				bread1.setText(parent2.getName()+" >");
-			} else if(parent1 != null) {
-				bread3.setVisibility(View.GONE);
-				bread2.setText(" "+newDir.getName());
-				bread2.setVisibility(View.VISIBLE);
-				bread1.setText(" "+parent1.getName()+" >");
-			} else {
-				bread3.setVisibility(View.GONE);
-				bread2.setVisibility(View.GONE);
-				bread1.setText(" "+newDir.getName());
+				breadUp.setEnabled(true);
 			}
 
+			String crumbPath = newDir.getName();
+			if(parentDir != null) {
+				crumbPath = parentDir.getName() + " > " + crumbPath;
+				File grandparentDir = parentDir.getParentFile();
+				if(grandparentDir != null) {
+					crumbPath = grandparentDir.getName() + " > " + crumbPath;
+				}
+			}
+			breadCrumbs.setText(crumbPath);		
+
+			//Handle clicking on a file
 			fileList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> adapter, View v, int pos, long l) {
-					File f = currDir.get(pos);
-					if(f.isDirectory()) {
-						changeDir(f);
-					} else {
-						v.setSelected(true);
-						OKBtn.setEnabled(true);
-						selectedFilePath = f.getAbsolutePath();
+					if(v.isEnabled()) {
+						File f = currDir.get(pos);
+						if(f.isDirectory()) {
+							changeDir(f);
+						} else {
+							v.setSelected(true);
+							OKBtn.setEnabled(true);
+							selectedFilePath = f.getAbsolutePath();
+						}
 					}
 				}
 			});
@@ -102,13 +102,9 @@ public class FileBrowser extends Activity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		if( v == bread1 && parent2 != null) {
-			changeDir(parent2);
-		} else if( v == bread2 && parent2 != null && parent1 != null ) {
-			changeDir(parent1);
-		} else if( v == bread1 && parent2 == null && parent1 != null ) {
-			changeDir(parent1);
-		} else if ( v == OKBtn ) {
+		if( v == breadUp ) {
+			changeDir(parentDir);
+		}  else if ( v == OKBtn ) {
 			Intent result = new Intent();
 			result.putExtra("filepath", selectedFilePath);
 			setResult(RESULT_OK, result);
