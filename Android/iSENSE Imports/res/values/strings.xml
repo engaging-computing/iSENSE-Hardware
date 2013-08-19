@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     
     <string name="contentDesc"></string>
-    <string name="prompt">Would you like to try uploading any of the following?</string>
     <string name="upload">Upload</string>
     <string name="digits_restriction">
 	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
@@ -32,5 +31,11 @@
 	
 	<string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
 	<string name="contentDescBack">Back</string>
+	<string name="prompt">
+	    Select which data sets you would like to upload to iSENSE.
+	    \nLong press a data set to reconfigure it.
+	</string>
+	<string name="type_data">Type: Data</string>
+	<string name="type_picture">Type: Picture</string>
     
 </resources>
