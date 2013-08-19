@@ -30,6 +30,7 @@
 	<string name="or">OR</string>
 	
 	<string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
+	<string name="contentDescBack">Back</string>
 	<string name="prompt">
 	    Select which data sets you would like to upload to iSENSE.
 	    \nLong press a data set to reconfigure it.
