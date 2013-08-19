@@ -12,11 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,11 +30,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,477 +40,266 @@ import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
-import edu.uml.cs.isense.datawalk_v2.dialogs.NoConnect;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
-import edu.uml.cs.isense.dfm.DataFieldManager;
-import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
+/**
+ * Behaves as the main driver for the iSENSE Data Walk App. Coordinates and
+ * records geolocation data.
+ * 
+ * @author Rajia
+ */
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener, Listener {
-	public static TextView loggedInAs;
-	public static TextView NameTxtBox;
-	public static Boolean inApp = false;
-	public static Boolean umbChecked = true;
-	public static Boolean ChkBoxChecked = true;
-	public static Boolean running = false;
-	public DataFieldManager dfm;
-	public Fields f;
-	private int resultGotName;
-	private Button startStop;
-	private Vibrator vibrator;
+
+	/* UI Related Globals */
+	private TextView loggedInAs;
+	private TextView nameTxtBox;
 	private TextView timeElapsedBox;
 	private TextView pointsUploadedBox;
 	private TextView expNumBox;
 	private TextView rateBox;
 	private TextView latLong;
+	private Button startStop;
+
+	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
-
-	private Boolean appTimedOut = false;
-	private Boolean gpsWorking = false;
-
+	private Vibrator vibrator;
+	private MediaPlayer mMediaPlayer;
+	private API api;
+	private UploadQueue uq;
 	private SensorManager mSensorManager;
-
 	private Location loc;
-	private Timer timeTimer;
-	private Timer mTimer;
+	private Timer recordTimer;
+	private Timer gpsTimer;
+	private Waffle w;
 
-	private float accel[];
+	/* iSENSE API Globals and Constants */
+	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_PASSWORD = "mobile";
+	private final String DEFAULT_PROJECT = "13";
 
+	private String loginName = "";
+	private String loginPass = "";
+	private String projectID = "13";
+	private String projectURL = "";
+	private String dataSetName = "";
+	private String baseprojectURL = "http://rsense-dev.cs.uml.edu/projects/";
+	private int dataSetID = -1;
+	public static final String USERNAME_KEY = "username";
+	public static final String PASSWORD_KEY = "password";
+
+	/* Manage Work Flow Between Activities */
+	public static Context mContext;
 	public static String firstName = "";
 	public static String lastInitial = "";
 
-	public static final int DIALOG_CANCELED = 0;
-	public static final int DIALOG_OK = 1;
-	private static final int DIALOG_VIEW_DATA = 4;
-	private static final int DIALOG_NO_GPS = 5;
-	private static final int DIALOG_FORCE_STOP = 6;
-	private static final int DIALOG_NO_CONNECT = 8;
+	/* Manage Work Flow Within DataWalk.java */
+	private boolean running = false;
+	private boolean gpsWorking = false;
+	private boolean useMenu = true;
 
-	private static final int QUEUE_UPLOAD_REQUESTED = 101;
-	private static final int TIMER_LOOP = 1000;
-	private static int INTERVAL = 10000;
-	private int mInterval = INTERVAL;
+	/* Recording Globals */
+	private float accel[];
+	private JSONArray dataSet;
 
+	/* Dialog Identity Constants */
+	private final int DIALOG_VIEW_DATA = 2;
+	private final int DIALOG_NO_GPS = 3;
+	private final int DIALOG_FORCE_STOP = 4;
+	private final int QUEUE_UPLOAD_REQUESTED = 5;
+	private final int RESET_REQUESTED = 6;
+	private final int NAME_REQUESTED = 7;
+	private final int EXPERIMENT_REQUESTED = 8;
+
+	/* Timer Related Globals and Constants */
+	private final int TIMER_LOOP = 1000;
+	private final int DEFAULT_INTERVAL = 10000;
+	private int mInterval = DEFAULT_INTERVAL;
 	private int elapsedMillis = 0;
-	private int sessionId = -1;
 	private int dataPointCount = 0;
+	private int timerTick = 0;
+	private int waitingCounter = 0;
 
-	private MediaPlayer mMediaPlayer;
-
-	API api;
-	String s_elapsedSeconds, s_elapsedMillis, s_elapsedMinutes;
-	String nameOfSession = "";
-	String partialSessionName = "";
-
-	int i = 0;
-
-	ProgressDialog dia;
-	double partialProg = 1.0;
-	UploadQueue uq;
-	static boolean inPausedState = false;
-	static boolean toastSuccess = false;
-	static boolean setupDone = false;
-	static boolean choiceViaMenu = false;
-	static boolean dontToastMeTwice = false;
-	static boolean exitAppViaBack = false;
-	static boolean backWasPressed = false;
-	static boolean useMenu = true;
-	static boolean beginWrite = true;
-	static boolean uploadPoint = false;
-	static boolean uploadMode = false;
-	static boolean savePoint = true;
-	static boolean thruUpload = false;
-
-	private Handler mHandler;
-
-	public static String textToSession = "";
-	public static String toSendOut = "";
-
-	private static String loginName = "mobile";
-	private static String loginPass = "mobile";
-	public static String experimentId = "13";
-	public static String defaultExp = "13";
-	private static String experimentUrl = "";
-	private static String baseExperimentUrl = "http://beta.isenseproject.org/projects/";
-	private int dataSetID = -1;
-
-	private static int waitingCounter = 0;
-	public static final int RESET_REQUESTED = 102;
-	public static JSONArray dataSet;
-	public static JSONArray uploadSet;
-
-	static int mheight = 1;
-	static int mwidth = 1;
-	private Waffle w;
-	public static Context mContext;
-
+	/**
+	 * Called when the application is created for the first time.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// Calling this during onCreate() ensures that your application is
-		// properly initialized with default settings,
-		// which your application may need to read in order to determine some
-		// behaviors(such as whether to download data while on a cell network
-
-		// when the third argument is false, the system sets the default values
-		// only if this method has never been called in the past
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		// Save current context
 		mContext = this;
-		w = new Waffle(mContext);
-		OrientationManager.enableRotation(DataWalk.this);
 
-		api = API.getInstance(mContext);
-		api.useDev(false);
+		// Initialize all the managers.
+		initManagers();
 
-		mHandler = new Handler();
+		// Gets first name and last initial the first time
+		if (firstName.equals("") || lastInitial.equals("")) {
+			startActivityForResult(
+					new Intent(mContext, EnterNameActivity.class),
+					NAME_REQUESTED);
+		}
 
+		// Set the initial default projectID in preferences
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		mEdit.putString("project_id", DEFAULT_PROJECT).commit();
+
+		// Initialize main UI elements
 		startStop = (Button) findViewById(R.id.startStop);
 		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
 		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
 		expNumBox = (TextView) findViewById(R.id.expNumBx);
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		NameTxtBox = (TextView) findViewById(R.id.NameStatus);
+		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
 		rateBox = (TextView) findViewById(R.id.RateBx);
-
 		latLong = (TextView) findViewById(R.id.myLocation);
+		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
+		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
 
-		uq = new UploadQueue("data_walk", mContext, api);
-		uq.buildQueueFromFile();
-		/*
-		 * This block useful for if onBackPressed - retains some things from
-		 * previous session
-		 */
-		if (running) {
+		// Attempt to login with saved credentials, otherwise try default
+		// credentials
+		new AttemptLoginTask().execute();
 
-			Intent i = new Intent(DataWalk.this, ForceStop.class);
-			startActivityForResult(i, DIALOG_FORCE_STOP);
-		}
+		/* Starts the code for the main button. */
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
 			public boolean onLongClick(View arg0) {
 
-				if (appTimedOut)
-					return false;
-
+				// Vibrate and beep
 				vibrator.vibrate(300);
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
 
+				// Handles when you press the button to STOP recording
 				if (running) {
 
-					running = false;
-					thruUpload = false;
-					startStop.setText(getString(R.string.startPrompt));
-
-					timeTimer.cancel();
+					// No longer recording so set menu flag to enabled
 					running = false;
 					useMenu = true;
+
+					// Reset the text on the main button
+					startStop.setText(getString(R.string.startPrompt));
+
+					// Cancel the recording timer
+					recordTimer.cancel();
+
+					// Tell the user recording has stopped
 					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 
-					if (savePoint) {
-						SimpleDateFormat sdf = new SimpleDateFormat(
-								"MM/dd/yyyy, HH:mm:ss", Locale.US);
-						Date dt = new Date();
-						String dateString = sdf.format(dt);
+					// Create the name of the session using the entered name and
+					// the current time
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"MM/dd/yyyy, HH:mm:ss", Locale.US);
+					Date dt = new Date();
+					String dateString = sdf.format(dt);
+					dataSetName = firstName + " " + lastInitial + ". - "
+							+ dateString;
 
-						nameOfSession = firstName + " " + lastInitial + ". - "
-								+ dateString;
+					// Get user's project #, or the default if there is none
+					// saved
+					SharedPreferences prefs = getSharedPreferences("PROJID", 0);
+					projectID = prefs.getString("project_id", DEFAULT_PROJECT);
 
-						// get user's project #, or default if there is none
-						SharedPreferences prefs = getSharedPreferences(
-								"PROJID", 0);
-						experimentId = prefs.getString("project_id", "");
-						if (experimentId.equals("")) {
-							experimentId = defaultExp;
-						}
+					// Set the project URL for view data
+					projectURL = baseprojectURL + projectID + "/data_sets/";
 
-						experimentUrl = baseExperimentUrl + experimentId + "/data_sets/";
-
-						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
-								nameOfSession,
-								"Data Points: " + dataPointCount,
-								experimentId, dataSet.toString(), null);
-						if (dataPointCount > 0) uq.addDataSetToQueue(ds);
-						else {
-							w.make("Data not saved because no points were recorded.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-						}
-					} else if (uploadMode) {
-						if (dataSet.length() != 0) {
-							Log.d("tag", "" + sessionId);
-							uploadSet = dataSet;
-							dataSet = new JSONArray();
-
-							if (uploadPoint == true) {
-								Log.d("tag", "uploading");
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										new Task().execute();
-									}
-								});
-							}
-						}
+					// Save the newest DataSet to the Upload Queue if it has at
+					// least 1 point
+					QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
+							"Data Points: " + dataPointCount, projectID,
+							dataSet.toString(), null);
+					if (dataPointCount > 0)
+						uq.addDataSetToQueue(ds);
+					else {
+						w.make("Data not saved because no points were recorded.",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					}
 
-					if (uploadPoint) {
-						if (dataPointCount >= 1) {
-							Intent i = new Intent(DataWalk.this, ViewData.class);
-							startActivityForResult(i, DIALOG_VIEW_DATA);
-
-						}
-					}
-					
+					// Re-enable rotation in the main activity
 					OrientationManager.enableRotation(DataWalk.this);
 
+					// Handles when you press the button to START recording
 				} else {
 
-					pointsUploadedBox.setText("Points Recorded: " + "0");
-					timeElapsedBox.setText("Time Elapsed:" + " 0 seconds");
-					dataPointCount = 0;
-
-					Log.d("sessionId", sessionId + "= reseting session id");
-					sessionId = -1;
-
-					// THIS ALLOWS THE START BUTTON TO CONTINUOUSLY CALL THE
-					// NAME ACTIVITY IF SOMEONE DID NOT ENTER A NAME!!!!
-					if (!setupDone) {
-						if (firstName.equals("") || lastInitial.equals("")) {
-							startActivityForResult(new Intent(mContext,
-									EnterNameActivity.class), resultGotName);
-							w.make("You must enter your name before starting to record data.",
-									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-							setupDone = true;
-							return false;
-						}
-
-					}
-					getWindow().addFlags(
-							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-					thruUpload = true;
-
-					dataSet = new JSONArray();
-					uploadSet = new JSONArray();
-
-					final long startTime = System.currentTimeMillis();
-
-					accel = new float[4];
-					if (mSensorManager == null)
-						mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-					mSensorManager.registerListener(
-							DataWalk.this,
-							mSensorManager
-									.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-							SensorManager.SENSOR_DELAY_FASTEST);
-
-					elapsedMillis = 0;
-					i = 0;
-
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						Toast.makeText(
-								getBaseContext(),
-								"Data recording interrupted! Time values may be inconsistent.",
-								Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					}
-
-					if (savePoint) {
-						uploadMode = false;
-					}
-
+					// Recording so set menu flag to disabled
 					useMenu = false;
 					running = true;
-					startStop.setText(getString(R.string.stopPrompt));
+
+					// Reset the main UI text boxes
+					pointsUploadedBox.setText("Points Recorded: " + "0");
+					timeElapsedBox.setText("Time Elapsed:" + " 0 seconds");
+
+					// Reset the number of data points and the current dataSet
+					// ID
+					dataPointCount = 0;
+					dataSetID = -1;
+
+					// Prevent the screen from turning off and prevent rotation
+					getWindow().addFlags(
+							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 					OrientationManager.disableRotation(DataWalk.this);
-					timeTimer = new Timer();
-					timeTimer.scheduleAtFixedRate(new TimerTask() {
-						public void run() {
 
-							i++;
-							Log.d("tag", "mInterval is: " + mInterval
-									+ "elapsedMillis =:" + elapsedMillis);
+					// Record and update the UI as necessary
+					runRecordingTimer();
 
-							mHandler.post(new Runnable() {
-
-								@Override
-								public void run() {
-									if (i == 1) {
-										timeElapsedBox.setText("Time Elapsed: "
-												+ i + " second");
-									} else {
-										timeElapsedBox.setText("Time Elapsed: "
-												+ i + " seconds");
-									}
-								}
-							});
-							if (!api.hasConnectivity())
-								uploadPoint = false;
-
-							else if (uploadMode) {
-								uploadPoint = true;
-								ChkBoxChecked = true;
-
-							} else {
-								savePoint = true;
-								ChkBoxChecked = false;
-							}
-
-							// Every n seconds which is determined by interval
-							// (not including time 0)
-							if ((i % (mInterval / 1000)) == 0 && i != 0) {
-								JSONObject dataJSON = new JSONObject();
-								elapsedMillis += mInterval;
-
-								try {
-									long time = startTime + elapsedMillis;
-									dataJSON.put("1", accel[3]);
-									dataJSON.put("2", loc.getLatitude());
-									dataJSON.put("3", loc.getLongitude());
-									dataJSON.put("0", "u " + time);
-
-									if (gpsWorking) {
-										dataSet.put(dataJSON);
-										Log.d("Recording", "Number of points: "
-												+ dataSet.length());
-
-										dataPointCount++;
-										runOnUiThread(new Runnable() {
-
-											@Override
-											public void run() {
-												pointsUploadedBox
-														.setText("Points Recorded: "
-																+ dataPointCount);
-											}
-
-										});
-									}
-
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								if (savePoint) {
-									umbChecked = false;
-									// DataSet ds = new DataSet(
-									// DataSet.Type.DATA,
-									// "",
-									// "Data Point Uploaded from Android DataWalk",
-									// "592", dataSet.toString(), null, -1,
-									// "", "", "", "");
-									// uq.addDataSetToQueue(ds);
-									// todo
-									/*
-									 * mHandler.post(new Runnable() {
-									 * 
-									 * @Override public void run() {
-									 * w.make("Data Point Saved!",
-									 * Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-									 * } });
-									 */
-
-								}
-
-								// upload points every 10 seconds (i is the
-								// number of seconds)
-								if (uploadMode && ((i % 10) == 0 && i > 9)) {
-									Log.d("tag", "preparing to upload");
-									uploadSet = dataSet;
-									dataSet = new JSONArray();
-
-									if (uploadPoint == true) {
-										Log.d("tag", "uploading");
-										mHandler.post(new Runnable() {
-											@Override
-											public void run() {
-												new Task().execute();
-											}
-										});
-									}
-								}
-
-							}
-						}
-
-					}, 0, TIMER_LOOP);
+					// Change the text on the main button
+					startStop.setText(getString(R.string.stopPrompt));
 
 				}
+
 				return running;
 
 			}
 
 		});
 
-		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		initLocationManager();
-		waitingForGPS();
-
-		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
-
-		new AttemptLoginTask().execute();
-
-		if (savedInstanceState == null && api.hasConnectivity()) {
-			if (firstName.equals("") || lastInitial.equals("")) {
-				startActivityForResult(new Intent(mContext,
-						EnterNameActivity.class), resultGotName);
-
-			}
-		}
-
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("project_id", defaultExp).commit();
-		
-		// was in onresume
-		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
-		timeElapsedBox.setText("Time Elapsed: " + i + " seconds");
-		
 	}// ends onCreate
 
+	/**
+	 * Is called every time this activity is paused. For example, whenever a new
+	 * dialog is launched.
+	 */
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		if (timeTimer != null)
-			timeTimer.cancel();
-		if (mTimer != null)
-			mTimer.cancel();
+		// Stop recording
+		if (recordTimer != null)
+			recordTimer.cancel();
+		recordTimer = null;
 
-		mTimer = null;
-		inPausedState = true;
-
+		// Stop updating GPS
+		if (gpsTimer != null)
+			gpsTimer.cancel();
+		gpsTimer = null;
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		if (mLocationManager != null)
-			initLocationManager();
-	}
-
+	/**
+	 * Called whenever this application is left, like when the user switches
+	 * apps using the task manager.
+	 */
 	@Override
 	public void onStop() {
 		super.onStop();
 
+		// Stops the GPS and accelerometer when the application is not
+		// recording.
 		if (!running) {
 			if (mLocationManager != null)
 				mLocationManager.removeUpdates(DataWalk.this);
@@ -523,59 +307,38 @@ public class DataWalk extends Activity implements LocationListener,
 			if (mSensorManager != null)
 				mSensorManager.unregisterListener(DataWalk.this);
 		}
-
-		if (timeTimer != null)
-			timeTimer.cancel();
-		if (mTimer != null)
-			mTimer.cancel();
-		mTimer = null;
-
-		inPausedState = true;
-
 	}
 
+	/**
+	 * Called whenever this activity is called from within the application, like
+	 * from the login dialog.
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		if (api.hasConnectivity()) {
-
-			savePoint = true;
-			uploadPoint = false;
-			uploadMode = false;
-			umbChecked = false;
-		}
-		if (umbChecked)
-			uploadMode = true;
-		// uploadMode =
-		// PreferenceManager.getDefaultSharedPreferences(this).getBoolean("UploadMode",
-		// true);
-
+		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences("RecordingPrefs", 0)
 				.getString("DataUploadRate", "10000"));
 
+		// Rebuild the upload queue
 		if (uq != null)
 			uq.buildQueueFromFile();
 
-		inPausedState = false;
-
+		// Check to see if the recording was canceled while running
 		if (running) {
 			Intent i = new Intent(DataWalk.this, ForceStop.class);
 			startActivityForResult(i, DIALOG_FORCE_STOP);
 		}
 
-		initLocationManager();
-
-		if (mTimer == null)
+		// Restart the GPS counter
+		if (mLocationManager != null)
+			initLocationManager();
+		if (gpsTimer == null)
 			waitingForGPS();
 
-		NameTxtBox.setText("Name: " + firstName + " " + lastInitial);
-		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-				+ " " + LoginIsense.uName);
-		//dataPointCount = 0;
-		
-		//i = 0;
-		expNumBox.setText("Project Number: " + experimentId);
+		// Update the text in the text boxes on the main UI
+		expNumBox.setText("Project Number: " + projectID);
 		if (mInterval == 1000) {
 			rateBox.setText("Data Recorded Every: 1 second");
 		} else if (mInterval == 60000) {
@@ -583,24 +346,27 @@ public class DataWalk extends Activity implements LocationListener,
 		} else {
 			rateBox.setText("Data Recorded Every: " + mInterval / 1000
 					+ " seconds");
-			Log.d("tag", "!!!!!!!The Project Id Is:" + experimentId);
 		}
 
-		new OnResumeLoginTask().execute();
 	}// ends onResume
 
+	/**
+	 * Handles application behavior on back press.
+	 */
 	@Override
 	public void onBackPressed() {
+		// Allows there user to leave via back only when not recording.
 		if (running) {
-			Toast.makeText(
-					this,
-					"Cannot exit via BACK while recording data; use HOME instead.",
-					Toast.LENGTH_LONG).show();
+			w.make("Cannot exit via BACK while recording data; use HOME instead.",
+					Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 		} else {
 			super.onBackPressed();
 		}
 	}
 
+	/**
+	 * Receives location updates from the location manager.
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		if (location.getLatitude() != 0 && location.getLongitude() != 0) {
@@ -610,146 +376,90 @@ public class DataWalk extends Activity implements LocationListener,
 			gpsWorking = false;
 		}
 	}
-	
+
+	/**
+	 * Location manager not receiving updates anymore.
+	 */
 	@Override
 	public void onProviderDisabled(String provider) {
 		gpsWorking = false;
 	}
 
+	/**
+	 * Location manager starts receiving updates.
+	 */
 	@Override
 	public void onProviderEnabled(String provider) {
 	}
 
+	/**
+	 * Called when the provider status changes.
+	 */
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 
 	}
 
-	static int getApiLevel() {
+	/**
+	 * Used to find out what version of Android you are using.
+	 * 
+	 * @return API level of current device
+	 */
+	public static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
 
-	private Runnable uploader = new Runnable() {
-
-		@Override
-		public void run() {
-
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
-					Locale.US);
-			Date dt = new Date();
-			String dateString = sdf.format(dt);
-
-			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
-
-			if (sessionId == -1) {
-
-				JSONObject jobj = new JSONObject();
-				try {
-					jobj.put("data", uploadSet);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				jobj = api.rowsToCols(jobj);
-
-				api.uploadDataSet(Integer.parseInt(experimentId), jobj,
-						nameOfSession);
-
-				//sessionUrl = baseSessionUrl + sessionId;
-			} else {
-				JSONObject jobj = new JSONObject();
-				try {
-					jobj.put("data", uploadSet);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				jobj = api.rowsToCols(jobj);
-
-				api.appendDataSetData(sessionId, jobj);
-			}
-
-		}
-
-	};
-
-	private class Task extends AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-			w.make("Uploading data to iSENSE...", Waffle.LENGTH_SHORT);
-
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-
-			api.createSession(loginName, loginPass);
-			uploader.run();
-			return null;
-
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-
-		}
-	}
-
+	/**
+	 * Turns the action bar menu on and off.
+	 * 
+	 * @return Whether or not the menu was prepared successfully.
+	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(0).setEnabled(false);
-			menu.getItem(1).setEnabled(false);
-		} else {
+		if (useMenu) {
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
+		} else {
+			menu.getItem(0).setEnabled(false);
+			menu.getItem(1).setEnabled(false);
 		}
 		return true;
 	}
 
+	/**
+	 * Tries to login then launches the upload queue uploading activity.
+	 */
 	private void manageUploadQueue() {
+
+		// Attempt to login with saved credentials, otherwise try default
+		// credentials
+		new AttemptLoginTask().execute();
+
+		// If the queue isn't empty, launch the activity. Otherwise tell the
+		// user the queue is empty.
 		if (!uq.emptyQueue()) {
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
 			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
-
 		} else {
 			w.make("No Data to Upload.", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 		}
 	}
 
-	private class NotConnectedTask extends AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			if (api.hasConnectivity()) {
-				Toast.makeText(DataWalk.this, "Connectivity found!",
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Intent i = new Intent(DataWalk.this, NoConnect.class);
-				startActivityForResult(i, DIALOG_NO_CONNECT);
-
-			}
-		}
-	}
-
+	/**
+	 * Sets up the locations manager so that it request GPS permission if
+	 * necessary and gets only the most accurate points.
+	 */
 	private void initLocationManager() {
-		
+
+		// Set the criteria to points with fine accuracy
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		
+
+		// Start the GPS listener
 		mLocationManager.addGpsStatusListener(this);
-			
+
+		// Check if GPS is enabled. If not, direct user to their settings.
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(criteria, true), 0, 0,
@@ -759,17 +469,29 @@ public class DataWalk extends Activity implements LocationListener,
 			startActivityForResult(i, DIALOG_NO_GPS);
 		}
 
+		// Save new GPS points in our loc variable
 		loc = new Location(mLocationManager.getBestProvider(criteria, true));
 	}
 
+	/**
+	 * Starts a timer that displays gps points when they are found and the
+	 * waiting for gps loop when they are not.
+	 */
 	private void waitingForGPS() {
-		mTimer = new Timer();
-		mTimer.scheduleAtFixedRate(new TimerTask() {
+
+		// Creates the new timer to update the main UI every second
+		gpsTimer = new Timer();
+		gpsTimer.scheduleAtFixedRate(new TimerTask() {
+
 			@Override
 			public void run() {
-				mHandler.post(new Runnable() {
+				runOnUiThread(new Runnable() {
+
 					@Override
 					public void run() {
+
+						// Show the GPS coordinate on the main UI, else continue
+						// with our loop.
 						if (gpsWorking) {
 							latLong.setText("Latitude: " + loc.getLatitude()
 									+ "\nLongitude: " + loc.getLongitude());
@@ -799,152 +521,164 @@ public class DataWalk extends Activity implements LocationListener,
 		}, 0, TIMER_LOOP);
 	}
 
-	public static final int EXPERIMENT_REQUESTED = 969;
+	/**
+	 * Initializes managers.
+	 */
+	private void initManagers() {
 
+		// Waffles
+		w = new Waffle(mContext);
+
+		// iSENSE API
+		api = API.getInstance(mContext);
+		api.useDev(true);
+
+		// Upload Queue
+		uq = new UploadQueue("data_walk", mContext, api);
+		uq.buildQueueFromFile();
+
+		// Vibrator for Long Click
+		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+		// GPS
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		initLocationManager();
+		waitingForGPS();
+
+		// Sensors
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+		// Beep sound
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+
+	}
+
+	/**
+	 * Catches the returns from other activities back to DataWalk.java
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+		// If the user hits yes, launch a web page to view their data on iSENSE,
+		// else do nothing.
 		if (requestCode == DIALOG_VIEW_DATA) {
 
 			if (resultCode == RESULT_OK) {
-				experimentUrl += dataSetID + "?embed=true";
+				projectURL += dataSetID + "?embed=true";
 				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(experimentUrl));
+				i.setData(Uri.parse(projectURL));
 				startActivity(i);
 			}
+
+			// If a new project has been selected, check to see if it is
+			// actually valid.
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
-				experimentId = prefs.getString("project_id", null);
+				projectID = prefs.getString("project_id", null);
 
 				if (api.hasConnectivity()) {
 					new GetProjectTask().execute();
 				}
-
-			} else {
-				// experimentId = experimentId;
 			}
+
+			// If the user hit yes, bring them to GPS settings.
 		} else if (requestCode == DIALOG_NO_GPS) {
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
-		} else if (requestCode == DIALOG_FORCE_STOP) {
 
+			// The user left the app while it was running, so press the main
+			// button to stop recording.
+		} else if (requestCode == DIALOG_FORCE_STOP) {
 			if (resultCode == RESULT_OK) {
 				startStop.performLongClick();
 			}
 
-		} else if (requestCode == DIALOG_NO_CONNECT) {
-			// SO IF THE DIALOG IS ON NO CONNECT WE WANT TO DO THIS
-
-			// IF THE DIALOG IS ON NO CONNECT AND THE PERSON HITS THE BUTTON
-			// DON'T SAVE OR DON'T TRY AGAIN WE SET THE RESULT TO OKAY, AND WE
-			// JUST EXIT THE APP.
-			if (resultCode == RESULT_OK) {
-				savePoint = true;
-				umbChecked = false;
-				w.make("You Have Choosen to Turn Save Mode On!",
-						Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-				startActivityForResult(new Intent(mContext,
-						EnterNameActivity.class), resultGotName);
-				Log.d("Tag",
-						"Rajia you have indicated that you want to turn save mode on!!!!!");
-
-			}
-			// IF THE PERSON HITS THE TRY AGAIN BUTTON THE RESULT IS SET TO
-			// RESULT_CANCELED IN WHICH WE TRY TO CONNECT TO THE INTERNET AGAIN
-			else if (resultCode == RESULT_CANCELED) {
-				Log.d("Tag",
-						"Rajia you have indicated that you want to TRY TO CONNECT TO THE INTERNET AGAIN!!!!!");
-				if (api.hasConnectivity()) {
-
-					boolean success = api.createSession(loginName, loginPass);
-					if (success)
-						Toast.makeText(DataWalk.this, "Connectivity found!",
-								Toast.LENGTH_SHORT).show();
-					else {
-						Intent i = new Intent(DataWalk.this, NoConnect.class);
-						startActivityForResult(i, DIALOG_NO_CONNECT);
-					}
-				} else {
-					new NotConnectedTask().execute();
-				}
-				// This else is when the person wants to turn save mode on
-			} else {
-				finish();
-				Log.d("Tag",
-						"Rajia you have indicated that you want to EXIT!!!!!");
-			}
-
-		}// ends resultCode = dialog_no_connect
-		else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
+			// If the user uploaded data, offer to show the data on iSENSE
+		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
-					dataSetID = data.getIntExtra(QueueLayout.LAST_UPLOADED_DATA_SET_ID, -1);
+					dataSetID = data.getIntExtra(
+							QueueLayout.LAST_UPLOADED_DATA_SET_ID, -1);
 					if (dataSetID != -1) {
 						Intent i = new Intent(DataWalk.this, ViewData.class);
 						startActivityForResult(i, DIALOG_VIEW_DATA);
 					}
 				}
 			}
-		} else if (requestCode == resultGotName) {
+
+			// Return of EnterNameActivity
+		} else if (requestCode == NAME_REQUESTED) {
+
+			// the user entered a valid name so update the main UI
 			if (resultCode == RESULT_OK) {
-				if (!inApp)
-					inApp = true;
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ "test" + " Name: " + firstName + " " + lastInitial);
+				nameTxtBox.setText("Name: " + firstName + " " + lastInitial);
 			} else {
-				if (!inApp)
-					finish();
+				// Calls the enter name activity if a name has not yet been
+				// entered.
+				if (firstName.equals("") || lastInitial.equals("")) {
+					startActivityForResult(new Intent(mContext,
+							EnterNameActivity.class), NAME_REQUESTED);
+					w.make("You must enter your name before starting to record data.",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				}
 			}
+
+			// Resets iSENSE and recording variables to their defaults.
 		} else if (requestCode == RESET_REQUESTED) {
 
 			if (resultCode == RESULT_OK) {
-				Log.d("tag", "Re-setting settings");
-				mInterval = 10000;
-				Log.d("tag", "!!!!!!!!! MInterval is:" + mInterval / 1000);
-				loginName = "test";
-				loginPass = "test";
-				firstName = " ";
+				
+				// Set variables to default
+				mInterval = DEFAULT_INTERVAL;
+				loginName = DEFAULT_USERNAME;
+				loginPass = DEFAULT_PASSWORD;
+				firstName = "";
 				lastInitial = "";
-				experimentId = defaultExp;
-				if (api.hasConnectivity())
-					ChkBoxChecked = true;
-				umbChecked = true;
+				projectID = DEFAULT_PROJECT;
 
+				//TODO
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor mEdit = prefs.edit();
-				mEdit.putString("project_id", defaultExp);
+				mEdit.putString("project_id", DEFAULT_PROJECT);
 				mEdit.commit();
-				w.make("Settings have been reset to Default",
-						Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				
+				w.make("Settings have been reset to default.",
+						Waffle.LENGTH_SHORT);
+				
 				startActivityForResult(new Intent(mContext,
-						EnterNameActivity.class), resultGotName);
+						EnterNameActivity.class), NAME_REQUESTED);
 
 			}
 		} else if (requestCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				if (loggedInAs == null)
-					loggedInAs = (TextView) findViewById(R.id.loginStatus);
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						DataWalk.mContext,
+						DataWalk.mContext.getSharedPreferences("USER_INFO",
+								Context.MODE_PRIVATE));
+
+				loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
+						DEFAULT_USERNAME);
+				loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
+						DEFAULT_USERNAME);
+
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ data.getStringExtra("username")
-						+ " Name: "
-						+ firstName + " " + lastInitial);
+						+ " " + loginName);
+			} else {
+				loggedInAs.setText(getResources().getString(
+						R.string.logged_in_as));
 			}
 
 		} else if (requestCode == SPINNER_STARTED) {
 			if (resultCode == RESULT_OK) {
-				// Here is what happens if they click okay on the spinner
-				Log.d("tag", "We clicked Okay on the Spinner");
-				// w.make("you clicked okay!");
 
 			}
 
 		}
-	}// Always b4 This guy
+	}//
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -984,7 +718,6 @@ public class DataWalk extends Activity implements LocationListener,
 		case R.id.reset:
 			Intent i = new Intent(mContext, Reset.class);
 			startActivityForResult(i, RESET_REQUESTED);
-			Log.d("tag", "*** We are in ResetToDefaults");
 			return true;
 		case R.id.login:
 			startActivityForResult(new Intent(this, LoginIsense.class),
@@ -992,33 +725,43 @@ public class DataWalk extends Activity implements LocationListener,
 			return true;
 		case R.id.NameChange:
 			startActivityForResult(new Intent(this, EnterNameActivity.class),
-					resultGotName);
-			Log.d("tag", "you clicked on NameChange");
+					NAME_REQUESTED);
 			return true;
 		case R.id.DataUploadRate:
 			startActivity(new Intent(this, DataRateDialog.class));
-			Log.d("tag", "you clicked on Change Recording Rate");
 			return true;
 		case R.id.ExpNum:
 			Intent setup = new Intent(this, Setup.class);
 			startActivityForResult(setup, EXPERIMENT_REQUESTED);
-			Log.d("tag", "you clicked on Change Exp Num");
 			return true;
 		case R.id.About:
 			startActivity(new Intent(this, About.class));
 			return true;
 		case R.id.help:
 			startActivity(new Intent(this, Help.class));
-			Log.d("tag", "!!Help Has been Clicked!!");
 			return true;
 		}
 		return false;
-	}// ENDS ON OPTIONS ITEM SELECTED
+	}// Ends on options item selected
 
 	public class AttemptLoginTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean connect = false;
 		boolean success = false;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					DataWalk.mContext, DataWalk.mContext.getSharedPreferences(
+							"USER_INFO", Context.MODE_PRIVATE));
+
+			loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
+					DEFAULT_USERNAME);
+			loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
+					DEFAULT_PASSWORD);
+		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -1037,69 +780,52 @@ public class DataWalk extends Activity implements LocationListener,
 			super.onPostExecute(result);
 
 			if (connect) {
-				if (!success) {
+				if (success) {
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							DataWalk.mContext,
+							DataWalk.mContext.getSharedPreferences("USER_INFO",
+									Context.MODE_PRIVATE));
+
+					SharedPreferences.Editor mEditor = mPrefs.edit();
+					mEditor.putString(DataWalk.USERNAME_KEY, loginName);
+					mEditor.putString(DataWalk.PASSWORD_KEY, loginName);
+					mEditor.commit();
+
+					loggedInAs.setText(getResources().getString(
+							R.string.logged_in_as)
+							+ " " + loginName);
+
+				} else {
 					if (loginName.length() == 0 || loginPass.length() == 0)
 						startActivityForResult(new Intent(mContext,
 								LoginIsense.class), LOGIN_STATUS_REQUESTED);
 				}
 			} else {
-				Intent i = new Intent(DataWalk.this, NoConnect.class);
-				startActivityForResult(i, DIALOG_NO_CONNECT);
+				w.make("Cannot connect to internet. Please check network settings.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				loggedInAs.setText(getResources().getString(
+						R.string.logged_in_as));
+
 			}
 
 		}
 
 	}
 
-	public class OnResumeLoginTask extends AsyncTask<Void, Integer, Void> {
-
-		boolean connect = false;
-		boolean success = false;
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			if (api.hasConnectivity()) {
-				connect = true;
-				success = api.createSession(LoginIsense.uName,
-						LoginIsense.password);
-			} else {
-				connect = false;
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (connect) {
-				if (success) {
-					// w.make("Login as  " + LoginIsense.uName +
-					// "  Successful.",Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-					Log.d("tag", "login as test successful!!!!!!!!!!!!!!!!!!!!");
-					Intent i = new Intent();
-					i.putExtra("username", LoginIsense.uName);
-				} else {
-					w.make("Incorrect login credentials. Please try again.",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-				}
-			} else {
-				// do nothing
-			}
-
-		}
-
-	}
-
+	/**
+	 * Checks to see if the last entered project number is valid.
+	 * 
+	 * @author Rajia
+	 */
 	public class GetProjectTask extends AsyncTask<Void, Integer, Void> {
 
 		RProject proj;
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			proj = api.getProject(Integer.parseInt(experimentId));
-			Log.d("tag", "Project name is: " + proj.name);
+
+			// Get the project from iSENSE
+			proj = api.getProject(Integer.parseInt(projectID));
 
 			return null;
 		}
@@ -1108,10 +834,12 @@ public class DataWalk extends Activity implements LocationListener,
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
+			// If the project is invalid, tell the user and launch the project
+			// picking dialog.
 			if (proj.name == null || proj.name.equals("")) {
-				Log.d("tag", "Invalid expiremnt number");
 				w.make("Project Number Invalid! Please enter a new one.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+
 				startActivityForResult(new Intent(mContext, Setup.class),
 						EXPERIMENT_REQUESTED);
 			}
@@ -1121,15 +849,108 @@ public class DataWalk extends Activity implements LocationListener,
 
 	@Override
 	public void onGpsStatusChanged(int event) {
-			GpsStatus status = mLocationManager.getGpsStatus(null);
-			int count = 0;
-			Iterable<GpsSatellite> sats = status.getSatellites();
-			
-            for (Iterator<GpsSatellite> i = sats.iterator(); i.hasNext(); i.next()) {
-            	count++;
-            }
-            
-            if (count < 4) gpsWorking = false;
+		GpsStatus status = mLocationManager.getGpsStatus(null);
+		int count = 0;
+		Iterable<GpsSatellite> sats = status.getSatellites();
+
+		for (Iterator<GpsSatellite> i = sats.iterator(); i.hasNext(); i.next()) {
+			count++;
+		}
+
+		if (count < 4)
+			gpsWorking = false;
 	}
 
-}// Ends DataWalk.java Class
+	/**
+	 * Runs the main timer that records data and updates the main UI every
+	 * second.
+	 */
+	void runRecordingTimer() {
+
+		// Start the sensor manager so we can get accelerometer data
+		mSensorManager.registerListener(DataWalk.this,
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_FASTEST);
+
+		// Prepare new containers where our recorded values will be stored
+		dataSet = new JSONArray();
+		accel = new float[4];
+
+		// Reset timer variables
+		final long startTime = System.currentTimeMillis();
+		elapsedMillis = 0;
+		timerTick = 0;
+
+		// Creates a new timer that runs every second
+		recordTimer = new Timer();
+		recordTimer.scheduleAtFixedRate(new TimerTask() {
+
+			public void run() {
+
+				// Increase the timerTick count
+				timerTick++;
+
+				// Update the main UI with the correct number of seconds
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						if (timerTick == 1) {
+							timeElapsedBox.setText("Time Elapsed: " + timerTick
+									+ " second");
+						} else {
+							timeElapsedBox.setText("Time Elapsed: " + timerTick
+									+ " seconds");
+						}
+					}
+				});
+
+				// Every n seconds which is determined by interval
+				// (not including time 0)
+				if ((timerTick % (mInterval / 1000)) == 0 && timerTick != 0) {
+
+					// Prepare a new row of data
+					JSONObject dataJSON = new JSONObject();
+
+					// Determine how long you've been recording for
+					elapsedMillis += mInterval;
+					long time = startTime + elapsedMillis;
+
+					try {
+
+						// Store new values into JSON Object
+						dataJSON.put("0", "u " + time);
+						dataJSON.put("1", accel[3]);
+						dataJSON.put("2", loc.getLatitude());
+						dataJSON.put("3", loc.getLongitude());
+
+						// Save this data point if GPS says it has a lock
+						if (gpsWorking) {
+							dataSet.put(dataJSON);
+
+							// Updated the number of points recorded here and on
+							// the main UI
+							dataPointCount++;
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									pointsUploadedBox
+											.setText("Points Recorded: "
+													+ dataPointCount);
+								}
+
+							});
+						}
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		}, 0, TIMER_LOOP);
+
+	}
+
+}
