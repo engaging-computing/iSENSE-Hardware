@@ -12,17 +12,15 @@ import android.widget.EditText;
 import edu.uml.cs.isense.datawalk_v2.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
+/**
+ * Allows the user to enter his/her first name and last initial.
+ * 
+ * @author Rajia
+ */
 public class EnterNameActivity extends Activity {
 
 	private Context mContext;
-
-	static final public int NAME_SUCCESSFUL = 1;
-	static final public int NAME_FAILED = 0;
-	static final public int NAME_CANCELED = -1;
-
-	boolean success;
-
-	Waffle w;
+	private Waffle w;
 
 	private static final String blankFields = "Do not leave any fields blank. Please enter your first name and last initial.";
 
@@ -82,7 +80,6 @@ public class EnterNameActivity extends Activity {
 						|| lastInitialInput.length() == 0) {
 					showFailure();
 				} else {
-					// DataWalk.setupDone = true;
 					DataWalk.firstName = firstNameInput.getText().toString();
 					DataWalk.lastInitial = lastInitialInput.getText()
 							.toString();
@@ -96,15 +93,9 @@ public class EnterNameActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		// DataWalk.setupDone = false;
-		// setResult(RESULT_CANCELED);
-		// super.onBackPressed();
-		if (DataWalk.inApp == true) {
-			DataWalk.setupDone = false;
-			setResult(RESULT_CANCELED);
-			super.onBackPressed();
 
-		} // ends if DataWalk.inApp
+		setResult(RESULT_CANCELED);
+		super.onBackPressed();
 
 	}// ends onBackPressed
 
