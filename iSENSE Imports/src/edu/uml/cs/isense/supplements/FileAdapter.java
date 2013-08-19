@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,17 @@ public class FileAdapter extends ArrayAdapter<File> {
 	public ArrayList<File> items;
 	private Context mContext;
 	private int resourceId;
+	String[] fileFilters;
 
 	public FileAdapter(Context context, int resourceId, ArrayList<File> items) {
 		super(context, resourceId, items);
 		this.items = items;
 		mContext = context;
 		this.resourceId = resourceId;
+	}
+	
+	public void setFileFilters(String[] newFilters) {
+		fileFilters = newFilters;
 	}
 
 	public int getCount() {
@@ -46,6 +52,18 @@ public class FileAdapter extends ArrayAdapter<File> {
 			File f = items.get(position);
 			if (f != null) {
 				TextView row = (TextView) v.findViewById(R.id.filerow);
+				if(fileFilters != null && f.isFile()) {
+					String extension = f.getName().substring(f.getName().lastIndexOf('.') + 1);
+					boolean matches = false;
+					for(String s : fileFilters) {
+						if(s.equals(extension)) matches = true;
+					}
+					if(matches == false) {
+						v.setEnabled(false);
+						v.setBackgroundColor(Color.LTGRAY);
+						row.setTextColor(Color.WHITE);
+					}
+				}
 				if (row != null) {
 					row.setText(f.getName());
 					if (f.isDirectory()) {
