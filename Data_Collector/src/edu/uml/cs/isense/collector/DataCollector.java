@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -45,14 +44,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -85,7 +81,7 @@ import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.sync.SyncTime;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
@@ -103,13 +99,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// String constants
 	public static final String activityName = "datacollector";
-	public static final String STEP_1_SESSION_NAME = "session_name";
+	public static final String STEP_1_DATASET_NAME = "dataset_name";
 	public static final String STEP_1_SAMPLE_INTERVAL = "sample_interval";
 	public static final String STEP_1_TEST_LENGTH = "test_length";
 
 	// Numerical constants
-	static final int S_INTERVAL = 50;
-	static final int TEST_LENGTH = 600;
+	public static final int S_INTERVAL = 50;
+	public static final int TEST_LENGTH = 600;
 
 	private static final int MENU_ITEM_LOGIN = 0;
 	private static final int MENU_ITEM_MEDIA = 1;
@@ -178,9 +174,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static int dataPointCount = 0;
 
 	// Recording Credentials
-	private static String sessionName;
+	private static String dataSetName;
 	private static long sampleInterval;
 	private static long recordingLength;
+	private static int currentProjID;
 
 	// Raw data variables
 	private static String temperature = "";
@@ -202,11 +199,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Booleans
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
-	// private static boolean performExpNumCheckOnReturn = false;
 	public static boolean manageUploadQueueAfterLogin = false;
 
 	// Strings
-	public static String textToSession = "";
+	public static String textToDataSet = "";
 	public static String toSendOut = "";
 	public static String sdFileName = "";
 
@@ -229,7 +225,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private String s_elapsedMinutes;
 	private String s_elapsedSeconds;
 	private String s_elapsedMillis;
-	private String sessionDescription = "";
+	private String dataSetDescription = "";
 
 	// Booleans
 	private static boolean useMenu = false;
@@ -255,7 +251,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Context mContext;
 
 	// Custom
-	public static RestAPI rapi;
+	public static API api;
 	public static Waffle w;
 	public static DataFieldManager dfm;
 	public static Fields f;
@@ -308,9 +304,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, sessionName + "--" + csvDateString
+			SDFile = new File(folder, dataSetName + "--" + csvDateString
 					+ ".csv");
-			sdFileName = sessionName + " - " + csvDateString;
+			sdFileName = dataSetName + " - " + csvDateString;
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -501,7 +497,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			return true;
 		case R.id.menu_item_media:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
-			iMedia.putExtra("sessionName", sessionName);
+			iMedia.putExtra("dataSetName", dataSetName);
 			startActivity(iMedia);
 			return true;
 		}
@@ -688,7 +684,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			disableStep2();
 
 			if (resultCode == RESULT_OK) {
-				sessionDescription = data.getStringExtra("description");
+				dataSetDescription = data.getStringExtra("description");
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
@@ -708,7 +704,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 
 				if (data != null) {
-					sessionName = data.getStringExtra(STEP_1_SESSION_NAME);
+					dataSetName = data.getStringExtra(STEP_1_DATASET_NAME);
 					sampleInterval = data.getLongExtra(STEP_1_SAMPLE_INTERVAL,
 							Step1Setup.S_INTERVAL);
 					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH,
@@ -734,42 +730,19 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-			int sessionId = -1;
-
-			// Try to obtain a location of upload
-			String city = "", state = "", country = "", addr = "";
-			List<Address> address = null;
-
-			if (rapi.isConnectedToInternet()) {
-				try {
-					if (loc != null) {
-						address = new Geocoder(DataCollector.this,
-								Locale.getDefault()).getFromLocation(
-								loc.getLatitude(), loc.getLongitude(), 1);
-						if (address.size() > 0) {
-							city = address.get(0).getLocality();
-							state = address.get(0).getAdminArea();
-							country = address.get(0).getCountryName();
-							addr = address.get(0).getAddressLine(0);
-						}
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 
 			// Prepare description for data set
 			String description;
-			if (sessionDescription.equals(""))
+			if (dataSetDescription.equals(""))
 				description = "Automated Submission Through Android Data Collection App";
 			else
-				description = sessionDescription;
+				description = dataSetDescription;
 
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String eid = mPrefs.getString("experiment_id", "");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projID = mPrefs.getString("project_id", "");
 
 			// Reset the description
-			sessionDescription = "";
+			dataSetDescription = "";
 
 			// Start to upload media and data
 			int pic = MediaManager.pictureArray.size();
@@ -777,8 +750,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// Check for media
 			if (pic != 0) {
 
-				// Associates latest picture with data set, then associates rest
-				// to experiment
+				// Associates latest picture with the current dataSet, then associates rest
+				// to project
 				boolean firstSave = true;
 
 				while (pic > 0) {
@@ -786,19 +759,17 @@ public class DataCollector extends Activity implements SensorEventListener,
 					// First run through, save data with the picture
 					if (firstSave) {
 						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
-								sessionName, description, eid,
+								dataSetName, description, projID,
 								dataSet.toString(),
-								MediaManager.pictureArray.get(pic - 1),
-								sessionId, city, state, country, addr);
+								MediaManager.pictureArray.get(pic - 1));
 						uq.addDataSetToQueue(ds);
 						firstSave = false;
 
 						// Next set of runs, save the remaining pictures
 					} else {
 						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
-								sessionName, description, eid, null,
-								MediaManager.pictureArray.get(pic - 1),
-								sessionId, city, state, country, addr);
+								dataSetName, description, projID, null,
+								MediaManager.pictureArray.get(pic - 1));
 						uq.addDataSetToQueue(dsp);
 					}
 
@@ -810,9 +781,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Else if no pictures, just save data
 			} else {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, sessionName,
-						description, eid, dataSet.toString(), null, sessionId,
-						city, state, country, addr);
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
+						description, projID, dataSet.toString(), null);
 				uq.addDataSetToQueue(ds);
 			}
 
@@ -853,7 +823,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			MediaManager.mediaCount = 0;
 
-			sessionName = "";
+			dataSetName = "";
 			recordingLength = TEST_LENGTH;
 			sampleInterval = S_INTERVAL;
 
@@ -881,19 +851,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Deals with login and UI display
-	boolean login() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
+	void login() {
+		new LoginTask().execute();
+	}
+	
+	// Attempts to login with current user information
+	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
-		boolean success = rapi.login(mPrefs.getString("username", ""),
-				mPrefs.getString("password", ""));
-		if (!success) {
-			// This is crazy, so Waffle me maybe?
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					DataCollector.mContext,
+					DataCollector.mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+			
+			boolean success = api.createSession(mPrefs.getString("username", ""),
+					mPrefs.getString("password", ""));
+			return success;
 		}
-
-		return success;
+		
 	}
 
 	// Gets the milliseconds since Epoch
@@ -987,12 +963,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	private void setUpDFMWithAllFields() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("experiment_id", "-1").commit();
+		mEdit.putString("project_id", "-1").commit();
 
 		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-				"experiment_id", "-1")), rapi, mContext, f);
+				"project_id", "-1")), api, mContext, f);
 		dfm.getOrder();
 
 		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
@@ -1023,13 +999,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private void initDfm() {
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String experimentInput = mPrefs.getString("experiment_id", "");
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
 
-		if (experimentInput.equals("-1")) {
+		if (projectInput.equals("-1")) {
 			setUpDFMWithAllFields();
 		} else {
-			dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
 			dfm.getOrder();
 
@@ -1051,7 +1027,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					break;
 			}
 		} catch (NullPointerException e) {
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 		}
@@ -1178,7 +1154,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
 		step2.setText(getResources().getString(R.string.step2));
-		if (sessionName.equals(""))
+		if (dataSetName.equals(""))
 			disableStep2();
 		step3 = (Button) findViewById(R.id.auto_step3);
 		step3.setText(getResources().getString(R.string.step3));
@@ -1191,13 +1167,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(false);
 
-		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1205,7 +1178,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		sessionName = "";
+		dataSetName = "";
 		sampleInterval = S_INTERVAL;
 		recordingLength = TEST_LENGTH;
 
@@ -1225,13 +1198,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(true);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(true);
 
-		uq = new UploadQueue("datacollector", mContext, rapi);
+		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
 
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1313,7 +1283,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				Locale.US);
 		Date dt = new Date();
 		dateString = sdf.format(dt);
-		sessionName += " - " + dateString;
+		dataSetName += " - " + dateString;
 
 		// absolutely ensure the timer resets to 0
 		setTime(0);
@@ -1403,7 +1373,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (dfm.enabledFields[Fields.LIGHT])
 			f.lux = light;
 
-		dataSet.put(dfm.putData());
+		if (currentProjID != -1)
+			dataSet.put(dfm.putData());
+		else
+			dataSet.put(dfm.putDataForNoProjectID());
+		
 		data = dfm.writeSdCardLine();
 
 		if (writeCSVFile) {
@@ -1433,7 +1407,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			@Override
 			public boolean onLongClick(View arg0) {
 				if (!running) {
-					if (sessionName.equals("")
+					if (dataSetName.equals("")
 							|| ((1000 / sampleInterval) * recordingLength) > Step1Setup.MAX_DATA_POINTS) {
 						w.make("Some data not found - please setup again",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
@@ -1448,13 +1422,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						OrientationManager.disableRotation((Activity) mContext);
 
-						SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-						String experimentInput = mPrefs.getString("experiment_id", "");
-						if (experimentInput.equals("-1"))
+						SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+						String projectInput = mPrefs.getString("project_id", "");
+						if (projectInput.equals("-1"))
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
-						
+						currentProjID = Integer.parseInt(projectInput);
+							
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -1568,7 +1543,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 										Context.MODE_PRIVATE));
 
 				if ((mPrefs.getString("username", "").equals(""))) {
-					if (rapi.isConnectedToInternet()) {
+					if (api.hasConnectivity()) {
 						manageUploadQueueAfterLogin = true;
 						Intent iCanLogin = new Intent(mContext, CanLogin.class);
 						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
@@ -1761,7 +1736,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setEnabled(false);
 		step1.setBackgroundColor(Color.TRANSPARENT);
 		step1.setTextColor(Color.parseColor("#555555"));
-		step1.setText("Recording data for \"" + sessionName
+		step1.setText("Recording data for \"" + dataSetName
 				+ "\" at a sample interval of " + sampleInterval + " ms for "
 				+ recordingLength + " sec.");
 

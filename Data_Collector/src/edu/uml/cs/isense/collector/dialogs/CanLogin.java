@@ -13,9 +13,7 @@ public class CanLogin extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.can_login);
-		
-		//getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+				
 		final Button ok = (Button) findViewById(R.id.can_login_okay);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override

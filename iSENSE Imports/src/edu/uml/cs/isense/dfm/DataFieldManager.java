@@ -6,49 +6,52 @@ import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.AsyncTask;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.objects.ExperimentField;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RProjectField;
 
 public class DataFieldManager extends Application {
 
-	int eid;
-	RestAPI rapi;
+	int projID;
+	API api;
 	Context mContext;
 
-	ArrayList<ExperimentField> expFields;
+	ArrayList<RProjectField> projFields;
 	public LinkedList<String> order;
-	JSONArray dataSet;
 	Fields f;
 	SensorCompatibility sc = new SensorCompatibility();
-	public boolean[] enabledFields = {  false, false, false, false, false, false,
+	public boolean[] enabledFields = { false, false, false, false, false,
 			false, false, false, false, false, false, false, false, false,
-			false, false, false, false };
+			false, false, false, false, false };
 
-	public DataFieldManager(int eid, RestAPI rapi, Context mContext, Fields f) {
-		this.eid = eid;
-		this.rapi = rapi;
+	public DataFieldManager(int projID, API api, Context mContext, Fields f) {
+		this.projID = projID;
+		this.api = api;
 		this.order = new LinkedList<String>();
 		this.mContext = mContext;
-		this.dataSet = new JSONArray();
 		this.f = f;
 	}
-	
-	// Static class function strictly for getting the field order of any experiment
-	public static LinkedList<String> getOrder(int eid, RestAPI rapi, Context c) {
-		DataFieldManager d = new DataFieldManager(eid, rapi, c, null);
-		d.getOrder();
+
+	// Static class function strictly for getting the field order of any
+	// experiment
+	public static LinkedList<String> getOrder(int projID, API api, Context c) {
+		api = API.getInstance(c);
+		DataFieldManager d = new DataFieldManager(projID, api, c, null);
+		d.getOrderWithExternalAsyncTask();
 		return d.order;
 	}
 
 	public void getOrder() {
 		if (!order.isEmpty())
 			return;
-			
-		if (eid == -1) {
+
+		if (projID == -1) {
 			order.add(mContext.getString(R.string.time));
 			order.add(mContext.getString(R.string.accel_x));
 			order.add(mContext.getString(R.string.accel_y));
@@ -69,209 +72,304 @@ public class DataFieldManager extends Application {
 			order.add(mContext.getString(R.string.temperature_f));
 			order.add(mContext.getString(R.string.temperature_k));
 		} else {
-
-			expFields = rapi.getExperimentFields(eid);
-
-			for (ExperimentField field : expFields) {
-				switch (field.type_id) {
-				
-				// Temperature
-				case 1:
-					if (field.unit_name.toLowerCase(Locale.US).contains("f"))
-						order.add(mContext.getString(R.string.temperature_f));
-					else if (field.unit_name.toLowerCase(Locale.US).contains("c")) {
-						order.add(mContext.getString(R.string.temperature_c));
-					} else if (field.unit_name.toLowerCase(Locale.US).contains("k")) {
-						order.add(mContext.getString(R.string.temperature_k));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-				
-				// Potential Altitude
-				case 2:
-				case 3:
-					if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
-						order.add(mContext.getString(R.string.altitude));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-
-				// Time
-				case 7:
-					order.add(mContext.getString(R.string.time));
-					break;
-
-				// Light
-				case 8:
-				case 9:
-				case 29:
-					order.add(mContext.getString(R.string.luminous_flux));
-					break;
-
-				// Angle
-				case 10:
-					if (field.unit_name.toLowerCase(Locale.US).contains("deg")) {
-						order.add(mContext.getString(R.string.heading_deg));
-					} else if (field.unit_name.toLowerCase(Locale.US).contains("rad")) {
-						order.add(mContext.getString(R.string.heading_rad));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-
-				// Geospacial
-				case 19:
-					if (field.field_name.toLowerCase(Locale.US).contains("lat")) {
-						order.add(mContext.getString(R.string.latitude));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("lon")) {
-						order.add(mContext.getString(R.string.longitude));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-
-				// Numeric/Custom
-				case 21:
-				case 22:
-					if (field.field_name.toLowerCase(Locale.US).contains("mag")) {
-						if (field.field_name.toLowerCase(Locale.US).contains("x")) {
-							order.add(mContext.getString(R.string.magnetic_x));
-						} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
-							order.add(mContext.getString(R.string.magnetic_y));
-						} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
-							order.add(mContext.getString(R.string.magnetic_z));
-						} else if ((field.field_name.toLowerCase(Locale.US).contains("total"))
-								|| (field.field_name.toLowerCase(Locale.US).contains("average"))
-								|| (field.field_name.toLowerCase(Locale.US).contains("mean"))) {
-							order.add(mContext.getString(R.string.magnetic_total));
-						}
-					} else if (field.field_name.toLowerCase(Locale.US).contains("altitude")) {
-						order.add(mContext.getString(R.string.altitude));
-					} else
-						order.add(mContext.getString(R.string.null_string));
-					break;
-
-				// Acceleration
-				case 25:
-					if (field.field_name.toLowerCase(Locale.US).contains("x")) {
-						order.add(mContext.getString(R.string.accel_x));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("y")) {
-						order.add(mContext.getString(R.string.accel_y));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("z")) {
-						order.add(mContext.getString(R.string.accel_z));
-					} else if (field.field_name.toLowerCase(Locale.US).contains("accel")) {
-						order.add(mContext.getString(R.string.accel_total));
-					} else {
-						order.add(mContext.getString(R.string.null_string));
-					}
-					break;
-
-				// Pressure
-				case 27:
-					order.add(mContext.getString(R.string.pressure));
-					break;
-
-				// No match (Just about every other category)
-				default:
-					order.add(mContext.getString(R.string.null_string));
-					break;
-
-				}
-
-			}
+			// Execute a new task
+			new GetOrderTask().execute();
 		}
-
 	}
 
-	public JSONArray putData() {
+	public void getOrderWithExternalAsyncTask() {
+		if (!order.isEmpty())
+			return;
 
-		JSONArray dataJSON = new JSONArray();
+		if (projID == -1) {
+			order.add(mContext.getString(R.string.time));
+			order.add(mContext.getString(R.string.accel_x));
+			order.add(mContext.getString(R.string.accel_y));
+			order.add(mContext.getString(R.string.accel_z));
+			order.add(mContext.getString(R.string.accel_total));
+			order.add(mContext.getString(R.string.latitude));
+			order.add(mContext.getString(R.string.longitude));
+			order.add(mContext.getString(R.string.magnetic_x));
+			order.add(mContext.getString(R.string.magnetic_y));
+			order.add(mContext.getString(R.string.magnetic_z));
+			order.add(mContext.getString(R.string.magnetic_total));
+			order.add(mContext.getString(R.string.heading_deg));
+			order.add(mContext.getString(R.string.heading_rad));
+			order.add(mContext.getString(R.string.temperature_c));
+			order.add(mContext.getString(R.string.pressure));
+			order.add(mContext.getString(R.string.altitude));
+			order.add(mContext.getString(R.string.luminous_flux));
+			order.add(mContext.getString(R.string.temperature_f));
+			order.add(mContext.getString(R.string.temperature_k));
+		} else {
+			// Function is being called within an AsyncTask already, so
+			// no need to create a new task for the API call
+			projFields = api.getProjectFields(projID);
+			getProjectFieldOrder();
 
-		for (String s : this.order) {
+		}
+	}
+
+	public JSONObject putData() {
+
+		JSONObject dataJSON = new JSONObject();
+
+		for (int i = 0; i < order.size(); i++) {
+			String s = order.get(i);
+
 			try {
 				if (s.equals(mContext.getString(R.string.accel_x))) {
-					dataJSON.put(f.accel_x);
+					if (enabledFields[Fields.ACCEL_X])
+						dataJSON.put("" + i, f.accel_x);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.accel_y))) {
-					dataJSON.put(f.accel_y);
+					if (enabledFields[Fields.ACCEL_Y])
+						dataJSON.put("" + i, f.accel_y);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.accel_z))) {
-					dataJSON.put(f.accel_z);
+					if (enabledFields[Fields.ACCEL_Z])
+						dataJSON.put("" + i, f.accel_z);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.accel_total))) {
-					dataJSON.put(f.accel_total);
+					if (enabledFields[Fields.ACCEL_TOTAL])
+						dataJSON.put("" + i, f.accel_total);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.temperature_c))) {
-					dataJSON.put(f.temperature_c);
+					if (enabledFields[Fields.TEMPERATURE_C])
+						dataJSON.put("" + i, f.temperature_c);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.temperature_f))) {
-					dataJSON.put(f.temperature_f);
+					if (enabledFields[Fields.TEMPERATURE_F])
+						dataJSON.put("" + i, f.temperature_f);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.temperature_k))) {
-					dataJSON.put(f.temperature_k);
+					if (enabledFields[Fields.TEMPERATURE_K])
+						dataJSON.put("" + i, f.temperature_k);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.time))) {
-					dataJSON.put(f.timeMillis);
+					if (enabledFields[Fields.TIME])
+						dataJSON.put("" + i, "u " + f.timeMillis);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.luminous_flux))) {
-					dataJSON.put(f.lux);
+					if (enabledFields[Fields.LIGHT])
+						dataJSON.put("" + i, f.lux);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.heading_deg))) {
-					dataJSON.put(f.angle_deg);
+					if (enabledFields[Fields.HEADING_DEG])
+						dataJSON.put("" + i, f.angle_deg);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.heading_rad))) {
-					dataJSON.put(f.angle_rad);
+					if (enabledFields[Fields.HEADING_RAD])
+						dataJSON.put("" + i, f.angle_rad);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.latitude))) {
-					dataJSON.put(f.latitude);
+					if (enabledFields[Fields.LATITUDE])
+						dataJSON.put("" + i, f.latitude);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.longitude))) {
-					dataJSON.put(f.longitude);
+					if (enabledFields[Fields.LONGITUDE])
+						dataJSON.put("" + i, f.longitude);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.magnetic_x))) {
-					dataJSON.put(f.mag_x);
+					if (enabledFields[Fields.MAG_X])
+						dataJSON.put("" + i, f.mag_x);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.magnetic_y))) {
-					dataJSON.put(f.mag_y);
+					if (enabledFields[Fields.MAG_Y])
+						dataJSON.put("" + i, f.mag_y);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.magnetic_z))) {
-					dataJSON.put(f.mag_z);
+					if (enabledFields[Fields.MAG_Z])
+						dataJSON.put("" + i, f.mag_z);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.magnetic_total))) {
-					dataJSON.put(f.mag_total);
+					if (enabledFields[Fields.MAG_TOTAL])
+						dataJSON.put("" + i, f.mag_total);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.altitude))) {
-					dataJSON.put(f.altitude);
+					if (enabledFields[Fields.ALTITUDE])
+
+						dataJSON.put("" + i, f.altitude);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
 				if (s.equals(mContext.getString(R.string.pressure))) {
-					dataJSON.put(f.pressure);
+					if (enabledFields[Fields.PRESSURE])
+						dataJSON.put("" + i, f.pressure);
+					else
+						dataJSON.put("" + i, "");
 					continue;
 				}
-				dataJSON.put(null);
+				dataJSON.put("" + i, "");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
+
+		System.out.println("Data line: " + dataJSON.toString());
+
+		return dataJSON;
+
+	}
+
+	public JSONArray putDataForNoProjectID() {
+
+		JSONArray dataJSON = new JSONArray();
+
+		try {
+			if (enabledFields[Fields.TIME])
+				dataJSON.put("u " + f.timeMillis);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_X])
+				dataJSON.put(f.accel_x);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_Y])
+				dataJSON.put(f.accel_y);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_Z])
+				dataJSON.put(f.accel_z);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ACCEL_TOTAL])
+				dataJSON.put(f.accel_total);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.LATITUDE])
+				dataJSON.put(f.latitude);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.LONGITUDE])
+				dataJSON.put(f.longitude);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.MAG_X])
+				dataJSON.put(f.mag_x);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.MAG_Y])
+				dataJSON.put(f.mag_y);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.MAG_Z])
+				dataJSON.put(f.mag_z);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.MAG_TOTAL])
+				dataJSON.put(f.mag_total);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.HEADING_DEG])
+				dataJSON.put(f.angle_deg);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.HEADING_RAD])
+				dataJSON.put(f.angle_rad);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.TEMPERATURE_C])
+				dataJSON.put(f.temperature_c);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.PRESSURE])
+				dataJSON.put(f.pressure);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.ALTITUDE])
+
+				dataJSON.put(f.altitude);
+			else
+				dataJSON.put("");
+			
+			if (enabledFields[Fields.LIGHT])
+				dataJSON.put(f.lux);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.TEMPERATURE_F])
+				dataJSON.put(f.temperature_f);
+			else
+				dataJSON.put("");
+
+			if (enabledFields[Fields.TEMPERATURE_K])
+				dataJSON.put(f.temperature_k);
+			else
+				dataJSON.put("");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Data line: " + dataJSON.toString());
 
 		return dataJSON;
 
@@ -284,7 +382,7 @@ public class DataFieldManager extends Application {
 		boolean firstLineWritten = false;
 
 		for (String s : this.order) {
-			
+
 			if (s.equals(mContext.getString(R.string.accel_x))) {
 				firstLineWritten = true;
 				if (start)
@@ -292,144 +390,126 @@ public class DataFieldManager extends Application {
 				else
 					b.append(", ").append(f.accel_x);
 
-			}
-			else if (s.equals(mContext.getString(R.string.accel_y))) {
+			} else if (s.equals(mContext.getString(R.string.accel_y))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_y);
 				else
 					b.append(", ").append(f.accel_y);
 
-			}
-			else if (s.equals(mContext.getString(R.string.accel_z))) {
+			} else if (s.equals(mContext.getString(R.string.accel_z))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_z);
 				else
 					b.append(", ").append(f.accel_z);
 
-			}
-			else if (s.equals(mContext.getString(R.string.accel_total))) {
+			} else if (s.equals(mContext.getString(R.string.accel_total))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.accel_total);
 				else
 					b.append(", ").append(f.accel_total);
 
-			}
-			else if (s.equals(mContext.getString(R.string.temperature_c))) {
+			} else if (s.equals(mContext.getString(R.string.temperature_c))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.temperature_c);
 				else
 					b.append(", ").append(f.temperature_c);
 
-			}
-			else if (s.equals(mContext.getString(R.string.temperature_f))) {
+			} else if (s.equals(mContext.getString(R.string.temperature_f))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.temperature_f);
 				else
 					b.append(", ").append(f.temperature_f);
 
-			}
-			else if (s.equals(mContext.getString(R.string.temperature_k))) {
+			} else if (s.equals(mContext.getString(R.string.temperature_k))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.temperature_k);
 				else
 					b.append(", ").append(f.temperature_k);
 
-			}
-			else if (s.equals(mContext.getString(R.string.time))) {
+			} else if (s.equals(mContext.getString(R.string.time))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.timeMillis);
 				else
 					b.append(", ").append(f.timeMillis);
 
-			}
-			else if (s.equals(mContext.getString(R.string.luminous_flux))) {
+			} else if (s.equals(mContext.getString(R.string.luminous_flux))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.lux);
 				else
 					b.append(", ").append(f.lux);
 
-			}
-			else if (s.equals(mContext.getString(R.string.heading_deg))) {
+			} else if (s.equals(mContext.getString(R.string.heading_deg))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.angle_deg);
 				else
 					b.append(", ").append(f.angle_deg);
 
-			}
-			else if (s.equals(mContext.getString(R.string.heading_rad))) {
+			} else if (s.equals(mContext.getString(R.string.heading_rad))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.angle_rad);
 				else
 					b.append(", ").append(f.angle_rad);
 
-			}
-			else if (s.equals(mContext.getString(R.string.latitude))) {
+			} else if (s.equals(mContext.getString(R.string.latitude))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.latitude);
 				else
 					b.append(", ").append(f.latitude);
 
-			}
-			else if (s.equals(mContext.getString(R.string.longitude))) {
+			} else if (s.equals(mContext.getString(R.string.longitude))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.longitude);
 				else
 					b.append(", ").append(f.longitude);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_x))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_x))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_x);
 				else
 					b.append(", ").append(f.mag_x);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_y))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_y))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_y);
 				else
 					b.append(", ").append(f.mag_y);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_z))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_z))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_z);
 				else
 					b.append(", ").append(f.mag_z);
 
-			}
-			else if (s.equals(mContext.getString(R.string.magnetic_total))) {
+			} else if (s.equals(mContext.getString(R.string.magnetic_total))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.mag_total);
 				else
 					b.append(", ").append(f.mag_total);
 
-			}
-			else if (s.equals(mContext.getString(R.string.altitude))) {
+			} else if (s.equals(mContext.getString(R.string.altitude))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.altitude);
 				else
 					b.append(", ").append(f.altitude);
 
-			}
-			else if (s.equals(mContext.getString(R.string.pressure))) {
+			} else if (s.equals(mContext.getString(R.string.pressure))) {
 				firstLineWritten = true;
 				if (start)
 					b.append(f.pressure);
@@ -443,10 +523,10 @@ public class DataFieldManager extends Application {
 				else
 					b.append(", ").append("");
 			}
-			
+
 			if (firstLineWritten)
 				start = false;
-			
+
 		}
 
 		b.append("\n");
@@ -475,135 +555,285 @@ public class DataFieldManager extends Application {
 
 		return sc;
 	}
-	
+
 	public String writeHeaderLine() {
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
-		
+
 		for (String unitName : this.order) {
 			if (start)
-				b.append(unitName);			
-			else 
+				b.append(unitName);
+			else
 				b.append(", ").append(unitName);
-			
+
 			start = false;
 		}
-		
+
 		b.append("\n");
-		
+
 		return b.toString();
 	}
 
-	// For use if a clump of data was recorded and needs to be cut down and re-ordered
-	public static String reOrderData(JSONArray data, String eid, RestAPI rapi, Context c) {
-		JSONArray row, outData = new JSONArray(), outRow;
+	// For use if a clump of data was recorded and needs to be cut down and
+	// re-ordered
+	public static String reOrderData(JSONArray data, String projID, API api,
+			Context c) {
+		JSONArray row, outData = new JSONArray();
+		JSONObject outRow;
 		int len = data.length();
-		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(eid), rapi, c);
-		
+		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(projID), api,
+				c);
+		Activity a = (Activity) c;
+
 		for (int i = 0; i < len; i++) {
 			try {
 				row = data.getJSONArray(i);
-				outRow = new JSONArray();
-				
-				for (String s : fieldOrder) {
+				outRow = new JSONObject();
+
+				for (int j = 0; j < fieldOrder.size(); j++) {
+					String s = fieldOrder.get(j);
 					try {
-						// Future TODO - I want to get the android R.string.accel_x for e.g. here but I need a context, so find a fix later
-						if (s.equals("Accel-X")) {
-							outRow.put(row.getString(Fields.ACCEL_X));
+						// Compare against hard-coded strings. make sure this
+						// a.getResources() thing works
+						if (s.equals(a.getResources().getString(
+								R.string.accel_x))) {
+							outRow.put(j + "", row.getString(Fields.ACCEL_X));
 							continue;
 						}
-						if (s.equals("Accel-Y")) {
-							outRow.put(row.getString(Fields.ACCEL_Y));
+						if (s.equals(a.getResources().getString(
+								R.string.accel_y))) {
+							outRow.put(j + "", row.getString(Fields.ACCEL_Y));
 							continue;
 						}
-						if (s.equals("Accel-Z")) {
-							outRow.put(row.getString(Fields.ACCEL_Z));
+						if (s.equals(a.getResources().getString(
+								R.string.accel_z))) {
+							outRow.put(j + "", row.getString(Fields.ACCEL_Z));
 							continue;
 						}
-						if (s.equals("Accel-Total")) {
-							outRow.put(row.getString(Fields.ACCEL_TOTAL));
+						if (s.equals(a.getResources().getString(
+								R.string.accel_total))) {
+							outRow.put(j + "",
+									row.getString(Fields.ACCEL_TOTAL));
 							continue;
 						}
-						if (s.equals("Temperature-C")) {
-							outRow.put(row.getString(Fields.TEMPERATURE_C));
+						if (s.equals(a.getResources().getString(
+								R.string.temperature_c))) {
+							outRow.put(j + "",
+									row.getString(Fields.TEMPERATURE_C));
 							continue;
 						}
-						if (s.equals("Temperature-F")) {
-							outRow.put(row.getString(Fields.TEMPERATURE_F));
+						if (s.equals(a.getResources().getString(
+								R.string.temperature_f))) {
+							outRow.put(j + "",
+									row.getString(Fields.TEMPERATURE_F));
 							continue;
 						}
-						if (s.equals("Temperature-K")) {
-							outRow.put(row.getString(Fields.TEMPERATURE_K));
+						if (s.equals(a.getResources().getString(
+								R.string.temperature_k))) {
+							outRow.put(j + "",
+									row.getString(Fields.TEMPERATURE_K));
 							continue;
 						}
-						if (s.equals("Time")) {
-							outRow.put(row.getLong(Fields.TIME));
+						if (s.equals(a.getResources().getString(R.string.time))) {
+							outRow.put(j + "", "u " + row.getString(Fields.TIME));
 							continue;
 						}
-						if (s.equals("Luminous Flux")) {
-							outRow.put(row.getString(Fields.LIGHT));
+						if (s.equals(a.getResources().getString(
+								R.string.luminous_flux))) {
+							outRow.put(j + "", row.getString(Fields.LIGHT));
 							continue;
 						}
-						if (s.equals("Heading-Deg")) {
-							outRow.put(row.getString(Fields.HEADING_DEG));
+						if (s.equals(a.getResources().getString(
+								R.string.heading_deg))) {
+							outRow.put(j + "",
+									row.getString(Fields.HEADING_DEG));
 							continue;
 						}
-						if (s.equals("Heading-Rad")) {
-							outRow.put(row.getString(Fields.HEADING_RAD));
+						if (s.equals(a.getResources().getString(
+								R.string.heading_rad))) {
+							outRow.put(j + "",
+									row.getString(Fields.HEADING_RAD));
 							continue;
 						}
-						if (s.equals("Latitude")) {
-							outRow.put(row.getDouble(Fields.LATITUDE));
+						if (s.equals(a.getResources().getString(
+								R.string.latitude))) {
+							outRow.put(j + "", row.getDouble(Fields.LATITUDE));
 							continue;
 						}
-						if (s.equals("Longitude")) {
-							outRow.put(row.getDouble(Fields.LONGITUDE));
+						if (s.equals(a.getResources().getString(
+								R.string.longitude))) {
+							outRow.put(j + "", row.getDouble(Fields.LONGITUDE));
 							continue;
 						}
-						if (s.equals("Magnetic-X")) {
-							outRow.put(row.getString(Fields.MAG_X));
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_x))) {
+							outRow.put(j + "", row.getString(Fields.MAG_X));
 							continue;
 						}
-						if (s.equals("Magnetic-Y")) {
-							outRow.put(row.getString(Fields.MAG_Y));
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_y))) {
+							outRow.put(j + "", row.getString(Fields.MAG_Y));
 							continue;
 						}
-						if (s.equals("Magnetic-Z")) {
-							outRow.put(row.getString(Fields.MAG_Z));
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_z))) {
+							outRow.put(j + "", row.getString(Fields.MAG_Z));
 							continue;
 						}
-						if (s.equals("Magnetic-Total")) {
-							outRow.put(row.getString(Fields.MAG_TOTAL));
+						if (s.equals(a.getResources().getString(
+								R.string.magnetic_total))) {
+							outRow.put(j + "", row.getString(Fields.MAG_TOTAL));
 							continue;
 						}
-						if (s.equals("Altitude")) {
-							outRow.put(row.getString(Fields.ALTITUDE));
+						if (s.equals(a.getResources().getString(
+								R.string.altitude))) {
+							outRow.put(j + "", row.getString(Fields.ALTITUDE));
 							continue;
 						}
-						if (s.equals("Pressure")) {
-							outRow.put(row.getString(Fields.PRESSURE));
+						if (s.equals(a.getResources().getString(
+								R.string.pressure))) {
+							outRow.put(j + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
-						outRow.put(null);
+						outRow.put(j + "", null);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
 
 				outData.put(outRow);
-				
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		// TODO: backup plan - if nothing was re-ordered, just hand back the data as-is?
-		
+
 		return outData.toString();
 	}
-	
+
 	public void setContext(Context c) {
 		this.mContext = c;
+	}
+
+	// Task for checking sensor availability along with enabling/disabling
+	private class GetOrderTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			projFields = api.getProjectFields(projID);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			getProjectFieldOrder();
+		}
+	}
+
+	private void getProjectFieldOrder() {
+		for (RProjectField field : projFields) {
+			switch (field.type) {
+
+			// Number
+			case RProjectField.TYPE_NUMBER:
+
+				// Temperature
+				if (field.name.toLowerCase(Locale.US).contains("temp")) {
+					if (field.unit.toLowerCase(Locale.US).contains("c")) {
+						order.add(mContext.getString(R.string.temperature_c));
+					} else if (field.unit.toLowerCase(Locale.US).contains("k")) {
+						order.add(mContext.getString(R.string.temperature_k));
+					} else {
+						order.add(mContext.getString(R.string.temperature_f));
+					}
+					break;
+				}
+
+				// Potential Altitude
+				else if (field.name.toLowerCase(Locale.US).contains("altitude")) {
+					order.add(mContext.getString(R.string.altitude));
+					break;
+				}
+
+				// Light
+				else if (field.name.toLowerCase(Locale.US).contains("light")) {
+					order.add(mContext.getString(R.string.luminous_flux));
+					break;
+				}
+
+				// Heading
+				else if (field.name.toLowerCase(Locale.US).contains("heading")
+						|| field.name.toLowerCase(Locale.US).contains("angle")) {
+					if (field.unit.toLowerCase(Locale.US).contains("rad")) {
+						order.add(mContext.getString(R.string.heading_rad));
+					} else {
+						order.add(mContext.getString(R.string.heading_deg));
+					}
+					break;
+				}
+
+				// Numeric/Custom
+				else if (field.name.toLowerCase(Locale.US).contains("magnetic")) {
+					if (field.name.toLowerCase(Locale.US).contains("x")) {
+						order.add(mContext.getString(R.string.magnetic_x));
+					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
+						order.add(mContext.getString(R.string.magnetic_y));
+					} else if (field.name.toLowerCase(Locale.US).contains("z")) {
+						order.add(mContext.getString(R.string.magnetic_z));
+					} else {
+						order.add(mContext.getString(R.string.magnetic_total));
+					}
+					break;
+				}
+
+				// Acceleration
+				else if (field.name.toLowerCase(Locale.US).contains("accel")) {
+					if (field.name.toLowerCase(Locale.US).contains("x")) {
+						order.add(mContext.getString(R.string.accel_x));
+					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
+						order.add(mContext.getString(R.string.accel_y));
+					} else if (field.name.toLowerCase(Locale.US).contains("z")) {
+						order.add(mContext.getString(R.string.accel_z));
+					} else {
+						order.add(mContext.getString(R.string.accel_total));
+					}
+					break;
+				}
+
+				// Pressure
+				else if (field.name.toLowerCase(Locale.US).contains("pressure")) {
+					order.add(mContext.getString(R.string.pressure));
+					break;
+				}
+
+				else {
+					order.add(mContext.getString(R.string.null_string));
+					break;
+				}
+
+				// Time
+			case RProjectField.TYPE_TIMESTAMP:
+				order.add(mContext.getString(R.string.time));
+				break;
+
+			// Latitude
+			case RProjectField.TYPE_LAT:
+				order.add(mContext.getString(R.string.latitude));
+				break;
+
+			// Longitude
+			case RProjectField.TYPE_LON:
+				order.add(mContext.getString(R.string.longitude));
+				break;
+
+			// No match (Just about every other category)
+			default:
+				order.add(mContext.getString(R.string.null_string));
+				break;
+
+			}
+
+		}
 	}
 
 }

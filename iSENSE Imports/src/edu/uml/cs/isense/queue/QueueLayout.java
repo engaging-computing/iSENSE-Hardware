@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +17,8 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.exp.Setup;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -47,7 +46,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATASET_REQUESTED   = 9001;
 	private static final int ALTER_DATA_NAME_REQUESTED = 9002;
 	private static final int ALTER_DATA_DATA_REQUESTED = 9003;
-	private static final int ALTER_DATA_EXP_REQUESTED  = 9004;
+	private static final int ALTER_DATA_PROJ_REQUESTED  = 9004;
+	
+	public static final String LAST_UPLOADED_DATA_SET_ID = "lastuploadeddatasetid";
 
 	private static int QUEUE_PARENT = -1;
 
@@ -57,13 +58,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static LinearLayout scrollQueue;
 	private Runnable sdUploader;
 	private static UploadQueue uq;
-	private boolean uploadSuccess = true;
+	private int dataSetID = -1;
 	private static String parentName = "";
 
 	protected static QDataSet lastDataSetLongClicked;
 	private View lastViewLongClicked;
 	private Waffle w;
-	private RestAPI rapi;
+	private API api;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +74,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
+		api = API.getInstance(mContext);
 
 		Bundle extras = getIntent().getExtras();
 		parentName = extras.getString(PARENT_NAME);
@@ -84,7 +82,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			w.make("Parent name not passed!", Waffle.IMAGE_X);
 		}
 
-		uq = new UploadQueue(parentName, mContext, rapi);
+		uq = new UploadQueue(parentName, mContext, api);
 		boolean success = uq.buildQueueFromFile();
 
 		if (uq == null || !success) {
@@ -109,7 +107,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	}
 
-	// Adds empty space after experiment groups
+	// Adds empty space after project groups
 	private String checkPrevious(String previous, LinearLayout scrollQueue,
 			String ds) {
 
@@ -125,13 +123,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 	// Fills the text fields in the list element blocks
 	private void makeBlock(View view, QDataSet ds) {
 		CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.name);
-		ctv.setText(ds.getName() + " - " + ds.getType());
+		ctv.setText(ds.getName() + " -- " + "Type: " + ds.getType());
 
-		TextView eid = (TextView) view.findViewById(R.id.experimentid);
-		if (ds.getEID().equals("-1"))
-			eid.setText("No Exp.");
+		TextView projIDText = (TextView) view.findViewById(R.id.project_id);
+		if (ds.getProjID().equals("-1"))
+			projIDText.setText("No Project");
 		else
-			eid.setText(ds.getEID());
+			projIDText.setText("Project: " + ds.getProjID());
 
 		TextView desc = (TextView) view.findViewById(R.id.description);
 		desc.setText(ds.getDesc());
@@ -144,12 +142,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.upload) {
 				
-			if (!rapi.isConnectedToInternet()) {
+			if (!api.hasConnectivity()) {
 				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
 			
-			if (!rapi.isLoggedIn()) {
+			if (api.getCurrentUser() == null) {
 				w.make("Login information not found - please login again", Waffle.IMAGE_X);
 				return;
 			}
@@ -171,7 +169,9 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private void setResultAndFinish(int result_code) {
 		if (result_code == RESULT_OK) {
 			uq.storeAndReRetrieveQueue(true);
-			setResult(RESULT_OK);
+			Intent iRet = new Intent();
+			iRet.putExtra(LAST_UPLOADED_DATA_SET_ID, dataSetID);
+			setResult(RESULT_OK, iRet);
 		} else {
 			setResult(RESULT_CANCELED);
 		}
@@ -230,11 +230,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("\"" + uploadSet.getName() + "\" chosen not to upload", Waffle.LENGTH_SHORT);
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
-			} else if (uploadSuccess)
+			} else if (dataSetID != -1)
 				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			else {
-				w.make("Upload failed - no experiment selected or experiment is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Upload failed - no project selected or project is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			}
@@ -261,7 +261,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			public void run() {
 				if (ds.isUploadable()) {
-					uploadSuccess = ds.upload(rapi, mContext);
+					dataSetID = ds.upload(api, mContext);
 				} else {
 					uq.queue.add(ds);
 					uq.storeAndReRetrieveQueue(false);
@@ -285,7 +285,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 
 				int returnCode = data.getIntExtra(QueueAlter.RETURN_CODE, -1);
-
+				
 				switch (returnCode) {
 
 				case QueueAlter.RENAME:
@@ -302,11 +302,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 					break;
 					
-				case QueueAlter.SELECT_EXPERIMENT:
+				case QueueAlter.SELECT_PROJECT:
 					
-					Intent iExp = new Intent(mContext, Setup.class);
-					iExp.putExtra("from_where", "queue");
-					startActivityForResult(iExp, ALTER_DATA_EXP_REQUESTED);
+					Intent iProj = new Intent(mContext, Setup.class);
+					iProj.putExtra("from_where", "queue");
+					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
 					
 					break;
 
@@ -350,12 +350,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 				addViewToScrollQueue(alter);
 				
 			}
-		} else if (requestCode == ALTER_DATA_EXP_REQUESTED) {
+		} else if (requestCode == ALTER_DATA_PROJ_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences mPrefs = getSharedPreferences("EID_QUEUE", 0);
+				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
 				
 				QDataSet alter = lastDataSetLongClicked;
-				alter.setExp(mPrefs.getString("experiment_id", "No Exp."));
+				alter.setProj(mPrefs.getString("project_id", "No Proj."));
 				
 				uq.removeItemWithKey(lastDataSetLongClicked.key);
 				scrollQueue.removeView(lastViewLongClicked);
@@ -414,11 +414,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 				public boolean onLongClick(View v) {
 					lastDataSetLongClicked = ds;
 					lastViewLongClicked = data;
-					boolean isFromDataCollector = (parentName.equals("datacollector"));
+					boolean isFromDataCollector = (parentName.equals("datacollector")) || (parentName.equals("carrampphysics"))
+							|| (parentName.equals("data_walk"));
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, !isFromDataCollector);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, !lastDataSetLongClicked.getHasInitialExperiment());
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, !lastDataSetLongClicked.getHasInitialProject());
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
 					return false;
@@ -468,7 +469,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, false);
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
@@ -519,7 +520,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_EXP, lastDataSetLongClicked.getEID().equals("-1"));
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, lastDataSetLongClicked.getProjID().equals("-1"));
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
