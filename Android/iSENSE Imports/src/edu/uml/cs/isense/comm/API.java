@@ -18,14 +18,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -492,19 +488,51 @@ public class API {
 		}
 	}
 
-	public int uploadCSV(int projectId, File csvToUpload) {
-		try {			
-			URI url = new URI(baseURL+"/projects/"+projectId+"/CSVUpload");
-			HttpClient client = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url);
+	/**
+	 * Uploads a CSV file to iSENSE as a new data set
+	 *
+	 * @param projectId The ID of the project to upload data to
+	 * @param csvToUpload The CSV as a File object
+	 * @param datasetName The name of the dataset
+	 * @return The ID of the data set created on iSENSE 
+	 */ 
+	public int uploadCSV(int projectId, File csvToUpload, String datasetName) {
+		try {
+			URL url = new URL(baseURL+"/projects/"+projectId+"/CSVUpload?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+
 			MultipartEntity entity = new MultipartEntity();
 			entity.addPart("utf8", new StringBody("\u2713", "text/plain", Charset.forName("UTF-8")));
-			entity.addPart("authenticity_token", new StringBody(authToken, "text/plain", Charset.forName("UTF-8")));
+			entity.addPart("dataset_name", new StringBody(datasetName));
 			entity.addPart("csv", new FileBody(csvToUpload, "text/csv"));
-			httpPost.setHeader("Accept", "*/*");
-			httpPost.setHeader("X-CSRF-Token", authToken);
-			httpPost.setEntity(entity);
-			client.execute(httpPost);
+			
+			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
+			connection.setRequestProperty("Accept", "application/json");
+			OutputStream out = connection.getOutputStream();
+			try {
+				entity.writeTo(out);
+			} finally {
+				out.close();
+			}
+			connection.getResponseCode();
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			try {
+				ByteArrayOutputStream bo = new ByteArrayOutputStream();
+				int i = in.read();
+				while(i != -1) {
+					bo.write(i);
+					i = in.read();
+				}
+				JSONObject j = new JSONObject(bo.toString());
+				return j.getInt("id");
+			} catch (IOException e) {
+				return -1;
+			}
+			finally {
+				in.close();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
