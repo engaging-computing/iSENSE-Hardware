@@ -578,6 +578,15 @@ public class API {
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
 	}
+	
+	/**
+	 * Directly set the base URL, rather than using the dev or production URLs
+	 * 
+	 * @param newUrl The URL to use as a base
+	 */
+	public void setBaseUrl(String newUrl) {
+		baseURL = newUrl;
+	}
 
 	/**
 	 * Returns status on whether you are connected to the Internet.
