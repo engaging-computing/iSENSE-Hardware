@@ -36,5 +36,9 @@
 	</string>
 	<string name="type_data">Type: Data</string>
 	<string name="type_picture">Type: Picture</string>
+	<string name="select_all">Select All</string>
+	<string name="deselect_all">Deselect All</string>
+	<string name="delete_selected">Delete Selected</string>
+	<string name="sure_delete_selected">Are you sure you would like to delete all selected data sets?</string>
     
 </resources>
