@@ -16,7 +16,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -225,8 +224,6 @@ public class DataWalk extends Activity implements LocationListener,
 					timeTimer.cancel();
 					running = false;
 					useMenu = true;
-					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 
 					if (savePoint) {
 						SimpleDateFormat sdf = new SimpleDateFormat(
@@ -251,7 +248,11 @@ public class DataWalk extends Activity implements LocationListener,
 								nameOfSession,
 								"Data Points: " + dataPointCount,
 								experimentId, dataSet.toString(), null);
-						if (dataPointCount > 0) uq.addDataSetToQueue(ds);
+						if (dataPointCount > 0) {
+							uq.addDataSetToQueue(ds);
+							w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
+									Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+						}
 						else {
 							w.make("Data not saved because no points were recorded.", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 						}
