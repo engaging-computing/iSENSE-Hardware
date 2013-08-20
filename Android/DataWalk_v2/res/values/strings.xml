@@ -39,6 +39,9 @@
     <string name="nameWithColon">Name: </string>
     <string name="name">Name</string>
     <string name="Reset">Reset</string>
+    <string name="digits_restriction">
+	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
+	</string>
     
     <!-- RAJIA'S STRINGS FOR MENU... -->
     <string name="NameChange">Change Name </string>

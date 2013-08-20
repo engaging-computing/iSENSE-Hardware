@@ -33,22 +33,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog"
+            android:name=".dialogs.DataRateDialog"
             android:label="Set Recording Interval"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".Help"
-            android:label="Help"
+            android:label="How to Create a New Experiment:"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".CustomOnItemSelectedListener"
-            android:label="SettingsTesting" >
-        </activity>
-        <activity
             android:name=".EnterNameActivity"
-            android:label="Name Activity"
+            android:label="Please Enter Your Name"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
