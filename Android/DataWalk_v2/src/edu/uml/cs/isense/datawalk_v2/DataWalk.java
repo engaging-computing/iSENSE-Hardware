@@ -89,6 +89,8 @@ public class DataWalk extends Activity implements LocationListener,
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "13";
+	public static final String USERNAME_KEY = "username";
+	public static final String PASSWORD_KEY = "password";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -97,16 +99,17 @@ public class DataWalk extends Activity implements LocationListener,
 	private String dataSetName = "";
 	private String baseprojectURL = "http://rsense-dev.cs.uml.edu/projects/";
 	private int dataSetID = -1;
-	public static final String USERNAME_KEY = "username";
-	public static final String PASSWORD_KEY = "password";
+	
 
 	/* Manage Work Flow Between Activities */
 	public static Context mContext;
 	public static String firstName = "";
 	public static String lastInitial = "";
+	
 	public static final String USER_PREFS_KEY = "USERID";
 	public static final String INTERVAL_PREFS_KEY = "INTERVALID";
 	public static final String PROJECT_PREFS_KEY = "PROJID";
+	public static final String INTERVAL_VALUE_KEY = "interval_val";
 	private final String PROJECTID_KEY = "project_id";
 
 	/* Manage Work Flow Within DataWalk.java */
@@ -326,7 +329,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
-				Context.MODE_PRIVATE).getString("DataUploadRate", "10000"));
+				Context.MODE_PRIVATE).getString(INTERVAL_VALUE_KEY, DEFAULT_INTERVAL + ""));
 
 		// Rebuild the upload queue
 		if (uq != null)
