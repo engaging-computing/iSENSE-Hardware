@@ -29,18 +29,8 @@ public class QDataSet implements Serializable {
 	private static final long serialVersionUID = 3776465868309657210L;
 	
 	/**
-	 * Constant that indicates that you have not yet created a session.
-	 * This can be passed in the constructor of the DataSet object to
-	 * indicate this.
-	 * 
-	 */
-	public static final int NO_SESSION_DEFINED = -1;
-
-	/**
-	 * Enum that indicates whether a data set is of type data
-	 * or media.
-	 * 
-	 * @author Jeremy Poulin and Mike Stowell of the iSENSE team.
+	 * Enum that indicates whether a data set is of type data,
+	 * media, or contains data and media.
 	 *
 	 */
 	public enum Type {
@@ -49,11 +39,11 @@ public class QDataSet implements Serializable {
 		 */
 		DATA, 
 		/**
-		 * Indicates the data set is media.
+		 * Indicates the data set is a single media object.
 		 */
 		PIC,
 		/**
-		 * Indicates the data is a session with both data and a single media object
+		 * Indicates the data set contains data and a single media object.
 		 */
 		BOTH
 	};
@@ -64,7 +54,7 @@ public class QDataSet implements Serializable {
 	 */
 	public Type type;
 	/**
-	 * Name of the session associated with the data.
+	 * Name of the data set associated with the data.
 	 */
 	private String name;
 	/**
@@ -72,7 +62,7 @@ public class QDataSet implements Serializable {
 	 */
 	private String desc;
 	/**
-	 * Project ID# to upload the data set to.
+	 * Project ID to upload the data set to.
 	 */
 	private String projID;
 	
@@ -96,13 +86,19 @@ public class QDataSet implements Serializable {
 	private File picture;
 
 	/**
-	 * Contructs an object of type DataSet
-	 * @param type DataSet.PIC or DataSet.DATA
+	 * Contructs an object of type QDataSet
+	 * @param type 
+	 * 		- QDataSet.DATA QDataSet.PIC, or QDataSet.BOTH
 	 * @param name
+	 * 		- The name of the of the data set
 	 * @param desc
+	 * 		- A description for the data set
 	 * @param projID
-	 * @param data If type is DataSet.DATA, we look here.
-	 * @param picture If type is DataSet.PIC, we look here.
+	 * 		- The associated project ID for the data set
+	 * @param data 
+	 * 		- If type is QDataSet.DATA, we look here.
+	 * @param picture 
+	 * 		- If type is QDataSet.PIC, we look here.
 	 */
 	public QDataSet(Type type, String name, String desc, String projID,
 			String data, File picture) {
@@ -120,14 +116,20 @@ public class QDataSet implements Serializable {
 	}
 	
 	/**
-	 * Upload function specifically for when projID = -1 initially
-	 * In this scenario, you'll need to provide a RestAPI instance
-	 * along with a context.  Should really only be called by
+	 * Upload function specifically for when projID = -1 initially.
 	 * 
-	 * @param rapi An instance of RestAPI
-	 * @param c The context of the calling class
+	 * In this scenario, you'll need to provide an 
+	 * {@link edu.uml.cs.isense.comm.API API} instance
+	 * along with an activity context.
 	 * 
-	 * @return if the upload was successful
+	 * @param api
+	 * 		- An instance of API
+	 * @param c 
+	 * 		- The context of the calling activity
+	 * 
+	 * @return
+	 * 		The ID of the data set created on iSENSE, or -1
+	 * 		if the upload failed
 	 */
 	public int upload(API api, Context c) {
 		if (this.projID.equals("-1"))
@@ -142,9 +144,12 @@ public class QDataSet implements Serializable {
 	}
 
 	/** 
-	 * Attempts to upload data with given information
+	 * Attempts to upload data with the given information passed in through
+	 * the QDataSet constructor
 	 * 
-	 * @return if the upload was successful
+	 * @return
+	 * 		The ID of the data set created on iSENSE, or -1
+	 * 		if the upload failed
 	 */
 	public int upload() {
 	
@@ -290,28 +295,30 @@ public class QDataSet implements Serializable {
 	}
 
 	/**
-	 * Getter for project ID.
+	 * Getter for the project ID.
 	 * 
-	 * @return The project ID associated with this data set.
+	 * @return 
+	 * 		The project ID associated with this data set.
 	 */
 	public String getProjID() {
 		return this.projID;
 	}
 	
 	/**
-	 * Setter for project ID.
+	 * Setter for the project ID.
 	 * 
 	 * @param projID
-	 * 		The project ID the session should be created under.
+	 * 		- The project ID the session should be created under.
 	 */
 	public void setProj(String projID) {
 		this.projID = projID;
 	}
 
 	/**
-	 * Getter for description.
+	 * Getter for the description.
 	 * 
-	 * @return The description associated with this data set.
+	 * @return 
+	 * 		The description associated with this data set.
 	 */
 	public String getDesc() {
 		return this.desc;
@@ -320,8 +327,10 @@ public class QDataSet implements Serializable {
 	/**
 	 * Getter for the type of data set.
 	 * 
-	 * @return "Picture" for a media file, "Data" for a JSONArray formatted 
-	 * String, or "Unsupported Type" otherwise.
+	 * @return 
+	 * 		"Picture" for a media file, "Data" for a JSONArray formatted 
+	 * 		String, "Data and Picture" for a JSONArray formatted String with
+	 * 		a single associated media file, or "Unsupported Type" otherwise.
 	 */
 	public CharSequence getType() {
 		if (this.type == Type.PIC)
@@ -335,19 +344,20 @@ public class QDataSet implements Serializable {
 	}
 	
 	/**
-	 * Setter for session name.
+	 * Setter for the data set name.
 	 * 
 	 * @param name
-	 * 			The session name the data set should be associated with.
+	 * 		- The data set name the data set should be associated with.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	/**
-	 * Getter for session name.
+	 * Getter for data set name.
 	 * 
-	 * @return The name of the session associated with the data set.
+	 * @return 
+	 * 		The name of the data set associated with the data.
 	 */
 	public CharSequence getName() {
 		return this.name;
@@ -357,7 +367,7 @@ public class QDataSet implements Serializable {
 	 * Setter for the data.
 	 * 
 	 * @param data
-	 * 			The data (or media) to upload in the future.
+	 * 		- The data to upload in the future.
 	 */
 	public void setData(String data) {
 		this.data = data;
@@ -366,10 +376,31 @@ public class QDataSet implements Serializable {
 	/**
 	 * Getter for the data
 	 * 
-	 * @return The data associated with this data set.
+	 * @return 
+	 * 		The data associated with this data set.
 	 */
 	public String getData() {
 		return this.data;
+	}
+	
+	/**
+	 * Setter for the picture
+	 * 
+	 * @param pic
+	 * 		- The media to associate with this data set.
+	 */
+	public void setPicture(File pic) {
+		this.picture = pic;
+	}
+	
+	/**
+	 * Getter for the picture
+	 * 
+	 * @return
+	 * 		The media associated with this data set.
+	 */
+	public File getPicture() {
+		return this.picture;
 	}
 	
 }

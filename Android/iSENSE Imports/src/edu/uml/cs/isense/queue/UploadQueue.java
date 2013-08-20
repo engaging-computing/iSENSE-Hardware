@@ -28,9 +28,8 @@ import edu.uml.cs.isense.comm.API;
  *
  */
 public class UploadQueue implements Serializable {
-	/*
-	 * Serializable key for UploadQueue class - DO NOT CHANGE
-	 */
+	
+	// serializable key for UploadQueue class - DO NOT CHANGE
 	private static final long serialVersionUID = -3036173866992721309L;
 	public static final String SERIAL_ID = "upload_queue_object";
 	
@@ -41,8 +40,8 @@ public class UploadQueue implements Serializable {
 	private static API api;
 
 	/**
-	 * This is the default/only constructor for an UploadQueue object.
-	 * All parameters are necessary and essential to ensuring that
+	 * This is the constructor for an UploadQueue object.
+	 * All parameters are necessary and essential to ensure that
 	 * this object works properly.
 	 * 
 	 * 
@@ -54,8 +53,8 @@ public class UploadQueue implements Serializable {
 	 * @param context
 	 * 			Context of the activity instantiating this object.
 	 * 
-	 * @param rapi
-	 * 			A RestAPI object that this UploadQueue object may utilize
+	 * @param api
+	 * 			An API object that this UploadQueue object may utilize
 	 * 			to upload data.
 	 * 
 	 */
@@ -66,7 +65,6 @@ public class UploadQueue implements Serializable {
 		
 		UploadQueue.parentName = parentName;
 		UploadQueue.mContext = context;
-
 		UploadQueue.api = api;
 	}
 	
@@ -93,7 +91,7 @@ public class UploadQueue implements Serializable {
 	 * the queue is stored on.
 	 * 
 	 * @param ds
-	 * 			The DataSet object to be added to the UploadQueue.
+	 * 			The QDataSet object to be added to the UploadQueue.
 	 */
 	public void addDataSetToQueue(QDataSet ds) {
 		queue.add(ds);

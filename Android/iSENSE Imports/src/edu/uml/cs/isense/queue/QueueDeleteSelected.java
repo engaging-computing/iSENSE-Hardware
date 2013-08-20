@@ -7,6 +7,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.R;
 
+/**
+ * Activity that asks for confirmation from the user if he or she
+ * is sure he or she would like to delete all selected data sets. 
+ * 
+ * @author Mike Stowell and Jeremy Poulin of the iSENSE team.
+ *
+ */
 public class QueueDeleteSelected extends Activity {
 	
 	@Override
