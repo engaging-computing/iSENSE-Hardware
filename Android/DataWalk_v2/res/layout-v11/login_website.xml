@@ -17,6 +17,7 @@
         android:id="@+id/userNameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:digits="@string/digits_restriction"
         android:inputType="text" />
 
     <TextView
@@ -31,6 +32,7 @@
         android:id="@+id/passwordET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:digits="@string/digits_restriction"
         android:inputType="textPassword" />
 
     <View

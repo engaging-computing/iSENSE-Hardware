@@ -16,20 +16,55 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProjectField;
 
+/**
+ * The DataFieldManager class is designed to, as its name implies, manage how data is associated
+ * with project fields on the iSENSE website.  It provides field matching, organizing and formatting
+ * data sets, applying sensor compatibility checks, and writing data sets to a .csv file.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class DataFieldManager extends Application {
 
-	int projID;
-	API api;
-	Context mContext;
+	private int projID;
+	private API api;
+	private Context mContext;
 
-	ArrayList<RProjectField> projFields;
-	public LinkedList<String> order;
-	Fields f;
-	SensorCompatibility sc = new SensorCompatibility();
+	private ArrayList<RProjectField> projFields;
+	private LinkedList<String> order;
+	private Fields f;
+	private SensorCompatibility sc = new SensorCompatibility();
+	
+	/**
+	 * Boolean array of size 19 containing a list of fields enabled for recording data.
+	 * See the {@link edu.uml.cs.isense.dfm.Fields Fields} class for a list of the constants
+	 * associated with this boolean array's respective indices.  By default, each field
+	 * is disabled.
+	 * 
+	 * To enable a particular field for recording from your class, perform an operation
+	 * such as:
+	 * <pre>
+	 * {@code
+	 *  myDFMInstance.enabledFields[Fields.ACCEL_X] = true;
+	 * }
+	 * </pre>
+	 */
 	public boolean[] enabledFields = { false, false, false, false, false,
 			false, false, false, false, false, false, false, false, false,
 			false, false, false, false, false };
 
+	/**
+	 * Constructor for the DataFieldManager class.
+	 * 
+	 * @param projID
+	 * 		- The ID of the project to be associated with this DataFieldManager, or -1 for no associated project.
+	 * @param api
+	 * 		- An instance of the {@link edu.uml.cs.isense.comm.API} class.
+	 * @param mContext
+	 * 		- The context of the class containing the DataFieldManager object instance.
+	 * @param f
+	 * 		- An instance of the {@link edu.uml.cs.isense.dfm.Fields} class.
+	 * @return An instance of DataFieldManager.
+	 */
 	public DataFieldManager(int projID, API api, Context mContext, Fields f) {
 		this.projID = projID;
 		this.api = api;
@@ -39,14 +74,36 @@ public class DataFieldManager extends Application {
 	}
 
 	// Static class function strictly for getting the field order of any
-	// experiment
-	public static LinkedList<String> getOrder(int projID, API api, Context c) {
+	// project.  To only be used internally.
+	private static LinkedList<String> getOrder(int projID, API api, Context c) {
 		api = API.getInstance(c);
 		DataFieldManager d = new DataFieldManager(projID, api, c, null);
 		d.getOrderWithExternalAsyncTask();
 		return d.order;
 	}
 
+	/**
+	 * Creates a list, stored in this DataFieldManager instance's "order" object,
+	 * of matched fields from the iSENSE project with the instance's "projID".
+	 * 
+	 * If no associated project is passed in (-1), the order array contains all
+	 * possible fields to be recorded.  Otherwise, the order array contains all
+	 * fields that could be matched string-wise with the associated project's fields.
+	 * 
+	 * NOTE: Ensure you call this method before recording data, or otherwise you will
+	 * be given blank data back from the {@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()}
+	 * method.  Error checking may be added such as:
+	 * <pre>
+	 * {@code
+	 *  if (myDFMInstance.getOrderList().size() == 0) myDFMInstance.getOrder();
+	 * }
+	 * </pre>
+	 * to prevent such a bug from occurring.
+	 * 
+	 * Additionally, if you intend on calling this function from within an AsyncTask,
+	 * call {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrderWithExternalAsyncTask() getOrderWithExternalAsyncTask()}
+	 * instead.
+	 */
 	public void getOrder() {
 		if (!order.isEmpty())
 			return;
@@ -77,6 +134,13 @@ public class DataFieldManager extends Application {
 		}
 	}
 
+	/**
+	 * Use this function instead of getOrder() if and only if you are calling this
+	 * function in an AsyncTask.
+	 * 
+	 * See the {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrder() getOrder()} function
+	 * for more details.
+	 */
 	public void getOrderWithExternalAsyncTask() {
 		if (!order.isEmpty())
 			return;
@@ -110,6 +174,15 @@ public class DataFieldManager extends Application {
 		}
 	}
 
+	/**
+	 * Creates a row of data from the Fields object this class instance contains.
+	 * 
+	 * NOTE: If you are recording data for no associated project (-1), call
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#putDataForNoProjectID() putDataForNoProjectID()}
+	 * instead.
+	 * 
+	 * @return The row of data in the form of a JSONObject.
+	 */
 	public JSONObject putData() {
 
 		JSONObject dataJSON = new JSONObject();
@@ -264,6 +337,15 @@ public class DataFieldManager extends Application {
 
 	}
 
+	/**
+	 * Creates a row of data from the Fields object this class instance contains.
+	 * This function performs no field matching and assumes you are only calling it
+	 * when this data set has no associated project.  If you have an associated project,
+	 * call {@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()} instead.
+	 * 
+	 * @return The row of data in the form of a JSONArray that is to be re-organized
+	 * at upload time.
+	 */
 	public JSONArray putDataForNoProjectID() {
 
 		JSONArray dataJSON = new JSONArray();
@@ -375,11 +457,27 @@ public class DataFieldManager extends Application {
 
 	}
 
+	/**
+	 * Writes a single line of data in .csv format.  Data is pulled from this class
+	 * instance's Fields object.
+	 * 
+	 * NOTE: Only call this method if you are recording with an associated
+	 * project.  You will be returned a blank string otherwise.
+	 * 
+	 * Also ensure that your .csv file begins with the String returned by
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeHeaderLine() writeHeaderLine()}.
+	 * 
+	 * @return A single line of data in .csv format in the form of a String, or
+	 * a blank string if there is no associated project.
+	 */
 	public String writeSdCardLine() {
 
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
 		boolean firstLineWritten = false;
+		
+		if (projID == -1)
+			return "";
 
 		for (String s : this.order) {
 
@@ -534,6 +632,13 @@ public class DataFieldManager extends Application {
 		return b.toString();
 	}
 
+	/**
+	 * Determines which sensors are potentially available on the user's device based on
+	 * which sensors devices with a similar API level typically have.
+	 * 
+	 * @return
+	 * 		A {@link edu.uml.cs.isense.dfm.SensorCampatibility} object.
+	 */
 	public SensorCompatibility checkCompatibility() {
 
 		int apiLevel = android.os.Build.VERSION.SDK_INT;
@@ -556,9 +661,23 @@ public class DataFieldManager extends Application {
 		return sc;
 	}
 
+	/**
+	 * Writes the first line in a .csv file for the project you
+	 * are recording data for.  Data can then by appended to this by calling
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeSdCardLine() writeSdCardLine()}.
+	 * 
+	 * NOTE: Only call this method if you are recording with an associated
+	 * project.  You will be returned a blank string otherwise.
+	 *
+	 * @return A single header line in .csv format in the form of a String, or
+	 * a blank string if there is no associated project.
+	 */
 	public String writeHeaderLine() {
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
+		
+		if (projID == -1)
+			return "";
 
 		for (String unitName : this.order) {
 			if (start)
@@ -576,6 +695,30 @@ public class DataFieldManager extends Application {
 
 	// For use if a clump of data was recorded and needs to be cut down and
 	// re-ordered
+	/**
+	 * Use this method only if data was recorded with no associated project
+	 * AND you intend to create a
+	 * {@link edu.uml.cs.isense.queue.QDataSet QDataSet} object with an
+	 * associated project before adding the QDataSet to an
+	 * {@link edu.uml.cs.isense.queue.UploadQueue UploadQueue} object.
+	 * 
+	 * This method will be called internally if you pass -1 as your project
+	 * ID to the QDataSet object, and thus you do not need to call it.
+	 * 
+	 * 
+	 * @param data
+	 * 		- A JSONArray of JSONArray objects returned from the
+	 * 		{@link edu.uml.cs.isense.dfm.DataFieldManager#putDataForNoProjectID() putDataForNoProjectID()}
+	 * @param projID
+	 * 		- The project ID which the data will be re-ordered to match.
+	 * @param api
+	 * 		- An {@link edu.uml.cs.isense.comm.API API} class instance.
+	 * @param c
+	 * 		- The context of the Activity calling this function 
+	 * @return
+	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
+	 * 		
+	 */
 	public static String reOrderData(JSONArray data, String projID, API api,
 			Context c) {
 		JSONArray row, outData = new JSONArray();
@@ -711,6 +854,12 @@ public class DataFieldManager extends Application {
 		return outData.toString();
 	}
 
+	/**
+	 * Set the context for this instance of DataFieldManager.
+	 * 
+	 * @param c
+	 * 		- The new context of this DataFieldManager instance.
+	 */
 	public void setContext(Context c) {
 		this.mContext = c;
 	}
@@ -834,6 +983,73 @@ public class DataFieldManager extends Application {
 			}
 
 		}
+	}
+	
+	/**
+	 * Getter for the project ID this DataFieldManager instance operates on.
+	 * 
+	 * @return
+	 * 		The current project ID.
+	 */
+	public int getProjID() {
+		return this.projID;
+	}
+	
+	/**
+	 * Setter for the project ID this DataFieldManager instance operates on.
+	 * 
+	 * NOTE: If you call this function, be sure you call
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrder()} to update
+	 * which fields this DataFieldManager instance records for.
+	 * 
+	 * @param projectID
+	 * 		- The new project ID for DataFieldManager to operate with.
+	 */
+	public void setProjID(int projectID) {
+		this.projID = projectID;
+	}
+	
+	/**
+	 * Getter for the project fields associated with the project ID passed in
+	 * to this instance of DataFieldManager.
+	 * 
+	 * @return
+	 * 		An ArrayList of {@link edu.uml.cs.isense.objects.RProjectField RProjectField}
+	 * 		containing the fields from the associated iSENSE project.
+	 */
+	public ArrayList<RProjectField> getProjectFields() {
+		return this.projFields;
+	}
+	
+	/**
+	 * Getter for the list of matched fields that this instance of
+	 * DataFieldManager will record data for.
+	 * 
+	 * @return
+	 * 		The list of matched project fields from the associated project ID
+	 */
+	public LinkedList<String> getOrderList() {
+		return this.order;
+	}
+	
+	/**
+	 * Getter for the Fields object associated with this instance of DataFieldManager
+	 * 
+	 * @return
+	 * 		The Fields object associated with this instance of DataFieldManager
+	 */
+	public Fields getFields() {
+		return this.f;
+	}
+	
+	/**
+	 * Setter for the Fields object associated with this instance of DataFieldManager
+	 * 
+	 * @param fields
+	 * 		- The Fields object associated with this instance of DataFieldManager
+	 */
+	public void setFields(Fields fields) {
+		this.f = fields;
 	}
 
 }
