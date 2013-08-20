@@ -245,10 +245,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static File SDFile;
 	private static FileWriter gpxwriter;
 	private static BufferedWriter out;
-
+	private static Context mContext;
+	
 	public static JSONArray dataSet;
-
-	public static Context mContext;
 
 	// Custom
 	public static API api;
@@ -1737,10 +1736,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 			
-//			if (dfm.order.size() == 0)
+//			if (dfm.getOrderList.size() == 0)
 //				TODO - API error checking for this case
-			
-			System.out.println("Dfm size is " + dfm.order.size());
 
 			super.onPostExecute(result);
 		}
