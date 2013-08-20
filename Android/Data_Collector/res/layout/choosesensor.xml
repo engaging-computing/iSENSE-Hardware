@@ -21,7 +21,6 @@
         android:layout_below="@id/choose_sensor_text"
         android:background="@android:color/transparent"
         android:padding="5dp"
-        android:scrollbarThumbVertical="@drawable/grey_scroll"
         android:scrollbars="vertical" >
 
         <LinearLayout

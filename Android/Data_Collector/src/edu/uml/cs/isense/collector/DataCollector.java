@@ -1779,31 +1779,26 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	private void enableStep1() {
 		step1.setEnabled(true);
-		step1.setBackgroundResource(R.drawable.button_rsense);
 		step1.setTextColor(Color.parseColor("#0066FF"));
 	}
 
 	private void disableStep2() {
 		step2.setEnabled(false);
-		step2.setBackgroundResource(R.drawable.button_rsense_disabled);
 		step2.setTextColor(Color.parseColor("#666666"));
 	}
 
 	private void enableStep2() {
 		step2.setEnabled(true);
-		step2.setBackgroundResource(R.drawable.button_rsense);
 		step2.setTextColor(Color.parseColor("#0066FF"));
 	}
 
 	private void disableStep3() {
 		step3.setEnabled(false);
-		step3.setBackgroundResource(R.drawable.button_rsense_disabled);
 		step3.setTextColor(Color.parseColor("#666666"));
 	}
 
 	private void enableStep3() {
 		step3.setEnabled(true);
-		step3.setBackgroundResource(R.drawable.button_rsense);
 		step3.setTextColor(Color.parseColor("#0066FF"));
 	}
 

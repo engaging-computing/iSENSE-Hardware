@@ -60,7 +60,6 @@
         android:layout_below="@+id/queue_top_buttons"
         android:background="#BBBBBB"
         android:padding="5dp"
-        android:scrollbarThumbVertical="@drawable/grey_scroll"
         android:scrollbars="vertical" >
 
         <LinearLayout

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/transparent"
-    android:scrollbarThumbVertical="@drawable/grey_scroll" >
+    android:background="@android:color/transparent" >
 
     <LinearLayout
         android:layout_width="match_parent"

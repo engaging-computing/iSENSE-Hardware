@@ -12,7 +12,6 @@
         android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
         android:padding="5dp"
-        android:scrollbarThumbVertical="@drawable/grey_scroll"
         android:scrollbars="vertical" >
 
         <LinearLayout

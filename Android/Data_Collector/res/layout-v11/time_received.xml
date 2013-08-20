@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:orientation="vertical"
-        android:scrollbarThumbVertical="@drawable/grey_scroll" >
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
