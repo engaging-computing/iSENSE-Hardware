@@ -409,8 +409,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = false;
 
-//		if (uq != null)
-//			uq.buildQueueFromFile();
+		// if (uq != null)
+		// uq.buildQueueFromFile();
 
 		// keeps menu buttons disabled while running
 		if (running)
@@ -710,6 +710,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH,
 							Step1Setup.TEST_LENGTH);
 					enableStep2();
+					new GetDfmOrderTask().execute();
+					// initDfm();
 				}
 			}
 		} else if (requestCode == CAN_LOGIN_REQUESTED) {
@@ -750,7 +752,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// Check for media
 			if (pic != 0) {
 
-				// Associates latest picture with the current dataSet, then associates rest
+				// Associates latest picture with the current dataSet, then
+				// associates rest
 				// to project
 				boolean firstSave = true;
 
@@ -854,7 +857,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	void login() {
 		new LoginTask().execute();
 	}
-	
+
 	// Attempts to login with current user information
 	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -864,12 +867,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 					DataCollector.mContext,
 					DataCollector.mContext.getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
-			
-			boolean success = api.createSession(mPrefs.getString("username", ""),
+
+			boolean success = api.createSession(
+					mPrefs.getString("username", ""),
 					mPrefs.getString("password", ""));
 			return success;
 		}
-		
+
 	}
 
 	// Gets the milliseconds since Epoch
@@ -1018,6 +1022,27 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	private void initDfmWithExternalAsyncTask() {
+
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrderWithExternalAsyncTask();
+
+			sc = dfm.checkCompatibility();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
+	}
+
 	// (currently 2 of these methods exist - one also in step1setup)
 	private void getEnabledFields() {
 
@@ -1149,7 +1174,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			isenseLogo.setVisibility(View.GONE);
 		}
-		
+
 		step1 = (Button) findViewById(R.id.auto_step1);
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
@@ -1301,7 +1326,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Code for registering sensors and preparing to poll data
 	public void setUpSensorsForRecording() {
 
-		initDfm();
+		// initDfm();
 		registerSensors();
 
 		rotation = getRotation(mContext);
@@ -1377,7 +1402,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dataSet.put(dfm.putData());
 		else
 			dataSet.put(dfm.putDataForNoProjectID());
-		
+
 		data = dfm.writeSdCardLine();
 
 		if (writeCSVFile) {
@@ -1422,14 +1447,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						OrientationManager.disableRotation((Activity) mContext);
 
-						SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-						String projectInput = mPrefs.getString("project_id", "");
+						SharedPreferences mPrefs = getSharedPreferences(
+								"PROJID", 0);
+						String projectInput = mPrefs
+								.getString("project_id", "");
 						if (projectInput.equals("-1"))
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
 						currentProjID = Integer.parseInt(projectInput);
-							
+
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -1453,7 +1480,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (android.os.Build.VERSION.SDK_INT >= 11) {
 							final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
 							ll.setAlpha(1.0f);
-							AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
+							AlphaAnimation flash = new AlphaAnimation(1.0f,
+									0.0f);
 							flash.setDuration(500);
 							flash.setAnimationListener(new AnimationListener() {
 								@SuppressLint("NewApi")
@@ -1463,7 +1491,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 								}
 
 								@Override
-								public void onAnimationRepeat(Animation animation) {
+								public void onAnimationRepeat(
+										Animation animation) {
 								}
 
 								@Override
@@ -1492,7 +1521,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
-					
+
 					stopService(new Intent(mContext, DataCollectorService.class));
 
 					isenseLogo.setImageResource(R.drawable.rsense_logo);
@@ -1679,6 +1708,45 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// Get DFM order
+	private class GetDfmOrderTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			OrientationManager.disableRotation(DataCollector.this);
+
+			dia = new ProgressDialog(DataCollector.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Loading...");
+			dia.setCancelable(false);
+			dia.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			initDfmWithExternalAsyncTask();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			dia.setMessage("Done");
+			if (dia != null && dia.isShowing())
+				dia.cancel();
+
+			OrientationManager.enableRotation(DataCollector.this);
+			
+//			if (dfm.order.size() == 0)
+//				TODO - API error checking for this case
+			
+			System.out.println("Dfm size is " + dfm.order.size());
+
+			super.onPostExecute(result);
+		}
+
+	}
+
 	// allows for menu to be turned off when necessary
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
@@ -1687,18 +1755,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menuLogin.setEnabled(enabled);
 			menuMedia.setEnabled(enabled);
 			menuSync.setEnabled(enabled);
-			/*
-			 * if (enabled) { MenuItem item =
-			 * mMenu.findItem(R.id.menu_item_login); item.setVisible(true); item
-			 * = mMenu.findItem(R.id.menu_item_media); item.setVisible(true);
-			 * item = mMenu.findItem(R.id.menu_item_sync);
-			 * item.setVisible(true); super.onPrepareOptionsMenu(mMenu); } else
-			 * { MenuItem item = mMenu.findItem(R.id.menu_item_login);
-			 * item.setVisible(false); item =
-			 * mMenu.findItem(R.id.menu_item_media); item.setVisible(false);
-			 * item = mMenu.findItem(R.id.menu_item_sync);
-			 * item.setVisible(false); super.onPrepareOptionsMenu(mMenu); }
-			 */
+
+			// if (enabled) {
+			// MenuItem item = mMenu.findItem(R.id.menu_item_login);
+			// item.setVisible(true);
+			// item = mMenu.findItem(R.id.menu_item_media);
+			// item.setVisible(true);
+			// item = mMenu.findItem(R.id.menu_item_sync);
+			// item.setVisible(true);
+			// super.onPrepareOptionsMenu(mMenu);
+			// } else {
+			// MenuItem item = mMenu.findItem(R.id.menu_item_login);
+			// item.setVisible(false);
+			// item = mMenu.findItem(R.id.menu_item_media);
+			// item.setVisible(false);
+			// item = mMenu.findItem(R.id.menu_item_sync);
+			// item.setVisible(false);
+			// super.onPrepareOptionsMenu(mMenu);
+			// }
+
 		}
 	}
 
