@@ -575,7 +575,7 @@ public class API {
 				out.close();
 			}
 
-			mstat = urlConnection.getResponseCode();
+			mstat = urlConnection.getResponseCode(); // TODO - add a try/catch for a java.net.ConnectException here.  We can get a connection failed here (ENETUNREACH) if the network is unreachable
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 			try {
 				ByteArrayOutputStream bo = new ByteArrayOutputStream();
