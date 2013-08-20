@@ -72,10 +72,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "mobile";
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 
-	public static final String baseSessionUrl_Prod = "http://beta.isenseproject.org/projects/";
-	public static final String baseSessionUrl_Dev = "http://rsense-dev.cs.uml.edu/projects/";
+	public static final String VIS_URL_PROD = "http://beta.isenseproject.org/projects/";
+	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";
 
@@ -184,9 +184,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		api = API.getInstance(mContext);
 		api.useDev(useDev);
 		if (useDev) {
-			baseSessionUrl = baseSessionUrl_Dev;
+			baseSessionUrl = VIS_URL_DEV;
 		} else {
-			baseSessionUrl = baseSessionUrl_Prod;
+			baseSessionUrl = VIS_URL_PROD;
 		}
 
 		f = new Fields();
@@ -265,6 +265,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 						timeTimer.cancel();
 						choiceViaMenu = false;
+						
+						startStop.setEnabled(true);
+						startStop.setBackgroundResource(R.drawable.button_rsense);
 
 						Intent dataIntent = new Intent(mContext,
 								DataActivity.class);
@@ -282,10 +285,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 						timeTimer.cancel();
 						choiceViaMenu = false;
+						
 						startStop.setEnabled(true);
+						startStop.setBackgroundResource(R.drawable.button_rsense);
+
 					}
 
-					startStop.setEnabled(true);
+					
 				} else {
 
 					OrientationManager.disableRotation(CarRampPhysicsV2.this);
@@ -293,6 +299,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 					
 					startStop.setEnabled(false);
+					startStop.setBackgroundResource(R.drawable.button_rsense_green);
+					
 					dataSet = new JSONArray();
 					elapsedMillis = 0;
 					len = 0;
@@ -338,12 +346,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 										CarRampPhysicsV2.this,
 										mSensorManager
 												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-										SensorManager.SENSOR_DELAY_FASTEST);
-						mSensorManager
-								.registerListener(
-										CarRampPhysicsV2.this,
-										mSensorManager
-												.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 										SensorManager.SENSOR_DELAY_FASTEST);
 					}
 
@@ -498,6 +500,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
+		mSensorManager.unregisterListener(CarRampPhysicsV2.this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
 
 	}
 
@@ -510,6 +513,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onStart() {
 		super.onStart();
 		inPausedState = false;
+		if (mSensorManager != null) {
+			mSensorManager
+					.registerListener(
+							CarRampPhysicsV2.this,
+							mSensorManager
+									.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+							SensorManager.SENSOR_DELAY_FASTEST);
+		}
 	}
 
 	@Override
@@ -559,11 +570,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			running = false;
 			startStop.setText("Hold to Start");
+			startStop.setEnabled(true);
+			startStop.setBackgroundResource(R.drawable.button_rsense);
 
 			timeTimer.cancel();
 			choiceViaMenu = false;
 			startStop.setEnabled(true);
 			dataSet = new JSONArray();
+			OrientationManager.enableRotation(CarRampPhysicsV2.this);
 
 			w.make("Data recording halted.", Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_X);
