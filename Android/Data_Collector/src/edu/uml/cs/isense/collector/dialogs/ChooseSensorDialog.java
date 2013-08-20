@@ -47,7 +47,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		compatible = true;
 		Context mContext = this;
 
-		LinkedList<String> fields = Step1Setup.dfm.order;
+		LinkedList<String> fields = Step1Setup.dfm.getOrderList();
 
 		sensors = Step1Setup.sc;
 
