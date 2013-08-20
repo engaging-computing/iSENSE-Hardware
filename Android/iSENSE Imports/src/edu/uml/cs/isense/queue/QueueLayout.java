@@ -401,12 +401,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				for (int i = 0; i < scrollQueue.getChildCount(); i++) {
-					View view = scrollQueue.getChildAt(i);
+				int count = scrollQueue.getChildCount();
+				int childIndex = 0;
+				for (int i = 0; i < count; i++) {
+					View view = scrollQueue.getChildAt(childIndex);
 					if (view.getTag() == Integer.valueOf(QUEUE_BOX_SELECTED)) {
-						uq.removeItemWithKey(Long.parseLong((String) view.getContentDescription()));
+						long dataSetKey = Long.parseLong("" + view.getContentDescription());
+						uq.removeItemWithKey(dataSetKey);
 						scrollQueue.removeView(view);
-					}
+					} else
+						++childIndex;
 				}
 			}
 		}
@@ -415,7 +419,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	// Adds ds to the scrollQueue object
 	// Each block in the scrollQueue gets 2 additional (and confusing) properties:
-	//		tag: the selection state of the queue block
+	//		tag: the selection state of the queue block (QUEUE_BOX_SELECTED or QUEUE_BOX_DESELECTED)
 	//		content description: the key of the associated data set
 	private void addViewToScrollQueue(final QDataSet ds) {
 
