@@ -103,8 +103,4 @@ public class EnterNameActivity extends Activity {
 		w.make(blankFields, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 	}
 
-	static int getApiLevel() {
-		return android.os.Build.VERSION.SDK_INT;
-	}
-
 }

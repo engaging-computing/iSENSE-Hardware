@@ -7,7 +7,8 @@ import android.widget.Button;
 import edu.uml.cs.isense.datawalk_v2.R;
 
 /**
- *  Displays information explaining how to use the iSENSE Data Walk Application
+ * Displays information explaining how to use the iSENSE Data Walk Application
+ * 
  * @author Rajia
  */
 public class About extends Activity {
