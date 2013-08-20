@@ -7,13 +7,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.datawalk_v2.R;
 
+/**
+ * Asks the user if he/she wants to view the data on iSENSE.
+ * 
+ * @author Rajia
+ */
 public class ViewData extends Activity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_data);
-				
+
 		final Button yes = (Button) findViewById(R.id.view_data_yes);
 		yes.setOnClickListener(new OnClickListener() {
 			@Override
@@ -22,7 +27,7 @@ public class ViewData extends Activity {
 				finish();
 			}
 		});
-		
+
 		final Button no = (Button) findViewById(R.id.view_data_no);
 		no.setOnClickListener(new OnClickListener() {
 			@Override
@@ -31,13 +36,13 @@ public class ViewData extends Activity {
 				finish();
 			}
 		});
-		
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);
 		finish();
 	}
-	
+
 }
