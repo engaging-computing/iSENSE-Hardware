@@ -3,7 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/transparent"
-    android:scrollbarThumbVertical="@drawable/grey_scroll"
     android:scrollbars="vertical" >
 
     <LinearLayout
