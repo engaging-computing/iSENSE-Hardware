@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class MarkerDetector {
 	
-	private static final String  TAG              = "PendulumTracker::MarkerDetector";
+	private static final String  TAG = "PendulumTracker::MarkerDetector";
 	
     // Lower and Upper bounds for range checking in HSV color space
     private Scalar mLowerBound = new Scalar(0);
