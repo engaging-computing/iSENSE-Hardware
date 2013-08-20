@@ -1,48 +1,66 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    
+
     <string name="contentDesc"></string>
     <string name="upload">Upload</string>
-    <string name="digits_restriction">
-	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
-	</string>
+    <string name="digits_restriction">	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
     <string name="queue_rename">Enter a new name for your data set:</string>
     <string name="queue_alter">What would you like to do with this data set?</string>
-	<string name="rename">Rename</string>
-	<string name="change_data">Change Data</string>
-	<string name="delete">Delete</string>
-    <string name="numbers_restriction">
-	    1234567890.-
-	</string>
-	<string name="select_proj">Select Project</string>
-	
-	<string name="browse">Browse</string>
-	<string name="scan_qr">Scan QR</string>
-	<string name="chooseProject">Uploading to project #:</string>
+    <string name="rename">Rename</string>
+    <string name="change_data">Change Data</string>
+    <string name="delete">Delete</string>
+    <string name="numbers_restriction">	    1234567890.-</string>
+    <string name="select_proj">Select Project</string>
+    <string name="browse">Browse</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="chooseProject">Uploading to project #:</string>
     <string name="search">Search</string>
     <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
-    <string name="qr_prompt">
-        Your device does not have the proper Barcode Scanner application installed
+    <string name="qr_prompt">        Your device does not have the proper Barcode Scanner application installed
 		to use this feature.  However, you may visit the Google Play store to download 
-		this application (\"Barcode Scanner\" by the Zxing Team).
-	</string>
-	<string name="loading">Loading&#x2026;</string>
-	<string name="or">OR</string>
-	
-	<string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
-	<string name="contentDescBack">Back</string>
-	<string name="prompt">
-	    Select which data sets you would like to upload to iSENSE.
+		this application (\"Barcode Scanner\" by the Zxing Team).</string>
+    <string name="loading">Loading&#x2026;</string>
+    <string name="or">OR</string>
+    <string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
+    <string name="contentDescBack">Back</string>
+    <string name="prompt">	    Select which data sets you would like to upload to iSENSE.
 	    \n\tTap data sets to enable/disable them for upload.
-	    \n\tLong press a data set to reconfigure it.
-	</string>
-	<string name="type_data">Type: Data</string>
-	<string name="type_picture">Type: Picture</string>
-	<string name="select_all">Select All</string>
-	<string name="deselect_all">Deselect All</string>
-	<string name="delete_selected">Delete Selected</string>
-	<string name="sure_delete_selected">
-	    Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.
-	</string>
-    
+	    \n\tLong press a data set to reconfigure it.</string>
+    <string name="type_data">Type: Data</string>
+    <string name="type_picture">Type: Picture</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
+    <string name="delete_selected">Delete Selected</string>
+    <string name="sure_delete_selected">	    Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.</string>
+    <!-- SyncTime -->
+    <string name="syncTime">        Synchronizing time is useful when using multiple devices to record data at the
+	    same time.  By default, many Android devices\' clocks will not match one
+	    another\'s, thus making recording data at similar times difficult.  However,
+	    you have a choice to fix this issue by setting a device as a \"host\".
+	    This can be done by hitting the \"Send\" button.  Upon hitting \"Send\", 
+	    the time from that particular Android device will be broadcasted as a \"timeframe\"
+	    that all other phones in the local network can receive.  However, in order for
+	    a phone to receive a broadcasted time, that phone must be currently in 
+	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
+	    you intend on receiving a host\'s time, you must be in receive-mode before the
+	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
+	    broadcasted, should you be the host).  After pressing either \"Send\" or 
+	    \"Receive\", a dialog box will tell you the time that has been received from
+	    the host, along with the millisecond offset between
+	    the received time and your Android device\'s actual clock.  If you do choose 
+	    to synchronize time, recording data will now work off of the host\'s timeframe.
+	    This now allows for simultaneous data recording across multiple devices at the 
+	    same time.  Please note: synchronizing time will only work if all the Android
+	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
+	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
+	    allowed on some WiFi networks, but it generally works on small, password-secured 
+	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
+	    can use the \"Reset\" button.</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+    <string name="retry">Try Again</string>
+    <string name="instructions"><u>Instructions:</u></string>
+    <string name="reset">Reset</string>
+
 </resources>

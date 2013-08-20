@@ -2,38 +2,11 @@
 <resources>
 
     <string name="app_name">iSENSE Data Collector</string>
-    <string name="syncTime">
-        Synchronizing time is useful when using multiple devices to record data at the
-	    same time.  By default, many Android devices\' clocks will not match one
-	    another\'s, thus making recording data at similar times difficult.  However,
-	    you have a choice to fix this issue by setting a device as a \"host\".
-	    This can be done by hitting the \"Send\" button.  Upon hitting \"Send\", 
-	    the time from that particular Android device will be broadcasted as a \"timeframe\"
-	    that all other phones in the local network can receive.  However, in order for
-	    a phone to receive a broadcasted time, that phone must be currently in 
-	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
-	    you intend on receiving a host\'s time, you must be in receive-mode before the
-	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
-	    broadcasted, should you be the host).  After pressing either \"Send\" or 
-	    \"Receive\", a dialog box will tell you the time that has been received from
-	    the host, along with the millisecond offset between
-	    the received time and your Android device\'s actual clock.  If you do choose 
-	    to synchronize time, recording data will now work off of the host\'s timeframe.
-	    This now allows for simultaneous data recording across multiple devices at the 
-	    same time.  Please note: synchronizing time will only work if all the Android
-	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
-	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
-	    allowed on some WiFi networks, but it generally works on small, password-secured 
-	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
-	    can use the \"Reset\" button.</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="iSENSELogo">iSENSE Logo</string>
     <string name="picAndVidCount">Pictures/Videos For This Data Set: \0</string>
     <string name="takePic">Take Picture</string>
     <string name="takeVid">Take Video"</string>
-    <string name="instructions"><u>Instructions:</u></string>
-    <string name="send">Send</string>
-    <string name="receive">Receive</string>
     <string name="back">Back</string>
     <string name="upload">Upload</string>
     <string name="media_desc">Select one of the following options:</string>
@@ -42,25 +15,18 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gpsString">Enabling GPS satellite communication is recommended for this application.  Would you like to enable GPS?</string>
-    <string name="force_stop">
-        You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
+    <string name="force_stop">        You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
         such as the accelerometer to stop collecting data.  Therefore, we have stopped the data collection process for
-        you and will allow you to upload your data up to the point before the power button was pressed.
-    </string>
+        you and will allow you to upload your data up to the point before the power button was pressed.</string>
     <string name="description_hint">Enter Description Here&#8230;</string>
-    <string name="description_prompt">
-        Enter a data set description (or leave blank if you\'d like an automatically generated description) and press
+    <string name="description_prompt">        Enter a data set description (or leave blank if you\'d like an automatically generated description) and press
         \"Save\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
-       	\"Delete\".
-        </string>
-    <string name="done">Done</string>
-    <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+       	\"Delete\".</string>
     <string name="retry">Try Again</string>
     <string name="sample_interval">Sample Interval (ms)</string>
     <string name="sample_default">Default Value = 50 ms</string>
     <string name="login">Login</string>
-    <string name="guide_text">
-        This is a guide designed to help explain to you how to use our iSENSE Data 
+    <string name="guide_text">        This is a guide designed to help explain to you how to use our iSENSE Data 
 	    Collector application.
 	    
 	    \n\nYou may notice the two buttons at the bottom of this screen labeled
@@ -69,9 +35,7 @@
 		
 		\n\n--------
 	      
-		\n\n<b>AUTOMATIC ENTRY:</b>
-		
-		\n\nAutomatic is the subapplication you will use should you want to record data
+		\n\n<b>AUTOMATIC ENTRY:</b>		\n\nAutomatic is the subapplication you will use should you want to record data
 		using the sensors built into your Android device.  Here, you can record a set
 		amount of data with a specified sample interval and specified recording time.
 		
@@ -180,9 +144,7 @@
 
 		\n\n--------
 
-		\n\n<b>MANUAL ENTRY:</b>
-		
-		\n\nPerhaps you do not want to record data using Android\'s built-in sensors.
+		\n\n<b>MANUAL ENTRY:</b>		\n\nPerhaps you do not want to record data using Android\'s built-in sensors.
 		With the manual subapplication, you will be able to fetch an project\'s fields,
 		manually enter data you recorded, and upload the data set to iSENSE.
 		
@@ -258,11 +220,8 @@
 		\n\nThank you for choosing to use our Data Collector application.  We hope 
 		you enjoy using it in conjunction with the iSENSE experience!
 		
-		\n\n--------\n\n
-
-	</string>
-    <string name="about_text">	    
-        Welcome to the iSENSE Data Collector Android Application, developed by 
+		\n\n--------\n\n</string>
+    <string name="about_text">        Welcome to the iSENSE Data Collector Android Application, developed by 
 	    UMass Lowell undergraduates Michael Stowell and Jeremy Poulin of the ECG/iSENSE 
 	    team under Fred Martin.
 
@@ -311,37 +270,27 @@
     <string name="manual">Manual</string>
     <string name="splashPrompt">Select \"Automatic\" to record sensor data, or select \"Manual\" to manually key in data.</string>
     <string name="qmark">\&#63;</string>
-	<string name="enterDataSetName">Enter Data Set Name Here&#8230;</string>
-	<string name="data_set_name">Data Set Name</string>
-	<string name="queue_alter">What would you like to do with this data set?</string>
-	<string name="rename">Rename</string>
-	<string name="change_data">Change Data</string>
-	<string name="delete">Delete</string>
-	<string name="queue_rename">Enter a new name for your data set:</string>
-	<string name="digits_restriction">
-	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
-	</string>
-	<string name="numbers_restriction">
-	    1234567890.-
-	</string>
-	<string name="reset">Reset</string>
-	<string name="no_thanks">No Thanks</string>
-	<string name="can_login_string">
-	    You have internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
-	    data.  However, you can still view your data sets without logging in.  Would you like login now?
-	</string>
-	<string name="need_connectivity_string">
-	    You need internet connectivity in order to login and upload data.  Since we cannot find any of your login credentials and there
-	    is no internet connectivity, you cannot upload data sets yet.  However, you may still view your data sets.
-	</string>
-	<string name="select_fields_for">
-	    Please select the fields you would like to record for project #
-	</string>
-	<string name="step1">Step 1: Setup Your Data Set</string>
-	<string name="step2">Step 2: Record a Data Set (Hold Down)</string>
-	<string name="step3">Step 3: Upload Data Sets</string>
-	<string name="select_proj">Select Project</string>
-	<string name="select_later">I\'ll select one later</string>
-	<string name="remember_setup">Remember my Sample Interval and Test Length</string>
-	
+    <string name="enterDataSetName">Enter Data Set Name Here&#8230;</string>
+    <string name="data_set_name">Data Set Name</string>
+    <string name="queue_alter">What would you like to do with this data set?</string>
+    <string name="rename">Rename</string>
+    <string name="change_data">Change Data</string>
+    <string name="delete">Delete</string>
+    <string name="queue_rename">Enter a new name for your data set:</string>
+    <string name="digits_restriction">	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
+    <string name="numbers_restriction">	    1234567890.-</string>
+    <string name="reset">Reset</string>
+    <string name="no_thanks">No Thanks</string>
+    <string name="can_login_string">	    You have internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
+	    data.  However, you can still view your data sets without logging in.  Would you like login now?</string>
+    <string name="need_connectivity_string">	    You need internet connectivity in order to login and upload data.  Since we cannot find any of your login credentials and there
+	    is no internet connectivity, you cannot upload data sets yet.  However, you may still view your data sets.</string>
+    <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
+    <string name="step1">Step 1: Setup Your Data Set</string>
+    <string name="step2">Step 2: Record a Data Set (Hold Down)</string>
+    <string name="step3">Step 3: Upload Data Sets</string>
+    <string name="select_proj">Select Project</string>
+    <string name="select_later">I\'ll select one later</string>
+    <string name="remember_setup">Remember my Sample Interval and Test Length</string>
+
 </resources>

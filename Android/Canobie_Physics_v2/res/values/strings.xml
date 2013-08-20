@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Canobie Physics</string>
-    
+    <string name="login">Login</string>
     <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
     <string name="otherConfig"><u><b>Other Configurations</b></u></string>
-    
     <string name="rides_prompt">Choose a ride</string>
+
     <string-array name="rides_array">
         <item>Unknown</item>
         <item>Bumper Cars</item>
@@ -37,9 +38,9 @@
         <item>Zipper</item>
     </string-array>
     <string-array name="canobie_array">
-    	<item>Unknown</item>
-    	<item>Alpine Swing</item>
-    	<item>Antique Carousel</item>
+        <item>Unknown</item>
+        <item>Alpine Swing</item>
+        <item>Antique Carousel</item>
         <item>Antique Cars</item>
         <item>Canobie 500</item>
         <item>Caterpillar</item>
@@ -67,41 +68,40 @@
         <item>Yankee Cannonball</item>
         <item>Zero Gravity</item>
     </string-array>
-    
+
     <string name="experiments_no_items">No experiments were found.</string>
-	
-	<string name="xyz">X:\nY:\nZ:</string>
-	<string name="startString">START\n(Press and Hold)</string>
-	<string name="stopString">STOP\n(Press and Hold)</string>
-	<string name="notLoggedIn"> Not Logged In</string>
-	<string name="rideAndSeat">Ride/St#: </string>
-	<string name="picAndVidCount">Pictures and Videos taken: \0</string>
-	<string name="menuDirections">Use Menu to Access Configurations</string>
-	<string name="timeElapsed">Time Elapsed: 0:00</string>
-	<string name="sessionName">Session Name: </string>
-	<string name="experimentNum">Expm #: </string>
-	<string name="browse">  Browse&#8230;  </string>
-	<string name="seatNum">Seat/Student #: </string>
-	<string name="seatNumber">1</string>
-	<string name="canobieRides">Canobie Lake Park Rides</string>
-	<string name="ride">Ride: </string>
-	<string name="takePic">Take a Picture</string>
-	<string name="takeVid">Take a Video"</string>
-	<string name="instructions">Instructions:</string>
-	<string name="send">Send</string>
-	<string name="receive">Receive</string>
-	<string name="cancel">Cancel</string>	
-	<string name="timeFailed">Failed to synchronize time.  You may try again.</string>
-	<string name="retry">Try Again</string>
-	<string name="done">Done</string>
-	<string name="back">Back</string>
-	<string name="media_desc">Select one of the following options:</string>
-	<string name="upload">Upload</string>
-	<string name="okay">Okay</string>
-	<string name="sample_rate">Sample Interval: </string>
-	
-	<string name="syncTime">
-	    Synchronizing time is useful when using multiple devices on a ride at the
+    <string name="xyz">X:\nY:\nZ:</string>
+    <string name="startString">START\n(Press and Hold)</string>
+    <string name="stopString">STOP\n(Press and Hold)</string>
+    <string name="notLoggedIn"> Not Logged In</string>
+    <string name="rideAndSeat">Ride/St#: </string>
+    <string name="picAndVidCount">Pictures and Videos taken: \0</string>
+    <string name="menuDirections">Use Menu to Access Configurations</string>
+    <string name="timeElapsed">Time Elapsed: 0:00</string>
+    <string name="sessionName">Session Name: </string>
+    <string name="experimentNum">Expm #: </string>
+    <string name="browse">  Browse&#8230;  </string>
+    <string name="seatNum">Seat/Student #: </string>
+    <string name="seatNumber">1</string>
+    <string name="canobieRides">Canobie Lake Park Rides</string>
+    <string name="ride">Ride: </string>
+    <string name="takePic">Take a Picture</string>
+    <string name="takeVid">Take a Video"</string>
+    <string name="instructions">Instructions:</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="cancel">Cancel</string>
+    <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+    <string name="retry">Try Again</string>
+    <string name="done">Done</string>
+    <string name="back">Back</string>
+    <string name="media_desc">Select one of the following options:</string>
+    <string name="upload">Upload</string>
+    <string name="okay">Okay</string>
+    <string name="sample_rate">Sample Interval: </string>
+    <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
+    
+    <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
 	    same time.  By default, many Android devices\' clocks will not match one
 	    another\'s, thus making recording data at similar times difficult.  However,
 	    you have a choice to fix this issue by setting a device as a \"host\".
@@ -123,14 +123,13 @@
 	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
 	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
-	    WiFi networks.
-	</string>
-	<string name="prompt">Would you like to retry uploading any of the following?</string>
-	<string name="username">Username:   </string>
-	<string name="password">Password:    </string>
-	<string name="loading">Loading&#x2026;</string>
-	<string name="contentDesc"></string>
-	<string name="search">Search</string>
-	<string name="select_later">I\'ll select one later</string>
+	    WiFi networks.</string>
+    <string name="prompt">Would you like to retry uploading any of the following?</string>
+    <string name="username">Username:   </string>
+    <string name="password">Password:    </string>
+    <string name="loading">Loading&#x2026;</string>
+    <string name="contentDesc"></string>
+    <string name="search">Search</string>
+    <string name="select_later">I\'ll select one later</string>
 
 </resources>

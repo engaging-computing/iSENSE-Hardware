@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.canobiev2;
+package edu.uml.cs.isense.sync;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,71 +9,91 @@ import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import edu.uml.cs.isense.comm.RestAPI;
+import android.widget.TextView;
+import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class SyncTime extends Activity {
 
-	private Context mContext;
+	private static Context mContext;
 
-	private static final int DIALOG_SENT = 1;
-	private static final int DIALOG_RECEIVE = 2;
-	private static final int DIALOG_FAIL_RECEIVE = 3;
+	private static final int TIME_SENT_REQUESTED = 100;
+	private static final int TIME_RECEIVED_REQUESTED = 101;
+	private static final int TIME_FAILED_REQUESTED = 102;
+	private static final int TIME_RESET_REQUESTED = 103;
 
-	private long timeOffset = 0;
-	private long myTime = 0;
-	private long timeReceived = 0;
+	private static long timeOffset = 0;
+	private static long myTime = 0;
+	private static long timeReceived = 0;
 
-	String host = "255.255.255.255";
-	int mPort = 45623;
-	String tag = "UDP Socket";
-	DatagramSocket mSocket;
-	DatagramPacket mPack, newPack;
-	String currentTime;
-	String receivedTime;
-	byte[] byteMessage;
-	byte[] receivedMessage;
-	InetAddress sendAddress;
+	static String host = "255.255.255.255";
+	static int mPort = 45623;
+	static String tag = "UDP Socket";
+	static DatagramSocket mSocket;
+	static DatagramPacket mPack, newPack;
+	static String currentTime;
+	static String receivedTime;
+	static byte[] byteMessage;
+	static byte[] receivedMessage;
+	static InetAddress sendAddress;
 
 	boolean preInit = false;
 	boolean success = false;
-	
-	RestAPI rapi;
-	Waffle w;
 
-	ProgressDialog dia;
+	private ProgressDialog dia;
+	private API api;
+	private Waffle w;
 
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.synctime);
 
 		mContext = this;
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		w = new Waffle(mContext);
-		
+
+		api = API.getInstance(mContext);
+		w = new Waffle(this);
+
 		if (android.os.Build.VERSION.SDK_INT > 9) {
-		      StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		      StrictMode.setThreadPolicy(policy);	
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#111133")));
+			bar.setIcon(getResources()
+					.getDrawable(R.drawable.rsense_logo_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
 		}
 
 		String dummyTime = "" + System.currentTimeMillis();
@@ -82,146 +102,59 @@ public class SyncTime extends Activity {
 
 		Button send = (Button) findViewById(R.id.sendButton);
 		Button receive = (Button) findViewById(R.id.receiveButton);
+		Button reset = (Button) findViewById(R.id.resetButton);
 		Button cancel = (Button) findViewById(R.id.buttonGoBack);
 
 		send.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
-				
-				if (rapi.isConnectedToInternet()) {
+
+				if (api.hasConnectivity()) {
+
 					sendPack();
+
 					receivePack();
 
-					showDialog(DIALOG_SENT);	
+					String timeSent = convertTimeStamp(timeReceived);
+
+					Intent iSent = new Intent(SyncTime.this, TimeSent.class);
+					iSent.putExtra("timeSent", timeSent);
+					iSent.putExtra("timeOffset", timeOffset);
+					startActivityForResult(iSent, TIME_SENT_REQUESTED);
+
 				} else {
-					w.make("Connect to internet first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					w.make("No internet connection found.", Waffle.IMAGE_X);
 				}
-				
 
 			}
 		});
 
 		receive.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
-				if (rapi.isConnectedToInternet()) {
+				if (api.hasConnectivity()) {
 					new ReceiveTask().execute();
 				} else {
-					w.make("Connect to internet first", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+					w.make("No internet connection found.", Waffle.IMAGE_X);
 				}
-				
+			}
+		});
+
+		reset.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent iReset = new Intent(SyncTime.this, TimeReset.class);
+				startActivityForResult(iReset, TIME_RESET_REQUESTED);
 			}
 		});
 
 		cancel.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
-				((Activity) mContext).finish();
 				setResult(RESULT_CANCELED);
+				((Activity) mContext).finish();
 			}
 		});
-	}
-
-	protected Dialog onCreateDialog(final int id) {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog;
-
-		switch (id) {
-		case DIALOG_SENT:
-
-			String timeSent = convertTimeStamp(timeReceived);
-
-			builder.setTitle("Time Sent")
-					.setMessage(
-							"You have sent the time "
-									+ timeSent
-									+ " to other devices, which is an offset of "
-									+ timeOffset
-									+ " milliseconds from your local clock.")
-					.setPositiveButton("Done",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									Intent retIntent = new Intent();
-									retIntent.putExtra("offset", timeOffset);
-									setResult(RESULT_OK, retIntent);
-
-									dialoginterface.dismiss();
-									((Activity) mContext).finish();
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_RECEIVE:
-
-			String timeRec = convertTimeStamp(timeReceived);
-
-			builder.setTitle("Time Received")
-					.setMessage(
-							"You have received the time "
-									+ timeRec
-									+ " from the host device, which is an offset of "
-									+ timeOffset
-									+ " milliseconds from your local clock.")
-					.setPositiveButton("Done",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									Intent retIntent = new Intent();
-									retIntent.putExtra("offset", timeOffset);
-									setResult(RESULT_OK, retIntent);
-
-									dialoginterface.dismiss();
-									((Activity) mContext).finish();
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_FAIL_RECEIVE:
-
-			builder.setTitle("Connection Timed Out")
-					.setMessage(
-							"Failed to synchronize time.  Make sure all devices are on the same network " +
-							"and that the host device is hitting \"Send\" while your device waits to " +
-							"receive it\'s time.")
-					.setPositiveButton("Try Again",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									new ReceiveTask().execute();
-									dialoginterface.dismiss();
-								}
-							})
-					.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		default:
-			dialog = null;
-			break;
-		}
-
-		return dialog;
-
 	}
 
 	// attempts to initialize socket
@@ -229,7 +162,7 @@ public class SyncTime extends Activity {
 	// -1 for UnknownHost exception
 	// -2 for Socket exception for socket creation
 	// -3 for Timeout exception
-	int initSocket() {
+	private int initSocket() {
 
 		try {
 			sendAddress = InetAddress.getByName(host);
@@ -246,7 +179,7 @@ public class SyncTime extends Activity {
 			e.printStackTrace();
 			return -2;
 		}
-		
+
 		try {
 			mSocket.setSoTimeout(10000);
 
@@ -259,22 +192,21 @@ public class SyncTime extends Activity {
 	}
 
 	// set socket for sending (fails if closed)
-	boolean prepForBroadcast() {
+	private void prepForBroadcast() {
 		try {
 			mSocket.setBroadcast(true);
 		} catch (SocketException e) {
 			e.printStackTrace();
-			return false;
 		}
-		return true;
+
 	}
 
 	// attempts to send packet
-	boolean sendPack() {
+	private void sendPack() {
 
 		initSocket();
 		preInit = true;
-		
+
 		prepForBroadcast();
 
 		try {
@@ -285,16 +217,16 @@ public class SyncTime extends Activity {
 			mSocket.send(mPack);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
 		}
-		return true;
+
 	}
 
 	// attempts to receive packet
-	boolean receivePack() {
-	
-		if (!preInit) initSocket();
-		
+	private void receivePack() {
+
+		if (!preInit)
+			initSocket();
+
 		DatagramPacket newPack = new DatagramPacket(receivedMessage,
 				byteMessage.length);
 		try {
@@ -304,7 +236,6 @@ public class SyncTime extends Activity {
 		} catch (IOException e) {
 			success = false;
 			e.printStackTrace();
-			return false;
 		}
 
 		receivedMessage = newPack.getData();
@@ -314,7 +245,6 @@ public class SyncTime extends Activity {
 		timeReceived = Long.parseLong(receivedTime);
 		timeOffset = timeReceived - myTime;
 
-		return true;
 	}
 
 	private String convertTimeStamp(long timeStamp) {
@@ -339,9 +269,9 @@ public class SyncTime extends Activity {
 
 	private class ReceiveTask extends AsyncTask<Void, Integer, Void> {
 
-		
 		@Override
 		protected void onPreExecute() {
+			OrientationManager.disableRotation(SyncTime.this);
 			dia = new ProgressDialog(mContext);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Attempting to synchronize time (automatic timeout in 10 seconds)...");
@@ -356,45 +286,48 @@ public class SyncTime extends Activity {
 			return null;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void onPostExecute(Void voids) {
 			dia.cancel();
-			if (success)
-				showDialog(DIALOG_RECEIVE);
-			else
-				showDialog(DIALOG_FAIL_RECEIVE);
+			OrientationManager.enableRotation(SyncTime.this);
+			if (success) {
+				String timeRec = convertTimeStamp(timeReceived);
+				Intent iReceived = new Intent(SyncTime.this, TimeReceived.class);
+				iReceived.putExtra("timeReceived", timeRec);
+				iReceived.putExtra("timeOffset", timeOffset);
+				startActivityForResult(iReceived, TIME_RECEIVED_REQUESTED);
+			} else {
+				Intent iFail = new Intent(SyncTime.this, TimeFailed.class);
+				startActivityForResult(iFail, TIME_FAILED_REQUESTED);
+			}
 		}
 	}
 
 	@Override
 	public void onBackPressed() {
-
 		super.onBackPressed();
 	}
 
 	@Override
 	protected void onPause() {
-
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
-
 		super.onResume();
 	}
 
 	@Override
 	protected void onStop() {
 		if (mSocket != null)
-			if (mSocket.isConnected())							
+			if (mSocket.isConnected())
 				mSocket.close();
 		super.onStop();
 	}
 
 	// used to convert wifi ip address
-	String formatIp(int ipAddress) {
+	public String formatIp(int ipAddress) {
 		int intMyIp3 = ipAddress / 0x1000000;
 		int intMyIp3mod = ipAddress % 0x1000000;
 
@@ -410,4 +343,31 @@ public class SyncTime extends Activity {
 
 		return ipString;
 	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == TIME_SENT_REQUESTED) {
+			Intent retIntent = new Intent();
+			retIntent.putExtra("offset", timeOffset);
+			setResult(RESULT_OK, retIntent);
+			finish();
+		} else if (requestCode == TIME_RECEIVED_REQUESTED) {
+			Intent retIntent = new Intent();
+			retIntent.putExtra("offset", timeOffset);
+			setResult(RESULT_OK, retIntent);
+			finish();
+		} else if (requestCode == TIME_FAILED_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				new ReceiveTask().execute();
+			}
+		} else if (requestCode == TIME_RESET_REQUESTED) {
+			timeOffset = 0;
+			Intent retIntent = new Intent();
+			retIntent.putExtra("offset", timeOffset);
+			setResult(RESULT_OK, retIntent);
+			finish();
+		}
+	}
+
 }
