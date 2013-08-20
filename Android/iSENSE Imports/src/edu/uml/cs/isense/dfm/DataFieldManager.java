@@ -20,6 +20,8 @@ import edu.uml.cs.isense.objects.RProjectField;
  * The DataFieldManager class is designed to, as its name implies, manage how data is associated
  * with project fields on the iSENSE website.  It provides field matching, organizing and formatting
  * data sets, applying sensor compatibility checks, and writing data sets to a .csv file.
+ * 
+ * @author iSENSE Android Development Team
  */
 public class DataFieldManager extends Application {
 

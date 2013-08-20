@@ -2,6 +2,27 @@ package edu.uml.cs.isense.dfm;
 
 // NOTE: if you change the type of any of the data fields below,
 // be sure to update DataFieldManager's reOrderData function!
+
+/**
+ * This is the class container for all recorded data.  This object is used in conjunction
+ * with {@link edu.uml.cs.isense.dfm.DataFieldManager DataFieldManager} to store one
+ * line of data at a time.
+ * 
+ * USAGE: Place data into the respective containers of this object, such as:
+ * <pre>
+ * {@code
+ *  myFieldsObject.timeMillis = System.currentTimeMillis();
+ * }
+ * </pre>
+ * You may then use your DataFieldManager instances's
+ * {@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()} function to
+ * record the data placed into this Field instance's containers.  After calling
+ * that function, you may replace the information in the container's to set up
+ * a new line of data to record and repeat the process for all data lines to be
+ * recorded.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class Fields {
 	// Field data
 	public String accel_x, accel_y, accel_z, accel_total;
@@ -14,6 +35,9 @@ public class Fields {
 	public String altitude;
 	public String pressure;
 	
+	/**
+	 * Default constructor for the Fields object.
+	 */
 	public Fields() {
 	}
 	
