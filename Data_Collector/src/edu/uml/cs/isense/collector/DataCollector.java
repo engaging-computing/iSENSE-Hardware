@@ -1643,18 +1643,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 		String appendMe = "";
 		if (sdCardError)
 			appendMe = "File not written to SD Card.";
-		else
-			appendMe = "Filename: \n" + sdFileName;
+		else {
+			if (sdFileName.equals(""))
+				appendMe = "";
+			else
+				appendMe = "Filename: \n" + sdFileName;
+		}
 
 		Intent iSummary = new Intent(mContext, Summary.class);
 		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe).putExtra("date", dateString)
+				.putExtra("append", appendMe)
+				.putExtra("date", dateString)
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
 
+		// Reset the sdFileName
+		sdFileName = "";
 	}
 
 	// Loads the main screen
@@ -1821,6 +1828,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setBackgroundResource(R.drawable.button_rsense);
 		step3.setTextColor(Color.parseColor("#0066FF"));
 
+		step1.setBackgroundResource(R.drawable.button_rsense);
 		step1.setText(getResources().getString(R.string.step1));
 		step3.setText(getResources().getString(R.string.step3));
 	}

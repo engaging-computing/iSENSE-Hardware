@@ -13,7 +13,7 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProject;
 
-public class ProjectAdapter extends ArrayAdapter<RProject> {
+class ProjectAdapter extends ArrayAdapter<RProject> {
 	public ArrayList<RProject> items;
 	private Context mContext;
 	private int resourceID;
@@ -28,7 +28,7 @@ public class ProjectAdapter extends ArrayAdapter<RProject> {
 	public int page = 0;
 	public String query = "";
 
-	public ProjectAdapter(Context context, int textViewResourceId,
+	protected ProjectAdapter(Context context, int textViewResourceId,
 			int loadingRow, ArrayList<RProject> items) {
 		super(context, textViewResourceId, items);
 		this.items = items;
@@ -107,7 +107,7 @@ public class ProjectAdapter extends ArrayAdapter<RProject> {
 		return v;
 	}
 
-	class LoadingThread extends Thread {
+	protected class LoadingThread extends Thread {
 		public void run() {
 			ArrayList<RProject> new_items = api.getProjects(page, pageSize, true, query);
 
@@ -127,7 +127,7 @@ public class ProjectAdapter extends ArrayAdapter<RProject> {
 		}
 	}
 
-	class UIUpdateTask implements Runnable {
+	protected class UIUpdateTask implements Runnable {
 		public void run() {
 			notifyDataSetChanged();
 		}
