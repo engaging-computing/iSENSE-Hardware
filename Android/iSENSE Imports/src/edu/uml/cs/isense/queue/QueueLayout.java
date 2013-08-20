@@ -147,9 +147,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 		desc.setText(ds.getDesc());
 	}
 
-	/**
-	 * This method was made public by Android.  Don't worry about it.
-	 */
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
@@ -199,6 +196,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			Intent iDelSel = new Intent(QueueLayout.this, QueueDeleteSelected.class);
 			startActivityForResult(iDelSel, QUEUE_DELETE_SELECTED_REQUESTED);
 		}
+		
 	}
 
 	private void setResultAndFinish(int result_code) {
