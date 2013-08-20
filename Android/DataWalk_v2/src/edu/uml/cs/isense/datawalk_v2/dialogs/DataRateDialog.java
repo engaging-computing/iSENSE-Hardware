@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.datawalk_v2.dialogs;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -8,12 +9,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import edu.uml.cs.isense.datawalk_v2.DataWalk;
 import edu.uml.cs.isense.datawalk_v2.R;
 
 public class DataRateDialog extends ListActivity {
 	
 	private String[] dataRates = null;
-	String[] dataRateValues = null;
+	private String[] dataRateValues = null;
+	private final String DEFAULT_INTERVAL = "10000";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,8 +26,8 @@ public class DataRateDialog extends ListActivity {
 		dataRates = getResources().getStringArray(R.array.dataRate);
 		dataRateValues = getResources().getStringArray(R.array.dataRateVals);
 		
-		String currentDataRate = getSharedPreferences("RecordingPrefs", 0).getString("DataUploadRate",
-				"10000");
+		String currentDataRate = getSharedPreferences(DataWalk.INTERVAL_PREFS_KEY, Context.MODE_PRIVATE).getString(DataWalk.INTERVAL_VALUE_KEY,
+				DEFAULT_INTERVAL);
 		
 		int currentIndex = 0;
 		for (String s: dataRateValues) {
@@ -43,9 +46,9 @@ public class DataRateDialog extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				SharedPreferences sp = getSharedPreferences("RecordingPrefs", 0);
+				SharedPreferences sp = getSharedPreferences(DataWalk.INTERVAL_PREFS_KEY, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = sp.edit();
-				editor.putString("DataUploadRate", dataRateValues[arg2]).commit();
+				editor.putString("DataUploadRate", DEFAULT_INTERVAL).commit();
 				
 				finish();
 			}
