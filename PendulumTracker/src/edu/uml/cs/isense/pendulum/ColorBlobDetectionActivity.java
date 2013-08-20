@@ -644,8 +644,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 	void addDataPoint(double x, double y) {
 	
 		JSONObject dataJSON = new JSONObject();
-		Calendar c = Calendar.getInstance();
-		long currentTime = (long) (c.getTimeInMillis() /*- 14400000*/);
+		//Calendar c = Calendar.getInstance();
+		long currentTime = (long) System.currentTimeMillis(); // (c.getTimeInMillis() /*- 14400000*/);
 
 		/* Convert floating point to String to send data via HTML */
 		try {
