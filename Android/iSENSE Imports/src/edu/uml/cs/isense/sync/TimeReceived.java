@@ -9,6 +9,11 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Tells the user what time was received and what its offset is from local time.
+ * 
+ * @author jpoulin
+ */
 public class TimeReceived extends Activity {
 
 	@Override

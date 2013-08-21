@@ -14,6 +14,26 @@ import android.widget.EditText;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
+/**
+ * This Activity is designed to select a project from the iSENSE website.
+ * It features an EditText that the user may manually enter a project ID into,
+ * a Browse feature to pick from a list of projects, and a QR code scanning
+ * feature to find the project ID from a project on iSENSE.
+ * 
+ * To use this Activity, launch an Intent to this class and catch it
+ * in your onActivityResult() method.  To obtain the project ID returned
+ * by this Activity, create a SharedPreferences object using the PREFS_ID
+ * variable as the "name" parameter.  Then, request a String with the
+ * PROJECT_ID "key" parameter.  For example:
+ * <pre>
+ * {@code
+ *  SharedPreferences mPrefs = getSharedPreferences(Setup.PREFS_ID, 0);
+ * String projID = mPrefs.getString(Setup.PROJECT_ID, "-1");
+ * }
+ * </pre>
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class Setup extends Activity implements OnClickListener {
 
 	private EditText projInput;
@@ -32,8 +52,21 @@ public class Setup extends Activity implements OnClickListener {
 	private static final int PROJECT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
 	
-	private static String prefsString = "PROJID";
-
+	/**
+	 * The constant for the "name" parameter in a
+	 * SharedPreference's getSharedPreferences(name, mode) call.
+	 * Use this String constant to build a SharedPreferences object
+	 * in which you may obtain the project ID returned by this Activity.
+	 */
+	public static String PREFS_ID   = "PROJID";
+	/**
+	 * The constant for the "key" parameter in a
+	 * SharedPreference's getString(key, defValue) call.
+	 * Use this String constant to retrieve the project ID, in
+	 * the form of a String, returned by this Activity.
+	 */
+	public static String PROJECT_ID = "project_id";
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,22 +95,22 @@ public class Setup extends Activity implements OnClickListener {
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
-					prefsString = "PROJID_MANUAL";
+					PREFS_ID = "PROJID_MANUAL";
 				} else if (fromWhere.equals("queue")) {
-					prefsString = "PROJID_QUEUE";
+					PREFS_ID = "PROJID_QUEUE";
 				} else {
-					prefsString = "PROJID";
+					PREFS_ID = "PROJID";
 				}
 			} else {
-				prefsString = "PROJID";
+				PREFS_ID = "PROJID";
 			}	
 		} else {
-			prefsString = "PROJID";
+			PREFS_ID = "PROJID";
 		}
 		
 		
-		mPrefs = getSharedPreferences(prefsString, 0);
-		String projID = mPrefs.getString("project_id", "").equals("-1") ? "" : mPrefs.getString("project_id", "");
+		mPrefs = getSharedPreferences(PREFS_ID, 0);
+		String projID = mPrefs.getString(PROJECT_ID, "").equals("-1") ? "" : mPrefs.getString(PROJECT_ID, "");
 		
 		projInput = (EditText) findViewById(R.id.projectInput);
 		projInput.setText(projID);
@@ -96,7 +129,7 @@ public class Setup extends Activity implements OnClickListener {
 			if (pass) {
 				
 				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putString("project_id",
+				mEditor.putString(PROJECT_ID,
 						projInput.getText().toString()).commit();
 
 				setResult(RESULT_OK);
@@ -152,7 +185,7 @@ public class Setup extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == PROJECT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
-				int projID = data.getExtras().getInt("project_id");
+				int projID = data.getExtras().getInt(PROJECT_ID);
 				projInput.setText("" + projID);
 
 			}
