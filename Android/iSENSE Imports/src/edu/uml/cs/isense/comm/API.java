@@ -659,8 +659,7 @@ public class API {
 		return reformatted;
 	}
 
-	private static byte[] convertFileToByteArray(File f)
-	{
+	private static byte[] convertFileToByteArray(File f) {
 		byte[] byteArray = null;
 		try
 		{

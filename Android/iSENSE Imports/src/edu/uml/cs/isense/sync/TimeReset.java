@@ -9,34 +9,40 @@ import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 
+/**
+ * Tells the user that their time offset has been reset back to zero.
+ * 
+ * @author jpoulin
+ */
 public class TimeReset extends Activity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.time_reset);
-		
-		getWindow().setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		
+
+		getWindow().setLayout(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+
 		final Button done = (Button) findViewById(R.id.time_reset_done);
 		done.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				setResult(RESULT_OK);
 				finish();
 			}
 		});
-		
+
 		final TextView text = (TextView) findViewById(R.id.time_reset_text);
-		text.setText("You have reset the time this application will use " +
-				"to record data at to the local time on your device.");
-		
+		text.setText("You have reset the time this application will use "
+				+ "to record data at to the local time on your device.");
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(RESULT_CANCELED);
 		finish();
 	}
-	
+
 }
