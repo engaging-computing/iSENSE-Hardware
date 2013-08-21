@@ -13,20 +13,29 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProject;
 
+/**
+ * An adapter used to load and query projects on the iSENSE website.
+ * 
+ * This class is utilized by 
+ * {@link edu.uml.cs.isense.proj.BrowseProjects BrowseProjects} and
+ * requires no further implementation.
+ * 
+ * @author iSENSE Android Development Team
+ */
 class ProjectAdapter extends ArrayAdapter<RProject> {
-	public ArrayList<RProject> items;
+	private ArrayList<RProject> items;
 	private Context mContext;
 	private int resourceID;
 	private int loadingRow;
-	public int itemsLoaded;
-	public boolean allItemsLoaded;
+	private int itemsLoaded;
+	private boolean allItemsLoaded;
 	private Boolean loading;
 	private UIUpdateTask updateTask;
 	private Handler uiHandler = new Handler();
 	private API api;
-	public static final int pageSize = 10;
-	public int page = 0;
-	public String query = "";
+	private final int PAGE_SIZE = 10;
+	private int page = 0;
+	protected String query = "";
 
 	protected ProjectAdapter(Context context, int textViewResourceId,
 			int loadingRow, ArrayList<RProject> items) {
@@ -42,6 +51,10 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 		api = API.getInstance(context);
 	}
 
+	/**
+	 * Returns the amount of projects loaded by the adapter plus one
+	 * if not all projects are yet loaded from iSENSE.
+	 */
 	public int getCount() {
 		int count = itemsLoaded;
 		if (!allItemsLoaded)
@@ -49,6 +62,12 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 		return count;
 	}
 
+	/**
+	 * Returns the project at the index of the position parameter.
+	 * 
+	 * @param position
+	 * 		- The index of the project to return
+	 */
 	public RProject getItem(int position) {
 		RProject result;
 		synchronized (items) {
@@ -57,10 +76,17 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 		return result;
 	}
 
-	public long getItemId(int position) {
-		return position;
-	}
-
+	/**
+	 * Returns the project block view at the given position.
+	 * 
+	 * @param position
+	 * 		- The index of the view to be returned
+	 * @param convertView
+	 * 		- Returned back if the view requested at the position parameter
+	 * 		is not a project block in the parent parameter.
+	 * @param parent
+	 * 		- The parent to obtain the view from.
+	 */
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		boolean isLastRow = position >= itemsLoaded;
@@ -109,7 +135,7 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 
 	protected class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<RProject> new_items = api.getProjects(page, pageSize, true, query);
+			ArrayList<RProject> new_items = api.getProjects(page, PAGE_SIZE, true, query);
 
 			if (new_items.size() == 0) {
 				allItemsLoaded = true;
@@ -120,7 +146,7 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 				itemsLoaded += new_items.size();
 			}
 			
-			synchronized( loading ) {
+			synchronized(loading) {
 				loading = Boolean.FALSE;
 			}
 			uiHandler.post( updateTask );

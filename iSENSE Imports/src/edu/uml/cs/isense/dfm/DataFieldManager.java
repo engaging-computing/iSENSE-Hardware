@@ -95,7 +95,8 @@ public class DataFieldManager extends Application {
 	 * method.  Error checking may be added such as:
 	 * <pre>
 	 * {@code
-	 *  if (myDFMInstance.getOrderList().size() == 0) myDFMInstance.getOrder();
+	 *  if (myDFMInstance.getOrderList().size() == 0) 
+	 *     myDFMInstance.getOrder();
 	 * }
 	 * </pre>
 	 * to prevent such a bug from occurring.
