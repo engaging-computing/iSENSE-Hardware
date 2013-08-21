@@ -8,6 +8,11 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 
+/**
+ * Asks the user to retry when the socket fails to receive a time packet.
+ * 
+ * @author jpoulin
+ */
 public class TimeFailed extends Activity {
 
 	@Override
