@@ -14,12 +14,23 @@ import android.widget.ListView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.objects.RProject;
 
+/**
+ * This is the class designed to browse projects on the iSENSE website. 
+ * Projects will be displayed by their title and respective owner on iSENSE.
+ *
+ * This class has already been implemented in the
+ * {@link edu.uml.cs.isense.proj.Setup Setup} class, so no public implementation
+ * is necessary.
+ * 
+ * @author iSENSE Android Development Team
+ *
+ */
 public class BrowseProjects extends ListActivity {
 	private ProjectAdapter m_adapter;
 	private ArrayList<RProject> m_projects;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.projects);
 		
