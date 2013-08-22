@@ -8,10 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface API : NSObject
+@interface API : NSObject {
+	private:
+		NSString baseURL;
+}
 
 /* getInstance */
 +(void)initialize;
+
+/* Switch For Dev */
+-(void)useDev:(BOOL)useDev;
 
 /* Gets an Authentication Key */
 -(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password;
