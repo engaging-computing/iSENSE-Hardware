@@ -2,6 +2,7 @@ package edu.uml.cs.isense.supplements;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -53,9 +54,10 @@ public class FileAdapter extends ArrayAdapter<File> {
 			if (f != null) {
 				TextView row = (TextView) v.findViewById(R.id.filerow);
 				if(fileFilters != null && f.isFile()) {
-					String extension = f.getName().substring(f.getName().lastIndexOf('.') + 1);
+					String extension = f.getName().substring(f.getName().lastIndexOf('.') + 1).toLowerCase(Locale.US);
 					boolean matches = false;
 					for(String s : fileFilters) {
+						s = s.toLowerCase(Locale.US);
 						if(s.equals(extension)) matches = true;
 					}
 					if(matches == false) {
