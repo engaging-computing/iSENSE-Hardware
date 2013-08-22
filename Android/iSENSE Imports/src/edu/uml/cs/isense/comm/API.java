@@ -13,6 +13,7 @@ import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -527,6 +528,98 @@ public class API {
 				}
 				JSONObject j = new JSONObject(bo.toString());
 				return j.getInt("id");
+			} catch (IOException e) {
+				return -1;
+			}
+			finally {
+				in.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	/**
+	 * Uploads a file to the media section of a project
+	 * 
+	 * @param projectId The project ID to upload to
+	 * @param mediaToUpload The file to upload
+	 * @return ??? or -1 if upload fails
+	 */
+	public int uploadProjectMedia(int projectId, File mediaToUpload) {
+		try {
+			URL url = new URL(baseURL+"/media_objects/saveMedia/project/"+projectId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+
+			MultipartEntity entity = new MultipartEntity();
+			entity.addPart("file", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
+			
+			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
+			connection.setRequestProperty("Accept", "application/json");
+			OutputStream out = connection.getOutputStream();
+			try {
+				entity.writeTo(out);
+			} finally {
+				out.close();
+			}
+			connection.getResponseCode();
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			try {
+				ByteArrayOutputStream bo = new ByteArrayOutputStream();
+				int i = in.read();
+				while(i != -1) {
+					bo.write(i);
+					i = in.read();
+				}
+			} catch (IOException e) {
+				return -1;
+			}
+			finally {
+				in.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	/**
+	 * Uploads a file to the media section of a data set
+	 * 
+	 * @param dataSetId The data set ID to upload to
+	 * @param mediaToUpload The file to upload
+	 * @return ??? or -1 if upload fails
+	 */
+	public int uploadDataSetMedia(int dataSetId, File mediaToUpload) {
+		try {
+			URL url = new URL(baseURL+"/media_objects/saveMedia/data_set/"+dataSetId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+
+			MultipartEntity entity = new MultipartEntity();
+			entity.addPart("file", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
+			
+			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
+			connection.setRequestProperty("Accept", "application/json");
+			OutputStream out = connection.getOutputStream();
+			try {
+				entity.writeTo(out);
+			} finally {
+				out.close();
+			}
+			connection.getResponseCode();
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			try {
+				ByteArrayOutputStream bo = new ByteArrayOutputStream();
+				int i = in.read();
+				while(i != -1) {
+					bo.write(i);
+					i = in.read();
+				}
 			} catch (IOException e) {
 				return -1;
 			}
