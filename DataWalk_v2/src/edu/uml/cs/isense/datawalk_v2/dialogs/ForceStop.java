@@ -7,6 +7,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.uml.cs.isense.datawalk_v2.R;
 
+/**
+ * Explains to the user that they left the app while it was recording.
+ * 
+ * @author Rajia
+ */
 public class ForceStop extends Activity {
 
 	@Override

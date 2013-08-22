@@ -23,9 +23,9 @@
         android:label="@string/app_name" >
         <activity
             android:name=".DataWalk"
-            android:theme="@style/theme_blue"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/theme_blue" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,35 +33,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Prefs"
-            android:label="Settings" >
-        </activity>
-        <activity
-            android:name=".NoQr2"
-            android:label="No Qr" >
-        </activity>
-        <activity
-            android:name="edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog"
+            android:name=".dialogs.DataRateDialog"
             android:label="Set Recording Interval"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".Help"
-            android:label="Help"
-            android:theme="@style/theme_dialog_white" >
-        </activity>
-        <activity
-            android:name=".CustomOnItemSelectedListener"
-            android:label="SettingsTesting" >
-        </activity>
-        <activity
-            android:name=".PrefsTwoClone"
-            android:label="Recording Interval"
+            android:label="How to Create a New Experiment:"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
             android:name=".EnterNameActivity"
-            android:label="Name Activity"
+            android:label="Please Enter Your Name"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
@@ -71,7 +54,7 @@
         </activity>
         <activity
             android:name=".LoginIsense"
-            android:label="Login to Isense"
+            android:label="iSENSE Login"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
@@ -92,15 +75,6 @@
         <activity
             android:name=".dialogs.ForceStop"
             android:label="Data Recording Halted"
-            android:theme="@style/theme_dialog_white" >
-        </activity>
-        <activity
-            android:name=".dialogs.MenuItemAbout"
-            android:label="About" >
-        </activity>
-        <activity
-            android:name=".dialogs.NoConnect"
-            android:label="No Connectivity"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
