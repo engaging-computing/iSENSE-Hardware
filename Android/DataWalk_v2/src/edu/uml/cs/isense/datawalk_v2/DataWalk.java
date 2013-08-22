@@ -56,7 +56,7 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 /**
  * Behaves as the main driver for the iSENSE Data Walk App. Coordinates and
- * records geolocation data.
+ * records Geo-location data.
  * 
  * @author Rajia
  */
@@ -72,7 +72,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView rateBox;
 	private TextView latLong;
 	private Button startStop;
-
+	
 	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
 	private Vibrator vibrator;
@@ -139,7 +139,11 @@ public class DataWalk extends Activity implements LocationListener,
 	private int dataPointCount = 0;
 	private int timerTick = 0;
 	private int waitingCounter = 0;
-
+	
+	
+	/* Menu Items */
+	private Menu mMenu;
+	
 	/**
 	 * Called when the application is created for the first time.
 	 */
@@ -167,17 +171,10 @@ public class DataWalk extends Activity implements LocationListener,
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString(PROJECTID_KEY, DEFAULT_PROJECT).commit();
 
+		
 		// Initialize main UI elements
-		startStop = (Button) findViewById(R.id.startStop);
-		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
-		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
-		expNumBox = (TextView) findViewById(R.id.expNumBx);
-		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
-		rateBox = (TextView) findViewById(R.id.RateBx);
-		latLong = (TextView) findViewById(R.id.myLocation);
-		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
-		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
+		initialize();
+		
 
 		// Attempt to login with saved credentials, otherwise try default
 		// credentials
@@ -200,7 +197,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// No longer recording so set menu flag to enabled
 					running = false;
 					useMenu = true;
-
+					onPrepareOptionsMenu(mMenu);
 					// Reset the text on the main button
 					startStop.setText(getString(R.string.startPrompt));
 
@@ -247,9 +244,14 @@ public class DataWalk extends Activity implements LocationListener,
 					// Handles when you press the button to START recording
 				} else {
 
+					//THIS DOES NOT WORK (MENU IS NOT DISABLED) 
 					// Recording so set menu flag to disabled
 					useMenu = false;
+					//invalidateOptionsMenu();
+					onPrepareOptionsMenu(mMenu);
 					running = true;
+					
+					
 
 					// Reset the main UI text boxes
 					pointsUploadedBox.setText("Points Recorded: " + "0");
@@ -277,9 +279,25 @@ public class DataWalk extends Activity implements LocationListener,
 
 			}
 
+			
+
 		});
 
 	}// ends onCreate
+
+	private void initialize() {
+		// Initialize main UI elements
+		startStop = (Button) findViewById(R.id.startStop);
+		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
+		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
+		expNumBox = (TextView) findViewById(R.id.expNumBx);
+		loggedInAs = (TextView) findViewById(R.id.loginStatus);
+		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
+		rateBox = (TextView) findViewById(R.id.RateBx);
+		latLong = (TextView) findViewById(R.id.myLocation);
+		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
+		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
+	}
 
 	/**
 	 * Is called every time this activity is paused. For example, whenever a new
@@ -327,6 +345,8 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onResume() {
 		super.onResume();
 
+		 
+		
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
 				Context.MODE_PRIVATE).getString(INTERVAL_VALUE_KEY, DEFAULT_INTERVAL + ""));
@@ -358,6 +378,7 @@ public class DataWalk extends Activity implements LocationListener,
 					+ " seconds");
 		}
 
+				
 	}// ends onResume
 
 	/**
@@ -418,7 +439,20 @@ public class DataWalk extends Activity implements LocationListener,
 	public static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
+	
+	/**
+	 * Called to create the menu from your menu.xml file.
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 
+		mMenu = menu;
+		// Inflate the layout from menu.xml
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
 	/**
 	 * Turns the action bar menu on and off.
 	 * 
@@ -426,12 +460,29 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (useMenu) {
-			menu.getItem(0).setEnabled(true);
-			menu.getItem(1).setEnabled(true);
-		} else {
+		//o
+		
+		if (!useMenu) {
 			menu.getItem(0).setEnabled(false);
 			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
+			menu.getItem(3).setEnabled(false);
+			menu.getItem(4).setEnabled(false);
+			menu.getItem(5).setEnabled(false);
+			menu.getItem(6).setEnabled(false);
+			menu.getItem(7).setEnabled(false);
+		} 
+		//
+		else {
+			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
+			menu.getItem(3).setEnabled(true);
+			menu.getItem(4).setEnabled(true);
+			menu.getItem(5).setEnabled(true);
+			menu.getItem(6).setEnabled(true);
+			menu.getItem(7).setEnabled(true);
+			
 		}
 		return true;
 	}
@@ -733,19 +784,7 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 	}
 
-	/**
-	 * Called to create the menu from your menu.xml file.
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		// Inflate the layout from menu.xml
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-
-		return true;
-	}
+	
 
 	/**
 	 * Performs the code for whenever a menu button is clicked.
@@ -857,7 +896,8 @@ public class DataWalk extends Activity implements LocationListener,
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-
+			
+			
 			if (connect) {
 				if (success) {
 
@@ -967,8 +1007,8 @@ public class DataWalk extends Activity implements LocationListener,
 		// probably lost GPS a lock
 		if (count < 4)
 			gpsWorking = false;
-	}
-
+	} 
+	
 	/**
 	 * Runs the main timer that records data and updates the main UI every
 	 * second.
