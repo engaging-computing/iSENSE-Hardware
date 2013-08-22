@@ -26,12 +26,14 @@ import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj, uploadCSV;
+	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj, uploadCSV, mediaProj, mediaDataset;
 	TextView status;
 	EditText projID, userName;
 	API api;
 	
 	int FILEPICK = 0;
+	int MEDIAPROJPICK = 1;
+	int MEDIADATASET = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		userName = (EditText) findViewById(R.id.et_username);
 		newProj = (Button) findViewById(R.id.btn_newproj);
 		uploadCSV = (Button) findViewById(R.id.btn_uploadCSV);
+		mediaProj = (Button) findViewById(R.id.btn_uploadToProj);
+		mediaDataset = (Button) findViewById(R.id.btn_uploadToDataSet);
 
 		login.setOnClickListener(this);
 		logout.setOnClickListener(this);
@@ -58,6 +62,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		uploadTest.setOnClickListener(this);
 		newProj.setOnClickListener(this);
 		uploadCSV.setOnClickListener(this);
+		mediaProj.setOnClickListener(this);
+		mediaDataset.setOnClickListener(this);
 
 		api = API.getInstance(this);
 		api.setBaseUrl("http://129.63.17.17:3000");
@@ -97,6 +103,12 @@ public class MainActivity extends Activity implements OnClickListener {
 				Intent i = new Intent(this, FileBrowser.class);
 				i.putExtra("filefilter", new String[]{"CSV"});
 				startActivityForResult(i, FILEPICK);
+			} else if ( v == mediaProj ) {
+				Intent i = new Intent(this, FileBrowser.class);
+				startActivityForResult(i, MEDIAPROJPICK);
+			} else if ( v == mediaDataset ) {
+				Intent i = new Intent(this, FileBrowser.class);
+				startActivityForResult(i, MEDIADATASET);
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
@@ -109,6 +121,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			if(requestCode == FILEPICK) {
 				String filepath = data.getStringExtra("filepath");
 				new CSVTask().execute(filepath);
+			} else if (requestCode == MEDIAPROJPICK) {
+				String filepath = data.getStringExtra("filepath");
+				new ProjMediaTask().execute(filepath);
+			} else if (requestCode == MEDIADATASET) {
+				String filepath = data.getStringExtra("filepath");
+				new DSMediaTask().execute(filepath);
 			}
 		}
 	}
@@ -232,6 +250,32 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected Void doInBackground(String... params) {
 			api.uploadCSV(7, new File(params[0]), "csv from app");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class ProjMediaTask extends AsyncTask<String, Void, Void> {
+		@Override
+		protected Void doInBackground(String... params) {
+			api.uploadProjectMedia(7, new File(params[0]));
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class DSMediaTask extends AsyncTask<String, Void, Void> {
+		@Override
+		protected Void doInBackground(String... params) {
+			api.uploadDataSetMedia(34, new File(params[0]));
 			return null;
 		}
 
