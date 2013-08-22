@@ -21,10 +21,6 @@ public class LoginActivity extends Activity {
 	private Context mContext;
 	
 	private API api;
-
-	static final public int NAME_SUCCESSFUL = 1;
-	static final public int NAME_FAILED = 0;
-	static final public int NAME_CANCELED = -1;
 	
 	private static final int ERROR_REQUESTED = 100;
 

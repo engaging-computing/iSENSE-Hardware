@@ -12,6 +12,8 @@
 		39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39216FE3176F5C790070DFCC /* InfoPlist.strings */; };
 		39217017176F7ACA0070DFCC /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217009176F7ACA0070DFCC /* Queue.h */; };
 		3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
+		3989BECE17C5556C009C5F21 /* API.h in Headers */ = {isa = PBXBuildFile; fileRef = 3989BECC17C5556C009C5F21 /* API.h */; };
+		3989BECF17C5556C009C5F21 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 3989BECD17C5556C009C5F21 /* API.m */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
 		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,6 +44,16 @@
 		B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */; };
 		B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */; };
 		B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B73CFDBB179D8DE700B891B0 /* Fields.strings */; };
+		B7BEBCC217C4FBBB005C08C0 /* RDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC017C4FBBB005C08C0 /* RDataSet.h */; };
+		B7BEBCC317C4FBBB005C08C0 /* RDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BEBCC117C4FBBB005C08C0 /* RDataSet.m */; };
+		B7BEBCC617C4FD2A005C08C0 /* RPerson.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC417C4FD2A005C08C0 /* RPerson.h */; };
+		B7BEBCC717C4FD2A005C08C0 /* RPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BEBCC517C4FD2A005C08C0 /* RPerson.m */; };
+		B7BEBCCA17C4FDAC005C08C0 /* RProjectField.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */; };
+		B7BEBCCB17C4FDAC005C08C0 /* RProjectField.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BEBCC917C4FDAC005C08C0 /* RProjectField.m */; };
+		B7BEBCD117C4FDDA005C08C0 /* RProject.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCCF17C4FDD9005C08C0 /* RProject.h */; };
+		B7BEBCD217C4FDDA005C08C0 /* RProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BEBCD017C4FDD9005C08C0 /* RProject.m */; };
+		B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */; };
+		B7BEBCD617C4FDEC005C08C0 /* RTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BEBCD417C4FDEC005C08C0 /* RTutorial.m */; };
 		B7EBFDBF17A01715006B90A8 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = B7EBFDBD17A01715006B90A8 /* Reachability.h */; };
 		B7EBFDC017A01715006B90A8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B7EBFDBE17A01715006B90A8 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B7EBFDC217A0186A006B90A8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */; };
@@ -76,6 +88,8 @@
 		39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API_Bundle-Prefix.pch"; sourceTree = "<group>"; };
 		39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
 		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
+		3989BECC17C5556C009C5F21 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
+		3989BECD17C5556C009C5F21 /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
@@ -108,6 +122,16 @@
 		B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldGrabber.h; sourceTree = "<group>"; };
 		B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldGrabber.m; sourceTree = "<group>"; };
 		B73CFDBB179D8DE700B891B0 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		B7BEBCC017C4FBBB005C08C0 /* RDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDataSet.h; sourceTree = "<group>"; };
+		B7BEBCC117C4FBBB005C08C0 /* RDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RDataSet.m; path = ../../headers/RDataSet.m; sourceTree = "<group>"; };
+		B7BEBCC417C4FD2A005C08C0 /* RPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPerson.h; sourceTree = "<group>"; };
+		B7BEBCC517C4FD2A005C08C0 /* RPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RPerson.m; path = ../../headers/RPerson.m; sourceTree = "<group>"; };
+		B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RProjectField.h; sourceTree = "<group>"; };
+		B7BEBCC917C4FDAC005C08C0 /* RProjectField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RProjectField.m; path = ../../headers/RProjectField.m; sourceTree = "<group>"; };
+		B7BEBCCF17C4FDD9005C08C0 /* RProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RProject.h; sourceTree = "<group>"; };
+		B7BEBCD017C4FDD9005C08C0 /* RProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RProject.m; path = ../../headers/RProject.m; sourceTree = "<group>"; };
+		B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTutorial.h; sourceTree = "<group>"; };
+		B7BEBCD417C4FDEC005C08C0 /* RTutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RTutorial.m; path = ../../headers/RTutorial.m; sourceTree = "<group>"; };
 		B7EBFDBD17A01715006B90A8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		B7EBFDBE17A01715006B90A8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -160,6 +184,15 @@
 				39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3989BECB17C5552C009C5F21 /* isense_api */ = {
+			isa = PBXGroup;
+			children = (
+				3989BECC17C5556C009C5F21 /* API.h */,
+				3989BECD17C5556C009C5F21 /* API.m */,
+			);
+			name = isense_api;
 			sourceTree = "<group>";
 		};
 		39EFB9E4172AD55700A6BD2A /* src_queue_saver */ = {
@@ -239,13 +272,14 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				3989BECB17C5552C009C5F21 /* isense_api */,
 				B7EBFDB817A01419006B90A8 /* reachability */,
 				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
 				B7F09EF41794595700725483 /* waffle */,
 				B7F2D81C177B692200F9A58D /* sensor_compatability */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
 				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
-				39FF261916DFA8760062C3DC /* src_api */,
+				39FF261916DFA8760062C3DC /* old_api */,
 				39FF261016DFA86B0062C3DC /* api_headers */,
 				39FF25E616DFA28A0062C3DC /* Supporting Files */,
 			);
@@ -271,18 +305,23 @@
 				39FF261616DFA86B0062C3DC /* Person.h */,
 				39FF261716DFA86B0062C3DC /* Session.h */,
 				39FF261816DFA86B0062C3DC /* SessionData.h */,
+				B7BEBCC017C4FBBB005C08C0 /* RDataSet.h */,
+				B7BEBCC417C4FD2A005C08C0 /* RPerson.h */,
+				B7BEBCCF17C4FDD9005C08C0 /* RProject.h */,
+				B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */,
+				B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */,
 			);
 			name = api_headers;
 			path = headers;
 			sourceTree = "<group>";
 		};
-		39FF261916DFA8760062C3DC /* src_api */ = {
+		39FF261916DFA8760062C3DC /* old_api */ = {
 			isa = PBXGroup;
 			children = (
 				39FF261A16DFA8760062C3DC /* iSENSE.m */,
 				39FF261B16DFA8760062C3DC /* Objects */,
 			);
-			name = src_api;
+			name = old_api;
 			path = src;
 			sourceTree = "<group>";
 		};
@@ -296,6 +335,11 @@
 				39FF262016DFA8760062C3DC /* Person.m */,
 				39FF262116DFA8760062C3DC /* Session.m */,
 				39FF262216DFA8760062C3DC /* SessionData.m */,
+				B7BEBCC117C4FBBB005C08C0 /* RDataSet.m */,
+				B7BEBCC517C4FD2A005C08C0 /* RPerson.m */,
+				B7BEBCD017C4FDD9005C08C0 /* RProject.m */,
+				B7BEBCC917C4FDAC005C08C0 /* RProjectField.m */,
+				B7BEBCD417C4FDEC005C08C0 /* RTutorial.m */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -395,6 +439,12 @@
 				B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */,
 				B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */,
 				B7EBFDBF17A01715006B90A8 /* Reachability.h in Headers */,
+				B7BEBCC217C4FBBB005C08C0 /* RDataSet.h in Headers */,
+				B7BEBCC617C4FD2A005C08C0 /* RPerson.h in Headers */,
+				B7BEBCCA17C4FDAC005C08C0 /* RProjectField.h in Headers */,
+				B7BEBCD117C4FDDA005C08C0 /* RProject.h in Headers */,
+				B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */,
+				3989BECE17C5556C009C5F21 /* API.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +558,12 @@
 				B73CFDB6179D8D1D00B891B0 /* Fields.m in Sources */,
 				B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */,
 				B7EBFDC017A01715006B90A8 /* Reachability.m in Sources */,
+				B7BEBCC317C4FBBB005C08C0 /* RDataSet.m in Sources */,
+				B7BEBCC717C4FD2A005C08C0 /* RPerson.m in Sources */,
+				B7BEBCCB17C4FDAC005C08C0 /* RProjectField.m in Sources */,
+				B7BEBCD217C4FDDA005C08C0 /* RProject.m in Sources */,
+				B7BEBCD617C4FDEC005C08C0 /* RTutorial.m in Sources */,
+				3989BECF17C5556C009C5F21 /* API.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

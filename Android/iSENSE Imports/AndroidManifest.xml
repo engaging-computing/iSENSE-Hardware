@@ -24,6 +24,10 @@
         android:label="Rename Data Set"
         android:theme="@style/theme_dialog_white" />
     <activity
+        android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+        android:label="Delete Selected Data Sets"
+        android:theme="@style/theme_dialog_white" />
+    <activity
         android:name="edu.uml.cs.isense.proj.BrowseProjects"
         android:label="Projects" />
     <activity

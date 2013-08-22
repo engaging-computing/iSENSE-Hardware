@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:orientation="vertical"
-    android:scrollbarThumbVertical="@drawable/grey_scroll"
     tools:ignore="UnusedResources" >
 
     <LinearLayout
