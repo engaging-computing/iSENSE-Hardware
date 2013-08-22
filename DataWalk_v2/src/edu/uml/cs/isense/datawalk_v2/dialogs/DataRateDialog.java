@@ -61,14 +61,14 @@ public class DataRateDialog extends ListActivity {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View arg1, int index,
 					long arg3) {
 
 				// Saves selection in preferences
 				SharedPreferences sp = getSharedPreferences(
 						DataWalk.INTERVAL_PREFS_KEY, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = sp.edit();
-				editor.putString(DataWalk.INTERVAL_VALUE_KEY, DEFAULT_INTERVAL)
+				editor.putString(DataWalk.INTERVAL_VALUE_KEY, dataRateValues[index] )
 						.commit();
 
 				// Dismisses the picker
