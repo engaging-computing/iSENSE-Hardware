@@ -3,7 +3,6 @@ package edu.uml.cs.isense.comm;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -127,8 +126,7 @@ public class API {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
-					+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
@@ -163,7 +161,7 @@ public class API {
 	public RProject getProject(int projectId) {
 		RProject proj = new RProject();
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			proj.project_id = j.getInt("id");
@@ -185,7 +183,7 @@ public class API {
 
 	/**
 	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
-	 * at a type and a name, and can optionally have a unit.
+	 * at a type and a name, and can optionally have a unit. This is an authenticated function.
 	 * 
 	 * @param projectName The name of the new project to be created
 	 * @param fields An ArrayList of field objects that will become the fields on iSENSE. 
@@ -219,7 +217,7 @@ public class API {
 	}
 
 	/** 
-	 * Gets all of the fields associated with a project
+	 * Gets all of the fields associated with a project.
 	 * 
 	 * @param projectId The unique ID of the project whose fields you want to see
 	 * @return An ArrayList of ProjectField objects
@@ -228,7 +226,7 @@ public class API {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for(int i = 0; i < j2.length(); i++) {
