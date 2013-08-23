@@ -10,6 +10,9 @@
 
 @implementation API
 
+#define LIVE_URL @"http://129.63.16.128/"
+#define DEV_URL  @"http://129.63.16.30/"
+
 static API *api;
 
 /**
@@ -34,5 +37,19 @@ static API *api;
 -(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
     return TRUE;
 }
+
+/**
+ * The ever important switch between live iSENSE and our development site.
+ *
+ * @param useDev Set to true if you want to use the development site.
+ */
+ - (void) useDev:(BOOL)useDev {
+	if (useDev) {
+		baseURL = BASE_URL;
+	} else {
+		baseURL = LIVE_URL;
+	}
+ }
+ 
 
 @end
