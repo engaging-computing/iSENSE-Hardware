@@ -134,7 +134,6 @@ public class API {
 				RProject proj = new RProject();
 
 				proj.project_id = inner.getInt("id");
-				//proj.featured_media_id = inner.getInt("featuredMediaId");
 				proj.name = inner.getString("name");
 				proj.url = inner.getString("url");
 				proj.hidden = inner.getBoolean("hidden");
@@ -165,7 +164,6 @@ public class API {
 			JSONObject j = new JSONObject(reqResult);
 
 			proj.project_id = j.getInt("id");
-			//proj.featured_media_id = j.getInt("featuredMediaId");
 			proj.name = j.getString("name");
 			proj.url = j.getString("url");
 			proj.hidden = j.getBoolean("hidden");
@@ -293,7 +291,6 @@ public class API {
 			JSONObject j = new JSONObject(reqResult);
 
 			tut.tutorial_id = j.getInt("id");
-			//proj.featured_media_id = j.getInt("featuredMediaId");
 			tut.name = j.getString("name");
 			tut.url = j.getString("url");
 			tut.hidden = j.getBoolean("hidden");
