@@ -759,26 +759,4 @@ public class API {
 		return reformatted;
 	}
 
-	private static byte[] convertFileToByteArray(File f) {
-		byte[] byteArray = null;
-		try
-		{
-			InputStream inputStream = new FileInputStream(f);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			byte[] b = new byte[1024*8];
-			int bytesRead =0;
-
-			while ((bytesRead = inputStream.read(b)) != -1)
-			{
-				bos.write(b, 0, bytesRead);
-			}
-
-			byteArray = bos.toByteArray();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return byteArray;
-	}
 }
