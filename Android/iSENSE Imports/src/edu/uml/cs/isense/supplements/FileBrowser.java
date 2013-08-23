@@ -18,14 +18,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 
+/**
+ * A dialog activity that can be launched from any other activity to
+ * present the user with an interface to pick files from the device's 
+ * storage. It can be passed an array of case-insensitive strings 
+ * representing allowed file extensions as an intent extra.
+ * 
+ * @author Nick Ver Voort of the iSENSE Android-Development Team
+ */
+
 public class FileBrowser extends Activity implements OnClickListener {
 
 	ImageButton breadUp;
 	File parentDir;
 	ListView fileList;
 	TextView breadCrumbs;
-	Button OKBtn, cancelBtn;
-	String selectedFilePath = null;
+	Button cancelBtn;
 	View selectedItem;
 	String[] fileFilters;
 
@@ -41,15 +49,10 @@ public class FileBrowser extends Activity implements OnClickListener {
 		breadUp = (ImageButton) findViewById(R.id.btn_up);
 		breadCrumbs = (TextView) findViewById(R.id.txt_path);
 		fileList = (ListView) findViewById(R.id.list_files);
-		OKBtn = (Button) findViewById(R.id.btn_ok);
 		cancelBtn = (Button) findViewById(R.id.btn_cancel);
 
-		OKBtn.setOnClickListener(this);
 		cancelBtn.setOnClickListener(this);
 		breadUp.setOnClickListener(this);
-
-		OKBtn.setEnabled(false);
-		fileList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 		File sdBase = Environment.getExternalStorageDirectory();
 		changeDir(sdBase);
@@ -91,9 +94,10 @@ public class FileBrowser extends Activity implements OnClickListener {
 						if(f.isDirectory()) {
 							changeDir(f);
 						} else {
-							v.setSelected(true);
-							OKBtn.setEnabled(true);
-							selectedFilePath = f.getAbsolutePath();
+							Intent result = new Intent();
+							result.putExtra("filepath", f.getAbsolutePath());
+							setResult(RESULT_OK, result);
+							finish();
 						}
 					}
 				}
@@ -104,11 +108,6 @@ public class FileBrowser extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if( v == breadUp ) {
 			changeDir(parentDir);
-		}  else if ( v == OKBtn ) {
-			Intent result = new Intent();
-			result.putExtra("filepath", selectedFilePath);
-			setResult(RESULT_OK, result);
-			finish();
 		} else if ( v == cancelBtn ) {
 			setResult(RESULT_CANCELED);
 			finish();
