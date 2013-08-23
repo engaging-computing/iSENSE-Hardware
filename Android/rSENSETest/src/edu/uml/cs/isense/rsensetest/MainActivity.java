@@ -275,7 +275,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class DSMediaTask extends AsyncTask<String, Void, Void> {
 		@Override
 		protected Void doInBackground(String... params) {
-			api.uploadDataSetMedia(34, new File(params[0]));
+			api.uploadDataSetMedia(42, new File(params[0]));
 			return null;
 		}
 
