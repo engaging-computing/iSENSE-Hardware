@@ -11,7 +11,6 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -19,7 +18,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -35,6 +33,15 @@ import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.objects.RTutorial;
+
+/**
+ * A class which allows Android applications to interface with
+ * the iSENSE website. Given a singleton instance of this class,
+ * functions can be called through an AsyncTask.
+ * 
+ * @author Nick Ver Voort of the iSENSE Android-Development Team
+ * with input from Mike Stowell and Jeremy Poulin
+ */
 
 public class API {
 	private static API instance = null;
