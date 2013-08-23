@@ -9,6 +9,7 @@
         android:id="@+id/userNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:text="@string/user_name"
         android:textStyle="bold" />
 
@@ -23,6 +24,7 @@
         android:id="@+id/passwordTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:text="@string/password"
         android:textStyle="bold" />
 
@@ -33,17 +35,15 @@
         android:digits="@string/digits_restriction"
         android:inputType="textPassword" />
 
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/cancelB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:text="@android:string/cancel" />
 
         <Button
             android:id="@+id/loginB"
@@ -51,6 +51,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="50"
             android:text="@string/login" />
+
+        <Button
+            android:id="@+id/cancelB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="@android:string/cancel" />
     </LinearLayout>
 
 </LinearLayout>
