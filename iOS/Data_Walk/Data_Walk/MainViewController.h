@@ -13,28 +13,35 @@
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/Waffle.h>
 
-@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,
-CLLocationManagerDelegate, UITextFieldDelegate> {
+@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate> {
     
 }
 
 // UI functions
-- (void) onMenuClick:(id)sender;
+- (void) onResetClick:(id)sender;
+- (void) onAboutClick:(id)sender;
+
+- (IBAction) onRecordDataClick:(id)sender;
+- (IBAction) onRecordingIntervalClick:(id)sender;
+- (IBAction) onLoggedInClick:(id)sender;
+- (IBAction) onUploadClick:(id)sender;
+- (IBAction) onSelectProjectClick:(id)sender;
 
 // UI properties
-@property (nonatomic, strong) UIBarButtonItem *menu;
-@property (nonatomic, strong) IBOutlet UILabel *name;
-@property (nonatomic, strong) IBOutlet UILabel *timeElapsed;
-@property (nonatomic, strong) IBOutlet UILabel *pointsRecorded;
-@property (nonatomic, strong) IBOutlet UILabel *loggedInAs;
-@property (nonatomic, strong) IBOutlet UILabel *projNumber;
-@property (nonatomic, strong) IBOutlet UILabel *dataRecordedEvery;
+@property (nonatomic, strong) UIBarButtonItem *reset;
+@property (nonatomic, strong) UIBarButtonItem *about;
+
 @property (nonatomic, strong) IBOutlet UILabel *latitudeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *longitudeLabel;
+@property (nonatomic, strong) IBOutlet UIButton *recordData;
+@property (nonatomic, strong) IBOutlet UIButton *recordingInterval;
+@property (nonatomic, strong) IBOutlet UITextField *nameTextField;
+@property (nonatomic, strong) IBOutlet UIButton *loggedInAs;
+@property (nonatomic, strong) IBOutlet UIButton *upload;
+@property (nonatomic, strong) IBOutlet UIButton *selectProject;
 
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;
-
 @property (nonatomic) BOOL isRecording;
 
 @end
