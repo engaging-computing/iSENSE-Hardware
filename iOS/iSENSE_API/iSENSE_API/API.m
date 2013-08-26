@@ -45,7 +45,7 @@ static API *api;
  */
  - (void) useDev:(BOOL)useDev {
 	if (useDev) {
-		baseURL = BASE_URL;
+		baseURL = DEV_URL;
 	} else {
 		baseURL = LIVE_URL;
 	}
