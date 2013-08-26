@@ -52,29 +52,31 @@
     
     // Establish menu bar
 	menu = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(onMenuClick:)];
-    self.navigationItem.rightBarButtonItem = menu;
-    self.navigationItem.title = @"iSENSE Data Walk";
+    UIBarButtonItem *uploadM = [[UIBarButtonItem alloc] initWithTitle:@"Upload" style:UIBarButtonItemStyleBordered target:self action:@selector(onUploadClick:)];
+    UIBarButtonItem *aboutM = [[UIBarButtonItem alloc] initWithTitle:@"About" style:UIBarButtonItemStyleBordered target:self action:@selector(onAboutClick:)];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:menu, uploadM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, nil];
+//    self.navigationItem.title = @"iSENSE Data Walk";
     
-    UIView *myView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 300, 30)];
-    UILabel *title = [[UILabel alloc] initWithFrame: CGRectMake(45, 2, 300, 30)];
-    
-    title.text = NSLocalizedString(@"iSENSE Data Walk", nil);
-    [title setTextColor:[UIColor colorWithRed:50/255.0f green:50/255.0f blue:50/255.0f alpha:1]];
-    [title setFont:[UIFont boldSystemFontOfSize:20.0]];
-    
-    [title setBackgroundColor:[UIColor clearColor]];
-    UIImage *image = [UIImage imageNamed:@"datawalk_logo.png"];
-    UIImageView *myImageView = [[UIImageView alloc] initWithImage:image];
-    
-    myImageView.frame = CGRectMake(0, -5, 40, 40);
-    
-    [myView addSubview:title];
-    [myView setBackgroundColor:[UIColor  clearColor]];
-    [myView addSubview:myImageView];
-    self.navigationItem.titleView = myView;
-    
-    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:200/255.0f green:200/255.0f blue:200/255.0f alpha:1];
-    self.navigationItem.rightBarButtonItem.tintColor = [UIColor colorWithRed:100/255.0f green:100/255.0f blue:100/255.0f alpha:1];
+//    UIView *myView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 300, 30)];
+//    UILabel *title = [[UILabel alloc] initWithFrame: CGRectMake(45, 2, 300, 30)];
+//    
+//    title.text = NSLocalizedString(@"iSENSE Data Walk", nil);
+//    [title setTextColor:[UIColor colorWithRed:50/255.0f green:50/255.0f blue:50/255.0f alpha:1]];
+//    [title setFont:[UIFont boldSystemFontOfSize:20.0]];
+//    
+//    [title setBackgroundColor:[UIColor clearColor]];
+//    UIImage *image = [UIImage imageNamed:@"datawalk_logo.png"];
+//    UIImageView *myImageView = [[UIImageView alloc] initWithImage:image];
+//    
+//    myImageView.frame = CGRectMake(0, -5, 40, 40);
+//    
+//    [myView addSubview:title];
+//    [myView setBackgroundColor:[UIColor  clearColor]];
+//    [myView addSubview:myImageView];
+//    self.navigationItem.titleView = myView;
+//    
+//    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:200/255.0f green:200/255.0f blue:200/255.0f alpha:1];
+//    self.navigationItem.rightBarButtonItem.tintColor = [UIColor colorWithRed:100/255.0f green:100/255.0f blue:100/255.0f alpha:1];
     
     // Setup UILabels with constant tags
     name.tag                = kTAG_LABEL_NAME;
@@ -112,6 +114,14 @@
 - (void) onMenuClick:(id)sender {
 //    [self displayMenu];
     [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+}
+
+- (void) onUploadClick:(id)sender {
+    
+}
+
+- (void) onAboutClick:(id)sender {
+    
 }
 
 - (void) displayMenu {
