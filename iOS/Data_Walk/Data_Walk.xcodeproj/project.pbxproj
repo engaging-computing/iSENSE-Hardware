@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		B714A34B17C7BA6B0016F52B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B714A34A17C7BA6B0016F52B /* QuartzCore.framework */; };
 		B71DF60517C7A55200A4B9CD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71DF60417C7A55200A4B9CD /* CoreLocation.framework */; };
+		B72E04F817CB9E8F00D06B57 /* gps_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B72E04F717CB9E8F00D06B57 /* gps_icon.png */; };
+		B72E04FC17CBC30E00D06B57 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B72E04FB17CBC30E00D06B57 /* AboutViewController.m */; };
+		B72E04FE17CBC35700D06B57 /* AboutLayout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */; };
+		B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E04FF17CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib */; };
+		B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E050217CBC43500D06B57 /* AboutLayout~ipad.xib */; };
+		B72E050517CBC44800D06B57 /* AboutLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */; };
+		B72E050D17CBC66F00D06B57 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B72E050A17CBC50B00D06B57 /* StringGrabber.m */; };
 		B762F4B217C6534500B1D6E9 /* MainLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */; };
 		B762F4B417C6537000B1D6E9 /* MainLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */; };
 		B762F4B617C6571100B1D6E9 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B517C6571100B1D6E9 /* rsense_logo.png */; };
@@ -71,6 +78,15 @@
 /* Begin PBXFileReference section */
 		B714A34A17C7BA6B0016F52B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		B71DF60417C7A55200A4B9CD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		B72E04F717CB9E8F00D06B57 /* gps_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gps_icon.png; path = ../../../Desktop/gps_icon.png; sourceTree = "<group>"; };
+		B72E04FA17CBC30E00D06B57 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		B72E04FB17CBC30E00D06B57 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout~iphone.xib"; sourceTree = "<group>"; };
+		B72E04FF17CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B72E050217CBC43500D06B57 /* AboutLayout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout~ipad.xib"; sourceTree = "<group>"; };
+		B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B72E050917CBC50B00D06B57 /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
+		B72E050A17CBC50B00D06B57 /* StringGrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B762F4B517C6571100B1D6E9 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
@@ -123,6 +139,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B72E04F917CBC27800D06B57 /* About Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				B72E04FA17CBC30E00D06B57 /* AboutViewController.h */,
+				B72E04FB17CBC30E00D06B57 /* AboutViewController.m */,
+			);
+			name = "About Dialog";
+			sourceTree = "<group>";
+		};
+		B72E050717CBC4D900D06B57 /* StringGrabber */ = {
+			isa = PBXGroup;
+			children = (
+				B72E050917CBC50B00D06B57 /* StringGrabber.h */,
+				B72E050A17CBC50B00D06B57 /* StringGrabber.m */,
+			);
+			name = StringGrabber;
+			sourceTree = "<group>";
+		};
 		B7E5679617C6442700C2DF46 = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +212,8 @@
 				B7E567DF17C644D500C2DF46 /* API */,
 				B7E567E017C644DF00C2DF46 /* Delegate */,
 				B7E567E117C644F000C2DF46 /* Main */,
+				B72E04F917CBC27800D06B57 /* About Dialog */,
+				B72E050717CBC4D900D06B57 /* StringGrabber */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -187,7 +223,6 @@
 			children = (
 				B7E567D917C6446700C2DF46 /* Images */,
 				B7E567DA17C6446F00C2DF46 /* Sounds */,
-				B7E567DB17C6447300C2DF46 /* Layout-Both */,
 				B7E567DC17C6447700C2DF46 /* Layout-iPhone */,
 				B7E567DD17C6447B00C2DF46 /* Layout-iPad */,
 				B7E567DE17C6447F00C2DF46 /* Strings */,
@@ -200,6 +235,7 @@
 			children = (
 				B7F3883217C6A95900CA8059 /* AppIcon */,
 				B762F4B517C6571100B1D6E9 /* rsense_logo.png */,
+				B72E04F717CB9E8F00D06B57 /* gps_icon.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -212,18 +248,13 @@
 			name = Sounds;
 			sourceTree = "<group>";
 		};
-		B7E567DB17C6447300C2DF46 /* Layout-Both */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Layout-Both";
-			sourceTree = "<group>";
-		};
 		B7E567DC17C6447700C2DF46 /* Layout-iPhone */ = {
 			isa = PBXGroup;
 			children = (
 				B7E567E617C64A2000C2DF46 /* MainLayout~iphone.xib */,
 				B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */,
+				B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */,
+				B72E04FF17CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -233,6 +264,8 @@
 			children = (
 				B7E567E817C64D1300C2DF46 /* MainLayout~ipad.xib */,
 				B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */,
+				B72E050217CBC43500D06B57 /* AboutLayout~ipad.xib */,
+				B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -385,6 +418,11 @@
 				B7F3883117C6A95100CA8059 /* datawalk_logo_ipad_retina.png in Resources */,
 				B7F3883417C6A98B00CA8059 /* datawalk_logo_ipad.png in Resources */,
 				B7F3883617C6A9AE00CA8059 /* datawalk_logo_retina.png in Resources */,
+				B72E04F817CB9E8F00D06B57 /* gps_icon.png in Resources */,
+				B72E04FE17CBC35700D06B57 /* AboutLayout~iphone.xib in Resources */,
+				B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */,
+				B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */,
+				B72E050517CBC44800D06B57 /* AboutLayout-landscape~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,10 +433,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72E050D17CBC66F00D06B57 /* StringGrabber.m in Sources */,
 				B7E567B117C6442700C2DF46 /* main.m in Sources */,
 				B7E567B517C6442700C2DF46 /* DWAppDelegate.m in Sources */,
 				B7E567BE17C6442700C2DF46 /* Data_Walk.xcdatamodeld in Sources */,
 				B7E567C117C6442700C2DF46 /* MainViewController.m in Sources */,
+				B72E04FC17CBC30E00D06B57 /* AboutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,3 +13,5 @@
 // ----------------- //
 
 // "Label"                      = "Value"; //
+
+"about_text"                    = "This is the about text for the Data Walk iOS application.";

@@ -8,14 +8,18 @@
 
 #import "MainViewController.h"
 #import "Constants.h"
+#import "AboutViewController.h"
 
 @implementation MainViewController
 
-@synthesize menu;
-@synthesize name, timeElapsed, pointsRecorded, loggedInAs, projNumber, dataRecordedEvery, latitudeLabel, longitudeLabel;
+// Menu properties
+@synthesize reset, about;
+// UI properties
+@synthesize latitudeLabel, longitudeLabel, recordData, recordingInterval, nameTextField, loggedInAs, upload, selectProject;
+// Other properties
 @synthesize locationManager, isRecording;
 
-// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+// Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
@@ -50,43 +54,20 @@
     // Initial super call
     [super viewDidLoad];
     
-    // Establish menu bar
-	menu = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(onMenuClick:)];
-    UIBarButtonItem *uploadM = [[UIBarButtonItem alloc] initWithTitle:@"Upload" style:UIBarButtonItemStyleBordered target:self action:@selector(onUploadClick:)];
-    UIBarButtonItem *aboutM = [[UIBarButtonItem alloc] initWithTitle:@"About" style:UIBarButtonItemStyleBordered target:self action:@selector(onAboutClick:)];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:menu, uploadM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, aboutM, nil];
-//    self.navigationItem.title = @"iSENSE Data Walk";
+    // Set up the menu bar
+	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
+    about = [[UIBarButtonItem alloc] initWithTitle:@"About" style:UIBarButtonItemStyleBordered target:self action:@selector(onAboutClick:)];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:reset, about, nil];
+    self.navigationItem.title = @"iSENSE Data Walk";
     
-//    UIView *myView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 300, 30)];
-//    UILabel *title = [[UILabel alloc] initWithFrame: CGRectMake(45, 2, 300, 30)];
-//    
-//    title.text = NSLocalizedString(@"iSENSE Data Walk", nil);
-//    [title setTextColor:[UIColor colorWithRed:50/255.0f green:50/255.0f blue:50/255.0f alpha:1]];
-//    [title setFont:[UIFont boldSystemFontOfSize:20.0]];
-//    
-//    [title setBackgroundColor:[UIColor clearColor]];
-//    UIImage *image = [UIImage imageNamed:@"datawalk_logo.png"];
-//    UIImageView *myImageView = [[UIImageView alloc] initWithImage:image];
-//    
-//    myImageView.frame = CGRectMake(0, -5, 40, 40);
-//    
-//    [myView addSubview:title];
-//    [myView setBackgroundColor:[UIColor  clearColor]];
-//    [myView addSubview:myImageView];
-//    self.navigationItem.titleView = myView;
-//    
-//    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:200/255.0f green:200/255.0f blue:200/255.0f alpha:1];
-//    self.navigationItem.rightBarButtonItem.tintColor = [UIColor colorWithRed:100/255.0f green:100/255.0f blue:100/255.0f alpha:1];
-    
-    // Setup UILabels with constant tags
-    name.tag                = kTAG_LABEL_NAME;
-    timeElapsed.tag         = kTAG_LABEL_TIME_ELAPSED;
-    pointsRecorded.tag      = kTAG_LABEL_POINTS_REC;
-    loggedInAs.tag          = kTAG_LABEL_LOGGED_IN;
-    projNumber.tag          = kTAG_LABEL_PROJ_NUM;
-    dataRecordedEvery.tag   = kTAG_LABEL_DATA_REC;
-    latitudeLabel.tag       = kTAG_LABEL_LATITUDE;
-    longitudeLabel.tag      = kTAG_LABEL_LONGITUDE;
+    // Tag the UI objects
+    latitudeLabel.tag   = kTAG_LABEL_LATITUDE;
+    longitudeLabel.tag  = kTAG_LABEL_LONGITUDE;
+    recordData.tag      = kTAG_BUTTON_RECORD;
+    nameTextField.tag   = kTAG_TEXTFIELD_NAME;
+    loggedInAs.tag      = kTAG_BUTTON_LOGGED_IN;
+    upload.tag          = kTAG_BUTTON_UPLOAD;
+    selectProject.tag   = kTAG_BUTTON_PROJECT;
     
     // Initialize other variables
     isRecording = NO;
@@ -106,33 +87,37 @@
 // Is called every time MainViewController appears
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    // Autorotate
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
-- (void) onMenuClick:(id)sender {
-//    [self displayMenu];
-    [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
-}
-
-- (void) onUploadClick:(id)sender {
-    
+- (void) onResetClick:(id)sender {
+    [self.view makeWaffle:@"Reset clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
 }
 
 - (void) onAboutClick:(id)sender {
-    
+    AboutViewController *avc = [[AboutViewController alloc] init];
+    avc.title = @"About";
+    [self.navigationController pushViewController:avc animated:YES];
 }
 
-- (void) displayMenu {
-	UIActionSheet *popupQuery = [[UIActionSheet alloc]
-                                 initWithTitle:nil
-                                 delegate:self
-                                 cancelButtonTitle:@"Cancel"
-                                 destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Login", @"Media", nil];
-	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-	[popupQuery showInView:self.view];
+- (IBAction) onRecordDataClick:(id)sender {
+    [self.view makeWaffle:@"Record clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+}
+
+- (IBAction) onRecordingIntervalClick:(id)sender {
+    [self.view makeWaffle:@"Interval clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+}
+
+- (IBAction) onLoggedInClick:(id)sender {
+    [self.view makeWaffle:@"Logged in clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+}
+
+- (IBAction) onUploadClick:(id)sender {
+    [self.view makeWaffle:@"Upload clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+}
+
+- (IBAction) onSelectProjectClick:(id)sender {
+    [self.view makeWaffle:@"Project clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
 }
 
 // Allows the device to rotate as necessary.
@@ -162,10 +147,6 @@
         return UIInterfaceOrientationMaskAll;
 }
 
-
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-}
-
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 }
 
@@ -183,15 +164,29 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     NSLog(@"New location = %@", newLocation);
     CLLocationCoordinate2D lc2d = [newLocation coordinate];
+//    if (newLocation != nil && lc2d.latitude != 0.0) {
+//        [self resetGeospatialLabels];
+//        return;
+//    }
     double latitude  = lc2d.latitude;
     double longitude = lc2d.longitude;
-    [latitudeLabel setText:[NSString stringWithFormat:@"Latitude: %lf", latitude]];
-    [longitudeLabel setText:[NSString stringWithFormat:@"Longitude: %lf", longitude]];
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        [latitudeLabel setText:[NSString stringWithFormat:@"Latitude: %lf", latitude]];
+        [longitudeLabel setText:[NSString stringWithFormat:@"Longitude: %lf", longitude]];
+    } else {
+        [latitudeLabel setText:[NSString stringWithFormat:@"Lat: %lf", latitude]];
+        [longitudeLabel setText:[NSString stringWithFormat:@"Lon: %lf", longitude]];
+    }
 }
 
 - (void) resetGeospatialLabels {
-    [latitudeLabel setText:@"Latitude: Waiting for GPS"];
-    [longitudeLabel setText:@"Latitude: Waiting for GPS"];
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        [latitudeLabel setText:@"Latitude: ..."];
+        [longitudeLabel setText:@"Longitude: ..."];
+    } else {
+        [latitudeLabel setText:@"Lat: ..."];
+        [longitudeLabel setText:@"Lon: ..."];
+    }
 }
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -201,8 +196,6 @@
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     return YES;
 }
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
