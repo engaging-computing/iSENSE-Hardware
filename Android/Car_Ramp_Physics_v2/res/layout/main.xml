@@ -20,13 +20,13 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/black"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/values"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:background="@android:color/black"
             android:gravity="center"
             android:text="@string/yString"
@@ -34,16 +34,14 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/howToUse"
+        <ToggleButton
+            android:id="@+id/toggleButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/placeDevice"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textOff="Normal Acceleration"
+            android:textOn="Linear Acceleration"
+            android:onClick="onToggleClicked" />
     </LinearLayout>
 
     <Button
@@ -54,7 +52,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_weight="0.79"
         android:background="@drawable/button_rsense"
         android:text="@string/holdToStart"
         android:textColor="#0066FF"
