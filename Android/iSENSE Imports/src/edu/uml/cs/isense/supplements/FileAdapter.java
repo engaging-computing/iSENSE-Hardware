@@ -14,6 +14,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 
+/**
+ * An array adapter for files and directories on the phone's local storage.
+ * Used in FileBrowser.java to display the file selection dialog
+ * 
+ * @author Nick Ver Voort of the iSENSE Android-Development Team
+ */
+
 public class FileAdapter extends ArrayAdapter<File> {
 	public ArrayList<File> items;
 	private Context mContext;
