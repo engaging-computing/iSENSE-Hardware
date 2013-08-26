@@ -45,13 +45,13 @@
     }
     
 }
-							
+
 - (void)viewDidLoad {
     // Initial super call
     [super viewDidLoad];
     
     // Establish menu bar
-	menu = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(onMenuClick)];
+	menu = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(onMenuClick:)];
     self.navigationItem.rightBarButtonItem = menu;
     self.navigationItem.title = @"iSENSE Data Walk";
     
@@ -89,6 +89,10 @@
     // Initialize other variables
     isRecording = NO;
     
+    // Set up location stuff
+    [self resetGeospatialLabels];
+    [self initLocations];
+    
 }
 
 // Is called every time MainViewController is about to appear
@@ -105,20 +109,21 @@
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
-- (void) onMenuClick {
-    NSLog(@"Menu item clicked.");
+- (void) onMenuClick:(id)sender {
+//    [self displayMenu];
+    [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
 }
 
-//- (void) displayMenu {
-//	UIActionSheet *popupQuery = [[UIActionSheet alloc]
-//                                 initWithTitle:nil
-//                                 delegate:self
-//                                 cancelButtonTitle:@"Cancel"
-//                                 destructiveButtonTitle:nil
-//                                 otherButtonTitles:@"Login", @"Media", nil];
-//	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-//	[popupQuery showInView:self.view];
-//}
+- (void) displayMenu {
+	UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                 initWithTitle:nil
+                                 delegate:self
+                                 cancelButtonTitle:@"Cancel"
+                                 destructiveButtonTitle:nil
+                                 otherButtonTitles:@"Login", @"Media", nil];
+	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+	[popupQuery showInView:self.view];
+}
 
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -155,17 +160,28 @@
 }
 
 - (void) initLocations {
-//    if (!locationManager) {
-//        locationManager = [[CLLocationManager alloc] init];
-//        locationManager.delegate = self;
-//        locationManager.distanceFilter = kCLDistanceFilterNone;
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//        [locationManager startUpdatingLocation];
-//        geoCoder = [[CLGeocoder alloc] init];
-//    }
+    if (!locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.distanceFilter = kCLDistanceFilterNone;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [locationManager startUpdatingLocation];
+    }
 }
 
+// Finds the associated address from a GPS location.
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    NSLog(@"New location = %@", newLocation);
+    CLLocationCoordinate2D lc2d = [newLocation coordinate];
+    double latitude  = lc2d.latitude;
+    double longitude = lc2d.longitude;
+    [latitudeLabel setText:[NSString stringWithFormat:@"Latitude: %lf", latitude]];
+    [longitudeLabel setText:[NSString stringWithFormat:@"Longitude: %lf", longitude]];
+}
+
+- (void) resetGeospatialLabels {
+    [latitudeLabel setText:@"Latitude: Waiting for GPS"];
+    [longitudeLabel setText:@"Latitude: Waiting for GPS"];
 }
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

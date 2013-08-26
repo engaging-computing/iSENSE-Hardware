@@ -11,7 +11,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
-
+#import <iSENSE_API/Waffle.h>
 
 @interface MainViewController : UIViewController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,
 CLLocationManagerDelegate, UITextFieldDelegate> {
@@ -19,7 +19,7 @@ CLLocationManagerDelegate, UITextFieldDelegate> {
 }
 
 // UI functions
-- (void) onMenuClick;
+- (void) onMenuClick:(id)sender;
 
 // UI properties
 @property (nonatomic, strong) UIBarButtonItem *menu;
@@ -33,7 +33,8 @@ CLLocationManagerDelegate, UITextFieldDelegate> {
 @property (nonatomic, strong) IBOutlet UILabel *longitudeLabel;
 
 // Other properties
-@property (nonatomic, assign) CLLocationManager *locationManager;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
 @property (nonatomic) BOOL isRecording;
 
 @end
