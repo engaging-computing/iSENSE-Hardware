@@ -9,13 +9,13 @@
 #ifndef Data_Walk_Constants_h
 #define Data_Walk_Constants_h
 
-#define kTAG_LABEL_NAME         500
-#define kTAG_LABEL_TIME_ELAPSED 501
-#define kTAG_LABEL_POINTS_REC   502
-#define kTAG_LABEL_LOGGED_IN    503
-#define kTAG_LABEL_PROJ_NUM     504
-#define kTAG_LABEL_DATA_REC     505
-#define kTAG_LABEL_LATITUDE     506
-#define kTAG_LABEL_LONGITUDE    507
+#define kTAG_LABEL_LATITUDE         500
+#define kTAG_LABEL_LONGITUDE        501
+#define kTAG_BUTTON_RECORD          502
+#define kTAG_BUTTON_INTERVAL        503
+#define kTAG_TEXTFIELD_NAME         504
+#define kTAG_BUTTON_LOGGED_IN       505
+#define kTAG_BUTTON_UPLOAD          506
+#define kTAG_BUTTON_PROJECT         507
 
 #endif
