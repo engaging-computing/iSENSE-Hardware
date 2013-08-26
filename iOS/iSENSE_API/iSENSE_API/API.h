@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface API : NSObject {
-	private:
-		NSString baseURL;
+	//private: //JEREMY - this was causing errors and wouldn't let me build
+		NSString *baseURL;
 }
 
 /* getInstance */
