@@ -11,11 +11,9 @@
 #import <RTutorial.h>
 #import <RPerson.h>
 #import <RDataSet.h>
+#import <Reachability.h>
 
 @interface API : NSObject {
-
-    NSString *baseURL;
-
 }
 
 /* getInstance */
@@ -24,7 +22,7 @@
 /* Checks for Connectivity */
 +(BOOL) hasConnectivity;
 
-/* Change the baseURL Value */
+/* Change the baseUrl Value */
 -(void) useDev:(BOOL)useDev;
 -(void) setBaseUrl:(NSURL *)newUrl;
 
