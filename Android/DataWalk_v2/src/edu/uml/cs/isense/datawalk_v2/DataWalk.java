@@ -56,7 +56,7 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 /**
  * Behaves as the main driver for the iSENSE Data Walk App. Coordinates and
- * records geolocation data.
+ * records Geo-location data.
  * 
  * @author Rajia
  */
@@ -72,7 +72,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView rateBox;
 	private TextView latLong;
 	private Button startStop;
-
+	
 	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
 	private Vibrator vibrator;
@@ -89,6 +89,8 @@ public class DataWalk extends Activity implements LocationListener,
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "13";
+	public static final String USERNAME_KEY = "username";
+	public static final String PASSWORD_KEY = "password";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -97,13 +99,18 @@ public class DataWalk extends Activity implements LocationListener,
 	private String dataSetName = "";
 	private String baseprojectURL = "http://rsense-dev.cs.uml.edu/projects/";
 	private int dataSetID = -1;
-	public static final String USERNAME_KEY = "username";
-	public static final String PASSWORD_KEY = "password";
+	
 
 	/* Manage Work Flow Between Activities */
 	public static Context mContext;
 	public static String firstName = "";
 	public static String lastInitial = "";
+	
+	public static final String USER_PREFS_KEY = "USERID";
+	public static final String INTERVAL_PREFS_KEY = "INTERVALID";
+	public static final String PROJECT_PREFS_KEY = "PROJID";
+	public static final String INTERVAL_VALUE_KEY = "interval_val";
+	private final String PROJECTID_KEY = "project_id";
 
 	/* Manage Work Flow Within DataWalk.java */
 	private boolean running = false;
@@ -121,7 +128,8 @@ public class DataWalk extends Activity implements LocationListener,
 	private final int QUEUE_UPLOAD_REQUESTED = 5;
 	private final int RESET_REQUESTED = 6;
 	private final int NAME_REQUESTED = 7;
-	private final int EXPERIMENT_REQUESTED = 8;
+	private final int PROJECT_REQUESTED = 8;
+	private final int LOGIN_ISENSE_REQUESTED = 9;
 
 	/* Timer Related Globals and Constants */
 	private final int TIMER_LOOP = 1000;
@@ -131,7 +139,11 @@ public class DataWalk extends Activity implements LocationListener,
 	private int dataPointCount = 0;
 	private int timerTick = 0;
 	private int waitingCounter = 0;
-
+	
+	
+	/* Menu Items */
+	private Menu mMenu;
+	
 	/**
 	 * Called when the application is created for the first time.
 	 */
@@ -154,21 +166,15 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 
 		// Set the initial default projectID in preferences
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		SharedPreferences mPrefs = getSharedPreferences(PROJECT_PREFS_KEY,
+				Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("project_id", DEFAULT_PROJECT).commit();
+		mEdit.putString(PROJECTID_KEY, DEFAULT_PROJECT).commit();
 
+		
 		// Initialize main UI elements
-		startStop = (Button) findViewById(R.id.startStop);
-		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
-		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
-		expNumBox = (TextView) findViewById(R.id.expNumBx);
-		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
-		rateBox = (TextView) findViewById(R.id.RateBx);
-		latLong = (TextView) findViewById(R.id.myLocation);
-		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
-		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
+		initialize();
+		
 
 		// Attempt to login with saved credentials, otherwise try default
 		// credentials
@@ -191,16 +197,12 @@ public class DataWalk extends Activity implements LocationListener,
 					// No longer recording so set menu flag to enabled
 					running = false;
 					useMenu = true;
-
+					onPrepareOptionsMenu(mMenu);
 					// Reset the text on the main button
 					startStop.setText(getString(R.string.startPrompt));
 
 					// Cancel the recording timer
 					recordTimer.cancel();
-
-					// Tell the user recording has stopped
-					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 
 					// Create the name of the session using the entered name and
 					// the current time
@@ -213,8 +215,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 					// Get user's project #, or the default if there is none
 					// saved
-					SharedPreferences prefs = getSharedPreferences("PROJID", 0);
-					projectID = prefs.getString("project_id", DEFAULT_PROJECT);
+					SharedPreferences prefs = getSharedPreferences(
+							PROJECT_PREFS_KEY, Context.MODE_PRIVATE);
+					projectID = prefs.getString(PROJECTID_KEY, DEFAULT_PROJECT);
 
 					// Set the project URL for view data
 					projectURL = baseprojectURL + projectID + "/data_sets/";
@@ -226,6 +229,8 @@ public class DataWalk extends Activity implements LocationListener,
 							dataSet.toString(), null);
 					if (dataPointCount > 0) {
 						uq.addDataSetToQueue(ds);
+
+						// Tell the user recording has stopped
 						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 					} else {
@@ -239,9 +244,14 @@ public class DataWalk extends Activity implements LocationListener,
 					// Handles when you press the button to START recording
 				} else {
 
+					//THIS DOES NOT WORK (MENU IS NOT DISABLED) 
 					// Recording so set menu flag to disabled
 					useMenu = false;
+					//invalidateOptionsMenu();
+					onPrepareOptionsMenu(mMenu);
 					running = true;
+					
+					
 
 					// Reset the main UI text boxes
 					pointsUploadedBox.setText("Points Recorded: " + "0");
@@ -269,9 +279,25 @@ public class DataWalk extends Activity implements LocationListener,
 
 			}
 
+			
+
 		});
 
 	}// ends onCreate
+
+	private void initialize() {
+		// Initialize main UI elements
+		startStop = (Button) findViewById(R.id.startStop);
+		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
+		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
+		expNumBox = (TextView) findViewById(R.id.expNumBx);
+		loggedInAs = (TextView) findViewById(R.id.loginStatus);
+		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
+		rateBox = (TextView) findViewById(R.id.RateBx);
+		latLong = (TextView) findViewById(R.id.myLocation);
+		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
+		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
+	}
 
 	/**
 	 * Is called every time this activity is paused. For example, whenever a new
@@ -319,9 +345,11 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onResume() {
 		super.onResume();
 
+		 
+		
 		// Get the last know recording interval
-		mInterval = Integer.parseInt(getSharedPreferences("RecordingPrefs", 0)
-				.getString("DataUploadRate", "10000"));
+		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
+				Context.MODE_PRIVATE).getString(INTERVAL_VALUE_KEY, DEFAULT_INTERVAL + ""));
 
 		// Rebuild the upload queue
 		if (uq != null)
@@ -350,6 +378,7 @@ public class DataWalk extends Activity implements LocationListener,
 					+ " seconds");
 		}
 
+				
 	}// ends onResume
 
 	/**
@@ -410,7 +439,20 @@ public class DataWalk extends Activity implements LocationListener,
 	public static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
+	
+	/**
+	 * Called to create the menu from your menu.xml file.
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 
+		mMenu = menu;
+		// Inflate the layout from menu.xml
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
 	/**
 	 * Turns the action bar menu on and off.
 	 * 
@@ -418,12 +460,29 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (useMenu) {
-			menu.getItem(0).setEnabled(true);
-			menu.getItem(1).setEnabled(true);
-		} else {
+		//o
+		
+		if (!useMenu) {
 			menu.getItem(0).setEnabled(false);
 			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
+			menu.getItem(3).setEnabled(false);
+			menu.getItem(4).setEnabled(false);
+			menu.getItem(5).setEnabled(false);
+			menu.getItem(6).setEnabled(false);
+			menu.getItem(7).setEnabled(false);
+		} 
+		//
+		else {
+			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
+			menu.getItem(3).setEnabled(true);
+			menu.getItem(4).setEnabled(true);
+			menu.getItem(5).setEnabled(true);
+			menu.getItem(6).setEnabled(true);
+			menu.getItem(7).setEnabled(true);
+			
 		}
 		return true;
 	}
@@ -556,7 +615,7 @@ public class DataWalk extends Activity implements LocationListener,
 	}
 
 	/**
-	 * Catches the returns from other activities back to DataWalk.java
+	 * Catches the returns from other activities back to DataWalk.java.
 	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -573,10 +632,11 @@ public class DataWalk extends Activity implements LocationListener,
 
 			// If a new project has been selected, check to see if it is
 			// actually valid.
-		} else if (requestCode == EXPERIMENT_REQUESTED) {
+		} else if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
-				projectID = prefs.getString("project_id", null);
+				SharedPreferences prefs = getSharedPreferences(
+						PROJECT_PREFS_KEY, Context.MODE_PRIVATE);
+				projectID = prefs.getString(PROJECTID_KEY, DEFAULT_PROJECT);
 
 				if (api.hasConnectivity()) {
 					new GetProjectTask().execute();
@@ -641,54 +701,80 @@ public class DataWalk extends Activity implements LocationListener,
 				lastInitial = "";
 				projectID = DEFAULT_PROJECT;
 
-				// TODO
-				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
+				// Set the project ID in preferences back to its default value
+				SharedPreferences prefs = getSharedPreferences(
+						PROJECT_PREFS_KEY, Context.MODE_PRIVATE);
 				SharedPreferences.Editor mEdit = prefs.edit();
-				mEdit.putString("project_id", DEFAULT_PROJECT);
+				mEdit.putString(PROJECTID_KEY, DEFAULT_PROJECT);
 				mEdit.commit();
 
+				// Set the default username and password in preferences back to
+				// their default value
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						DataWalk.mContext,
+						DataWalk.mContext.getSharedPreferences(USER_PREFS_KEY,
+								Context.MODE_PRIVATE));
+				SharedPreferences.Editor mEditor = mPrefs.edit();
+				mEditor.putString(DataWalk.USERNAME_KEY, loginName);
+				mEditor.putString(DataWalk.PASSWORD_KEY, loginPass);
+				mEditor.commit();
+
+				// Tell the user his settings are back to default
 				w.make("Settings have been reset to default.",
 						Waffle.LENGTH_SHORT);
 
+				// Launch the EnterNameActivity
 				startActivityForResult(new Intent(mContext,
 						EnterNameActivity.class), NAME_REQUESTED);
 
 			}
-		} else if (requestCode == LOGIN_STATUS_REQUESTED) {
+
+			// Catches return from LoginIsense.java
+		} else if (requestCode == LOGIN_ISENSE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+
+				// Get the new login information from preferences
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						DataWalk.mContext,
-						DataWalk.mContext.getSharedPreferences("USER_INFO",
+						DataWalk.mContext.getSharedPreferences(USER_PREFS_KEY,
 								Context.MODE_PRIVATE));
-
 				loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
 						DEFAULT_USERNAME);
 				loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
 						DEFAULT_USERNAME);
 
+				// Set the UI to the new login name
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
 						+ " " + loginName);
 			} else {
+				// Set the UI to say you aren't logged in TODO What if you are
+				// still logged in as default?
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as));
 			}
-
-		} else if (requestCode == SPINNER_STARTED) {
-			if (resultCode == RESULT_OK) {
-
-			}
-
 		}
-	}//
 
+	}// End of onActivityResult
+
+	/**
+	 * Is called when the accuracy of the accelerometer sensor changes.
+	 */
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
 	}
 
+	/**
+	 * Is called whenever a new point is received from the accelerometer.
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		// The accel array new holds:
+		// x acceleration in accel[0]
+		// y acceleration in accel[1]
+		// z acceleration in accel[2]
+		// magnitude of total acceleration in accel[3]
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			accel[0] = event.values[0];
 			accel[1] = event.values[1];
@@ -698,121 +784,168 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 	}
 
-	// Rajia's created Menu...
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-		return true;
-	}
+	
 
-	public static final int LOGIN_STATUS_REQUESTED = 45;
-	public static final int SPINNER_STARTED = 23;
-
+	/**
+	 * Performs the code for whenever a menu button is clicked.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
 		case R.id.Upload:
+			// Launched the upload queue dialog
 			manageUploadQueue();
 			return true;
+
 		case R.id.reset:
+			// Launch the dialog asking if the user is sure he/she wants to
+			// reset to default settings
 			Intent i = new Intent(mContext, Reset.class);
 			startActivityForResult(i, RESET_REQUESTED);
 			return true;
+
 		case R.id.login:
+			// Launch the dialog that allows users to login to iSENSE
 			startActivityForResult(new Intent(this, LoginIsense.class),
-					LOGIN_STATUS_REQUESTED);
+					LOGIN_ISENSE_REQUESTED);
 			return true;
+
 		case R.id.NameChange:
+			// Launch the dialog that allows users to enter his/her firstname
+			// and last initial
 			startActivityForResult(new Intent(this, EnterNameActivity.class),
 					NAME_REQUESTED);
 			return true;
+
 		case R.id.DataUploadRate:
+			// Launches the data recording interval picker
 			startActivity(new Intent(this, DataRateDialog.class));
 			return true;
+
 		case R.id.ExpNum:
+			// Allows the user to pick a project to upload to
 			Intent setup = new Intent(this, Setup.class);
-			startActivityForResult(setup, EXPERIMENT_REQUESTED);
+			startActivityForResult(setup, PROJECT_REQUESTED);
 			return true;
+
 		case R.id.About:
+			// Shows the about dialog
 			startActivity(new Intent(this, About.class));
 			return true;
+
 		case R.id.help:
+			// Shows the help dialog
 			startActivity(new Intent(this, Help.class));
 			return true;
 		}
+
 		return false;
+
 	}// Ends on options item selected
 
+	/**
+	 * Tries to login the user to iSENSE using the current saved user
+	 * credentials.
+	 * 
+	 * @author Rajia
+	 */
 	public class AttemptLoginTask extends AsyncTask<Void, Integer, Void> {
 
+		// This booleans check the return values of our API calls
 		boolean connect = false;
 		boolean success = false;
 
+		/**
+		 * Preparation before doInBackground.
+		 */
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
+			// Retrieve user credentials from shared preferences
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					DataWalk.mContext, DataWalk.mContext.getSharedPreferences(
-							"USER_INFO", Context.MODE_PRIVATE));
-
+							USER_PREFS_KEY, Context.MODE_PRIVATE));
 			loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
 					DEFAULT_USERNAME);
 			loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
 					DEFAULT_PASSWORD);
+
 		}
 
+		/**
+		 * Performs the API calls to login and saves the results into our
+		 * variables.
+		 */
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (api.hasConnectivity()) {
-				connect = true;
+
+			// If we have connectivity, try to login to iSENSE
+			if (connect = api.hasConnectivity()) {
 				success = api.createSession(loginName, loginPass);
-			} else {
-				connect = false;
 			}
 
 			return null;
 		}
 
+		/**
+		 * Uses our result variables to determine the appropriate course of
+		 * action once doInBackground has finished.
+		 */
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-
+			
+			
 			if (connect) {
 				if (success) {
+
+					// Save the user's credentials into preferences
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 							DataWalk.mContext,
-							DataWalk.mContext.getSharedPreferences("USER_INFO",
-									Context.MODE_PRIVATE));
-
+							DataWalk.mContext.getSharedPreferences(
+									USER_PREFS_KEY, Context.MODE_PRIVATE));
 					SharedPreferences.Editor mEditor = mPrefs.edit();
 					mEditor.putString(DataWalk.USERNAME_KEY, loginName);
 					mEditor.putString(DataWalk.PASSWORD_KEY, loginName);
 					mEditor.commit();
 
+					// Update the UI with the new logged in username
 					loggedInAs.setText(getResources().getString(
 							R.string.logged_in_as)
 							+ " " + loginName);
 
 				} else {
-					if (loginName.length() == 0 || loginPass.length() == 0)
+
+					// Failed to login with these credentials, so try again
+					if (loginName.length() == 0 || loginPass.length() == 0) {
 						startActivityForResult(new Intent(mContext,
-								LoginIsense.class), LOGIN_STATUS_REQUESTED);
+								LoginIsense.class), LOGIN_ISENSE_REQUESTED);
+
+						// Tell the user his/her credentials are wrong
+						w.make("Invalid username or password.",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					}
+
 				}
+
 			} else {
+
+				// Couldn't connect to the Internet, so report this to the user.
 				w.make("Cannot connect to internet. Please check network settings.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+
+				// Update the UI to signal the fact that you aren't logged in
+				// TODO might still be logged in
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as));
 
 			}
 
-		}
+		}// Ends onPostExecute
 
-	}
+	}// Ends AttempLoginTask
 
 	/**
 	 * Checks to see if the last entered project number is valid.
@@ -823,6 +956,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 		RProject proj;
 
+		/**
+		 * Tries to get the project from iSENSE.
+		 */
 		@Override
 		protected Void doInBackground(Void... arg0) {
 
@@ -832,6 +968,9 @@ public class DataWalk extends Activity implements LocationListener,
 			return null;
 		}
 
+		/**
+		 * Called once you've finished trying to get the project from iSENSE.
+		 */
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
@@ -843,26 +982,33 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				startActivityForResult(new Intent(mContext, Setup.class),
-						EXPERIMENT_REQUESTED);
+						PROJECT_REQUESTED);
 			}
 		}
 
 	}
 
+	/**
+	 * Tracks the current GPS status. Is called when the GPS is started,
+	 * stopped, and receives updates.
+	 */
 	@Override
 	public void onGpsStatusChanged(int event) {
+
+		// Count the current number of satellites in contact with the GPS
 		GpsStatus status = mLocationManager.getGpsStatus(null);
 		int count = 0;
 		Iterable<GpsSatellite> sats = status.getSatellites();
-
 		for (Iterator<GpsSatellite> i = sats.iterator(); i.hasNext(); i.next()) {
 			count++;
 		}
 
+		// If there are 3 or fewer satellites that we are connected, we've
+		// probably lost GPS a lock
 		if (count < 4)
 			gpsWorking = false;
-	}
-
+	} 
+	
 	/**
 	 * Runs the main timer that records data and updates the main UI every
 	 * second.

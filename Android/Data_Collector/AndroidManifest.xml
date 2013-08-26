@@ -59,9 +59,10 @@
             android:label="Login"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".sync.SyncTime"
+            android:name="edu.uml.cs.isense.sync.SyncTime"
             android:label="Synchronize Time"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name=".dialogs.ChooseSensorDialog"
             android:label="Select Fields"
@@ -91,21 +92,25 @@
             android:label="Enter Data Set Description"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".sync.TimeSent"
+            android:name="edu.uml.cs.isense.sync.TimeSent"
             android:label="Time Sent"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
-            android:name=".sync.TimeReceived"
+            android:name="edu.uml.cs.isense.sync.TimeReceived"
             android:label="Time Received"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
-            android:name=".sync.TimeFailed"
+            android:name="edu.uml.cs.isense.sync.TimeFailed"
             android:label="Connection Timed Out"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
-            android:name=".sync.TimeReset"
+            android:name="edu.uml.cs.isense.sync.TimeReset"
             android:label="Time Reset"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name=".dialogs.CanLogin"
             android:label="Would You Like to Login?"
