@@ -50,6 +50,51 @@ static API *api;
 		baseURL = LIVE_URL;
 	}
  }
+
+
+
+
+
+/**
+ * Below methods are unimplemented.  They were added to prevent warnings in the API for
+ * an unfinished implementation.
+ *
+ */
+
+/* Checks for Connectivity */
++(BOOL) hasConnectivity { return YES; }
+
+/* Change the baseURL Value */
+-(void) setBaseUrl:(NSURL *)newUrl {}
+
+/* Manage Authentication Key */
+-(void) deleteSession {}
+
+/* Doesn't Require Authentication Key */
+-(RProject *)   getProjectWithId:       (int)projectId { return nil; }
+-(RTutorial *)  getTutorialWithId:      (int)tutorialId { return nil; }
+-(RDataSet *)   getDataSetWithId:       (int)dataSetId { return nil; }
+-(NSArray *)    getProjectFieldsWithId: (int)projectId { return nil; }
+-(NSArray *)    getDataSetsWithId:      (int)projectId { return nil; }
+
+-(NSArray *)    getProjectsAtPage:  (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
+-(RTutorial *)  getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
+
+/* Requires an Authentication Key */
+-(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
+
+-(RPerson *)    getCurrentUser { return nil; };
+-(RPerson *)    getUserWithUsername:(NSString *)username { return nil; }
+-(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
+-(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
+
+-(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name { return -1; }
+-(int)      uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
+-(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+-(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+
+/* Convenience Method for Uploading */
+-(NSDictionary *)rowsToCols:(NSDictionary *)original { return nil; }
  
 
 @end
