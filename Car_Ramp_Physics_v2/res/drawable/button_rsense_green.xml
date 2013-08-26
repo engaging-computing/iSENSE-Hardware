@@ -2,7 +2,7 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <item android:state_enabled="false" >        
+    <item android:state_enabled="false" >
         <shape>
             <gradient
                 android:endColor="#CBF0C7"
@@ -59,7 +59,7 @@
         </shape>
     </item>
 
-    <item>        
+    <item>
         <shape>
             <gradient
                 android:endColor="#CBF0C7"

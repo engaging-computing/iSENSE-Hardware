@@ -4,8 +4,10 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,11 +32,21 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choosesensor);
+		
+		String expNum = "", expName = "";
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			expNum  = extras.getString("expnum");
+			expName = extras.getString("expname");
+		}
+		
+		TextView tvtext = (TextView) findViewById(R.id.choose_sensor_text);
+		tvtext.setText(getResources().getString(R.string.select_fields_for) + expNum + ", " + expName + ".");
 
 		compatible = true;
 		Context mContext = this;
 
-		LinkedList<String> fields = AmusementPark.dfm.order;
+		LinkedList<String> fields = AmusementPark.dfm.getOrderList();
 
 		sensors = AmusementPark.sc;
 
@@ -90,7 +102,12 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 							SensorTypes.AMBIENT_TEMPERATURE);
 				}
 
-				scrollViewLayout.addView(v);
+				LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+					     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+				layoutParams.setMargins(1, 1, 1, 1);
+				
+				scrollViewLayout.addView(v, layoutParams);
 				v.setOnClickListener(this);
 
 				if (field.equals(getString(R.string.null_string))) {
@@ -103,7 +120,8 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 
 		if (nullViewCount == scrollViewLayout.getChildCount()) {
 			errorTV = new TextView(mContext);
-			if (isEmpty) errorTV.setText(getString(R.string.invalidExperiment));
+			errorTV.setBackgroundColor(Color.TRANSPARENT);
+			if (isEmpty) errorTV.setText(getString(R.string.invalidProject));
 			else {
 				errorTV.setText(getString(R.string.noCompatibleFields));
 				compatible = false;
@@ -116,14 +134,11 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		Button okay = (Button) findViewById(R.id.sensor_ok);
 		okay.setOnClickListener(this);
 
-		Button back = (Button) findViewById(R.id.sensor_back);
-		back.setOnClickListener(this);
-
 	}
 
 	// Automatically Compatible
 	void setCompatibility(TextView tv, CheckedTextView ctv) {
-		tv.setTextColor(Color.GREEN);
+		tv.setTextColor(Color.parseColor("#00AA00"));
 		tv.setText(R.string.compatible);
 		ctv.setChecked(true);
 	}
@@ -131,11 +146,11 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	// Check compatibility against SensorTypes
 	void setCompatibility(TextView tv, CheckedTextView ctv, SensorTypes sensor) {
 		if (sensors.isCompatible(sensor)) {
-			tv.setTextColor(Color.GREEN);
+			tv.setTextColor(Color.parseColor("#00AA00"));
 			tv.setText(R.string.compatible);
 			ctv.setChecked(true);
 		} else {
-			tv.setTextColor(Color.RED);
+			tv.setTextColor(Color.parseColor("#AA0000"));
 			tv.setText(R.string.incompatible);
 			ctv.setChecked(false);
 			ctv.setCheckMarkDrawable(R.drawable.red_x);
@@ -146,11 +161,11 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 	void setCompatibility(TextView tv, CheckedTextView ctv,
 			SensorTypes sensor1, SensorTypes sensor2) {
 		if (sensors.isCompatible(sensor1) && sensors.isCompatible(sensor2)) {
-			tv.setTextColor(Color.GREEN);
+			tv.setTextColor(Color.parseColor("#00AA00"));
 			tv.setText(R.string.compatible);
 			ctv.setChecked(true);
 		} else {
-			tv.setTextColor(Color.RED);
+			tv.setTextColor(Color.parseColor("#AA0000"));
 			tv.setText(R.string.incompatible);
 			ctv.setChecked(false);
 			ctv.setCheckMarkDrawable(R.drawable.red_x);
@@ -164,11 +179,6 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		case R.id.sensor_ok:
 			setAcceptedFields();
 			setResult(RESULT_OK);
-			finish();
-			break;
-
-		case R.id.sensor_back:
-			setResult(RESULT_CANCELED);
 			finish();
 			break;
 
@@ -198,12 +208,36 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 			else
 				acceptedFields.add(getString(R.string.null_string));
 		}
+		
+		buildPrefsString();
 
+	}
+	
+	private void buildPrefsString() {
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for (String s : acceptedFields) {
+			sb.append(s).append(",");
+		}
+		
+		String prefString = sb.toString();
+		if(prefString.length() == 0)
+			return;
+		prefString = prefString.substring(0, prefString.length() - 1);
+		
+		mEdit.putString("accepted_fields", prefString).commit();
+		
+		Log.d("Jeremy", prefString);
+		
 	}
 	
 	@Override
 	public void onBackPressed() {
-		setResult(RESULT_CANCELED);
+		setAcceptedFields();
+		setResult(RESULT_OK);
 		finish();
 	}
 

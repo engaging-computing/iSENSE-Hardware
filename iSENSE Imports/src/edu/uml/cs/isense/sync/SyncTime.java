@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.sync;
+package edu.uml.cs.isense.sync;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -19,64 +19,75 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
+/**
+ * Allows the user to share his device's current time with other devices on the
+ * same network.
+ * 
+ * @author jpoulin
+ */
 public class SyncTime extends Activity {
 
-	private static Context mContext;
+	private Context mContext;
 
-	private static final int TIME_SENT_REQUESTED = 100;
-	private static final int TIME_RECEIVED_REQUESTED = 101;
-	private static final int TIME_FAILED_REQUESTED = 102;
-	private static final int TIME_RESET_REQUESTED = 103;
+	/* Constants */
+	private final int TIME_RECEIVED_REQUESTED = 2;
+	private final int TIME_FAILED_REQUESTED = 3;
+	private final int TIME_RESET_REQUESTED = 4;
+	private final String HOST = "255.255.255.255";
 
-	private static long timeOffset = 0;
-	private static long myTime = 0;
-	private static long timeReceived = 0;
+	/* Time Variables */
+	private long timeOffset = 0;
+	private long myTime = 0;
+	private long timeReceived = 0;
+	String currentTime;
+	String receivedTime;
 
-	static String host = "255.255.255.255";
-	static int mPort = 45623;
-	static String tag = "UDP Socket";
-	static DatagramSocket mSocket;
-	static DatagramPacket mPack, newPack;
-	static String currentTime;
-	static String receivedTime;
-	static byte[] byteMessage;
-	static byte[] receivedMessage;
-	static InetAddress sendAddress;
+	/* Socket Variables */
+	int mPort = 45623;
+	DatagramSocket mSocket;
+	DatagramPacket mPack, newPack;
+	InetAddress sendAddress;
+	byte[] byteMessage;
+	byte[] receivedMessage;
 
+	/* Work Flow Variables */
 	boolean preInit = false;
 	boolean success = false;
 
+	/* Managers */
 	private ProgressDialog dia;
 	private API api;
 	private Waffle w;
 
+	public enum SyncTimeExceptionType {
+		NONE, SOCKET_EXCEPTION, UNKNOWN_HOST_EXCEPTION, TIMEOUT_EXCEPTION
+	}
+
+	/**
+	 * Creates the 4 button layout that can send and receive time. It also
+	 * allows the user to reset his iSENSE uploading time stamp back to its
+	 * default.
+	 */
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.synctime);
 
+		// Initialize important variables
 		mContext = this;
-
 		api = API.getInstance(mContext);
 		w = new Waffle(this);
-		
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
-		
+
 		// Action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
@@ -95,11 +106,13 @@ public class SyncTime extends Activity {
 				}
 			}
 		}
-		
-		String dummyTime = "" + System.currentTimeMillis();
-		byteMessage = dummyTime.getBytes();
-		receivedMessage = dummyTime.getBytes();
 
+		// Prepare messages
+		String currentTime = "" + System.currentTimeMillis();
+		byteMessage = currentTime.getBytes();
+		receivedMessage = currentTime.getBytes();
+
+		// Prepare UI buttons
 		Button send = (Button) findViewById(R.id.sendButton);
 		Button receive = (Button) findViewById(R.id.receiveButton);
 		Button reset = (Button) findViewById(R.id.resetButton);
@@ -107,21 +120,15 @@ public class SyncTime extends Activity {
 
 		send.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 
 				if (api.hasConnectivity()) {
 
-					sendPack();
+					// Send the message on a new thread
+					new SendMessage().start();
 
-					receivePack();
-
-					String timeSent = convertTimeStamp(timeReceived);
-
-					Intent iSent = new Intent(SyncTime.this, TimeSent.class);
-					iSent.putExtra("timeSent", timeSent);
-					iSent.putExtra("timeOffset", timeOffset);
-					startActivityForResult(iSent, TIME_SENT_REQUESTED);
+					// Listen for a message on its own thread (async task)
+					new ReceiveTask().execute();
 
 				} else {
 					w.make("No internet connection found.", Waffle.IMAGE_X);
@@ -132,28 +139,31 @@ public class SyncTime extends Activity {
 
 		receive.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				if (api.hasConnectivity()) {
+
+					// Listen for a message on its own thread (async task)
 					new ReceiveTask().execute();
+
 				} else {
 					w.make("No internet connection found.", Waffle.IMAGE_X);
 				}
 			}
 		});
-		
+
 		reset.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
+
+				// Launches the reset time activity
 				Intent iReset = new Intent(SyncTime.this, TimeReset.class);
 				startActivityForResult(iReset, TIME_RESET_REQUESTED);
+
 			}
 		});
 
 		cancel.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				((Activity) mContext).finish();
@@ -161,19 +171,20 @@ public class SyncTime extends Activity {
 		});
 	}
 
-	// attempts to initialize socket
-	// returns:
-	// -1 for UnknownHost exception
-	// -2 for Socket exception for socket creation
-	// -3 for Timeout exception
-	private int initSocket() {
+	/**
+	 * Attempts to initialize socket.
+	 * 
+	 * @return SyncTimeExceptionType which signifies which exception was caught
+	 *         if any.
+	 */
+	private SyncTimeExceptionType initSocket() {
 
 		try {
-			sendAddress = InetAddress.getByName(host);
+			sendAddress = InetAddress.getByName(HOST);
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			return -1;
+			return SyncTimeExceptionType.UNKNOWN_HOST_EXCEPTION;
 		}
 
 		try {
@@ -181,7 +192,7 @@ public class SyncTime extends Activity {
 
 		} catch (SocketException e) {
 			e.printStackTrace();
-			return -2;
+			return SyncTimeExceptionType.SOCKET_EXCEPTION;
 		}
 
 		try {
@@ -189,10 +200,10 @@ public class SyncTime extends Activity {
 
 		} catch (SocketException e) {
 			e.printStackTrace();
-			return -3;
+			return SyncTimeExceptionType.TIMEOUT_EXCEPTION;
 		}
 
-		return 0;
+		return SyncTimeExceptionType.NONE;
 	}
 
 	// set socket for sending (fails if closed)
@@ -205,12 +216,14 @@ public class SyncTime extends Activity {
 
 	}
 
-	// attempts to send packet
-	private void sendPack() {
+	/**
+	 * Attempts to send a packet. Print an IOException to the error log if any
+	 * is caught.
+	 */
+	synchronized private void sendPack() {
 
 		initSocket();
 		preInit = true;
-
 		prepForBroadcast();
 
 		try {
@@ -225,8 +238,22 @@ public class SyncTime extends Activity {
 
 	}
 
-	// attempts to receive packet
-	private void receivePack() {
+	/**
+	 * A thread class dedicated to sending our time packet into the network.
+	 * 
+	 * @author jpoulin
+	 */
+	private class SendMessage extends Thread {
+		public void run() {
+			sendPack();
+		}
+	}
+
+	/**
+	 * Attempts to receive a packet. Print an IOException to the error log if
+	 * any is caught.
+	 */
+	synchronized private void receivePack() {
 
 		if (!preInit)
 			initSocket();
@@ -251,6 +278,13 @@ public class SyncTime extends Activity {
 
 	}
 
+	/**
+	 * Converts a millisecond time stamp into human readable form.
+	 * 
+	 * @param timeStamp
+	 *            Time you want to convert in milliseconds.
+	 * @return A human readable date string in the form MM/DD/YYYY, HH:MM:SS.MS
+	 */
 	private String convertTimeStamp(long timeStamp) {
 
 		Calendar date = Calendar.getInstance();
@@ -271,6 +305,15 @@ public class SyncTime extends Activity {
 				+ secondSt + "." + millisSt;
 	}
 
+	/**
+	 * An AsyncTask class dedicated to that launches a progress dialog, and
+	 * attempts to receive a packet from the network. Launches
+	 * {@link edu.uml.cs.isense.sync.TimeReceived TimeReceived} or
+	 * {@link edu.uml.cs.isense.sync.TimeFailed TimeFailed} in onPostExecute,
+	 * depending on whether or not the packet was received successfully.
+	 * 
+	 * @author jpoulin
+	 */
 	private class ReceiveTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
@@ -307,21 +350,9 @@ public class SyncTime extends Activity {
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
+	/**
+	 * Makes sure the socket is closed.
+	 */
 	@Override
 	protected void onStop() {
 		if (mSocket != null)
@@ -330,7 +361,13 @@ public class SyncTime extends Activity {
 		super.onStop();
 	}
 
-	// used to convert wifi ip address
+	/**
+	 * Used to convert WiFi IP address into usable string form.
+	 * 
+	 * @param ipAddress
+	 *            IP address in integer form.
+	 * @return
+	 */
 	public String formatIp(int ipAddress) {
 		int intMyIp3 = ipAddress / 0x1000000;
 		int intMyIp3mod = ipAddress % 0x1000000;
@@ -348,15 +385,15 @@ public class SyncTime extends Activity {
 		return ipString;
 	}
 
+	/**
+	 * Catches the returns of {@link edu.uml.cs.isense.sync.TimeReceived
+	 * TimeReceived}, {@link edu.uml.cs.isense.sync.TimeFailed TimeFailed}, and
+	 * {@link edu.uml.cs.isense.sync.TimeReset TimeReset}.
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == TIME_SENT_REQUESTED) {
-			Intent retIntent = new Intent();
-			retIntent.putExtra("offset", timeOffset);
-			setResult(RESULT_OK, retIntent);
-			finish();
-		} else if (requestCode == TIME_RECEIVED_REQUESTED) {
+		if (requestCode == TIME_RECEIVED_REQUESTED) {
 			Intent retIntent = new Intent();
 			retIntent.putExtra("offset", timeOffset);
 			setResult(RESULT_OK, retIntent);

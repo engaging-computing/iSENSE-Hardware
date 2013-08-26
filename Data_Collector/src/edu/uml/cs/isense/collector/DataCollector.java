@@ -80,7 +80,6 @@ import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
-import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -90,6 +89,7 @@ import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataCollector extends Activity implements SensorEventListener,
@@ -245,10 +245,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static File SDFile;
 	private static FileWriter gpxwriter;
 	private static BufferedWriter out;
-
+	private static Context mContext;
+	
 	public static JSONArray dataSet;
-
-	public static Context mContext;
 
 	// Custom
 	public static API api;
@@ -1644,18 +1643,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 		String appendMe = "";
 		if (sdCardError)
 			appendMe = "File not written to SD Card.";
-		else
-			appendMe = "Filename: \n" + sdFileName;
+		else {
+			if (sdFileName.equals(""))
+				appendMe = "";
+			else
+				appendMe = "Filename: \n" + sdFileName;
+		}
 
 		Intent iSummary = new Intent(mContext, Summary.class);
 		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe).putExtra("date", dateString)
+				.putExtra("append", appendMe)
+				.putExtra("date", dateString)
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
 
+		// Reset the sdFileName
+		sdFileName = "";
 	}
 
 	// Loads the main screen
@@ -1737,10 +1743,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 			
-//			if (dfm.order.size() == 0)
+//			if (dfm.getOrderList.size() == 0)
 //				TODO - API error checking for this case
-			
-			System.out.println("Dfm size is " + dfm.order.size());
 
 			super.onPostExecute(result);
 		}
@@ -1824,6 +1828,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setBackgroundResource(R.drawable.button_rsense);
 		step3.setTextColor(Color.parseColor("#0066FF"));
 
+		step1.setBackgroundResource(R.drawable.button_rsense);
 		step1.setText(getResources().getString(R.string.step1));
 		step3.setText(getResources().getString(R.string.step3));
 	}
