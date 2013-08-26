@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B714A34B17C7BA6B0016F52B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B714A34A17C7BA6B0016F52B /* QuartzCore.framework */; };
+		B71DF60517C7A55200A4B9CD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71DF60417C7A55200A4B9CD /* CoreLocation.framework */; };
 		B762F4B217C6534500B1D6E9 /* MainLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */; };
 		B762F4B417C6537000B1D6E9 /* MainLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */; };
 		B762F4B617C6571100B1D6E9 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B517C6571100B1D6E9 /* rsense_logo.png */; };
+		B773ACFB17C7AD4E0074ECE3 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B7FE9E1117C792D500EE1A32 /* iSENSE_API_Bundle.bundle */; };
+		B773ACFF17C7AFE50074ECE3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */; };
 		B7E567A317C6442700C2DF46 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A217C6442700C2DF46 /* UIKit.framework */; };
 		B7E567A517C6442700C2DF46 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A417C6442700C2DF46 /* Foundation.framework */; };
 		B7E567A717C6442700C2DF46 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A617C6442700C2DF46 /* CoreGraphics.framework */; };
@@ -30,12 +34,47 @@
 		B7F3883117C6A95100CA8059 /* datawalk_logo_ipad_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883017C6A95100CA8059 /* datawalk_logo_ipad_retina.png */; };
 		B7F3883417C6A98B00CA8059 /* datawalk_logo_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883317C6A98B00CA8059 /* datawalk_logo_ipad.png */; };
 		B7F3883617C6A9AE00CA8059 /* datawalk_logo_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883517C6A9AE00CA8059 /* datawalk_logo_retina.png */; };
+		B7FE9E1717C793BA00EE1A32 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7FE9E0F17C792D500EE1A32 /* libiSENSE_API.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B773ACF817C7AD370074ECE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39216FDC176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		B7FE9E0E17C792D500EE1A32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39FF25E016DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
+		};
+		B7FE9E1017C792D500EE1A32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39216FDD176F5C790070DFCC;
+			remoteInfo = iSENSE_API_Bundle;
+		};
+		B7FE9E1517C793B000EE1A32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39FF25DF16DFA28A0062C3DC;
+			remoteInfo = iSENSE_API;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		B714A34A17C7BA6B0016F52B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		B71DF60417C7A55200A4B9CD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B762F4B517C6571100B1D6E9 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
+		B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B7E5679F17C6442700C2DF46 /* Data_Walk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Data_Walk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7E567A217C6442700C2DF46 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B7E567A417C6442700C2DF46 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -62,6 +101,7 @@
 		B7F3883317C6A98B00CA8059 /* datawalk_logo_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = datawalk_logo_ipad.png; sourceTree = "<group>"; };
 		B7F3883517C6A9AE00CA8059 /* datawalk_logo_retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = datawalk_logo_retina.png; sourceTree = "<group>"; };
 		B7F3883717C6AA8A00CA8059 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +109,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B714A34B17C7BA6B0016F52B /* QuartzCore.framework in Frameworks */,
+				B773ACFF17C7AFE50074ECE3 /* SystemConfiguration.framework in Frameworks */,
+				B71DF60517C7A55200A4B9CD /* CoreLocation.framework in Frameworks */,
+				B7FE9E1717C793BA00EE1A32 /* libiSENSE_API.a in Frameworks */,
 				B7E567A317C6442700C2DF46 /* UIKit.framework in Frameworks */,
 				B7E567A517C6442700C2DF46 /* Foundation.framework in Frameworks */,
 				B7E567A717C6442700C2DF46 /* CoreGraphics.framework in Frameworks */,
@@ -101,6 +145,9 @@
 		B7E567A117C6442700C2DF46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B714A34A17C7BA6B0016F52B /* QuartzCore.framework */,
+				B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */,
+				B71DF60417C7A55200A4B9CD /* CoreLocation.framework */,
 				B7E567A217C6442700C2DF46 /* UIKit.framework */,
 				B7E567A417C6442700C2DF46 /* Foundation.framework */,
 				B7E567A617C6442700C2DF46 /* CoreGraphics.framework */,
@@ -201,6 +248,7 @@
 		B7E567DF17C644D500C2DF46 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -235,6 +283,15 @@
 			name = AppIcon;
 			sourceTree = "<group>";
 		};
+		B7FE9E0A17C792D500EE1A32 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B7FE9E0F17C792D500EE1A32 /* libiSENSE_API.a */,
+				B7FE9E1117C792D500EE1A32 /* iSENSE_API_Bundle.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -249,6 +306,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				B773ACF917C7AD370074ECE3 /* PBXTargetDependency */,
+				B7FE9E1617C793B000EE1A32 /* PBXTargetDependency */,
 			);
 			name = Data_Walk;
 			productName = Data_Walk;
@@ -275,6 +334,12 @@
 			mainGroup = B7E5679617C6442700C2DF46;
 			productRefGroup = B7E567A017C6442700C2DF46 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = B7FE9E0A17C792D500EE1A32 /* Products */;
+					ProjectRef = B7FE9E0917C792D500EE1A32 /* iSENSE_API.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				B7E5679E17C6442700C2DF46 /* Data_Walk */,
@@ -282,11 +347,29 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		B7FE9E0F17C792D500EE1A32 /* libiSENSE_API.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libiSENSE_API.a;
+			remoteRef = B7FE9E0E17C792D500EE1A32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B7FE9E1117C792D500EE1A32 /* iSENSE_API_Bundle.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iSENSE_API_Bundle.bundle;
+			remoteRef = B7FE9E1017C792D500EE1A32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		B7E5679D17C6442700C2DF46 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B773ACFB17C7AD4E0074ECE3 /* iSENSE_API_Bundle.bundle in Resources */,
 				B7E567AF17C6442700C2DF46 /* InfoPlist.strings in Resources */,
 				B7E567B717C6442700C2DF46 /* Default.png in Resources */,
 				B7E567B917C6442700C2DF46 /* Default@2x.png in Resources */,
@@ -320,6 +403,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B773ACF917C7AD370074ECE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API_Bundle;
+			targetProxy = B773ACF817C7AD370074ECE3 /* PBXContainerItemProxy */;
+		};
+		B7FE9E1617C793B000EE1A32 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iSENSE_API;
+			targetProxy = B7FE9E1517C793B000EE1A32 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B7E567AD17C6442700C2DF46 /* InfoPlist.strings */ = {
@@ -396,7 +492,20 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Data_Walk/Data_Walk-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
+					"$(PROJECT_DIR)/../iSENSE_API",
+				);
 				INFOPLIST_FILE = "Data_Walk/Data_Walk-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)\"",
+					"$(inherited)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"$(SRCROOT)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -407,7 +516,16 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Data_Walk/Data_Walk-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../iSENSE_API/iSENSE_API/headers",
+					"$(PROJECT_DIR)/../iSENSE_API",
+				);
 				INFOPLIST_FILE = "Data_Walk/Data_Walk-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)\"",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

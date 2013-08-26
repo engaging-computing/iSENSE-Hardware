@@ -13,7 +13,9 @@
 #import <RDataSet.h>
 
 @interface API : NSObject {
+
     NSString *baseURL;
+
 }
 
 /* getInstance */
