@@ -43,5 +43,6 @@
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) BOOL isRecording;
+@property (nonatomic, strong) UITextField *activeField;
 
 @end
