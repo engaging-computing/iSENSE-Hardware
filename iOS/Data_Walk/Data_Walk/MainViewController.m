@@ -55,8 +55,10 @@
     [super viewDidLoad];
     
     // Set up iSENSE settings and API
-    [api getInstance];
+    api = [API getInstance];
     NSLog(@"API is: %@", api);
+    
+    [api createSessionWithUsername:@"mobile" andPassword:@"mobile"];
     
     // Set up the menu bar
 	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
@@ -379,7 +381,7 @@
         [longitudeLabel setText:[NSString stringWithFormat:@"Lon: %lf", longitude]];
     }
     
-    [gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
+    //[gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
 }
 
 - (void) resetGeospatialLabels {

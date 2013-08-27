@@ -10,8 +10,8 @@
 
 @implementation API
 
-#define LIVE_URL @"http://129.63.16.128/"
-#define DEV_URL  @"http://129.63.16.30/"
+#define LIVE_URL @"http://129.63.16.128"
+#define DEV_URL  @"http://129.63.16.30"
 
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
@@ -49,7 +49,7 @@ static RPerson *currentUser;
  *
  * @param newUrl NSString version of the URL you want to use.
  */
--(void) setBaseUrl:(NSString *)newUrl {
+-(void)setBaseUrl:(NSString *)newUrl {
     baseUrl = newUrl;
 }
 
@@ -58,7 +58,7 @@ static RPerson *currentUser;
  *
  * @param useDev Set to true if you want to use the development site.
  */
-- (void) useDev:(BOOL)useDev {
+- (void)useDev:(BOOL)useDev {
 	if (useDev) {
 		baseUrl = DEV_URL;
 	} else {
@@ -71,17 +71,11 @@ static RPerson *currentUser;
  *
  * @return YES if you have connectivity, NO if it does not
  */
-+(BOOL) hasConnectivity {
++(BOOL)hasConnectivity {
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];
     return !(networkStatus == NotReachable);
 }
-
-/**
- * Below methods are unimplemented.  They were added to prevent warnings in the API for
- * an unfinished implementation.
- *
- */
 
 /**
  * Log in to iSENSE. After calling this function, authenticated API functions will work properly.
@@ -90,9 +84,9 @@ static RPerson *currentUser;
  * @param password The password of the user to log in as
  * @return TRUE if login succeeds, FALSE if it does not
  */
--(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
+-(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"&username=", [username UTF8String], @"&password=", [password UTF8String]];
+    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"username_or_email=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"POST" andPostData:nil];
     NSLog(@"%@", result.description);
     authenticityToken = [result objectForKey:@"authenticity_token"];
@@ -105,8 +99,16 @@ static RPerson *currentUser;
     return FALSE;
 }
 
-/* Manage Authentication Key */
--(void) deleteSession {}
+/**
+ * Log out of iSENSE.
+ */
+-(void)deleteSession {
+    
+    NSString *parameters = [NSString stringWithFormat:@"%@%s", @"authenticity_token=", authenticityToken.UTF8String];
+    [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"DELETE" andPostData:nil];
+    currentUser = nil;
+    
+}
 
 /* Doesn't Require Authentication Key */
 -(RProject *)   getProjectWithId:       (int)projectId { return nil; }
@@ -138,7 +140,7 @@ static RPerson *currentUser;
  * @return A Person object
  */
 -(RPerson *)getUserWithUsername:(NSString *)username {
-
+    
     RPerson *person = [[RPerson alloc] init];
     NSString *path = [NSString stringWithFormat:@"%@%@", @"users/", username];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:@"" withReqestType:@"GET" andPostData:nil];
@@ -196,7 +198,8 @@ static RPerson *currentUser;
  * @return An NSDictionary dump of a JSONObject representing the requested data
  */
 -(NSDictionary *)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withReqestType:(NSString *)reqType andPostData:(NSData *)postData {
-    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@%@%@", baseUrl, path, parameters]];
+    
+    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/%@?%@", baseUrl, path, parameters]];
     NSLog(@"Connect to: %@", url);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url

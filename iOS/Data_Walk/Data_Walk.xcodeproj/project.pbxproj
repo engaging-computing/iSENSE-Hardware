@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		B714A34B17C7BA6B0016F52B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B714A34A17C7BA6B0016F52B /* QuartzCore.framework */; };
 		B71DF60517C7A55200A4B9CD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71DF60417C7A55200A4B9CD /* CoreLocation.framework */; };
-		B72E04F817CB9E8F00D06B57 /* gps_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B72E04F717CB9E8F00D06B57 /* gps_icon.png */; };
 		B72E04FC17CBC30E00D06B57 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B72E04FB17CBC30E00D06B57 /* AboutViewController.m */; };
 		B72E04FE17CBC35700D06B57 /* AboutLayout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */; };
 		B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E04FF17CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib */; };
@@ -79,7 +78,6 @@
 /* Begin PBXFileReference section */
 		B714A34A17C7BA6B0016F52B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		B71DF60417C7A55200A4B9CD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		B72E04F717CB9E8F00D06B57 /* gps_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gps_icon.png; path = ../../../Desktop/gps_icon.png; sourceTree = "<group>"; };
 		B72E04FA17CBC30E00D06B57 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		B72E04FB17CBC30E00D06B57 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout~iphone.xib"; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 			children = (
 				B7F3883217C6A95900CA8059 /* App Icon */,
 				B762F4B517C6571100B1D6E9 /* rsense_logo.png */,
-				B72E04F717CB9E8F00D06B57 /* gps_icon.png */,
 				B752DAC117CD117400B01912 /* gps_icon_no_lock.png */,
 			);
 			name = Images;
@@ -421,7 +418,6 @@
 				B7F3883117C6A95100CA8059 /* datawalk_logo_ipad_retina.png in Resources */,
 				B7F3883417C6A98B00CA8059 /* datawalk_logo_ipad.png in Resources */,
 				B7F3883617C6A9AE00CA8059 /* datawalk_logo_retina.png in Resources */,
-				B72E04F817CB9E8F00D06B57 /* gps_icon.png in Resources */,
 				B72E04FE17CBC35700D06B57 /* AboutLayout~iphone.xib in Resources */,
 				B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */,
 				B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */,
