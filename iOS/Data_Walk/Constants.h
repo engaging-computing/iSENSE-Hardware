@@ -9,6 +9,17 @@
 #ifndef Data_Walk_Constants_h
 #define Data_Walk_Constants_h
 
+// iSENSE constants
+#define kUSE_DEV            true
+#define kDEFAULT_PROJECT    11
+#define kDEFAULT_USER       @"mobile"
+#define kDEFAULT_PASS       @"mobile"
+#define kBASE_VIS_URL       @"http://beta.isenseproject.org/projects/"
+
+// other recording constants
+#define kDEFAULT_REC_INTERVAL   10
+
+// tags for UI items
 #define kTAG_LABEL_LATITUDE         500
 #define kTAG_LABEL_LONGITUDE        501
 #define kTAG_BUTTON_RECORD          502

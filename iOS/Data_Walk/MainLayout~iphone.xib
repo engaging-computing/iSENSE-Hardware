@@ -471,14 +471,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">recordingInterval</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="856296132"/>
-					</object>
-					<int key="connectionID">154</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">selectProject</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="529326218"/>
@@ -492,6 +484,14 @@
 						<reference key="destination" ref="247396850"/>
 					</object>
 					<int key="connectionID">156</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">recordingIntervalButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="856296132"/>
+					</object>
+					<int key="connectionID">163</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -679,7 +679,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">161</int>
+			<int key="maxID">163</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -721,7 +721,7 @@
 						<string key="longitudeLabel">UILabel</string>
 						<string key="nameTextField">UITextField</string>
 						<string key="recordData">UIButton</string>
-						<string key="recordingInterval">UIButton</string>
+						<string key="recordingIntervalButton">UIButton</string>
 						<string key="selectProject">UIButton</string>
 						<string key="upload">UIButton</string>
 					</dictionary>
@@ -746,8 +746,8 @@
 							<string key="name">recordData</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="recordingInterval">
-							<string key="name">recordingInterval</string>
+						<object class="IBToOneOutletInfo" key="recordingIntervalButton">
+							<string key="name">recordingIntervalButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="selectProject">

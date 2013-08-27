@@ -15,9 +15,9 @@
 // Menu properties
 @synthesize reset, about;
 // UI properties
-@synthesize latitudeLabel, longitudeLabel, recordData, recordingInterval, nameTextField, loggedInAs, upload, selectProject;
+@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject;
 // Other properties
-@synthesize locationManager, isRecording, activeField;
+@synthesize locationManager, activeField;
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -54,6 +54,10 @@
     // Initial super call
     [super viewDidLoad];
     
+    // Set up iSENSE settings and API
+    [api getInstance];
+    NSLog(@"API is: %@", api);
+    
     // Set up the menu bar
 	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
     about = [[UIBarButtonItem alloc] initWithTitle:@"About" style:UIBarButtonItemStyleBordered target:self action:@selector(onAboutClick:)];
@@ -61,13 +65,14 @@
     self.navigationItem.title = @"iSENSE Data Walk";
     
     // Tag the UI objects
-    latitudeLabel.tag   = kTAG_LABEL_LATITUDE;
-    longitudeLabel.tag  = kTAG_LABEL_LONGITUDE;
-    recordData.tag      = kTAG_BUTTON_RECORD;
-    nameTextField.tag   = kTAG_TEXTFIELD_NAME;
-    loggedInAs.tag      = kTAG_BUTTON_LOGGED_IN;
-    upload.tag          = kTAG_BUTTON_UPLOAD;
-    selectProject.tag   = kTAG_BUTTON_PROJECT;
+    latitudeLabel.tag           = kTAG_LABEL_LATITUDE;
+    longitudeLabel.tag          = kTAG_LABEL_LONGITUDE;
+    recordData.tag              = kTAG_BUTTON_RECORD;
+    recordingIntervalButton.tag = kTAG_BUTTON_INTERVAL;
+    nameTextField.tag           = kTAG_TEXTFIELD_NAME;
+    loggedInAs.tag              = kTAG_BUTTON_LOGGED_IN;
+    upload.tag                  = kTAG_BUTTON_UPLOAD;
+    selectProject.tag           = kTAG_BUTTON_PROJECT;
     
     // Set up text field delegate to catch editing actions and return key type to end editing
     nameTextField.delegate = self;
@@ -75,6 +80,35 @@
     
     // Initialize other variables
     isRecording = NO;
+    isShowingPickerView = NO;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int recInt = [prefs integerForKey:[StringGrabber grabString:@"recording_interval"]];
+    if (recInt == 0) {
+        recInt = kDEFAULT_REC_INTERVAL;
+        [prefs setInteger:recInt forKey:[StringGrabber grabString:@"recording_interval"]];
+    }
+    recordingInterval = recInt;
+    NSLog(@"Interval: %d", recordingInterval);
+    switch (recordingInterval) {
+        case 1:
+            [recordingIntervalButton setTitle:@"1 second" forState:UIControlStateNormal];
+            break;
+        case 2:
+            [recordingIntervalButton setTitle:@"2 seconds" forState:UIControlStateNormal];
+            break;
+        case 5:
+            [recordingIntervalButton setTitle:@"5 seconds" forState:UIControlStateNormal];
+            break;
+        case 10:
+            [recordingIntervalButton setTitle:@"10 seconds" forState:UIControlStateNormal];
+            break;
+        case 30:
+            [recordingIntervalButton setTitle:@"30 seconds" forState:UIControlStateNormal];
+            break;
+        case 60:
+            [recordingIntervalButton setTitle:@"60 seconds" forState:UIControlStateNormal];
+            break;
+    }
     
     // Set up location stuff
     [self resetGeospatialLabels];
@@ -111,7 +145,129 @@
 }
 
 - (IBAction) onRecordingIntervalClick:(id)sender {
-    [self.view makeWaffle:@"Interval clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+    
+    if (isShowingPickerView && intervalPickerView != nil) {
+        [intervalPickerView removeFromSuperview];
+        isShowingPickerView = NO;
+        
+        switch (recordingInterval) {
+            case 1:
+                [recordingIntervalButton setTitle:@"1 second" forState:UIControlStateNormal];
+                break;
+            case 2:
+                [recordingIntervalButton setTitle:@"2 seconds" forState:UIControlStateNormal];
+                break;
+            case 5:
+                [recordingIntervalButton setTitle:@"5 seconds" forState:UIControlStateNormal];
+                break;
+            case 10:
+                [recordingIntervalButton setTitle:@"10 seconds" forState:UIControlStateNormal];
+                break;
+            case 30:
+                [recordingIntervalButton setTitle:@"30 seconds" forState:UIControlStateNormal];
+                break;
+            case 60:
+                [recordingIntervalButton setTitle:@"60 seconds" forState:UIControlStateNormal];
+                break;
+        }
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:recordingInterval forKey:[StringGrabber grabString:@"recording_interval"]];
+        
+    } else {
+        
+        int x = recordingIntervalButton.frame.origin.x;
+        int y = recordingIntervalButton.frame.origin.y + recordingIntervalButton.frame.size.height;
+        if([UIDevice currentDevice].userInterfaceIdiom != UIUserInterfaceIdiomPad)
+            if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
+                x = 0;
+        
+        [recordingIntervalButton setTitle:@"Done" forState:UIControlStateNormal];
+        
+        intervalPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(x, y, 320, 200)];
+        intervalPickerView.delegate = self;
+        intervalPickerView.showsSelectionIndicator = YES;
+        
+        [self.view addSubview:intervalPickerView];
+        isShowingPickerView = YES;
+        
+    }
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
+    // Handle the selection
+    if (row != 0) {
+        switch (row) {
+            case 1:
+                recordingInterval = 1;
+                break;
+            case 2:
+                recordingInterval = 2;
+                break;
+            case 3:
+                recordingInterval = 5;
+                break;
+            case 4:
+                recordingInterval = 10;
+                break;
+            case 5:
+                recordingInterval = 30;
+                break;
+            case 6:
+                recordingInterval = 60;
+                break;
+        }
+    
+    } else {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        recordingInterval = [prefs integerForKey:[StringGrabber grabString:@"recording_interval"]];
+    }
+   
+}
+
+// tell the picker how many rows are available for a given component
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return 7;
+}
+
+// tell the picker how many components it will have
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+// tell the picker the title for a given component
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    NSString *title;
+    switch (row) {
+        case 0:
+            title = @"Return to previous";
+            return title;
+        case 1:
+            title = @"1 second";
+            return title;
+        case 2:
+            title = @"2 seconds";
+            return title;
+        case 3:
+            title = @"5 seconds";
+            return title;
+        case 4:
+            title = @"10 seconds";
+            return title;
+        case 5:
+            title = @"30 seconds";
+            return title;
+        case 6:
+            title = @"60 seconds";
+            return title;
+    }
+    return title;
+}
+
+// tell the picker the width of each row for a given component
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
+    int sectionWidth = 300;
+    return sectionWidth;
 }
 
 - (IBAction) onLoggedInClick:(id)sender {
