@@ -17,18 +17,18 @@
 }
 
 /* getInstance */
--(API *)getInstance;
++(API *)getInstance;
 
 /* Checks for Connectivity */
-+(BOOL) hasConnectivity;
++(BOOL)hasConnectivity;
 
 /* Change the baseUrl Value */
--(void) useDev:(BOOL)useDev;
--(void) setBaseUrl:(NSURL *)newUrl;
+-(void)useDev:(BOOL)useDev;
+-(void)setBaseUrl:(NSURL *)newUrl;
 
 /* Manage Authentication Key */
--(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password;
--(void) deleteSession;
+-(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password;
+-(void)deleteSession;
 
 /* Doesn't Require Authentication Key */
 -(RProject *)   getProjectWithId:       (int)projectId;

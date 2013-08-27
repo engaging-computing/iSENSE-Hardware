@@ -13,30 +13,35 @@
 #define LIVE_URL @"http://129.63.16.128/"
 #define DEV_URL  @"http://129.63.16.30/"
 
-static API *api;
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
 
 /**
- * Returns the current instance of API.
+ * Access the current instance of an API object.
+ *
+ * @return An instance of the API object
  */
--(API *)getInstance {
++(id)getInstance {
+    static API *api = nil;
+    static dispatch_once_t initApi;
+    dispatch_once(&initApi, ^{
+        api = [[self alloc] init];
+    });
     return api;
 }
 
-/**
- * Will only get called once by the system,
- * but doesn't prevent the user from calling alloc or copy methods.
+/*
+ * Initializes all the static variables in the API.
+ *
+ * @return The current instance of the API
  */
-+ (void)initialize {
-    static BOOL initialized = NO;
-    if(!initialized) {
-        initialized = YES;
-        api = [[API alloc] init];
+- (id)init {
+    if (self = [super init]) {
         baseUrl = LIVE_URL;
         authenticityToken = nil;
         currentUser = nil;
     }
+    return self;
 }
 
 /**
@@ -86,14 +91,17 @@ static RPerson *currentUser;
  * @return TRUE if login succeeds, FALSE if it does not
  */
 -(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
+    
     NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"&username=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"POST" andPostData:nil];
     NSLog(@"%@", result.description);
     authenticityToken = [result objectForKey:@"authenticity_token"];
+    
     if (authenticityToken) {
         currentUser = [self getUserWithUsername:username];
         return TRUE;
     }
+    
     return FALSE;
 }
 
@@ -113,24 +121,45 @@ static RPerson *currentUser;
 /* Requires an Authentication Key */
 -(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
 
+
+/*
+ * Returns the current saved user object.
+ *
+ * @return
+ */
 -(RPerson *)getCurrentUser {
     return currentUser;
 }
 
 /**
- * Gets a user off of iSENSE
+ * Gets a user off of iSENSE.
  *
  * @param username The username of the user to retrieve
  * @return A Person object
  */
--(RPerson *)    getUserWithUsername:(NSString *)username { return nil; }
--(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
--(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
+-(RPerson *)getUserWithUsername:(NSString *)username {
 
--(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name { return -1; }
--(int)      uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
--(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
--(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+    RPerson *person = [[RPerson alloc] init];
+    NSString *path = [NSString stringWithFormat:@"%@%@", @"users/", username];
+    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:@"" withReqestType:@"GET" andPostData:nil];
+    person.person_id = [result objectForKey:@"id"];
+    person.name = [result objectForKey:@"name"];
+    person.username = [result objectForKey:@"username"];
+    person.url = [result objectForKey:@"url"];
+    person.gravatar = [result objectForKey:@"gravatar"];
+    person.timecreated = [result objectForKey:@"createdAt"];
+    person.hidden = [result objectForKey:@"hidden"];
+    
+    return person;
+}
+
+-(int)createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
+-(void)appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
+
+-(int)uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name { return -1; }
+-(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
+-(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
 
 /**
  * Reformats a row-major JSONObject to column-major.

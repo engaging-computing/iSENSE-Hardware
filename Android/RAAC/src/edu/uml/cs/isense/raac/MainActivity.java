@@ -39,6 +39,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -52,7 +54,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -87,7 +88,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
 import edu.uml.cs.isense.raac.pincushion.BluetoothService;
 import edu.uml.cs.isense.raac.pincushion.PinComm;
@@ -114,14 +115,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	int flipView = 0; //Currently displayed child of the viewFlipper
 	int btStatNum = 0; //The current status of the bluetooth connection
 	int sessionId = -1;
-	String experimentId = "572";
-	String username = "sor";
-	String password = "sor";
+	String experimentId = "61";
+	String username = "mobile";
+	String password = "mobile";
 	boolean loggedIn = false;
-	static String sessionUrl;
-	String baseSessionUrl = "http://isense.cs.uml.edu/highvis.php?sessions=";
+	String baseProjectUrl = "http://isenseproject.org/projects/";
+	String dataSetUrlExtension = "/data_sets/";
+	static String finalUrl = "";
 	String datMed, datAve, datMax, datMin;
-	private RestAPI rapi;
+	private API api;
 	private ProgressDialog dia;
 	JSONArray dataSet;
 	public static Context mContext;
@@ -163,8 +165,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
-		rapi.useDev(false);
+		api = API.getInstance(getApplicationContext());
+		api.useDev(true);
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		//Get the MAC address of the default PINPoint
@@ -384,7 +386,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onStart() {
-		if (!loggedIn && rapi.isConnectedToInternet()) new PerformLogin().execute();
+		if (!loggedIn && api.hasConnectivity()) new PerformLogin().execute();
 		super.onStart();
 	}
 
@@ -431,7 +433,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			if (loggedIn)
 				Toast.makeText(MainActivity.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
 			else
-				if (rapi.isConnectedToInternet()) new PerformLogin().execute();
+				if (api.hasConnectivity()) new PerformLogin().execute();
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
@@ -798,6 +800,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	// The Handler that gets information back from the BluetoothService
+	@SuppressLint("HandlerLeak")
 	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -1006,12 +1009,16 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		dataSet = new JSONArray();
 
-		JSONArray dataJSON;
+		JSONObject dataJSON;
 		if (lastKnownSensor == 1 || lastKnownSensor == 24) //PINPoint is set to use Temperature Probe or pH Sensor
 			for (int i = 0; i < timeData.size(); i++) {
-				dataJSON = new JSONArray();
-				dataJSON.put(timeData.get(i));
-				dataJSON.put(bta1Data.get(i));
+				dataJSON = new JSONObject();
+				try {
+					dataJSON.put("0", timeData.get(i));
+					dataJSON.put("1", bta1Data.get(i));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				dataSet.put(dataJSON);
 			}
 		else {
@@ -1029,32 +1036,34 @@ public class MainActivity extends Activity implements OnClickListener {
 		public void run() {
 
 			String nameOfSession = nameField.getText().toString();
-
-			if (!loggedIn && rapi.isConnectedToInternet())
+			JSONObject data = new JSONObject();
+			try {
+				data.put("data", dataSet);
+				data = api.rowsToCols(data);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			if (!loggedIn && api.hasConnectivity())
 				new PerformLogin().execute();
 
 			if (loggedIn) {
 
 				if (sessionId == -1) {
-					sessionId = rapi.createSession(experimentId, 
-							nameOfSession, 
-							"Automated Submission Through Android App", 
-							"500 Pawtucket Blvd.", "Lowell, Massachusetts", "United States");
+					sessionId = api.uploadDataSet(Integer.parseInt(experimentId), data, nameOfSession);
+							
 					if (sessionId != -1) {
-						rapi.putSessionData(sessionId, experimentId, dataSet);
-						sessionUrl = baseSessionUrl + sessionId;
+						finalUrl = baseProjectUrl + experimentId + dataSetUrlExtension + sessionId;
 					} else {
-						sessionUrl = baseSessionUrl;
+						finalUrl = baseProjectUrl + experimentId;
 						return;	
 					}
 
 				}
 				else {
-					if(!(rapi.updateSessionData(sessionId, experimentId, dataSet))) {
-						Toast.makeText(MainActivity.this, "Could not update session data.", Toast.LENGTH_SHORT).show();
-					}
+					api.appendDataSetData(sessionId, data);
 				}
-			} else sessionUrl = baseSessionUrl;
+			} else finalUrl = baseProjectUrl + experimentId;
 
 		}
 
@@ -1086,16 +1095,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			dia.setMessage("Done");
 			dia.cancel();
 
-			if (!(sessionUrl.equals(baseSessionUrl))) {
+			if (!(finalUrl.equals(baseProjectUrl + experimentId))) {
 				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(sessionUrl));
+				i.setData(Uri.parse(finalUrl));
 				rcrdBtn.setEnabled(false);
 				showSensorOption = false;
 				showTimeOption = false;
 				invalidateOptionsMenu();
 				startActivity(i);  
 			} else {
-				Toast.makeText(MainActivity.this, "Upload failed. Check your internet connection, and make sure the experiment is not closed.", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Upload failed. Check your internet connection, and make sure the project is not closed.", Toast.LENGTH_LONG).show();
 				dataRdy = true;
 				pushToISENSE.setEnabled(true);
 			}
@@ -1126,7 +1135,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			boolean success = rapi.login(username, password);
+			boolean success = api.createSession(username, password);
 			if (success)
 				loggedIn = true;
 			else
