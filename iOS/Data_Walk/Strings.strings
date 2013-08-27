@@ -14,7 +14,7 @@
 
 // "Label"                      = "Value"; //
 
-"default_recording_interval"    = "defaultrecordinginterval";
+"recording_interval"            = "recordinginterval";
 
 "about_text"                    =
 "Overview:

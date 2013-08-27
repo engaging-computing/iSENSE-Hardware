@@ -14,8 +14,12 @@
 #import <iSENSE_API/Waffle.h>
 #import <iSENSE_API/API.h>
 
-@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate> {
+@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
+    
     API *api;
+    
+    BOOL isShowingPickerView;
+    UIPickerView *intervalPickerView;
     
     BOOL isRecording;
     int recordingInterval;
@@ -38,7 +42,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *latitudeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *longitudeLabel;
 @property (nonatomic, strong) IBOutlet UIButton *recordData;
-@property (nonatomic, strong) IBOutlet UIButton *recordingInterval;
+@property (nonatomic, strong) IBOutlet UIButton *recordingIntervalButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic, strong) IBOutlet UIButton *loggedInAs;
 @property (nonatomic, strong) IBOutlet UIButton *upload;
