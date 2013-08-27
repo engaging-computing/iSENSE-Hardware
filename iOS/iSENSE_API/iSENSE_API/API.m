@@ -15,9 +15,17 @@
 
 static API *api;
 static NSString *baseUrl, *authenticityToken;
+static RPerson *currentUser;
 
 /**
- * Behaves as the "getInstance" method of the API. Will only get called once by the system,
+ * Returns the current instance of API.
+ */
+-(API *)getInstance {
+    return api;
+}
+
+/**
+ * Will only get called once by the system,
  * but doesn't prevent the user from calling alloc or copy methods.
  */
 + (void)initialize {
@@ -27,6 +35,7 @@ static NSString *baseUrl, *authenticityToken;
         api = [[API alloc] init];
         baseUrl = LIVE_URL;
         authenticityToken = nil;
+        currentUser = nil;
     }
 }
 
@@ -77,28 +86,15 @@ static NSString *baseUrl, *authenticityToken;
  * @return TRUE if login succeeds, FALSE if it does not
  */
 -(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
-    /*
-     try {
-     String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
-     System.out.println(result);
-     JSONObject j =  new JSONObject(result);
-     authToken = j.getString("authenticity_token");
-     if( j.getString("status").equals("success")) {
-     currentUser = getUser(username);
-     return true;
-     } else {
-     return false;
-     }
-     } catch (Exception e) {
-     e.printStackTrace();
-     }
-     return false;    */
     NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"&username=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"POST" andPostData:nil];
     NSLog(@"%@", result.description);
-    
-    
+    authenticityToken = [result objectForKey:@"authenticity_token"];
+    if (authenticityToken) {
+        currentUser = [self getUserWithUsername:username];
         return TRUE;
+    }
+    return FALSE;
 }
 
 /* Manage Authentication Key */
@@ -117,7 +113,16 @@ static NSString *baseUrl, *authenticityToken;
 /* Requires an Authentication Key */
 -(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
 
--(RPerson *)    getCurrentUser { return nil; };
+-(RPerson *)getCurrentUser {
+    return currentUser;
+}
+
+/**
+ * Gets a user off of iSENSE
+ *
+ * @param username The username of the user to retrieve
+ * @return A Person object
+ */
 -(RPerson *)    getUserWithUsername:(NSString *)username { return nil; }
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
@@ -164,7 +169,7 @@ static NSString *baseUrl, *authenticityToken;
 -(NSDictionary *)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withReqestType:(NSString *)reqType andPostData:(NSData *)postData {
     NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@%@%@", baseUrl, path, parameters]];
     NSLog(@"Connect to: %@", url);
-
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];
