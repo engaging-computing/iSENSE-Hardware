@@ -442,7 +442,7 @@ public class API {
 		JSONObject requestData = new JSONObject();
 		ArrayList<String> headers = new ArrayList<String>();
 		for(RProjectField rpf : fields) {
-			headers.add(rpf.name);
+			headers.add(""+rpf.field_id);
 		}
 		try {
 			requestData.put("headers", new JSONArray(headers));
@@ -671,7 +671,12 @@ public class API {
 			}
 
 			mstat = urlConnection.getResponseCode(); // TODO - add a try/catch for a java.net.ConnectException here.  We can get a connection failed here (ENETUNREACH) if the network is unreachable
-			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+			InputStream in;
+			if(mstat>=200 && mstat < 300) {
+				in = new BufferedInputStream(urlConnection.getInputStream());
+			} else {
+				in = new BufferedInputStream(urlConnection.getErrorStream());
+			}
 			try {
 				ByteArrayOutputStream bo = new ByteArrayOutputStream();
 				int i = in.read();
