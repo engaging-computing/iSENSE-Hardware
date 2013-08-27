@@ -17,7 +17,7 @@
 }
 
 /* getInstance */
-+(void) initialize;
+-(API *)getInstance;
 
 /* Checks for Connectivity */
 +(BOOL) hasConnectivity;
