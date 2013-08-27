@@ -10,33 +10,38 @@
 
 @implementation API
 
-#define LIVE_URL @"http://129.63.16.128/"
-#define DEV_URL  @"http://129.63.16.30/"
+#define LIVE_URL @"http://129.63.16.128"
+#define DEV_URL  @"http://129.63.16.30"
 
-static API *api;
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
 
 /**
- * Returns the current instance of API.
+ * Access the current instance of an API object.
+ *
+ * @return An instance of the API object
  */
--(API *)getInstance {
++(id)getInstance {
+    static API *api = nil;
+    static dispatch_once_t initApi;
+    dispatch_once(&initApi, ^{
+        api = [[self alloc] init];
+    });
     return api;
 }
 
-/**
- * Will only get called once by the system,
- * but doesn't prevent the user from calling alloc or copy methods.
+/*
+ * Initializes all the static variables in the API.
+ *
+ * @return The current instance of the API
  */
-+ (void)initialize {
-    static BOOL initialized = NO;
-    if(!initialized) {
-        initialized = YES;
-        api = [[API alloc] init];
+- (id)init {
+    if (self = [super init]) {
         baseUrl = LIVE_URL;
         authenticityToken = nil;
         currentUser = nil;
     }
+    return self;
 }
 
 /**
@@ -44,7 +49,7 @@ static RPerson *currentUser;
  *
  * @param newUrl NSString version of the URL you want to use.
  */
--(void) setBaseUrl:(NSString *)newUrl {
+-(void)setBaseUrl:(NSString *)newUrl {
     baseUrl = newUrl;
 }
 
@@ -53,7 +58,7 @@ static RPerson *currentUser;
  *
  * @param useDev Set to true if you want to use the development site.
  */
-- (void) useDev:(BOOL)useDev {
+- (void)useDev:(BOOL)useDev {
 	if (useDev) {
 		baseUrl = DEV_URL;
 	} else {
@@ -66,17 +71,11 @@ static RPerson *currentUser;
  *
  * @return YES if you have connectivity, NO if it does not
  */
-+(BOOL) hasConnectivity {
++(BOOL)hasConnectivity {
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];
     return !(networkStatus == NotReachable);
 }
-
-/**
- * Below methods are unimplemented.  They were added to prevent warnings in the API for
- * an unfinished implementation.
- *
- */
 
 /**
  * Log in to iSENSE. After calling this function, authenticated API functions will work properly.
@@ -85,20 +84,31 @@ static RPerson *currentUser;
  * @param password The password of the user to log in as
  * @return TRUE if login succeeds, FALSE if it does not
  */
--(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"&username=", [username UTF8String], @"&password=", [password UTF8String]];
+-(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
+    
+    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"username_or_email=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"POST" andPostData:nil];
     NSLog(@"%@", result.description);
     authenticityToken = [result objectForKey:@"authenticity_token"];
+    
     if (authenticityToken) {
         currentUser = [self getUserWithUsername:username];
         return TRUE;
     }
+    
     return FALSE;
 }
 
-/* Manage Authentication Key */
--(void) deleteSession {}
+/**
+ * Log out of iSENSE.
+ */
+-(void)deleteSession {
+    
+    NSString *parameters = [NSString stringWithFormat:@"%@%s", @"authenticity_token=", authenticityToken.UTF8String];
+    [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"DELETE" andPostData:nil];
+    currentUser = nil;
+    
+}
 
 /* Doesn't Require Authentication Key */
 -(RProject *)   getProjectWithId:       (int)projectId { return nil; }
@@ -113,24 +123,45 @@ static RPerson *currentUser;
 /* Requires an Authentication Key */
 -(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
 
+
+/*
+ * Returns the current saved user object.
+ *
+ * @return
+ */
 -(RPerson *)getCurrentUser {
     return currentUser;
 }
 
 /**
- * Gets a user off of iSENSE
+ * Gets a user off of iSENSE.
  *
  * @param username The username of the user to retrieve
  * @return A Person object
  */
--(RPerson *)    getUserWithUsername:(NSString *)username { return nil; }
--(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
--(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
+-(RPerson *)getUserWithUsername:(NSString *)username {
+    
+    RPerson *person = [[RPerson alloc] init];
+    NSString *path = [NSString stringWithFormat:@"%@%@", @"users/", username];
+    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:@"" withReqestType:@"GET" andPostData:nil];
+    person.person_id = [result objectForKey:@"id"];
+    person.name = [result objectForKey:@"name"];
+    person.username = [result objectForKey:@"username"];
+    person.url = [result objectForKey:@"url"];
+    person.gravatar = [result objectForKey:@"gravatar"];
+    person.timecreated = [result objectForKey:@"createdAt"];
+    person.hidden = [result objectForKey:@"hidden"];
+    
+    return person;
+}
 
--(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name { return -1; }
--(int)      uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
--(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
--(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+-(int)createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
+-(void)appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
+
+-(int)uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name { return -1; }
+-(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
+-(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
 
 /**
  * Reformats a row-major JSONObject to column-major.
@@ -167,7 +198,8 @@ static RPerson *currentUser;
  * @return An NSDictionary dump of a JSONObject representing the requested data
  */
 -(NSDictionary *)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withReqestType:(NSString *)reqType andPostData:(NSData *)postData {
-    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@%@%@", baseUrl, path, parameters]];
+    
+    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/%@?%@", baseUrl, path, parameters]];
     NSLog(@"Connect to: %@", url);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
