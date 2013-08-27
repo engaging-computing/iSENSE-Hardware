@@ -23,6 +23,7 @@
     
     BOOL isRecording;
     int recordingInterval;
+    NSString *name;
 }
 
 // UI functions
@@ -47,6 +48,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *loggedInAs;
 @property (nonatomic, strong) IBOutlet UIButton *upload;
 @property (nonatomic, strong) IBOutlet UIButton *selectProject;
+@property (nonatomic, strong) IBOutlet UIImageView *gpsLock;
 
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;

@@ -16,6 +16,7 @@
 		B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E050217CBC43500D06B57 /* AboutLayout~ipad.xib */; };
 		B72E050517CBC44800D06B57 /* AboutLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */; };
 		B72E050D17CBC66F00D06B57 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B72E050A17CBC50B00D06B57 /* StringGrabber.m */; };
+		B752DAC217CD117400B01912 /* gps_icon_no_lock.png in Resources */ = {isa = PBXBuildFile; fileRef = B752DAC117CD117400B01912 /* gps_icon_no_lock.png */; };
 		B762F4B217C6534500B1D6E9 /* MainLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */; };
 		B762F4B417C6537000B1D6E9 /* MainLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */; };
 		B762F4B617C6571100B1D6E9 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B517C6571100B1D6E9 /* rsense_logo.png */; };
@@ -87,6 +88,7 @@
 		B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B72E050917CBC50B00D06B57 /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
 		B72E050A17CBC50B00D06B57 /* StringGrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
+		B752DAC117CD117400B01912 /* gps_icon_no_lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps_icon_no_lock.png; sourceTree = "<group>"; };
 		B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B762F4B517C6571100B1D6E9 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
@@ -233,9 +235,10 @@
 		B7E567D917C6446700C2DF46 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				B7F3883217C6A95900CA8059 /* AppIcon */,
+				B7F3883217C6A95900CA8059 /* App Icon */,
 				B762F4B517C6571100B1D6E9 /* rsense_logo.png */,
 				B72E04F717CB9E8F00D06B57 /* gps_icon.png */,
+				B752DAC117CD117400B01912 /* gps_icon_no_lock.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -305,7 +308,7 @@
 			name = Main;
 			sourceTree = "<group>";
 		};
-		B7F3883217C6A95900CA8059 /* AppIcon */ = {
+		B7F3883217C6A95900CA8059 /* App Icon */ = {
 			isa = PBXGroup;
 			children = (
 				B7F3882E17C6644700CA8059 /* datawalk_logo.png */,
@@ -313,7 +316,7 @@
 				B7F3883317C6A98B00CA8059 /* datawalk_logo_ipad.png */,
 				B7F3883017C6A95100CA8059 /* datawalk_logo_ipad_retina.png */,
 			);
-			name = AppIcon;
+			name = "App Icon";
 			sourceTree = "<group>";
 		};
 		B7FE9E0A17C792D500EE1A32 /* Products */ = {
@@ -423,6 +426,7 @@
 				B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */,
 				B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */,
 				B72E050517CBC44800D06B57 /* AboutLayout-landscape~ipad.xib in Resources */,
+				B752DAC217CD117400B01912 /* gps_icon_no_lock.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
