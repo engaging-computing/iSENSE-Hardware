@@ -14,6 +14,8 @@
 
 // "Label"                      = "Value"; //
 
+"default_recording_interval"    = "defaultrecordinginterval";
+
 "about_text"                    =
 "Overview:
 This app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. When the app is activated, your GPS coordinates are saved once every 10 seconds and are then shared on the iSENSE web system (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.

@@ -17,7 +17,7 @@
 // UI properties
 @synthesize latitudeLabel, longitudeLabel, recordData, recordingInterval, nameTextField, loggedInAs, upload, selectProject;
 // Other properties
-@synthesize locationManager, isRecording, activeField;
+@synthesize locationManager, activeField;
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -54,6 +54,10 @@
     // Initial super call
     [super viewDidLoad];
     
+    // Set up iSENSE settings and API
+    api = [[API alloc] init];
+    [api useDev:kUSE_DEV];
+    
     // Set up the menu bar
 	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
     about = [[UIBarButtonItem alloc] initWithTitle:@"About" style:UIBarButtonItemStyleBordered target:self action:@selector(onAboutClick:)];
@@ -75,6 +79,10 @@
     
     // Initialize other variables
     isRecording = NO;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int recInt = [prefs integerForKey:[StringGrabber grabString:@"default_recording_interval"]];
+    NSLog(@"Recording at %d", recInt);
+    
     
     // Set up location stuff
     [self resetGeospatialLabels];

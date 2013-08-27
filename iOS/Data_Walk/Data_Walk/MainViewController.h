@@ -12,9 +12,13 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/Waffle.h>
+#import <iSENSE_API/API.h>
 
 @interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate> {
+    API *api;
     
+    BOOL isRecording;
+    int recordingInterval;
 }
 
 // UI functions
@@ -42,7 +46,6 @@
 
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic) BOOL isRecording;
 @property (nonatomic, strong) UITextField *activeField;
 
 @end
