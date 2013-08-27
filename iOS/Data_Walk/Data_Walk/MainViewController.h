@@ -12,9 +12,18 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/Waffle.h>
+#import <iSENSE_API/API.h>
 
-@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate> {
+@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
     
+    API *api;
+    
+    BOOL isShowingPickerView;
+    UIPickerView *intervalPickerView;
+    
+    BOOL isRecording;
+    int recordingInterval;
+    NSString *name;
 }
 
 // UI functions
@@ -34,15 +43,15 @@
 @property (nonatomic, strong) IBOutlet UILabel *latitudeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *longitudeLabel;
 @property (nonatomic, strong) IBOutlet UIButton *recordData;
-@property (nonatomic, strong) IBOutlet UIButton *recordingInterval;
+@property (nonatomic, strong) IBOutlet UIButton *recordingIntervalButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameTextField;
 @property (nonatomic, strong) IBOutlet UIButton *loggedInAs;
 @property (nonatomic, strong) IBOutlet UIButton *upload;
 @property (nonatomic, strong) IBOutlet UIButton *selectProject;
+@property (nonatomic, strong) IBOutlet UIImageView *gpsLock;
 
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic) BOOL isRecording;
 @property (nonatomic, strong) UITextField *activeField;
 
 @end
