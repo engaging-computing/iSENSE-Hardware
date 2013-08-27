@@ -17,7 +17,7 @@
 // UI properties
 @synthesize latitudeLabel, longitudeLabel, recordData, recordingInterval, nameTextField, loggedInAs, upload, selectProject;
 // Other properties
-@synthesize locationManager, isRecording;
+@synthesize locationManager, isRecording, activeField;
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -69,13 +69,16 @@
     upload.tag          = kTAG_BUTTON_UPLOAD;
     selectProject.tag   = kTAG_BUTTON_PROJECT;
     
+    // Set up text field delegate to catch editing actions and return key type to end editing
+    nameTextField.delegate = self;
+    [nameTextField setReturnKeyType:UIReturnKeyDone];
+    
     // Initialize other variables
     isRecording = NO;
     
     // Set up location stuff
     [self resetGeospatialLabels];
     [self initLocations];
-    
 }
 
 // Is called every time MainViewController is about to appear
@@ -88,6 +91,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    
+    // Register for keyboard notifications
+    [self registerForKeyboardNotifications];
 }
 
 - (void) onResetClick:(id)sender {
@@ -200,5 +206,78 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
+// Sets up listeners for keyboard
+- (void) registerForKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+// Unregisters listeners for keyboard
+- (void) unregisterKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    
+    if (activeField.tag == kTAG_TEXTFIELD_NAME) {
+        
+        NSDictionary* info = [aNotification userInfo];
+        
+        CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+        
+        CGRect aRect = self.view.frame;
+        aRect.size.height -= kbSize.height;
+        CGPoint origin = activeField.frame.origin;
+        
+        if (!CGRectContainsPoint(aRect, origin) ) {
+            UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+            if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
+                self.view.frame = CGRectMake(0.0, -(kbSize.height), self.view.frame.size.width, self.view.frame.size.height);
+        }
+    }
+    
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    
+    if (activeField != nil && activeField.tag == kTAG_TEXTFIELD_NAME)
+        self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+    
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    activeField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    activeField = nil;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (IBAction)textFieldFinished:(id)sender {
+}
+
 
 @end
