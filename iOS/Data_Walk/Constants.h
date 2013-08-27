@@ -29,4 +29,14 @@
 #define kTAG_BUTTON_UPLOAD          506
 #define kTAG_BUTTON_PROJECT         507
 
+// tags for alert view/text fields in the alert view
+#define kTAG_PROJECT_SELECTION      600
+#define kENTER_PROJ_TEXTFIELD       601
+
+// options for project action sheet
+#define kOPTION_CANCELED            0
+#define kOPTION_ENTER_PROJECT       1
+#define kOPTION_BROWSE_PROJECTS     2
+#define kOPTION_SCAN_PROJECT_QR     3
+
 #endif
