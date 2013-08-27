@@ -78,12 +78,6 @@ static RPerson *currentUser;
 }
 
 /**
- * Below methods are unimplemented.  They were added to prevent warnings in the API for
- * an unfinished implementation.
- *
- */
-
-/**
  * Log in to iSENSE. After calling this function, authenticated API functions will work properly.
  *
  * @param username The username of the user to log in as
@@ -92,7 +86,7 @@ static RPerson *currentUser;
  */
 -(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"&username=", [username UTF8String], @"&password=", [password UTF8String]];
+    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"username=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"POST" andPostData:nil];
     NSLog(@"%@", result.description);
     authenticityToken = [result objectForKey:@"authenticity_token"];
@@ -105,8 +99,21 @@ static RPerson *currentUser;
     return FALSE;
 }
 
-/* Manage Authentication Key */
--(void) deleteSession {}
+/**
+ * Log out of iSENSE.
+ */
+-(void)deleteSession {
+    /*
+     try {
+     makeRequest(baseURL, "login", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "DELETE", null);
+     currentUser = null;
+     } catch (Exception e) {
+     e.printStackTrace();
+     }
+     */
+    NSString *parameters = [NSString stringWithFormat:@"%@%s", @"authenticity_token=", authenticityToken.UTF8String];
+    [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withReqestType:@"DELETE" andPostData:nil];
+}
 
 /* Doesn't Require Authentication Key */
 -(RProject *)   getProjectWithId:       (int)projectId { return nil; }
@@ -196,7 +203,7 @@ static RPerson *currentUser;
  * @return An NSDictionary dump of a JSONObject representing the requested data
  */
 -(NSDictionary *)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withReqestType:(NSString *)reqType andPostData:(NSData *)postData {
-    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@%@%@", baseUrl, path, parameters]];
+    NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/%@?%@", baseUrl, path, parameters]];
     NSLog(@"Connect to: %@", url);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
