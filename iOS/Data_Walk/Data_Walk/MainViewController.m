@@ -15,7 +15,7 @@
 // Menu properties
 @synthesize reset, about;
 // UI properties
-@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject;
+@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock;
 // Other properties
 @synthesize locationManager, activeField;
 
@@ -313,13 +313,13 @@
 }
 
 - (void) initLocations {
-    if (!locationManager) {
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.distanceFilter = kCLDistanceFilterNone;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        [locationManager startUpdatingLocation];
-    }
+    if (locationManager) locationManager = nil;
+    
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
 }
 
 // Finds the associated address from a GPS location.
@@ -339,6 +339,8 @@
         [latitudeLabel setText:[NSString stringWithFormat:@"Lat: %lf", latitude]];
         [longitudeLabel setText:[NSString stringWithFormat:@"Lon: %lf", longitude]];
     }
+    
+    [gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
 }
 
 - (void) resetGeospatialLabels {
