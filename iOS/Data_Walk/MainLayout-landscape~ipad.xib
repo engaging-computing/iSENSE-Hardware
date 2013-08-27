@@ -544,14 +544,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">recordingInterval</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="1026466736"/>
-					</object>
-					<int key="connectionID">167</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">selectProject</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="168874490"/>
@@ -565,6 +557,14 @@
 						<reference key="destination" ref="245862821"/>
 					</object>
 					<int key="connectionID">169</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">recordingIntervalButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="1026466736"/>
+					</object>
+					<int key="connectionID">175</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -772,7 +772,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">174</int>
+			<int key="maxID">175</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -785,6 +785,7 @@
 						<string key="onRecordingIntervalClick:">id</string>
 						<string key="onSelectProjectClick:">id</string>
 						<string key="onUploadClick:">id</string>
+						<string key="textFieldFinished:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="onLoggedInClick:">
@@ -807,6 +808,10 @@
 							<string key="name">onUploadClick:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="textFieldFinished:">
+							<string key="name">textFieldFinished:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="latitudeLabel">UILabel</string>
@@ -814,7 +819,7 @@
 						<string key="longitudeLabel">UILabel</string>
 						<string key="nameTextField">UITextField</string>
 						<string key="recordData">UIButton</string>
-						<string key="recordingInterval">UIButton</string>
+						<string key="recordingIntervalButton">UIButton</string>
 						<string key="selectProject">UIButton</string>
 						<string key="upload">UIButton</string>
 					</dictionary>
@@ -839,8 +844,8 @@
 							<string key="name">recordData</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="recordingInterval">
-							<string key="name">recordingInterval</string>
+						<object class="IBToOneOutletInfo" key="recordingIntervalButton">
+							<string key="name">recordingIntervalButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="selectProject">
