@@ -65,4 +65,21 @@
     [super didReceiveMemoryWarning];
 }
 
+// Allows the device to rotate as necessary.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Overriden to allow any orientation.
+    return YES;
+}
+
+// iOS6 enable rotation
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6 enable rotation
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+
 @end
