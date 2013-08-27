@@ -15,6 +15,12 @@
 // "Label"                      = "Value"; //
 
 "recording_interval"            = "recordinginterval";
+"first_name"                    = "firstname";
+
+"accepted_digits"               = "1234567890";
+"accepted_numbers"              = "1234567890.-";
+
+// Longer text
 
 "about_text"                    =
 "Overview:
