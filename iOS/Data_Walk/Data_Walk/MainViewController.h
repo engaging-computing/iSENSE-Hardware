@@ -23,6 +23,7 @@
     
     BOOL isRecording;
     int recordingInterval;
+    NSString *name;
 }
 
 // UI functions

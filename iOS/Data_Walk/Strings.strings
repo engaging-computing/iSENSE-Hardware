@@ -15,6 +15,9 @@
 // "Label"                      = "Value"; //
 
 "recording_interval"            = "recordinginterval";
+"first_name"                    = "firstname";
+
+// Longer text
 
 "about_text"                    =
 "Overview:

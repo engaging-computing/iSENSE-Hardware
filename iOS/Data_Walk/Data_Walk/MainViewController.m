@@ -81,6 +81,8 @@
     // Initialize other variables
     isRecording = NO;
     isShowingPickerView = NO;
+    
+    // Set up properties dependent on NSUserDefaults
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int recInt = [prefs integerForKey:[StringGrabber grabString:@"recording_interval"]];
     if (recInt == 0) {
@@ -88,7 +90,6 @@
         [prefs setInteger:recInt forKey:[StringGrabber grabString:@"recording_interval"]];
     }
     recordingInterval = recInt;
-    NSLog(@"Interval: %d", recordingInterval);
     switch (recordingInterval) {
         case 1:
             [recordingIntervalButton setTitle:@"1 second" forState:UIControlStateNormal];
@@ -109,6 +110,8 @@
             [recordingIntervalButton setTitle:@"60 seconds" forState:UIControlStateNormal];
             break;
     }
+    name = [prefs stringForKey:[StringGrabber grabString:@"first_name"]];
+    [nameTextField setText:name];
     
     // Set up location stuff
     [self resetGeospatialLabels];
@@ -326,12 +329,10 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     NSLog(@"New location = %@", newLocation);
     CLLocationCoordinate2D lc2d = [newLocation coordinate];
-//    if (newLocation != nil && lc2d.latitude != 0.0) {
-//        [self resetGeospatialLabels];
-//        return;
-//    }
+
     double latitude  = lc2d.latitude;
     double longitude = lc2d.longitude;
+    
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         [latitudeLabel setText:[NSString stringWithFormat:@"Latitude: %lf", latitude]];
         [longitudeLabel setText:[NSString stringWithFormat:@"Longitude: %lf", longitude]];
@@ -363,6 +364,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    [self unregisterKeyboardNotifications];
 }
 
 // Sets up listeners for keyboard
@@ -431,6 +433,12 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
+    if (textField.tag == kTAG_TEXTFIELD_NAME) {
+        name = textField.text;
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:name forKey:[StringGrabber grabString:@"first_name"]];
+    }
     return YES;
 }
 
