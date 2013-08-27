@@ -477,7 +477,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
-
+			
 		}
 		return true;
 	}
@@ -1542,7 +1542,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						writeToSDCard(null, 'f');
 
 					setMenuStatus(true);
-
+					
 					step2.setText(R.string.step2);
 					setTime(0);
 
@@ -1700,7 +1700,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			OrientationManager.enableRotation(DataCollector.this);
 
 			if (mMenu != null) {
-				onPrepareOptionsMenu(mMenu);
+			//	onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);
 			}
 			preLoad = false;
@@ -1752,6 +1752,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// allows for menu to be turned off when necessary
+	@SuppressLint("NewApi")
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
 
@@ -1779,6 +1780,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// }
 
 		}
+		
+		if (useMenu && android.os.Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
 	}
 
 	private void enableStep1() {
