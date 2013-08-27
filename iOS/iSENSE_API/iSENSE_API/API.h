@@ -11,13 +11,13 @@
 #import <RTutorial.h>
 #import <RPerson.h>
 #import <RDataSet.h>
-#import <Reachability.h>
+#import "Reachability.h"
 
 @interface API : NSObject {
 }
 
 /* getInstance */
-+(void) initialize;
+-(API *)getInstance;
 
 /* Checks for Connectivity */
 +(BOOL) hasConnectivity;
