@@ -11,24 +11,24 @@
 #import <RTutorial.h>
 #import <RPerson.h>
 #import <RDataSet.h>
-#import <Reachability.h>
+#import "Reachability.h"
 
 @interface API : NSObject {
 }
 
 /* getInstance */
-+(void) initialize;
++(API *)getInstance;
 
 /* Checks for Connectivity */
-+(BOOL) hasConnectivity;
++(BOOL)hasConnectivity;
 
 /* Change the baseUrl Value */
--(void) useDev:(BOOL)useDev;
--(void) setBaseUrl:(NSURL *)newUrl;
+-(void)useDev:(BOOL)useDev;
+-(void)setBaseUrl:(NSURL *)newUrl;
 
 /* Manage Authentication Key */
--(BOOL) createSessionWithUsername:(NSString *)username andPassword:(NSString *)password;
--(void) deleteSession;
+-(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password;
+-(void)deleteSession;
 
 /* Doesn't Require Authentication Key */
 -(RProject *)   getProjectWithId:       (int)projectId;

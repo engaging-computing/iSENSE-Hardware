@@ -287,7 +287,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Lat: ...</string>
+						<string key="IBUIText">Latitude: ...</string>
 						<object class="NSColor" key="IBUITextColor" id="230592219">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC43OTg5NTY3NDk5IDAuODU2ODkyNzU3MiAxAA</bytes>
@@ -311,7 +311,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Lon: ...</string>
+						<string key="IBUIText">Longitude: ...</string>
 						<reference key="IBUITextColor" ref="230592219"/>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">0</int>
@@ -332,7 +332,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">gps_icon.png</string>
+							<string key="NSResourceName">gps_icon_no_lock.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="842523137">
@@ -459,14 +459,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">recordingInterval</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="149291152"/>
-					</object>
-					<int key="connectionID">222</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">selectProject</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="669724901"/>
@@ -480,6 +472,22 @@
 						<reference key="destination" ref="842523137"/>
 					</object>
 					<int key="connectionID">224</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">recordingIntervalButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="149291152"/>
+					</object>
+					<int key="connectionID">230</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">gpsLock</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="336121823"/>
+					</object>
+					<int key="connectionID">231</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -666,7 +674,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">229</int>
+			<int key="maxID">231</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -703,16 +711,21 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="gpsLock">UIImageView</string>
 						<string key="latitudeLabel">UILabel</string>
 						<string key="loggedInAs">UIButton</string>
 						<string key="longitudeLabel">UILabel</string>
 						<string key="nameTextField">UITextField</string>
 						<string key="recordData">UIButton</string>
-						<string key="recordingInterval">UIButton</string>
+						<string key="recordingIntervalButton">UIButton</string>
 						<string key="selectProject">UIButton</string>
 						<string key="upload">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="gpsLock">
+							<string key="name">gpsLock</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="latitudeLabel">
 							<string key="name">latitudeLabel</string>
 							<string key="candidateClassName">UILabel</string>
@@ -733,8 +746,8 @@
 							<string key="name">recordData</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="recordingInterval">
-							<string key="name">recordingInterval</string>
+						<object class="IBToOneOutletInfo" key="recordingIntervalButton">
+							<string key="name">recordingIntervalButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="selectProject">
@@ -758,7 +771,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">gps_icon.png</string>
+			<string key="NS.key.0">gps_icon_no_lock.png</string>
 			<string key="NS.object.0">{48, 48}</string>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
