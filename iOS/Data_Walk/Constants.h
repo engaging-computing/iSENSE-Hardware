@@ -32,6 +32,9 @@
 // tags for alert view/text fields in the alert view
 #define kTAG_PROJECT_SELECTION      600
 #define kENTER_PROJ_TEXTFIELD       601
+#define kENTER_USER_TEXTFIELD       602
+#define kENTER_PASS_TEXTFIELD       603
+#define kTAG_LOGIN_DIALOG           604
 
 // options for project action sheet
 #define kOPTION_CANCELED            0

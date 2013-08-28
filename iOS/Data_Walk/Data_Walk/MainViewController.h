@@ -13,6 +13,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/Waffle.h>
 #import <iSENSE_API/API.h>
+#import <RPerson.h>
+
+typedef void (^APIBlock)(void);
 
 @interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
     
@@ -37,6 +40,9 @@
 - (IBAction) onUploadClick:(id)sender;
 - (IBAction) onSelectProjectClick:(id)sender;
 
+// Non-UI functions
+- (void)showLoadingDialogWithMessage:(NSString *)message andExecuteInBackground:(APIBlock)backgroundBlock finishingOnMainThreadWith:(APIBlock)mainBlock;
+
 // UI properties
 @property (nonatomic, strong) UIBarButtonItem *reset;
 @property (nonatomic, strong) UIBarButtonItem *about;
@@ -54,5 +60,6 @@
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) UITextField *activeField;
+@property (nonatomic, strong) UITextField *passwordField;
 
 @end
