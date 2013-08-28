@@ -17,7 +17,7 @@
 // UI properties
 @synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock;
 // Other properties
-@synthesize locationManager, activeField;
+@synthesize locationManager, activeField, passwordField;
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -56,7 +56,6 @@
     
     // Set up iSENSE settings and API
     api = [API getInstance];
-    [api createSessionWithUsername:kDEFAULT_USER andPassword:kDEFAULT_PASS];
     
     // Set up the menu bar
 	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
@@ -282,7 +281,23 @@
 }
 
 - (IBAction) onLoggedInClick:(id)sender {
-    [self.view makeWaffle:@"Logged in clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login"
+                                         message:nil
+                                        delegate:self
+                               cancelButtonTitle:@"Cancel"
+                               otherButtonTitles:@"Okay", nil];
+    message.tag = kTAG_LOGIN_DIALOG;
+    [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+    
+    [message textFieldAtIndex:0].tag = kENTER_USER_TEXTFIELD;
+    [message textFieldAtIndex:1].tag = kENTER_PASS_TEXTFIELD;
+    [message textFieldAtIndex:0].delegate = self;
+    [message textFieldAtIndex:1].delegate = self;
+    [message textFieldAtIndex:0].returnKeyType = UIReturnKeyNext;
+    [message textFieldAtIndex:1].returnKeyType = UIReturnKeyDone;
+    
+    passwordField = [message textFieldAtIndex:1];
+    [message show];
 }
 
 - (IBAction) onUploadClick:(id)sender {
@@ -363,7 +378,85 @@
             [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
         }
         
+    } else if (actionSheet.tag == kTAG_LOGIN_DIALOG) {
+        
+        passwordField = nil;
+        
+        if (buttonIndex != kOPTION_CANCELED) {
+            NSString *usernameInput = [[actionSheet textFieldAtIndex:0] text];
+            NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
+            [self login:usernameInput withPassword:passwordInput];
+        }
     }
+}
+
+// Log into iSENSE
+- (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
+
+//    __block BOOL success;
+//    __block RPerson *curUser;
+
+    [self showLoadingDialogWithMessage:@"Logging in..."
+                andExecuteInBackground:^{}
+             finishingOnMainThreadWith:^{
+                 BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
+                 if (success) {
+                     [self.view makeWaffle:[NSString stringWithFormat:@"Login as %@ successful", usernameInput]
+                                  duration:WAFFLE_LENGTH_SHORT
+                                  position:WAFFLE_BOTTOM
+                                     image:WAFFLE_CHECKMARK];
+                     
+                     // save the username and password in prefs
+                     NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                     [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                     [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                     [prefs synchronize];
+                     
+
+                     RPerson *curUser = [api getCurrentUser];
+ 
+                     [loggedInAs setTitle:curUser.name forState:UIControlStateNormal];
+                 } else {
+                     [self.view makeWaffle:@"Login failed"
+                                  duration:WAFFLE_LENGTH_SHORT
+                                  position:WAFFLE_BOTTOM
+                                     image:WAFFLE_RED_X];
+                 }
+             }];
+    
+    
+}
+
+- (void)showLoadingDialogWithMessage:(NSString *)message andExecuteInBackground:(APIBlock)backgroundBlock finishingOnMainThreadWith:(APIBlock)mainBlock {
+    UIAlertView *spinnerDialog = [self getDispatchDialogWithMessage:message];
+    [spinnerDialog show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_t_dialog", NULL);
+    dispatch_async(queue, ^{
+        
+        backgroundBlock();
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            mainBlock();
+            [spinnerDialog dismissWithClickedButtonIndex:0 animated:YES];
+            
+        });
+    });
+}
+
+// Default dispatch_async dialog with custom spinner
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
 }
 
 - (void) initLocations {
@@ -506,7 +599,12 @@
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:name forKey:[StringGrabber grabString:@"first_name"]];
+    } else if (textField.tag == kENTER_USER_TEXTFIELD) {
+        //[textField resignFirstResponder];
+        if (passwordField != nil)
+            [passwordField becomeFirstResponder];
     }
+    
     return YES;
 }
 
