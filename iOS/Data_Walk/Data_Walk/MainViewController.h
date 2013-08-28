@@ -24,6 +24,7 @@
     BOOL isRecording;
     int recordingInterval;
     NSString *name;
+    int projectID;
 }
 
 // UI functions
