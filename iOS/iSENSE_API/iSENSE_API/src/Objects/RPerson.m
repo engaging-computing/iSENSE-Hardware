@@ -23,4 +23,9 @@
     return self;
 }
 
+-(NSString *)description {
+    NSString *objString = [NSString stringWithFormat:@"RPerson: {\n\tperson_id: %@\n\tname: %@\n\tusername: %@\n\turl: %@\n\ttimecreated: %@\n\tgravatar:= %@\n\thidden:= %@\n}", person_id, name, username, url, timecreated, gravatar, hidden];
+    return objString;
+}
+
 @end

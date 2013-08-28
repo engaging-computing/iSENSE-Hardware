@@ -360,7 +360,17 @@
             [message show];
             
         } else if (buttonIndex == kOPTION_BROWSE_PROJECTS) {
-            [self.view makeWaffle:@"Browse projects not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+            
+            NSNumber *projNumInteger = [[NSNumber alloc] init];
+            
+            ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
+            browseView.title = @"Browse for Experiments";
+            browseView.chosenProject = projNumInteger;
+            [self.navigationController pushViewController:browseView animated:YES];
+            
+            NSLog(@"Project chosen: %@", projNumInteger);
+
+            
         } else if (buttonIndex == kOPTION_SCAN_PROJECT_QR) {
             [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
