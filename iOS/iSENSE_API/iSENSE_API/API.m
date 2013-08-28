@@ -161,10 +161,10 @@ static RPerson *currentUser;
     NSMutableArray *results = [[NSMutableArray alloc] init];
     NSString *sortMode = descending ? @"DESC" : @"ASC";
     NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&search=%s", page, perPage, sortMode.UTF8String, search.UTF8String];
-    NSDictionary *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
+    NSArray *reqResult = (NSArray *)[self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
     
-    for (id key in reqResult) {
-        NSDictionary *innerProjJSON = [reqResult objectForKey:key];
+    for (NSDictionary *innerProjJSON in reqResult) {
+        NSLog(@"%@", innerProjJSON);
         RProject *proj = [[RProject alloc] init];
         
         proj.project_id = [innerProjJSON objectForKey:@"id"];
@@ -176,6 +176,8 @@ static RPerson *currentUser;
         proj.timecreated = [innerProjJSON objectForKey:@"createdAt"];
         proj.owner_name = [innerProjJSON objectForKey:@"ownerName"];
         proj.owner_url = [innerProjJSON objectForKey:@"ownerUrl"];
+        
+        NSLog(@"%@", proj);
         
         [results addObject:proj];
         
@@ -263,7 +265,7 @@ static RPerson *currentUser;
  * @param postData The data to be given to iSENSE as NSData
  * @return An NSDictionary dump of a JSONObject representing the requested data
  */
--(NSDictionary *)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withRequestType:(NSString *)reqType andPostData:(NSData *)postData {
+-(id)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withRequestType:(NSString *)reqType andPostData:(NSData *)postData {
     
     NSURL *url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@/%@?%@", baseUrl, path, parameters]];
     NSLog(@"Connect to: %@", url);
@@ -284,7 +286,7 @@ static RPerson *currentUser;
     
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
     if (urlResponse.statusCode == 200) {
-        NSDictionary *parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
+        id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
         if (requestError) NSLog(@"Error received from server: %@", requestError);
         return parsedJSONResponse;
     } else if (urlResponse.statusCode == 403){

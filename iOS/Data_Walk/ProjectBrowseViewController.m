@@ -153,7 +153,7 @@
 }
 
 - (void)projectChosen {
-    *_chosenProject = lastProjectClicked.project.project_id.intValue;
+    _chosenProject = [[NSNumber alloc] initWithInteger:lastProjectClicked.project.project_id.intValue];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -311,13 +311,13 @@
 }
 
 // Update scrollView by appending or making a new search in background.
-- (void) updateScrollView:(ISenseSearch *)iSS {
+-(void)updateScrollView:(ISenseSearch *)iSS {
         
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        NSArray *projects = [isenseAPI getProjectsAtPage:iSS.page withPageLimit:iSS.perPage withFilter:true andQuery:iSS.query];
-                        
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSArray *projects = [isenseAPI getProjectsAtPage:iSS.page withPageLimit:iSS.perPage withFilter:true andQuery:iSS.query];
+            
             // remove the spinner
             [projectSpinner stopAnimating];
             [projectSpinner removeFromSuperview];
@@ -337,6 +337,8 @@
             }
             
             for (RProject *proj in projects) {
+                
+                NSLog(@"%@", proj);
                
                 ProjectBlock *block = [[ProjectBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
                                                                      project:proj

@@ -72,9 +72,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "mobile";
-	public static boolean useDev = true;
+	public static boolean useDev = false;
 
-	public static final String VIS_URL_PROD = "http://beta.isenseproject.org/projects/";
+	public static final String VIS_URL_PROD = "http://isenseproject.org/projects/";
 	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";

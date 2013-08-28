@@ -38,7 +38,7 @@
 @property (nonatomic, assign) int currentPage;
 @property (nonatomic, retain) NSString *currentQuery;
 @property (nonatomic, assign) int scrollHeight;
-@property (nonatomic, assign) int *chosenProject;
+@property (nonatomic, assign) NSNumber *chosenProject;
 @property (nonatomic, assign) int contentHeight;
 @property (nonatomic, retain) ProjectBlock *lastProjectClicked;
 
