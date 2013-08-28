@@ -56,9 +56,7 @@
     
     // Set up iSENSE settings and API
     api = [API getInstance];
-    NSLog(@"API is: %@", api);
-    
-    [api createSessionWithUsername:@"mobile" andPassword:@"mobile"];
+    [api createSessionWithUsername:kDEFAULT_USER andPassword:kDEFAULT_PASS];
     
     // Set up the menu bar
 	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
@@ -112,8 +110,16 @@
             [recordingIntervalButton setTitle:@"60 seconds" forState:UIControlStateNormal];
             break;
     }
+    
     name = [prefs stringForKey:[StringGrabber grabString:@"first_name"]];
     [nameTextField setText:name];
+    
+    int proj = [prefs integerForKey:[StringGrabber grabString:@"project_id"]];
+    if (proj == 0)
+        projectID = kDEFAULT_PROJECT;
+    else
+        projectID = proj;
+    [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
     
     // Set up location stuff
     [self resetGeospatialLabels];
@@ -141,7 +147,7 @@
 
 - (void) onAboutClick:(id)sender {
     AboutViewController *avc = [[AboutViewController alloc] init];
-    avc.title = @"About";
+    avc.title = @"About and Help";
     [self.navigationController pushViewController:avc animated:YES];
 }
 
@@ -349,7 +355,12 @@
         if (buttonIndex != kOPTION_CANCELED) {
             
             NSString *projNum = [[actionSheet textFieldAtIndex:0] text];
-            NSLog(@"Entered: %@", projNum);
+            projectID = [projNum intValue];
+            
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+            
+            [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
         }
         
     }
@@ -381,7 +392,7 @@
         [longitudeLabel setText:[NSString stringWithFormat:@"Lon: %lf", longitude]];
     }
     
-    //[gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
+    [gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
 }
 
 - (void) resetGeospatialLabels {
