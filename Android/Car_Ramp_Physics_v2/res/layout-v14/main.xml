@@ -34,14 +34,30 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <Switch
-            android:id="@+id/switch1"
+        <LinearLayout
+            android:id="@+id/lalala"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textOff="Normal Acceleration"
-            android:textOn="Linear Acceleration"
-            android:onClick="onToggleClicked" />
+            android:layout_gravity="center_horizontal" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Linear Acceleration:   "
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onToggleClicked"
+                android:textOff="OFF"
+                android:textOn="ON" />
+        </LinearLayout>
     </LinearLayout>
 
     <Button
