@@ -13,6 +13,10 @@
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/Waffle.h>
 #import <iSENSE_API/API.h>
+#import <RPerson.h>
+#import "ProjectBrowseViewController.h"
+
+typedef void (^APIBlock)(void);
 
 @interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
     
@@ -24,6 +28,7 @@
     BOOL isRecording;
     int recordingInterval;
     NSString *name;
+    int projectID;
 }
 
 // UI functions
@@ -35,6 +40,9 @@
 - (IBAction) onLoggedInClick:(id)sender;
 - (IBAction) onUploadClick:(id)sender;
 - (IBAction) onSelectProjectClick:(id)sender;
+
+// Non-UI functions
+- (void)showLoadingDialogWithMessage:(NSString *)message andExecuteInBackground:(APIBlock)backgroundBlock finishingOnMainThreadWith:(APIBlock)mainBlock;
 
 // UI properties
 @property (nonatomic, strong) UIBarButtonItem *reset;
@@ -53,5 +61,6 @@
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) UITextField *activeField;
+@property (nonatomic, strong) UITextField *passwordField;
 
 @end

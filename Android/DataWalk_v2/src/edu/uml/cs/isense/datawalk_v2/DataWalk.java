@@ -97,7 +97,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private String projectID = "13";
 	private String projectURL = "";
 	private String dataSetName = "";
-	private String baseprojectURL = "http://rsense-dev.cs.uml.edu/projects/";
+	private String baseprojectURL = "http://isenseproject.org/projects/";
 	private int dataSetID = -1;
 	
 
@@ -592,7 +592,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// iSENSE API
 		api = API.getInstance(mContext);
-		api.useDev(true);
+		api.useDev(false);
 
 		// Upload Queue
 		uq = new UploadQueue("data_walk", mContext, api);
