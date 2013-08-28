@@ -7,8 +7,6 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-// TODO SPINNER ON SEARCH AND IPAD
-
 #import "ExperimentBrowseViewController.h"
 
 @implementation ExperimentBrowseViewController
