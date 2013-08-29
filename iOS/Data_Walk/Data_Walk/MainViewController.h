@@ -18,7 +18,7 @@
 
 typedef void (^APIBlock)(void);
 
-@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
+@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate, ProjectBrowseViewControllerDelegate> {
     
     // iSENSE API
     API *api;
