@@ -14,6 +14,7 @@
 #import <iSENSE_API/Waffle.h>
 #import <iSENSE_API/API.h>
 #import <RPerson.h>
+#import "ProjectBrowseViewController.h"
 
 typedef void (^APIBlock)(void);
 

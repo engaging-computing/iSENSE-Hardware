@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		399A007217CE77EC00C80FA0 /* ProjectBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399A007117CE77EC00C80FA0 /* ProjectBrowseViewController.m */; };
+		399A007517CE77FC00C80FA0 /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 399A007417CE77FC00C80FA0 /* ISenseSearch.m */; };
+		399A007A17CE7A8E00C80FA0 /* ProjectBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 399A007917CE7A6B00C80FA0 /* ProjectBlock.m */; };
+		399A007E17CE7DB400C80FA0 /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 399A007D17CE7DB400C80FA0 /* HexColor.m */; };
+		399A008117CE833900C80FA0 /* projectblock_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 399A007F17CE833800C80FA0 /* projectblock_clean.png */; };
+		399A008217CE833900C80FA0 /* projectblock_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 399A008017CE833900C80FA0 /* projectblock_dark.png */; };
 		B714A34B17C7BA6B0016F52B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B714A34A17C7BA6B0016F52B /* QuartzCore.framework */; };
 		B71CA83217CE2E93003920FD /* gps_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B71CA83117CE2E93003920FD /* gps_icon.png */; };
 		B71CA83817CE365A003920FD /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = B71CA83517CE365A003920FD /* waffle_check.png */; };
@@ -80,6 +86,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		399A007017CE77EC00C80FA0 /* ProjectBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowseViewController.h; sourceTree = "<group>"; };
+		399A007117CE77EC00C80FA0 /* ProjectBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowseViewController.m; sourceTree = "<group>"; };
+		399A007317CE77FC00C80FA0 /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
+		399A007417CE77FC00C80FA0 /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
+		399A007817CE7A6B00C80FA0 /* ProjectBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectBlock.h; sourceTree = "<group>"; };
+		399A007917CE7A6B00C80FA0 /* ProjectBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProjectBlock.m; sourceTree = "<group>"; };
+		399A007C17CE7DB400C80FA0 /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
+		399A007D17CE7DB400C80FA0 /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColor.m; sourceTree = "<group>"; };
+		399A007F17CE833800C80FA0 /* projectblock_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_clean.png; sourceTree = "<group>"; };
+		399A008017CE833900C80FA0 /* projectblock_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_dark.png; sourceTree = "<group>"; };
 		B714A34A17C7BA6B0016F52B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		B71CA83117CE2E93003920FD /* gps_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps_icon.png; sourceTree = "<group>"; };
 		B71CA83517CE365A003920FD /* waffle_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_check.png; sourceTree = "<group>"; };
@@ -147,6 +163,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		399A007617CE780200C80FA0 /* BrowseProjects */ = {
+			isa = PBXGroup;
+			children = (
+				399A007717CE782100C80FA0 /* Objects */,
+				399A007017CE77EC00C80FA0 /* ProjectBrowseViewController.h */,
+				399A007117CE77EC00C80FA0 /* ProjectBrowseViewController.m */,
+			);
+			name = BrowseProjects;
+			sourceTree = "<group>";
+		};
+		399A007717CE782100C80FA0 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				399A007C17CE7DB400C80FA0 /* HexColor.h */,
+				399A007D17CE7DB400C80FA0 /* HexColor.m */,
+				399A007817CE7A6B00C80FA0 /* ProjectBlock.h */,
+				399A007917CE7A6B00C80FA0 /* ProjectBlock.m */,
+				399A007317CE77FC00C80FA0 /* ISenseSearch.h */,
+				399A007417CE77FC00C80FA0 /* ISenseSearch.m */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
 		B71CA83417CE363E003920FD /* Waffle Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,6 +266,7 @@
 		B7E567D617C6443300C2DF46 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				399A007617CE780200C80FA0 /* BrowseProjects */,
 				B7E567DF17C644D500C2DF46 /* API */,
 				B7E567E017C644DF00C2DF46 /* Delegate */,
 				B7E567E117C644F000C2DF46 /* Main */,
@@ -256,6 +296,8 @@
 				B762F4B517C6571100B1D6E9 /* rsense_logo.png */,
 				B752DAC117CD117400B01912 /* gps_icon_no_lock.png */,
 				B71CA83117CE2E93003920FD /* gps_icon.png */,
+				399A007F17CE833800C80FA0 /* projectblock_clean.png */,
+				399A008017CE833900C80FA0 /* projectblock_dark.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -447,6 +489,8 @@
 				B71CA83817CE365A003920FD /* waffle_check.png in Resources */,
 				B71CA83917CE365A003920FD /* waffle_warn.png in Resources */,
 				B71CA83A17CE365A003920FD /* waffle_x.png in Resources */,
+				399A008117CE833900C80FA0 /* projectblock_clean.png in Resources */,
+				399A008217CE833900C80FA0 /* projectblock_dark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,8 +505,12 @@
 				B7E567B117C6442700C2DF46 /* main.m in Sources */,
 				B7E567B517C6442700C2DF46 /* DWAppDelegate.m in Sources */,
 				B7E567BE17C6442700C2DF46 /* Data_Walk.xcdatamodeld in Sources */,
+				399A007A17CE7A8E00C80FA0 /* ProjectBlock.m in Sources */,
 				B7E567C117C6442700C2DF46 /* MainViewController.m in Sources */,
 				B72E04FC17CBC30E00D06B57 /* AboutViewController.m in Sources */,
+				399A007217CE77EC00C80FA0 /* ProjectBrowseViewController.m in Sources */,
+				399A007517CE77FC00C80FA0 /* ISenseSearch.m in Sources */,
+				399A007E17CE7DB400C80FA0 /* HexColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
