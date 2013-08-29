@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckedTextView;
-import edu.uml.cs.isense.carphysicsv2.R;
 
 public class RecordSettings extends Activity {
 

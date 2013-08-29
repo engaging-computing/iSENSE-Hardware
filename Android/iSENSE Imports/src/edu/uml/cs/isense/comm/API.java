@@ -3,7 +3,6 @@ package edu.uml.cs.isense.comm;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,14 +10,13 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -34,6 +32,15 @@ import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.objects.RTutorial;
+
+/**
+ * A class which allows Android applications to interface with
+ * the iSENSE website. Given a singleton instance of this class,
+ * functions can be called through an AsyncTask.
+ * 
+ * @author Nick Ver Voort of the iSENSE Android-Development Team
+ * with input from Mike Stowell and Jeremy Poulin
+ */
 
 public class API {
 	private static API instance = null;
@@ -119,8 +126,7 @@ public class API {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "projects", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
-					+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
@@ -128,7 +134,6 @@ public class API {
 				RProject proj = new RProject();
 
 				proj.project_id = inner.getInt("id");
-				//proj.featured_media_id = inner.getInt("featuredMediaId");
 				proj.name = inner.getString("name");
 				proj.url = inner.getString("url");
 				proj.hidden = inner.getBoolean("hidden");
@@ -155,11 +160,10 @@ public class API {
 	public RProject getProject(int projectId) {
 		RProject proj = new RProject();
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			proj.project_id = j.getInt("id");
-			//proj.featured_media_id = j.getInt("featuredMediaId");
 			proj.name = j.getString("name");
 			proj.url = j.getString("url");
 			proj.hidden = j.getBoolean("hidden");
@@ -177,7 +181,7 @@ public class API {
 
 	/**
 	 * Creates a new project on iSENSE. The Field objects in the second parameter must have
-	 * at a type and a name, and can optionally have a unit.
+	 * at a type and a name, and can optionally have a unit. This is an authenticated function.
 	 * 
 	 * @param projectName The name of the new project to be created
 	 * @param fields An ArrayList of field objects that will become the fields on iSENSE. 
@@ -211,7 +215,7 @@ public class API {
 	}
 
 	/** 
-	 * Gets all of the fields associated with a project
+	 * Gets all of the fields associated with a project.
 	 * 
 	 * @param projectId The unique ID of the project whose fields you want to see
 	 * @return An ArrayList of ProjectField objects
@@ -220,7 +224,7 @@ public class API {
 		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
 
 		try {
-			String reqResult = makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for(int i = 0; i < j2.length(); i++) {
@@ -287,7 +291,6 @@ public class API {
 			JSONObject j = new JSONObject(reqResult);
 
 			tut.tutorial_id = j.getInt("id");
-			//proj.featured_media_id = j.getInt("featuredMediaId");
 			tut.name = j.getString("name");
 			tut.url = j.getString("url");
 			tut.hidden = j.getBoolean("hidden");
@@ -439,7 +442,7 @@ public class API {
 		JSONObject requestData = new JSONObject();
 		ArrayList<String> headers = new ArrayList<String>();
 		for(RProjectField rpf : fields) {
-			headers.add(rpf.name);
+			headers.add(""+rpf.field_id);
 		}
 		try {
 			requestData.put("headers", new JSONArray(headers));
@@ -538,6 +541,98 @@ public class API {
 		}
 		return -1;
 	}
+	
+	/**
+	 * Uploads a file to the media section of a project
+	 * 
+	 * @param projectId The project ID to upload to
+	 * @param mediaToUpload The file to upload
+	 * @return ??? or -1 if upload fails
+	 */
+	public int uploadProjectMedia(int projectId, File mediaToUpload) {
+		try {
+			URL url = new URL(baseURL+"/media_objects/saveMedia/project/"+projectId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+
+			MultipartEntity entity = new MultipartEntity();
+			entity.addPart("file", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
+			
+			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
+			connection.setRequestProperty("Accept", "application/json");
+			OutputStream out = connection.getOutputStream();
+			try {
+				entity.writeTo(out);
+			} finally {
+				out.close();
+			}
+			connection.getResponseCode();
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			try {
+				ByteArrayOutputStream bo = new ByteArrayOutputStream();
+				int i = in.read();
+				while(i != -1) {
+					bo.write(i);
+					i = in.read();
+				}
+			} catch (IOException e) {
+				return -1;
+			}
+			finally {
+				in.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	/**
+	 * Uploads a file to the media section of a data set
+	 * 
+	 * @param dataSetId The data set ID to upload to
+	 * @param mediaToUpload The file to upload
+	 * @return ??? or -1 if upload fails
+	 */
+	public int uploadDataSetMedia(int dataSetId, File mediaToUpload) {
+		try {
+			URL url = new URL(baseURL+"/media_objects/saveMedia/data_set/"+dataSetId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+
+			MultipartEntity entity = new MultipartEntity();
+			entity.addPart("file", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
+			
+			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
+			connection.setRequestProperty("Accept", "application/json");
+			OutputStream out = connection.getOutputStream();
+			try {
+				entity.writeTo(out);
+			} finally {
+				out.close();
+			}
+			connection.getResponseCode();
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			try {
+				ByteArrayOutputStream bo = new ByteArrayOutputStream();
+				int i = in.read();
+				while(i != -1) {
+					bo.write(i);
+					i = in.read();
+				}
+			} catch (IOException e) {
+				return -1;
+			}
+			finally {
+				in.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	public RPerson getCurrentUser() {
 		return currentUser;
@@ -576,7 +671,12 @@ public class API {
 			}
 
 			mstat = urlConnection.getResponseCode(); // TODO - add a try/catch for a java.net.ConnectException here.  We can get a connection failed here (ENETUNREACH) if the network is unreachable
-			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+			InputStream in;
+			if(mstat>=200 && mstat < 300) {
+				in = new BufferedInputStream(urlConnection.getInputStream());
+			} else {
+				in = new BufferedInputStream(urlConnection.getErrorStream());
+			}
 			try {
 				ByteArrayOutputStream bo = new ByteArrayOutputStream();
 				int i = in.read();
@@ -659,26 +759,4 @@ public class API {
 		return reformatted;
 	}
 
-	private static byte[] convertFileToByteArray(File f) {
-		byte[] byteArray = null;
-		try
-		{
-			InputStream inputStream = new FileInputStream(f);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			byte[] b = new byte[1024*8];
-			int bytesRead =0;
-
-			while ((bytesRead = inputStream.read(b)) != -1)
-			{
-				bos.write(b, 0, bytesRead);
-			}
-
-			byteArray = bos.toByteArray();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return byteArray;
-	}
 }

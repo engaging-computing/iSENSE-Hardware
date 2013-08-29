@@ -1,0 +1,48 @@
+//
+// Strings.strings
+// Splash
+//
+//  Created by Mike Stowell on 12/28/12.
+//  Copyright 2012 iSENSE Development Team. All rights reserved.
+//  Engaging Computing Lab, Advisor: Fred Martin
+//
+
+
+// ----------------- //
+// --- constants --- //
+// ----------------- //
+
+// "Label"                      = "Value"; //
+
+"recording_interval"            = "recordinginterval";
+"first_name"                    = "firstname";
+"project_id"                    = "projectid";
+
+"accepted_digits"               = "1234567890";
+"accepted_numbers"              = "1234567890.-";
+
+"key_username"                  = "keyusername";
+"key_password"                  = "keypassword";
+
+// Longer text
+
+"about_text"                    =
+"Overview:
+
+This app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. When the app is activated, your GPS coordinates are saved once every 10 seconds and are then shared on the iSENSE web system (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.
+
+Instructions:
+
+In order to begin recording and sharing data, press and hold the button that says \"Hold to Start.\" This allows data to be recorded and saved every 10 seconds (provided that the GPS on your mobile device has a satellite fix). When you are ready to stop recording, press and hold the button that says \"Hold to Stop.\" While data is being recorded, you will not be permitted to exit the app by pressing the Back button. However, pressing the Home button will interrupt the recording. When the app resumes, a dialog box will appear indicating that data recording was halted.
+
+Help:
+
+1. Go to isenseproject.org.
+2. Login or Register for an Account.
+3. Click on Projects.
+4. Create a new project.
+5. Fill out the appropriate fields in Description.
+6. When formatting the project, the fields should be as follows: Accel-Magnitude (m/s^2), Latitude (deg), Longitude (deg), and time (ms), in that order.
+7. Next click Create Project.
+8. Click on where it says here to get started. This will take you to your project and give you a QR code. Your project number will be the number at the end of the url.
+9. Remember to change your project code in the app to match your project number!";
