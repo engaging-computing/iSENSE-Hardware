@@ -334,7 +334,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		//Update preferences set in PreferenceActivity
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		autoRun = prefs.getBoolean("auto_upload", false);
-		experimentId = prefs.getString("experiment_number", "572");
+		experimentId = prefs.getString("experiment_number", "61");
 		autoConn = prefs.getBoolean("auto_connect", true);
 		defaultMac = prefs.getString("defaultPpt", "");
 	}
@@ -1014,7 +1014,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONObject();
 				try {
-					dataJSON.put("0", timeData.get(i));
+					dataJSON.put("0", "U " + timeData.get(i));
 					dataJSON.put("1", bta1Data.get(i));
 				} catch (JSONException e) {
 					e.printStackTrace();
