@@ -279,26 +279,33 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			values.setText("X: ");
 		}
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
 				values.setText(values.getText() + " Y: ");
 			} else {
 				values.setText("Y: ");
 			}
 		}
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))
-					|| dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))) {
 				values.setText(values.getText() + " Z: ");
 			} else {
 				values.setText("Z: ");
 			}
 
 		}
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_total))) {
+		if (dfm.getOrderList().contains(
+				mContext.getString(R.string.accel_total))) {
 
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))
-					|| dfm.getOrderList().contains(mContext.getString(R.string.accel_y))
-					|| dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_z))) {
 				values.setText(values.getText() + " Magnitude: ");
 			} else {
 				values.setText("Magnitude: ");
@@ -475,23 +482,27 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								Log.d("fantastag", "time added");
 
 								if (!saveMode) {
-									if (dfm.getOrderList().contains(mContext
-											.getString(R.string.accel_x))) {
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_x))) {
 										f.accel_x = toThou.format(accel[0]);
 										Log.d("fantastag", "X added");
 									}
-									if (dfm.getOrderList().contains(mContext
-											.getString(R.string.accel_y))) {
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_y))) {
 										f.accel_y = toThou.format(accel[1]);
 										Log.d("fantastag", "Y added");
 									}
-									if (dfm.getOrderList().contains(mContext
-											.getString(R.string.accel_z))) {
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_z))) {
 										f.accel_z = toThou.format(accel[2]);
 										Log.d("fantastag", "Z added");
 									}
-									if (dfm.getOrderList().contains(mContext
-											.getString(R.string.accel_total))) {
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_total))) {
 										f.accel_total = toThou.format(accel[3]);
 										Log.d("fantastag", "Magnitude added");
 									}
@@ -516,14 +527,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						}
 					}, 0, INTERVAL);
 
-
 				}
-
-				
 
 				acceler.clear();
 
-				menu.setGroupVisible(0, useMenu);
+				CarRampPhysicsV2.this.invalidateOptionsMenu();
 
 				return running;
 
@@ -622,7 +630,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			dfm.enabledFields[Fields.ACCEL_Y] = true;
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z)))
 			dfm.enabledFields[Fields.ACCEL_Z] = true;
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_total)))
+		if (dfm.getOrderList().contains(
+				mContext.getString(R.string.accel_total)))
 			dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
 		dfm.enabledFields[Fields.TIME] = true;
 	}
@@ -735,26 +744,33 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			values.setText("X: ");
 		}
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
 				values.setText(values.getText() + " Y: ");
 			} else {
 				values.setText("Y: ");
 			}
 		}
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))
-					|| dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))) {
 				values.setText(values.getText() + " Z: ");
 			} else {
 				values.setText("Z: ");
 			}
 
 		}
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_total))) {
+		if (dfm.getOrderList().contains(
+				mContext.getString(R.string.accel_total))) {
 
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))
-					|| dfm.getOrderList().contains(mContext.getString(R.string.accel_y))
-					|| dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_z))) {
 				values.setText(values.getText() + " Magnitude: ");
 			} else {
 				values.setText("Magnitude: ");
@@ -783,7 +799,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	public boolean onPrepareOptionsMenu (Menu menu) {
 		CarRampPhysicsV2.menu = menu;
+		menu.setGroupEnabled(0, useMenu);
 		return true;
 	}
 
@@ -843,17 +864,20 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			yPrepend = accel[1] > 0 ? "+" : "";
 			zPrepend = accel[2] > 0 ? "+" : "";
 
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
 				data = "X: " + xPrepend + oneDigit.format(accel[0]);
 			}
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_y))) {
 				if (!data.equals("")) {
 					data += " , Y: " + yPrepend + oneDigit.format(accel[1]);
 				} else {
 					data += "Y: " + yPrepend + oneDigit.format(accel[1]);
 				}
 			}
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_z))) {
 				if (!data.equals("")) {
 					data += " , Z: " + zPrepend + oneDigit.format(accel[2]);
 				} else {
@@ -861,7 +885,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 			}
 
-			if (dfm.getOrderList().contains(mContext.getString(R.string.accel_total))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_total))) {
 
 				if (!data.equals("")) {
 					data += " , Magnitude: " + oneDigit.format(accel[3]);
@@ -871,46 +896,42 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			}
 			/*
-			accelerX.add(Double.valueOf(accel[0]));
-			accelerY.add(Double.valueOf(accel[1]));
-			accelerZ.add(Double.valueOf(accel[2]));
-
-			ArrayList<Double> velocityX = new ArrayList<Double>();
-			ArrayList<Double> velocityY = new ArrayList<Double>();
-			ArrayList<Double> velocityZ = new ArrayList<Double>();
-			ArrayList<Double> velocity = new ArrayList<Double>();
-			velocityX.add(Double.valueOf(0));
-			velocityY.add(Double.valueOf(0));
-			velocityZ.add(Double.valueOf(0));
-			double interval = 0.05;
-			for (int i = 1; i < accelerX.size(); i++) {
-				velocityX.add(Double.valueOf((accelerX.get(i) + accelerX
-						.get(i - 1)) / 2 * interval + velocityX.get(i - 1)));
-				velocityY.add(Double.valueOf((accelerY.get(i) + accelerY
-						.get(i - 1)) / 2 * interval + velocityY.get(i - 1)));
-				velocityZ.add(Double.valueOf((accelerZ.get(i) + accelerZ
-						.get(i - 1)) / 2 * interval + velocityZ.get(i - 1)));
-			}
-
-			for (int i = 0; i < velocityX.size(); i++) {
-				velocity.add(Math
-						.sqrt((velocityX.get(i).doubleValue() * velocityX
-								.get(i).doubleValue())
-								+ (velocityY.get(i).doubleValue() * velocityY
-										.get(i).doubleValue())
-								+ (velocityZ.get(i).doubleValue() * velocityZ
-										.get(i).doubleValue())));
-			}
-
-			double avgUpTill = 0;
-			
-			for (int i = 0 ; i<velocity.size(); i++)
-				avgUpTill += velocity.get(i).doubleValue();
-			
-			avgUpTill /= velocity.size();
-			
-			values.setText(data + " Velocity: " + oneDigit.format(avgUpTill));
-			*/
+			 * accelerX.add(Double.valueOf(accel[0]));
+			 * accelerY.add(Double.valueOf(accel[1]));
+			 * accelerZ.add(Double.valueOf(accel[2]));
+			 * 
+			 * ArrayList<Double> velocityX = new ArrayList<Double>();
+			 * ArrayList<Double> velocityY = new ArrayList<Double>();
+			 * ArrayList<Double> velocityZ = new ArrayList<Double>();
+			 * ArrayList<Double> velocity = new ArrayList<Double>();
+			 * velocityX.add(Double.valueOf(0));
+			 * velocityY.add(Double.valueOf(0));
+			 * velocityZ.add(Double.valueOf(0)); double interval = 0.05; for
+			 * (int i = 1; i < accelerX.size(); i++) {
+			 * velocityX.add(Double.valueOf((accelerX.get(i) + accelerX .get(i -
+			 * 1)) / 2 * interval + velocityX.get(i - 1)));
+			 * velocityY.add(Double.valueOf((accelerY.get(i) + accelerY .get(i -
+			 * 1)) / 2 * interval + velocityY.get(i - 1)));
+			 * velocityZ.add(Double.valueOf((accelerZ.get(i) + accelerZ .get(i -
+			 * 1)) / 2 * interval + velocityZ.get(i - 1))); }
+			 * 
+			 * for (int i = 0; i < velocityX.size(); i++) { velocity.add(Math
+			 * .sqrt((velocityX.get(i).doubleValue() * velocityX
+			 * .get(i).doubleValue()) + (velocityY.get(i).doubleValue() *
+			 * velocityY .get(i).doubleValue()) +
+			 * (velocityZ.get(i).doubleValue() * velocityZ
+			 * .get(i).doubleValue()))); }
+			 * 
+			 * double avgUpTill = 0;
+			 * 
+			 * for (int i = 0 ; i<velocity.size(); i++) avgUpTill +=
+			 * velocity.get(i).doubleValue();
+			 * 
+			 * avgUpTill /= velocity.size();
+			 * 
+			 * values.setText(data + " Velocity: " +
+			 * oneDigit.format(avgUpTill));
+			 */
 			values.setText(data);
 
 		}
@@ -945,23 +966,26 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						api, mContext, f);
 				dfm.getOrder();
 				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
 					values.setText("X: " + oneDigit.format(accel[0]));
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
 						values.setText(values.getText() + " Y: "
 								+ oneDigit.format(accel[1]));
 					} else {
 						values.setText("Y: " + oneDigit.format(accel[1]));
 					}
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
 						values.setText(values.getText() + " Z: "
 								+ oneDigit.format(accel[2]));
 					} else {
@@ -969,17 +993,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
-				if (dfm.getOrderList()
-						.contains(mContext.getString(R.string.accel_total))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
 					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
 							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
 						values.setText(values.getText() + " Magnitude: "
 								+ oneDigit.format(accel[3]));
 					} else {
@@ -1021,23 +1045,26 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						api, mContext, f);
 				dfm.getOrder();
 				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
 					values.setText("X: " + oneDigit.format(accel[0]));
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
 						values.setText(values.getText() + " Y: "
 								+ oneDigit.format(accel[1]));
 					} else {
 						values.setText("Y: " + oneDigit.format(accel[1]));
 					}
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
 						values.setText(values.getText() + " Z: "
 								+ oneDigit.format(accel[2]));
 					} else {
@@ -1045,17 +1072,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
-				if (dfm.getOrderList()
-						.contains(mContext.getString(R.string.accel_total))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
 					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
 							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
 						values.setText(values.getText() + " Magnitude: "
 								+ oneDigit.format(accel[3]));
 					} else {
@@ -1137,23 +1164,26 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				dfm.getOrder();
 
 				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
 					values.setText("X: " + oneDigit.format(accel[0]));
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
 						values.setText(values.getText() + " Y: "
 								+ oneDigit.format(accel[1]));
 					} else {
 						values.setText("Y: " + oneDigit.format(accel[1]));
 					}
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
 						values.setText(values.getText() + " Z: "
 								+ oneDigit.format(accel[2]));
 					} else {
@@ -1161,17 +1191,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
-				if (dfm.getOrderList()
-						.contains(mContext.getString(R.string.accel_total))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
 					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
 							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
 						values.setText(values.getText() + " Magnitude: "
 								+ oneDigit.format(accel[3]));
 					} else {
@@ -1192,23 +1222,26 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						api, mContext, f);
 				dfm.getOrder();
 				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
 					values.setText("X: " + oneDigit.format(accel[0]));
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
 						values.setText(values.getText() + " Y: "
 								+ oneDigit.format(accel[1]));
 					} else {
 						values.setText("Y: " + oneDigit.format(accel[1]));
 					}
 				}
-				if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
 						values.setText(values.getText() + " Z: "
 								+ oneDigit.format(accel[2]));
 					} else {
@@ -1216,17 +1249,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
-				if (dfm.getOrderList()
-						.contains(mContext.getString(R.string.accel_total))) {
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
 					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
 							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
-					if (dfm.getOrderList()
-							.contains(mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_y))
-							|| dfm.getOrderList().contains(mContext
-									.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
 						values.setText(values.getText() + " Magnitude: "
 								+ oneDigit.format(accel[3]));
 					} else {
