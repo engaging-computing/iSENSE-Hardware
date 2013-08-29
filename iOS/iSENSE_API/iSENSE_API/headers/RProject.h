@@ -12,16 +12,16 @@
     
 }
 
-@property (assign) NSNumber *project_id;
-@property (assign) NSNumber *featured_media_id;
-@property (assign) NSNumber *default_read;
-@property (assign) NSNumber *like_count;
-@property (assign) NSNumber *hidden;
-@property (assign) NSNumber *featured;
-@property (assign) NSString *name;
-@property (assign) NSString *url;
-@property (assign) NSString *timecreated;
-@property (assign) NSString *owner_name;
-@property (assign) NSString *owner_url;
+@property (strong) NSNumber *project_id;
+@property (strong) NSNumber *featured_media_id;
+@property (strong) NSNumber *default_read;
+@property (strong) NSNumber *like_count;
+@property (strong) NSNumber *hidden;
+@property (strong) NSNumber *featured;
+@property (strong) NSString *name;
+@property (strong) NSString *url;
+@property (strong) NSString *timecreated;
+@property (strong) NSString *owner_name;
+@property (strong) NSString *owner_url;
 
 @end

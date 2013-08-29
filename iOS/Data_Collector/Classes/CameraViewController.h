@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 
-@interface UIImagePickerController (CameraDelegateMethods) {
+@interface CameraViewController : UIImagePickerController <UIImagePickerControllerDelegate> {
 }
 
 @end

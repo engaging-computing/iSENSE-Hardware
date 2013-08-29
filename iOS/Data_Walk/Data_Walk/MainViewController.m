@@ -360,16 +360,11 @@
             [message show];
             
         } else if (buttonIndex == kOPTION_BROWSE_PROJECTS) {
-            
-            NSNumber *projNumInteger = [[NSNumber alloc] init];
-            
+                      
             ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenProject = projNumInteger;
+            browseView.title = @"Browse Projects";
+            browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
-            
-            NSLog(@"Project chosen: %@", projNumInteger);
-
             
         } else if (buttonIndex == kOPTION_SCAN_PROJECT_QR) {
             [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
@@ -621,5 +616,14 @@
 - (IBAction)textFieldFinished:(id)sender {
 }
 
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+    projectID = project.intValue;
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+    
+    [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
+
+}
 
 @end

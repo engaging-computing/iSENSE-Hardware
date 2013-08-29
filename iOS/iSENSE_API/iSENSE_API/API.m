@@ -164,7 +164,6 @@ static RPerson *currentUser;
     NSArray *reqResult = (NSArray *)[self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
     
     for (NSDictionary *innerProjJSON in reqResult) {
-        NSLog(@"%@", innerProjJSON);
         RProject *proj = [[RProject alloc] init];
         
         proj.project_id = [innerProjJSON objectForKey:@"id"];

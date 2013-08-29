@@ -42,7 +42,7 @@
         chooseProject.frame = CGRectMake(20, self.view.bounds.size.height - 170, projectInfo.frame.size.width - 40, 100);
         [chooseProject setTitleColor:[HexColor colorWithHexString:@"5C93DB"] forState:UIControlStateNormal];
         [chooseProject setTitle:[StringGrabber grabString:@"choose_Project"] forState:UIControlStateNormal];
-        [chooseProject addTarget:self action:@selector(projectChosen) forControlEvents:UIControlEventTouchUpInside];
+        //[chooseProject addTarget:self action:@selector(projectChosen) forControlEvents:UIControlEventTouchUpInside];
 
     } else {
         // Bound, allocate, and customize the main view
@@ -153,7 +153,8 @@
 }
 
 - (void)projectChosen {
-    _chosenProject = [[NSNumber alloc] initWithInteger:lastProjectClicked.project.project_id.intValue];
+    NSLog(@"%@", lastProjectClicked.project.owner_name);
+    [self.delegate projectViewController:self didFinishChoosingProject:lastProjectClicked.project.project_id];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -337,9 +338,7 @@
             }
             
             for (RProject *proj in projects) {
-                
-                NSLog(@"%@", proj);
-               
+                              
                 ProjectBlock *block = [[ProjectBlock alloc] initWithFrame:CGRectMake(0, maxHeight, 310, 50)
                                                                      project:proj
                                                                          target:self
@@ -348,7 +347,7 @@
                 maxHeight += 54; // adds 4 pixels of padding
             }
             
-            if (projects.count == 0) {
+            if (projects.count == 0 && iSS.buildType == NEW) {
                 UILabel *noProjectsFound = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 310, 20)];
                 noProjectsFound.text = @"No Projects found.";
                 [scrollView addSubview:noProjectsFound];
