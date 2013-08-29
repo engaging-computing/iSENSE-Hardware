@@ -16,7 +16,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginLeft="10dp"
-            android:background="?android:selectableItemBackground"
+            android:background="@null"
             android:contentDescription="@string/contentDescBack"
             android:gravity="left|center_vertical"
             android:padding="5dp"
@@ -39,7 +39,6 @@
 
     <LinearLayout
         android:id="@+id/buttons"
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -49,24 +48,16 @@
 
         <Button
             android:id="@+id/btn_cancel"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@android:string/cancel" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/buttondivider"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:layout_above="@id/buttons"
-        android:background="?android:attr/dividerVertical" />
-
     <ListView
         android:id="@+id/list_files"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/buttondivider"
+        android:layout_above="@id/buttons"
         android:layout_below="@id/layout_breadcrumbs"
         android:choiceMode="singleChoice" >
     </ListView>

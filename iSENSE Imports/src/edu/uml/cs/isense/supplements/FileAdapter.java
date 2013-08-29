@@ -2,6 +2,7 @@ package edu.uml.cs.isense.supplements;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,6 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
+
+/**
+ * An array adapter for files and directories on the phone's local storage.
+ * Used in FileBrowser.java to display the file selection dialog
+ * 
+ * @author Nick Ver Voort of the iSENSE Android-Development Team
+ */
 
 public class FileAdapter extends ArrayAdapter<File> {
 	public ArrayList<File> items;
@@ -53,9 +61,10 @@ public class FileAdapter extends ArrayAdapter<File> {
 			if (f != null) {
 				TextView row = (TextView) v.findViewById(R.id.filerow);
 				if(fileFilters != null && f.isFile()) {
-					String extension = f.getName().substring(f.getName().lastIndexOf('.') + 1);
+					String extension = f.getName().substring(f.getName().lastIndexOf('.') + 1).toLowerCase(Locale.US);
 					boolean matches = false;
 					for(String s : fileFilters) {
+						s = s.toLowerCase(Locale.US);
 						if(s.equals(extension)) matches = true;
 					}
 					if(matches == false) {
