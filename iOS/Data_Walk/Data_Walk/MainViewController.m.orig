@@ -406,8 +406,13 @@
             browseView.title = @"Browse Projects";
             browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
+            
+<<<<<<< HEAD
+            NSLog(@"Project chosen: %@", projNumInteger);
 
         // User wants to obtain a project number by scanning a QR code
+=======
+>>>>>>> upstream/master
         } else if (buttonIndex == kOPTION_SCAN_PROJECT_QR) {
             [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
@@ -689,6 +694,7 @@
 - (IBAction)textFieldFinished:(id)sender {
 }
 
+<<<<<<< HEAD
 // Alter the layout for the data recording state
 - (void) setRecordingLayout {
     topBar.backgroundColor = UIColorFromHex(0x066126);
@@ -739,6 +745,7 @@
         bbi.enabled = TRUE;
 }
 
+=======
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
     projectID = project.intValue;
     
@@ -748,5 +755,6 @@
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
 
 }
+>>>>>>> upstream/master
 
 @end
