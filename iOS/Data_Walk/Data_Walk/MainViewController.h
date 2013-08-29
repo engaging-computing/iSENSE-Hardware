@@ -35,7 +35,6 @@ typedef void (^APIBlock)(void);
 - (void) onResetClick:(id)sender;
 - (void) onAboutClick:(id)sender;
 
-- (IBAction) onRecordDataClick:(id)sender;
 - (IBAction) onRecordingIntervalClick:(id)sender;
 - (IBAction) onLoggedInClick:(id)sender;
 - (IBAction) onUploadClick:(id)sender;
@@ -57,6 +56,7 @@ typedef void (^APIBlock)(void);
 @property (nonatomic, strong) IBOutlet UIButton *upload;
 @property (nonatomic, strong) IBOutlet UIButton *selectProject;
 @property (nonatomic, strong) IBOutlet UIImageView *gpsLock;
+@property (nonatomic, strong) IBOutlet UILabel *topBar;
 
 // Other properties
 @property (nonatomic, strong) CLLocationManager *locationManager;

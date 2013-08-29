@@ -15,7 +15,7 @@
 // Menu properties
 @synthesize reset, about;
 // UI properties
-@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock;
+@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock, topBar;
 // Other properties
 @synthesize locationManager, activeField, passwordField;
 
@@ -76,6 +76,13 @@
     // Set up text field delegate to catch editing actions and return key type to end editing
     nameTextField.delegate = self;
     [nameTextField setReturnKeyType:UIReturnKeyDone];
+    
+    // Add a long press gesture listener to the record data button
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc]
+                                                       initWithTarget:self
+                                                       action:@selector(onRecordDataLongClick:)];
+    [longPressGesture setMinimumPressDuration:0.5];
+    [recordData addGestureRecognizer:longPressGesture];
     
     // Initialize other variables
     isRecording = NO;
@@ -142,6 +149,13 @@
 
 - (void) onResetClick:(id)sender {
     [self.view makeWaffle:@"Reset clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Reset Settings"
+                                                      message:@"Are you sure you would like to reset settings?  These include the project number, recording interval, and username."
+                                                     delegate:self
+                                            cancelButtonTitle:@"Cancel"
+                                            otherButtonTitles:@"Okay", nil];
+    message.tag = kTAG_RESET_ARE_YOU_SURE;
+    [message show];
 }
 
 - (void) onAboutClick:(id)sender {
@@ -150,8 +164,16 @@
     [self.navigationController pushViewController:avc animated:YES];
 }
 
-- (IBAction) onRecordDataClick:(id)sender {
-    [self.view makeWaffle:@"Record clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+- (void) onRecordDataLongClick:(UIButton *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        if (!isRecording) {
+            isRecording = true;
+            [self setRecordingLayout];
+        } else {
+            isRecording = false;
+            [self setNonRecordingLayout];
+        }
+    }
 }
 
 - (IBAction) onRecordingIntervalClick:(id)sender {
@@ -397,6 +419,23 @@
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self login:usernameInput withPassword:passwordInput];
         }
+    } else if (actionSheet.tag == kTAG_RESET_ARE_YOU_SURE) {
+        
+        if (buttonIndex != kOPTION_CANCELED) {
+            
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setObject:kDEFAULT_USER forKey:[StringGrabber grabString:@"key_username"]];
+            [prefs setObject:kDEFAULT_PASS forKey:[StringGrabber grabString:@"key_password"]];
+            [prefs setInteger:kDEFAULT_PROJECT forKey:[StringGrabber grabString:@"project_id"]];
+            [prefs setInteger:kDEFAULT_REC_INTERVAL forKey:[StringGrabber grabString:@"recording_interval"]];
+            [prefs synchronize];
+            
+            [loggedInAs setTitle:kDEFAULT_NAME forState:UIControlStateNormal];
+            [selectProject setTitle:[NSString stringWithFormat:@"to project %d", kDEFAULT_PROJECT] forState:UIControlStateNormal];
+            [recordingIntervalButton setTitle:[NSString stringWithFormat:@"%d seconds", kDEFAULT_REC_INTERVAL] forState:UIControlStateNormal];
+            
+        }
+        
     }
 }
 
@@ -619,6 +658,54 @@
 }
 
 - (IBAction)textFieldFinished:(id)sender {
+}
+
+- (void) setRecordingLayout {
+    topBar.backgroundColor = UIColorFromHex(0x066126);
+    
+    [recordData setTitle:@"Hold to Stop Recording" forState:UIControlStateNormal];
+    
+    [recordingIntervalButton setEnabled:FALSE];
+    [recordingIntervalButton setAlpha:0.5f];
+    
+    [loggedInAs setEnabled:FALSE];
+    [loggedInAs setAlpha:0.5f];
+    
+    [upload setEnabled:FALSE];
+    [upload setAlpha:0.5f];
+    
+    [selectProject setEnabled:FALSE];
+    [selectProject setAlpha:0.5f];
+    
+    [nameTextField setEnabled:FALSE];
+    [nameTextField setAlpha:0.5f];
+    
+    for (UIBarButtonItem *bbi in self.navigationItem.rightBarButtonItems)
+        bbi.enabled = FALSE;
+}
+
+- (void) setNonRecordingLayout {
+    topBar.backgroundColor = UIColorFromHex(0x0F0661);
+    
+    [recordData setTitle:@"Hold to Record Data" forState:UIControlStateNormal];
+    
+    [recordingIntervalButton setEnabled:TRUE];
+    [recordingIntervalButton setAlpha:1.0f];
+    
+    [loggedInAs setEnabled:TRUE];
+    [loggedInAs setAlpha:1.0f];
+    
+    [upload setEnabled:TRUE];
+    [upload setAlpha:1.0f];
+    
+    [selectProject setEnabled:TRUE];
+    [selectProject setAlpha:1.0f];
+    
+    [nameTextField setEnabled:TRUE];
+    [nameTextField setAlpha:1.0f];
+    
+    for (UIBarButtonItem *bbi in self.navigationItem.rightBarButtonItems)
+        bbi.enabled = TRUE;
 }
 
 

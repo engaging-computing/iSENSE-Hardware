@@ -14,6 +14,7 @@
 #define kDEFAULT_PROJECT    11
 #define kDEFAULT_USER       @"mobile"
 #define kDEFAULT_PASS       @"mobile"
+#define kDEFAULT_NAME       @"Mobile U."
 #define kBASE_VIS_URL       @"http://beta.isenseproject.org/projects/"
 
 // other recording constants
@@ -35,11 +36,15 @@
 #define kENTER_USER_TEXTFIELD       602
 #define kENTER_PASS_TEXTFIELD       603
 #define kTAG_LOGIN_DIALOG           604
+#define kTAG_RESET_ARE_YOU_SURE     605
 
 // options for project action sheet
 #define kOPTION_CANCELED            0
 #define kOPTION_ENTER_PROJECT       1
 #define kOPTION_BROWSE_PROJECTS     2
 #define kOPTION_SCAN_PROJECT_QR     3
+
+// hex color
+#define UIColorFromHex(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #endif
