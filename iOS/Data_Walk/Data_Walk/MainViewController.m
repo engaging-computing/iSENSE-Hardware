@@ -23,11 +23,13 @@
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        // iPad Landscape
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"MainLayout-landscape~ipad"
                                           owner:self
                                         options:nil];
             [self viewDidLoad];
+        // iPad Portrait
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"MainLayout~ipad"
                                           owner:self
@@ -35,11 +37,13 @@
             [self viewDidLoad];
         }
     } else {
+        // iPhone Landscape
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"MainLayout-landscape~iphone"
                                           owner:self
                                         options:nil];
             [self viewDidLoad];
+        // iPhone Portrait
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"MainLayout~iphone"
                                           owner:self
@@ -50,6 +54,7 @@
     
 }
 
+// Called every time the main UI is loaded, or when the device is rotated
 - (void)viewDidLoad {
     // Initial super call
     [super viewDidLoad];
@@ -147,6 +152,7 @@
     [self registerForKeyboardNotifications];
 }
 
+// Display a dialog asking user if he/she would like to reset application settings
 - (void) onResetClick:(id)sender {
     [self.view makeWaffle:@"Reset clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Reset Settings"
@@ -158,12 +164,14 @@
     [message show];
 }
 
+// Shows the user information about the application, as well as a generic "Help/How To" guide
 - (void) onAboutClick:(id)sender {
     AboutViewController *avc = [[AboutViewController alloc] init];
     avc.title = @"About and Help";
     [self.navigationController pushViewController:avc animated:YES];
 }
 
+// Activated when the main application button, the data recording button, is long pressed and it's state is UIGestureRecognizerStateBegan
 - (void) onRecordDataLongClick:(UIButton *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (!isRecording) {
@@ -176,12 +184,14 @@
     }
 }
 
+// Activated when the user wants to change his/her recording interval, measured in seconds
 - (IBAction) onRecordingIntervalClick:(id)sender {
     
     if (isShowingPickerView && intervalPickerView != nil) {
         [intervalPickerView removeFromSuperview];
         isShowingPickerView = NO;
         
+        // Set button text according to the selected recording interval
         switch (recordingInterval) {
             case 1:
                 [recordingIntervalButton setTitle:@"1 second" forState:UIControlStateNormal];
@@ -208,6 +218,7 @@
         
     } else {
         
+        // Display the recording interval selector
         int x = recordingIntervalButton.frame.origin.x;
         int y = recordingIntervalButton.frame.origin.y + recordingIntervalButton.frame.size.height;
         if([UIDevice currentDevice].userInterfaceIdiom != UIUserInterfaceIdiomPad)
@@ -226,6 +237,7 @@
     }
 }
 
+// Called every time the recording interval selector stops on a new row
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
     // Handle the selection
     if (row != 0) {
@@ -251,23 +263,24 @@
         }
     
     } else {
+        // If the user selects row 0, reset the recording interval to its previous state
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         recordingInterval = [prefs integerForKey:[StringGrabber grabString:@"recording_interval"]];
     }
    
 }
 
-// tell the picker how many rows are available for a given component
+// Tells the picker how many rows are available for a given component - we have 7 recording interval options
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
     return 7;
 }
 
-// tell the picker how many components it will have
+// Tells the picker how many components it will have - 1, since we only want to display a single interval per row
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     return 1;
 }
 
-// tell the picker the title for a given component
+// Assigns the picker a title for each row - a "Return to previous" selection, and the 6 other intervals
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     NSString *title;
     switch (row) {
@@ -296,12 +309,13 @@
     return title;
 }
 
-// tell the picker the width of each row for a given component
+// Tells the picker the width of each row for a given component
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
     int sectionWidth = 300;
     return sectionWidth;
 }
 
+// Called when the user clicked on the button displaying his/her login information
 - (IBAction) onLoggedInClick:(id)sender {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Login"
                                          message:nil
@@ -322,10 +336,12 @@
     [message show];
 }
 
+// Called when the user clicked the Upload button
 - (IBAction) onUploadClick:(id)sender {
     [self.view makeWaffle:@"Upload clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
 }
 
+// Called when the user clicked the project selection button
 - (IBAction) onSelectProjectClick:(id)sender {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:nil
                                                       message:nil
@@ -336,9 +352,8 @@
     [message show];
 }
 
-// Allows the device to rotate as necessary.
+// Allows the device to rotate as necessary - overriden to allow any orientation
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Overriden to allow any orientation.
     return (isRecording) ? NO : YES;
 }
 
@@ -363,9 +378,12 @@
         return UIInterfaceOrientationMaskAll;
 }
 
+// Called when a UIActionSheet or UIAlertView is clicked at a button index
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // User clicked on the project selection action sheet
     if (actionSheet.tag == kTAG_PROJECT_SELECTION){
         
+        // User wants to manually enter a project ID
         if (buttonIndex == kOPTION_ENTER_PROJECT) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Project #:"
@@ -380,7 +398,8 @@
             [message textFieldAtIndex:0].tag = kENTER_PROJ_TEXTFIELD;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            
+        
+        // User wants to browse projects
         } else if (buttonIndex == kOPTION_BROWSE_PROJECTS) {
             
             NSNumber *projNumInteger = [[NSNumber alloc] init];
@@ -392,11 +411,12 @@
             
             NSLog(@"Project chosen: %@", projNumInteger);
 
-            
+        // User wants to obtain a project number by scanning a QR code
         } else if (buttonIndex == kOPTION_SCAN_PROJECT_QR) {
             [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
         
+    // User is done entering a project # manually
     } else if (actionSheet.tag == kOPTION_ENTER_PROJECT) {
         
         if (buttonIndex != kOPTION_CANCELED) {
@@ -410,6 +430,7 @@
             [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
         }
         
+    // User is done with the login dialog
     } else if (actionSheet.tag == kTAG_LOGIN_DIALOG) {
         
         passwordField = nil;
@@ -419,6 +440,8 @@
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self login:usernameInput withPassword:passwordInput];
         }
+        
+    // User is done with the Reset dialog
     } else if (actionSheet.tag == kTAG_RESET_ARE_YOU_SURE) {
         
         if (buttonIndex != kOPTION_CANCELED) {
@@ -442,8 +465,8 @@
 // Log into iSENSE
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
 
-//    __block BOOL success;
-//    __block RPerson *curUser;
+    // __block BOOL success;
+    // __block RPerson *curUser;
 
     [self showLoadingDialogWithMessage:@"Logging in..."
                 andExecuteInBackground:^{}
@@ -476,6 +499,7 @@
     
 }
 
+// Function template that shows a spinner UIAlertView while executing a background block, then updating the UI with another block
 - (void)showLoadingDialogWithMessage:(NSString *)message andExecuteInBackground:(APIBlock)backgroundBlock finishingOnMainThreadWith:(APIBlock)mainBlock {
     UIAlertView *spinnerDialog = [self getDispatchDialogWithMessage:message];
     [spinnerDialog show];
@@ -508,6 +532,7 @@
     return message;
 }
 
+// Initialize the location manager.  If one exist, set it to nil and recreate it
 - (void) initLocations {
     if (locationManager) locationManager = nil;
     
@@ -518,7 +543,7 @@
     [locationManager startUpdatingLocation];
 }
 
-// Finds the associated address from a GPS location.
+// New location has been found - update the latitude/longitude labels
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     NSLog(@"New location = %@", newLocation);
     CLLocationCoordinate2D lc2d = [newLocation coordinate];
@@ -537,6 +562,7 @@
     [gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
 }
 
+// Reset the latitude/longiude labels
 - (void) resetGeospatialLabels {
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         [latitudeLabel setText:@"Latitude: ..."];
@@ -545,9 +571,13 @@
         [latitudeLabel setText:@"Lat: ..."];
         [longitudeLabel setText:@"Lon: ..."];
     }
+    
+    [gpsLock setImage:[UIImage imageNamed:@"gps_icon_no_lock.png"]];
 }
 
+// Checks text and returns whether or not the new user character is allowed
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    // Check if the text field is the project text field.  If so, restrict input to 10 numbers only
     if (textField.tag == kENTER_PROJ_TEXTFIELD) {
         NSUInteger newLength = [textField.text length] + [string length] - range.length;
         
@@ -557,13 +587,11 @@
         return (newLength > 10) ? NO : YES;
     }
     
+    // For all other text fields, all characters are accepted
     return YES;
 }
 
-- (BOOL) containsAcceptedCharacters:(NSString *)mString {
-    return YES;
-}
-
+// Checks to see if the string contains only digits 0 - 9
 - (BOOL) containsAcceptedDigits:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
     [[NSCharacterSet characterSetWithCharactersInString:
@@ -572,6 +600,7 @@
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
+// Application received a memory warning - free up what we can
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     [self unregisterKeyboardNotifications];
@@ -633,14 +662,17 @@
     
 }
 
+// Set the active text field to the text field currently being edited
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     activeField = textField;
 }
 
+// Set the active text field to nil when no text fields are in focus
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     activeField = nil;
 }
 
+// Determine how text fields should behave when they are no longer in focus
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     if (textField.tag == kTAG_TEXTFIELD_NAME) {
@@ -657,9 +689,11 @@
     return YES;
 }
 
+// Called when the text field is done being edited
 - (IBAction)textFieldFinished:(id)sender {
 }
 
+// Alter the layout for the data recording state
 - (void) setRecordingLayout {
     topBar.backgroundColor = UIColorFromHex(0x066126);
     
@@ -684,6 +718,7 @@
         bbi.enabled = FALSE;
 }
 
+// Alter the layout for when data is not being recorded
 - (void) setNonRecordingLayout {
     topBar.backgroundColor = UIColorFromHex(0x0F0661);
     

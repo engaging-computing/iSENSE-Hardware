@@ -20,11 +20,14 @@ typedef void (^APIBlock)(void);
 
 @interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
     
+    // iSENSE API
     API *api;
     
+    // Variables for the recording interval picker view
     BOOL isShowingPickerView;
     UIPickerView *intervalPickerView;
     
+    // User settings/other variables
     BOOL isRecording;
     int recordingInterval;
     NSString *name;
