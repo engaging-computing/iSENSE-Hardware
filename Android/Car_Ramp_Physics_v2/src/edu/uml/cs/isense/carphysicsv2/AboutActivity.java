@@ -1,6 +1,5 @@
 package edu.uml.cs.isense.carphysicsv2;
 
-import edu.uml.cs.isense.carphysicsv2.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
