@@ -32,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,6 +64,9 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener, Listener {
 
+	/* Booleans */
+	private Boolean canChangeProjectNum; 
+	
 	/* UI Related Globals */
 	private TextView loggedInAs;
 	private TextView nameTxtBox;
@@ -99,6 +103,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private String dataSetName = "";
 	private String baseprojectURL = "http://isenseproject.org/projects/";
 	private int dataSetID = -1;
+	private String emptyProjectId = "-1";
 	
 
 	/* Manage Work Flow Between Activities */
@@ -108,9 +113,7 @@ public class DataWalk extends Activity implements LocationListener,
 	
 	public static final String USER_PREFS_KEY = "USERID";
 	public static final String INTERVAL_PREFS_KEY = "INTERVALID";
-	public static final String PROJECT_PREFS_KEY = "PROJID";
 	public static final String INTERVAL_VALUE_KEY = "interval_val";
-	private final String PROJECTID_KEY = "project_id";
 
 	/* Manage Work Flow Within DataWalk.java */
 	private boolean running = false;
@@ -166,10 +169,10 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 
 		// Set the initial default projectID in preferences
-		SharedPreferences mPrefs = getSharedPreferences(PROJECT_PREFS_KEY,
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PREFS_ID,
 				Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString(PROJECTID_KEY, DEFAULT_PROJECT).commit();
+		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
 
 		
 		// Initialize main UI elements
@@ -216,8 +219,8 @@ public class DataWalk extends Activity implements LocationListener,
 					// Get user's project #, or the default if there is none
 					// saved
 					SharedPreferences prefs = getSharedPreferences(
-							PROJECT_PREFS_KEY, Context.MODE_PRIVATE);
-					projectID = prefs.getString(PROJECTID_KEY, DEFAULT_PROJECT);
+							Setup.PREFS_ID, Context.MODE_PRIVATE);
+					projectID = prefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
 
 					// Set the project URL for view data
 					projectURL = baseprojectURL + projectID + "/data_sets/";
@@ -244,10 +247,9 @@ public class DataWalk extends Activity implements LocationListener,
 					// Handles when you press the button to START recording
 				} else {
 
-					//THIS DOES NOT WORK (MENU IS NOT DISABLED) 
+					 
 					// Recording so set menu flag to disabled
 					useMenu = false;
-					//invalidateOptionsMenu();
 					onPrepareOptionsMenu(mMenu);
 					running = true;
 					
@@ -282,6 +284,7 @@ public class DataWalk extends Activity implements LocationListener,
 			
 
 		});
+		
 
 	}// ends onCreate
 
@@ -346,6 +349,19 @@ public class DataWalk extends Activity implements LocationListener,
 		super.onResume();
 
 		 
+		//Give the boolean canChangeProjectNum a value of either true or false.   
+				if (api.hasConnectivity()){
+					canChangeProjectNum = true;
+					setProjectIdtoUsersChoice();
+					AutoLogin();
+					//projectID = projectId;
+					//loginNow = false; 
+				}else{
+					//TODO UNComment
+					canChangeProjectNum = false;
+					//loginNow = true; 
+					setProjectIdEmpty();
+				}
 		
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
@@ -368,7 +384,11 @@ public class DataWalk extends Activity implements LocationListener,
 			waitingForGPS();
 
 		// Update the text in the text boxes on the main UI
+		if (projectID == "-1"){
+		expNumBox.setText("Project number cannot be choose until you are connected to the intenet.");
+		}else{
 		expNumBox.setText("Project Number: " + projectID);
+		}
 		if (mInterval == 1000) {
 			rateBox.setText("Data Recorded Every: 1 second");
 		} else if (mInterval == 60000) {
@@ -378,8 +398,39 @@ public class DataWalk extends Activity implements LocationListener,
 					+ " seconds");
 		}
 
+		
 				
 	}// ends onResume
+	/**
+	 * Logs the user in automatically 
+	 */
+	private void AutoLogin() {
+		// TODO Auto-generated method stub
+		
+	}
+	/**
+	 * Sets the project Id to the one the user specified. 
+	 */
+	private void setProjectIdtoUsersChoice() {
+		SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
+		projectID = prefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+		
+	}
+
+	/**
+	 * Handles Setting the Experiment number equal to -1 when you are not connected to the internet. 
+	 */
+	
+	private void setProjectIdEmpty() {
+		// Auto-generated method stub
+		projectID = emptyProjectId;
+		// Set the project ID in preferences back to its default value
+		SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
+		SharedPreferences.Editor mEdit = prefs.edit();
+		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+		mEdit.commit();
+		
+	}
 
 	/**
 	 * Handles application behavior on back press.
@@ -471,7 +522,10 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(5).setEnabled(false);
 			menu.getItem(6).setEnabled(false);
 			menu.getItem(7).setEnabled(false);
-		} 
+		} else if (canChangeProjectNum == false){
+			menu.getItem(3).setEnabled(false);
+			menu.getItem(4).setEnabled(false);
+		}
 		//
 		else {
 			menu.getItem(0).setEnabled(true);
@@ -592,7 +646,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// iSENSE API
 		api = API.getInstance(mContext);
-		api.useDev(false);
+		api.useDev(true);
 
 		// Upload Queue
 		uq = new UploadQueue("data_walk", mContext, api);
@@ -633,15 +687,30 @@ public class DataWalk extends Activity implements LocationListener,
 			// If a new project has been selected, check to see if it is
 			// actually valid.
 		} else if (requestCode == PROJECT_REQUESTED) {
+			
+			
+			if (api.hasConnectivity()){
 			if (resultCode == RESULT_OK) {
-				SharedPreferences prefs = getSharedPreferences(
-						PROJECT_PREFS_KEY, Context.MODE_PRIVATE);
-				projectID = prefs.getString(PROJECTID_KEY, DEFAULT_PROJECT);
+				setProjectIdtoUsersChoice();
 
 				if (api.hasConnectivity()) {
 					new GetProjectTask().execute();
 				}
+			}else if (resultCode == RESULT_CANCELED){
+				//This is called when they hit cancel. 
+				//In this situation, we want the UI to display the last project number the user entered. 
+				projectID = DEFAULT_PROJECT;
+				// Set the project ID in preferences back to its default value
+				SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
+				SharedPreferences.Editor mEdit = prefs.edit();
+				mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+				mEdit.commit();
 			}
+			} else {
+				//There is no Internet so menu is disabled, thus the user will never reach this point. 
+				
+			}
+		
 
 			// If the user hit yes, bring them to GPS settings.
 		} else if (requestCode == DIALOG_NO_GPS) {
@@ -703,9 +772,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Set the project ID in preferences back to its default value
 				SharedPreferences prefs = getSharedPreferences(
-						PROJECT_PREFS_KEY, Context.MODE_PRIVATE);
+						Setup.PREFS_ID, Context.MODE_PRIVATE);
 				SharedPreferences.Editor mEdit = prefs.edit();
-				mEdit.putString(PROJECTID_KEY, DEFAULT_PROJECT);
+				mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
 				mEdit.commit();
 
 				// Set the default username and password in preferences back to
@@ -748,8 +817,8 @@ public class DataWalk extends Activity implements LocationListener,
 						R.string.logged_in_as)
 						+ " " + loginName);
 			} else {
-				// Set the UI to say you aren't logged in TODO What if you are
-				// still logged in as default?
+				// Set the UI to say you aren't logged in 
+				//TODO What if you are still logged in as default?
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as));
 			}

@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="25dp" >
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:text="@string/iSenseQuestion"
         android:textSize="18sp" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,18 +24,18 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/view_data_no"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/no" />
-
-        <Button
             android:id="@+id/view_data_yes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@android:string/yes" />
+
+        <Button
+            android:id="@+id/view_data_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/no" />
     </LinearLayout>
 
 </LinearLayout>

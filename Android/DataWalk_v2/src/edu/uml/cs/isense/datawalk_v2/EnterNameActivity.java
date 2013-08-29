@@ -2,8 +2,10 @@ package edu.uml.cs.isense.datawalk_v2;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -39,7 +41,22 @@ public class EnterNameActivity extends Activity {
 		firstNameInput.setText(DataWalk.firstName);
 		lastInitialInput.setText(DataWalk.lastInitial);
 
-		
+		//We are going to give the first Name input the ability to have a next button...
+		firstNameInput.setOnKeyListener(new OnKeyListener() {
+
+		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+		          // If the event is a key-down event on the "enter" button
+		          if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+		               (keyCode == KeyEvent.KEYCODE_ENTER))
+		          {
+		                // Perform action on Enter key press
+		                firstNameInput.clearFocus();
+		                lastInitialInput.requestFocus();
+		                return true;
+		          }
+		          return false;
+		    }
+		});
 		okButton.setOnClickListener(new OnClickListener() {
 
 			@Override

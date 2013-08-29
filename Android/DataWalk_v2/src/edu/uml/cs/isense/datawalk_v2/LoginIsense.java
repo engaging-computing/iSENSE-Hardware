@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.API;
@@ -46,6 +48,7 @@ public class LoginIsense extends Activity {
 		user = (EditText) findViewById(R.id.userNameET);
 		pass = (EditText) findViewById(R.id.passwordET);
 
+	
 		// Get the username and password from preferences
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataWalk.mContext, DataWalk.mContext.getSharedPreferences(
