@@ -15,7 +15,7 @@
 @synthesize project;
 
 - (id)initWithFrame:(CGRect)frame project:(RProject *)proj target:(id)target action:(SEL)selector {
-
+    
     self = [super initWithFrame:frame];
     if (self) {
         
@@ -37,19 +37,19 @@
         projectNameLabel.textColor = [UIColor blackColor];
         projectNameLabel.font = [UIFont systemFontOfSize:14];
         
-        UILabel *projectDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 22, frame.size.width - 10, 25)];
-        [projectDescriptionLabel setBackgroundColor:[UIColor clearColor]];
-        if ([proj.description class] != [NSNull class]) projectDescriptionLabel.text = proj.description;
-        else projectDescriptionLabel.text = @"No description provided.";
-        projectDescriptionLabel.textAlignment = NSTextAlignmentCenter;
-        projectDescriptionLabel.textColor = [UIColor blackColor];
-        projectDescriptionLabel.font = [UIFont systemFontOfSize:11];
-        projectDescriptionLabel.numberOfLines = 2;
-        projectDescriptionLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        UILabel *projectCreatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 22, frame.size.width - 10, 25)];
+        [projectCreatorLabel setBackgroundColor:[UIColor clearColor]];
+        if ([proj.owner_name class] != [NSNull class]) projectCreatorLabel.text = [NSString stringWithFormat:@"Created by: %@", proj.owner_name];
+        else projectCreatorLabel.text = @"Unknown creator.";
+        projectCreatorLabel.textAlignment = NSTextAlignmentCenter;
+        projectCreatorLabel.textColor = [UIColor blackColor];
+        projectCreatorLabel.font = [UIFont systemFontOfSize:11];
+        projectCreatorLabel.numberOfLines = 2;
+        projectCreatorLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
         // Add the label to the main view
         [self addSubview:projectNameLabel];
-        [self addSubview:projectDescriptionLabel];
+        [self addSubview:projectCreatorLabel];
         
     }
     return self;
@@ -69,11 +69,14 @@
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [self switchToDarkImage:FALSE];
-
+    
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [_target performSelector:_selector withObject:self];
+    #pragma clang diagnostic pop
 }
 
 @end

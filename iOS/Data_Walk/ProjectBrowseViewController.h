@@ -15,6 +15,13 @@
 #import "Constants.h"
 #import "HexColor.h"
 
+@class ProjectBrowseViewController;
+
+@protocol ProjectBrowseViewControllerDelegate <NSObject>
+@required
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project;
+@end
+
 @interface ProjectBrowseViewController : UIViewController <UISearchBarDelegate, UIScrollViewDelegate> {
     API *isenseAPI;
     UIScrollView *scrollView;
@@ -38,9 +45,12 @@
 @property (nonatomic, assign) int currentPage;
 @property (nonatomic, retain) NSString *currentQuery;
 @property (nonatomic, assign) int scrollHeight;
-@property (nonatomic, assign) NSNumber *chosenProject;
 @property (nonatomic, assign) int contentHeight;
 @property (nonatomic, retain) ProjectBlock *lastProjectClicked;
+@property (nonatomic, weak) id <ProjectBrowseViewControllerDelegate> delegate;
 
 @end
+
+
+
 
