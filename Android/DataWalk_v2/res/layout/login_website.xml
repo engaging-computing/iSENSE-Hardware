@@ -18,10 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:digits="@string/digits_restriction"
-        android:inputType="text" />
+        android:inputType="text" 
+        android:singleLine="true"
+        android:nextFocusDown="@+id/passwordTV"/>
 
     <TextView
-        android:id="@+id/passwordTV"
+        android:id="@id/passwordTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -33,7 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:digits="@string/digits_restriction"
-        android:inputType="textPassword" />
+        android:inputType="textPassword" 
+        />
 
     <View
         android:id="@+id/view1"
