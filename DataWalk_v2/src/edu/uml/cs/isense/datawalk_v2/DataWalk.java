@@ -646,7 +646,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// iSENSE API
 		api = API.getInstance(mContext);
-		api.useDev(false);
+		api.useDev(true);
 
 		// Upload Queue
 		uq = new UploadQueue("data_walk", mContext, api);
