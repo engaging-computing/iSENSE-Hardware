@@ -62,5 +62,10 @@
     <string name="retry">Try Again</string>
     <string name="instructions"><u>Instructions:</u></string>
     <string name="reset">Reset</string>
+    <string name="no_initial_proj">
+        One or more of the data sets you have selected to upload have no associated project.  This is indicated by the text that
+        states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
+        sets with no associated project and select \"Select Project\" to associate the data set with a project.
+    </string>
 
 </resources>
