@@ -12,7 +12,7 @@ import android.widget.TextView;
 /**
  * Tells the user what time was received and what its offset is from local time.
  * 
- * @author jpoulin
+ * @author iSENSE Android Development Team
  */
 public class TimeReceived extends Activity {
 

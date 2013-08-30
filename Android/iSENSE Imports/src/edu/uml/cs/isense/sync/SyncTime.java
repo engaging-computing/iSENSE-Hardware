@@ -32,7 +32,7 @@ import edu.uml.cs.isense.waffle.Waffle;
  * Allows the user to share his device's current time with other devices on the
  * same network.
  * 
- * @author jpoulin
+ * @author iSENSE Android Development Team
  */
 public class SyncTime extends Activity {
 
