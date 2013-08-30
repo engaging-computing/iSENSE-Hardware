@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.sync;
+package edu.uml.cs.isense.queue;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,36 +6,31 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.TextView;
 import edu.uml.cs.isense.R;
 
 /**
- * Tells the user that their time offset has been reset back to zero.
+ * Tells the user that 
  * 
  * @author iSENSE Android Development Team
  */
-public class TimeReset extends Activity {
+public class NoInitialProject extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.time_reset);
+		setContentView(R.layout.no_initial_project);
 
 		getWindow().setLayout(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 
-		final Button done = (Button) findViewById(R.id.time_reset_done);
-		done.setOnClickListener(new OnClickListener() {
+		final Button ok = (Button) findViewById(R.id.no_initial_project_ok);
+		ok.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				setResult(RESULT_OK);
 				finish();
 			}
 		});
-
-		final TextView text = (TextView) findViewById(R.id.time_reset_text);
-		text.setText("You have reset the time this application will use "
-				+ "to record data at to the local time on your device.");
 
 	}
 
