@@ -32,6 +32,9 @@ typedef void (^APIBlock)(void);
     int recordingInterval;
     NSString *name;
     int projectID;
+    int elapsedTime;
+    int dataPointCount;
+    NSMutableArray *data;
 }
 
 // UI functions
@@ -60,10 +63,15 @@ typedef void (^APIBlock)(void);
 @property (nonatomic, strong) IBOutlet UIButton *selectProject;
 @property (nonatomic, strong) IBOutlet UIImageView *gpsLock;
 @property (nonatomic, strong) IBOutlet UILabel *topBar;
+@property (nonatomic, strong) IBOutlet UILabel *timeElapsedLabel;
+@property (nonatomic, strong) IBOutlet UILabel *dataPointCountLabel;
 
 // Other properties
+@property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) UITextField *activeField;
 @property (nonatomic, strong) UITextField *passwordField;
+@property (nonatomic, strong) NSTimer *elapsedTimeTimer;
+@property (nonatomic, strong) NSTimer *recordDataTimer;
 
 @end

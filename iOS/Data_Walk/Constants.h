@@ -29,6 +29,8 @@
 #define kTAG_BUTTON_LOGGED_IN       505
 #define kTAG_BUTTON_UPLOAD          506
 #define kTAG_BUTTON_PROJECT         507
+#define kTAG_LABEL_TIME_ELAP        508
+#define kTAG_LABEL_DATA_POINTS      509
 
 // tags for alert view/text fields in the alert view
 #define kTAG_PROJECT_SELECTION      600

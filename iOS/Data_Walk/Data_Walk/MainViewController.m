@@ -15,9 +15,9 @@
 // Menu properties
 @synthesize reset, about;
 // UI properties
-@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock, topBar;
+@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock, topBar, timeElapsedLabel, dataPointCountLabel;
 // Other properties
-@synthesize locationManager, activeField, passwordField;
+@synthesize motionManager, locationManager, activeField, passwordField, elapsedTimeTimer, recordDataTimer;
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -77,6 +77,8 @@
     loggedInAs.tag              = kTAG_BUTTON_LOGGED_IN;
     upload.tag                  = kTAG_BUTTON_UPLOAD;
     selectProject.tag           = kTAG_BUTTON_PROJECT;
+    timeElapsedLabel.tag        = kTAG_LABEL_TIME_ELAP;
+    dataPointCountLabel.tag     = kTAG_LABEL_DATA_POINTS;
     
     // Set up text field delegate to catch editing actions and return key type to end editing
     nameTextField.delegate = self;
@@ -88,6 +90,12 @@
                                                        action:@selector(onRecordDataLongClick:)];
     [longPressGesture setMinimumPressDuration:0.5];
     [recordData addGestureRecognizer:longPressGesture];
+    
+    // Reset the data and data recording labels
+    if (data != nil) data = nil;
+    data = [[NSMutableArray alloc] init];
+    timeElapsedLabel.text = @"Time Elapsed: 0:00";
+    dataPointCountLabel.text = @"Data Points Recorded: 0";
     
     // Initialize other variables
     isRecording = NO;
@@ -132,9 +140,13 @@
         projectID = proj;
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
     
-    // Set up location stuff
+    // Set up location manager
     [self resetGeospatialLabels];
     [self initLocations];
+    
+    // Set up motion manager
+    if (motionManager != nil) motionManager = nil;
+    motionManager = [[CMMotionManager alloc] init];
 }
 
 // Is called every time MainViewController is about to appear
@@ -154,7 +166,6 @@
 
 // Display a dialog asking user if he/she would like to reset application settings
 - (void) onResetClick:(id)sender {
-    [self.view makeWaffle:@"Reset clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Reset Settings"
                                                       message:@"Are you sure you would like to reset settings?  These include the project number, recording interval, and username."
                                                      delegate:self
@@ -174,14 +185,127 @@
 // Activated when the main application button, the data recording button, is long pressed and it's state is UIGestureRecognizerStateBegan
 - (void) onRecordDataLongClick:(UIButton *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
+        // Begin recording data
         if (!isRecording) {
-            isRecording = true;
+            
+            isRecording = TRUE;
             [self setRecordingLayout];
+            
+            if (motionManager.accelerometerAvailable) {
+                motionManager.accelerometerUpdateInterval = recordingInterval;
+                [motionManager startAccelerometerUpdates];
+            }
+            
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            recordingInterval = [prefs integerForKey:[StringGrabber grabString:@"recording_interval"]];
+            
+            elapsedTime = 0;
+            dataPointCount = 0;
+            
+            if (data != nil) data = nil;
+            data = [[NSMutableArray alloc] init];
+            
+            recordDataTimer  = [NSTimer scheduledTimerWithTimeInterval:recordingInterval target:self selector:@selector(buildRowOfData)    userInfo:nil repeats:YES];
+            elapsedTimeTimer = [NSTimer scheduledTimerWithTimeInterval:1                 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES];
+
+        // Stop recording data
         } else {
-            isRecording = false;
+            
+            NSLog(@"Data = %@", data);
+            isRecording = FALSE;
             [self setNonRecordingLayout];
+            
+            [recordDataTimer invalidate];
+            [elapsedTimeTimer invalidate];
+            recordDataTimer = nil;
+            elapsedTimeTimer = nil;
+            
+            if (motionManager.accelerometerActive) [motionManager stopAccelerometerUpdates];
+            
+            timeElapsedLabel.text = @"Time Elapsed: 0:00";
+            dataPointCountLabel.text = @"Data Points Recorded: 0";
+            
         }
     }
+}
+
+// Ticks the timer +1 every second
+- (void) updateElapsedTime {
+    
+    if (!isRecording && elapsedTimeTimer != nil) {
+        [elapsedTimeTimer invalidate];
+        elapsedTimeTimer = nil;
+    }
+    
+    dispatch_queue_t queue = dispatch_queue_create("automatic_update_elapsed_time", NULL);
+    dispatch_async(queue, ^{
+        elapsedTime += 1;
+        
+        int minutes = elapsedTime / 60;
+        int seconds = elapsedTime % 60;
+        
+        NSString *secondsStr;
+        if (seconds < 10)
+            secondsStr = [NSString stringWithFormat:@"0%d", seconds];
+        else
+            secondsStr = [NSString stringWithFormat:@"%d", seconds];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            timeElapsedLabel.text = [NSString stringWithFormat:@"Time Elapsed: %d:%@", minutes, secondsStr];
+            dataPointCountLabel.text = [NSString stringWithFormat:@"Data Points Recorded: %d", dataPointCount];
+        });
+    });
+    
+}
+
+// Records one row of data at a time
+- (void) buildRowOfData {
+    NSLog(@"goat");
+    dataPointCount++;
+    
+    if (!isRecording && recordDataTimer != nil) {
+        [recordDataTimer invalidate];
+        recordDataTimer = nil;
+    } else {
+        dispatch_queue_t queue = dispatch_queue_create("data_walk_data_recording", NULL);
+        dispatch_async(queue, ^{
+            
+            // Fill a new row of data starting with time
+            double rawTime = [[NSDate date] timeIntervalSince1970];
+            long long longTime = (long long) rawTime;
+            NSNumber *time = [NSNumber numberWithLongLong:longTime * 1000];
+            
+            // Acceleration in meters per second squared
+            
+            NSNumber *accel_x = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665];
+            NSNumber *accel_y = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665];
+            NSNumber *accel_z = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665];
+            NSNumber *accel_mag = [NSNumber numberWithDouble:
+                                   sqrt(pow(accel_x.doubleValue, 2)
+                                        + pow(accel_y.doubleValue, 2)
+                                        + pow(accel_z.doubleValue, 2))];
+            
+            
+            // Latitude and longitude coordinates
+            CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+            double rawLatitude  = lc2d.latitude;
+            double rawLongitude = lc2d.longitude;
+            NSNumber *latitude = [NSNumber numberWithDouble:rawLatitude];
+            NSNumber *longitude = [NSNumber numberWithDouble:rawLongitude];
+            
+            // Create the row of data
+            NSDictionary *jObj = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  time,      @"0",
+                                  accel_mag, @"1",
+                                  latitude,  @"2",
+                                  longitude, @"3",
+                                  nil];
+            
+            // Add the row to the overall data set
+            [data addObject:jObj];
+        });
+    }
+    
 }
 
 // Activated when the user wants to change his/her recording interval, measured in seconds
@@ -541,7 +665,6 @@
 
 // New location has been found - update the latitude/longitude labels
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"New location = %@", newLocation);
     CLLocationCoordinate2D lc2d = [newLocation coordinate];
 
     double latitude  = lc2d.latitude;
