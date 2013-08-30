@@ -23,10 +23,12 @@
         android:inputType="textCapSentences"
         android:maxLength="20"
         android:paddingLeft="6dip"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:singleLine="true"
+        android:nextFocusDown="@+id/initialLabel" />
 
     <TextView
-        android:id="@+id/initialLabel"
+        android:id="@id/initialLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -49,7 +51,8 @@
         android:maxWidth="40sp"
         android:paddingLeft="6dip"
         android:singleLine="true"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black" 
+      >
     </EditText>
 
     <View
