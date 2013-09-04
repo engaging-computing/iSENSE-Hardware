@@ -292,6 +292,8 @@ static RPerson *currentUser;
     
     NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
     
+    NSLog(@"Result = %@", requestData);
+    
     return [requestResult objectForKey:@"id"];
 
 }
