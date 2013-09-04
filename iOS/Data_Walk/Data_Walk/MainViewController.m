@@ -248,20 +248,27 @@
     
     // Retrieve all components for the DataSet object
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    // TODO
     
-//    [ds setName:sessionName];
-//    [ds setParentName:PARENT_DATA_WALK];
-//    [ds setDataDescription:description];
-//    [ds setEid:[NSNumber numberWithInt:expNum]];
-//    [ds setData:dataToBeJSONed];
-//    [ds setPicturePaths:nil];
-//    [ds setSid:[NSNumber numberWithInt:-1]];
-//    [ds setCity:city];
-//    [ds setCountry:country];
-//    [ds setAddress:address];
-//    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-//    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];
+    NSString *dataSetName = [NSString stringWithFormat:@"%@: %@", [nameTextField text], [self getDateAndTime]];
+    NSString *description = @"Data set uploaded from the iSENSE Data Walk iOS mobile application";
+    int projID = [prefs integerForKey:[StringGrabber grabString:@"project_id"]];
+    NSMutableDictionary *mutableData = [[NSMutableDictionary alloc] init];
+    [mutableData setObject:data forKey:@"data"];
+    NSDictionary *dataJObj = [api rowsToCols:mutableData];
+    
+    
+    [ds setName:dataSetName];
+    [ds setParentName:PARENT_DATA_WALK];
+    [ds setDataDescription:description];
+    [ds setEid:[NSNumber numberWithInt:projID]];
+    [ds setData:dataJObj];
+    [ds setPicturePaths:nil];
+    [ds setSid:[NSNumber numberWithInt:-1]];
+    [ds setCity:@"Lowell"];
+    [ds setCountry:@"USA"];
+    [ds setAddress:@"1 University Ave."];
+    [ds setUploadable:[NSNumber numberWithBool:TRUE]];
+    [ds setHasInitialExp:[NSNumber numberWithBool:TRUE]];
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
@@ -270,6 +277,14 @@
                  duration:WAFFLE_LENGTH_SHORT
                  position:WAFFLE_BOTTOM
                     image:WAFFLE_CHECKMARK];
+}
+
+- (NSString *) getDateAndTime {
+    NSDate *today = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    NSString *currentTime = [dateFormatter stringFromDate:today];
+    return currentTime;
 }
 
 // Ticks the timer +1 every second
