@@ -15,6 +15,8 @@
 #import <iSENSE_API/API.h>
 #import <RPerson.h>
 #import "ProjectBrowseViewController.h"
+#import "DWAppDelegate.h"
+#import <iSENSE_API/headers/DataSaver.h>
 
 typedef void (^APIBlock)(void);
 
@@ -73,5 +75,7 @@ typedef void (^APIBlock)(void);
 @property (nonatomic, strong) UITextField *passwordField;
 @property (nonatomic, strong) NSTimer *elapsedTimeTimer;
 @property (nonatomic, strong) NSTimer *recordDataTimer;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) DataSaver *dataSaver;
 
 @end
