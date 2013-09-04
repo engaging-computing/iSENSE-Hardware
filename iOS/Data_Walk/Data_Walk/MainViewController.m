@@ -277,6 +277,11 @@
                  duration:WAFFLE_LENGTH_SHORT
                  position:WAFFLE_BOTTOM
                     image:WAFFLE_CHECKMARK];
+    
+    [api useDev:TRUE];
+    [api createSessionWithUsername:@"sor" andPassword:@"sor"];
+    int amIActuallyAThing = [api uploadDataSetWithId:36 withData:dataJObj andName:@"iOS Data Walk Test"];
+    NSLog(@"A thing is %d", amIActuallyAThing); 
 }
 
 - (NSString *) getDateAndTime {
