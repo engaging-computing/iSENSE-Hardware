@@ -110,6 +110,11 @@
             android:name="edu.uml.cs.isense.proj.NoQR"
             android:label="No QR Code found"
             tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.NoInitialProject"
+            android:label="No Associated Projects"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
     </application>
 
 </manifest>
