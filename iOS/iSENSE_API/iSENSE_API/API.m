@@ -284,7 +284,7 @@ static RPerson *currentUser;
     
     [requestData setObject:headers forKey:@"headers"];
     [requestData setObject:dataToUpload forKey:@"data"];
-    [requestData setObject:[NSNumber numberWithInt:projectId] forKey:];
+    [requestData setObject:[NSNumber numberWithInt:projectId] forKey:@"id"];
     if (![name isEqualToString:@""]) [requestData setObject:name forKey:@"name"];
     
     NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%s", authenticityToken.UTF8String];
@@ -292,8 +292,8 @@ static RPerson *currentUser;
     
     NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
     
-    return [requestData objectForKey:@"id"];
-;
+    return [requestResult objectForKey:@"id"];
+
 }
 
 -(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
