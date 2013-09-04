@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="@string/prefs_label_expr" >
         <EditTextPreference
-            android:defaultValue="421"
+            android:defaultValue="61"
             android:inputType="number"
             android:key="experiment_number"
             android:summary="@string/prefs_expid_desc"
