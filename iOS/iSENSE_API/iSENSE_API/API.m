@@ -222,7 +222,46 @@ static RPerson *currentUser;
     return person;
 }
 
--(int)createProjectWithName:(NSString *)name  andFields:(NSArray *)fields { return -1; }
+/**
+ * Creates a new project on iSENSE. The Field objects in the second parameter must have
+ * at a type and a name, and can optionally have a unit. This is an authenticated function.
+ *
+ * @param projectName The name of the new project to be created
+ * @param fields An ArrayList of field objects that will become the fields on iSENSE.
+ * @return The ID of the created project
+ */
+-(int)createProjectWithName:(NSString *)name andFields:(NSArray *)fields {
+    
+    NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
+    [postData setObject:name forKey:@"project_name"];
+    
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%s", authenticityToken.UTF8String];
+    NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
+    
+    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
+    
+    NSNumber *projectId = [requestResult objectForKey:@"id"];
+    
+    for (RProjectField *projField in fields) {
+        NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
+        [fieldMetaData setObject:projectId forKey:@"project_id"];
+        [fieldMetaData setObject:projField.type forKey:@"field_type"];
+        [fieldMetaData setObject:projField.name forKey:@"name"];
+        [fieldMetaData setObject:projField.unit forKey:@"unit"];
+        
+        NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
+        [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
+        [fullFieldMeta setObject:projectId forKey:@"project_id"];
+        
+        NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
+        [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        
+        return projectId.intValue;
+    }
+    
+    return -1;
+}
+
 -(void)appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
 
 -(int)uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name { return -1; }
