@@ -275,6 +275,8 @@ static RPerson *currentUser;
 -(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
     
     NSArray *fields = [self getProjectFieldsWithId:projectId];
+    NSLog(@"%@", fields);
+    
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     NSMutableArray *headers = [[NSMutableArray alloc] init];
     
