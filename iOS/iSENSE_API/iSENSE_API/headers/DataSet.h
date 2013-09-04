@@ -12,6 +12,7 @@
 
 #define PARENT_AUTOMATIC    @"Automatic"
 #define PARENT_MANUAL       @"Manual"
+#define PARENT_DATA_WALK    @"DataWalk"
 
 @interface DataSet : NSManagedObject
 
