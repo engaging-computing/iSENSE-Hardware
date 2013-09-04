@@ -17,7 +17,7 @@
 // UI properties
 @synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock, topBar, timeElapsedLabel, dataPointCountLabel;
 // Other properties
-@synthesize motionManager, locationManager, activeField, passwordField, elapsedTimeTimer, recordDataTimer;
+@synthesize motionManager, locationManager, activeField, passwordField, elapsedTimeTimer, recordDataTimer, managedObjectContext, dataSaver;
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -61,6 +61,16 @@
     
     // Set up iSENSE settings and API
     api = [API getInstance];
+    
+    // Managed Object Context from DWAppDelegate
+    if (managedObjectContext == nil) {
+        managedObjectContext = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    }
+    
+    // DataSaver from DWAppDelegate
+    if (dataSaver == nil) {
+        dataSaver = [(DWAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+    }
     
     // Set up the menu bar
 	reset = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStyleBordered target:self action:@selector(onResetClick:)];
@@ -225,8 +235,41 @@
             timeElapsedLabel.text = @"Time Elapsed: 0:00";
             dataPointCountLabel.text = @"Data Points Recorded: 0";
             
+            [self saveDataSet];
         }
     }
+}
+
+- (void) saveDataSet {
+    // Create the DataSet object
+    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet"
+                                                              inManagedObjectContext:managedObjectContext]
+                   insertIntoManagedObjectContext:managedObjectContext];
+    
+    // Retrieve all components for the DataSet object
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // TODO
+    
+//    [ds setName:sessionName];
+//    [ds setParentName:PARENT_DATA_WALK];
+//    [ds setDataDescription:description];
+//    [ds setEid:[NSNumber numberWithInt:expNum]];
+//    [ds setData:dataToBeJSONed];
+//    [ds setPicturePaths:nil];
+//    [ds setSid:[NSNumber numberWithInt:-1]];
+//    [ds setCity:city];
+//    [ds setCountry:country];
+//    [ds setAddress:address];
+//    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+//    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];
+    
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
+    
+    [self.view makeWaffle:@"Data set saved"
+                 duration:WAFFLE_LENGTH_SHORT
+                 position:WAFFLE_BOTTOM
+                    image:WAFFLE_CHECKMARK];
 }
 
 // Ticks the timer +1 every second

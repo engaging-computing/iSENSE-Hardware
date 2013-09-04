@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/headers/DataSaver.h>
 
 @interface DWAppDelegate : NSObject <UIApplicationDelegate> // was UIResponder, not NSObject
 
@@ -20,5 +21,8 @@
 - (NSURL *)applicationDocumentsDirectory;
 
 @property (strong, nonatomic) UINavigationController *navigationController;
+
+// DataSaver
+@property (nonatomic, retain) DataSaver *dataSaver;
 
 @end
