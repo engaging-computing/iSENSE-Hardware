@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +33,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -145,8 +145,9 @@ public class DataWalk extends Activity implements LocationListener,
 	
 	
 	/* Menu Items */
-	private Menu mMenu;
+
 	
+	@SuppressLint("NewApi")
 	/**
 	 * Called when the application is created for the first time.
 	 */
@@ -186,6 +187,7 @@ public class DataWalk extends Activity implements LocationListener,
 		/* Starts the code for the main button. */
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
+			@SuppressLint("NewApi")
 			@Override
 			public boolean onLongClick(View arg0) {
 
@@ -200,7 +202,8 @@ public class DataWalk extends Activity implements LocationListener,
 					// No longer recording so set menu flag to enabled
 					running = false;
 					useMenu = true;
-					onPrepareOptionsMenu(mMenu);
+					if (android.os.Build.VERSION.SDK_INT >= 11)
+						invalidateOptionsMenu();
 					// Reset the text on the main button
 					startStop.setText(getString(R.string.startPrompt));
 
@@ -232,13 +235,15 @@ public class DataWalk extends Activity implements LocationListener,
 							dataSet.toString(), null);
 					if (dataPointCount > 0) {
 						uq.addDataSetToQueue(ds);
-
 						// Tell the user recording has stopped
 						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+						
+						
 					} else {
 						w.make("Data not saved because no points were recorded.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						
 					}
 
 					// Re-enable rotation in the main activity
@@ -250,7 +255,8 @@ public class DataWalk extends Activity implements LocationListener,
 					 
 					// Recording so set menu flag to disabled
 					useMenu = false;
-					onPrepareOptionsMenu(mMenu);
+					if (android.os.Build.VERSION.SDK_INT >= 11)
+						invalidateOptionsMenu();
 					running = true;
 					
 					
@@ -263,7 +269,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-
+					//TODO KEEP SCREEN ON
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -344,14 +350,18 @@ public class DataWalk extends Activity implements LocationListener,
 	 * Called whenever this activity is called from within the application, like
 	 * from the login dialog.
 	 */
+	@SuppressLint("NewApi")
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		 
-		//Give the boolean canChangeProjectNum a value of either true or false.   
+			// We are going to do a series of tasks depending on whether or not we have connectivity
+				// if we have connectivity: user can change ProjectNumber, set it originally to the user's last choice, and automatically login
 				if (api.hasConnectivity()){
+					//Give the boolean canChangeProjectNum a value of either true or false depending on whether or not we are connected to the Internet
 					canChangeProjectNum = true;
+					if (android.os.Build.VERSION.SDK_INT >= 11)
+						invalidateOptionsMenu();
 					setProjectIdtoUsersChoice();
 					AutoLogin();
 					//projectID = projectId;
@@ -359,6 +369,8 @@ public class DataWalk extends Activity implements LocationListener,
 				}else{
 					//TODO UNComment
 					canChangeProjectNum = false;
+					if (android.os.Build.VERSION.SDK_INT >= 11)
+						invalidateOptionsMenu();
 					//loginNow = true; 
 					setProjectIdEmpty();
 				}
@@ -385,7 +397,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Update the text in the text boxes on the main UI
 		if (projectID == "-1"){
-		expNumBox.setText("Project number cannot be choose until you are connected to the intenet.");
+		expNumBox.setText("Project number cannot be choose until you are connected to the intenet." + projectID);
 		}else{
 		expNumBox.setText("Project Number: " + projectID);
 		}
@@ -424,10 +436,10 @@ public class DataWalk extends Activity implements LocationListener,
 	private void setProjectIdEmpty() {
 		// Auto-generated method stub
 		projectID = emptyProjectId;
-		// Set the project ID in preferences back to its default value
+		// Set the project ID in preferences back to -1
 		SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = prefs.edit();
-		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+		mEdit.putString(Setup.PROJECT_ID, emptyProjectId);
 		mEdit.commit();
 		
 	}
@@ -497,8 +509,6 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-
-		mMenu = menu;
 		// Inflate the layout from menu.xml
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
@@ -511,7 +521,7 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		//o
+		
 		
 		if (!useMenu) {
 			menu.getItem(0).setEnabled(false);
@@ -522,10 +532,10 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(5).setEnabled(false);
 			menu.getItem(6).setEnabled(false);
 			menu.getItem(7).setEnabled(false);
-		} else if (canChangeProjectNum == false){
+		} /*else if (canChangeProjectNum == false){
 			menu.getItem(3).setEnabled(false);
 			menu.getItem(4).setEnabled(false);
-		}
+		}*/
 		//
 		else {
 			menu.getItem(0).setEnabled(true);
@@ -817,10 +827,13 @@ public class DataWalk extends Activity implements LocationListener,
 						R.string.logged_in_as)
 						+ " " + loginName);
 			} else {
+				//A lo 
 				// Set the UI to say you aren't logged in 
 				//TODO What if you are still logged in as default?
+				//loggedInAs.setText(getResources().getString(R.string.logged_in_as + ""+ loginName));
 				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as));
+						R.string.logged_in_as)
+						+ " " + loginName);
 			}
 		}
 

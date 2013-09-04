@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:layout_weight="1"
-            android:text="@string/select_all" />
+            android:text="@string/deselect_all" />
     </LinearLayout>
 
     <ScrollView
