@@ -331,7 +331,8 @@ public class pinpointInterface {
         int NUM_BYTES_H = 2;
         int NUM_BYTES_L = 3;
 
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        @SuppressWarnings("resource")
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 
         ArrayList<String> lines = new ArrayList<String>();
         String curline;

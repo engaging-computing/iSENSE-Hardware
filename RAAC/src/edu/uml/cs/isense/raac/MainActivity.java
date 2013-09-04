@@ -96,14 +96,17 @@ import edu.uml.cs.isense.raac.pincushion.pinpointInterface;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity implements OnClickListener {
-	boolean showConnectOption = false, showTimeOption = false, showSensorOption = false, connectFromSplash = true, dataRdy = false;
+	boolean showConnectOption = false, showTimeOption = false,
+			showSensorOption = false, connectFromSplash = true,
+			dataRdy = false;
 	Button rcrdBtn, pushToISENSE, btnSetName;
 	ScrollView dataScroller;
 	ImageButton pinpointBtn, pinpointBtnOther;
 	ImageView spinner, spinner2;
 	RelativeLayout launchLayout, lastPptLayout, otherPptLayout;
 	ViewFlipper flipper;
-	TextView minField, maxField, aveField, medField, sensorHead, launchStatusA, lastPptName;
+	TextView minField, maxField, aveField, medField, sensorHead, launchStatusA,
+			lastPptName, statusField;
 	LinearLayout dataLayout;
 	TextView tenPoints;
 	EditText nameField, splashNameField;
@@ -112,8 +115,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	private BluetoothAdapter mBluetoothAdapter = null;
 	ArrayList<String[]> data;
 	Animation mSlideInTop, mSlideOutTop, rotateInPlace;
-	int flipView = 0; //Currently displayed child of the viewFlipper
-	int btStatNum = 0; //The current status of the bluetooth connection
+	int flipView = 0; // Currently displayed child of the viewFlipper
+	int btStatNum = 0; // The current status of the bluetooth connection
 	int sessionId = -1;
 	String experimentId = "61";
 	String username = "mobile";
@@ -132,12 +135,14 @@ public class MainActivity extends Activity implements OnClickListener {
 	String defaultMac = "";
 	String groupName = "";
 
+	private final String NOT_CONNECTED = "Status: Not Connected";
+	private final String CONNECTED = "Status: Connected";
 	boolean pressedRecent = true;
 
 	NfcAdapter mAdapter;
 	PendingIntent pendingIntent;
 
-	int lastKnownSensor = 0; //0 for temp, 24 pH
+	int lastKnownSensor = 0; // 0 for temp, 24 pH
 
 	ArrayList<Double> bta1Data = new ArrayList<Double>();
 	ArrayList<String> timeData = new ArrayList<String>();
@@ -166,10 +171,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		api = API.getInstance(getApplicationContext());
-		api.useDev(true);
+		api.useDev(false);
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		//Get the MAC address of the default PINPoint
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		// Get the MAC address of the default PINPoint
 		defaultMac = prefs.getString("defaultPpt", "");
 
 		initializeLayout();
@@ -190,18 +196,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 
-		rcrdBtn.setEnabled(false);
-
 		launchLayout.setVisibility(View.VISIBLE);
 
-		pendingIntent = PendingIntent.getActivity(
-				this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		mChatService = new BluetoothService(this, mHandler);
 	}
 
 	// Set up all views from the XML layout
-	public void initializeLayout() {		
+	public void initializeLayout() {
 		dataScroller = (ScrollView) findViewById(R.id.scrollView1);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		rcrdBtn = (Button) findViewById(R.id.btn_getRcrd);
@@ -218,16 +222,18 @@ public class MainActivity extends Activity implements OnClickListener {
 		dataLayout = (LinearLayout) findViewById(R.id.linearLayout1);
 		tenPoints = (TextView) findViewById(R.id.onlyTenPoints);
 		sensorHead = (TextView) findViewById(R.id.sensorNameHeader);
-		nameField = (EditText) findViewById(R.id.nameField);	
+		nameField = (EditText) findViewById(R.id.nameField);
 		splashNameField = (EditText) findViewById(R.id.et_groupName);
 		btnSetName = (Button) findViewById(R.id.btn_setName);
+		statusField = (TextView) findViewById(R.id.statusField);
 
 		nameField.setText(groupName);
 		splashNameField.setText(groupName);
 		splashNameField.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if(actionId == EditorInfo.IME_ACTION_DONE) {
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
 					setNameThing();
 					return true;
 				} else {
@@ -248,8 +254,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		rcrdBtn.setOnClickListener(this);
 		pushToISENSE.setOnClickListener(this);
 
-		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String name = defPrefs.getString("defaultPptName","");
+		SharedPreferences defPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String name = defPrefs.getString("defaultPptName", "");
 		lastPptName.setText(name);
 
 		minField.setText(datMin);
@@ -261,8 +268,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void LostPinPoint() {
-		Toast.makeText(this, "Couldn't find the PINPoint! Press the Connect button and reconnect please.", Toast.LENGTH_LONG).show();
-		rcrdBtn.setEnabled(false);
+		Toast.makeText(
+				this,
+				"Couldn't find the PINPoint! Press the Connect button and reconnect please.",
+				Toast.LENGTH_LONG).show();
 		showSensorOption = false;
 		showTimeOption = false;
 		invalidateOptionsMenu();
@@ -270,9 +279,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		setBtStatus();
 		return;
 	}
+
 	public void FoundPinPoint() {
-		Toast.makeText(this, "Connected to PINPoint!", Toast.LENGTH_SHORT).show();
-		rcrdBtn.setEnabled(true);
+		Toast.makeText(this, "Connected to PINPoint!", Toast.LENGTH_SHORT)
+				.show();
 		showSensorOption = true;
 		showTimeOption = true;
 		invalidateOptionsMenu();
@@ -281,7 +291,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		return;
 	}
 
-	//Override to make sure that the correct layout file is used when the screen orientation changes
+	// Override to make sure that the correct layout file is used when the
+	// screen orientation changes
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -306,11 +317,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	public synchronized void onResume() {
 		super.onResume();
 
-		//Set up foreground dispatch so that this app knows to intercept NFC discoveries while it's open
-		if(Build.VERSION.SDK_INT >= 10) {
+		// Set up foreground dispatch so that this app knows to intercept NFC
+		// discoveries while it's open
+		if (Build.VERSION.SDK_INT >= 10) {
 			mAdapter = NfcAdapter.getDefaultAdapter(this);
-			if(mAdapter != null) {
-				mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+			if (mAdapter != null) {
+				mAdapter.enableForegroundDispatch(this, pendingIntent, null,
+						null);
 			}
 		}
 
@@ -331,19 +344,22 @@ public class MainActivity extends Activity implements OnClickListener {
 			handleNFCIntent(getIntent());
 		}
 
-		//Update preferences set in PreferenceActivity
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		// Update preferences set in PreferenceActivity
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		autoRun = prefs.getBoolean("auto_upload", false);
 		experimentId = prefs.getString("experiment_number", "61");
 		autoConn = prefs.getBoolean("auto_connect", true);
 		defaultMac = prefs.getString("defaultPpt", "");
+		
+		setBtStatus();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		if(Build.VERSION.SDK_INT >= 10) {
-			if(mAdapter != null) {
+		if (Build.VERSION.SDK_INT >= 10) {
+			if (mAdapter != null) {
 				mAdapter.disableForegroundDispatch(this);
 			}
 		}
@@ -351,8 +367,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@SuppressLint("NewApi")
 	void handleNFCIntent(Intent intent) {
-		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-		if(Build.VERSION.SDK_INT >= 9) {
+		Parcelable[] rawMsgs = intent
+				.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+		if (Build.VERSION.SDK_INT >= 9) {
 			if (rawMsgs != null) {
 				NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
 				for (int i = 0; i < rawMsgs.length; i++) {
@@ -360,13 +377,16 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				byte[] payload = msgs[0].getRecords()[0].getPayload();
 				String text = "";
-				//Get the Text Encoding
-				String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
-				//Get the Language Code
+				// Get the Text Encoding
+				String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8"
+						: "UTF-16";
+				// Get the Language Code
 				int languageCodeLength = payload[0] & 0077;
 				try {
-					//Get the Text
-					text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+					// Get the Text
+					text = new String(payload, languageCodeLength + 1,
+							payload.length - languageCodeLength - 1,
+							textEncoding);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -378,7 +398,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		//Check to see if the activity is being started due to reading an NFC tag
+		// Check to see if the activity is being started due to reading an NFC
+		// tag
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
 			handleNFCIntent(intent);
 		}
@@ -386,19 +407,20 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onStart() {
-		if (!loggedIn && api.hasConnectivity()) new PerformLogin().execute();
+		if (!loggedIn && api.hasConnectivity())
+			new PerformLogin().execute();
 		super.onStart();
 	}
 
 	private double applyFormula(int sensor, double x) {
 		BigDecimal bd, rounded;
 		double temp;
-		if(sensor == 24) {
-			temp = (-0.0185*x)+13.769;
+		if (sensor == 24) {
+			temp = (-0.0185 * x) + 13.769;
 			bd = new BigDecimal(temp);
 			rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 			return rounded.doubleValue();
-		} else if(sensor == 1) {
+		} else if (sensor == 1) {
 			temp = (-33.47 * Math.log(x)) + 213.85;
 			bd = new BigDecimal(temp);
 			rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -422,18 +444,21 @@ public class MainActivity extends Activity implements OnClickListener {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
 		} else if (item.getItemId() == R.id.menu_setTime) {
-			if(ppi.setRealTimeClock())
-				Toast.makeText(MainActivity.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+			if (ppi.setRealTimeClock())
+				Toast.makeText(MainActivity.this, "Successfully synced time.",
+						Toast.LENGTH_SHORT).show();
 			else
-				Toast.makeText(MainActivity.this, "Could not sync time.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, "Could not sync time.",
+						Toast.LENGTH_SHORT).show();
 		} else if (item.getItemId() == R.id.menu_setSensors) {
 			Intent i = new Intent(this, SensorSelector.class);
 			startActivityForResult(i, SENSOR_CHANGE);
 		} else if (item.getItemId() == R.id.menu_login) {
 			if (loggedIn)
-				Toast.makeText(MainActivity.this,  "Already logged in!", Toast.LENGTH_SHORT).show();
-			else
-				if (api.hasConnectivity()) new PerformLogin().execute();
+				Toast.makeText(MainActivity.this, "Already logged in!",
+						Toast.LENGTH_SHORT).show();
+			else if (api.hasConnectivity())
+				new PerformLogin().execute();
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
@@ -453,19 +478,21 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void connectToBluetooth(String macAddr, boolean fromMain) {
-		System.out.println("conneting to "+macAddr);
+		System.out.println("conneting to " + macAddr);
 		try {
-			BluetoothDevice device = mBluetoothAdapter
-					.getRemoteDevice(macAddr);
+			BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(macAddr);
 			mChatService.connect(device);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
+			Toast.makeText(this,
+					"Sorry, the MAC address was invalid. Connection failed!",
+					Toast.LENGTH_LONG).show();
 			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			if(!fromMain){
+			if (!fromMain) {
 				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 			} else {
-				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_MAIN);
+				startActivityForResult(serverIntent,
+						REQUEST_CONNECT_DEVICE_MAIN);
 			}
 		}
 	}
@@ -473,13 +500,14 @@ public class MainActivity extends Activity implements OnClickListener {
 	@SuppressLint("NewApi")
 	public void getRecords() {
 		ppi.setContext(this);
-		//Check PINPoint's BTA1 sensor setting
-		//and if it's not pH or temperature, set it to temperature
+		// Check PINPoint's BTA1 sensor setting
+		// and if it's not pH or temperature, set it to temperature
 		try {
-			if(ppi.getSetting(PinComm.BTA1)!=24 && ppi.getSetting(PinComm.BTA1)!=1) {
+			if (ppi.getSetting(PinComm.BTA1) != 24
+					&& ppi.getSetting(PinComm.BTA1) != 1) {
 				ppi.setSetting(PinComm.BTA1, 1);
 			}
-			if(ppi.getSetting(PinComm.BTA1)==24) {
+			if (ppi.getSetting(PinComm.BTA1) == 24) {
 				sensorHead.setText("BTA1: Vernier pH Sensor");
 			} else {
 				sensorHead.setText("BTA1: Vernier Temperature Probe");
@@ -493,15 +521,18 @@ public class MainActivity extends Activity implements OnClickListener {
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setMessage("Please wait, reading data from PINPoint");
 		progressDialog.setCancelable(false);
-		if(Build.VERSION.SDK_INT >= 11) {
+		if (Build.VERSION.SDK_INT >= 11) {
 			progressDialog.setProgressNumberFormat(null);
 		}
 		progressDialog.show();
 
-		final Runnable toastRun = new Runnable() { 
-			public void run() { 
-				Toast.makeText(getApplicationContext(), "Error retrieving data from PINPoint! Please try again", Toast.LENGTH_SHORT).show();
-				rcrdBtn.setEnabled(true);
+		final Runnable toastRun = new Runnable() {
+			public void run() {
+				Toast.makeText(
+						getApplicationContext(),
+						"Error retrieving data from PINPoint! Please try again",
+						Toast.LENGTH_SHORT).show();
+				setBtStatus();
 				dataLayout.removeAllViews();
 				bta1Data.clear();
 				timeData.clear();
@@ -509,49 +540,49 @@ public class MainActivity extends Activity implements OnClickListener {
 		};
 
 		dataLayout.removeAllViews();
-		if( bta1Data != null || timeData != null ) {
+		if (bta1Data != null || timeData != null) {
 			bta1Data.clear();
 			timeData.clear();
 		}
 
-		Thread thread=new Thread(
-				new Runnable(){
+		Thread thread = new Thread(new Runnable() {
 
-					public void run(){
+			public void run() {
 
-						try {
-							data = ppi.getData(progressDialog);
+				try {
+					data = ppi.getData(progressDialog);
 
-							runOnUiThread(new Runnable(){
+					runOnUiThread(new Runnable() {
 
-								@Override
-								public void run() {
-									if(progressDialog.isShowing()) {
-										progressDialog.dismiss();
-									}
-									if (data != null && data.size() == progressDialog.getMax()) {
-										try {
-											prepDataForUpload();
-											writeDataToScreen();
-											rcrdBtn.setEnabled(true);
-										} catch (NoConnectionException e) {
-											LostPinPoint();
-											return;
-										}
-									} else {
-										runOnUiThread(toastRun);
-									}
+						@Override
+						public void run() {
+							if (progressDialog.isShowing()) {
+								progressDialog.dismiss();
+							}
+							if (data != null
+									&& data.size() == progressDialog.getMax()) {
+								try {
+									prepDataForUpload();
+									writeDataToScreen();
+									setBtStatus();
+								} catch (NoConnectionException e) {
+									LostPinPoint();
+									return;
 								}
-
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-							runOnUiThread(toastRun);
-							Thread.currentThread().interrupt();
+							} else {
+								runOnUiThread(toastRun);
+							}
 						}
-					}
 
-				});
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+					runOnUiThread(toastRun);
+					Thread.currentThread().interrupt();
+				}
+			}
+
+		});
 		thread.start();
 		pushToISENSE.setEnabled(true);
 	}
@@ -560,13 +591,14 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v == lastPptLayout) {
-			if(!groupName.equals("")) {
+			if (!groupName.equals("")) {
 				pressedRecent = true;
 				splashNameField.setError(null);
-				if(!defaultMac.equals("")) {
+				if (!defaultMac.equals("")) {
 					connectToBluetooth(defaultMac, false);
 				} else {
-					Intent serverIntent = new Intent(this, DeviceListActivity.class);
+					Intent serverIntent = new Intent(this,
+							DeviceListActivity.class);
 					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 				}
 			} else {
@@ -574,7 +606,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 		if (v == otherPptLayout) {
-			if(!groupName.equals("")) {
+			if (!groupName.equals("")) {
 				pressedRecent = false;
 				splashNameField.setError(null);
 				Intent serverIntent = new Intent(this, DeviceListActivity.class);
@@ -595,7 +627,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				LostPinPoint();
 			}
 		}
-		if (v == btnSetName ) {
+		if (v == btnSetName) {
 			setNameThing();
 		}
 
@@ -603,13 +635,13 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	public void setNameThing() {
 		String name = splashNameField.getText().toString();
-		if(!name.equals("")) {
+		if (!name.equals("")) {
 			splashNameField.setError(null);
 			groupName = name;
 			nameField.setText(groupName);
-			Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT).show();
-			InputMethodManager imm = (InputMethodManager)getSystemService(
-					Context.INPUT_METHOD_SERVICE);
+			Toast.makeText(this, "Group name has been set!", Toast.LENGTH_SHORT)
+					.show();
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(splashNameField.getWindowToken(), 0);
 		} else {
 			splashNameField.setError("A group name is required");
@@ -624,20 +656,26 @@ public class MainActivity extends Activity implements OnClickListener {
 
 			for (String str : strray) {
 				x++;
-				switch(x) {
-				case 1:  timeData.add(formatTime(str)); 
-				break;
-				case 14: bta1Data.add(applyFormula(sensorsetting, Double.parseDouble(str)));
-				data.get(i)[14] = ""+applyFormula(sensorsetting, Double.parseDouble(str)); 
-				break;
-				default: break;
+				switch (x) {
+				case 1:
+					timeData.add(formatTime(str));
+					break;
+				case 14:
+					bta1Data.add(applyFormula(sensorsetting,
+							Double.parseDouble(str)));
+					data.get(i)[14] = ""
+							+ applyFormula(sensorsetting,
+									Double.parseDouble(str));
+					break;
+				default:
+					break;
 				}
 			}
 			x = 0;
 		}
 		dataRdy = true;
 		findStatistics();
-		if(autoRun) {
+		if (autoRun) {
 			uploadData();
 		}
 	}
@@ -650,8 +688,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (data.size() > 10) {
 			dataLayout.addView(tenPoints);
 			tenPoints.setVisibility(View.VISIBLE);
-			i = data.size()-10;
-			y = data.size()-9;
+			i = data.size() - 10;
+			y = data.size() - 9;
 		}
 
 		int x = 0;
@@ -660,16 +698,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		int currSensor = ppi.getSetting(PinComm.BTA1);
 
 		try {
-			for (; i<data.size(); i++) {
+			for (; i < data.size(); i++) {
 				String[] strray = data.get(i);
 				DecimalFormat df = new DecimalFormat("#0.00");
 				LinearLayout newRow = new LinearLayout(getBaseContext());
 				newRow.setOrientation(LinearLayout.HORIZONTAL);
-				if(i%2 != 0) {
+				if (i % 2 != 0) {
 					newRow.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft1 = new TextView(getBaseContext());
-				tvLeft1.setText(Html.fromHtml("<b>" + "Datapoint " + y + "</b>"));
+				tvLeft1.setText(Html
+						.fromHtml("<b>" + "Datapoint " + y + "</b>"));
 				tvLeft1.setTextColor(Color.BLACK);
 				TextView tvRight1 = new TextView(getBaseContext());
 				newRow.addView(tvLeft1);
@@ -677,29 +716,36 @@ public class MainActivity extends Activity implements OnClickListener {
 				dataLayout.addView(newRow);
 				for (String str : strray) {
 					x++;
-					switch(x) {
-					case 1: label = "Time (GMT)"; break;
-					case 14: if(currSensor==24) {
-						label = "BTA1: Vernier pH Sensor";
-					} else {
-						label = "BTA1: Vernier Temperature Probe";
-					} 
-					break;
+					switch (x) {
+					case 1:
+						label = "Time (GMT)";
+						break;
+					case 14:
+						if (currSensor == 24) {
+							label = "BTA1: Vernier pH Sensor";
+						} else {
+							label = "BTA1: Vernier Temperature Probe";
+						}
+						break;
 					default:
 						continue;
 					}
 					LinearLayout newRow2 = new LinearLayout(getBaseContext());
 					newRow2.setOrientation(LinearLayout.HORIZONTAL);
-					if(i%2 != 0) {
-						newRow2.setBackgroundColor(res.getColor(R.color.rowcols));
+					if (i % 2 != 0) {
+						newRow2.setBackgroundColor(res
+								.getColor(R.color.rowcols));
 					}
 					TextView tvLeft2 = new TextView(getBaseContext());
 					tvLeft2.setText(label);
 					tvLeft2.setTextColor(Color.BLACK);
-					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
+					tvLeft2.setLayoutParams(new LinearLayout.LayoutParams(
+							LayoutParams.WRAP_CONTENT,
+							LayoutParams.WRAP_CONTENT, 1f));
 					TextView tvRight2 = new TextView(getBaseContext());
-					if(x==14) {
-						tvRight2.setText(df.format(applyFormula(currSensor, Double.parseDouble(str))));
+					if (x == 14) {
+						tvRight2.setText(df.format(applyFormula(currSensor,
+								Double.parseDouble(str))));
 					} else {
 						tvRight2.setText(str);
 					}
@@ -712,7 +758,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				newRow3.setPadding(5, 5, 5, 5);
 				newRow3.setGravity(Gravity.CENTER_VERTICAL);
 				newRow3.setOrientation(LinearLayout.HORIZONTAL);
-				if(i%2 != 0) {
+				if (i % 2 != 0) {
 					newRow3.setBackgroundColor(res.getColor(R.color.rowcols));
 				}
 				TextView tvLeft3 = new TextView(getBaseContext());
@@ -731,9 +777,11 @@ public class MainActivity extends Activity implements OnClickListener {
 				x = 0;
 				y++;
 			}
-			//findStatistics();
+			// findStatistics();
 		} catch (NullPointerException e) {
-			Toast.makeText(getApplicationContext(), "Error collecting data, please try again", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(),
+					"Error collecting data, please try again",
+					Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}
@@ -771,8 +819,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if (bta1Data.size() % 2 == 0) {
 				med = bta1Data.get((bta1Data.size() + 1) / 2);
 			} else {
-				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data.get((bta1Data
-						.size() + 1) / 2)) / 2;
+				med = (bta1Data.get((bta1Data.size() / 2)) + bta1Data
+						.get((bta1Data.size() + 1) / 2)) / 2;
 			}
 
 			datMed = "" + form.format(med);
@@ -784,8 +832,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void setBtStatus() {
 		if (btStatNum == 0) {
 			rcrdBtn.setEnabled(false);
+			statusField.setText(NOT_CONNECTED);
 		} else if (btStatNum == 1) {
 			rcrdBtn.setEnabled(true);
+			statusField.setText(CONNECTED);
 		}
 	}
 
@@ -808,7 +858,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			case BluetoothService.MESSAGE_STATE_CHANGE:
 				switch (msg.arg1) {
 				case BluetoothService.STATE_CONNECTED:
-					if(pressedRecent) {
+					if (pressedRecent) {
 						spinner.clearAnimation();
 						spinner.setVisibility(View.GONE);
 						pinpointBtn.setImageResource(R.drawable.pptbtn);
@@ -818,22 +868,22 @@ public class MainActivity extends Activity implements OnClickListener {
 						pinpointBtnOther.setImageResource(R.drawable.pptbtn);
 					}
 					ppi = new pinpointInterface(mChatService);
-					rcrdBtn.setEnabled(true);
 					pinpointBtn.setEnabled(false);
 					pinpointBtnOther.setEnabled(false);
 					btStatNum = 1;
 					setBtStatus();
-					//Sleep thread to allow near-future communications to succeed
+					// Sleep thread to allow near-future communications to
+					// succeed
 					try {
 						Thread.sleep(600);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if(connectFromSplash) {
+					if (connectFromSplash) {
 						showConnectOption = true;
 						showTimeOption = true;
 						showSensorOption = true;
-						if(Build.VERSION.SDK_INT >= 11) {
+						if (Build.VERSION.SDK_INT >= 11) {
 							invalidateOptionsMenu();
 						}
 						flipper.showNext();
@@ -842,15 +892,19 @@ public class MainActivity extends Activity implements OnClickListener {
 					} else {
 						FoundPinPoint();
 					}
-					//Set the time on the PINPoint's internal clock
+					// Set the time on the PINPoint's internal clock
 					int tries = 0;
-					while(!ppi.setRealTimeClock() && tries++ < 10) {
+					while (!ppi.setRealTimeClock() && tries++ < 10) {
 						continue;
 					}
-					if(tries <= 10) {
-						Toast.makeText(MainActivity.this, "Successfully synced time.", Toast.LENGTH_SHORT).show();
+					if (tries <= 10) {
+						Toast.makeText(MainActivity.this,
+								"Successfully synced time.", Toast.LENGTH_SHORT)
+								.show();
 					} else {
-						Toast.makeText(MainActivity.this, "Couldn't sync time.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this,
+								"Couldn't sync time.", Toast.LENGTH_SHORT)
+								.show();
 					}
 					ppi.setSetting(PinComm.SAMPLE_RATE, 1000);
 					try {
@@ -860,12 +914,12 @@ public class MainActivity extends Activity implements OnClickListener {
 						e.printStackTrace();
 					}
 
-					if(autoRun) {
+					if (autoRun) {
 						getRecords();
 					}
 					break;
 				case BluetoothService.STATE_CONNECTING:
-					if(pressedRecent) {
+					if (pressedRecent) {
 						pinpointBtn.setImageResource(R.drawable.pptbtntry);
 						spinner.setVisibility(View.VISIBLE);
 						spinner.startAnimation(rotateInPlace);
@@ -879,7 +933,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					break;
 				case BluetoothService.STATE_LISTEN:
 				case BluetoothService.STATE_NONE:
-					if(pressedRecent) {
+					if (pressedRecent) {
 						spinner.clearAnimation();
 						spinner.setVisibility(View.GONE);
 						pinpointBtn.setImageResource(R.drawable.nopptbtn);
@@ -889,7 +943,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						pinpointBtnOther.setImageResource(R.drawable.nopptbtn);
 					}
 					showSensorOption = false;
-					if(Build.VERSION.SDK_INT >= 11) {
+					if (Build.VERSION.SDK_INT >= 11) {
 						invalidateOptionsMenu();
 					}
 					btStatNum = 0;
@@ -906,9 +960,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			case BluetoothService.MESSAGE_DEVICE_NAME:
 				break;
 			case BluetoothService.MESSAGE_TOAST:
-				Toast.makeText(getApplicationContext(), msg.getData().getString(BluetoothService.TOAST), Toast.LENGTH_SHORT).show();
-				if(msg.getData().getString(BluetoothService.TOAST).equals("Unable to connect device")) {
-					Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
+				Toast.makeText(getApplicationContext(),
+						msg.getData().getString(BluetoothService.TOAST),
+						Toast.LENGTH_SHORT).show();
+				if (msg.getData().getString(BluetoothService.TOAST)
+						.equals("Unable to connect device")) {
+					Intent serverIntent = new Intent(getApplicationContext(),
+							DeviceListActivity.class);
 					startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 				}
 				break;
@@ -917,7 +975,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	};
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		SharedPreferences defPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences defPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor defEditor = defPrefs.edit();
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
@@ -927,7 +986,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				String name = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_NAME);
+				String name = data.getExtras().getString(
+						DeviceListActivity.EXTRA_DEVICE_NAME);
 				defEditor.putString("defaultPpt", address);
 				defEditor.putString("defaultPptName", name);
 				defEditor.commit();
@@ -944,7 +1004,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				String name = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_NAME);
+				String name = data.getExtras().getString(
+						DeviceListActivity.EXTRA_DEVICE_NAME);
 				defEditor.putString("defaultPpt", address);
 				defEditor.putString("defaultPptName", name);
 				defEditor.commit();
@@ -952,8 +1013,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				lastPptName.setText(name);
 
 				connectToBluetooth(address, true);
-				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
-				rcrdBtn.setEnabled(false);
+				Toast.makeText(getApplicationContext(), "Connecting...",
+						Toast.LENGTH_SHORT).show();
+				setBtStatus();
 			}
 			break;
 		case REQUEST_ENABLE_BT:
@@ -977,7 +1039,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case REQUEST_VIEW_DATA:
-			//When the data has been uploaded
+			// When the data has been uploaded
 			break;
 		case CHANGE_EXPERIMENT:
 			break;
@@ -991,18 +1053,21 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	//preps the JSONArray, and pushes time, temp and ph to iSENSE
+	// preps the JSONArray, and pushes time, temp and ph to iSENSE
 	private void uploadData() throws NoConnectionException {
 		if (nameField.length() == 0) {
 			nameField.setText("SoR Group");
 		}
 		if (!dataRdy) {
-			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "There is no data to push.", Toast.LENGTH_LONG)
+					.show();
 			return;
 		}
 
 		if (timeData.size() != bta1Data.size()) {
-			Toast.makeText(this, "Error in preparing data.  Please try pressing \"Get Data\" again.",
+			Toast.makeText(
+					this,
+					"Error in preparing data.  Please try pressing \"Get Data\" again.",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -1010,7 +1075,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		dataSet = new JSONArray();
 
 		JSONObject dataJSON;
-		if (lastKnownSensor == 1 || lastKnownSensor == 24) //PINPoint is set to use Temperature Probe or pH Sensor
+		if (lastKnownSensor == 1 || lastKnownSensor == 24) // PINPoint is set to
+															// use Temperature
+															// Probe or pH
+															// Sensor
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONObject();
 				try {
@@ -1022,14 +1090,15 @@ public class MainActivity extends Activity implements OnClickListener {
 				dataSet.put(dataJSON);
 			}
 		else {
-			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Invalid sensor type.", Toast.LENGTH_LONG)
+					.show();
 			return;
 		}
 
 		new UploadTask().execute();
 	}
 
-	//the uploading thread that does all the work
+	// the uploading thread that does all the work
 	private Runnable uploader = new Runnable() {
 
 		@Override
@@ -1043,36 +1112,40 @@ public class MainActivity extends Activity implements OnClickListener {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
+
 			if (!loggedIn && api.hasConnectivity())
 				new PerformLogin().execute();
 
 			if (loggedIn) {
 
 				if (sessionId == -1) {
-					sessionId = api.uploadDataSet(Integer.parseInt(experimentId), data, nameOfSession);
-							
+					sessionId = api
+							.uploadDataSet(Integer.parseInt(experimentId),
+									data, nameOfSession);
+
 					if (sessionId != -1) {
-						finalUrl = baseProjectUrl + experimentId + dataSetUrlExtension + sessionId;
+						finalUrl = baseProjectUrl + experimentId
+								+ dataSetUrlExtension + sessionId;
 					} else {
 						finalUrl = baseProjectUrl + experimentId;
-						return;	
+						return;
 					}
 
-				}
-				else {
+				} else {
 					api.appendDataSetData(sessionId, data);
 				}
-			} else finalUrl = baseProjectUrl + experimentId;
+			} else
+				finalUrl = baseProjectUrl + experimentId;
 
 		}
 
 	};
 
 	// Control task for uploading data
-	private class UploadTask extends AsyncTask <Void, Integer, Void> {
+	private class UploadTask extends AsyncTask<Void, Integer, Void> {
 
-		@Override protected void onPreExecute() {
+		@Override
+		protected void onPreExecute() {
 			dia = new ProgressDialog(MainActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
@@ -1081,7 +1154,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		}
 
-		@Override protected Void doInBackground(Void... voids) {
+		@Override
+		protected Void doInBackground(Void... voids) {
 
 			uploader.run();
 			publishProgress(100);
@@ -1090,7 +1164,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		}
 
-		@Override  protected void onPostExecute(Void voids)	{
+		@Override
+		protected void onPostExecute(Void voids) {
 			sessionId = -1;
 			dia.setMessage("Done");
 			dia.cancel();
@@ -1098,29 +1173,33 @@ public class MainActivity extends Activity implements OnClickListener {
 			if (!(finalUrl.equals(baseProjectUrl + experimentId))) {
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setData(Uri.parse(finalUrl));
-				rcrdBtn.setEnabled(false);
+				setBtStatus();
 				showSensorOption = false;
 				showTimeOption = false;
 				invalidateOptionsMenu();
-				startActivity(i);  
+				startActivity(i);
 			} else {
-				Toast.makeText(MainActivity.this, "Upload failed. Check your internet connection, and make sure the project is not closed.", Toast.LENGTH_LONG).show();
+				Toast.makeText(
+						MainActivity.this,
+						"Upload failed. Check your internet connection, and make sure the project is not closed.",
+						Toast.LENGTH_LONG).show();
 				dataRdy = true;
 				pushToISENSE.setEnabled(true);
 			}
 		}
 	}
 
-	//String formatter
+	// String formatter
 	public String formatTime(String temp) {
 		String dataString = "";
 
 		long unixTs = 0;
-		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z", Locale.US);
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss:SS z",
+				Locale.US);
 		Date parsed;
 
 		try {
-			parsed = format.parse(temp+" GMT");
+			parsed = format.parse(temp + " GMT");
 			unixTs = parsed.getTime();
 
 			dataString = "" + unixTs;
@@ -1147,10 +1226,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			Toast.makeText(MainActivity.this, "Logged in!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "Logged in!", Toast.LENGTH_SHORT)
+					.show();
 		}
 
 	}
-
 
 }
