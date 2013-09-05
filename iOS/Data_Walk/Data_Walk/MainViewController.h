@@ -30,7 +30,6 @@ typedef void (^APIBlock)(void);
     UIPickerView *intervalPickerView;
     
     // User settings/other variables
-    BOOL isRecording;
     int recordingInterval;
     NSString *name;
     int projectID;
@@ -63,12 +62,14 @@ typedef void (^APIBlock)(void);
 @property (nonatomic, strong) IBOutlet UIButton *loggedInAs;
 @property (nonatomic, strong) IBOutlet UIButton *upload;
 @property (nonatomic, strong) IBOutlet UIButton *selectProject;
-@property (nonatomic, strong) IBOutlet UIImageView *gpsLock;
 @property (nonatomic, strong) IBOutlet UILabel *topBar;
 @property (nonatomic, strong) IBOutlet UILabel *timeElapsedLabel;
 @property (nonatomic, strong) IBOutlet UILabel *dataPointCountLabel;
+@property (nonatomic, strong) IBOutlet UILabel *gpsLockLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *gpsLockImage;
 
 // Other properties
+@property (nonatomic) BOOL isRecording;
 @property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) UITextField *activeField;
@@ -77,5 +78,6 @@ typedef void (^APIBlock)(void);
 @property (nonatomic, strong) NSTimer *recordDataTimer;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) DataSaver *dataSaver;
+@property (nonatomic, strong) CLLocation *lastLocation;
 
 @end
