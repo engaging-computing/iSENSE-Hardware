@@ -434,6 +434,9 @@
             case 10:
                 [recordingIntervalButton setTitle:@"10 seconds" forState:UIControlStateNormal];
                 break;
+            case 20:
+                [recordingIntervalButton setTitle:@"20 seconds" forState:UIControlStateNormal];
+                break;
             case 30:
                 [recordingIntervalButton setTitle:@"30 seconds" forState:UIControlStateNormal];
                 break;
@@ -484,9 +487,12 @@
                 recordingInterval = 10;
                 break;
             case 5:
-                recordingInterval = 30;
+                recordingInterval = 20;
                 break;
             case 6:
+                recordingInterval = 30;
+                break;
+            case 7:
                 recordingInterval = 60;
                 break;
         }
@@ -501,7 +507,7 @@
 
 // Tells the picker how many rows are available for a given component - we have 7 recording interval options
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return 7;
+    return 8;
 }
 
 // Tells the picker how many components it will have - 1, since we only want to display a single interval per row
@@ -529,9 +535,12 @@
             title = @"10 seconds";
             return title;
         case 5:
-            title = @"30 seconds";
+            title = @"20 seconds";
             return title;
         case 6:
+            title = @"30 seconds";
+            return title;
+        case 7:
             title = @"60 seconds";
             return title;
     }
