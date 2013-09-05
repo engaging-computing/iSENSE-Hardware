@@ -464,8 +464,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prepare the menu (enable/disable properly)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!preLoad)
-			setMenuStatus(true);
+//		if (!preLoad)
+//			setMenuStatus(true);
 		if (!useMenu) {
 
 			menu.getItem(0).setEnabled(false);
@@ -1192,7 +1192,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(true);
+		api.useDev(false);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1223,7 +1223,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(true);
+		api.useDev(false);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1698,13 +1698,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
+			
+			preLoad = false;
+			useMenu = true;
 
 			if (mMenu != null) {
 			//	onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);
 			}
-			preLoad = false;
-
+			
 			setContentView(R.layout.automatic_concept);
 			initMainUI();
 			assignVars();
