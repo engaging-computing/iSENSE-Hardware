@@ -15,13 +15,41 @@
 // Menu properties
 @synthesize reset, about;
 // UI properties
-@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, gpsLock, topBar, timeElapsedLabel, dataPointCountLabel;
+@synthesize latitudeLabel, longitudeLabel, recordData, recordingIntervalButton, nameTextField, loggedInAs, upload, selectProject, topBar, timeElapsedLabel, dataPointCountLabel, gpsLockLabel, gpsLockImage;
 // Other properties
-@synthesize motionManager, locationManager, activeField, passwordField, elapsedTimeTimer, recordDataTimer, managedObjectContext, dataSaver;
+@synthesize isRecording, motionManager, locationManager, activeField, passwordField, elapsedTimeTimer, recordDataTimer, managedObjectContext, dataSaver, lastLocation;
+
+// Allows the device to rotate as necessary - overriden to allow any orientation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+   // return (isRecording) ? NO : YES;
+    return NO;
+}
+
+// iOS6 enable rotation
+- (BOOL)shouldAutorotate {
+   // return (isRecording) ? NO : YES;
+    return NO;
+}
+
+// iOS6 enable rotation
+- (NSUInteger)supportedInterfaceOrientations {
+    if (isRecording) {
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
+            return UIInterfaceOrientationMaskPortrait;
+        } else if (self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+            return UIInterfaceOrientationMaskPortraitUpsideDown;
+        } else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+            return UIInterfaceOrientationMaskLandscapeLeft;
+        } else {
+            return UIInterfaceOrientationMaskLandscapeRight;
+        }
+    } else
+        return UIInterfaceOrientationMaskAll;
+}
 
 // Displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
+
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         // iPad Landscape
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
@@ -110,6 +138,8 @@
     // Initialize other variables
     isRecording = NO;
     isShowingPickerView = NO;
+    [gpsLockLabel setOpaque:NO];
+    gpsLockLabel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gps_icon.png"]];
     
     // Set up properties dependent on NSUserDefaults
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -162,7 +192,6 @@
 // Is called every time MainViewController is about to appear
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
 }
 
 // Is called every time MainViewController appears
@@ -199,6 +228,7 @@
         if (!isRecording) {
             
             isRecording = TRUE;
+            lastLocation = nil;
             [self setRecordingLayout];
             
             if (motionManager.accelerometerAvailable) {
@@ -281,7 +311,7 @@
     [api useDev:TRUE];
     [api createSessionWithUsername:@"sor" andPassword:@"sor"];
     int amIActuallyAThing = [api uploadDataSetWithId:36 withData:dataJObj andName:@"iOS Data Walk Test"];
-    NSLog(@"A thing is %d", amIActuallyAThing); 
+    NSLog(@"Created data set ID: %d", amIActuallyAThing);
 }
 
 - (NSString *) getDateAndTime {
@@ -323,7 +353,7 @@
 
 // Records one row of data at a time
 - (void) buildRowOfData {
-    NSLog(@"goat");
+    NSLog(@"Row of data recorded");
     dataPointCount++;
     
     if (!isRecording && recordDataTimer != nil) {
@@ -350,11 +380,22 @@
             
             
             // Latitude and longitude coordinates
+            BOOL getDistanceTraveled = YES;
+            if (lastLocation == nil) getDistanceTraveled = NO;
+            
+            lastLocation = [locationManager location];
             CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
             double rawLatitude  = lc2d.latitude;
             double rawLongitude = lc2d.longitude;
             NSNumber *latitude = [NSNumber numberWithDouble:rawLatitude];
             NSNumber *longitude = [NSNumber numberWithDouble:rawLongitude];
+            
+            if (getDistanceTraveled) {
+                NSLog(@"You just traveled %f meters", [[locationManager location] distanceFromLocation:lastLocation]);
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self.view makeWaffle:[NSString stringWithFormat:@"Moved %f meters", [[locationManager location] distanceFromLocation:lastLocation]]];
+//                });
+            }
             
             // Create the row of data
             NSDictionary *jObj = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -367,6 +408,7 @@
             // Add the row to the overall data set
             [data addObject:jObj];
         });
+
     }
     
 }
@@ -537,32 +579,6 @@
                                             otherButtonTitles:@"Enter Project #", @"Browse Projects", @"Scan QR Code", nil];
     message.tag = kTAG_PROJECT_SELECTION;
     [message show];
-}
-
-// Allows the device to rotate as necessary - overriden to allow any orientation
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (isRecording) ? NO : YES;
-}
-
-// iOS6 enable rotation
-- (BOOL)shouldAutorotate {
-    return (isRecording) ? NO : YES;
-}
-
-// iOS6 enable rotation
-- (NSUInteger)supportedInterfaceOrientations {
-    if (isRecording) {
-        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
-            return UIInterfaceOrientationMaskPortrait;
-        } else if (self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-            return UIInterfaceOrientationMaskPortraitUpsideDown;
-        } else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-            return UIInterfaceOrientationMaskLandscapeLeft;
-        } else {
-            return UIInterfaceOrientationMaskLandscapeRight;
-        }
-    } else
-        return UIInterfaceOrientationMaskAll;
 }
 
 // Called when a UIActionSheet or UIAlertView is clicked at a button index
@@ -741,7 +757,8 @@
         [longitudeLabel setText:[NSString stringWithFormat:@"Lon: %lf", longitude]];
     }
     
-    [gpsLock setImage:[UIImage imageNamed:@"gps_icon.png"]];
+    gpsLockImage.image = [UIImage imageNamed:@"gps_icon.png"];
+    gpsLockLabel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gps_icon.png"]];
 }
 
 // Reset the latitude/longiude labels
@@ -754,7 +771,8 @@
         [longitudeLabel setText:@"Lon: ..."];
     }
     
-    [gpsLock setImage:[UIImage imageNamed:@"gps_icon_no_lock.png"]];
+    gpsLockImage.image = [UIImage imageNamed:@"gps_icon_no_lock.png"];
+    gpsLockLabel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gps_icon_no_lock.png"]];
 }
 
 // Checks text and returns whether or not the new user character is allowed

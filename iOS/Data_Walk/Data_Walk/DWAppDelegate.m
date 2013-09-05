@@ -28,7 +28,7 @@
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:rootView];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
+    [self.window setRootViewController:self.navigationController];
     [self.window makeKeyAndVisible];
     
     return YES;
@@ -49,6 +49,24 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+}
+
+-(NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    if ([self.navigationController.topViewController isMemberOfClass:[MainViewController class]] ) {
+        if (((MainViewController *)self.navigationController.topViewController).isRecording) {
+            if (self.navigationController.topViewController.interfaceOrientation == UIInterfaceOrientationPortrait) {
+                return UIInterfaceOrientationMaskPortrait;
+            } else if (self.navigationController.topViewController.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+                return UIInterfaceOrientationMaskPortraitUpsideDown;
+            } else if (self.navigationController.topViewController.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+                return UIInterfaceOrientationMaskLandscapeLeft;
+            } else {
+                return UIInterfaceOrientationMaskLandscapeRight;
+            }
+        }
+    }
+    
+    return UIInterfaceOrientationMaskAll;
 }
 
 - (void)saveContext {
