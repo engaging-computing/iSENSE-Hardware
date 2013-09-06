@@ -308,20 +308,21 @@ static RPerson *currentUser;
     NSMutableArray *headers = [[NSMutableArray alloc] init];
     
     for (RProjectField *field in fields) {
-        [headers addObject:field.field_id];
+        [headers addObject:[NSString stringWithFormat:@"%@", field.field_id]];
     }
     
+    [requestData setObject:[NSString stringWithFormat:@"%d", projectId] forKey:@"id"];
     [requestData setObject:headers forKey:@"headers"];
     [requestData setObject:dataToUpload forKey:@"data"];
-    [requestData setObject:[NSNumber numberWithInt:projectId] forKey:@"id"];
     if (![name isEqualToString:@""]) [requestData setObject:name forKey:@"name"];
     
     NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
     
     NSError *error;
     NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
-                                                       options:NSJSONWritingPrettyPrinted
+                                                       options:0
                                                          error:&error];
+    NSLog(@"Parsed JSONObject = %@", [[NSString alloc] initWithData:postReqData encoding:NSUTF8StringEncoding]);
     
     if (error) {
         NSLog(@"Error parsing object to JSON: %@", error);
@@ -377,7 +378,7 @@ static RPerson *currentUser;
  * @param parameters Parameters separated by ampersands (&)
  * @param reqType The request type as a string (i.e. GET or POST)
  * @param postData The data to be given to iSENSE as NSData
- * @return An NSDictionary dump of a JSONObject representing the requested data
+ * @return An object dump of a JSONObject or JSONArray representing the requested data
  */
 -(id)makeRequestWithBaseUrl:(NSString *)baseUrl withPath:(NSString *)path withParameters:(NSString *)parameters withRequestType:(NSString *)reqType andPostData:(NSData *)postData {
     
@@ -391,6 +392,7 @@ static RPerson *currentUser;
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if (postData) {
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request setValue:[NSString stringWithFormat:@"%d", postData.length] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:postData];
     }
@@ -399,19 +401,19 @@ static RPerson *currentUser;
     NSHTTPURLResponse *urlResponse;
     
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) NSLog(@"Error received from server: %@", requestError);
     
     if (urlResponse.statusCode == 200) {
         id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
-        if (requestError) NSLog(@"Error received from server: %@", requestError);
         return parsedJSONResponse;
     } else if (urlResponse.statusCode == 403) {
-        NSLog(@"Authenticity token not accepted.");
+        NSLog(@"Authenticity token not accepted. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     } else if (urlResponse.statusCode == 422) {
-        NSLog(@"Unprocessable entity. (Something is wrong with the request.)");
+        NSLog(@"Unprocessable entity. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     } else if (urlResponse.statusCode == 500) {
-        NSLog(@"Internal server error.");
+        NSLog(@"Internal server error. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     } else {
-        NSLog(@"Unrecognized status code = %d.", urlResponse.statusCode);
+        NSLog(@"Unrecognized status code = %d. %@", urlResponse.statusCode, [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     }
     
     return nil;

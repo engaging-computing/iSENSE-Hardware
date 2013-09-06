@@ -116,7 +116,7 @@
 						<string key="NSFrame">{{20, 90}, {162, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="149291152"/>
+						<reference key="NSNextKeyView" ref="520052906"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -255,7 +255,7 @@
 						<string key="NSFrameSize">{768, 44}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="336121823"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -319,22 +319,6 @@
 						<reference key="IBUIFont" ref="243913418"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
-					<object class="IBUIImageView" id="336121823">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 7}, {37, 30}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="303953796"/>
-						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<int key="IBUIContentMode">1</int>
-						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">gps_icon_no_lock.png</string>
-						</object>
-					</object>
 					<object class="IBUIButton" id="842523137">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
@@ -367,7 +351,6 @@
 						<string key="NSFrame">{{383, 896}, {385, 64}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="259192781"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -430,6 +413,22 @@
 						<reference key="IBUIFontDescription" ref="509805374"/>
 						<reference key="IBUIFont" ref="243913418"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
+					</object>
+					<object class="IBUIImageView" id="520052906">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{20, 11}, {21, 21}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="149291152"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<int key="IBUIContentMode">1</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">gps_icon_no_lock.png</string>
+						</object>
 					</object>
 				</array>
 				<string key="NSFrame">{{0, 64}, {768, 960}}</string>
@@ -526,14 +525,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">gpsLock</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="336121823"/>
-					</object>
-					<int key="connectionID">231</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">topBar</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="735637510"/>
@@ -555,6 +546,14 @@
 						<reference key="destination" ref="144201835"/>
 					</object>
 					<int key="connectionID">236</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">gpsLockImage</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="520052906"/>
+					</object>
+					<int key="connectionID">239</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -618,7 +617,6 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="735637510"/>
 							<reference ref="397843849"/>
-							<reference ref="336121823"/>
 							<reference ref="303953796"/>
 							<reference ref="935473721"/>
 							<reference ref="905372326"/>
@@ -632,6 +630,7 @@
 							<reference ref="735973808"/>
 							<reference ref="793624983"/>
 							<reference ref="144201835"/>
+							<reference ref="520052906"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -691,11 +690,6 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">214</int>
-						<reference key="object" ref="336121823"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">215</int>
 						<reference key="object" ref="842523137"/>
 						<reference key="parent" ref="191373211"/>
@@ -713,6 +707,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">234</int>
 						<reference key="object" ref="793624983"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">238</int>
+						<reference key="object" ref="520052906"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -734,19 +733,19 @@
 				<string key="211.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="212.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="213.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="214.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="215.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="215.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="216.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="3" key="216.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="233.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="234.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="238.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">236</int>
+			<int key="maxID">239</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -758,6 +757,7 @@
 						<string key="onRecordingIntervalClick:">id</string>
 						<string key="onSelectProjectClick:">id</string>
 						<string key="onUploadClick:">id</string>
+						<string key="textFieldFinished:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="onLoggedInClick:">
@@ -776,10 +776,15 @@
 							<string key="name">onUploadClick:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="textFieldFinished:">
+							<string key="name">textFieldFinished:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="dataPointCountLabel">UILabel</string>
-						<string key="gpsLock">UIImageView</string>
+						<string key="gpsLockImage">UIImageView</string>
+						<string key="gpsLockLabel">UILabel</string>
 						<string key="latitudeLabel">UILabel</string>
 						<string key="loggedInAs">UIButton</string>
 						<string key="longitudeLabel">UILabel</string>
@@ -796,9 +801,13 @@
 							<string key="name">dataPointCountLabel</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="gpsLock">
-							<string key="name">gpsLock</string>
+						<object class="IBToOneOutletInfo" key="gpsLockImage">
+							<string key="name">gpsLockImage</string>
 							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="gpsLockLabel">
+							<string key="name">gpsLockLabel</string>
+							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="latitudeLabel">
 							<string key="name">latitudeLabel</string>
@@ -854,7 +863,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="NS.key.0">gps_icon_no_lock.png</string>
-			<string key="NS.object.0">{48, 48}</string>
+			<string key="NS.object.0">{21, 21}</string>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
