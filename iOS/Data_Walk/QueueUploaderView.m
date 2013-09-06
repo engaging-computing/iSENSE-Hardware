@@ -10,13 +10,13 @@
 
 @implementation QueueUploaderView
 
-@synthesize mTableView, currentIndex, dataSaver, managedObjectContext, iapi, lastClickedCellIndex, parent, limitedTempQueue;
+@synthesize api, mTableView, currentIndex, dataSaver, managedObjectContext, lastClickedCellIndex, parent, limitedTempQueue;
 
 // Initialize the view
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        iapi = [iSENSE getInstance];
+        api = [API getInstance];
     }
     return self;
 }
@@ -24,7 +24,7 @@
 -(id)initWithParentName:(NSString *)parentName {
     self = [super init];
     if (self) {
-        iapi = [iSENSE getInstance];
+        api = [API getInstance];
         parent = parentName;
     }
     return self;
@@ -34,7 +34,7 @@
 -(IBAction)upload:(id)sender {
     
     // Words n stuff
-    if ([iapi isLoggedIn]) {
+    if ([api getCurrentUser] != nil) {
         
         // Do zee upload thang
         bool uploadSuccessful = [dataSaver upload:parent];
@@ -47,7 +47,7 @@
         NSString *user = [prefs objectForKey:[StringGrabber grabString:@"key_username"]];
         NSString *pass = [prefs objectForKey:[StringGrabber grabString:@"key_password"]];
         
-        if ([iapi isConnectedToInternet]) {
+        if ([API hasConnectivity]) {
             
             if (user == nil || pass == nil) {
                 
@@ -59,7 +59,6 @@
                 message.tag = QUEUE_LOGIN;
                 [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
                 [message show];
-                [message release];
             } else {
                 [self loginAndUploadWithUsername:user withPassword:pass];
             }
@@ -117,12 +116,12 @@
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
-        managedObjectContext = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+        managedObjectContext = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
     }
     
     // Get dataSaver from the App Delegate
     if (dataSaver == nil) {
-        dataSaver = [(Data_CollectorAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
+        dataSaver = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
     
     currentIndex = 0;
@@ -133,7 +132,6 @@
     lpgr.minimumPressDuration = 0.5;
     lpgr.delegate = self;
     [self.mTableView addGestureRecognizer:lpgr];
-    [lpgr release];
     
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
@@ -144,11 +142,10 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
-        QDataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         }
-        [tmp release];
     }
     
 }
@@ -165,7 +162,7 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
             if (cell.isHighlighted) {
                 
-                if (![cell dataSetHasInitialExperiment]) {
+                if (![cell dataSetHasInitialProject]) {
                     UIActionSheet *popupQuery = [[UIActionSheet alloc]
                                                  initWithTitle:nil
                                                  delegate:self
@@ -174,7 +171,6 @@
                                                  otherButtonTitles:@"Rename", @"Change Description", @"Select Experiment", nil];
                     popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                     [popupQuery showInView:self.view];
-                    [popupQuery release];
                 } else {
                     UIActionSheet *popupQuery = [[UIActionSheet alloc]
                                                  initWithTitle:nil
@@ -184,7 +180,6 @@
                                                  otherButtonTitles:@"Rename", @"Change Description", nil];
                     popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                     [popupQuery showInView:self.view];
-                    [popupQuery release];
                 }
             }
         }
@@ -220,7 +215,6 @@
             [message textFieldAtIndex:0].tag = TAG_QUEUE_RENAME;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
             break;
             
@@ -237,23 +231,21 @@
             [message textFieldAtIndex:0].tag = TAG_QUEUE_DESC;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
             break;
             
-        case QUEUE_SELECT_EXP:
+        case QUEUE_SELECT_PROJ:
             
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            if (![cell dataSetHasInitialExperiment]) {
+            if (![cell dataSetHasInitialProject]) {
                 
                 message = [[UIAlertView alloc] initWithTitle:nil
                                                      message:nil
                                                     delegate:self
                                            cancelButtonTitle:@"Cancel"
                                            otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-                message.tag = QUEUE_SELECT_EXP;
+                message.tag = QUEUE_SELECT_PROJ;
                 [message show];
-                [message release];
             }
             
 			break;
@@ -278,71 +270,41 @@
             
             NSString *newSessionName = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setSessionName:newSessionName];
+            [cell setDataSetName:newSessionName];
         }
-    } else if (actionSheet.tag == QUEUE_SELECT_EXP) {
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+    } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
+        if (buttonIndex == OPTION_ENTER_PROJECT) {
             
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Project #:"
                                                               message:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             [message textFieldAtIndex:0].tag = TAG_QUEUE_EXP;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+        } else if (buttonIndex == OPTION_BROWSE_PROJECTS) {
             
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNum;
-            browsing = true;
+            ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
+            browseView.title = @"Browse Projects";
+            browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
             
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            
-            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-                
-                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-                    [dcad setLastController:self];
-                    [dcad setReturnToClass:DELELGATE_KEY_QUEUE];
-                    [[UIApplication sharedApplication] openURL:urlp2s];
-                } else {
-                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-                    [[UIApplication sharedApplication] openURL:urlapp];
-                }
-                
-            } else {
-                
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                [message release];
-                
-            }
-            
+        } else if (buttonIndex == OPTION_SCAN_PROJECT_QR) {
+            [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
             NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setExpNum:expNumString];
+            [cell setProjID:expNumString];
         }
         
     } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
@@ -355,17 +317,25 @@
     }
 }
 
+// TODO - do something with the project ID
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+      projID = project.intValue;
+//    
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+}
+
 - (BOOL) handleNewQRCode:(NSURL *)url {
-    
-    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-    NSString *exp = arr[2];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
-    
-    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-    [cell setExpNum:exp];
-    
+//    
+//    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+//    NSString *exp = arr[2];
+//    
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+//    
+//    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+//    [cell setExpNum:exp];
+//    
     return YES;
 }
 
@@ -391,12 +361,12 @@
 }
 
 // There is a single column in this table
-- (NSInteger *)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
 // There are as many rows as there are DataSets
-- (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return limitedTempQueue.count;
 }
 
@@ -408,21 +378,18 @@
     if (cell == nil) {
         UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
         cell = (QueueCell *) tmpVC.view;
-        [tmpVC release];
     }
     
     NSArray *keys = [limitedTempQueue allKeys];
-    QDataSet *tmp = [[limitedTempQueue objectForKey:keys[indexPath.row]] retain];
+    QDataSet *tmp = [limitedTempQueue objectForKey:keys[indexPath.row]];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
         browsing = false;
-        NSString *expNumString = [NSString stringWithFormat:@"%d", expNum];
-        if (expNum != 0)
-            [cell setExpNum:expNumString];
+        NSString *expNumString = [NSString stringWithFormat:@"%d", projID];
+        if (projID != 0)
+            [cell setProjID:expNumString];
     }
-    
-    [tmp release];
     
     return cell;
 }
@@ -436,7 +403,7 @@
     
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [iapi login:usernameInput with:passwordInput];
+        BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.view makeWaffle:@"Login Successful!"
@@ -456,9 +423,9 @@
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
             }
-            [message dismissWithClickedButtonIndex:nil animated:YES];
+            [message dismissWithClickedButtonIndex:0 animated:YES];
             
-            if ([iapi isLoggedIn]) {
+            if ([api getCurrentUser] != nil) {
                 // Do zee upload thang
                 bool uploadSuccessful = [dataSaver upload:parent];
                 if (!uploadSuccessful) NSLog(@"Too bad 4 you");
@@ -482,8 +449,8 @@
     spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
-    [spinner release];
-    return [message autorelease];
+
+    return message;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -544,11 +511,6 @@
         default:
             return YES;
     }
-}
-
--(void)dealloc {
-    [limitedTempQueue release];
-    [super dealloc];
 }
 
 @end

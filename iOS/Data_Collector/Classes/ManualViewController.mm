@@ -1085,19 +1085,15 @@
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionNameInput.text];
     [ds setParentName:[[[NSString alloc] initWithString:PARENT_MANUAL] autorelease]];
     [ds setDataDescription:description];
-    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setProjID:[NSNumber numberWithInt:expNum]];
     [ds setData:dataJSON];
     [ds setPicturePaths:[imageList copy]];
-    [ds setSid:[NSNumber numberWithInt:-1]];
-    [ds setCity:city];
-    [ds setCountry:country];
-    [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];    
+    [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     [ds release];

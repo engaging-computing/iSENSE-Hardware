@@ -13,16 +13,16 @@
 
 - (QueueCell *)setupCellWithDataSet:(QDataSet *)dataSet andKey:(NSNumber *)key;
 - (void) toggleChecked;
-- (void) setSessionName:(NSString *)name;
+- (void) setDataSetName:(NSString *)name;
 - (NSNumber *)getKey;
-- (void) setExpNum:(NSString *)exp;
+- (void) setProjID:(NSString *)projID;
 - (void) setDesc:(NSString *)desc;
-- (BOOL) dataSetHasInitialExperiment;
+- (BOOL) dataSetHasInitialProject;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;
 @property (nonatomic, assign) IBOutlet UILabel *description;
-@property (nonatomic, assign) IBOutlet UILabel *eidLabel;
+@property (nonatomic, assign) IBOutlet UILabel *projIDLabel;
 
 @property (nonatomic, retain) QDataSet *dataSet;
 @property (nonatomic, retain) NSNumber *mKey;

@@ -10,21 +10,17 @@
 
 @implementation QueueCell
 
-@synthesize nameAndDate, dataType, description, eidLabel, dataSet, mKey;
-
-
+@synthesize nameAndDate, dataType, description, projIDLabel, dataSet, mKey;
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 - (QueueCell *)setupCellWithDataSet:(QDataSet *)ds andKey:(NSNumber *)key {
     self.mKey = key;
     self.nameAndDate.text = ds.name;
     self.description.text = ds.dataDescription;
-    self.eidLabel.text = (ds.projID.intValue == -1) ? @"No Proj." : [NSString stringWithFormat:@"%d", ds.projID.intValue];
+    self.projIDLabel.text = (ds.projID.intValue == -1) ? @"No Proj." : [NSString stringWithFormat:@"%d", ds.projID.intValue];
     
     NSString *tmpDataType;
     if (ds.picturePaths == nil) {
@@ -43,8 +39,6 @@
     
     self.dataType.text = tmpDataType;
     [self setCheckedSwitch:ds.uploadable.boolValue];
-    
-    dataSet = [ds retain];
     
     return self;
 }
@@ -76,7 +70,7 @@
     }
 }
 
-- (void) setSessionName:(NSString *)name {
+- (void) setDataSetName:(NSString *)name {
     self.nameAndDate.text = name;
     [dataSet setName:name];
 }
@@ -85,9 +79,9 @@
     return mKey;
 }
 
-- (void) setExpNum:(NSString *)exp {
-    self.eidLabel.text = exp;
-    [dataSet setProjID:[NSNumber numberWithInt:[exp intValue]]];
+- (void) setProjID:(NSString *)projID {
+    self.projIDLabel.text = projID;
+    [dataSet setProjID:[NSNumber numberWithInt:[projID intValue]]];
 }
 
 - (void) setDesc:(NSString *)desc {
@@ -95,14 +89,9 @@
     [dataSet setDataDescription:desc];
 }
 
-- (BOOL) dataSetHasInitialExperiment {
+- (BOOL) dataSetHasInitialProject {
     NSNumber *initial = [dataSet hasInitialProj];
     return [initial boolValue];
-}
-
--(void)dealloc {
-    [super dealloc];
-    [dataSet release];
 }
 
 @end
