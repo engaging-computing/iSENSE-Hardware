@@ -26,12 +26,20 @@
 		B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E050217CBC43500D06B57 /* AboutLayout~ipad.xib */; };
 		B72E050517CBC44800D06B57 /* AboutLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */; };
 		B72E050D17CBC66F00D06B57 /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B72E050A17CBC50B00D06B57 /* StringGrabber.m */; };
+		B74D43FE17DA2A11008A15A0 /* QueueCell~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B74D43FB17DA2A11008A15A0 /* QueueCell~iphone.xib */; };
+		B74D43FF17DA2A11008A15A0 /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B74D43FC17DA2A11008A15A0 /* queue_layout-landscape~iphone.xib */; };
+		B74D440017DA2A11008A15A0 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B74D43FD17DA2A11008A15A0 /* queue_layout~iphone.xib */; };
+		B74D440417DA2A1A008A15A0 /* QueueCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B74D440117DA2A1A008A15A0 /* QueueCell~ipad.xib */; };
+		B74D440517DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B74D440217DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib */; };
+		B74D440617DA2A1A008A15A0 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B74D440317DA2A1A008A15A0 /* queue_layout~ipad.xib */; };
 		B752DAC217CD117400B01912 /* gps_icon_no_lock.png in Resources */ = {isa = PBXBuildFile; fileRef = B752DAC117CD117400B01912 /* gps_icon_no_lock.png */; };
 		B762F4B217C6534500B1D6E9 /* MainLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */; };
 		B762F4B417C6537000B1D6E9 /* MainLayout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */; };
 		B762F4B617C6571100B1D6E9 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B517C6571100B1D6E9 /* rsense_logo.png */; };
 		B773ACFB17C7AD4E0074ECE3 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B7FE9E1117C792D500EE1A32 /* iSENSE_API_Bundle.bundle */; };
 		B773ACFF17C7AFE50074ECE3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */; };
+		B7D8CBE817DA41C9006F8F76 /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B74D440917DA2A21008A15A0 /* QueueCell.m */; };
+		B7D8CBE917DA41C9006F8F76 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B74D440717DA2A21008A15A0 /* QueueUploaderView.m */; };
 		B7E567A317C6442700C2DF46 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A217C6442700C2DF46 /* UIKit.framework */; };
 		B7E567A517C6442700C2DF46 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A417C6442700C2DF46 /* Foundation.framework */; };
 		B7E567A717C6442700C2DF46 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A617C6442700C2DF46 /* CoreGraphics.framework */; };
@@ -112,11 +120,22 @@
 		B72E050417CBC44800D06B57 /* AboutLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B72E050917CBC50B00D06B57 /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
 		B72E050A17CBC50B00D06B57 /* StringGrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
+		B74D43FB17DA2A11008A15A0 /* QueueCell~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "QueueCell~iphone.xib"; sourceTree = "<group>"; };
+		B74D43FC17DA2A11008A15A0 /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B74D43FD17DA2A11008A15A0 /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
+		B74D440117DA2A1A008A15A0 /* QueueCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "QueueCell~ipad.xib"; sourceTree = "<group>"; };
+		B74D440217DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B74D440317DA2A1A008A15A0 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
+		B74D440717DA2A21008A15A0 /* QueueUploaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
+		B74D440817DA2A21008A15A0 /* QueueUploaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
+		B74D440917DA2A21008A15A0 /* QueueCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QueueCell.m; sourceTree = "<group>"; };
+		B74D440A17DA2A21008A15A0 /* QueueCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
 		B752DAC117CD117400B01912 /* gps_icon_no_lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps_icon_no_lock.png; sourceTree = "<group>"; };
 		B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B762F4B517C6571100B1D6E9 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
 		B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		B7D8CBEB17DA430F006F8F76 /* QueueConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueConstants.h; sourceTree = "<group>"; };
 		B7E5679F17C6442700C2DF46 /* Data_Walk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Data_Walk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7E567A217C6442700C2DF46 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B7E567A417C6442700C2DF46 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -220,8 +239,33 @@
 		B74D43F817DA2441008A15A0 /* Queue Saving */ = {
 			isa = PBXGroup;
 			children = (
+				B7D8CBEB17DA430F006F8F76 /* QueueConstants.h */,
+				B74D440A17DA2A21008A15A0 /* QueueCell.h */,
+				B74D440917DA2A21008A15A0 /* QueueCell.m */,
+				B74D440817DA2A21008A15A0 /* QueueUploaderView.h */,
+				B74D440717DA2A21008A15A0 /* QueueUploaderView.m */,
 			);
 			name = "Queue Saving";
+			sourceTree = "<group>";
+		};
+		B74D43F917DA29C2008A15A0 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				B74D43FB17DA2A11008A15A0 /* QueueCell~iphone.xib */,
+				B74D43FC17DA2A11008A15A0 /* queue_layout-landscape~iphone.xib */,
+				B74D43FD17DA2A11008A15A0 /* queue_layout~iphone.xib */,
+			);
+			name = Queue;
+			sourceTree = "<group>";
+		};
+		B74D43FA17DA29C7008A15A0 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				B74D440117DA2A1A008A15A0 /* QueueCell~ipad.xib */,
+				B74D440217DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib */,
+				B74D440317DA2A1A008A15A0 /* queue_layout~ipad.xib */,
+			);
+			name = Queue;
 			sourceTree = "<group>";
 		};
 		B7E5679617C6442700C2DF46 = {
@@ -325,6 +369,7 @@
 		B7E567DC17C6447700C2DF46 /* Layout-iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				B74D43F917DA29C2008A15A0 /* Queue */,
 				B7E567E617C64A2000C2DF46 /* MainLayout~iphone.xib */,
 				B762F4B117C6534500B1D6E9 /* MainLayout-landscape~iphone.xib */,
 				B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */,
@@ -336,6 +381,7 @@
 		B7E567DD17C6447B00C2DF46 /* Layout-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				B74D43FA17DA29C7008A15A0 /* Queue */,
 				B7E567E817C64D1300C2DF46 /* MainLayout~ipad.xib */,
 				B762F4B317C6537000B1D6E9 /* MainLayout-landscape~ipad.xib */,
 				B72E050217CBC43500D06B57 /* AboutLayout~ipad.xib */,
@@ -503,6 +549,12 @@
 				B71CA83A17CE365A003920FD /* waffle_x.png in Resources */,
 				399A008117CE833900C80FA0 /* projectblock_clean.png in Resources */,
 				399A008217CE833900C80FA0 /* projectblock_dark.png in Resources */,
+				B74D43FE17DA2A11008A15A0 /* QueueCell~iphone.xib in Resources */,
+				B74D43FF17DA2A11008A15A0 /* queue_layout-landscape~iphone.xib in Resources */,
+				B74D440017DA2A11008A15A0 /* queue_layout~iphone.xib in Resources */,
+				B74D440417DA2A1A008A15A0 /* QueueCell~ipad.xib in Resources */,
+				B74D440517DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib in Resources */,
+				B74D440617DA2A1A008A15A0 /* queue_layout~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,6 +565,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7D8CBE817DA41C9006F8F76 /* QueueCell.m in Sources */,
+				B7D8CBE917DA41C9006F8F76 /* QueueUploaderView.m in Sources */,
 				B72E050D17CBC66F00D06B57 /* StringGrabber.m in Sources */,
 				B7E567B117C6442700C2DF46 /* main.m in Sources */,
 				B7E567B517C6442700C2DF46 /* DWAppDelegate.m in Sources */,
