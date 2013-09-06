@@ -221,7 +221,7 @@
         // Stop recording data
         } else {
             
-            NSLog(@"Data = %@", data);
+           // NSLog(@"Data = %@", data);
             isRecording = FALSE;
             [self setNonRecordingLayout];
             
@@ -281,7 +281,7 @@
     [api useDev:TRUE];
     [api createSessionWithUsername:@"sor" andPassword:@"sor"];
     int amIActuallyAThing = [api uploadDataSetWithId:36 withData:dataJObj andName:@"iOS Data Walk Test"];
-    NSLog(@"A thing is %d", amIActuallyAThing); 
+    NSLog(@"New session is: %d", amIActuallyAThing); 
 }
 
 - (NSString *) getDateAndTime {

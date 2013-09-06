@@ -93,7 +93,7 @@ static RPerson *currentUser;
     
     NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"username_or_email=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
-    NSLog(@"%@", result.description);
+
     authenticityToken = [result objectForKey:@"authenticity_token"];
     
     if (authenticityToken) {
@@ -109,7 +109,7 @@ static RPerson *currentUser;
  */
 -(void)deleteSession {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s", @"authenticity_token=", authenticityToken.UTF8String];
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
     [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:DELETE andPostData:nil];
     currentUser = nil;
     
@@ -145,7 +145,35 @@ static RPerson *currentUser;
 
 -(RTutorial *)  getTutorialWithId:      (int)tutorialId{ return nil; }
 -(RDataSet *)   getDataSetWithId:       (int)dataSetId { return nil; }
--(NSArray *)    getProjectFieldsWithId: (int)projectId { return nil; }
+
+/**
+ * Gets all of the fields associated with a project.
+ *
+ * @param projectId The unique ID of the project whose fields you want to see
+ * @return An ArrayList of ProjectField objects
+ */
+-(NSArray *)getProjectFieldsWithId:(int)projectId {
+    NSMutableArray *fields = [[NSMutableArray alloc] init];
+    
+    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"" withRequestType:GET andPostData:nil];
+    NSArray *innerFields = [requestResult objectForKey:@"fields"];
+    
+    for (int i = 0; i < innerFields.count; i++) {
+        NSDictionary *innermostField = [innerFields objectAtIndex:i];
+        RProjectField *newProjField = [[RProjectField alloc] init];
+        
+        newProjField.field_id = [innermostField objectForKey:@"id"];
+        newProjField.name = [innermostField objectForKey:@"name"];
+        newProjField.type = [innermostField objectForKey:@"type"];
+        newProjField.unit = [innermostField objectForKey:@"unit"];
+
+        [fields addObject:newProjField];
+    }
+    
+    return fields;
+}
+
+
 -(NSArray *)    getDataSetsWithId:      (int)projectId { return nil; }
 
 /**
@@ -209,7 +237,7 @@ static RPerson *currentUser;
 -(RPerson *)getUserWithUsername:(NSString *)username {
     
     RPerson *person = [[RPerson alloc] init];
-    NSString *path = [NSString stringWithFormat:@"%@%@", @"users/", username];
+    NSString *path = [NSString stringWithFormat:@"users/%@", username];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:@"" withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];
@@ -235,7 +263,7 @@ static RPerson *currentUser;
     NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
     [postData setObject:name forKey:@"project_name"];
     
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%s", authenticityToken.UTF8String];
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
     NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
     
     NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
@@ -275,7 +303,6 @@ static RPerson *currentUser;
 -(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
     
     NSArray *fields = [self getProjectFieldsWithId:projectId];
-    NSLog(@"Fields are %@", fields);
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     NSMutableArray *headers = [[NSMutableArray alloc] init];
@@ -289,14 +316,23 @@ static RPerson *currentUser;
     [requestData setObject:[NSNumber numberWithInt:projectId] forKey:@"id"];
     if (![name isEqualToString:@""]) [requestData setObject:name forKey:@"name"];
     
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%s", authenticityToken.UTF8String];
-    NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:requestData];
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
+    
+    NSError *error;
+    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    
+    if (error) {
+        NSLog(@"Error parsing object to JSON: %@", error);
+    }
     
     NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
+    NSNumber *dataSetId = [requestResult objectForKey:@"id"];
     
-    NSLog(@"Result = %@", requestData);
+    NSLog(@"Result = %@", requestResult);
     
-    return [requestResult objectForKey:@"id"];
+    return dataSetId.intValue;
 
 }
 
@@ -325,6 +361,11 @@ static RPerson *currentUser;
         }
     }
     return reformatted;
+}
+
+-(NSString *)getEncodedAuthtoken {
+    CFStringRef encodedToken = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, CFBridgingRetain(authenticityToken), NULL, CFSTR("!*'();:@&=+@,/?#[]"), kCFStringEncodingUTF8);
+    return CFBridgingRelease(encodedToken);
 }
 
 /**
@@ -358,14 +399,19 @@ static RPerson *currentUser;
     NSHTTPURLResponse *urlResponse;
     
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    
     if (urlResponse.statusCode == 200) {
         id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
         if (requestError) NSLog(@"Error received from server: %@", requestError);
         return parsedJSONResponse;
-    } else if (urlResponse.statusCode == 403){
+    } else if (urlResponse.statusCode == 403) {
         NSLog(@"Authenticity token not accepted.");
     } else if (urlResponse.statusCode == 422) {
         NSLog(@"Unprocessable entity. (Something is wrong with the request.)");
+    } else if (urlResponse.statusCode == 500) {
+        NSLog(@"Internal server error.");
+    } else {
+        NSLog(@"Unrecognized status code = %d.", urlResponse.statusCode);
     }
     
     return nil;
