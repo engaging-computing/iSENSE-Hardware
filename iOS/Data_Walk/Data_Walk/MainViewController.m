@@ -272,11 +272,9 @@
 
 - (void) saveDataSet {
     // Create the DataSet object
-    NSLog(@"Trying to create the data set");
     QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                               inManagedObjectContext:managedObjectContext]
                    insertIntoManagedObjectContext:managedObjectContext];
-    NSLog(@"Created");
     
     // Retrieve all components for the DataSet object
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -574,7 +572,13 @@
 
 // Called when the user clicked the Upload button
 - (IBAction) onUploadClick:(id)sender {
-    [self.view makeWaffle:@"Upload clicked" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+    if (dataSaver.count > 0) {
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
+        queueUploader.title = @"Upload";
+        [self.navigationController pushViewController:queueUploader animated:YES];
+    } else {
+        [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
+    }
 }
 
 // Called when the user clicked the project selection button
