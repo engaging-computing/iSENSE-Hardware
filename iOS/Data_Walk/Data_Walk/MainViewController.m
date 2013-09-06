@@ -251,7 +251,7 @@
         // Stop recording data
         } else {
             
-            NSLog(@"Data = %@", data);
+           // NSLog(@"Data = %@", data);
             isRecording = FALSE;
             [self setNonRecordingLayout];
             
@@ -395,10 +395,10 @@
             
             // Create the row of data
             NSDictionary *jObj = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  time,      @"0",
-                                  accel_mag, @"1",
-                                  latitude,  @"2",
-                                  longitude, @"3",
+                                  [NSString stringWithFormat:@"%@", time], @"0",
+                                  [NSString stringWithFormat:@"%@", accel_mag], @"1",
+                                  [NSString stringWithFormat:@"%@", latitude],  @"2",
+                                  [NSString stringWithFormat:@"%@", longitude], @"3",
                                   nil];
             
             // Add the row to the overall data set
