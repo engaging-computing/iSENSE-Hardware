@@ -180,13 +180,13 @@
         projectID = proj;
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
     
-    // Set up location manager
-    [self resetGeospatialLabels];
-    [self initLocations];
-    
     // Set up motion manager
     if (motionManager != nil) motionManager = nil;
     motionManager = [[CMMotionManager alloc] init];
+    
+    // Set up location manager
+    [self resetGeospatialLabels];
+    [self initLocations];
 }
 
 // Is called every time MainViewController is about to appear
@@ -272,9 +272,11 @@
 
 - (void) saveDataSet {
     // Create the DataSet object
-    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet"
+    NSLog(@"Trying to create the data set");
+    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                               inManagedObjectContext:managedObjectContext]
                    insertIntoManagedObjectContext:managedObjectContext];
+    NSLog(@"Created");
     
     // Retrieve all components for the DataSet object
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -286,19 +288,14 @@
     [mutableData setObject:data forKey:@"data"];
     NSDictionary *dataJObj = [api rowsToCols:mutableData];
     
-    
     [ds setName:dataSetName];
     [ds setParentName:PARENT_DATA_WALK];
     [ds setDataDescription:description];
-    [ds setEid:[NSNumber numberWithInt:projID]];
+    [ds setProjID:[NSNumber numberWithInt:projID]];
     [ds setData:dataJObj];
     [ds setPicturePaths:nil];
-    [ds setSid:[NSNumber numberWithInt:-1]];
-    [ds setCity:@"Lowell"];
-    [ds setCountry:@"USA"];
-    [ds setAddress:@"1 University Ave."];
     [ds setUploadable:[NSNumber numberWithBool:TRUE]];
-    [ds setHasInitialExp:[NSNumber numberWithBool:TRUE]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:TRUE]];
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
@@ -308,6 +305,7 @@
                  position:WAFFLE_BOTTOM
                     image:WAFFLE_CHECKMARK];
     
+    // remove below code when done testing upload
     [api useDev:TRUE];
     [api createSessionWithUsername:@"sor" andPassword:@"sor"];
     int amIActuallyAThing = [api uploadDataSetWithId:36 withData:dataJObj andName:@"iOS Data Walk Test"];
@@ -742,7 +740,7 @@
 
 // Initialize the location manager.  If one exist, set it to nil and recreate it
 - (void) initLocations {
-    if (locationManager) locationManager = nil;
+    if (locationManager != nil) locationManager = nil;
     
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;

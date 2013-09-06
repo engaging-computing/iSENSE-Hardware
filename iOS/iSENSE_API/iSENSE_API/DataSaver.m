@@ -25,20 +25,16 @@
 }
 
 // add a DataSet to the queue
--(void)addDataSet:(DataSet *)dataSet {
+-(void)addDataSet:(QDataSet *)dataSet {
     
-    DataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    QDataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"QDataSet" inManagedObjectContext:managedObjectContext];
     
     ds.name = dataSet.name;
     ds.dataDescription = dataSet.dataDescription;
     ds.data = dataSet.data;
     ds.picturePaths = dataSet.picturePaths;
-    ds.eid = dataSet.eid;
-    ds.city = dataSet.city;
-    ds.country = dataSet.country;
+    ds.projID = dataSet.projID;
     ds.uploadable = dataSet.uploadable;
-    ds.address = dataSet.address;
-    ds.sid = dataSet.sid;
         
     // Commit the changes
     NSError *error = nil;
@@ -52,7 +48,7 @@
     count++;
 }
 
--(void)addDataSetFromCoreData:(DataSet *)dataSet {
+-(void)addDataSetFromCoreData:(QDataSet *)dataSet {
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     count++;
@@ -62,7 +58,7 @@
 // if key is nil, call dequeue otherwise dequeue with the given key
 -(id)removeDataSet:(NSNumber *)key {
     count--;
-    DataSet *tmp;
+    QDataSet *tmp;
     if (key == nil) {
         tmp = [dataQueue dequeue];
     } else {
@@ -101,7 +97,7 @@
 }
 
 -(void)editDataSetWithKey:(NSNumber *)key {
-    DataSet *dataSet = [dataQueue removeFromQueueWithKey:key];
+    QDataSet *dataSet = [dataQueue removeFromQueueWithKey:key];
     [dataQueue enqueue:dataSet withKey:key];
 }
 
@@ -118,7 +114,7 @@
     int dataSetsFailed = 0;
     
     NSMutableArray *dataSetsToBeRemoved = [[NSMutableArray alloc] init];
-    DataSet *currentDS;
+    QDataSet *currentDS;
     
     for (NSNumber *currentKey in dataQueue.allKeys) {
         
@@ -129,69 +125,69 @@
         if (![currentDS.parentName isEqualToString:parentName]) continue;
         
         // prevent trying to upload with an invalid experiment
-        if (currentDS.eid.intValue <= 0) continue;
+        if (currentDS.projID.intValue <= 0) continue;
         
         // check if the session is uploadable
         if (currentDS.uploadable.boolValue) {
             
             dataSetsToUpload++;
             
-            // create a session
-            if (currentDS.sid.intValue == -1) {
-                NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
-                if (sessionID.intValue == -1) {
-                    continue;
-                } else {
-                    currentDS.sid = sessionID;
-                }
-            }
+//            // create a session TODO - remove session creation, but ensure we don't need anything from here
+//            if (currentDS.sid.intValue == -1) {
+//                NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
+//                if (sessionID.intValue == -1) {
+//                    continue;
+//                } else {
+//                    currentDS.sid = sessionID;
+//                }
+//            }
             
             // organize data if no initial experiment was found
-            if (currentDS.hasInitialExp.boolValue == FALSE) {
+            if (currentDS.hasInitialProj.boolValue == FALSE) {
                 DataFieldManager *dfm = [[DataFieldManager alloc] init];
-                currentDS.data = [dfm reOrderData:currentDS.data forExperimentID:currentDS.eid.intValue];
+                currentDS.data = [dfm reOrderData:currentDS.data forExperimentID:currentDS.projID.intValue];
             }
             
-            // upload to iSENSE
-            if (((NSArray *)currentDS.data).count) {
-                NSError *error = nil;
-                NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
-                if (error != nil) {
-                    NSLog(@"%@", error);
-                    return false;
-                }
-                
-                if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
-                    dataSetsFailed++;
-                    continue;
-                }
-            }
+            // upload to iSENSE TODO - implement new API
+//            if (((NSArray *)currentDS.data).count) {
+//                NSError *error = nil;
+//                NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
+//                if (error != nil) {
+//                    NSLog(@"%@", error);
+//                    return false;
+//                }
+//                
+//                if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
+//                    dataSetsFailed++;
+//                    continue;
+//                }
+//            }
             
-            // upload pictures to iSENSE
-            if (((NSArray *)currentDS.picturePaths).count) {
-                NSArray *pictures = (NSArray *) currentDS.picturePaths;
-                NSMutableArray *newPicturePaths = [NSMutableArray alloc];
-                bool failedAtLeastOnce = false;
-                
-                // loop through all the images and try to upload them
-                for (int i = 0; i < pictures.count; i++) {
-                    
-                    // track the images that fail to upload
-                    if (![isenseAPI upload:pictures[i] toExperiment:currentDS.eid forSession:currentDS.sid withName:currentDS.name andDescription:currentDS.dataDescription]) {
-                        dataSetsFailed++;
-                        failedAtLeastOnce = true;
-                        [newPicturePaths addObject:pictures[i]];
-                        continue;
-                    }
-
-                }
-                
-                // add back the images that need to be uploaded
-                if (failedAtLeastOnce) {
-                    currentDS.picturePaths = newPicturePaths;
-                    continue;
-                }
-            }
+            // upload pictures to iSENSE TODO - implement with the new API
+//            if (((NSArray *)currentDS.picturePaths).count) {
+//                NSArray *pictures = (NSArray *) currentDS.picturePaths;
+//                NSMutableArray *newPicturePaths = [NSMutableArray alloc];
+//                bool failedAtLeastOnce = false;
+//                
+//                // loop through all the images and try to upload them
+//                for (int i = 0; i < pictures.count; i++) {
+//                    
+//                    // track the images that fail to upload
+//                    if (![isenseAPI upload:pictures[i] toExperiment:currentDS.projID forSession:currentDS.sid withName:currentDS.name andDescription:currentDS.dataDescription]) {
+//                        dataSetsFailed++;
+//                        failedAtLeastOnce = true;
+//                        [newPicturePaths addObject:pictures[i]];
+//                        continue;
+//                    }
+//
+//                }
+//            
+//                // add back the images that need to be uploaded
+//                if (failedAtLeastOnce) {
+//                    currentDS.picturePaths = newPicturePaths;
+//                    continue;
+//                }
+//            }
             
         [dataSetsToBeRemoved addObject:currentKey];
             

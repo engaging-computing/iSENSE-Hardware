@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <iSENSE_API/headers/DataSet.h>
+#import <iSENSE_API/headers/QDataSet.h>
 
 @interface QueueCell : UITableViewCell
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
+- (QueueCell *)setupCellWithDataSet:(QDataSet *)dataSet andKey:(NSNumber *)key;
 - (void) toggleChecked;
 - (void) setSessionName:(NSString *)name;
 - (NSNumber *)getKey;
@@ -24,7 +24,7 @@
 @property (nonatomic, assign) IBOutlet UILabel *description;
 @property (nonatomic, assign) IBOutlet UILabel *eidLabel;
 
-@property (nonatomic, retain) DataSet *dataSet;
+@property (nonatomic, retain) QDataSet *dataSet;
 @property (nonatomic, retain) NSNumber *mKey;
 
 @end

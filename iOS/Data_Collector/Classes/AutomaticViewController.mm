@@ -128,7 +128,7 @@ dataToBeOrdered, backFromQueue;
     BOOL enableStep3 = false;
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
-        DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        QDataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
         if ([tmp.parentName isEqualToString:PARENT_AUTOMATIC]) {
             enableStep3 = true;
         }
@@ -613,7 +613,7 @@ dataToBeOrdered, backFromQueue;
         bool uploadable = false;
         if (expNum > 1) uploadable = true;
         
-        DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet"
+        QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                                   inManagedObjectContext:managedObjectContext]
                        insertIntoManagedObjectContext:managedObjectContext];
         
@@ -631,15 +631,11 @@ dataToBeOrdered, backFromQueue;
             [ds setName:sessionName];
             [ds setParentName:[[[NSString alloc] initWithString:PARENT_AUTOMATIC] autorelease]];
             [ds setDataDescription:description];
-            [ds setEid:[NSNumber numberWithInt:expNum]];
+            [ds setProjID:[NSNumber numberWithInt:expNum]];
             [ds setData:dataToBeJSONed];
             [ds setPicturePaths:nil];
-            [ds setSid:[NSNumber numberWithInt:-1]];
-            [ds setCity:city];
-            [ds setCountry:country];
-            [ds setAddress:address];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-            [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];
+            [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
             
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
