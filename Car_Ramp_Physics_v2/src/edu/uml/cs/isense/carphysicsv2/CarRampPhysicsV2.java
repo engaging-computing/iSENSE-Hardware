@@ -43,7 +43,6 @@ import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -90,7 +89,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static Boolean running = false;
 
 	private SensorManager mSensorManager;
-	private LocationManager mLocationManager;
 
 	public static Location loc;
 	private float accel[];
@@ -389,13 +387,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						System.out
 								.println("Honk frogs@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 					}
-
-					if (mLocationManager
-							.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-						mLocationManager.requestLocationUpdates(
-								LocationManager.NETWORK_PROVIDER, 0, 0,
-								CarRampPhysicsV2.this);
-
+					
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -526,7 +518,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		});
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		SharedPreferences prefs3 = getSharedPreferences(ACCEL_SETTINGS, 0);
 		if (mSensorManager != null) {
@@ -629,7 +620,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
@@ -639,7 +629,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public void onStop() {
 		super.onStop();
-		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
