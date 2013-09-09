@@ -80,7 +80,6 @@
 								<string key="NSFrame">{{207, 4}, {50, 21}}</string>
 								<reference key="NSSuperview" ref="322765688"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -180,59 +179,11 @@
 			<array class="NSMutableArray" key="connectionRecords">
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataType</string>
+						<string key="label">view</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="207774994"/>
+						<reference key="destination" ref="135679168"/>
 					</object>
-					<int key="connectionID">239</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">description</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="550115405"/>
-					</object>
-					<int key="connectionID">240</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">nameAndDate</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="765178334"/>
-					</object>
-					<int key="connectionID">241</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">projIDLabel</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="264504999"/>
-					</object>
-					<int key="connectionID">243</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataType</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="207774994"/>
-					</object>
-					<int key="connectionID">228</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">description</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="550115405"/>
-					</object>
-					<int key="connectionID">229</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">nameAndDate</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="765178334"/>
-					</object>
-					<int key="connectionID">230</int>
+					<int key="connectionID">246</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -240,7 +191,31 @@
 						<reference key="source" ref="135679168"/>
 						<reference key="destination" ref="264504999"/>
 					</object>
-					<int key="connectionID">244</int>
+					<int key="connectionID">247</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">nameAndDate</string>
+						<reference key="source" ref="135679168"/>
+						<reference key="destination" ref="765178334"/>
+					</object>
+					<int key="connectionID">248</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">description</string>
+						<reference key="source" ref="135679168"/>
+						<reference key="destination" ref="550115405"/>
+					</object>
+					<int key="connectionID">249</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataType</string>
+						<reference key="source" ref="135679168"/>
+						<reference key="destination" ref="207774994"/>
+					</object>
+					<int key="connectionID">250</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -296,7 +271,7 @@
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
-				<string key="-1.CustomClassName">QueueCell</string>
+				<string key="-1.CustomClassName">UIViewController</string>
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -311,7 +286,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">244</int>
+			<int key="maxID">250</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
