@@ -135,7 +135,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">EID</string>
+								<string key="IBUIText">ProjID</string>
 								<reference key="IBUITextColor" ref="391007478"/>
 								<reference key="IBUIHighlightedColor" ref="816550143"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -183,23 +183,15 @@
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="135679168"/>
 					</object>
-					<int key="connectionID">226</int>
+					<int key="connectionID">246</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataType</string>
+						<string key="label">projIDLabel</string>
 						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="207774994"/>
+						<reference key="destination" ref="264504999"/>
 					</object>
-					<int key="connectionID">228</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">description</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="550115405"/>
-					</object>
-					<int key="connectionID">229</int>
+					<int key="connectionID">247</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -207,15 +199,23 @@
 						<reference key="source" ref="135679168"/>
 						<reference key="destination" ref="765178334"/>
 					</object>
-					<int key="connectionID">230</int>
+					<int key="connectionID">248</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">eidLabel</string>
+						<string key="label">description</string>
 						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="264504999"/>
+						<reference key="destination" ref="550115405"/>
 					</object>
-					<int key="connectionID">238</int>
+					<int key="connectionID">249</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataType</string>
+						<reference key="source" ref="135679168"/>
+						<reference key="destination" ref="207774994"/>
+					</object>
+					<int key="connectionID">250</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -286,7 +286,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">238</int>
+			<int key="maxID">250</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -296,8 +296,8 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="dataType">UILabel</string>
 						<string key="description">UILabel</string>
-						<string key="eidLabel">UILabel</string>
 						<string key="nameAndDate">UILabel</string>
+						<string key="projIDLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="dataType">
@@ -308,12 +308,12 @@
 							<string key="name">description</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="eidLabel">
-							<string key="name">eidLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="nameAndDate">
 							<string key="name">nameAndDate</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="projIDLabel">
+							<string key="name">projIDLabel</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
 					</dictionary>
