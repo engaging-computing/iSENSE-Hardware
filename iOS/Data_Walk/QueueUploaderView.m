@@ -33,10 +33,8 @@
 // Upload button control
 -(IBAction)upload:(id)sender {
     
-    // Words n stuff
     if ([api getCurrentUser] != nil) {
         
-        // Do zee upload thang
         bool uploadSuccessful = [dataSaver upload:parent];
         if (!uploadSuccessful) NSLog(@"Upload Not Successful");
         
@@ -124,6 +122,8 @@
         dataSaver = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
     
+    NSLog(@"Data set count: %d", dataSaver.count);
+    
     currentIndex = 0;
     
     // add long press gesture listener to the table
@@ -143,6 +143,7 @@
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
         QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
+        NSLog(@"Looping on object: %@", tmp.name);
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         }
@@ -372,7 +373,7 @@
 
 // Initialize a single object in the table
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    NSLog(@"cells plz");
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
@@ -426,7 +427,6 @@
             [message dismissWithClickedButtonIndex:0 animated:YES];
             
             if ([api getCurrentUser] != nil) {
-                // Do zee upload thang
                 bool uploadSuccessful = [dataSaver upload:parent];
                 if (!uploadSuccessful) NSLog(@"Too bad 4 you");
             }

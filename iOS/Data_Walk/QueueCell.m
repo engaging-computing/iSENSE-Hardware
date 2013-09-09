@@ -17,6 +17,8 @@
 }
 
 - (QueueCell *)setupCellWithDataSet:(QDataSet *)ds andKey:(NSNumber *)key {
+    NSLog(@"do we get here?");
+    
     self.mKey = key;
     self.nameAndDate.text = ds.name;
     self.description.text = ds.dataDescription;
@@ -39,6 +41,8 @@
     
     self.dataType.text = tmpDataType;
     [self setCheckedSwitch:ds.uploadable.boolValue];
+    
+    NSLog(@"Cell created in QueueCell.m");
     
     return self;
 }
