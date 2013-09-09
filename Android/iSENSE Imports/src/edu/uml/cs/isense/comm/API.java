@@ -662,6 +662,7 @@ public class API {
 			urlConnection.setRequestProperty("Accept", "application/json");
 
 			if(postData != null) {
+				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();
 				urlConnection.setRequestProperty("Content-Length",Integer.toString(mPostData.length));
 				urlConnection.setRequestProperty("Content-Type", "application/json");

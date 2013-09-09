@@ -128,7 +128,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		mContext = this;
 		
 		api = API.getInstance(mContext);
-		api.useDev(false);
+		api.useDev(true);
 		
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
