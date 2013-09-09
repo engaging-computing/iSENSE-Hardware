@@ -17,6 +17,7 @@
 #define POST    @"POST"
 #define PUT     @"PUT"
 #define DELETE  @"DELETE"
+#define NONE    @""
 
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
@@ -126,7 +127,7 @@ static RPerson *currentUser;
     RProject *proj = [[RProject alloc] init];
     
     NSString *path = [NSString stringWithFormat:@"projects/%d", projectId];
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:@"" withRequestType:GET andPostData:nil];
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     
     proj.project_id = [results objectForKey:@"id"];
     proj.name = [results objectForKey:@"name"];
@@ -143,8 +144,46 @@ static RPerson *currentUser;
 }
 
 
--(RTutorial *)  getTutorialWithId:      (int)tutorialId{ return nil; }
--(RDataSet *)   getDataSetWithId:       (int)dataSetId { return nil; }
+-(RTutorial *)getTutorialWithId:(int)tutorialId {
+    RTutorial *tutorial = [[RTutorial alloc] init];
+    
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"tutorials/%d", tutorialId] withParameters:NONE withRequestType:GET andPostData:nil];
+    tutorial.tutorial_id = [results objectForKey:@"id"];
+    tutorial.name = [results objectForKey:@"name"];
+    tutorial.url = [results objectForKey:@"url"];
+    tutorial.hidden = [results objectForKey:@"hidden"];
+    tutorial.timecreated = [results objectForKey:@"createdAt"];
+    tutorial.owner_name = [results objectForKey:@"ownerName"];
+    tutorial.owner_url = [results objectForKey:@"ownerUrl"];
+    
+    return tutorial;
+}
+
+/**
+ * Retrieve a data set from iSENSE, with it's data field filled in
+ * The internal data set will be converted to column-major format, to make it compatible with
+ * the uploadDataSet function
+ *
+ * @param dataSetId The unique ID of the data set to retrieve from iSENSE
+ * @return An RDataSet object
+ */
+-(RDataSet *)getDataSetWithId:(int)dataSetId {
+    RDataSet *dataSet = [[RDataSet alloc] init];
+    
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_set/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    
+    dataSet.ds_id = [results objectForKey:@"id"];
+    dataSet.name = [results objectForKey:@"id"];
+    dataSet.hidden = [results objectForKey:@"id"];
+    dataSet.url = [results objectForKey:@"id"];
+    dataSet.timecreated = [results objectForKey:@"id"];
+    dataSet.fieldCount = [results objectForKey:@"id"];
+    dataSet.datapointCount = [results objectForKey:@"id"];
+    dataSet.data = [results objectForKey:@"id"];
+    dataSet.project_id = [[results objectForKey:@"project"] objectForKey:@"id"];
+
+    return dataSet;
+}
 
 /**
  * Gets all of the fields associated with a project.
@@ -155,7 +194,7 @@ static RPerson *currentUser;
 -(NSArray *)getProjectFieldsWithId:(int)projectId {
     NSMutableArray *fields = [[NSMutableArray alloc] init];
     
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"" withRequestType:GET andPostData:nil];
+    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:NONE withRequestType:GET andPostData:nil];
     NSArray *innerFields = [requestResult objectForKey:@"fields"];
     
     for (int i = 0; i < innerFields.count; i++) {
@@ -238,7 +277,7 @@ static RPerson *currentUser;
     
     RPerson *person = [[RPerson alloc] init];
     NSString *path = [NSString stringWithFormat:@"users/%@", username];
-    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:@"" withRequestType:GET andPostData:nil];
+    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];
     person.username = [result objectForKey:@"username"];
@@ -314,7 +353,7 @@ static RPerson *currentUser;
     [requestData setObject:[NSString stringWithFormat:@"%d", projectId] forKey:@"id"];
     [requestData setObject:headers forKey:@"headers"];
     [requestData setObject:dataToUpload forKey:@"data"];
-    if (![name isEqualToString:@""]) [requestData setObject:name forKey:@"name"];
+    if (![name isEqualToString:NONE]) [requestData setObject:name forKey:@"name"];
     
     NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
     
