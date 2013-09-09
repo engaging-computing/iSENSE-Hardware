@@ -307,7 +307,7 @@
     [api useDev:TRUE];
     [api createSessionWithUsername:@"sor" andPassword:@"sor"];
     int amIActuallyAThing = [api uploadDataSetWithId:36 withData:dataJObj andName:@"iOS Data Walk Test"];
-    NSLog(@"Created data set ID: %d", amIActuallyAThing);
+    NSLog(@"Created data set ID: %d, for data set named: %@", amIActuallyAThing, ds.name);
 }
 
 - (NSString *) getDateAndTime {
@@ -365,7 +365,6 @@
             NSNumber *time = [NSNumber numberWithLongLong:longTime * 1000];
             
             // Acceleration in meters per second squared
-            
             NSNumber *accel_x = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665];
             NSNumber *accel_y = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665];
             NSNumber *accel_z = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665];
@@ -573,7 +572,7 @@
 // Called when the user clicked the Upload button
 - (IBAction) onUploadClick:(id)sender {
     if (dataSaver.count > 0) {
-        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_DATA_WALK];
         queueUploader.title = @"Upload";
         [self.navigationController pushViewController:queueUploader animated:YES];
     } else {
