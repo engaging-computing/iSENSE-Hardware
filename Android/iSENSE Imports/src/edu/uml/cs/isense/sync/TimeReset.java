@@ -12,7 +12,7 @@ import edu.uml.cs.isense.R;
 /**
  * Tells the user that their time offset has been reset back to zero.
  * 
- * @author jpoulin
+ * @author iSENSE Android Development Team
  */
 public class TimeReset extends Activity {
 

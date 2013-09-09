@@ -10,18 +10,21 @@
 #import "CameraViewController.h"
 
 
-@implementation UIImagePickerController (CameraDelegateMethods)
+@implementation CameraViewController
 
 // For responding to the user tapping Cancel.
 - (void) imagePickerControllerDidCancel: (UIImagePickerController *) picker {
     
-    [[picker parentViewController] dismissModalViewControllerAnimated: YES];
+    NSLog(@"Got into camera delegate method cancel");
+    
+    [self dismissModalViewControllerAnimated: YES];
     [picker release];
     
 }
 
 // For responding to the user accepting a newly-captured picture or movie
 - (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo:(NSDictionary *) info {
+    NSLog(@"Image picker controller method");
     
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     UIImage *originalImage, *editedImage, *imageToSave;

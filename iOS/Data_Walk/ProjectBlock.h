@@ -18,7 +18,7 @@
 
 }
 
-@property (nonatomic, retain) RProject *project;
+@property (nonatomic, strong) RProject *project;
 
 - (id)initWithFrame:(CGRect)frame project:(RProject*)exp target:(id)target action:(SEL)selector;
 - (void)switchToDarkImage:(bool)booleanSwitch;

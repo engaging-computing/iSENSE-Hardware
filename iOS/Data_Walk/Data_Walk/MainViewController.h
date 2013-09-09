@@ -15,27 +15,34 @@
 #import <iSENSE_API/API.h>
 #import <RPerson.h>
 #import "ProjectBrowseViewController.h"
+#import "DWAppDelegate.h"
+#import <iSENSE_API/headers/DataSaver.h>
+#import "QueueUploaderView.h"
 
 typedef void (^APIBlock)(void);
 
-@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate> {
+@interface MainViewController : UIViewController <UINavigationControllerDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate, ProjectBrowseViewControllerDelegate> {
     
+    // iSENSE API
     API *api;
     
+    // Variables for the recording interval picker view
     BOOL isShowingPickerView;
     UIPickerView *intervalPickerView;
     
-    BOOL isRecording;
+    // User settings/other variables
     int recordingInterval;
     NSString *name;
     int projectID;
+    int elapsedTime;
+    int dataPointCount;
+    NSMutableArray *data;
 }
 
 // UI functions
 - (void) onResetClick:(id)sender;
 - (void) onAboutClick:(id)sender;
 
-- (IBAction) onRecordDataClick:(id)sender;
 - (IBAction) onRecordingIntervalClick:(id)sender;
 - (IBAction) onLoggedInClick:(id)sender;
 - (IBAction) onUploadClick:(id)sender;
@@ -56,11 +63,22 @@ typedef void (^APIBlock)(void);
 @property (nonatomic, strong) IBOutlet UIButton *loggedInAs;
 @property (nonatomic, strong) IBOutlet UIButton *upload;
 @property (nonatomic, strong) IBOutlet UIButton *selectProject;
-@property (nonatomic, strong) IBOutlet UIImageView *gpsLock;
+@property (nonatomic, strong) IBOutlet UILabel *topBar;
+@property (nonatomic, strong) IBOutlet UILabel *timeElapsedLabel;
+@property (nonatomic, strong) IBOutlet UILabel *dataPointCountLabel;
+@property (nonatomic, strong) IBOutlet UILabel *gpsLockLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *gpsLockImage;
 
 // Other properties
+@property (nonatomic) BOOL isRecording;
+@property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) UITextField *activeField;
 @property (nonatomic, strong) UITextField *passwordField;
+@property (nonatomic, strong) NSTimer *elapsedTimeTimer;
+@property (nonatomic, strong) NSTimer *recordDataTimer;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) DataSaver *dataSaver;
+@property (nonatomic, strong) CLLocation *lastLocation;
 
 @end

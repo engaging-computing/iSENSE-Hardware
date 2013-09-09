@@ -20,11 +20,11 @@
     // Configure the view for the selected state
 }
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)ds andKey:(NSNumber *)key {
+- (QueueCell *)setupCellWithDataSet:(QDataSet *)ds andKey:(NSNumber *)key {
     self.mKey = key;
     self.nameAndDate.text = ds.name;
     self.description.text = ds.dataDescription;
-    self.eidLabel.text = (ds.eid.intValue == -1) ? @"No Exp." : [NSString stringWithFormat:@"%d", ds.eid.intValue];
+    self.eidLabel.text = (ds.projID.intValue == -1) ? @"No Proj." : [NSString stringWithFormat:@"%d", ds.projID.intValue];
     
     NSString *tmpDataType;
     if (ds.picturePaths == nil) {
@@ -87,7 +87,7 @@
 
 - (void) setExpNum:(NSString *)exp {
     self.eidLabel.text = exp;
-    [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
+    [dataSet setProjID:[NSNumber numberWithInt:[exp intValue]]];
 }
 
 - (void) setDesc:(NSString *)desc {
@@ -96,7 +96,7 @@
 }
 
 - (BOOL) dataSetHasInitialExperiment {
-    NSNumber *initial = [dataSet hasInitialExp];
+    NSNumber *initial = [dataSet hasInitialProj];
     return [initial boolValue];
 }
 

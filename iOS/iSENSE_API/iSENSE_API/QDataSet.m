@@ -7,22 +7,17 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
 
-#import "DataSet.h"
+#import "QDataSet.h"
 
+@implementation QDataSet
 
-@implementation DataSet
-
-@dynamic address;
-@dynamic city;
-@dynamic country;
 @dynamic data;
 @dynamic picturePaths;
-@dynamic eid;
+@dynamic projID;
 @dynamic uploadable;
 @dynamic dataDescription;
-@dynamic sid;
 @dynamic name;
-@dynamic hasInitialExp;
+@dynamic hasInitialProj;
 @dynamic parentName;
 
 @end
