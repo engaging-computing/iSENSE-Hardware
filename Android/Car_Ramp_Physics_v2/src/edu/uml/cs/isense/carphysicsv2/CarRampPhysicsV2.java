@@ -76,7 +76,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "mobile";
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 
 	public static final String VIS_URL_PROD = "http://isenseproject.org/projects/";
 	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
@@ -94,11 +94,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static Location loc;
 	private float accel[];
-	private float orientation[];
 	private Timer timeTimer;
-	private float rawAccel[];
-	private float rawMag[];
-
 	private int INTERVAL = 50;
 
 	static final public int DIALOG_CANCELED = 0;
@@ -132,8 +128,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 
 	private String dateString;
-
-	private boolean x = false, y = true, z = false, mag = false;
 
 	DecimalFormat toThou = new DecimalFormat("######0.000");
 
@@ -274,7 +268,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
 				mContext, f);
 		dfm.getOrder();
-		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+		new DecimalFormat("#,##0.0");
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
 			values.setText("X: ");
 		}
@@ -387,14 +381,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					len2 = 0;
 					i = 0;
 					currentTime = getUploadTime(0);
-
-					SharedPreferences prefs = getSharedPreferences(
-							RECORD_SETTINGS, 0);
-
-					x = prefs.getBoolean("X", false);
-					y = prefs.getBoolean("Y", true);
-					z = prefs.getBoolean("Z", false);
-					mag = prefs.getBoolean("Magnitude", false);
 
 					setEnabledFields();
 
@@ -548,7 +534,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (CarRampPhysicsV2.getApiLevel() < 14) {
 				// If the device isn't on Jelly Bean
 				ToggleButton button = (ToggleButton) findViewById(R.id.toggleButton1);
-				button.setChecked(isLinear);
+				button.setChecked(isLinear); 
 			} else {
 				Switch button = (Switch) findViewById(R.id.switch1);
 				button.setChecked(isLinear);
@@ -577,10 +563,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
 		accel = new float[4];
-		orientation = new float[3];
-		rawAccel = new float[3];
-		rawMag = new float[3];
-
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 	}
@@ -693,7 +675,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
-		SharedPreferences prefs = getSharedPreferences(RECORD_SETTINGS, 0);
+		getSharedPreferences(RECORD_SETTINGS, 0);
 
 		if (usedHomeButton && running) {
 			setupDone = false;
@@ -739,7 +721,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
 				mContext, f);
 		dfm.getOrder();
-		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+		new DecimalFormat("#,##0.0");
 		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
 			values.setText("X: ");
 		}
@@ -850,8 +832,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION
 				|| event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-
-			rawAccel = event.values.clone();
 
 			accel[0] = event.values[0];
 			accel[1] = event.values[1];
