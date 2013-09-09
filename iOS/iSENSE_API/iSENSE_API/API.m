@@ -217,8 +217,35 @@ static RPerson *currentUser;
     return fields;
 }
 
-
--(NSArray *)    getDataSetsWithId:      (int)projectId { return nil; }
+/**
+ * Gets all the data sets associated with a project
+ * The data sets returned by this function do not have their data field filled.
+ *
+ * @param projectId The project ID whose data sets you want
+ * @return An ArrayList of RDataSet objects, with their data fields left null
+ */
+-(NSArray *)getDataSetsWithId:(int)projectId {
+    NSMutableArray *dataSets = [[NSMutableArray alloc] init];
+    
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    NSArray *resultsArray = [results objectForKey:@"dataSets"];
+    for (int i = 0; i < results.count; i++) {
+        RDataSet *dataSet = [[RDataSet alloc] init];
+        NSDictionary *innermost = [resultsArray objectAtIndex:i];
+        
+        dataSet.ds_id = [innermost objectForKey:@"id"];
+        dataSet.name = [innermost objectForKey:@"name"];
+        dataSet.hidden = [innermost objectForKey:@"hidden"];
+        dataSet.url = [innermost objectForKey:@"url"];
+        dataSet.timecreated = [innermost objectForKey:@"createdAt"];
+        dataSet.fieldCount = [innermost objectForKey:@"fieldCount"];
+        dataSet.datapointCount = [innermost objectForKey:@"datapointCount"];
+        
+        [dataSets addObject:dataSet];
+    }
+    
+    return dataSets;
+}
 
 /**
  * 	Retrieves multiple projects off of iSENSE.
@@ -409,6 +436,11 @@ static RPerson *currentUser;
     return reformatted;
 }
 
+/**
+  * Bro, do you even read the function names?
+  *
+  * @return An percent escaped version of the current user authentication token
+  */
 -(NSString *)getEncodedAuthtoken {
     CFStringRef encodedToken = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, CFBridgingRetain(authenticityToken), NULL, CFSTR("!*'();:@&=+@,/?#[]"), kCFStringEncodingUTF8);
     return CFBridgingRelease(encodedToken);
