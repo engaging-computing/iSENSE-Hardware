@@ -120,7 +120,7 @@ static RPerson *currentUser;
  * Retrieves information about a single project on iSENSE.
  *
  * @param projectId The ID of the project to retrieve
- * @return A Project object
+ * @return An RProject object
  */
 -(RProject *)getProjectWithId:(int)projectId {
     
@@ -143,7 +143,12 @@ static RPerson *currentUser;
     
 }
 
-
+/**
+ * Get a tutorial from iSENSE.
+ *
+ * @param tutorialId The ID of the tutorial to retrieve
+ * @return A RTutorial object
+ */
 -(RTutorial *)getTutorialWithId:(int)tutorialId {
     RTutorial *tutorial = [[RTutorial alloc] init];
     
@@ -160,7 +165,7 @@ static RPerson *currentUser;
 }
 
 /**
- * Retrieve a data set from iSENSE, with it's data field filled in
+ * Retrieve a data set from iSENSE, with it's data field filled in.
  * The internal data set will be converted to column-major format, to make it compatible with
  * the uploadDataSet function
  *
@@ -173,13 +178,13 @@ static RPerson *currentUser;
     NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_set/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
     
     dataSet.ds_id = [results objectForKey:@"id"];
-    dataSet.name = [results objectForKey:@"id"];
-    dataSet.hidden = [results objectForKey:@"id"];
-    dataSet.url = [results objectForKey:@"id"];
-    dataSet.timecreated = [results objectForKey:@"id"];
-    dataSet.fieldCount = [results objectForKey:@"id"];
-    dataSet.datapointCount = [results objectForKey:@"id"];
-    dataSet.data = [results objectForKey:@"id"];
+    dataSet.name = [results objectForKey:@"name"];
+    dataSet.hidden = [results objectForKey:@"hidden"];
+    dataSet.url = [results objectForKey:@"url"];
+    dataSet.timecreated = [results objectForKey:@"createdAt"];
+    dataSet.fieldCount = [results objectForKey:@"fieldCount"];
+    dataSet.datapointCount = [results objectForKey:@"datapointCount"];
+    dataSet.data = [results objectForKey:@"data"];
     dataSet.project_id = [[results objectForKey:@"project"] objectForKey:@"id"];
 
     return dataSet;
@@ -189,7 +194,7 @@ static RPerson *currentUser;
  * Gets all of the fields associated with a project.
  *
  * @param projectId The unique ID of the project whose fields you want to see
- * @return An ArrayList of ProjectField objects
+ * @return An ArrayList of RProjectField objects
  */
 -(NSArray *)getProjectFieldsWithId:(int)projectId {
     NSMutableArray *fields = [[NSMutableArray alloc] init];
@@ -222,7 +227,7 @@ static RPerson *currentUser;
  * @param perPage How many results to display per page
  * @param descending Whether to display the results in descending order (true) or ascending order (false)
  * @param search A string to search all projects for
- * @return An ArrayList of Project objects
+ * @return An ArrayList of RProject objects
  */
 -(NSArray *)getProjectsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
     NSMutableArray *results = [[NSMutableArray alloc] init];
@@ -252,6 +257,7 @@ static RPerson *currentUser;
     return results;
     
 }
+
 -(RTutorial *)  getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
 
 /* Requires an Authentication Key */
@@ -261,7 +267,7 @@ static RPerson *currentUser;
 /*
  * Returns the current saved user object.
  *
- * @return
+ * @return An RPerson object that corresponds to the owner of the current session
  */
 -(RPerson *)getCurrentUser {
     return currentUser;
@@ -271,7 +277,7 @@ static RPerson *currentUser;
  * Gets a user off of iSENSE.
  *
  * @param username The username of the user to retrieve
- * @return A Person object
+ * @return An RPerson object
  */
 -(RPerson *)getUserWithUsername:(NSString *)username {
     
@@ -381,10 +387,10 @@ static RPerson *currentUser;
 -(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
 
 /**
- * Reformats a row-major JSONObject to column-major.
+ * Reformats a row-major NSDictionary to column-major.
  *
- * @param original The row-major formatted JSONObject
- * @return A column-major reformatted version of the original JSONObject
+ * @param original The row-major formatted NSDictionary
+ * @return A column-major reformatted version of the original NSDictionary
  */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original {
     NSMutableDictionary *reformatted = [[NSMutableDictionary alloc] init];
