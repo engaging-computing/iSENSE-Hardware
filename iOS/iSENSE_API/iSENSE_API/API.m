@@ -442,7 +442,7 @@ static RPerson *currentUser;
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
     if (requestError) NSLog(@"Error received from server: %@", requestError);
     
-    if (urlResponse.statusCode == 200) {
+    if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
         id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
         return parsedJSONResponse;
     } else if (urlResponse.statusCode == 403) {
