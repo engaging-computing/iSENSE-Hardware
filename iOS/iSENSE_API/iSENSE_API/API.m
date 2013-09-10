@@ -285,10 +285,76 @@ static RPerson *currentUser;
     
 }
 
--(RTutorial *)  getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
+/**
+ * Retrieves multiple tutorials off of iSENSE.
+ *
+ * @param page Which page of results to start from. 1-indexed
+ * @param perPage How many results to display per page
+ * @param descending Whether to display the results in descending order (true) or ascending order (false)
+ * @param search A string to search all tutorials for
+ * @return An ArrayList of RTutorial objects
+ */
+-(NSArray *)getTutorialsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+    
+    NSMutableArray *tutorials = [[NSMutableArray alloc] init];
+    
+    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
 
-/* Requires an Authentication Key */
--(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
+    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"tutorials" withParameters:parameters withRequestType:GET andPostData:nil];
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *inner = [results objectAtIndex:i];
+        RTutorial *tutorial = [[RTutorial alloc] init];
+        
+        tutorial.tutorial_id = [inner objectForKey:@"id"];
+        tutorial.name = [inner objectForKey:@"name"];
+        tutorial.url = [inner objectForKey:@"url"];
+        tutorial.hidden = [inner objectForKey:@"hidden"];
+        tutorial.timecreated = [inner objectForKey:@"createdAt"];
+        tutorial.owner_name = [inner objectForKey:@"ownerName"];
+        tutorial.owner_url = [inner objectForKey:@"ownerUrl"];
+        
+        [tutorials addObject:tutorial];
+    }
+    
+    return tutorials;
+}
+
+/**
+ * Retrieves a list of users on iSENSE.
+ * This is an authenticated function and requires that the createSession function was called earlier.
+ *
+ * @param page Which page of users to start the request from
+ * @param perPage How many users per page to perform the search with
+ * @param descending Whether the list of users should be in descending order or not
+ * @param search A string to search all users for
+ * @return A list of RPerson objects
+ */
+-(NSArray *)getUsersAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+    
+    NSMutableArray *persons = [[NSMutableArray alloc] init];
+    
+    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+
+    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"users" withParameters:parameters withRequestType:GET andPostData:nil];
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *inner = [results objectAtIndex:i];
+        RPerson *person = [[RPerson alloc] init];
+        
+        person.person_id = [inner objectForKey:@"id"];
+        person.name = [inner objectForKey:@"name"];
+        person.username = [inner objectForKey:@"username"];
+        person.url = [inner objectForKey:@"url"];
+        person.gravatar = [inner objectForKey:@"gravatar"];
+        person.timecreated = [inner objectForKey:@"createdAt"];
+        person.hidden = [inner objectForKey:@"hidden"];
+        
+        [persons addObject:person];
+    }
+    
+    return persons;
+}
 
 
 /*
@@ -495,7 +561,5 @@ static RPerson *currentUser;
     
     return nil;
 }
-
-
 
 @end
