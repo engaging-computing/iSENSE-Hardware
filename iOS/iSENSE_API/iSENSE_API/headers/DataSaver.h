@@ -29,8 +29,9 @@
 -(bool) upload:(NSString *)parentName;
 -(void) removeAllDataSets;
 -(id)   getDataSet;
+-(int)  dataSetCountWithParentName:(NSString *)pn;
 
-@property (nonatomic, assign) int count;
+//@property (nonatomic, assign) int count;
 @property (nonatomic, retain) NSMutableDictionary *dataQueue;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
