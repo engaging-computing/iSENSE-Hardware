@@ -111,6 +111,8 @@
 // Do any additional setup after loading the view.
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    NSLog(@"loading view");
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -143,6 +145,9 @@
         QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
+        } else {
+            // shouldn't get here, but remove garbage data sets not cleaned up by the implementor who should call dataSetCountWithParentName:
+            [dataSaver.dataQueue removeObjectForKey:keys[i]];
         }
     }
     
@@ -303,6 +308,9 @@
             NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setProjID:expNumString];
+            [cell.dataSet setProjID:[NSNumber numberWithInt:projID]]; // TODO - yes? no? wasn't here before. same for below 2 lines
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
         }
         
     } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
@@ -315,15 +323,17 @@
     }
 }
 
-// TODO - do something with the project ID
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+
     projID = project.intValue;
-    
+        
     QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
     [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
-
+    [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+        
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
+    
 }
 
 - (BOOL) handleNewQRCode:(NSURL *)url {
@@ -386,9 +396,9 @@
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
         browsing = false;
-        NSString *expNumString = [NSString stringWithFormat:@"%d", projID];
+        NSString *projIDString = [NSString stringWithFormat:@"%d", projID];
         if (projID != 0)
-            [cell setProjID:expNumString];
+            [cell setProjID:projIDString];
     }
     
     return cell;
@@ -460,7 +470,6 @@
     [cell setBackgroundColor:[UIColor clearColor]];
     
     [cell toggleChecked];
-    NSLog(@"Toggle");
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField{

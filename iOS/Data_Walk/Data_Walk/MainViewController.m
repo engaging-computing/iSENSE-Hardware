@@ -301,12 +301,12 @@
     
     [ds setName:dataSetName];
     [ds setParentName:PARENT_DATA_WALK];
-    [ds setDataDescription:description];
+    [ds setDataDescription:description]; projID = -1; // TODO remove
     [ds setProjID:[NSNumber numberWithInt:projID]];
     [ds setData:dataJObj];
     [ds setPicturePaths:nil];
     [ds setUploadable:[NSNumber numberWithBool:TRUE]];
-    [ds setHasInitialProj:[NSNumber numberWithBool:TRUE]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:((projID == -1) ? NO : YES)]];
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
@@ -585,7 +585,7 @@
 
 // Called when the user clicked the Upload button
 - (IBAction) onUploadClick:(id)sender {
-    if (dataSaver.count > 0) {
+    if ([dataSaver dataSetCountWithParentName:PARENT_DATA_WALK] > 0) {
         QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_DATA_WALK];
         queueUploader.title = @"Upload";
         [self.navigationController pushViewController:queueUploader animated:YES];
