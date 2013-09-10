@@ -21,6 +21,8 @@
 		B71CA83917CE365A003920FD /* waffle_warn.png in Resources */ = {isa = PBXBuildFile; fileRef = B71CA83617CE365A003920FD /* waffle_warn.png */; };
 		B71CA83A17CE365A003920FD /* waffle_x.png in Resources */ = {isa = PBXBuildFile; fileRef = B71CA83717CE365A003920FD /* waffle_x.png */; };
 		B71DF60517C7A55200A4B9CD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B71DF60417C7A55200A4B9CD /* CoreLocation.framework */; };
+		B722A52717DF6E580050C486 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B722A52617DF6E580050C486 /* AudioToolbox.framework */; };
+		B722A52917DF6ECD0050C486 /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B722A52817DF6ECD0050C486 /* beep.mp3 */; };
 		B72E04FC17CBC30E00D06B57 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B72E04FB17CBC30E00D06B57 /* AboutViewController.m */; };
 		B72E04FE17CBC35700D06B57 /* AboutLayout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */; };
 		B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72E04FF17CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib */; };
@@ -53,7 +55,6 @@
 		B7E567BB17C6442700C2DF46 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E567BA17C6442700C2DF46 /* Default-568h@2x.png */; };
 		B7E567BE17C6442700C2DF46 /* Data_Walk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B7E567BC17C6442700C2DF46 /* Data_Walk.xcdatamodeld */; };
 		B7E567C117C6442700C2DF46 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E567C017C6442700C2DF46 /* MainViewController.m */; };
-		B7E567E317C6453400C2DF46 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E217C6453400C2DF46 /* button-37.wav */; };
 		B7E567E517C645A700C2DF46 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E417C645A700C2DF46 /* Strings.strings */; };
 		B7E567E717C64A2000C2DF46 /* MainLayout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E617C64A2000C2DF46 /* MainLayout~iphone.xib */; };
 		B7E567E917C64D1300C2DF46 /* MainLayout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E817C64D1300C2DF46 /* MainLayout~ipad.xib */; };
@@ -114,6 +115,8 @@
 		B71CA83617CE365A003920FD /* waffle_warn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_warn.png; sourceTree = "<group>"; };
 		B71CA83717CE365A003920FD /* waffle_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = waffle_x.png; sourceTree = "<group>"; };
 		B71DF60417C7A55200A4B9CD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		B722A52617DF6E580050C486 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		B722A52817DF6ECD0050C486 /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
 		B72E04FA17CBC30E00D06B57 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		B72E04FB17CBC30E00D06B57 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		B72E04FD17CBC35700D06B57 /* AboutLayout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutLayout~iphone.xib"; sourceTree = "<group>"; };
@@ -155,7 +158,6 @@
 		B7E567BD17C6442700C2DF46 /* Data_Walk.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Data_Walk.xcdatamodel; sourceTree = "<group>"; };
 		B7E567BF17C6442700C2DF46 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = Data_Walk/MainViewController.h; sourceTree = "<group>"; };
 		B7E567C017C6442700C2DF46 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = Data_Walk/MainViewController.m; sourceTree = "<group>"; };
-		B7E567E217C6453400C2DF46 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		B7E567E417C645A700C2DF46 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		B7E567E617C64A2000C2DF46 /* MainLayout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout~iphone.xib"; sourceTree = "<group>"; };
 		B7E567E817C64D1300C2DF46 /* MainLayout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainLayout~ipad.xib"; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B722A52717DF6E580050C486 /* AudioToolbox.framework in Frameworks */,
 				39DEBD2017DF87F3005AD2A6 /* MobileCoreServices.framework in Frameworks */,
 				B711EE1617D0CC9B003C4187 /* CoreMotion.framework in Frameworks */,
 				B714A34B17C7BA6B0016F52B /* QuartzCore.framework in Frameworks */,
@@ -293,6 +296,7 @@
 		B7E567A117C6442700C2DF46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B722A52617DF6E580050C486 /* AudioToolbox.framework */,
 				39DEBD1F17DF87F3005AD2A6 /* MobileCoreServices.framework */,
 				B711EE1517D0CC9B003C4187 /* CoreMotion.framework */,
 				B714A34A17C7BA6B0016F52B /* QuartzCore.framework */,
@@ -365,7 +369,7 @@
 		B7E567DA17C6446F00C2DF46 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				B7E567E217C6453400C2DF46 /* button-37.wav */,
+				B722A52817DF6ECD0050C486 /* beep.mp3 */,
 			);
 			name = Sounds;
 			sourceTree = "<group>";
@@ -531,7 +535,6 @@
 				B7E567B717C6442700C2DF46 /* Default.png in Resources */,
 				B7E567B917C6442700C2DF46 /* Default@2x.png in Resources */,
 				B7E567BB17C6442700C2DF46 /* Default-568h@2x.png in Resources */,
-				B7E567E317C6453400C2DF46 /* button-37.wav in Resources */,
 				B7E567E517C645A700C2DF46 /* Strings.strings in Resources */,
 				B7E567E717C64A2000C2DF46 /* MainLayout~iphone.xib in Resources */,
 				B7E567E917C64D1300C2DF46 /* MainLayout~ipad.xib in Resources */,
@@ -559,6 +562,7 @@
 				B74D440417DA2A1A008A15A0 /* QueueCell~ipad.xib in Resources */,
 				B74D440517DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib in Resources */,
 				B74D440617DA2A1A008A15A0 /* queue_layout~ipad.xib in Resources */,
+				B722A52917DF6ECD0050C486 /* beep.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

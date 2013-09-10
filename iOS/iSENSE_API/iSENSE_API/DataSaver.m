@@ -12,12 +12,12 @@
 
 @implementation DataSaver
 
-@synthesize count, dataQueue, managedObjectContext;
+@synthesize dataQueue, managedObjectContext;
 
 -(id)initWithContext:(NSManagedObjectContext *)context {
     self = [super init];
     if (self) {
-        count = 0;
+        //count = 0;
         dataQueue = [[NSMutableDictionary alloc] init];
         managedObjectContext = context;
     }
@@ -45,19 +45,19 @@
     
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
-    count++;
+    //count++;
 }
 
 -(void)addDataSetFromCoreData:(QDataSet *)dataSet {
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
-    count++;
+    //count++;
 
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
 -(id)removeDataSet:(NSNumber *)key {
-    count--;
+    //count--;
     QDataSet *tmp;
     if (key == nil) {
         tmp = [dataQueue dequeue];
@@ -92,8 +92,7 @@
     }
     
     [dataQueue removeAllObjects];
-    count = 0;
-
+    //count = 0;
 }
 
 -(void)editDataSetWithKey:(NSNumber *)key {
@@ -215,6 +214,24 @@
 -(void)removeDataSets:(NSArray *)keys {
     for(NSNumber *key in keys) {
         [self removeDataSet:key];
+    }
+}
+
+-(int) dataSetCountWithParentName:(NSString *)pn {
+    [self clearGarbageWithoutParentName:pn];
+    
+    NSArray *keys = [self.dataQueue allKeys];
+    return keys.count;
+}
+
+// removes malformed or garbage data sets caused by things like deleting data sets, resetting the app, etc.
+-(void) clearGarbageWithoutParentName:(NSString *)pn {
+    NSArray *keys = [self.dataQueue allKeys];
+    for (int i = 0; i < keys.count; i++) {
+        QDataSet *tmp = [self.dataQueue objectForKey:keys[i]];
+        if (!([tmp.parentName isEqualToString:pn])) {
+            [self.dataQueue removeObjectForKey:keys[i]];
+        }
     }
 }
 
