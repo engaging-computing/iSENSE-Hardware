@@ -26,10 +26,10 @@
 // other character restriction text field tags
 #define TAG_QUEUE_RENAME    700
 #define TAG_QUEUE_DESC      701
-#define TAG_QUEUE_EXP       702
-#define TAG_STEPONE_EXP     703
+#define TAG_QUEUE_PROJ      702
+#define TAG_STEPONE_PROJ    703
 #define TAG_AUTO_LOGIN      704
 #define TAG_MANUAL_LOGIN    705
-#define TAG_MANUAL_EXP      706
+#define TAG_MANUAL_PROJ     706
 
 #endif

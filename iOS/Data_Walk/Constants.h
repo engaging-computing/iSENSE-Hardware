@@ -11,11 +11,11 @@
 
 // iSENSE constants
 #define kUSE_DEV            true
-#define kDEFAULT_PROJECT    11
+#define kDEFAULT_PROJECT    36
 #define kDEFAULT_USER       @"mobile"
 #define kDEFAULT_PASS       @"mobile"
 #define kDEFAULT_NAME       @"Mobile U."
-#define kBASE_VIS_URL       @"http://beta.isenseproject.org/projects/"
+#define kBASE_VIS_URL       @"http://isenseproject.org/projects/"
 
 // other recording constants
 #define kDEFAULT_REC_INTERVAL   10
