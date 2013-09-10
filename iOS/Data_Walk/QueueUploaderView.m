@@ -122,8 +122,6 @@
         dataSaver = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
     }
     
-    NSLog(@"Data set count: %d", dataSaver.count);
-    
     currentIndex = 0;
     
     // add long press gesture listener to the table
@@ -143,7 +141,6 @@
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
         QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
-        NSLog(@"Looping on object: %@", tmp.name);
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         }
@@ -169,7 +166,7 @@
                                                  delegate:self
                                                  cancelButtonTitle:@"Cancel"
                                                  destructiveButtonTitle:@"Delete"
-                                                 otherButtonTitles:@"Rename", @"Change Description", @"Select Experiment", nil];
+                                                 otherButtonTitles:@"Rename", @"Change Description", @"Select Project", nil];
                     popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                     [popupQuery showInView:self.view];
                 } else {
@@ -204,7 +201,7 @@
             break;
             
         case QUEUE_RENAME:
-            message = [[UIAlertView alloc] initWithTitle:@"Enter new session name:"
+            message = [[UIAlertView alloc] initWithTitle:@"Enter new data set name:"
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
@@ -244,7 +241,7 @@
                                                      message:nil
                                                     delegate:self
                                            cancelButtonTitle:@"Cancel"
-                                           otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                                           otherButtonTitles:@"Enter Project #", @"Browse Projects", @"Scan QR Code", nil];
                 message.tag = QUEUE_SELECT_PROJ;
                 [message show];
             }
@@ -269,9 +266,9 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            NSString *newSessionName = [[actionSheet textFieldAtIndex:0] text];
+            NSString *newDataSetName = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setDataSetName:newSessionName];
+            [cell setDataSetName:newDataSetName];
         }
     } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
         if (buttonIndex == OPTION_ENTER_PROJECT) {
@@ -285,7 +282,7 @@
             message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message textFieldAtIndex:0].tag = TAG_QUEUE_EXP;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_PROJ;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
             
@@ -320,10 +317,13 @@
 
 // TODO - do something with the project ID
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
-      projID = project.intValue;
-//    
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+    projID = project.intValue;
+    
+    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+    [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
+
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
 }
 
 - (BOOL) handleNewQRCode:(NSURL *)url {
@@ -373,7 +373,6 @@
 
 // Initialize a single object in the table
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cells plz");
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
@@ -461,6 +460,7 @@
     [cell setBackgroundColor:[UIColor clearColor]];
     
     [cell toggleChecked];
+    NSLog(@"Toggle");
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField{
@@ -502,7 +502,7 @@
             
             return (newLength > 255) ? NO : YES;
             
-        case TAG_QUEUE_EXP:
+        case TAG_QUEUE_PROJ:
             if (![self containsAcceptedDigits:string])
                 return NO;
             
