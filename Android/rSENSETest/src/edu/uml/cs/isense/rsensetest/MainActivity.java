@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -26,9 +27,9 @@ import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj, uploadCSV, mediaProj, mediaDataset;
+	Button login, logout, getusers, getprojects, getnews, appendTest, uploadTest, newProj, uploadCSV, mediaProj, mediaDataset;
 	TextView status;
-	EditText projID, userName;
+	EditText projID, userName, newsId;
 	API api;
 	
 	int FILEPICK = 0;
@@ -42,12 +43,14 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		login = (Button) findViewById(R.id.btn_login);
 		getusers = (Button) findViewById(R.id.btn_getusers);
+		getnews = (Button) findViewById(R.id.btn_getnews);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
 		logout = (Button) findViewById(R.id.btn_logout);
 		appendTest = (Button) findViewById(R.id.btn_append);
 		uploadTest = (Button) findViewById(R.id.btn_upload);
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
+		newsId = (EditText) findViewById(R.id.et_newsnum);
 		userName = (EditText) findViewById(R.id.et_username);
 		newProj = (Button) findViewById(R.id.btn_newproj);
 		uploadCSV = (Button) findViewById(R.id.btn_uploadCSV);
@@ -57,6 +60,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		login.setOnClickListener(this);
 		logout.setOnClickListener(this);
 		getusers.setOnClickListener(this);
+		getnews.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
 		appendTest.setOnClickListener(this);
 		uploadTest.setOnClickListener(this);
@@ -90,6 +94,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == getprojects ) {
 				status.setText("clicked get projects");
 				new ProjectsTask().execute();
+			} else if ( v == getnews ) {
+				status.setText("clicked get news");
+				new NewsTask().execute();
 			} else if ( v == appendTest ) {
 				status.setText("append button clicked");
 				new AppendTask().execute();
@@ -171,6 +178,27 @@ public class MainActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(ArrayList<RPerson> people) {
 			status.setText("People:\n");
 			for(RPerson p : people) {
+				status.append(p.name + "\n");
+			}
+		}
+	}
+	
+	private class NewsTask extends AsyncTask<Void, Void, ArrayList<RNews>> {
+		@Override
+		protected ArrayList<RNews> doInBackground(Void... params) {
+			if(newsId.getText().toString().equals("")) {
+				return api.getNewsEntries(1, 10, true, "");
+			} else {
+				ArrayList<RNews> rp = new ArrayList<RNews>();
+				rp.add(api.getNewsEntry(Integer.valueOf(newsId.getText().toString())));
+				return rp;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<RNews> blogs) {
+			status.setText("News:\n");
+			for(RNews p : blogs) {
 				status.append(p.name + "\n");
 			}
 		}
