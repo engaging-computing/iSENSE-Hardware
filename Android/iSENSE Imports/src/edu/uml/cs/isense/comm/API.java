@@ -391,7 +391,7 @@ public class API {
 				RNews blog = new RNews();
 
 				blog.news_id = inner.getInt("id");
-				blog.featured_media_id = inner.getInt("featuredMediaId");
+				//blog.featured_media_id = inner.getInt("featuredMediaId");
 				blog.name = inner.getString("name");
 				blog.url = inner.getString("url");
 				blog.timecreated = inner.getString("createdAt");
@@ -418,7 +418,7 @@ public class API {
 			JSONObject j = new JSONObject(reqResult);
 
 			blog.news_id = j.getInt("id");
-			blog.featured_media_id = j.getInt("featuredMediaId");
+			//blog.featured_media_id = j.getInt("featuredMediaId");
 			blog.name = j.getString("name");
 			blog.url = j.getString("url");
 			blog.timecreated = j.getString("createdAt");
