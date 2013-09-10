@@ -318,6 +318,7 @@ public class API {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
+			// TODO use the auth token in the request! Otherwise the comment is a lie and the function won't work.
 			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
@@ -662,6 +663,7 @@ public class API {
 			urlConnection.setRequestProperty("Accept", "application/json");
 
 			if(postData != null) {
+				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();
 				urlConnection.setRequestProperty("Content-Length",Integer.toString(mPostData.length));
 				urlConnection.setRequestProperty("Content-Type", "application/json");

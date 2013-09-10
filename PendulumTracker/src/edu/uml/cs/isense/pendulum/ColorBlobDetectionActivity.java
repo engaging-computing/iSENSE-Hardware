@@ -77,10 +77,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private final int ENTERNAME_REQUEST = -4;
 	Boolean sessionNameEntered = false;
 
-	private static String experimentNumber = "29"; // production
+	private static String experimentNumber = "29"; // production = 29, dev = 39
 	//private static String experimentNumber = "38"; // dev
 	//private static String experimentNumber = "39"; // dev
-	private static String baseSessionUrl = "http://beta.isenseproject.org/projects/"
+	private static String baseSessionUrl = "http://isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
 	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/" 
 			+ experimentNumber + "/data_sets/";
