@@ -2,16 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp" >
+    android:layout_height="fill_parent" >
 
     <TextView
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="12dip"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="12dp"
         android:text="@string/firstNameLabel" />
 
     <EditText
@@ -24,34 +23,26 @@
         android:inputType="textCapSentences"
         android:maxLength="20"
         android:paddingLeft="6dip"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black" 
+        android:singleLine="true"
+        android:nextFocusDown="@+id/initialLabel"/>
 
     <TextView
-        android:id="@+id/initialLabel"
+        android:id="@id/initialLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/nameInput"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="12dip"
         android:text="@string/lastInitialLabel" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/initialLabel"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-    </LinearLayout>
 
     <EditText
         android:id="@+id/initialInput"
         android:layout_width="40sp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/nameInput"
-        android:layout_below="@+id/nameInput"
+        android:layout_alignLeft="@id/nameInput"
+        android:layout_below="@id/nameInput"
         android:digits="@string/digits_restriction"
         android:ems="10"
         android:gravity="left"
@@ -60,17 +51,31 @@
         android:maxWidth="40sp"
         android:paddingLeft="6dip"
         android:singleLine="true"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black" 
+        >
     </EditText>
 
-    <Button
-        android:id="@+id/OK"
+    <View
+        android:id="@+id/enternameDivider"
         android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/initialInput"
+        android:orientation="vertical" >
+    </View>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
-        android:paddingTop="10dp"
-        android:text="@android:string/ok" />
+        android:layout_below="@id/enternameDivider"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/OK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@android:string/ok" />
+    </LinearLayout>
 
 </RelativeLayout>

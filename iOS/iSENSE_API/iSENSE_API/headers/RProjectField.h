@@ -18,9 +18,9 @@
     
 }
 
-@property (assign) int field_id;
-@property (assign) NSString *name;
-@property (assign) int type;
-@property (assign) NSString *unit;
+@property (strong) NSNumber *field_id;
+@property (strong) NSString *name;
+@property (strong) NSNumber *type;
+@property (strong) NSString *unit;
 
 @end

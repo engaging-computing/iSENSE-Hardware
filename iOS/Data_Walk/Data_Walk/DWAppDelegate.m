@@ -15,38 +15,11 @@
 @synthesize managedObjectModel          = _managedObjectModel;
 @synthesize persistentStoreCoordinator  = _persistentStoreCoordinator;
 
-// TODO get landscape to work!!!!
+@synthesize dataSaver;
+
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
     [self.navigationController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-//    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
-//        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-//            [[NSBundle mainBundle] loadNibNamed:@"MainLayout-landscape~ipad"
-//                                          owner:self
-//                                        options:nil];
-//            [self.navigationController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-//        } else {
-//            [[NSBundle mainBundle] loadNibNamed:@"MainLayout~ipad"
-//                                          owner:self
-//                                        options:nil];
-//            [self.navigationController viewDidLoad];
-//        }
-//    } else {
-//        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-//            [[NSBundle mainBundle] loadNibNamed:@"MainLayout-landscape~iphone"
-//                                          owner:self
-//                                        options:nil];
-//            [self.navigationController viewDidLoad];
-//        } else {
-//            [[NSBundle mainBundle] loadNibNamed:@"MainLayout~iphone"
-//                                          owner:self
-//                                        options:nil];
-//            [self.navigationController viewDidLoad];
-//        }
-//    }
-    
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -55,7 +28,7 @@
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:rootView];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
+    [self.window setRootViewController:self.navigationController];
     [self.window makeKeyAndVisible];
     
     return YES;
@@ -76,6 +49,24 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+}
+
+-(NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    if ([self.navigationController.topViewController isMemberOfClass:[MainViewController class]] ) {
+        if (((MainViewController *)self.navigationController.topViewController).isRecording) {
+            if (self.navigationController.topViewController.interfaceOrientation == UIInterfaceOrientationPortrait) {
+                return UIInterfaceOrientationMaskPortrait;
+            } else if (self.navigationController.topViewController.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+                return UIInterfaceOrientationMaskPortraitUpsideDown;
+            } else if (self.navigationController.topViewController.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+                return UIInterfaceOrientationMaskLandscapeLeft;
+            } else {
+                return UIInterfaceOrientationMaskLandscapeRight;
+            }
+        }
+    }
+    
+    return UIInterfaceOrientationMaskAll;
 }
 
 - (void)saveContext {
@@ -100,11 +91,19 @@
         return _managedObjectContext;
     }
     
+//    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+//    if (coordinator != nil) {
+//        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+//        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+//    }
+
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
         _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+        [_managedObjectContext setPersistentStoreCoordinator: coordinator];
     }
+    [self fetchDataSets];
+    
     return _managedObjectContext;
 }
 
@@ -114,8 +113,17 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Data_Walk" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+//    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Data_Walk" withExtension:@"momd"];
+//    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
+    NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
+    NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"QDataSetModel" withExtension:@"momd"];
+    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL];
+    if (!_managedObjectModel) {
+        NSLog(@"Problem");
+        abort();
+    }
+    
     return _managedObjectModel;
 }
 
@@ -131,29 +139,7 @@
     NSError *error = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
-         @{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES}
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
+
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
@@ -166,6 +152,30 @@
 // Returns the URL to the application's Documents directory.
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+#pragma mark - Custom Functions
+// Get the dataSets from the queue
+- (void) fetchDataSets {
+    
+    // Fetch the old DataSets
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:_managedObjectContext];
+    if (dataSetEntity) {
+        [request setEntity:dataSetEntity];
+        
+        // Actually make the request
+        NSError *error = nil;
+        NSMutableArray *mutableFetchResults = [[_managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        
+        dataSaver = [[DataSaver alloc] initWithContext:_managedObjectContext];
+        
+        // fill dataSaver's DataSet Queue
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            [dataSaver addDataSetFromCoreData:mutableFetchResults[i]];
+        }
+
+    }
 }
 
 @end

@@ -12,12 +12,12 @@
     
 }
 
-@property (assign) int person_id;
-@property (assign) NSString *name;
-@property (assign) NSString *username;
-@property (assign) NSString *url;
-@property (assign) NSString *timecreated;
-@property (assign) NSString *gravatar;
-@property (assign) bool hidden;
+@property (strong) NSNumber *person_id;
+@property (strong) NSString *name;
+@property (strong) NSString *username;
+@property (strong) NSString *url;
+@property (strong) NSString *timecreated;
+@property (strong) NSString *gravatar;
+@property (strong) NSNumber *hidden;
 
 @end

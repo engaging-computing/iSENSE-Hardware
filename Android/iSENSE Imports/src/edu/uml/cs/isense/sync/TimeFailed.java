@@ -11,7 +11,7 @@ import android.widget.Button;
 /**
  * Asks the user to retry when the socket fails to receive a time packet.
  * 
- * @author jpoulin
+ * @author iSENSE Android Development Team
  */
 public class TimeFailed extends Activity {
 

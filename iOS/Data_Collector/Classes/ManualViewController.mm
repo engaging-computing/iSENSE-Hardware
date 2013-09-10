@@ -1085,22 +1085,19 @@
     bool uploadable = false;
     if (expNum > 1) uploadable = true;
     
-    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionNameInput.text];
     [ds setParentName:[[[NSString alloc] initWithString:PARENT_MANUAL] autorelease]];
     [ds setDataDescription:description];
-    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setProjID:[NSNumber numberWithInt:expNum]];
     [ds setData:dataJSON];
-    [ds setPicturePaths:imageList];
-    [ds setSid:[NSNumber numberWithInt:-1]];
-    [ds setCity:city];
-    [ds setCountry:country];
-    [ds setAddress:address];
+    [ds setPicturePaths:[imageList copy]];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialExp:[NSNumber numberWithBool:(expNum != -1)]];    
+    [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     [ds release];
+    NSLog(@"There are %d images in imageList.", imageList.count);
     NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
     
     [imageList removeAllObjects];
@@ -1163,15 +1160,52 @@
     return YES;
 }
 
-- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error {
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error andContextInfo:(void *)contextInfo {
     NSLog(@"Got zee image!");
     if  (error) {
         NSLog(@"%@", error);
     } else {
+        NSLog(@"Added image");
         [imageList addObject:image];
     }
 }
 
+// For responding to the user tapping Cancel when taking a picture.
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker  {
+    
+    [self dismissModalViewControllerAnimated: YES];
+    
+}
 
+// For responding to the user accepting a newly-captured picture or movie
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *) info {
+    NSLog(@"Image picker controller method");
+    
+    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
+    UIImage *originalImage, *editedImage, *imageToSave;
+    
+    // Handle a still image capture
+    if (CFStringCompare ((CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) {
+        
+        editedImage = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
+        originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
+        
+        if (editedImage) {
+            imageToSave = editedImage;
+        } else {
+            imageToSave = originalImage;
+        }
+        
+        NSLog(@"About to save picture!");
+        
+        // Save the new image (original or edited) to the Camera Roll (then send the image to the caller's image:didFinishSavingWithError: method);
+        UIImageWriteToSavedPhotosAlbum (imageToSave, self, @selector(image:didFinishSavingWithError:andContextInfo:), nil);
+        
+        NSLog(@"Image write finished.");
+
+    }
+    
+    [self dismissModalViewControllerAnimated:YES];
+}
 
 @end

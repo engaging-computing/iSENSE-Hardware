@@ -12,12 +12,12 @@
     
 }
 
-@property (assign) int tutorial_id;
-@property (assign) bool hidden;
-@property (assign) NSString *name;
-@property (assign) NSString *url;
-@property (assign) NSString *timecreated;
-@property (assign) NSString *owner_name;
-@property (assign) NSString *owner_url;
+@property (strong) NSNumber *tutorial_id;
+@property (strong) NSNumber *hidden;
+@property (strong) NSString *name;
+@property (strong) NSString *url;
+@property (strong) NSString *timecreated;
+@property (strong) NSString *owner_name;
+@property (strong) NSString *owner_url;
 
 @end

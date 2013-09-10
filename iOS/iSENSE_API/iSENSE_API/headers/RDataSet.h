@@ -12,14 +12,14 @@
     
 }
 
-@property (assign) int ds_id;
-@property (assign) int project_id;
-@property (assign) bool hidden;
-@property (assign) NSString *name;
-@property (assign) NSString *url;
-@property (assign) NSString *timecreated;
-@property (assign) int fieldCount;
-@property (assign) int datapointCount;
-@property (assign) NSDictionary *data;
+@property (strong) NSNumber *ds_id;
+@property (strong) NSNumber *project_id;
+@property (strong) NSNumber *hidden;
+@property (strong) NSString *name;
+@property (strong) NSString *url;
+@property (strong) NSString *timecreated;
+@property (strong) NSNumber *fieldCount;
+@property (strong) NSNumber *datapointCount;
+@property (strong) NSDictionary *data;
 
 @end

@@ -97,7 +97,7 @@
     if (!managedObjectModel) {
 
         NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
-        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"momd"];
+        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"QDataSetModel" withExtension:@"momd"];
         managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
         if (!managedObjectModel) {
             NSLog(@"Problem");
@@ -194,7 +194,7 @@
    
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] retain];
+    NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] retain];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
         
