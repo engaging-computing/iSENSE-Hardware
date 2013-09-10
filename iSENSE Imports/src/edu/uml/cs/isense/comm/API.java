@@ -28,6 +28,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import edu.uml.cs.isense.objects.RDataSet;
+import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -366,6 +367,67 @@ public class API {
 			e.printStackTrace();
 		}
 		return person;
+	}
+	
+	/**
+	 * Retrieves a list of news articles on iSENSE
+	 * 
+	 * @param page Which page of news to start the request from
+	 * @param perPage How many entries per page to perform the search with
+	 * @param descending Whether the list of articles should be in descending order or not
+	 * @param search A string to search all articles for
+	 * @return A list of News objects
+	 */
+	public ArrayList<RNews> getNewsEntries(int page, int perPage, boolean descending, String search) {
+		ArrayList<RNews> blogs = new ArrayList<RNews>();
+		try {
+			String sortMode = descending ? "DESC" : "ASC";
+			// TODO use the auth token in the request! Otherwise the comment is a lie and the function won't work.
+			String reqResult = makeRequest(baseURL, "news", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+			JSONArray j = new JSONArray(reqResult);
+			for(int i = 0; i < j.length(); i++) {
+				JSONObject inner = j.getJSONObject(i);
+				RNews blog = new RNews();
+
+				blog.news_id = inner.getInt("id");
+				blog.featured_media_id = inner.getInt("featuredMediaId");
+				blog.name = inner.getString("name");
+				blog.url = inner.getString("url");
+				blog.timecreated = inner.getString("createdAt");
+				blog.hidden = inner.getBoolean("hidden");
+
+				blogs.add(blog);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return blogs;
+	}
+	
+	/**
+	 * Gets a news article off iSENSE
+	 * 
+	 * @param newsId The id of the news entry to retrieve
+	 * @return A News object
+	 */
+	public RNews getNewsEntry(int newsId) {
+		RNews blog = new RNews();
+		try {
+			String reqResult = makeRequest(baseURL, "news/"+newsId, "", "GET", null);
+			JSONObject j = new JSONObject(reqResult);
+
+			blog.news_id = j.getInt("id");
+			blog.featured_media_id = j.getInt("featuredMediaId");
+			blog.name = j.getString("name");
+			blog.url = j.getString("url");
+			blog.timecreated = j.getString("createdAt");
+			blog.hidden = j.getBoolean("hidden");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return blog;
 	}
 
 
