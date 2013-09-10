@@ -19,6 +19,8 @@
 #define DELETE  @"DELETE"
 #define NONE    @""
 
+#define BOUNDARY @"*****"
+
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
 
@@ -475,9 +477,87 @@ static RPerson *currentUser;
 
 }
 
--(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
--(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+-(NSString *)getMimeType:(NSString *)path{
+    
+    CFStringRef pathExtension = (__bridge_retained CFStringRef)[path pathExtension];
+    CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, NULL);
+    CFRelease(pathExtension);
+    
+    // The UTI can be converted to a mime type:
+    NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType);
+    if (type != NULL)
+        CFRelease(type);
+
+    return mimeType;
+}
+
+
+
+-(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload   withPath:(NSString *)path andName:(NSString *)name { return -1; }
+-(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload withPath:(NSString *)path andName:(NSString *)name {
+    
+    // Make sure there aren't any characters in the name
+    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    
+    CFStringRef fileName = (__bridge CFStringRef)(name);
+    
+    
+    // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
+    NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
+    [params setObject:@"uploadImageToSession"  forKey:@"method"];
+    [params setObject:name              forKey:@"session_key"];
+    [params setObject:name                   forKey:@"eid"];
+    [params setObject:name                   forKey:@"sid"];
+    [params setObject:name                     forKey:@"img_name"];
+    [params setObject:name              forKey:@"img_description"];
+
+    
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:POST];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    // add params (all params are strings)
+    for (NSString *param in params) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    // add image data
+    NSData *imageData = [mediaToUpload readDataToEndOfFile];
+    if (imageData) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", name, name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:requestURL];
+    
+    return -1;
+}
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload andName:(NSString *)name { return -1; }
 
 /**
  * Reformats a row-major NSDictionary to column-major.
