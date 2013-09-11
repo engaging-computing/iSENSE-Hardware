@@ -106,6 +106,7 @@ public class MarkerDetector {
         
         // Detect contours
         Imgproc.findContours(resultCopy, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Log.e(TAG, "Contours count: " + contours.size());
 
         // Find max contour area
         List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
@@ -160,6 +161,14 @@ public class MarkerDetector {
 			return new Point(0,0);
 
     }
+    
+    Mat getLastDebugImg()
+    {
+    	// currently edge image
+    	return mResult;
+    }
+    
+    
     
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);

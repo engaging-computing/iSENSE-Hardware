@@ -19,6 +19,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -166,8 +167,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		mOpenCvCameraView.enableFpsMeter();
 		// mOpenCvCameraView.setMaxFrameSize(1280,720);
-		//mOpenCvCameraView.setMaxFrameSize(640, 480);
-		mOpenCvCameraView.setMaxFrameSize(320, 240);
+		mOpenCvCameraView.setMaxFrameSize(640, 480);
+		//mOpenCvCameraView.setMaxFrameSize(320, 240);
 		
 		// iSENSE network connectivity stuff
 		api = API.getInstance(mContext);
@@ -240,7 +241,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 	
 	public boolean onTouch(View v, MotionEvent event) {
 		
-	/*
+		/*
 		int cols = mRgba.cols();
 		int rows = mRgba.rows();
 
@@ -293,7 +294,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 		touchedRegionHsv.release();
 
 		return false; // don't need subsequent touch events
-	*/
+		*/
+	
 		return true;
 	}
 
@@ -301,7 +303,10 @@ public class ColorBlobDetectionActivity extends Activity implements
 	// invoked when camera frame delivered
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) { // processFrame(VideoCapture
 																// vc)
-		boolean useGrey = true;
+		boolean useGrey = false;
+		
+		boolean debug = true;
+		int contourSize = -1;
 		
 		if(useGrey)
 		{
@@ -313,9 +318,20 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// get location of detected points
 			point = mDetector.processGrey(mRgba);
 			
-			// convert grey image to color so we can draw color overlay
-			Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_GRAY2RGB); // current frame
-		  
+
+			// ---- DEBUG -----
+			if(debug)
+			{
+				mRgba = mDetector.getLastDebugImg();
+				Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_GRAY2RGB); 
+				contourSize = 2;
+				this.drawDetectedContours(contourSize);
+			}
+		    // ------------------
+			else
+				// convert grey image to color so we can draw color overlay
+				Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_GRAY2RGB); // current frame
+		
 			if(mDataCollectionEnabled)
 			{
 				
@@ -359,9 +375,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 	
 			if (mIsColorSelected) {
 				mDetector.process(mRgba);
-				List<MatOfPoint> contours = mDetector.getContours();;
-				Log.e(TAG, "Contours count: " + contours.size());
-				Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
+				
+				this.drawDetectedContours(contourSize);
+				//List<MatOfPoint> contours = mDetector.getContours();;
+				//Log.e(TAG, "Contours count: " + contours.size());
+				//Imgproc.drawContours(mRgba, contours, -1, CONTOUR_COLOR);
 	
 				Mat colorLabel = mRgba.submat(4, 68, 4, 68);
 				colorLabel.setTo(mBlobColorRgba);
@@ -374,7 +392,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 		}
 
-		//return clone;
 		return mRgba;
 	}
 
@@ -386,6 +403,14 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 		return new Scalar(pointMatRgba.get(0, 0));
 	
+	}
+	
+	void drawDetectedContours(int contourSize)
+	{
+		// if contourSize = -1, contour will be filled
+		List<MatOfPoint> contours = mDetector.getContours();;
+		Log.e(TAG, "Contours count: " + contours.size());
+		Imgproc.drawContours(mRgba, contours, contourSize, CONTOUR_COLOR);	
 	}
 	
 	// ------ screen overlays ------------------------
