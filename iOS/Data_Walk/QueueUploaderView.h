@@ -21,7 +21,6 @@
 
 @interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
     int projID;
-    bool browsing;
 }
 
 - (IBAction) upload:(id)sender;
