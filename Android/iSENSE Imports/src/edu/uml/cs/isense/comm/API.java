@@ -414,7 +414,7 @@ public class API {
 	public RNews getNewsEntry(int newsId) {
 		RNews blog = new RNews();
 		try {
-			String reqResult = makeRequest(baseURL, "news/"+newsId, "", "GET", null);
+			String reqResult = makeRequest(baseURL, "news/"+newsId, "recur=true", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			blog.news_id = j.getInt("id");
@@ -423,6 +423,7 @@ public class API {
 			blog.url = j.getString("url");
 			blog.timecreated = j.getString("createdAt");
 			blog.hidden = j.getBoolean("hidden");
+			blog.content = j.getString("content");
 
 		} catch (JSONException e) {
 			e.printStackTrace();

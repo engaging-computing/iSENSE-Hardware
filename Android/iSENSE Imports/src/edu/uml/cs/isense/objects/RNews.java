@@ -12,4 +12,5 @@ public class RNews {
     public String name = "";
     public String url = "";
     public String timecreated = "";
+    public String content = "";
 }
