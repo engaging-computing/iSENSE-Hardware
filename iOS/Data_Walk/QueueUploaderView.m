@@ -111,8 +111,6 @@
 // Do any additional setup after loading the view.
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    NSLog(@"loading view");
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -146,8 +144,11 @@
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         } else {
-            // shouldn't get here, but remove garbage data sets not cleaned up by the implementor who should call dataSetCountWithParentName:
-            [dataSaver.dataQueue removeObjectForKey:keys[i]];
+            // shouldn't get here: if user wants to remove garbage data sets,
+            // he/she should first call by dataSetCountWithParentName: before
+            // loading the QueueUploaderView.m.  Cleaning can't be done here or
+            // else data sets with a new project can be treated as garbage, thus
+            // changing a data set's project kills it completely.  And that's bad.
         }
     }
     
@@ -305,10 +306,14 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            NSString *projIDString = [[actionSheet textFieldAtIndex:0] text];
+            projID = [projIDString intValue];
+            
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setProjID:expNumString];
-            [cell.dataSet setProjID:[NSNumber numberWithInt:projID]]; // TODO - yes? no? wasn't here before. same for below 2 lines
+            [cell setProjID:projIDString];
+            //[cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+            
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
         }
@@ -319,6 +324,7 @@
             NSString *newDescription = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setDesc:newDescription];
+            [dataSaver editDataSetWithKey:cell.mKey andChangeDescription:newDescription];
         }
     }
 }
@@ -328,9 +334,11 @@
     projID = project.intValue;
         
     QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+    
     [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
     [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
-        
+    [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
     
@@ -394,13 +402,6 @@
     QDataSet *tmp = [limitedTempQueue objectForKey:keys[indexPath.row]];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
-    if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
-        browsing = false;
-        NSString *projIDString = [NSString stringWithFormat:@"%d", projID];
-        if (projID != 0)
-            [cell setProjID:projIDString];
-    }
-    
     return cell;
 }
 
@@ -437,7 +438,7 @@
             
             if ([api getCurrentUser] != nil) {
                 bool uploadSuccessful = [dataSaver upload:parent];
-                if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+                if (!uploadSuccessful) NSLog(@"Upload failed");
             }
             
             [self.navigationController popViewControllerAnimated:YES];
