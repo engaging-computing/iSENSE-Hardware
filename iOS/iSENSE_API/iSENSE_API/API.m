@@ -477,6 +477,9 @@ static RPerson *currentUser;
 
 }
 
+/*
+ * Gets the MIME time from a file path.
+ */
 -(NSString *)getMimeType:(NSString *)path{
     
     CFStringRef pathExtension = (__bridge_retained CFStringRef)[path pathExtension];
@@ -493,25 +496,32 @@ static RPerson *currentUser;
 
 
 
--(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload   withPath:(NSString *)path andName:(NSString *)name { return -1; }
+-(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload andName:(NSString *)name { return -1; }
+
+/**
+ * Uploads a file to the media section of a project
+ *
+ * @param projectId The project ID to upload to
+ * @param mediaToUpload The file to upload
+ * @return ??? or -1 if upload fails
+ */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload withPath:(NSString *)path andName:(NSString *)name {
-    
+       
     // Make sure there aren't any characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     
-    CFStringRef fileName = (__bridge CFStringRef)(name);
-    
+    // Tries to get the mime type of the specified file
+    NSString *mimeType = [self getMimeType:path];
     
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
-    NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
-    [params setObject:@"uploadImageToSession"  forKey:@"method"];
-    [params setObject:name              forKey:@"session_key"];
-    [params setObject:name                   forKey:@"eid"];
-    [params setObject:name                   forKey:@"sid"];
-    [params setObject:name                     forKey:@"img_name"];
-    [params setObject:name              forKey:@"img_description"];
-
-    
+//    NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
+//    [params setObject:@"uploadImageToSession"  forKey:@"method"];
+//    [params setObject:name              forKey:@"session_key"];
+//    [params setObject:name                   forKey:@"eid"];
+//    [params setObject:name                   forKey:@"sid"];
+//    [params setObject:name                     forKey:@"img_name"];
+//    [params setObject:name              forKey:@"img_description"];
+   
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
@@ -527,18 +537,18 @@ static RPerson *currentUser;
     NSMutableData *body = [NSMutableData data];
     
     // add params (all params are strings)
-    for (NSString *param in params) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
-    }
+//    for (NSString *param in params) {
+//        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+//        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
+//        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
+//    }
     
     // add image data
     NSData *imageData = [mediaToUpload readDataToEndOfFile];
     if (imageData) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", name, name] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:imageData];
         [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -553,11 +563,19 @@ static RPerson *currentUser;
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
     // set URL
-    [request setURL:requestURL];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/project/%d?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
     
-    return -1;
+    // do the request thang
+    NSError *requestError;
+    NSHTTPURLResponse *urlResponse;
+    
+    NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) NSLog(@"Error received from server: %@", requestError);
+    
+    return [urlResponse statusCode];
 }
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload andName:(NSString *)name { return -1; }
+
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload withPath:(NSString *)path andName:(NSString *)name { return -1; }
 
 /**
  * Reformats a row-major NSDictionary to column-major.

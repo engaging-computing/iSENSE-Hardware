@@ -50,11 +50,10 @@
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields;
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data;
 
--(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name;
--(int)      uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name;
--(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload   andName:(NSString *)name;
--(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload   andName:(NSString *)name;
-
+-(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName: (NSString *)name;
+-(int)      uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     withPath:(NSString *)path andName:(NSString *)name;
+-(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload   withPath:(NSString *)path andName:(NSString *)name;
+-(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload   withPath:(NSString *)path andName:(NSString *)name;
 /* Convenience Method for Uploading */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original;
 
