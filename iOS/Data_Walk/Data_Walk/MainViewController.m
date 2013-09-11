@@ -178,6 +178,7 @@
         projectID = kDEFAULT_PROJECT;
     else
         projectID = proj;
+    [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
     
     // Set up motion manager
@@ -224,6 +225,13 @@
 // Activated when the main application button, the data recording button, is long pressed and it's state is UIGestureRecognizerStateBegan
 - (void) onRecordDataLongClick:(UIButton *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
+        // Make the beep sound
+        NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/beep.mp3"];
+        SystemSoundID soundID;
+        NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)filePath, &soundID);
+        AudioServicesPlaySystemSound(soundID);
+        
         // Begin recording data
         if (!isRecording) {
             
@@ -251,7 +259,6 @@
         // Stop recording data
         } else {
             
-           // NSLog(@"Data = %@", data);
             isRecording = FALSE;
             [self setNonRecordingLayout];
             
@@ -278,8 +285,14 @@
     
     // Retrieve all components for the DataSet object
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    
-    NSString *dataSetName = [NSString stringWithFormat:@"%@: %@", [nameTextField text], [self getDateAndTime]];
+
+    NSString *usersName = @"";
+    if ([[nameTextField text] length] == 0) {
+        usersName = [[loggedInAs titleLabel] text];
+    } else {
+        usersName = [nameTextField text];
+    }
+    NSString *dataSetName = [NSString stringWithFormat:@"%@ - %@", usersName, [self getDateAndTime]];
     NSString *description = @"Data set uploaded from the iSENSE Data Walk iOS mobile application";
     int projID = [prefs integerForKey:[StringGrabber grabString:@"project_id"]];
     NSMutableDictionary *mutableData = [[NSMutableDictionary alloc] init];
@@ -288,12 +301,12 @@
     
     [ds setName:dataSetName];
     [ds setParentName:PARENT_DATA_WALK];
-    [ds setDataDescription:description];
+    [ds setDataDescription:description]; projID = -1; // TODO remove
     [ds setProjID:[NSNumber numberWithInt:projID]];
     [ds setData:dataJObj];
     [ds setPicturePaths:nil];
     [ds setUploadable:[NSNumber numberWithBool:TRUE]];
-    [ds setHasInitialProj:[NSNumber numberWithBool:TRUE]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:((projID == -1) ? NO : YES)]];
     
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
@@ -306,15 +319,16 @@
     // remove below code when done testing upload
     [api useDev:TRUE];
     [api createSessionWithUsername:@"sor" andPassword:@"sor"];
-    int amIActuallyAThing = [api uploadDataSetWithId:36 withData:dataJObj andName:@"iOS Data Walk Test"];
-    NSLog(@"Created data set ID: %d", amIActuallyAThing);
+    int amIActuallyAThing = [api uploadDataSetWithId:kDEFAULT_PROJECT withData:dataJObj andName:dataSetName];
+    NSLog(@"Created data set ID: %d, for data set named: %@", amIActuallyAThing, ds.name);
 }
 
 - (NSString *) getDateAndTime {
-    NSDate *today = [NSDate date];
+    NSDate *date = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    NSString *currentTime = [dateFormatter stringFromDate:today];
+    [dateFormatter setDateFormat:@"HH:mm:ss MM/dd/yyyy"];
+    //[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    NSString *currentTime = [dateFormatter stringFromDate:date];
     return currentTime;
 }
 
@@ -365,7 +379,6 @@
             NSNumber *time = [NSNumber numberWithLongLong:longTime * 1000];
             
             // Acceleration in meters per second squared
-            
             NSNumber *accel_x = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].x * 9.80665];
             NSNumber *accel_y = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].y * 9.80665];
             NSNumber *accel_z = [NSNumber numberWithDouble:[motionManager.accelerometerData acceleration].z * 9.80665];
@@ -395,7 +408,7 @@
             
             // Create the row of data
             NSDictionary *jObj = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  [NSString stringWithFormat:@"%@", time], @"0",
+                                  [NSString stringWithFormat:@"u %@", time], @"0",
                                   [NSString stringWithFormat:@"%@", accel_mag], @"1",
                                   [NSString stringWithFormat:@"%@", latitude],  @"2",
                                   [NSString stringWithFormat:@"%@", longitude], @"3",
@@ -572,8 +585,8 @@
 
 // Called when the user clicked the Upload button
 - (IBAction) onUploadClick:(id)sender {
-    if (dataSaver.count > 0) {
-        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
+    if ([dataSaver dataSetCountWithParentName:PARENT_DATA_WALK] > 0) {
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_DATA_WALK];
         queueUploader.title = @"Upload";
         [self.navigationController pushViewController:queueUploader animated:YES];
     } else {

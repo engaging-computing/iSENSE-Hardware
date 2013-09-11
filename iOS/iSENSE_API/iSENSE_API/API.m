@@ -120,7 +120,7 @@ static RPerson *currentUser;
  * Retrieves information about a single project on iSENSE.
  *
  * @param projectId The ID of the project to retrieve
- * @return A Project object
+ * @return An RProject object
  */
 -(RProject *)getProjectWithId:(int)projectId {
     
@@ -143,7 +143,12 @@ static RPerson *currentUser;
     
 }
 
-
+/**
+ * Get a tutorial from iSENSE.
+ *
+ * @param tutorialId The ID of the tutorial to retrieve
+ * @return A RTutorial object
+ */
 -(RTutorial *)getTutorialWithId:(int)tutorialId {
     RTutorial *tutorial = [[RTutorial alloc] init];
     
@@ -160,7 +165,7 @@ static RPerson *currentUser;
 }
 
 /**
- * Retrieve a data set from iSENSE, with it's data field filled in
+ * Retrieve a data set from iSENSE, with it's data field filled in.
  * The internal data set will be converted to column-major format, to make it compatible with
  * the uploadDataSet function
  *
@@ -173,13 +178,13 @@ static RPerson *currentUser;
     NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_set/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
     
     dataSet.ds_id = [results objectForKey:@"id"];
-    dataSet.name = [results objectForKey:@"id"];
-    dataSet.hidden = [results objectForKey:@"id"];
-    dataSet.url = [results objectForKey:@"id"];
-    dataSet.timecreated = [results objectForKey:@"id"];
-    dataSet.fieldCount = [results objectForKey:@"id"];
-    dataSet.datapointCount = [results objectForKey:@"id"];
-    dataSet.data = [results objectForKey:@"id"];
+    dataSet.name = [results objectForKey:@"name"];
+    dataSet.hidden = [results objectForKey:@"hidden"];
+    dataSet.url = [results objectForKey:@"url"];
+    dataSet.timecreated = [results objectForKey:@"createdAt"];
+    dataSet.fieldCount = [results objectForKey:@"fieldCount"];
+    dataSet.datapointCount = [results objectForKey:@"datapointCount"];
+    dataSet.data = [results objectForKey:@"data"];
     dataSet.project_id = [[results objectForKey:@"project"] objectForKey:@"id"];
 
     return dataSet;
@@ -189,7 +194,7 @@ static RPerson *currentUser;
  * Gets all of the fields associated with a project.
  *
  * @param projectId The unique ID of the project whose fields you want to see
- * @return An ArrayList of ProjectField objects
+ * @return An ArrayList of RProjectField objects
  */
 -(NSArray *)getProjectFieldsWithId:(int)projectId {
     NSMutableArray *fields = [[NSMutableArray alloc] init];
@@ -212,8 +217,35 @@ static RPerson *currentUser;
     return fields;
 }
 
-
--(NSArray *)    getDataSetsWithId:      (int)projectId { return nil; }
+/**
+ * Gets all the data sets associated with a project
+ * The data sets returned by this function do not have their data field filled.
+ *
+ * @param projectId The project ID whose data sets you want
+ * @return An ArrayList of RDataSet objects, with their data fields left null
+ */
+-(NSArray *)getDataSetsWithId:(int)projectId {
+    NSMutableArray *dataSets = [[NSMutableArray alloc] init];
+    
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    NSArray *resultsArray = [results objectForKey:@"dataSets"];
+    for (int i = 0; i < results.count; i++) {
+        RDataSet *dataSet = [[RDataSet alloc] init];
+        NSDictionary *innermost = [resultsArray objectAtIndex:i];
+        
+        dataSet.ds_id = [innermost objectForKey:@"id"];
+        dataSet.name = [innermost objectForKey:@"name"];
+        dataSet.hidden = [innermost objectForKey:@"hidden"];
+        dataSet.url = [innermost objectForKey:@"url"];
+        dataSet.timecreated = [innermost objectForKey:@"createdAt"];
+        dataSet.fieldCount = [innermost objectForKey:@"fieldCount"];
+        dataSet.datapointCount = [innermost objectForKey:@"datapointCount"];
+        
+        [dataSets addObject:dataSet];
+    }
+    
+    return dataSets;
+}
 
 /**
  * 	Retrieves multiple projects off of iSENSE.
@@ -222,7 +254,7 @@ static RPerson *currentUser;
  * @param perPage How many results to display per page
  * @param descending Whether to display the results in descending order (true) or ascending order (false)
  * @param search A string to search all projects for
- * @return An ArrayList of Project objects
+ * @return An ArrayList of RProject objects
  */
 -(NSArray *)getProjectsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
     NSMutableArray *results = [[NSMutableArray alloc] init];
@@ -252,16 +284,83 @@ static RPerson *currentUser;
     return results;
     
 }
--(RTutorial *)  getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
 
-/* Requires an Authentication Key */
--(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search { return nil; }
+/**
+ * Retrieves multiple tutorials off of iSENSE.
+ *
+ * @param page Which page of results to start from. 1-indexed
+ * @param perPage How many results to display per page
+ * @param descending Whether to display the results in descending order (true) or ascending order (false)
+ * @param search A string to search all tutorials for
+ * @return An ArrayList of RTutorial objects
+ */
+-(NSArray *)getTutorialsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+    
+    NSMutableArray *tutorials = [[NSMutableArray alloc] init];
+    
+    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+
+    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"tutorials" withParameters:parameters withRequestType:GET andPostData:nil];
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *inner = [results objectAtIndex:i];
+        RTutorial *tutorial = [[RTutorial alloc] init];
+        
+        tutorial.tutorial_id = [inner objectForKey:@"id"];
+        tutorial.name = [inner objectForKey:@"name"];
+        tutorial.url = [inner objectForKey:@"url"];
+        tutorial.hidden = [inner objectForKey:@"hidden"];
+        tutorial.timecreated = [inner objectForKey:@"createdAt"];
+        tutorial.owner_name = [inner objectForKey:@"ownerName"];
+        tutorial.owner_url = [inner objectForKey:@"ownerUrl"];
+        
+        [tutorials addObject:tutorial];
+    }
+    
+    return tutorials;
+}
+
+/**
+ * Retrieves a list of users on iSENSE.
+ * This is an authenticated function and requires that the createSession function was called earlier.
+ *
+ * @param page Which page of users to start the request from
+ * @param perPage How many users per page to perform the search with
+ * @param descending Whether the list of users should be in descending order or not
+ * @param search A string to search all users for
+ * @return A list of RPerson objects
+ */
+-(NSArray *)getUsersAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+    
+    NSMutableArray *persons = [[NSMutableArray alloc] init];
+    
+    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+
+    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"users" withParameters:parameters withRequestType:GET andPostData:nil];
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *inner = [results objectAtIndex:i];
+        RPerson *person = [[RPerson alloc] init];
+        
+        person.person_id = [inner objectForKey:@"id"];
+        person.name = [inner objectForKey:@"name"];
+        person.username = [inner objectForKey:@"username"];
+        person.url = [inner objectForKey:@"url"];
+        person.gravatar = [inner objectForKey:@"gravatar"];
+        person.timecreated = [inner objectForKey:@"createdAt"];
+        person.hidden = [inner objectForKey:@"hidden"];
+        
+        [persons addObject:person];
+    }
+    
+    return persons;
+}
 
 
 /*
  * Returns the current saved user object.
  *
- * @return
+ * @return An RPerson object that corresponds to the owner of the current session
  */
 -(RPerson *)getCurrentUser {
     return currentUser;
@@ -271,7 +370,7 @@ static RPerson *currentUser;
  * Gets a user off of iSENSE.
  *
  * @param username The username of the user to retrieve
- * @return A Person object
+ * @return An RPerson object
  */
 -(RPerson *)getUserWithUsername:(NSString *)username {
     
@@ -381,10 +480,10 @@ static RPerson *currentUser;
 -(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
 
 /**
- * Reformats a row-major JSONObject to column-major.
+ * Reformats a row-major NSDictionary to column-major.
  *
- * @param original The row-major formatted JSONObject
- * @return A column-major reformatted version of the original JSONObject
+ * @param original The row-major formatted NSDictionary
+ * @return A column-major reformatted version of the original NSDictionary
  */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original {
     NSMutableDictionary *reformatted = [[NSMutableDictionary alloc] init];
@@ -403,6 +502,11 @@ static RPerson *currentUser;
     return reformatted;
 }
 
+/**
+  * Bro, do you even read the function names?
+  *
+  * @return An percent escaped version of the current user authentication token
+  */
 -(NSString *)getEncodedAuthtoken {
     CFStringRef encodedToken = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, CFBridgingRetain(authenticityToken), NULL, CFSTR("!*'();:@&=+@,/?#[]"), kCFStringEncodingUTF8);
     return CFBridgingRelease(encodedToken);
@@ -457,7 +561,5 @@ static RPerson *currentUser;
     
     return nil;
 }
-
-
 
 @end

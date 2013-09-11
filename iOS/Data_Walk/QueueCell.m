@@ -17,6 +17,10 @@
 }
 
 - (QueueCell *)setupCellWithDataSet:(QDataSet *)ds andKey:(NSNumber *)key {
+    
+    // TODO - is this the right way to do this?
+    self.dataSet = ds;
+    
     self.mKey = key;
     self.nameAndDate.text = ds.name;
     self.description.text = ds.dataDescription;
