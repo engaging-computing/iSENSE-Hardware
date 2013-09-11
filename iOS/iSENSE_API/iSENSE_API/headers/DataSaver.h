@@ -25,13 +25,14 @@
 -(void) addDataSetFromCoreData:(QDataSet *)dataSet;
 -(void) addDataSet:(QDataSet *)dataSet;
 -(id)   removeDataSet:(NSNumber *)key;
--(void) editDataSetWithKey:(NSNumber *)key;
+-(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
+-(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;
 -(bool) upload:(NSString *)parentName;
 -(void) removeAllDataSets;
 -(id)   getDataSet;
+-(id)   getDataSetWithKey:(NSNumber *)key;
 -(int)  dataSetCountWithParentName:(NSString *)pn;
 
-//@property (nonatomic, assign) int count;
 @property (nonatomic, retain) NSMutableDictionary *dataQueue;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
@@ -39,4 +40,4 @@
 @end
 
 
-#endif /* defined(__iSENSE_API__DataSaver__) */
+#endif

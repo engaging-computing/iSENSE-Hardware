@@ -35,51 +35,51 @@
     ds.picturePaths = dataSet.picturePaths;
     ds.projID = dataSet.projID;
     ds.uploadable = dataSet.uploadable;
-        
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
+    
+    // commitMOCChanges used to be here - moved down to bottom of function
     
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
-    //count++;
+    
+    [self commitMOCChanges];
+
 }
 
 -(void)addDataSetFromCoreData:(QDataSet *)dataSet {
+    
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
-    //count++;
-
+    
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
 -(id)removeDataSet:(NSNumber *)key {
-    //count--;
+    
     QDataSet *tmp;
     if (key == nil) {
         tmp = [dataQueue dequeue];
     } else {
         tmp = [dataQueue removeFromQueueWithKey:key];
     }
-    
-    [managedObjectContext deleteObject:tmp];
 
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"Save failed: %@", error);
-    }
+    [managedObjectContext deleteObject:tmp];
+    [self commitMOCChanges];
     
     return tmp;
+    
 }
 
 -(id)getDataSet {
+    
     NSNumber *firstKey = [dataQueue.allKeys objectAtIndex:0];
     return [dataQueue objectForKey:firstKey];
+    
+}
+
+-(id)getDataSetWithKey:(NSNumber *)key {
+    
+    return [dataQueue objectForKey:key];
+    
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
@@ -87,17 +87,37 @@
     
     for (int i = 0; i < dataQueue.count; i++) {
         NSNumber *tmp = [dataQueue.allKeys objectAtIndex:i];
-        NSLog(@"deleting %@", tmp);
         [self removeDataSet:tmp];
     }
-    
+
     [dataQueue removeAllObjects];
-    //count = 0;
 }
 
--(void)editDataSetWithKey:(NSNumber *)key {
-    QDataSet *dataSet = [dataQueue removeFromQueueWithKey:key];
-    [dataQueue enqueue:dataSet withKey:key];
+-(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID {
+    
+    QDataSet *dataSet = [dataQueue objectForKey:key];
+    [dataSet setProjID:newProjID];
+    
+    [self commitMOCChanges];
+}
+
+-(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription {
+    
+    QDataSet *dataSet = [dataQueue objectForKey:key];
+    [dataSet setDataDescription:newDescription];
+    
+    [self commitMOCChanges];
+    
+}
+
+// commit changes to the managedObjectContext
+-(void) commitMOCChanges {
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        NSLog(@"Save failed: %@", error);
+    }
+    
 }
 
 -(bool)upload:(NSString *)parentName {
@@ -123,7 +143,7 @@
         // prevent uploading datasets from other sources (e.g. manual vs automatic)
         if (![currentDS.parentName isEqualToString:parentName]) continue;
         
-        // prevent trying to upload with an invalid experiment
+        // prevent trying to upload with an invalid project
         if (currentDS.projID.intValue <= 0) continue;
         
         // check if the session is uploadable
@@ -212,9 +232,11 @@
 }
 
 -(void)removeDataSets:(NSArray *)keys {
+    
     for(NSNumber *key in keys) {
         [self removeDataSet:key];
     }
+    
 }
 
 -(int) dataSetCountWithParentName:(NSString *)pn {
@@ -226,13 +248,18 @@
 
 // removes malformed or garbage data sets caused by things like deleting data sets, resetting the app, etc.
 -(void) clearGarbageWithoutParentName:(NSString *)pn {
+    
     NSArray *keys = [self.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
         QDataSet *tmp = [self.dataQueue objectForKey:keys[i]];
         if (!([tmp.parentName isEqualToString:pn])) {
+            // remove garbage
             [self.dataQueue removeObjectForKey:keys[i]];
+        } else {
+           // keep data set
         }
     }
+    
 }
 
 @end
