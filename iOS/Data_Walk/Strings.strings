@@ -20,6 +20,7 @@
 
 "accepted_digits"               = "1234567890";
 "accepted_numbers"              = "1234567890.-";
+"accepted_chars"                = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,:01234567879()[]@";
 
 "key_username"                  = "keyusername";
 "key_password"                  = "keypassword";
