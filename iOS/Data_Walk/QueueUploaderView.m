@@ -111,8 +111,6 @@
 // Do any additional setup after loading the view.
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    NSLog(@"loading view");
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -146,8 +144,11 @@
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         } else {
-            // shouldn't get here, but remove garbage data sets not cleaned up by the implementor who should call dataSetCountWithParentName:
-            [dataSaver.dataQueue removeObjectForKey:keys[i]];
+            // shouldn't get here: if user wants to remove garbage data sets,
+            // he/she should first call by dataSetCountWithParentName: before
+            // loading the QueueUploaderView.m.  Cleaning can't be done here or
+            // else data sets with a new project can be treated as garbage, thus
+            // changing a data set's project kills it completely.  And that's bad.
         }
     }
     
@@ -267,6 +268,7 @@
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self loginAndUploadWithUsername:usernameInput withPassword:passwordInput];
         }
+        
     } else if (actionSheet.tag == QUEUE_RENAME) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -275,7 +277,9 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setDataSetName:newDataSetName];
         }
+        
     } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
+        
         if (buttonIndex == OPTION_ENTER_PROJECT) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Project #:"
@@ -301,14 +305,18 @@
         } else if (buttonIndex == OPTION_SCAN_PROJECT_QR) {
             [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
+        
     } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
+            NSString *projIDString = [[actionSheet textFieldAtIndex:0] text];
+            projID = [projIDString intValue];
+            
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setProjID:expNumString];
-            [cell.dataSet setProjID:[NSNumber numberWithInt:projID]]; // TODO - yes? no? wasn't here before. same for below 2 lines
+            [cell setProjID:projIDString];
+            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+            
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
         }
@@ -319,7 +327,9 @@
             NSString *newDescription = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setDesc:newDescription];
+            [dataSaver editDataSetWithKey:cell.mKey andChangeDescription:newDescription];
         }
+        
     }
 }
 
@@ -328,9 +338,11 @@
     projID = project.intValue;
         
     QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+    
     [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
     [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
-        
+    [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
     
@@ -394,13 +406,6 @@
     QDataSet *tmp = [limitedTempQueue objectForKey:keys[indexPath.row]];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
-    if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
-        browsing = false;
-        NSString *projIDString = [NSString stringWithFormat:@"%d", projID];
-        if (projID != 0)
-            [cell setProjID:projIDString];
-    }
-    
     return cell;
 }
 
@@ -413,10 +418,10 @@
     
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
             if (success) {
-                [self.view makeWaffle:@"Login Successful!"
+                [self.view makeWaffle:@"Login Successful"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_CHECKMARK];
@@ -427,19 +432,28 @@
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
                 
+                [message setTitle:@"Uploading data sets..."];
+                
             } else {
-                [self.view makeWaffle:@"Login Failed!"
+                [self.view makeWaffle:@"Login Failed"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
+                [message dismissWithClickedButtonIndex:0 animated:YES];
+                return;
             }
-            [message dismissWithClickedButtonIndex:0 animated:YES];
             
             if ([api getCurrentUser] != nil) {
                 bool uploadSuccessful = [dataSaver upload:parent];
-                if (!uploadSuccessful) NSLog(@"Too bad 4 you");
+                if (!uploadSuccessful) {
+                    [self.view makeWaffle:@"One or more data sets failed to upload"
+                                 duration:WAFFLE_LENGTH_LONG
+                                 position:WAFFLE_BOTTOM
+                                    image:WAFFLE_RED_X];
+                }
             }
             
+            [message dismissWithClickedButtonIndex:0 animated:YES];
             [self.navigationController popViewControllerAnimated:YES];
             
         });
