@@ -89,6 +89,7 @@
     
     // Set up iSENSE settings and API
     api = [API getInstance];
+    [api useDev:kUSE_DEV];
     
     // Managed Object Context from DWAppDelegate
     if (managedObjectContext == nil) {
@@ -181,6 +182,13 @@
     [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
     
+    NSString *curUser = [prefs objectForKey:[StringGrabber grabString:@"key_username"]];
+    if ([curUser length] == 0) {
+        [prefs setObject:kDEFAULT_USER forKey:[StringGrabber grabString:@"key_username"]];
+        [prefs setObject:kDEFAULT_PASS forKey:[StringGrabber grabString:@"key_password"]];
+        [prefs synchronize];
+    }
+    
     // Set up motion manager
     if (motionManager != nil) motionManager = nil;
     motionManager = [[CMMotionManager alloc] init];
@@ -272,7 +280,13 @@
             timeElapsedLabel.text = @"Time Elapsed: 0:00";
             dataPointCountLabel.text = @"Data Points Recorded: 0";
             
-            [self saveDataSet];
+            if ([data count] == 0)
+                [self.view makeWaffle:@"No points recorded - data not saved"
+                             duration:WAFFLE_LENGTH_LONG
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_RED_X];
+            else
+                [self saveDataSet];
         }
     }
 }
@@ -301,7 +315,7 @@
     
     [ds setName:dataSetName];
     [ds setParentName:PARENT_DATA_WALK];
-    [ds setDataDescription:description]; projID = -1; // TODO remove
+    [ds setDataDescription:description];
     [ds setProjID:[NSNumber numberWithInt:projID]];
     [ds setData:dataJObj];
     [ds setPicturePaths:nil];
@@ -317,10 +331,10 @@
                     image:WAFFLE_CHECKMARK];
     
     // remove below code when done testing upload
-    [api useDev:TRUE];
-    [api createSessionWithUsername:@"sor" andPassword:@"sor"];
-    int amIActuallyAThing = [api uploadDataSetWithId:kDEFAULT_PROJECT withData:dataJObj andName:dataSetName];
-    NSLog(@"Created data set ID: %d, for data set named: %@", amIActuallyAThing, ds.name);
+//    [api useDev:TRUE];
+//    [api createSessionWithUsername:@"sor" andPassword:@"sor"];
+//    int amIActuallyAThing = [api uploadDataSetWithId:kDEFAULT_PROJECT withData:dataJObj andName:dataSetName];
+//    NSLog(@"Created data set ID: %d, for data set named: %@", amIActuallyAThing, ds.name);
 }
 
 - (NSString *) getDateAndTime {
@@ -707,7 +721,6 @@
                      [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                      [prefs synchronize];
                      
-
                      RPerson *curUser = [api getCurrentUser];
  
                      [loggedInAs setTitle:curUser.name forState:UIControlStateNormal];

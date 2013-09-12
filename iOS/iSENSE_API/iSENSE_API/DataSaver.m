@@ -17,7 +17,6 @@
 -(id)initWithContext:(NSManagedObjectContext *)context {
     self = [super init];
     if (self) {
-        //count = 0;
         dataQueue = [[NSMutableDictionary alloc] init];
         managedObjectContext = context;
     }
@@ -49,6 +48,7 @@
     
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
+    [self commitMOCChanges];
     
 }
 
@@ -91,6 +91,7 @@
     }
 
     [dataQueue removeAllObjects];
+    [self commitMOCChanges];
 }
 
 -(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID {
@@ -121,8 +122,8 @@
 }
 
 -(bool)upload:(NSString *)parentName {
-    iSENSE *isenseAPI = [iSENSE getInstance];
-    if (![isenseAPI isLoggedIn]) {
+    API *api = [API getInstance];
+    if ([api getCurrentUser] == nil) {
         
         NSLog(@"Not logged in.");
         return false;
@@ -151,36 +152,28 @@
             
             dataSetsToUpload++;
             
-//            // create a session TODO - remove session creation, but ensure we don't need anything from here
-//            if (currentDS.sid.intValue == -1) {
-//                NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
-//                if (sessionID.intValue == -1) {
-//                    continue;
-//                } else {
-//                    currentDS.sid = sessionID;
-//                }
-//            }
-            
-            // organize data if no initial experiment was found
+            // organize data if no initial project was found
             if (currentDS.hasInitialProj.boolValue == FALSE) {
                 DataFieldManager *dfm = [[DataFieldManager alloc] init];
                 currentDS.data = [dfm reOrderData:currentDS.data forExperimentID:currentDS.projID.intValue];
             }
             
-            // upload to iSENSE TODO - implement new API
-//            if (((NSArray *)currentDS.data).count) {
+            // upload to iSENSE
+            if (((NSArray *)currentDS.data).count) {
 //                NSError *error = nil;
 //                NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
 //                if (error != nil) {
 //                    NSLog(@"%@", error);
 //                    return false;
 //                }
-//                
-//                if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
-//                    dataSetsFailed++;
-//                    continue;
-//                }
-//            }
+                
+                int returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:currentDS.data andName:currentDS.name];
+                if (returnID == 0 || returnID == -1) {
+                    dataSetsFailed++;
+                    continue;
+                }
+                
+            }
             
             // upload pictures to iSENSE TODO - implement with the new API
 //            if (((NSArray *)currentDS.picturePaths).count) {
@@ -219,16 +212,18 @@
     
     [self removeDataSets:dataSetsToBeRemoved];
     
+    bool status = FALSE;
     if (dataSetsToUpload > 0)
         if (dataSetsFailed > 0)
             [prefs setInteger:DATA_UPLOAD_FAILED forKey:@"key_data_uploaded"];
-        else
+        else {
             [prefs setInteger:DATA_UPLOAD_SUCCESS forKey:@"key_data_uploaded"];
+            status = TRUE;
+        }
     else
         [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
     
-    
-    return true;
+    return status;
 }
 
 -(void)removeDataSets:(NSArray *)keys {
@@ -259,7 +254,7 @@
            // keep data set
         }
     }
-    
+    [self commitMOCChanges];
 }
 
 @end
