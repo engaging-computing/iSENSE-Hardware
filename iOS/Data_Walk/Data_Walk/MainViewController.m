@@ -323,18 +323,20 @@
     [ds setHasInitialProj:[NSNumber numberWithBool:((projID == -1) ? NO : YES)]];
     
     // Add the new data set to the queue
-    [dataSaver addDataSet:ds];
+    BOOL dataDidSave = [dataSaver addDataSet:ds];
     
-    [self.view makeWaffle:@"Data set saved"
-                 duration:WAFFLE_LENGTH_SHORT
-                 position:WAFFLE_BOTTOM
-                    image:WAFFLE_CHECKMARK];
+    if (dataDidSave) {
+        [self.view makeWaffle:@"Data set saved"
+                     duration:WAFFLE_LENGTH_SHORT
+                     position:WAFFLE_BOTTOM
+                        image:WAFFLE_CHECKMARK];
+    } else {
+        [self.view makeWaffle:@"Error saving data set"
+                     duration:WAFFLE_LENGTH_SHORT
+                     position:WAFFLE_BOTTOM
+                        image:WAFFLE_RED_X];
+    }
     
-    // remove below code when done testing upload
-//    [api useDev:TRUE];
-//    [api createSessionWithUsername:@"sor" andPassword:@"sor"];
-//    int amIActuallyAThing = [api uploadDataSetWithId:kDEFAULT_PROJECT withData:dataJObj andName:dataSetName];
-//    NSLog(@"Created data set ID: %d, for data set named: %@", amIActuallyAThing, ds.name);
 }
 
 - (NSString *) getDateAndTime {

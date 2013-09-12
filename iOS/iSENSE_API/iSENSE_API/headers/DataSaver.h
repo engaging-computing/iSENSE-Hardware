@@ -23,7 +23,7 @@
 
 -(id)   initWithContext:(NSManagedObjectContext *)context;
 -(void) addDataSetFromCoreData:(QDataSet *)dataSet;
--(void) addDataSet:(QDataSet *)dataSet;
+-(BOOL) addDataSet:(QDataSet *)dataSet;
 -(id)   removeDataSet:(NSNumber *)key;
 -(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
 -(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;

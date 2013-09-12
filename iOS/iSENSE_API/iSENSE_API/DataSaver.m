@@ -24,7 +24,7 @@
 }
 
 // add a DataSet to the queue
--(void)addDataSet:(QDataSet *)dataSet {
+-(BOOL)addDataSet:(QDataSet *)dataSet {
     
     QDataSet *ds = [NSEntityDescription insertNewObjectForEntityForName:@"QDataSet" inManagedObjectContext:managedObjectContext];
     
@@ -40,8 +40,9 @@
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     
-    [self commitMOCChanges];
-
+    BOOL success = [self commitMOCChanges];
+    return success;
+    
 }
 
 -(void)addDataSetFromCoreData:(QDataSet *)dataSet {
@@ -112,13 +113,15 @@
 }
 
 // commit changes to the managedObjectContext
--(void) commitMOCChanges {
+-(BOOL) commitMOCChanges {
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
         NSLog(@"Save failed: %@", error);
+        return FALSE;
     }
     
+    return TRUE;
 }
 
 -(bool)upload:(NSString *)parentName {
