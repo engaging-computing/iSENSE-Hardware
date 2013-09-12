@@ -17,7 +17,6 @@
 -(id)initWithContext:(NSManagedObjectContext *)context {
     self = [super init];
     if (self) {
-        //count = 0;
         dataQueue = [[NSMutableDictionary alloc] init];
         managedObjectContext = context;
     }
@@ -35,51 +34,52 @@
     ds.picturePaths = dataSet.picturePaths;
     ds.projID = dataSet.projID;
     ds.uploadable = dataSet.uploadable;
-        
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"%@", error);
-    }
+    
+    // commitMOCChanges used to be here - moved down to bottom of function
     
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
-    //count++;
+    
+    [self commitMOCChanges];
+
 }
 
 -(void)addDataSetFromCoreData:(QDataSet *)dataSet {
+    
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
-    //count++;
-
+    [self commitMOCChanges];
+    
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
 -(id)removeDataSet:(NSNumber *)key {
-    //count--;
+    
     QDataSet *tmp;
     if (key == nil) {
         tmp = [dataQueue dequeue];
     } else {
         tmp = [dataQueue removeFromQueueWithKey:key];
     }
-    
-    [managedObjectContext deleteObject:tmp];
 
-    // Commit the changes
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        // Handle the error.
-        NSLog(@"Save failed: %@", error);
-    }
+    [managedObjectContext deleteObject:tmp];
+    [self commitMOCChanges];
     
     return tmp;
+    
 }
 
 -(id)getDataSet {
+    
     NSNumber *firstKey = [dataQueue.allKeys objectAtIndex:0];
     return [dataQueue objectForKey:firstKey];
+    
+}
+
+-(id)getDataSetWithKey:(NSNumber *)key {
+    
+    return [dataQueue objectForKey:key];
+    
 }
 
 // if key is nil, call dequeue otherwise dequeue with the given key
@@ -87,22 +87,43 @@
     
     for (int i = 0; i < dataQueue.count; i++) {
         NSNumber *tmp = [dataQueue.allKeys objectAtIndex:i];
-        NSLog(@"deleting %@", tmp);
         [self removeDataSet:tmp];
     }
-    
+
     [dataQueue removeAllObjects];
-    //count = 0;
+    [self commitMOCChanges];
 }
 
--(void)editDataSetWithKey:(NSNumber *)key {
-    QDataSet *dataSet = [dataQueue removeFromQueueWithKey:key];
-    [dataQueue enqueue:dataSet withKey:key];
+-(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID {
+    
+    QDataSet *dataSet = [dataQueue objectForKey:key];
+    [dataSet setProjID:newProjID];
+    
+    [self commitMOCChanges];
+}
+
+-(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription {
+    
+    QDataSet *dataSet = [dataQueue objectForKey:key];
+    [dataSet setDataDescription:newDescription];
+    
+    [self commitMOCChanges];
+    
+}
+
+// commit changes to the managedObjectContext
+-(void) commitMOCChanges {
+    
+    NSError *error = nil;
+    if (![managedObjectContext save:&error]) {
+        NSLog(@"Save failed: %@", error);
+    }
+    
 }
 
 -(bool)upload:(NSString *)parentName {
-    iSENSE *isenseAPI = [iSENSE getInstance];
-    if (![isenseAPI isLoggedIn]) {
+    API *api = [API getInstance];
+    if ([api getCurrentUser] == nil) {
         
         NSLog(@"Not logged in.");
         return false;
@@ -123,7 +144,7 @@
         // prevent uploading datasets from other sources (e.g. manual vs automatic)
         if (![currentDS.parentName isEqualToString:parentName]) continue;
         
-        // prevent trying to upload with an invalid experiment
+        // prevent trying to upload with an invalid project
         if (currentDS.projID.intValue <= 0) continue;
         
         // check if the session is uploadable
@@ -131,36 +152,28 @@
             
             dataSetsToUpload++;
             
-//            // create a session TODO - remove session creation, but ensure we don't need anything from here
-//            if (currentDS.sid.intValue == -1) {
-//                NSNumber *sessionID = [isenseAPI createSession:currentDS.name withDescription:currentDS.dataDescription Street:currentDS.address City:currentDS.city Country:currentDS.country toExperiment:currentDS.eid];
-//                if (sessionID.intValue == -1) {
-//                    continue;
-//                } else {
-//                    currentDS.sid = sessionID;
-//                }
-//            }
-            
-            // organize data if no initial experiment was found
+            // organize data if no initial project was found
             if (currentDS.hasInitialProj.boolValue == FALSE) {
                 DataFieldManager *dfm = [[DataFieldManager alloc] init];
                 currentDS.data = [dfm reOrderData:currentDS.data forExperimentID:currentDS.projID.intValue];
             }
             
-            // upload to iSENSE TODO - implement new API
-//            if (((NSArray *)currentDS.data).count) {
+            // upload to iSENSE
+            if (((NSArray *)currentDS.data).count) {
 //                NSError *error = nil;
 //                NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
 //                if (error != nil) {
 //                    NSLog(@"%@", error);
 //                    return false;
 //                }
-//                
-//                if (![isenseAPI putSessionData:dataJSON forSession:currentDS.sid inExperiment:currentDS.eid]) {
-//                    dataSetsFailed++;
-//                    continue;
-//                }
-//            }
+                
+                int returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:currentDS.data andName:currentDS.name];
+                if (returnID == 0 || returnID == -1) {
+                    dataSetsFailed++;
+                    continue;
+                }
+                
+            }
             
             // upload pictures to iSENSE TODO - implement with the new API
 //            if (((NSArray *)currentDS.picturePaths).count) {
@@ -199,22 +212,26 @@
     
     [self removeDataSets:dataSetsToBeRemoved];
     
+    bool status = FALSE;
     if (dataSetsToUpload > 0)
         if (dataSetsFailed > 0)
             [prefs setInteger:DATA_UPLOAD_FAILED forKey:@"key_data_uploaded"];
-        else
+        else {
             [prefs setInteger:DATA_UPLOAD_SUCCESS forKey:@"key_data_uploaded"];
+            status = TRUE;
+        }
     else
         [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
     
-    
-    return true;
+    return status;
 }
 
 -(void)removeDataSets:(NSArray *)keys {
+    
     for(NSNumber *key in keys) {
         [self removeDataSet:key];
     }
+    
 }
 
 -(int) dataSetCountWithParentName:(NSString *)pn {
@@ -226,13 +243,18 @@
 
 // removes malformed or garbage data sets caused by things like deleting data sets, resetting the app, etc.
 -(void) clearGarbageWithoutParentName:(NSString *)pn {
+    
     NSArray *keys = [self.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
         QDataSet *tmp = [self.dataQueue objectForKey:keys[i]];
         if (!([tmp.parentName isEqualToString:pn])) {
+            // remove garbage
             [self.dataQueue removeObjectForKey:keys[i]];
+        } else {
+           // keep data set
         }
     }
+    [self commitMOCChanges];
 }
 
 @end

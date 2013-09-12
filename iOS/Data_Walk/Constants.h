@@ -10,7 +10,7 @@
 #define Data_Walk_Constants_h
 
 // iSENSE constants
-#define kUSE_DEV            true
+#define kUSE_DEV            TRUE
 #define kDEFAULT_PROJECT    36
 #define kDEFAULT_USER       @"mobile"
 #define kDEFAULT_PASS       @"mobile"
