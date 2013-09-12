@@ -218,13 +218,13 @@
     bool status = FALSE;
     if (dataSetsToUpload > 0)
         if (dataSetsFailed > 0)
-            [prefs setInteger:DATA_UPLOAD_FAILED forKey:@"key_data_uploaded"];
+            [prefs setInteger:DATA_UPLOAD_FAILED forKey:KEY_DATA_UPLOADED];
         else {
-            [prefs setInteger:DATA_UPLOAD_SUCCESS forKey:@"key_data_uploaded"];
+            [prefs setInteger:DATA_UPLOAD_SUCCESS forKey:KEY_DATA_UPLOADED];
             status = TRUE;
         }
     else
-        [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+        [prefs setInteger:DATA_NONE_UPLOADED forKey:KEY_DATA_UPLOADED];
     
     return status;
 }

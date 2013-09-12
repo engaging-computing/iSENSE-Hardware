@@ -29,6 +29,7 @@ typedef void (^APIBlock)(void);
     // Variables for the recording interval picker view
     BOOL isShowingPickerView;
     UIPickerView *intervalPickerView;
+    BOOL comingBackFromQueueUploader;
     
     // User settings/other variables
     int recordingInterval;

@@ -32,6 +32,9 @@
 
 // Upload button control
 -(IBAction)upload:(id)sender {
+
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:TRUE forKey:KEY_ATTEMPTED_UPLOAD];
     
     if ([api getCurrentUser] != nil) {
         
@@ -151,6 +154,10 @@
             // changing a data set's project kills it completely.  And that's bad.
         }
     }
+    
+    // set that we haven't tried uploading anything yet
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:FALSE forKey:KEY_ATTEMPTED_UPLOAD];
     
 }
 
@@ -421,10 +428,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
             if (success) {
-                [self.view makeWaffle:@"Login Successful"
-                             duration:WAFFLE_LENGTH_SHORT
-                             position:WAFFLE_BOTTOM
-                                image:WAFFLE_CHECKMARK];
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
@@ -444,13 +447,7 @@
             }
             
             if ([api getCurrentUser] != nil) {
-                bool uploadSuccessful = [dataSaver upload:parent];
-                if (!uploadSuccessful) {
-                    [self.view makeWaffle:@"One or more data sets failed to upload"
-                                 duration:WAFFLE_LENGTH_LONG
-                                 position:WAFFLE_BOTTOM
-                                    image:WAFFLE_RED_X];
-                }
+                [dataSaver upload:parent];
             }
             
             [message dismissWithClickedButtonIndex:0 animated:YES];
