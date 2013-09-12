@@ -33,6 +33,7 @@
 		768A1C7A17CE5237004A165F /* PTViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 768A1C7917CE5237004A165F /* PTViewController.mm */; };
 		768A1C7D17CE5237004A165F /* PTViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 768A1C7B17CE5237004A165F /* PTViewController_iPhone.xib */; };
 		768A1C8017CE5237004A165F /* PTViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 768A1C7E17CE5237004A165F /* PTViewController_iPad.xib */; };
+		76A5159217E0E4640044F668 /* haarcascade_frontalface_alt.xml in Resources */ = {isa = PBXBuildFile; fileRef = 76A5159117E0E4640044F668 /* haarcascade_frontalface_alt.xml */; };
 		76F5057717D8D34C008FFD2F /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76F5057617D8D34C008FFD2F /* Strings.strings */; };
 		76F5057817D8D47D008FFD2F /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F5057517D8D314008FFD2F /* StringGrabber.m */; };
 /* End PBXBuildFile section */
@@ -69,6 +70,7 @@
 		768A1C7917CE5237004A165F /* PTViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PTViewController.mm; sourceTree = "<group>"; };
 		768A1C7C17CE5237004A165F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PTViewController_iPhone.xib; sourceTree = "<group>"; };
 		768A1C7F17CE5237004A165F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PTViewController_iPad.xib; sourceTree = "<group>"; };
+		76A5159117E0E4640044F668 /* haarcascade_frontalface_alt.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = haarcascade_frontalface_alt.xml; sourceTree = "<group>"; };
 		76F5057417D8D314008FFD2F /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
 		76F5057517D8D314008FFD2F /* StringGrabber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		76F5057617D8D34C008FFD2F /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 		768A1C6717CE5237004A165F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				76A5159117E0E4640044F668 /* haarcascade_frontalface_alt.xml */,
 				7619AC4517D628E40003B932 /* PendulumTracker144x144.png */,
 				7619AC4317D628BA0003B932 /* PendulumTracker72x72.png */,
 				7619AC4117D628800003B932 /* PendulumTracker114x114.png */,
@@ -235,6 +238,7 @@
 				7619AC4417D628BA0003B932 /* PendulumTracker72x72.png in Resources */,
 				7619AC4617D628E40003B932 /* PendulumTracker144x144.png in Resources */,
 				76F5057717D8D34C008FFD2F /* Strings.strings in Resources */,
+				76A5159217E0E4640044F668 /* haarcascade_frontalface_alt.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

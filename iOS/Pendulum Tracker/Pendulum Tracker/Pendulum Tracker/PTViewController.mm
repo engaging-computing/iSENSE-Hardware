@@ -112,7 +112,7 @@
     cv::vector<cv::Rect> faces;
     cv::Mat frame_gray;
     
-    cvtColor(image, frame_gray, CV_BGRA2GRAY);
+    cv::cvtColor(image, frame_gray, CV_RGB2GRAY);
     equalizeHist(frame_gray, frame_gray);
     
     face_cascade.detectMultiScale(frame_gray, faces, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, cv::Size(100, 100));
