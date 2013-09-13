@@ -268,6 +268,7 @@
             NSString *passwordInput = [[actionSheet textFieldAtIndex:1] text];
             [self loginAndUploadWithUsername:usernameInput withPassword:passwordInput];
         }
+        
     } else if (actionSheet.tag == QUEUE_RENAME) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -276,7 +277,9 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setDataSetName:newDataSetName];
         }
+        
     } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
+        
         if (buttonIndex == OPTION_ENTER_PROJECT) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Project #:"
@@ -302,6 +305,7 @@
         } else if (buttonIndex == OPTION_SCAN_PROJECT_QR) {
             [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
+        
     } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
@@ -311,7 +315,6 @@
             
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setProjID:projIDString];
-            //[cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
             [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -326,6 +329,7 @@
             [cell setDesc:newDescription];
             [dataSaver editDataSetWithKey:cell.mKey andChangeDescription:newDescription];
         }
+        
     }
 }
 
@@ -414,10 +418,10 @@
     
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
             if (success) {
-                [self.view makeWaffle:@"Login Successful!"
+                [self.view makeWaffle:@"Login Successful"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_CHECKMARK];
@@ -428,19 +432,28 @@
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
                 
+                [message setTitle:@"Uploading data sets..."];
+                
             } else {
-                [self.view makeWaffle:@"Login Failed!"
+                [self.view makeWaffle:@"Login Failed"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
+                [message dismissWithClickedButtonIndex:0 animated:YES];
+                return;
             }
-            [message dismissWithClickedButtonIndex:0 animated:YES];
             
             if ([api getCurrentUser] != nil) {
                 bool uploadSuccessful = [dataSaver upload:parent];
-                if (!uploadSuccessful) NSLog(@"Upload failed");
+                if (!uploadSuccessful) {
+                    [self.view makeWaffle:@"One or more data sets failed to upload"
+                                 duration:WAFFLE_LENGTH_LONG
+                                 position:WAFFLE_BOTTOM
+                                    image:WAFFLE_RED_X];
+                }
             }
             
+            [message dismissWithClickedButtonIndex:0 animated:YES];
             [self.navigationController popViewControllerAnimated:YES];
             
         });
