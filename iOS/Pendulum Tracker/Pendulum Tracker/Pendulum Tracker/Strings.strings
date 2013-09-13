@@ -1,0 +1,31 @@
+/* 
+  Strings.strings
+  Pendulum Tracker
+
+  Created by Virinchi Balabhadrapatruni on 9/5/13.
+  Copyright (c) 2013 ECG. All rights reserved.
+*/
+
+// ----------------- //
+// --- constants --- //
+// ----------------- //
+
+// "Label"                      = "Value" //
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  ------------------------------  //
+//  ------ instructions ----------  //
+//  ------------------------------  //
+
+"instructions" = "Center at-rest pendulum in center of image. Select 'Start data collection button' to start. Pull pendulum back to left or right edge of image and release when selecting 'OK'. Select 'Stop and upload to iSENSE' to stop.";

@@ -7,11 +7,6 @@
         android:title="@string/upload">
     </item>
     <item
-        android:id="@+id/record_settings"
-        android:showAsAction="ifRoom"
-        android:title="@string/recordSettings">
-    </item>
-    <item
         android:id="@+id/record_length"
         android:showAsAction="ifRoom"
         android:title="@string/record_length">
