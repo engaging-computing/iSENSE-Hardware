@@ -151,13 +151,119 @@
                     [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
                 continue;
             }
+            if ([s isEqualToString:[FieldGrabber grabField:@"temperature_c"]]) {
+                if (enabledFields[fTEMPERATURE_C])
+                    [dataJSON setObject:f.temperature_c forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"temperature_f"]]) {
+                if (enabledFields[fTEMPERATURE_F])
+                    [dataJSON setObject:f.temperature_f forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"temperature_k"]]) {
+                if (enabledFields[fTEMPERATURE_K])
+                    [dataJSON setObject:f.temperature_k forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"time"]]) {
+                if (enabledFields[fTIME_MILLIS])
+                    [dataJSON setObject:f.time_millis forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"luminous flux"]]) {
+                if (enabledFields[fLUX])
+                    [dataJSON setObject:f.lux forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"heading_deg"]]) {
+                if (enabledFields[fANGLE_DEG])
+                    [dataJSON setObject:f.angle_deg forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"heading_rad"]]) {
+                if (enabledFields[fANGLE_RAD])
+                    [dataJSON setObject:f.angle_rad forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"latitude"]]) {
+                if (enabledFields[fLATITUDE])
+                    [dataJSON setObject:f.latitude forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"longitude"]]) {
+                if (enabledFields[fLONGITUDE])
+                    [dataJSON setObject:f.longitude forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_x"]]) {
+                if (enabledFields[fMAG_X])
+                    [dataJSON setObject:f.mag_x forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_y"]]) {
+                if (enabledFields[fMAG_Y])
+                    [dataJSON setObject:f.mag_y forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_z"]]) {
+                if (enabledFields[fMAG_Z])
+                    [dataJSON setObject:f.mag_z forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_total"]]) {
+                if (enabledFields[fMAG_TOTAL])
+                    [dataJSON setObject:f.mag_total forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"altitude"]]) {
+                if (enabledFields[fALTITUDE])
+                    [dataJSON setObject:f.altitude forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+            if ([s isEqualToString:[FieldGrabber grabField:@"pressure"]]) {
+                if (enabledFields[fPRESSURE])
+                    [dataJSON setObject:f.pressure forKey:[NSString stringWithFormat:@"%d", i]];
+                else
+                    [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
+                continue;
+            }
+        
         }
         @catch (NSException *exception) {
             //
         }
-        
-    }
     
+    }
+
 }
 
 
