@@ -419,11 +419,10 @@
 // Log you into to iSENSE using the iSENSE API and uploads data
 - (void) loginAndUploadWithUsername:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
-    
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Logging in..."];
     [message show];
     
-    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_in_queue_uploader_view", NULL);
     dispatch_async(queue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
