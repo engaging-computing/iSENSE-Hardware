@@ -15,9 +15,9 @@
 			<key>CFBundleIconFiles</key>
 			<array>
 				<string>datawalk_logo.png</string>
-				<string>datawalk_logo_ipad_retina.png</string>
-				<string>datawalk_logo_ipad.png</string>
 				<string>datawalk_logo_retina.png</string>
+				<string>datawalk_logo_ipad.png</string>
+				<string>datawalk_logo_ipad_retina.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>

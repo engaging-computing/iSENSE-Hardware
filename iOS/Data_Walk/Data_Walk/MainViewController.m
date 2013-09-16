@@ -835,7 +835,7 @@
     CLLocationCoordinate2D lc2d = [newLocation coordinate];
 
     double latitude  = lc2d.latitude;
-    double longitude = lc2d.longitude;
+    double longitude = lc2d.longitude; NSLog(@"updating location");
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         [latitudeLabel setText:[NSString stringWithFormat:@"Latitude: %lf", latitude]];

@@ -40,6 +40,10 @@
 		B762F4B617C6571100B1D6E9 /* rsense_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B762F4B517C6571100B1D6E9 /* rsense_logo.png */; };
 		B773ACFB17C7AD4E0074ECE3 /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B7FE9E1117C792D500EE1A32 /* iSENSE_API_Bundle.bundle */; };
 		B773ACFF17C7AFE50074ECE3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */; };
+		B7AC214E17E778FF00E32D86 /* datawalk_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3882E17C6644700CA8059 /* datawalk_logo.png */; };
+		B7AC214F17E7790600E32D86 /* datawalk_logo_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883517C6A9AE00CA8059 /* datawalk_logo_retina.png */; };
+		B7AC215017E7790E00E32D86 /* datawalk_logo_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883317C6A98B00CA8059 /* datawalk_logo_ipad.png */; };
+		B7AC215117E7791200E32D86 /* datawalk_logo_ipad_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883017C6A95100CA8059 /* datawalk_logo_ipad_retina.png */; };
 		B7D8CBE817DA41C9006F8F76 /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B74D440917DA2A21008A15A0 /* QueueCell.m */; };
 		B7D8CBE917DA41C9006F8F76 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B74D440717DA2A21008A15A0 /* QueueUploaderView.m */; };
 		B7E567A317C6442700C2DF46 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E567A217C6442700C2DF46 /* UIKit.framework */; };
@@ -57,10 +61,6 @@
 		B7E567E517C645A700C2DF46 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E417C645A700C2DF46 /* Strings.strings */; };
 		B7E567E717C64A2000C2DF46 /* MainLayout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E617C64A2000C2DF46 /* MainLayout~iphone.xib */; };
 		B7E567E917C64D1300C2DF46 /* MainLayout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7E567E817C64D1300C2DF46 /* MainLayout~ipad.xib */; };
-		B7F3882F17C6644700CA8059 /* datawalk_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3882E17C6644700CA8059 /* datawalk_logo.png */; };
-		B7F3883117C6A95100CA8059 /* datawalk_logo_ipad_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883017C6A95100CA8059 /* datawalk_logo_ipad_retina.png */; };
-		B7F3883417C6A98B00CA8059 /* datawalk_logo_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883317C6A98B00CA8059 /* datawalk_logo_ipad.png */; };
-		B7F3883617C6A9AE00CA8059 /* datawalk_logo_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7F3883517C6A9AE00CA8059 /* datawalk_logo_retina.png */; };
 		B7FE9E1717C793BA00EE1A32 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7FE9E0F17C792D500EE1A32 /* libiSENSE_API.a */; };
 /* End PBXBuildFile section */
 
@@ -139,7 +139,7 @@
 		B762F4B517C6571100B1D6E9 /* rsense_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rsense_logo.png; sourceTree = "<group>"; };
 		B773ACFE17C7AFE50074ECE3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B7D8CBEB17DA430F006F8F76 /* QueueConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueConstants.h; sourceTree = "<group>"; };
-		B7E5679F17C6442700C2DF46 /* Data_Walk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Data_Walk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7E5679F17C6442700C2DF46 /* iS DataWalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iS DataWalk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7E567A217C6442700C2DF46 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B7E567A417C6442700C2DF46 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B7E567A617C6442700C2DF46 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -285,7 +285,7 @@
 		B7E567A017C6442700C2DF46 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B7E5679F17C6442700C2DF46 /* Data_Walk.app */,
+				B7E5679F17C6442700C2DF46 /* iS DataWalk.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -468,7 +468,7 @@
 			);
 			name = Data_Walk;
 			productName = Data_Walk;
-			productReference = B7E5679F17C6442700C2DF46 /* Data_Walk.app */;
+			productReference = B7E5679F17C6442700C2DF46 /* iS DataWalk.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -537,10 +537,6 @@
 				B762F4B217C6534500B1D6E9 /* MainLayout-landscape~iphone.xib in Resources */,
 				B762F4B417C6537000B1D6E9 /* MainLayout-landscape~ipad.xib in Resources */,
 				B762F4B617C6571100B1D6E9 /* rsense_logo.png in Resources */,
-				B7F3882F17C6644700CA8059 /* datawalk_logo.png in Resources */,
-				B7F3883117C6A95100CA8059 /* datawalk_logo_ipad_retina.png in Resources */,
-				B7F3883417C6A98B00CA8059 /* datawalk_logo_ipad.png in Resources */,
-				B7F3883617C6A9AE00CA8059 /* datawalk_logo_retina.png in Resources */,
 				B72E04FE17CBC35700D06B57 /* AboutLayout~iphone.xib in Resources */,
 				B72E050017CBC36B00D06B57 /* AboutLayout-landscape~iphone.xib in Resources */,
 				B72E050317CBC43500D06B57 /* AboutLayout~ipad.xib in Resources */,
@@ -559,6 +555,10 @@
 				B74D440517DA2A1A008A15A0 /* queue_layout-landscape~ipad.xib in Resources */,
 				B74D440617DA2A1A008A15A0 /* queue_layout~ipad.xib in Resources */,
 				B722A52917DF6ECD0050C486 /* beep.mp3 in Resources */,
+				B7AC214E17E778FF00E32D86 /* datawalk_logo.png in Resources */,
+				B7AC214F17E7790600E32D86 /* datawalk_logo_retina.png in Resources */,
+				B7AC215017E7790E00E32D86 /* datawalk_logo_ipad.png in Resources */,
+				B7AC215117E7791200E32D86 /* datawalk_logo_ipad_retina.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,7 +689,7 @@
 					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "iS DataWalk";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -710,7 +710,7 @@
 					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "iS DataWalk";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
