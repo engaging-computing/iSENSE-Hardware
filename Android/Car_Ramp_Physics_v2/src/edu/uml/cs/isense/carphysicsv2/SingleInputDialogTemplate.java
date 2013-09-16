@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -36,6 +35,13 @@ public class SingleInputDialogTemplate extends Activity {
 			return 5;
 	}
 
+	public void onRadioButtonClicked(View view) {
+	    // Is the button now checked?
+	    
+	    // Check which radio button was clicked
+	    length = ((RadioButton) view).getText().toString().substring(0, ((RadioButton) view).getText().toString().indexOf(" "));
+	}
+	
 	public void onCreate(Bundle b) {
 		super.onCreate(b);
 		setContentView(R.layout.single_input_template);
@@ -46,35 +52,38 @@ public class SingleInputDialogTemplate extends Activity {
 
 		pos = (Button) findViewById(R.id.positive2);
 		neg = (Button) findViewById(R.id.negative2);
-		spinner = (Spinner) findViewById(R.id.length_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner
-		// layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.lengths_array,
-				android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		spinner.setAdapter(adapter);
+		RadioButton defaultR;
+		
 		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
 				0);
 		length = String.valueOf(prefs.getInt("length", 10));
 		
-		spinner.setSelection(this.indexOfLength(), true);
+		switch(indexOfLength()){
+		
+			case 0:
+				defaultR = (RadioButton) findViewById(R.id.radio0);
+				break;
+			case 1:
+				defaultR = (RadioButton) findViewById(R.id.radio1);
+				break;
+			case 2:
+				defaultR = (RadioButton) findViewById(R.id.radio2);
+				break;
+			case 3:
+				defaultR = (RadioButton) findViewById(R.id.radio3);
+				break;
+			case 4:
+				defaultR = (RadioButton) findViewById(R.id.radio4);
+				break;
+			default:
+				defaultR = (RadioButton) findViewById(R.id.radio5);
+				break;
+		}
+		
+		defaultR.setChecked(true);
 
 		w = new Waffle(CarRampPhysicsV2.mContext);
 
-		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int pos, long id) {
-				length = parent.getItemAtPosition(pos).toString().substring(0, parent.getItemAtPosition(pos).toString().indexOf(" "));
-			}
-
-			public void onNothingSelected(AdapterView<?> parent) {
-				length = "10";
-			}
-		});
 
 		pos.setOnClickListener(new View.OnClickListener() {
 

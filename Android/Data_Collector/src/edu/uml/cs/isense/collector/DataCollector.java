@@ -80,7 +80,6 @@ import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
-import edu.uml.cs.isense.collector.sync.SyncTime;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -90,6 +89,7 @@ import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataCollector extends Activity implements SensorEventListener,
@@ -245,10 +245,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static File SDFile;
 	private static FileWriter gpxwriter;
 	private static BufferedWriter out;
-
+	private static Context mContext;
+	
 	public static JSONArray dataSet;
-
-	public static Context mContext;
 
 	// Custom
 	public static API api;
@@ -409,8 +408,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		inPausedState = false;
 
-//		if (uq != null)
-//			uq.buildQueueFromFile();
+		// if (uq != null)
+		// uq.buildQueueFromFile();
 
 		// keeps menu buttons disabled while running
 		if (running)
@@ -465,8 +464,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prepare the menu (enable/disable properly)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!preLoad)
-			setMenuStatus(true);
+//		if (!preLoad)
+//			setMenuStatus(true);
 		if (!useMenu) {
 
 			menu.getItem(0).setEnabled(false);
@@ -478,7 +477,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
-
+			
 		}
 		return true;
 	}
@@ -710,6 +709,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH,
 							Step1Setup.TEST_LENGTH);
 					enableStep2();
+					new GetDfmOrderTask().execute();
+					// initDfm();
 				}
 			}
 		} else if (requestCode == CAN_LOGIN_REQUESTED) {
@@ -750,7 +751,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// Check for media
 			if (pic != 0) {
 
-				// Associates latest picture with the current dataSet, then associates rest
+				// Associates latest picture with the current dataSet, then
+				// associates rest
 				// to project
 				boolean firstSave = true;
 
@@ -854,7 +856,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	void login() {
 		new LoginTask().execute();
 	}
-	
+
 	// Attempts to login with current user information
 	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -864,12 +866,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 					DataCollector.mContext,
 					DataCollector.mContext.getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
-			
-			boolean success = api.createSession(mPrefs.getString("username", ""),
+
+			boolean success = api.createSession(
+					mPrefs.getString("username", ""),
 					mPrefs.getString("password", ""));
 			return success;
 		}
-		
+
 	}
 
 	// Gets the milliseconds since Epoch
@@ -1018,6 +1021,27 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
+	private void initDfmWithExternalAsyncTask() {
+
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrderWithExternalAsyncTask();
+
+			sc = dfm.checkCompatibility();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
+	}
+
 	// (currently 2 of these methods exist - one also in step1setup)
 	private void getEnabledFields() {
 
@@ -1149,7 +1173,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			isenseLogo.setVisibility(View.GONE);
 		}
-		
+
 		step1 = (Button) findViewById(R.id.auto_step1);
 		step1.setText(getResources().getString(R.string.step1));
 		step2 = (Button) findViewById(R.id.auto_step2);
@@ -1168,7 +1192,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(true);
+		api.useDev(false);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1199,7 +1223,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(true);
+		api.useDev(false);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1301,7 +1325,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Code for registering sensors and preparing to poll data
 	public void setUpSensorsForRecording() {
 
-		initDfm();
+		// initDfm();
 		registerSensors();
 
 		rotation = getRotation(mContext);
@@ -1377,7 +1401,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			dataSet.put(dfm.putData());
 		else
 			dataSet.put(dfm.putDataForNoProjectID());
-		
+
 		data = dfm.writeSdCardLine();
 
 		if (writeCSVFile) {
@@ -1422,14 +1446,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						OrientationManager.disableRotation((Activity) mContext);
 
-						SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-						String projectInput = mPrefs.getString("project_id", "");
+						SharedPreferences mPrefs = getSharedPreferences(
+								"PROJID", 0);
+						String projectInput = mPrefs
+								.getString("project_id", "");
 						if (projectInput.equals("-1"))
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
 						currentProjID = Integer.parseInt(projectInput);
-							
+
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -1453,7 +1479,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 						if (android.os.Build.VERSION.SDK_INT >= 11) {
 							final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
 							ll.setAlpha(1.0f);
-							AlphaAnimation flash = new AlphaAnimation(1.0f, 0.0f);
+							AlphaAnimation flash = new AlphaAnimation(1.0f,
+									0.0f);
 							flash.setDuration(500);
 							flash.setAnimationListener(new AnimationListener() {
 								@SuppressLint("NewApi")
@@ -1463,7 +1490,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 								}
 
 								@Override
-								public void onAnimationRepeat(Animation animation) {
+								public void onAnimationRepeat(
+										Animation animation) {
 								}
 
 								@Override
@@ -1492,7 +1520,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
-					
+
 					stopService(new Intent(mContext, DataCollectorService.class));
 
 					isenseLogo.setImageResource(R.drawable.rsense_logo);
@@ -1514,7 +1542,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						writeToSDCard(null, 'f');
 
 					setMenuStatus(true);
-
+					
 					step2.setText(R.string.step2);
 					setTime(0);
 
@@ -1615,18 +1643,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 		String appendMe = "";
 		if (sdCardError)
 			appendMe = "File not written to SD Card.";
-		else
-			appendMe = "Filename: \n" + sdFileName;
+		else {
+			if (sdFileName.equals(""))
+				appendMe = "";
+			else
+				appendMe = "Filename: \n" + sdFileName;
+		}
 
 		Intent iSummary = new Intent(mContext, Summary.class);
 		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe).putExtra("date", dateString)
+				.putExtra("append", appendMe)
+				.putExtra("date", dateString)
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
 
+		// Reset the sdFileName
+		sdFileName = "";
 	}
 
 	// Loads the main screen
@@ -1663,13 +1698,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
+			
+			preLoad = false;
+			useMenu = true;
 
 			if (mMenu != null) {
-				onPrepareOptionsMenu(mMenu);
+			//	onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);
 			}
-			preLoad = false;
-
+			
 			setContentView(R.layout.automatic_concept);
 			initMainUI();
 			assignVars();
@@ -1679,7 +1716,45 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	}
 
+	// Get DFM order
+	private class GetDfmOrderTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			OrientationManager.disableRotation(DataCollector.this);
+
+			dia = new ProgressDialog(DataCollector.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Loading...");
+			dia.setCancelable(false);
+			dia.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			initDfmWithExternalAsyncTask();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			dia.setMessage("Done");
+			if (dia != null && dia.isShowing())
+				dia.cancel();
+
+			OrientationManager.enableRotation(DataCollector.this);
+			
+//			if (dfm.getOrderList.size() == 0)
+//				TODO - API error checking for this case
+
+			super.onPostExecute(result);
+		}
+
+	}
+
 	// allows for menu to be turned off when necessary
+	@SuppressLint("NewApi")
 	private void setMenuStatus(boolean enabled) {
 		useMenu = enabled;
 
@@ -1687,48 +1762,53 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menuLogin.setEnabled(enabled);
 			menuMedia.setEnabled(enabled);
 			menuSync.setEnabled(enabled);
-			/*
-			 * if (enabled) { MenuItem item =
-			 * mMenu.findItem(R.id.menu_item_login); item.setVisible(true); item
-			 * = mMenu.findItem(R.id.menu_item_media); item.setVisible(true);
-			 * item = mMenu.findItem(R.id.menu_item_sync);
-			 * item.setVisible(true); super.onPrepareOptionsMenu(mMenu); } else
-			 * { MenuItem item = mMenu.findItem(R.id.menu_item_login);
-			 * item.setVisible(false); item =
-			 * mMenu.findItem(R.id.menu_item_media); item.setVisible(false);
-			 * item = mMenu.findItem(R.id.menu_item_sync);
-			 * item.setVisible(false); super.onPrepareOptionsMenu(mMenu); }
-			 */
+
+			// if (enabled) {
+			// MenuItem item = mMenu.findItem(R.id.menu_item_login);
+			// item.setVisible(true);
+			// item = mMenu.findItem(R.id.menu_item_media);
+			// item.setVisible(true);
+			// item = mMenu.findItem(R.id.menu_item_sync);
+			// item.setVisible(true);
+			// super.onPrepareOptionsMenu(mMenu);
+			// } else {
+			// MenuItem item = mMenu.findItem(R.id.menu_item_login);
+			// item.setVisible(false);
+			// item = mMenu.findItem(R.id.menu_item_media);
+			// item.setVisible(false);
+			// item = mMenu.findItem(R.id.menu_item_sync);
+			// item.setVisible(false);
+			// super.onPrepareOptionsMenu(mMenu);
+			// }
+
 		}
+		
+		if (useMenu && android.os.Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
 	}
 
 	private void enableStep1() {
 		step1.setEnabled(true);
-		step1.setBackgroundResource(R.drawable.button_rsense);
 		step1.setTextColor(Color.parseColor("#0066FF"));
 	}
 
 	private void disableStep2() {
 		step2.setEnabled(false);
-		step2.setBackgroundResource(R.drawable.button_rsense_disabled);
 		step2.setTextColor(Color.parseColor("#666666"));
 	}
 
 	private void enableStep2() {
 		step2.setEnabled(true);
-		step2.setBackgroundResource(R.drawable.button_rsense);
 		step2.setTextColor(Color.parseColor("#0066FF"));
 	}
 
 	private void disableStep3() {
 		step3.setEnabled(false);
-		step3.setBackgroundResource(R.drawable.button_rsense_disabled);
 		step3.setTextColor(Color.parseColor("#666666"));
 	}
 
 	private void enableStep3() {
 		step3.setEnabled(true);
-		step3.setBackgroundResource(R.drawable.button_rsense);
 		step3.setTextColor(Color.parseColor("#0066FF"));
 	}
 
@@ -1754,6 +1834,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step3.setBackgroundResource(R.drawable.button_rsense);
 		step3.setTextColor(Color.parseColor("#0066FF"));
 
+		step1.setBackgroundResource(R.drawable.button_rsense);
 		step1.setText(getResources().getString(R.string.step1));
 		step3.setText(getResources().getString(R.string.step3));
 	}

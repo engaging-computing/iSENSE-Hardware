@@ -19,6 +19,7 @@ package edu.uml.cs.isense.carphysicsv2;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -29,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -41,7 +43,6 @@ import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -53,7 +54,9 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -72,27 +75,24 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "mobile";
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 
-	public static final String baseSessionUrl_Prod = "http://beta.isenseproject.org/projects/";
-	public static final String baseSessionUrl_Dev = "http://rsense-dev.cs.uml.edu/projects/";
+	public static final String VIS_URL_PROD = "http://isenseproject.org/projects/";
+	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
 	public static String baseSessionUrl = "";
 	public static String sessionUrl = "";
+
+	public static String RECORD_SETTINGS = "RECORD_SETTINGS";
 
 	private Button startStop;
 	private TextView values;
 	public static Boolean running = false;
 
 	private SensorManager mSensorManager;
-	private LocationManager mLocationManager;
 
 	public static Location loc;
 	private float accel[];
-	private float orientation[];
 	private Timer timeTimer;
-	private float rawAccel[];
-	private float rawMag[];
-
 	private int INTERVAL = 50;
 
 	static final public int DIALOG_CANCELED = 0;
@@ -115,6 +115,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final int QUEUE_UPLOAD_REQUESTED = 5000;
 	public static final int RESET_REQUESTED = 6003;
 	public static final int SAVE_MODE_REQUESTED = 10005;
+	public static final String ACCEL_SETTINGS = "ACCEL_SETTINGS";
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
@@ -126,9 +127,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private String dateString;
 
-	private boolean x = false, y = true, z = false, mag = false;
-
 	DecimalFormat toThou = new DecimalFormat("######0.000");
+
+	ArrayList<Double> accelerX;
+	ArrayList<Double> accelerY;
+	ArrayList<Double> accelerZ;
+	ArrayList<Double> acceler;
 
 	int i = 0;
 	int len = 0;
@@ -173,6 +177,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static Bundle saved;
 
+	public static Menu menu;
+
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -184,17 +191,22 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		api = API.getInstance(mContext);
 		api.useDev(useDev);
 		if (useDev) {
-			baseSessionUrl = baseSessionUrl_Dev;
+			baseSessionUrl = VIS_URL_DEV;
 		} else {
-			baseSessionUrl = baseSessionUrl_Prod;
+			baseSessionUrl = VIS_URL_PROD;
 		}
+
+		accelerX = new ArrayList<Double>();
+		accelerY = new ArrayList<Double>();
+		accelerZ = new ArrayList<Double>();
+		acceler = new ArrayList<Double>();
 
 		f = new Fields();
 		uq = new UploadQueue("carrampphysics", mContext, api);
 		uq.buildQueueFromFile();
 
 		w = new Waffle(mContext);
-		
+
 		// Save the default login info
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				CarRampPhysicsV2.mContext,
@@ -217,11 +229,26 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH", 0);
 		length = countdown = prefs.getInt("length", 10);
 
+		if (savedInstanceState == null) {
+			if (firstName.equals("") || lastInitial.equals("")) {
+				if (!dontPromptMeTwice) {
+					startActivityForResult(new Intent(mContext,
+							EnterNameActivity.class), resultGotName);
+				}
+			}
+		}
+
+		if (!api.hasConnectivity() && !saveMode) {
+			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
+					SAVE_MODE_REQUESTED);
+		}
+
 		new OnCreateLoginTask().execute();
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		loggedInAs.setText(getResources().getString(R.string.logged_in_as) + " "
-				+ mPrefs.getString("username", "") + ", Name: " + firstName + " " + lastInitial);
+		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+				+ " " + mPrefs.getString("username", "") + ", Name: "
+				+ firstName + " " + lastInitial);
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		experimentNumber = prefs2.getString("project_id", null);
 		if (experimentNumber == null) {
@@ -231,9 +258,53 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				experimentNumber = DEFAULT_PROJ_PROD;
 			}
 		}
-		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api, mContext, f);
+
+		if (!api.hasConnectivity()) {
+			experimentNumber = "-1";
+			System.out.println("Logtastic");
+		}
+		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
+				mContext, f);
 		dfm.getOrder();
-		
+		new DecimalFormat("#,##0.0");
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+			values.setText("X: ");
+		}
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
+				values.setText(values.getText() + " Y: ");
+			} else {
+				values.setText("Y: ");
+			}
+		}
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))) {
+				values.setText(values.getText() + " Z: ");
+			} else {
+				values.setText("Z: ");
+			}
+
+		}
+		if (dfm.getOrderList().contains(
+				mContext.getString(R.string.accel_total))) {
+
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_z))) {
+				values.setText(values.getText() + " Magnitude: ");
+			} else {
+				values.setText("Magnitude: ");
+			}
+
+		}
+
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
@@ -251,10 +322,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (running) {
 
 					if (timeHasElapsed) {
-						
+
 						getWindow().clearFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-						
+
 						setupDone = false;
 						timeHasElapsed = false;
 						useMenu = true;
@@ -266,10 +337,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						timeTimer.cancel();
 						choiceViaMenu = false;
 
+						startStop.setEnabled(true);
+						startStop
+								.setBackgroundResource(R.drawable.button_rsense);
+
 						Intent dataIntent = new Intent(mContext,
 								DataActivity.class);
 						startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
-						
 
 					} else if (usedHomeButton) {
 						setupDone = false;
@@ -282,32 +356,30 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 						timeTimer.cancel();
 						choiceViaMenu = false;
+
 						startStop.setEnabled(true);
+						startStop
+								.setBackgroundResource(R.drawable.button_rsense);
+
 					}
 
-					startStop.setEnabled(true);
 				} else {
 
 					OrientationManager.disableRotation(CarRampPhysicsV2.this);
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-					
+
 					startStop.setEnabled(false);
+					startStop
+							.setBackgroundResource(R.drawable.button_rsense_green);
+
 					dataSet = new JSONArray();
 					elapsedMillis = 0;
 					len = 0;
 					len2 = 0;
 					i = 0;
 					currentTime = getUploadTime(0);
-					
-					SharedPreferences prefs = getSharedPreferences(
-							RecordSettings.RECORD_SETTINGS, 0);
 
-					x = prefs.getBoolean("X", false);
-					y = prefs.getBoolean("Y", true);
-					z = prefs.getBoolean("Z", false);
-					mag = prefs.getBoolean("Magnitude", false);
-					
 					setEnabledFields();
 
 					if (saveMode) {
@@ -315,13 +387,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						System.out
 								.println("Honk frogs@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 					}
-
-					if (mLocationManager
-							.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-						mLocationManager.requestLocationUpdates(
-								LocationManager.NETWORK_PROVIDER, 0, 0,
-								CarRampPhysicsV2.this);
-
+					
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -330,21 +396,26 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						e.printStackTrace();
 					}
 
-					useMenu = true;
+					useMenu = false;
 
+					SharedPreferences prefs2 = getSharedPreferences(
+							ACCEL_SETTINGS, 0);
 					if (mSensorManager != null) {
-						mSensorManager
-								.registerListener(
-										CarRampPhysicsV2.this,
-										mSensorManager
-												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-										SensorManager.SENSOR_DELAY_FASTEST);
-						mSensorManager
-								.registerListener(
-										CarRampPhysicsV2.this,
-										mSensorManager
-												.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-										SensorManager.SENSOR_DELAY_FASTEST);
+						boolean isLinear = prefs2.getBoolean("LINEAR_ACCEL",
+								false);
+						if (isLinear) {
+							mSensorManager.registerListener(
+									CarRampPhysicsV2.this,
+									mSensorManager
+											.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+									SensorManager.SENSOR_DELAY_FASTEST);
+						} else {
+							mSensorManager.registerListener(
+									CarRampPhysicsV2.this,
+									mSensorManager
+											.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+									SensorManager.SENSOR_DELAY_FASTEST);
+						}
 					}
 
 					running = true;
@@ -387,31 +458,47 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 								f.timeMillis = currentTime + elapsedMillis;
 								Log.d("fantastag", "time added");
-								
-								if (x) {
-									f.accel_x = toThou.format(accel[0]);
-									Log.d("fantastag", "X added");
-								}
-								if (y) {
-									f.accel_y = toThou.format(accel[1]);
-									Log.d("fantastag", "Y added");
-								}
-								if (z) {
-									f.accel_z = toThou.format(accel[2]);
-									Log.d("fantastag", "Z added");
-								}
-								if (mag) {
-									f.accel_total = toThou.format(accel[3]);
-									Log.d("fantastag", "Magnitude added");
-								}
 
 								if (!saveMode) {
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_x))) {
+										f.accel_x = toThou.format(accel[0]);
+										Log.d("fantastag", "X added");
+									}
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_y))) {
+										f.accel_y = toThou.format(accel[1]);
+										Log.d("fantastag", "Y added");
+									}
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_z))) {
+										f.accel_z = toThou.format(accel[2]);
+										Log.d("fantastag", "Z added");
+									}
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_total))) {
+										f.accel_total = toThou.format(accel[3]);
+										Log.d("fantastag", "Magnitude added");
+									}
 									dataSet.put(dfm.putData());
 									Log.d("tag", "NULLFROG");
 								} else {
+									f.accel_x = toThou.format(accel[0]);
+									f.accel_y = toThou.format(accel[1]);
+									f.accel_z = toThou.format(accel[2]);
+									f.accel_total = toThou.format(accel[3]);
+
 									dataSet.put(dfm.putDataForNoProjectID());
 									Log.d("tag", "NULLTOAD");
 								}
+
+								accelerX.add(Double.valueOf(f.accel_x));
+								accelerY.add(Double.valueOf(f.accel_y));
+								accelerZ.add(Double.valueOf(f.accel_z));
 
 							}
 
@@ -420,6 +507,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				}
 
+				acceler.clear();
+
+				CarRampPhysicsV2.this.invalidateOptionsMenu();
+
 				return running;
 
 			}
@@ -427,12 +518,32 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		});
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+		SharedPreferences prefs3 = getSharedPreferences(ACCEL_SETTINGS, 0);
 		if (mSensorManager != null) {
-			mSensorManager.registerListener(CarRampPhysicsV2.this,
-					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-					SensorManager.SENSOR_DELAY_FASTEST);
+			boolean isLinear = prefs3.getBoolean("LINEAR_ACCEL", false);
+			if (CarRampPhysicsV2.getApiLevel() < 14) {
+				// If the device isn't on Jelly Bean
+				ToggleButton button = (ToggleButton) findViewById(R.id.toggleButton1);
+				button.setChecked(isLinear); 
+			} else {
+				Switch button = (Switch) findViewById(R.id.switch1);
+				button.setChecked(isLinear);
+			}
+			if (isLinear) {
+				mSensorManager
+						.registerListener(
+								CarRampPhysicsV2.this,
+								mSensorManager
+										.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+								SensorManager.SENSOR_DELAY_FASTEST);
+
+			} else {
+				mSensorManager.registerListener(CarRampPhysicsV2.this,
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						SensorManager.SENSOR_DELAY_FASTEST);
+			}
 			mSensorManager
 					.registerListener(CarRampPhysicsV2.this, mSensorManager
 							.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
@@ -443,33 +554,58 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 
 		accel = new float[4];
-		orientation = new float[3];
-		rawAccel = new float[3];
-		rawMag = new float[3];
-
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
-		if (savedInstanceState == null) {
-			if (firstName.equals("") || lastInitial.equals("")) {
-				if (!dontPromptMeTwice) {
-					startActivityForResult(new Intent(mContext,
-							EnterNameActivity.class), resultGotName);
-				}
-			}
+	}
+
+	@SuppressLint("NewApi")
+	public void onToggleClicked(View view) {
+
+		mSensorManager.unregisterListener(CarRampPhysicsV2.this, mSensorManager
+				.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
+		mSensorManager.unregisterListener(CarRampPhysicsV2.this,
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+
+		boolean on;
+
+		if (CarRampPhysicsV2.getApiLevel() < 14) {
+			// If the device isn't on Jelly Bean
+			on = ((ToggleButton) view).isChecked();
+		} else {
+			// the device is on Jelly Bean
+			on = ((Switch) view).isChecked();
 		}
 
-		if (!api.hasConnectivity() && !saveMode) {
-			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
-					SAVE_MODE_REQUESTED);
+		// Determine if normal or linear acceleration
+		if (on) {
+			mSensorManager.registerListener(CarRampPhysicsV2.this,
+					mSensorManager
+							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+					SensorManager.SENSOR_DELAY_FASTEST);
+		} else {
+			mSensorManager.registerListener(CarRampPhysicsV2.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_FASTEST);
 		}
+
+		SharedPreferences prefs = getSharedPreferences(ACCEL_SETTINGS, 0);
+
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean("LINEAR_ACCEL", on);
+		editor.commit();
 
 	}
-	
+
 	private void setEnabledFields() {
-		if (x) dfm.enabledFields[Fields.ACCEL_X] = true;
-		if (y) dfm.enabledFields[Fields.ACCEL_Y] = true;
-		if (z) dfm.enabledFields[Fields.ACCEL_Z] = true;
-		if (mag) dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x)))
+			dfm.enabledFields[Fields.ACCEL_X] = true;
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y)))
+			dfm.enabledFields[Fields.ACCEL_Y] = true;
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z)))
+			dfm.enabledFields[Fields.ACCEL_Z] = true;
+		if (dfm.getOrderList().contains(
+				mContext.getString(R.string.accel_total)))
+			dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
 		dfm.enabledFields[Fields.TIME] = true;
 	}
 
@@ -484,7 +620,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
@@ -494,10 +629,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public void onStop() {
 		super.onStop();
-		mLocationManager.removeUpdates(CarRampPhysicsV2.this);
 		if (timeTimer != null)
 			timeTimer.cancel();
 		inPausedState = true;
+		mSensorManager.unregisterListener(CarRampPhysicsV2.this, mSensorManager
+				.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
 
 	}
 
@@ -510,46 +646,25 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onStart() {
 		super.onStart();
 		inPausedState = false;
+		SharedPreferences prefs3 = getSharedPreferences(ACCEL_SETTINGS, 0);
+		boolean isLinear = prefs3.getBoolean("LINEAR_ACCEL", false);
+		if (isLinear) {
+			mSensorManager.registerListener(CarRampPhysicsV2.this,
+					mSensorManager
+							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+					SensorManager.SENSOR_DELAY_FASTEST);
+		} else {
+			mSensorManager.registerListener(CarRampPhysicsV2.this,
+					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_FASTEST);
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		inPausedState = false;
-		SharedPreferences prefs = getSharedPreferences(
-				RecordSettings.RECORD_SETTINGS, 0);
-
-		x = prefs.getBoolean("X", false);
-		y = prefs.getBoolean("Y", true);
-		z = prefs.getBoolean("Z", false);
-		mag = prefs.getBoolean("Magnitude", false);
-
-		String dataLabel = "";
-
-		if (x) {
-			dataLabel += "X: ";
-		}
-		if (y) {
-			if (x) {
-				dataLabel += " , Y: ";
-			} else
-				dataLabel += "Y: ";
-		}
-		if (z) {
-			if (x || y) {
-				dataLabel += " , Z: ";
-			} else
-				dataLabel += "Z: ";
-		}
-
-		if (mag) {
-			if (x || y || z) {
-				dataLabel += " , Magnitude: ";
-			} else
-				dataLabel += "Magnitude: ";
-		}
-
-		values.setText(dataLabel);
+		getSharedPreferences(RECORD_SETTINGS, 0);
 
 		if (usedHomeButton && running) {
 			setupDone = false;
@@ -559,11 +674,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			running = false;
 			startStop.setText("Hold to Start");
+			startStop.setEnabled(true);
+			startStop.setBackgroundResource(R.drawable.button_rsense);
 
 			timeTimer.cancel();
 			choiceViaMenu = false;
 			startStop.setEnabled(true);
 			dataSet = new JSONArray();
+			OrientationManager.enableRotation(CarRampPhysicsV2.this);
+
+			menu.setGroupVisible(0, true);
+			useMenu = true;
 
 			w.make("Data recording halted.", Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_X);
@@ -572,24 +693,61 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		if (uq != null)
 			uq.buildQueueFromFile();
 
-		if (api.hasConnectivity() && saveMode) {
-			SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
-			experimentNumber = prefs2.getString("project_id", null);
-			if (experimentNumber == null) {
-				if (useDev) {
-					experimentNumber = DEFAULT_PROJ_DEV;
-				} else {
-					experimentNumber = DEFAULT_PROJ_PROD;
-				}
+		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
+		experimentNumber = prefs2.getString("project_id", null);
+		if (experimentNumber == null) {
+			if (useDev) {
+				experimentNumber = DEFAULT_PROJ_DEV;
+			} else {
+				experimentNumber = DEFAULT_PROJ_PROD;
 			}
-			dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
-					mContext, f);
-			dfm.getOrder();
-
-			saveMode = false;
-			System.out.println("Switching off save mode");
 		}
 
+		if (!api.hasConnectivity()) {
+			experimentNumber = "-1";
+			System.out.println("Logtastic");
+		}
+		dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
+				mContext, f);
+		dfm.getOrder();
+		new DecimalFormat("#,##0.0");
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
+			values.setText("X: ");
+		}
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
+				values.setText(values.getText() + " Y: ");
+			} else {
+				values.setText("Y: ");
+			}
+		}
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))) {
+				values.setText(values.getText() + " Z: ");
+			} else {
+				values.setText("Z: ");
+			}
+
+		}
+		if (dfm.getOrderList().contains(
+				mContext.getString(R.string.accel_total))) {
+
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_y))
+					|| dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_z))) {
+				values.setText(values.getText() + " Magnitude: ");
+			} else {
+				values.setText("Magnitude: ");
+			}
+
+		}
 	}
 
 	@Override
@@ -614,6 +772,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	public boolean onPrepareOptionsMenu (Menu menu) {
+		CarRampPhysicsV2.menu = menu;
+		menu.setGroupEnabled(0, useMenu);
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -626,9 +790,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					new Intent(this, CarRampLoginActivity.class),
 					LOGIN_STATUS_REQUESTED);
 			return true;
-		case R.id.record_settings:
-			startActivity(new Intent(this, RecordSettings.class));
-			return true;
 		case R.id.experiment_select:
 			Intent setup = new Intent(this, Setup.class);
 			startActivityForResult(setup, EXPERIMENT_REQUESTED);
@@ -637,8 +798,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			manageUploadQueue();
 			return true;
 		case R.id.record_length:
-			createSingleInputDialog("Change Recording Length",
-					"Input new recording length in seconds",
+			createSingleInputDialog("Change Recording Length", "",
 					RECORDING_LENGTH_REQUESTED);
 			return true;
 		case R.id.changename:
@@ -659,30 +819,34 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
 
-		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION
+				|| event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
-			rawAccel = event.values.clone();
 			accel[0] = event.values[0];
 			accel[1] = event.values[1];
 			accel[2] = event.values[2];
-
+			accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+					+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 			String xPrepend, yPrepend, zPrepend, data = "";
 
 			xPrepend = accel[0] > 0 ? "+" : "";
 			yPrepend = accel[1] > 0 ? "+" : "";
 			zPrepend = accel[2] > 0 ? "+" : "";
 
-			if (x) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
 				data = "X: " + xPrepend + oneDigit.format(accel[0]);
 			}
-			if (y) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_y))) {
 				if (!data.equals("")) {
 					data += " , Y: " + yPrepend + oneDigit.format(accel[1]);
 				} else {
 					data += "Y: " + yPrepend + oneDigit.format(accel[1]);
 				}
 			}
-			if (z) {
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_z))) {
 				if (!data.equals("")) {
 					data += " , Z: " + zPrepend + oneDigit.format(accel[2]);
 				} else {
@@ -690,9 +854,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 			}
 
-			if (mag) {
-				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_total))) {
 
 				if (!data.equals("")) {
 					data += " , Magnitude: " + oneDigit.format(accel[3]);
@@ -701,18 +864,44 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 
 			}
+			/*
+			 * accelerX.add(Double.valueOf(accel[0]));
+			 * accelerY.add(Double.valueOf(accel[1]));
+			 * accelerZ.add(Double.valueOf(accel[2]));
+			 * 
+			 * ArrayList<Double> velocityX = new ArrayList<Double>();
+			 * ArrayList<Double> velocityY = new ArrayList<Double>();
+			 * ArrayList<Double> velocityZ = new ArrayList<Double>();
+			 * ArrayList<Double> velocity = new ArrayList<Double>();
+			 * velocityX.add(Double.valueOf(0));
+			 * velocityY.add(Double.valueOf(0));
+			 * velocityZ.add(Double.valueOf(0)); double interval = 0.05; for
+			 * (int i = 1; i < accelerX.size(); i++) {
+			 * velocityX.add(Double.valueOf((accelerX.get(i) + accelerX .get(i -
+			 * 1)) / 2 * interval + velocityX.get(i - 1)));
+			 * velocityY.add(Double.valueOf((accelerY.get(i) + accelerY .get(i -
+			 * 1)) / 2 * interval + velocityY.get(i - 1)));
+			 * velocityZ.add(Double.valueOf((accelerZ.get(i) + accelerZ .get(i -
+			 * 1)) / 2 * interval + velocityZ.get(i - 1))); }
+			 * 
+			 * for (int i = 0; i < velocityX.size(); i++) { velocity.add(Math
+			 * .sqrt((velocityX.get(i).doubleValue() * velocityX
+			 * .get(i).doubleValue()) + (velocityY.get(i).doubleValue() *
+			 * velocityY .get(i).doubleValue()) +
+			 * (velocityZ.get(i).doubleValue() * velocityZ
+			 * .get(i).doubleValue()))); }
+			 * 
+			 * double avgUpTill = 0;
+			 * 
+			 * for (int i = 0 ; i<velocity.size(); i++) avgUpTill +=
+			 * velocity.get(i).doubleValue();
+			 * 
+			 * avgUpTill /= velocity.size();
+			 * 
+			 * values.setText(data + " Velocity: " +
+			 * oneDigit.format(avgUpTill));
+			 */
 			values.setText(data);
-
-		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			rawMag = event.values.clone();
-
-			float rotation[] = new float[9];
-
-			if (SensorManager.getRotationMatrix(rotation, null, rawAccel,
-					rawMag)) {
-				orientation = new float[3];
-				SensorManager.getOrientation(rotation, orientation);
-			}
 
 		}
 	}
@@ -742,9 +931,56 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						experimentNumber = DEFAULT_PROJ_PROD;
 					}
 				}
-				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
-						mContext, f);
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
+						api, mContext, f);
 				dfm.getOrder();
+				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
+					values.setText("X: " + oneDigit.format(accel[0]));
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
+						values.setText(values.getText() + " Y: "
+								+ oneDigit.format(accel[1]));
+					} else {
+						values.setText("Y: " + oneDigit.format(accel[1]));
+					}
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
+						values.setText(values.getText() + " Z: "
+								+ oneDigit.format(accel[2]));
+					} else {
+						values.setText("Z: " + oneDigit.format(accel[2]));
+					}
+
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
+					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
+						values.setText(values.getText() + " Magnitude: "
+								+ oneDigit.format(accel[3]));
+					} else {
+						values.setText("Magnitude: "
+								+ oneDigit.format(accel[3]));
+					}
+
+				}
 			}
 		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
@@ -769,13 +1005,61 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (loggedInAs == null)
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
 				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as) + " "
+						R.string.logged_in_as)
+						+ " "
 						+ data.getStringExtra("username")
 						+ ", Name: "
 						+ firstName + " " + lastInitial);
-				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
-						mContext, f);
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
+						api, mContext, f);
 				dfm.getOrder();
+				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
+					values.setText("X: " + oneDigit.format(accel[0]));
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
+						values.setText(values.getText() + " Y: "
+								+ oneDigit.format(accel[1]));
+					} else {
+						values.setText("Y: " + oneDigit.format(accel[1]));
+					}
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
+						values.setText(values.getText() + " Z: "
+								+ oneDigit.format(accel[2]));
+					} else {
+						values.setText("Z: " + oneDigit.format(accel[2]));
+					}
+
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
+					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
+						values.setText(values.getText() + " Magnitude: "
+								+ oneDigit.format(accel[3]));
+					} else {
+						values.setText("Magnitude: "
+								+ oneDigit.format(accel[3]));
+					}
+
+				}
 			}
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -786,11 +1070,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putInt("length", length);
 				// Below is a math fail
-//				if (length <= 25) {
-//					INTERVAL = 50; 
-//				} else {
-//					INTERVAL = 2 * length;
-//				}
+				// if (length <= 25) {
+				// INTERVAL = 50;
+				// } else {
+				// INTERVAL = 2 * length;
+				// }
 				editor.putInt("Interval", INTERVAL);
 				editor.commit();
 			}
@@ -798,13 +1082,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						CarRampPhysicsV2.mContext,
-						CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
-								Context.MODE_PRIVATE));
+						CarRampPhysicsV2.mContext.getSharedPreferences(
+								"USER_INFO", Context.MODE_PRIVATE));
 				if (!inApp)
 					inApp = true;
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ " " + mPrefs.getString("username", "") + ", Name: " + firstName + " " + lastInitial);
+						+ " "
+						+ mPrefs.getString("username", "")
+						+ ", Name: "
+						+ firstName + " " + lastInitial);
 			} else {
 				if (!inApp)
 					finish();
@@ -816,16 +1103,19 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				countdown = length = prefs.getInt("length", 10);
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						CarRampPhysicsV2.mContext,
-						CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
-								Context.MODE_PRIVATE));
+						CarRampPhysicsV2.mContext.getSharedPreferences(
+								"USER_INFO", Context.MODE_PRIVATE));
 				SharedPreferences.Editor mOSPEdit = mPrefs.edit();
 				mOSPEdit.putString("username", DEFAULT_USER).commit();
 				mOSPEdit.putString("password", DEFAULT_USER).commit();
-				
+
 				new OnCreateLoginTask().execute();
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
-						+ " " + mPrefs.getString("username", "") + ", Name: " + firstName + " " + lastInitial);
+						+ " "
+						+ mPrefs.getString("username", "")
+						+ ", Name: "
+						+ firstName + " " + lastInitial);
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -837,28 +1127,116 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				editor.putString("project_id", experimentNumber);
 				editor.commit();
 				INTERVAL = 50;
-				
-				SharedPreferences rprefs = getSharedPreferences("RECORD_SETTINGS", 0) ;
-				SharedPreferences.Editor mEdit = rprefs.edit();
-				mEdit.putBoolean("X", false);
-				mEdit.putBoolean("Y", true);
-				mEdit.putBoolean("Z", false);
-				mEdit.putBoolean("Magnitude", false);
-				mEdit.commit();
 
-				x = z = mag = false;
-				y = true;
-				values.setText("Y: " + accel[1]);
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
+						api, mContext, f);
+				dfm.getOrder();
+
+				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
+					values.setText("X: " + oneDigit.format(accel[0]));
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
+						values.setText(values.getText() + " Y: "
+								+ oneDigit.format(accel[1]));
+					} else {
+						values.setText("Y: " + oneDigit.format(accel[1]));
+					}
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
+						values.setText(values.getText() + " Z: "
+								+ oneDigit.format(accel[2]));
+					} else {
+						values.setText("Z: " + oneDigit.format(accel[2]));
+					}
+
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
+					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
+						values.setText(values.getText() + " Magnitude: "
+								+ oneDigit.format(accel[3]));
+					} else {
+						values.setText("Magnitude: "
+								+ oneDigit.format(accel[3]));
+					}
+
+				}
 				Log.d("fantastag", "resetti");
 
 			}
 		} else if (reqCode == SAVE_MODE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				saveMode = true;
+				System.out.println("Save mode is on");
 				CarRampPhysicsV2.experimentNumber = "-1";
-				dfm = new DataFieldManager(Integer.parseInt(experimentNumber), api,
-						mContext, f);
+				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
+						api, mContext, f);
 				dfm.getOrder();
+				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_x))) {
+					values.setText("X: " + oneDigit.format(accel[0]));
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_y))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))) {
+						values.setText(values.getText() + " Y: "
+								+ oneDigit.format(accel[1]));
+					} else {
+						values.setText("Y: " + oneDigit.format(accel[1]));
+					}
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_z))) {
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))) {
+						values.setText(values.getText() + " Z: "
+								+ oneDigit.format(accel[2]));
+					} else {
+						values.setText("Z: " + oneDigit.format(accel[2]));
+					}
+
+				}
+				if (dfm.getOrderList().contains(
+						mContext.getString(R.string.accel_total))) {
+					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
+					if (dfm.getOrderList().contains(
+							mContext.getString(R.string.accel_x))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_y))
+							|| dfm.getOrderList().contains(
+									mContext.getString(R.string.accel_z))) {
+						values.setText(values.getText() + " Magnitude: "
+								+ oneDigit.format(accel[3]));
+					} else {
+						values.setText("Magnitude: "
+								+ oneDigit.format(accel[3]));
+					}
+
+				}
 			} else {
 				if (!api.hasConnectivity()) {
 					startActivityForResult(new Intent(mContext,
@@ -886,7 +1264,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			if (!saveMode) {
 
-				//String experimentNumber = CarRampPhysicsV2.experimentNumber;
+				// String experimentNumber = CarRampPhysicsV2.experimentNumber;
 				JSONObject data = new JSONObject();
 				try {
 					data.put("data", dataSet);
@@ -908,9 +1286,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					uploadSuccessful = true;
 				} else {
 					uploadSuccessful = false;
-					QDataSet ds = new QDataSet(QDataSet.Type.DATA, nameOfSession,
-							"Car Ramp Physics", experimentNumber,
-							dataSet.toString(), null);
+					QDataSet ds = new QDataSet(QDataSet.Type.DATA,
+							nameOfSession, "Car Ramp Physics",
+							experimentNumber, dataSet.toString(), null);
 					Log.d("data", "Data: " + dataSet.toString());
 					CarRampPhysicsV2.uq.addDataSetToQueue(ds);
 				}
@@ -970,7 +1348,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			} else {
 				w.make("Data saved.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 			}
-			
+
 			OrientationManager.enableRotation(CarRampPhysicsV2.this);
 
 		}
@@ -1088,8 +1466,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (api.hasConnectivity()) {
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						CarRampPhysicsV2.mContext,
-						CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
-								Context.MODE_PRIVATE));
+						CarRampPhysicsV2.mContext.getSharedPreferences(
+								"USER_INFO", Context.MODE_PRIVATE));
 				api.createSession(mPrefs.getString("username", ""),
 						mPrefs.getString("password", ""));
 			}

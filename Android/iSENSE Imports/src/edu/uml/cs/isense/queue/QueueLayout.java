@@ -147,31 +147,36 @@ public class QueueLayout extends Activity implements OnClickListener {
 		desc.setText(ds.getDesc());
 	}
 
-	/**
-	 * This method was made public by Android.  Don't worry about it.
-	 */
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
+			
+			if (allSelectedDataSetsHaveProjects()) {
+				if (!api.hasConnectivity()) {
+					w.make("No internet connection found", Waffle.IMAGE_X);
+					return;
+				}
 				
-			if (!api.hasConnectivity()) {
-				w.make("No internet connection found", Waffle.IMAGE_X);
-				return;
+				if (api.getCurrentUser() == null) {
+					w.make("Login information not found - please login again", Waffle.IMAGE_X);
+					return;
+				}
+				
+				lastSID = -1;
+				if (uq.mirrorQueue.isEmpty()) {
+					uq.storeAndReRetrieveQueue(true);
+					setResultAndFinish(RESULT_OK);
+					return;
+				} else {
+					new UploadSDTask().execute();
+					// clear the queue so we can re-add un-uploaded data sets from the mirrorQueue
+					uq.queue = new LinkedList<QDataSet>();
+				}
+			} else {
+				Intent iNoInitialProject = new Intent(QueueLayout.this, NoInitialProject.class);
+				startActivity(iNoInitialProject);
 			}
-			
-			if (api.getCurrentUser() == null) {
-				w.make("Login information not found - please login again", Waffle.IMAGE_X);
-				return;
-			}
-			
-			lastSID = -1;
-			if (uq.mirrorQueue.isEmpty()) {
-				uq.storeAndReRetrieveQueue(true);
-				setResultAndFinish(RESULT_OK);
-				return;
-			} else
-				new UploadSDTask().execute();
-			uq.queue = new LinkedList<QDataSet>();
+				
 		} else if (id == R.id.cancel) {
 			setResultAndFinish(RESULT_CANCELED);
 			finish();
@@ -199,6 +204,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 			Intent iDelSel = new Intent(QueueLayout.this, QueueDeleteSelected.class);
 			startActivityForResult(iDelSel, QUEUE_DELETE_SELECTED_REQUESTED);
 		}
+		
+	}
+	
+	private boolean allSelectedDataSetsHaveProjects() {
+		for (QDataSet qds : uq.queue) {
+			if (qds.isUploadable() && qds.getProjID().equals("-1")) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void setResultAndFinish(int result_code) {
@@ -268,8 +283,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 			} else if (dataSetID != -1)
 				w.make("Upload success for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
-			else {
-				w.make("Upload failed - no project selected or project is closed", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			else if (uploadSet.getProjID().equals("-1")) {
+				w.make("Select a project first for \"" + uploadSet.getName() + "\"", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				uq.queue.add(uploadSet);
+				uq.storeAndReRetrieveQueue(false);
+			} else {
+				w.make("Upload failed - project is closed, deleted, or contains broken data sets", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			}
@@ -401,12 +420,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				for (int i = 0; i < scrollQueue.getChildCount(); i++) {
-					View view = scrollQueue.getChildAt(i);
+				int count = scrollQueue.getChildCount();
+				int childIndex = 0;
+				for (int i = 0; i < count; i++) {
+					View view = scrollQueue.getChildAt(childIndex);
 					if (view.getTag() == Integer.valueOf(QUEUE_BOX_SELECTED)) {
-						uq.removeItemWithKey(Long.parseLong((String) view.getContentDescription()));
+						long dataSetKey = Long.parseLong("" + view.getContentDescription());
+						uq.removeItemWithKey(dataSetKey);
 						scrollQueue.removeView(view);
-					}
+					} else
+						++childIndex;
 				}
 			}
 		}
@@ -415,7 +438,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	// Adds ds to the scrollQueue object
 	// Each block in the scrollQueue gets 2 additional (and confusing) properties:
-	//		tag: the selection state of the queue block
+	//		tag: the selection state of the queue block (QUEUE_BOX_SELECTED or QUEUE_BOX_DESELECTED)
 	//		content description: the key of the associated data set
 	private void addViewToScrollQueue(final QDataSet ds) {
 
@@ -431,16 +454,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 			final View data = View.inflate(mContext, R.layout.queueblock_data,
 					null);
 
-			data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+			data.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
 
 			makeBlock(data, ds);
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
 			scrollQueue.addView(data, layoutParams);
-			ds.setUploadable(false);
+			ds.setUploadable(true);
 			data.setContentDescription("" + ds.key);
-			data.setTag(QUEUE_BOX_DESELECTED);
+			data.setTag(QUEUE_BOX_SELECTED);
 			
 			data.setOnClickListener(new OnClickListener() {
 
@@ -484,16 +507,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 			final View pic = View.inflate(mContext, R.layout.queueblock_pic,
 					null);
 
-			pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+			pic.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
 
 			makeBlock(pic, ds);
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
 			scrollQueue.addView(pic, layoutParams);
-			ds.setUploadable(false);
+			ds.setUploadable(true);
 			pic.setContentDescription("" + ds.key);
-			pic.setTag(QUEUE_BOX_DESELECTED);
+			pic.setTag(QUEUE_BOX_SELECTED);
 
 			pic.setOnClickListener(new OnClickListener() {
 
@@ -536,16 +559,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 			final View both = View.inflate(mContext, R.layout.queueblock_pic,
 					null);
 
-			both.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+			both.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
 
 			makeBlock(both, ds);
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
 			scrollQueue.addView(both, layoutParams);
-			ds.setUploadable(false);
+			ds.setUploadable(true);
 			both.setContentDescription("" + ds.key);
-			both.setTag(QUEUE_BOX_DESELECTED);
+			both.setTag(QUEUE_BOX_SELECTED);
 
 			both.setOnClickListener(new OnClickListener() {
 

@@ -11,27 +11,28 @@
 #define __iSENSE_API__DataSaver__
 
 #import <Foundation/Foundation.h>
-#import "DataSet.h"
+#import "QDataSet.h"
 #import "Queue.h"
-#import "iSENSE.h"
+#import <iSENSE_API/API.h>
 
 #define DATA_NONE_UPLOADED  1500
 #define DATA_UPLOAD_SUCCESS 1501
 #define DATA_UPLOAD_FAILED  1502
 
-@interface DataSaver : NSObject {
-}
+@interface DataSaver : NSObject {}
 
--(id)initWithContext:(NSManagedObjectContext *)context;
--(void)addDataSetFromCoreData:(DataSet *)dataSet;
--(void)addDataSet:(DataSet *)dataSet;
--(id)removeDataSet:(NSNumber *)key;
--(void)editDataSetWithKey:(NSNumber *)key;
--(bool)upload:(NSString *)parentName;
--(void)removeAllDataSets;
--(id)getDataSet;
+-(id)   initWithContext:(NSManagedObjectContext *)context;
+-(void) addDataSetFromCoreData:(QDataSet *)dataSet;
+-(void) addDataSet:(QDataSet *)dataSet;
+-(id)   removeDataSet:(NSNumber *)key;
+-(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
+-(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;
+-(bool) upload:(NSString *)parentName;
+-(void) removeAllDataSets;
+-(id)   getDataSet;
+-(id)   getDataSetWithKey:(NSNumber *)key;
+-(int)  dataSetCountWithParentName:(NSString *)pn;
 
-@property (nonatomic, assign) int count;
 @property (nonatomic, retain) NSMutableDictionary *dataQueue;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
@@ -39,4 +40,4 @@
 @end
 
 
-#endif /* defined(__iSENSE_API__DataSaver__) */
+#endif

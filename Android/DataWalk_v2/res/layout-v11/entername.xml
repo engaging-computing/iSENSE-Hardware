@@ -18,13 +18,17 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/nameLabel"
+        android:digits="@string/digits_restriction"
         android:gravity="left"
         android:inputType="textCapSentences"
+        android:maxLength="20"
         android:paddingLeft="6dip"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:singleLine="true"
+        android:nextFocusDown="@+id/initialLabel" />
 
     <TextView
-        android:id="@+id/initialLabel"
+        android:id="@id/initialLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -39,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/nameInput"
         android:layout_below="@id/nameInput"
+        android:digits="@string/digits_restriction"
         android:ems="10"
         android:gravity="left"
         android:inputType="textCapSentences"
@@ -46,7 +51,8 @@
         android:maxWidth="40sp"
         android:paddingLeft="6dip"
         android:singleLine="true"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black" 
+      >
     </EditText>
 
     <View

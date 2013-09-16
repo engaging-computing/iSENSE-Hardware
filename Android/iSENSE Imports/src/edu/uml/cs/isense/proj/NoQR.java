@@ -8,6 +8,16 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 
+/**
+ * This dialog themed activity displays when the user attempts
+ * to scan a QR code in the
+ * {@link edu.uml.cs.isense.proj.Setup Setup} class but has not
+ * yet installed the ZXing Barcode Scanner Android application.
+ * 
+ * No public implementation of this class is necessary.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class NoQR extends Activity {
 	
 	@Override

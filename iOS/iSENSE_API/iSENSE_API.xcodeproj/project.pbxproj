@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		391DA0D81795B4AA0011B955 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 391DA0D61795B4AA0011B955 /* DataSet.m */; };
+		391DA0D81795B4AA0011B955 /* QDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 391DA0D61795B4AA0011B955 /* QDataSet.m */; };
 		39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39216FDE176F5C790070DFCC /* CoreFoundation.framework */; };
 		39216FE5176F5C790070DFCC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39216FE3176F5C790070DFCC /* InfoPlist.strings */; };
 		39217017176F7ACA0070DFCC /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 39217009176F7ACA0070DFCC /* Queue.h */; };
-		3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */; };
+		3921701D176F8A010070DFCC /* QDataSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 39216FFF176F7ACA0070DFCC /* QDataSetModel.xcdatamodeld */; };
+		3989BECE17C5556C009C5F21 /* API.h in Headers */ = {isa = PBXBuildFile; fileRef = 3989BECC17C5556C009C5F21 /* API.h */; };
+		3989BECF17C5556C009C5F21 /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 3989BECD17C5556C009C5F21 /* API.m */; };
 		39A1CC2916DFB48700B1979F /* ExperimentField.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261216DFA86B0062C3DC /* ExperimentField.h */; };
 		39A1CC2A16DFB48700B1979F /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261316DFA86B0062C3DC /* Image.h */; };
 		39A1CC2B16DFB48700B1979F /* iSENSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261416DFA86B0062C3DC /* iSENSE.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -34,7 +36,7 @@
 		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
 		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
 		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
-		B712DE241796D17000A30CAC /* DataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* DataSet.h */; };
+		B712DE241796D17000A30CAC /* QDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* QDataSet.h */; };
 		B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */; };
 		B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */; };
 		B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB3179D8D1D00B891B0 /* Fields.h */; };
@@ -42,6 +44,16 @@
 		B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */; };
 		B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */; };
 		B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B73CFDBB179D8DE700B891B0 /* Fields.strings */; };
+		B7BEBCC217C4FBBB005C08C0 /* RDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC017C4FBBB005C08C0 /* RDataSet.h */; };
+		B7BEBCC617C4FD2A005C08C0 /* RPerson.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC417C4FD2A005C08C0 /* RPerson.h */; };
+		B7BEBCCA17C4FDAC005C08C0 /* RProjectField.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */; };
+		B7BEBCD117C4FDDA005C08C0 /* RProject.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCCF17C4FDD9005C08C0 /* RProject.h */; };
+		B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */; };
+		B7E5674E17C63DCE00C2DF46 /* RDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674917C63DCE00C2DF46 /* RDataSet.m */; };
+		B7E5674F17C63DCE00C2DF46 /* RPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674A17C63DCE00C2DF46 /* RPerson.m */; };
+		B7E5675017C63DCE00C2DF46 /* RProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674B17C63DCE00C2DF46 /* RProject.m */; };
+		B7E5675117C63DCE00C2DF46 /* RProjectField.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674C17C63DCE00C2DF46 /* RProjectField.m */; };
+		B7E5675217C63DCE00C2DF46 /* RTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674D17C63DCE00C2DF46 /* RTutorial.m */; };
 		B7EBFDBF17A01715006B90A8 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = B7EBFDBD17A01715006B90A8 /* Reachability.h */; };
 		B7EBFDC017A01715006B90A8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B7EBFDBE17A01715006B90A8 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B7EBFDC217A0186A006B90A8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */; };
@@ -68,14 +80,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		391DA0D61795B4AA0011B955 /* DataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSet.m; sourceTree = "<group>"; };
+		391DA0D61795B4AA0011B955 /* QDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDataSet.m; sourceTree = "<group>"; };
 		39216FDD176F5C790070DFCC /* iSENSE_API_Bundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iSENSE_API_Bundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		39216FDE176F5C790070DFCC /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		39216FE2176F5C790070DFCC /* iSENSE_API_Bundle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iSENSE_API_Bundle-Info.plist"; sourceTree = "<group>"; };
 		39216FE4176F5C790070DFCC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39216FE6176F5C790070DFCC /* iSENSE_API_Bundle-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iSENSE_API_Bundle-Prefix.pch"; sourceTree = "<group>"; };
-		39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataSetModel.xcdatamodel; sourceTree = "<group>"; };
+		39217000176F7ACA0070DFCC /* QDataSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QDataSetModel.xcdatamodel; sourceTree = "<group>"; };
 		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
+		3989BECC17C5556C009C5F21 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
+		3989BECD17C5556C009C5F21 /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
@@ -100,7 +114,7 @@
 		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
 		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
 		B712DE211796D17000A30CAC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
-		B712DE221796D17000A30CAC /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = headers/DataSet.h; sourceTree = "<group>"; };
+		B712DE221796D17000A30CAC /* QDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QDataSet.h; path = headers/QDataSet.h; sourceTree = "<group>"; };
 		B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
 		B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
 		B73CFDB3179D8D1D00B891B0 /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
@@ -108,6 +122,16 @@
 		B73CFDB7179D8DA100B891B0 /* FieldGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldGrabber.h; sourceTree = "<group>"; };
 		B73CFDB8179D8DA100B891B0 /* FieldGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldGrabber.m; sourceTree = "<group>"; };
 		B73CFDBB179D8DE700B891B0 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		B7BEBCC017C4FBBB005C08C0 /* RDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDataSet.h; sourceTree = "<group>"; };
+		B7BEBCC417C4FD2A005C08C0 /* RPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPerson.h; sourceTree = "<group>"; };
+		B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RProjectField.h; sourceTree = "<group>"; };
+		B7BEBCCF17C4FDD9005C08C0 /* RProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RProject.h; sourceTree = "<group>"; };
+		B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTutorial.h; sourceTree = "<group>"; };
+		B7E5674917C63DCE00C2DF46 /* RDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RDataSet.m; path = src/Objects/RDataSet.m; sourceTree = "<group>"; };
+		B7E5674A17C63DCE00C2DF46 /* RPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RPerson.m; path = src/Objects/RPerson.m; sourceTree = "<group>"; };
+		B7E5674B17C63DCE00C2DF46 /* RProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RProject.m; path = src/Objects/RProject.m; sourceTree = "<group>"; };
+		B7E5674C17C63DCE00C2DF46 /* RProjectField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RProjectField.m; path = src/Objects/RProjectField.m; sourceTree = "<group>"; };
+		B7E5674D17C63DCE00C2DF46 /* RTutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RTutorial.m; path = src/Objects/RTutorial.m; sourceTree = "<group>"; };
 		B7EBFDBD17A01715006B90A8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		B7EBFDBE17A01715006B90A8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -162,6 +186,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		3989BECB17C5552C009C5F21 /* isense_api */ = {
+			isa = PBXGroup;
+			children = (
+				3989BECC17C5556C009C5F21 /* API.h */,
+				3989BECD17C5556C009C5F21 /* API.m */,
+				B7E5674817C63D5D00C2DF46 /* Objects */,
+			);
+			name = isense_api;
+			sourceTree = "<group>";
+		};
 		39EFB9E4172AD55700A6BD2A /* src_queue_saver */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,8 +234,8 @@
 		39EFB9F0172ADF8F00A6BD2A /* dataset */ = {
 			isa = PBXGroup;
 			children = (
-				391DA0D61795B4AA0011B955 /* DataSet.m */,
-				39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */,
+				391DA0D61795B4AA0011B955 /* QDataSet.m */,
+				39216FFF176F7ACA0070DFCC /* QDataSetModel.xcdatamodeld */,
 			);
 			name = dataset;
 			sourceTree = "<group>";
@@ -239,13 +273,14 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				3989BECB17C5552C009C5F21 /* isense_api */,
 				B7EBFDB817A01419006B90A8 /* reachability */,
 				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
 				B7F09EF41794595700725483 /* waffle */,
 				B7F2D81C177B692200F9A58D /* sensor_compatability */,
 				39EFB9E4172AD55700A6BD2A /* src_queue_saver */,
 				39EFB9EE172ADA1F00A6BD2A /* queue_headers */,
-				39FF261916DFA8760062C3DC /* src_api */,
+				39FF261916DFA8760062C3DC /* old_api */,
 				39FF261016DFA86B0062C3DC /* api_headers */,
 				39FF25E616DFA28A0062C3DC /* Supporting Files */,
 			);
@@ -271,18 +306,23 @@
 				39FF261616DFA86B0062C3DC /* Person.h */,
 				39FF261716DFA86B0062C3DC /* Session.h */,
 				39FF261816DFA86B0062C3DC /* SessionData.h */,
+				B7BEBCC017C4FBBB005C08C0 /* RDataSet.h */,
+				B7BEBCC417C4FD2A005C08C0 /* RPerson.h */,
+				B7BEBCCF17C4FDD9005C08C0 /* RProject.h */,
+				B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */,
+				B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */,
 			);
 			name = api_headers;
 			path = headers;
 			sourceTree = "<group>";
 		};
-		39FF261916DFA8760062C3DC /* src_api */ = {
+		39FF261916DFA8760062C3DC /* old_api */ = {
 			isa = PBXGroup;
 			children = (
 				39FF261A16DFA8760062C3DC /* iSENSE.m */,
 				39FF261B16DFA8760062C3DC /* Objects */,
 			);
-			name = src_api;
+			name = old_api;
 			path = src;
 			sourceTree = "<group>";
 		};
@@ -303,7 +343,7 @@
 		B73B842D179ED48E0003007F /* dataset */ = {
 			isa = PBXGroup;
 			children = (
-				B712DE221796D17000A30CAC /* DataSet.h */,
+				B712DE221796D17000A30CAC /* QDataSet.h */,
 			);
 			name = dataset;
 			sourceTree = "<group>";
@@ -337,6 +377,18 @@
 				B73CFDBB179D8DE700B891B0 /* Fields.strings */,
 			);
 			name = data_field_manager;
+			sourceTree = "<group>";
+		};
+		B7E5674817C63D5D00C2DF46 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				B7E5674917C63DCE00C2DF46 /* RDataSet.m */,
+				B7E5674A17C63DCE00C2DF46 /* RPerson.m */,
+				B7E5674B17C63DCE00C2DF46 /* RProject.m */,
+				B7E5674C17C63DCE00C2DF46 /* RProjectField.m */,
+				B7E5674D17C63DCE00C2DF46 /* RTutorial.m */,
+			);
+			name = Objects;
 			sourceTree = "<group>";
 		};
 		B7EBFDB817A01419006B90A8 /* reachability */ = {
@@ -390,11 +442,17 @@
 				B7F2D81F177B69F400F9A58D /* SensorCompatibility.h in Headers */,
 				B7F09EFD1794599E00725483 /* Waffle.h in Headers */,
 				B712DE231796D17000A30CAC /* DataSaver.h in Headers */,
-				B712DE241796D17000A30CAC /* DataSet.h in Headers */,
+				B712DE241796D17000A30CAC /* QDataSet.h in Headers */,
 				B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */,
 				B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */,
 				B73CFDB9179D8DA100B891B0 /* FieldGrabber.h in Headers */,
 				B7EBFDBF17A01715006B90A8 /* Reachability.h in Headers */,
+				B7BEBCC217C4FBBB005C08C0 /* RDataSet.h in Headers */,
+				B7BEBCC617C4FD2A005C08C0 /* RPerson.h in Headers */,
+				B7BEBCCA17C4FDAC005C08C0 /* RProjectField.h in Headers */,
+				B7BEBCD117C4FDDA005C08C0 /* RProject.h in Headers */,
+				B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */,
+				3989BECE17C5556C009C5F21 /* API.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +541,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3921701D176F8A010070DFCC /* DataSetModel.xcdatamodeld in Sources */,
+				3921701D176F8A010070DFCC /* QDataSetModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,11 +561,17 @@
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
 				B7F09EFE1794599E00725483 /* Waffle.m in Sources */,
-				391DA0D81795B4AA0011B955 /* DataSet.m in Sources */,
+				391DA0D81795B4AA0011B955 /* QDataSet.m in Sources */,
 				B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */,
 				B73CFDB6179D8D1D00B891B0 /* Fields.m in Sources */,
 				B73CFDBA179D8DA100B891B0 /* FieldGrabber.m in Sources */,
 				B7EBFDC017A01715006B90A8 /* Reachability.m in Sources */,
+				3989BECF17C5556C009C5F21 /* API.m in Sources */,
+				B7E5674E17C63DCE00C2DF46 /* RDataSet.m in Sources */,
+				B7E5674F17C63DCE00C2DF46 /* RPerson.m in Sources */,
+				B7E5675017C63DCE00C2DF46 /* RProject.m in Sources */,
+				B7E5675117C63DCE00C2DF46 /* RProjectField.m in Sources */,
+				B7E5675217C63DCE00C2DF46 /* RTutorial.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,14 +745,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		39216FFF176F7ACA0070DFCC /* DataSetModel.xcdatamodeld */ = {
+		39216FFF176F7ACA0070DFCC /* QDataSetModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */,
+				39217000176F7ACA0070DFCC /* QDataSetModel.xcdatamodel */,
 			);
-			currentVersion = 39217000176F7ACA0070DFCC /* DataSetModel.xcdatamodel */;
-			name = DataSetModel.xcdatamodeld;
-			path = headers/DataSetModel.xcdatamodeld;
+			currentVersion = 39217000176F7ACA0070DFCC /* QDataSetModel.xcdatamodel */;
+			name = QDataSetModel.xcdatamodeld;
+			path = headers/QDataSetModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -144,7 +144,7 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
-        DataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        QDataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         }
@@ -412,7 +412,7 @@
     }
     
     NSArray *keys = [limitedTempQueue allKeys];
-    DataSet *tmp = [[limitedTempQueue objectForKey:keys[indexPath.row]] retain];
+    QDataSet *tmp = [[limitedTempQueue objectForKey:keys[indexPath.row]] retain];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {

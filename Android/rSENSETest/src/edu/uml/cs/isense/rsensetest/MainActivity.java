@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -26,12 +27,14 @@ import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button login, logout, getusers, getprojects, appendTest, uploadTest, newProj, uploadCSV;
+	Button login, logout, getusers, getprojects, getnews, appendTest, uploadTest, newProj, uploadCSV, mediaProj, mediaDataset;
 	TextView status;
-	EditText projID, userName;
+	EditText projID, userName, newsId;
 	API api;
 	
 	int FILEPICK = 0;
+	int MEDIAPROJPICK = 1;
+	int MEDIADATASET = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,24 +43,31 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		login = (Button) findViewById(R.id.btn_login);
 		getusers = (Button) findViewById(R.id.btn_getusers);
+		getnews = (Button) findViewById(R.id.btn_getnews);
 		getprojects = (Button) findViewById(R.id.btn_getprojects);
 		logout = (Button) findViewById(R.id.btn_logout);
 		appendTest = (Button) findViewById(R.id.btn_append);
 		uploadTest = (Button) findViewById(R.id.btn_upload);
 		status = (TextView) findViewById(R.id.txt_results);
 		projID = (EditText) findViewById(R.id.et_projectnum);
+		newsId = (EditText) findViewById(R.id.et_newsnum);
 		userName = (EditText) findViewById(R.id.et_username);
 		newProj = (Button) findViewById(R.id.btn_newproj);
 		uploadCSV = (Button) findViewById(R.id.btn_uploadCSV);
+		mediaProj = (Button) findViewById(R.id.btn_uploadToProj);
+		mediaDataset = (Button) findViewById(R.id.btn_uploadToDataSet);
 
 		login.setOnClickListener(this);
 		logout.setOnClickListener(this);
 		getusers.setOnClickListener(this);
+		getnews.setOnClickListener(this);
 		getprojects.setOnClickListener(this);
 		appendTest.setOnClickListener(this);
 		uploadTest.setOnClickListener(this);
 		newProj.setOnClickListener(this);
 		uploadCSV.setOnClickListener(this);
+		mediaProj.setOnClickListener(this);
+		mediaDataset.setOnClickListener(this);
 
 		api = API.getInstance(this);
 		api.setBaseUrl("http://129.63.17.17:3000");
@@ -84,6 +94,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if ( v == getprojects ) {
 				status.setText("clicked get projects");
 				new ProjectsTask().execute();
+			} else if ( v == getnews ) {
+				status.setText("clicked get news");
+				new NewsTask().execute();
 			} else if ( v == appendTest ) {
 				status.setText("append button clicked");
 				new AppendTask().execute();
@@ -95,8 +108,14 @@ public class MainActivity extends Activity implements OnClickListener {
 				new CreateProjectTask().execute();
 			} else if ( v == uploadCSV ) {
 				Intent i = new Intent(this, FileBrowser.class);
-				i.putExtra("filefilter", new String[]{"csv"});
+				i.putExtra("filefilter", new String[]{"CSV"});
 				startActivityForResult(i, FILEPICK);
+			} else if ( v == mediaProj ) {
+				Intent i = new Intent(this, FileBrowser.class);
+				startActivityForResult(i, MEDIAPROJPICK);
+			} else if ( v == mediaDataset ) {
+				Intent i = new Intent(this, FileBrowser.class);
+				startActivityForResult(i, MEDIADATASET);
 			}
 		} else {
 			Toast.makeText(this, "no innahnet!", Toast.LENGTH_SHORT).show();
@@ -109,6 +128,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			if(requestCode == FILEPICK) {
 				String filepath = data.getStringExtra("filepath");
 				new CSVTask().execute(filepath);
+			} else if (requestCode == MEDIAPROJPICK) {
+				String filepath = data.getStringExtra("filepath");
+				new ProjMediaTask().execute(filepath);
+			} else if (requestCode == MEDIADATASET) {
+				String filepath = data.getStringExtra("filepath");
+				new DSMediaTask().execute(filepath);
 			}
 		}
 	}
@@ -153,6 +178,27 @@ public class MainActivity extends Activity implements OnClickListener {
 		protected void onPostExecute(ArrayList<RPerson> people) {
 			status.setText("People:\n");
 			for(RPerson p : people) {
+				status.append(p.name + "\n");
+			}
+		}
+	}
+	
+	private class NewsTask extends AsyncTask<Void, Void, ArrayList<RNews>> {
+		@Override
+		protected ArrayList<RNews> doInBackground(Void... params) {
+			if(newsId.getText().toString().equals("")) {
+				return api.getNewsEntries(1, 10, true, "");
+			} else {
+				ArrayList<RNews> rp = new ArrayList<RNews>();
+				rp.add(api.getNewsEntry(Integer.valueOf(newsId.getText().toString())));
+				return rp;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<RNews> blogs) {
+			status.setText("News:\n");
+			for(RNews p : blogs) {
 				status.append(p.name + "\n");
 			}
 		}
@@ -218,7 +264,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			api.uploadDataSet(2, newData, "mobile upload test");
+			api.uploadDataSet(2, newData, "mobile upload testfuyf");
 			return null;
 		}
 
@@ -232,6 +278,32 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected Void doInBackground(String... params) {
 			api.uploadCSV(7, new File(params[0]), "csv from app");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class ProjMediaTask extends AsyncTask<String, Void, Void> {
+		@Override
+		protected Void doInBackground(String... params) {
+			api.uploadProjectMedia(7, new File(params[0]));
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+		}
+	}
+	
+	private class DSMediaTask extends AsyncTask<String, Void, Void> {
+		@Override
+		protected Void doInBackground(String... params) {
+			api.uploadDataSetMedia(42, new File(params[0]));
 			return null;
 		}
 

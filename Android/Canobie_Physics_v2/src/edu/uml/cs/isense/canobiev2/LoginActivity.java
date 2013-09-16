@@ -1,169 +1,142 @@
 package edu.uml.cs.isense.canobiev2;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
-import edu.uml.cs.isense.comm.RestAPI;
+import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
-public class LoginActivity {
-	private RestAPI rapi;
+public class LoginActivity extends Activity {
+
 	private Context mContext;
 
-	static final public int LOGIN_SUCCESSFULL = 1;
-	static final public int LOGIN_FAILED = 0;
-	static final public int LOGIN_CANCELED = -1;
+	private API api;
+
+	private final int ERROR_REQUESTED = 100;
 
 	boolean success;
 
 	private String message = "";
+	private String returnCode = "";
+
+	private EditText username, password;
 
 	private static final String unknownUser = "Connection to internet has been found, but the username or password was incorrect.  Please try again.";
 	private static final String noConnection = "No connection to internet through either wifi or mobile found.  Please enable one to continue, then try again.";
-	private static final String defaultMessage = "Was your username and password correct?\nAre you connected to the internet?\nPlease try again.";
 
-	@SuppressWarnings("unused")
-	private SharedPreferences settings;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.logindialog);
 
-	public LoginActivity(Context c) {
-		mContext = c;
-		rapi = RestAPI.getInstance();
+		mContext = this;
 
-		settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-	}
+		api = API.getInstance(mContext);
 
-	public AlertDialog getDialog(final Handler h) {
-		return getDialog(h, "");
-	}
-
-	public AlertDialog getDialog(final Handler h, final String message) {
-
-		final Message loginSuccess = Message.obtain();
-		loginSuccess.setTarget(h);
-		loginSuccess.what = LOGIN_SUCCESSFULL;
-
-		final Message rejectMsg = Message.obtain();
-		rejectMsg.setTarget(h);
-		rejectMsg.what = LOGIN_CANCELED;
-
-		final View v;
-		LayoutInflater vi = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		v = vi.inflate(R.layout.logindialog, null);
-
-		final EditText usernameInput = (EditText) v
-				.findViewById(R.id.usernameInput);
-		final EditText passwordInput = (EditText) v
-				.findViewById(R.id.passwordInput);
+		username = (EditText) findViewById(R.id.usernameInput);
+		password = (EditText) findViewById(R.id.passwordInput);
+		final Button ok = (Button) findViewById(R.id.login_ok);
+		final Button cancel = (Button) findViewById(R.id.login_cancel);
 
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
+				AmusementPark.mContext, AmusementPark.mContext.getSharedPreferences(
+						"USER_INFO", Context.MODE_PRIVATE));
 
-		usernameInput.setText(mPrefs.getString("username", ""));
-		passwordInput.setText(mPrefs.getString("password", ""));
+		username.setText(mPrefs.getString("username", ""));
+		password.setText(mPrefs.getString("password", ""));
 
-		final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		ok.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				new LoginTask().execute();
+			}
+		});
 
-		builder.setView(v);
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
 
-		builder.setMessage(message)
-				.setPositiveButton("Login",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								success = rapi.login(usernameInput.getText()
-										.toString(), passwordInput.getText()
-										.toString());
-
-								if (success) {
-									final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-											AmusementPark.mContext,
-											AmusementPark.mContext
-													.getSharedPreferences(
-															"USER_INFO",
-															Context.MODE_PRIVATE));
-									mPrefs.edit()
-											.putString(
-													"username",
-													usernameInput.getText()
-															.toString())
-											.commit();
-									mPrefs.edit()
-											.putString(
-													"password",
-													passwordInput.getText()
-															.toString())
-											.commit();
-									loginSuccess.sendToTarget();
-									dialog.dismiss();
-								} else {
-									showFailure(h);
-									dialog.dismiss();
-								}
-								dialog.dismiss();
-							}
-						})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								rejectMsg.sendToTarget();
-								dialog.dismiss();
-							}
-						}).setCancelable(true)
-				.setOnCancelListener(new OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						rejectMsg.sendToTarget();
-						dialog.dismiss();
-					}
-				});
-
-		return builder.create();
 	}
 
-	private void showFailure(Handler h) {
-		final Message msg = Message.obtain();
-		msg.setTarget(h);
-		msg.what = LOGIN_FAILED;
+	private void showFailure() {
 
-		if (rapi.connection == "NONE")
+		// if(rapi.connection == "NONE") {
+		// message = noConnection;
+		// }
+		// else if(rapi.connection == "600") {
+		// message = unknownUser;
+		// }
+
+		if (api.hasConnectivity()) {
+			message = unknownUser;
+		} else {
 			message = noConnection;
-		else if (rapi.connection == "600")
-			message = unknownUser;
-		else if (rapi.connection == "")
-			message = unknownUser;
-		else
-			message = defaultMessage;
+		}
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		Dialog dialog;
+		returnCode = "Failed";
 
-		builder.setTitle("Login Failed").setMessage(message)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						msg.sendToTarget();
-					}
-				}).setOnCancelListener(new OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						msg.sendToTarget();
-					}
-				}).setCancelable(false).create();
+		Intent showError = new Intent(mContext, LoginError.class);
+		showError.putExtra("message", message);
+		showError.putExtra("returnCode", returnCode);
+		startActivityForResult(showError, ERROR_REQUESTED);
 
-		dialog = builder.create();
-		dialog.show();
+	}
 
-		AmusementPark.apiTabletDisplay(dialog);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == ERROR_REQUESTED) {
+			String codeFromError = data.getStringExtra("returnCode");
+			Intent ret = new Intent(LoginActivity.this, AmusementPark.class);
+			ret.putExtra("returnCode", codeFromError);
+			setResult(RESULT_OK, ret);
+			finish();
+		}
+	}
+
+	private class LoginTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			success = api.createSession(username.getText().toString(), password
+					.getText().toString());
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			if (success) {
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						AmusementPark.mContext, AmusementPark.mContext.getSharedPreferences(
+								"USER_INFO", Context.MODE_PRIVATE));
+				mPrefs.edit()
+						.putString("username", username.getText().toString())
+						.commit();
+				mPrefs.edit()
+						.putString("password", password.getText().toString())
+						.commit();
+
+				returnCode = "Success";
+				Intent ret = new Intent(LoginActivity.this, AmusementPark.class);
+				ret.putExtra("returnCode", returnCode);
+				setResult(RESULT_OK, ret);
+				finish();
+			} else {
+				showFailure();
+			}
+		}
 
 	}
 
