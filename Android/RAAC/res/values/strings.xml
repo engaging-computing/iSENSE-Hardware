@@ -3,6 +3,7 @@
 
     <string name="wifi_page">WiFi Disabled</string>
     <string name="app_name">Science of Rivers</string>
+    <string name="display_name">iS Science of Rivers</string>
     <string name="button_scan">Scan for Devices</string>
     <string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
