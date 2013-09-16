@@ -107,6 +107,9 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:reset, about, nil];
     self.navigationItem.title = @"iSENSE Data Walk";
     
+    // Provide user feedback from anything from the queue
+    [self backFromQueueUserUpdate];
+    
     // Tag the UI objects
     latitudeLabel.tag           = kTAG_LABEL_LATITUDE;
     longitudeLabel.tag          = kTAG_LABEL_LONGITUDE;
@@ -201,6 +204,12 @@
 // Is called every time MainViewController is about to appear
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // If true, then we're coming back from another ViewController
+    if (self.isMovingToParentViewController == NO) {
+
+    }
+    
 }
 
 // Is called every time MainViewController appears
@@ -210,6 +219,45 @@
     
     // Register for keyboard notifications
     [self registerForKeyboardNotifications];
+}
+
+- (void)backFromQueueUserUpdate {
+    if (comingBackFromQueueUploader) {
+        comingBackFromQueueUploader = FALSE;
+        NSLog(@"Back");
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        BOOL attemptedUpload = [prefs boolForKey:KEY_ATTEMPTED_UPLOAD];
+        if (attemptedUpload) {
+            NSLog(@"Attempt");
+            int returnCode = [prefs integerForKey:KEY_DATA_UPLOADED];
+            switch (returnCode) {
+                case DATA_NONE_UPLOADED:
+                    [self.view makeWaffle:@"No data sets were selected to upload"
+                                 duration:WAFFLE_LENGTH_LONG
+                                 position:WAFFLE_BOTTOM
+                                    image:WAFFLE_WARNING];
+                    break;
+                    
+                case DATA_UPLOAD_FAILED:
+                    [self.view makeWaffle:@"One or more data sets failed to upload"
+                                 duration:WAFFLE_LENGTH_LONG
+                                 position:WAFFLE_BOTTOM
+                                    image:WAFFLE_WARNING];
+                    break;
+                    
+                case DATA_UPLOAD_SUCCESS:
+                    [self.view makeWaffle:@"Selected data sets uploaded successfully"
+                                 duration:WAFFLE_LENGTH_LONG
+                                 position:WAFFLE_BOTTOM
+                                    image:WAFFLE_CHECKMARK];
+                    break;
+                default:
+                    NSLog(@"no no no no no no no");
+                    break;
+            }
+        }
+    }
 }
 
 // Display a dialog asking user if he/she would like to reset application settings
@@ -323,18 +371,20 @@
     [ds setHasInitialProj:[NSNumber numberWithBool:((projID == -1) ? NO : YES)]];
     
     // Add the new data set to the queue
-    [dataSaver addDataSet:ds];
+    BOOL dataDidSave = [dataSaver addDataSet:ds];
     
-    [self.view makeWaffle:@"Data set saved"
-                 duration:WAFFLE_LENGTH_SHORT
-                 position:WAFFLE_BOTTOM
-                    image:WAFFLE_CHECKMARK];
+    if (dataDidSave) {
+        [self.view makeWaffle:@"Data set saved"
+                     duration:WAFFLE_LENGTH_SHORT
+                     position:WAFFLE_BOTTOM
+                        image:WAFFLE_CHECKMARK];
+    } else {
+        [self.view makeWaffle:@"Error saving data set"
+                     duration:WAFFLE_LENGTH_SHORT
+                     position:WAFFLE_BOTTOM
+                        image:WAFFLE_RED_X];
+    }
     
-    // remove below code when done testing upload
-//    [api useDev:TRUE];
-//    [api createSessionWithUsername:@"sor" andPassword:@"sor"];
-//    int amIActuallyAThing = [api uploadDataSetWithId:kDEFAULT_PROJECT withData:dataJObj andName:dataSetName];
-//    NSLog(@"Created data set ID: %d, for data set named: %@", amIActuallyAThing, ds.name);
 }
 
 - (NSString *) getDateAndTime {
@@ -600,6 +650,7 @@
 // Called when the user clicked the Upload button
 - (IBAction) onUploadClick:(id)sender {
     if ([dataSaver dataSetCountWithParentName:PARENT_DATA_WALK] > 0) {
+        comingBackFromQueueUploader = TRUE;
         QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_DATA_WALK];
         queueUploader.title = @"Upload";
         [self.navigationController pushViewController:queueUploader animated:YES];
@@ -784,7 +835,7 @@
     CLLocationCoordinate2D lc2d = [newLocation coordinate];
 
     double latitude  = lc2d.latitude;
-    double longitude = lc2d.longitude;
+    double longitude = lc2d.longitude; NSLog(@"updating location");
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         [latitudeLabel setText:[NSString stringWithFormat:@"Latitude: %lf", latitude]];

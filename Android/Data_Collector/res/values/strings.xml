@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">iSENSE Data Collector</string>
+    <string name="display_name">iS Data Collector</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="iSENSELogo">iSENSE Logo</string>
     <string name="picAndVidCount">Pictures/Videos For This Data Set: \0</string>
