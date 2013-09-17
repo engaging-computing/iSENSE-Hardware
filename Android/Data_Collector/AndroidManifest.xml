@@ -34,7 +34,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
         <activity
-            android:name="edu.uml.cs.isense.collector.splash.Splash"
+            android:name="edu.uml.cs.isense.collector.splash.Welcome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/display_name"
             android:theme="@style/AppTheme" >
@@ -44,6 +44,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".splash.SelectMode"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Select Mode"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".DataCollector"
             android:configChanges="orientation|keyboardHidden|screenSize"
