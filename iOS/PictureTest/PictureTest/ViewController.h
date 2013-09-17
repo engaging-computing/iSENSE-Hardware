@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/API.h>
 #import <MobileCoreServices/UTCoreTypes.h> 
+#import <AssetsLibrary/AssetsLibrary.h>
+
 
 @interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+
+@property (strong) API *api;
 
 -(IBAction)browsePictures:(id)sender;
 -(IBAction)upload:(id)sender;

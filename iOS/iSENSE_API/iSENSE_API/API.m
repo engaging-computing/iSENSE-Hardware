@@ -484,13 +484,10 @@ static RPerson *currentUser;
     
     CFStringRef pathExtension = (__bridge_retained CFStringRef)[path pathExtension];
     CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, NULL);
-    CFRelease(pathExtension);
     
     // The UTI can be converted to a mime type:
     NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType);
-    if (type != NULL)
-        CFRelease(type);
-
+    
     return mimeType;
 }
 
@@ -505,22 +502,13 @@ static RPerson *currentUser;
  * @param mediaToUpload The file to upload
  * @return ??? or -1 if upload fails
  */
--(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload withPath:(NSString *)path andName:(NSString *)name {
+-(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload andName:(NSString *)name {
        
     // Make sure there aren't any characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     
     // Tries to get the mime type of the specified file
-    NSString *mimeType = [self getMimeType:path];
-    
-    // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
-//    NSMutableDictionary* params = [[NSMutableDictionary alloc] init];
-//    [params setObject:@"uploadImageToSession"  forKey:@"method"];
-//    [params setObject:name              forKey:@"session_key"];
-//    [params setObject:name                   forKey:@"eid"];
-//    [params setObject:name                   forKey:@"sid"];
-//    [params setObject:name                     forKey:@"img_name"];
-//    [params setObject:name              forKey:@"img_description"];
+    NSString *mimeType = [self getMimeType:name];
    
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -536,15 +524,10 @@ static RPerson *currentUser;
     // post body
     NSMutableData *body = [NSMutableData data];
     
-    // add params (all params are strings)
-//    for (NSString *param in params) {
-//        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
-//        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
-//    }
-    
     // add image data
     NSData *imageData = [mediaToUpload readDataToEndOfFile];
+    NSLog(@"Image Data = %@", imageData);
+    
     if (imageData) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", name, name] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -559,6 +542,7 @@ static RPerson *currentUser;
     [request setHTTPBody:body];
     
     // set the content-length
+    NSLog(@"%d", [body length]);
     NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
@@ -572,10 +556,12 @@ static RPerson *currentUser;
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
     if (requestError) NSLog(@"Error received from server: %@", requestError);
     
+    NSLog(@"%@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    
     return [urlResponse statusCode];
 }
 
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload withPath:(NSString *)path andName:(NSString *)name { return -1; }
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload andName:(NSString *)name { return -1; }
 
 /**
  * Reformats a row-major NSDictionary to column-major.

@@ -17,6 +17,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    _api = [API getInstance];
+    [_api useDev:TRUE];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -80,15 +82,29 @@
         } else {
             imageToUse = originalImage;
         }
-        
+                
         // Do something with imageToUse
-        imageToUse 
+        NSURL *path = [info objectForKey:UIImagePickerControllerReferenceURL];
         
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        __block NSURL *actualUrl = nil;
+        [library assetForURL:path resultBlock:^(ALAsset *asset) {
+            actualUrl = [[asset defaultRepresentation] url];
+        } failureBlock:^(NSError *error) {
+            NSLog(@"error : %@", error);
+        }];
+        
+        NSString *imageName = [path lastPathComponent];
+        
+        NSFileHandle *imageFile = [NSFileHandle fileHandleForReadingAtPath:[actualUrl absoluteString]];
+        NSLog(@"Image File = %@, with url %@, and original path %@", imageFile, actualUrl.absoluteString, path.description);
+        
+        [_api uploadProjectMediaWithId:24 withFile:imageFile andName:imageName];
     }
     
     // Handle a movied picked from a photo album
     if (CFStringCompare ((CFStringRef) mediaType, kUTTypeMovie, 0)== kCFCompareEqualTo) {
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
+       // NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
         
         // Do something with the picked movie available at moviePath
     }
