@@ -21,14 +21,14 @@
 
 // Allows the device to rotate as necessary - overriden to allow any orientation
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-   // return (isRecording) ? NO : YES;
-    return NO;
+    return (isRecording) ? NO : YES;
+    //return NO;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-   // return (isRecording) ? NO : YES;
-    return NO;
+    return (isRecording) ? NO : YES;
+    //return NO;
 }
 
 // iOS6 enable rotation
@@ -300,6 +300,11 @@
                 [motionManager startAccelerometerUpdates];
             }
             
+            //[locationManager startUpdatingLocation]; // TODO - just added.  is this necessary?
+            
+            // wakelock
+            [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+            
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             recordingInterval = [prefs integerForKey:[StringGrabber grabString:@"recording_interval"]];
             
@@ -324,6 +329,9 @@
             elapsedTimeTimer = nil;
             
             if (motionManager.accelerometerActive) [motionManager stopAccelerometerUpdates];
+            
+            // wakelock
+            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
             
             timeElapsedLabel.text = @"Time Elapsed: 0:00";
             dataPointCountLabel.text = @"Data Points Recorded: 0";
