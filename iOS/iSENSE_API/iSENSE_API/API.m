@@ -502,7 +502,7 @@ static RPerson *currentUser;
  * @param mediaToUpload The file to upload
  * @return ??? or -1 if upload fails
  */
--(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload andName:(NSString *)name {
+-(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
        
     // Make sure there aren't any characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -520,19 +520,17 @@ static RPerson *currentUser;
     // set Content-Type in HTTP header
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
     [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     // post body
     NSMutableData *body = [NSMutableData data];
     
-    // add image data
-    NSData *imageData = [mediaToUpload readDataToEndOfFile];
-    NSLog(@"Image Data = %@", imageData);
-    
-    if (imageData) {
+    // add image data   
+    if (mediaToUpload) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", name, name] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:imageData];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:mediaToUpload];
         [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     }
     
@@ -542,12 +540,12 @@ static RPerson *currentUser;
     [request setHTTPBody:body];
     
     // set the content-length
-    NSLog(@"%d", [body length]);
     NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
     // set URL
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/project/%d?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
+    NSLog(@"%@", request);
     
     // do the request thang
     NSError *requestError;

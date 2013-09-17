@@ -19,7 +19,6 @@
 		392EF7E617E0C84500E8B4BA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 392EF7E517E0C84500E8B4BA /* ViewController.m */; };
 		392EF7E917E0C84500E8B4BA /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 392EF7E717E0C84500E8B4BA /* ViewController_iPhone.xib */; };
 		392EF7EC17E0C84500E8B4BA /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 392EF7EA17E0C84500E8B4BA /* ViewController_iPad.xib */; };
-		3964C82D17E2583900A4CF11 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3964C82C17E2583900A4CF11 /* AssetsLibrary.framework */; };
 		39A7DEF017E21FB40047FEC0 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 392EF7F817E0DB1700E8B4BA /* libiSENSE_API.a */; };
 		39A7DEF217E220930047FEC0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A7DEF117E220930047FEC0 /* CoreData.framework */; };
 		39A7DEF417E2209D0047FEC0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A7DEF317E2209D0047FEC0 /* SystemConfiguration.framework */; };
@@ -80,7 +79,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3964C82D17E2583900A4CF11 /* AssetsLibrary.framework in Frameworks */,
 				39A7DEF417E2209D0047FEC0 /* SystemConfiguration.framework in Frameworks */,
 				39A7DEF217E220930047FEC0 /* CoreData.framework in Frameworks */,
 				39D6BB1A17E0DDAA003988A3 /* MobileCoreServices.framework in Frameworks */,
