@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Canobie Physics</string>
+    <string name="display_name">iS Canobie Physics</string>
     <string name="login">Login</string>
     <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
     <string name="otherConfig"><u><b>Other Configurations</b></u></string>
