@@ -70,7 +70,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		mediaDataset.setOnClickListener(this);
 
 		api = API.getInstance(this);
-		api.setBaseUrl("http://129.63.17.17:3000");
+		//api.setBaseUrl("http://129.63.17.17:3000");
+		api.useDev(true);
 	}
 
 	@Override
