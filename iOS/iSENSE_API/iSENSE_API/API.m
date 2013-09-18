@@ -513,7 +513,7 @@ static RPerson *currentUser;
     // create request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setHTTPShouldHandleCookies:NO];
+    [request setHTTPShouldHandleCookies:YES];
     [request setTimeoutInterval:30];
     [request setHTTPMethod:POST];
     
@@ -554,7 +554,7 @@ static RPerson *currentUser;
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
     if (requestError) NSLog(@"Error received from server: %@", requestError);
     
-    NSLog(@"%@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    NSLog(@"Return string: %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     
     return [urlResponse statusCode];
 }

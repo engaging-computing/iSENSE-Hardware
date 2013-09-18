@@ -18,7 +18,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     _api = [API getInstance];
+    //[_api setBaseUrl:[[NSURL alloc] initWithString:@"http://129.63.17.17:3000"]];
     [_api useDev:TRUE];
+    [_api createSessionWithUsername:@"test" andPassword:@"test"];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,8 +93,7 @@
         
         NSData *imageFile = UIImageJPEGRepresentation(imageToUse, 1);
         NSLog(@"Original path %@", path.description);
-        //[_api createSessionWithUsername:@"test" andPassword:@"test"];
-        [_api uploadProjectMediaWithId:24 withFile:imageFile andName:imageName];
+        [_api uploadProjectMediaWithId:50 withFile:imageFile andName:imageName];
     }
     
     // Handle a movied picked from a photo album
