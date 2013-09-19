@@ -20,7 +20,7 @@
     _api = [API getInstance];
     //[_api setBaseUrl:[[NSURL alloc] initWithString:@"http://129.63.17.17:3000"]];
     [_api useDev:TRUE];
-    [_api createSessionWithUsername:@"test" andPassword:@"test"];
+    [_api createSessionWithUsername:@"mobile" andPassword:@"mobile"];
 
 }
 
@@ -93,7 +93,7 @@
         
         NSData *imageFile = UIImageJPEGRepresentation(imageToUse, 1);
         NSLog(@"Original path %@", path.description);
-        [_api uploadProjectMediaWithId:50 withFile:imageFile andName:imageName];
+        [_api uploadDataSetMediaWithId:766 withFile:imageFile andName:imageName];
     }
     
     // Handle a movied picked from a photo album

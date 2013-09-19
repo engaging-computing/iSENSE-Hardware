@@ -551,16 +551,80 @@ static RPerson *currentUser;
     NSError *requestError;
     NSHTTPURLResponse *urlResponse;
     
-    NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
-    if (requestError) NSLog(@"Error received from server: %@", requestError);
-    
-    NSLog(@"Return string: %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
-    
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) {
+        NSLog(@"Error received from server: %@", requestError);
+        return -1;
+    }
+       
     return [urlResponse statusCode];
 }
 
-// TODO
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name { return -1; }
+/**
+ * Uploads a file to the media section of a data set.
+ *
+ * @param dataSetId The data set ID to upload to
+ * @param mediaToUpload The file to upload
+ * @return ??? or -1 if upload fails
+ */
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+    
+    // Make sure there aren't any characters in the name
+    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    
+    // Tries to get the mime type of the specified file
+    NSString *mimeType = [self getMimeType:name];
+    
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:YES];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:POST];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    // add image data
+    if (mediaToUpload) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:mediaToUpload];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/data_set/%d?authenticity_token=%@", baseUrl, dataSetId, [self getEncodedAuthtoken]]]];
+    NSLog(@"%@", request);
+    
+    // do the request thang
+    NSError *requestError;
+    NSHTTPURLResponse *urlResponse;
+    
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) {
+        NSLog(@"Error received from server: %@", requestError);
+        return -1;
+    }
+    
+    return [urlResponse statusCode];
+
+}
 
 /**
  * Reformats a row-major NSDictionary to column-major.
