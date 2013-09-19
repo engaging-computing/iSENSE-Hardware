@@ -430,7 +430,26 @@ static RPerson *currentUser;
 }
 
 // TODO
--(void)appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
+/**
+ * Append new rows of data to the end of an existing data set
+ *
+ * @param dataSetId The ID of the data set to append to
+ * @param newData The new data to append
+ */
+-(void)appendDataSetDataWithId:(int)dataSetId andData:(NSDictionary *)data {
+    RDataSet *currentDS = [self getDataSetWithId:dataSetId];
+    NSMutableDictionary *existingData = [[NSMutableDictionary alloc] initWithDictionary:currentDS.data];
+    NSArray *keys = [data allKeys];
+    for (int i = 0; i < data.count; i++) {
+        NSArray *newDataPoints = [data objectForKey:keys[i]];
+        for(int j = 0; j < newDataPoints.count; i++) {
+            //[existingData addEntriesFromDictionary:];
+        }
+    }
+    
+    
+    
+}
 
 /**
  * Uploads a new data set to a project on iSENSE.
@@ -491,9 +510,73 @@ static RPerson *currentUser;
     return mimeType;
 }
 
+/**
+ * Uploads a CSV file to iSENSE as a new data set.
+ *
+ * @param projectId The ID of the project to upload data to
+ * @param csvToUpload The CSV as an NSData object
+ * @param datasetName The name of the dataset
+ * @return The ID of the data set created on iSENSE
+ */ // TODO
+-(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
+    
+    // Make sure there aren't any illegal characters in the name
+    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 
-// TODO
--(int)uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name { return -1; }
+    // Tries to get the mime type of the specified file
+    NSString *mimeType = [self getMimeType:name];
+    
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:YES];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:POST];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    // add image data
+    if (csvToUpload) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+        //[body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+       // [body appendData:[[NSString stringWithFormat:@"dataset_name: "]]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:csvToUpload];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/projects/%d/CSVUpload?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
+    NSLog(@"%@", request);
+    
+    // do the request thang
+    NSError *requestError;
+    NSHTTPURLResponse *urlResponse;
+    
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) {
+        NSLog(@"Error received from server: %@", requestError);
+        return -1;
+    }
+    
+    return [urlResponse statusCode];
+
+}
 
 /**
  * Uploads a file to the media section of a project.
@@ -504,7 +587,7 @@ static RPerson *currentUser;
  */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
        
-    // Make sure there aren't any characters in the name
+    // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     
     // Tries to get the mime type of the specified file
@@ -569,7 +652,7 @@ static RPerson *currentUser;
  */
 -(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
     
-    // Make sure there aren't any characters in the name
+    // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     
     // Tries to get the mime type of the specified file
