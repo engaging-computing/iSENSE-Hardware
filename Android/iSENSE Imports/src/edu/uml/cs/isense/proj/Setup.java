@@ -98,6 +98,8 @@ public class Setup extends Activity implements OnClickListener {
 					PREFS_ID = "PROJID_MANUAL";
 				} else if (fromWhere.equals("queue")) {
 					PREFS_ID = "PROJID_QUEUE";
+				} else if (fromWhere.equals("welcome")) {
+					PREFS_ID = "PROJID_WELCOME";
 				} else {
 					PREFS_ID = "PROJID";
 				}

@@ -18,12 +18,13 @@
 #define DATA_NONE_UPLOADED  1500
 #define DATA_UPLOAD_SUCCESS 1501
 #define DATA_UPLOAD_FAILED  1502
+#define KEY_DATA_UPLOADED   @"key_data_uploaded"
 
 @interface DataSaver : NSObject {}
 
 -(id)   initWithContext:(NSManagedObjectContext *)context;
 -(void) addDataSetFromCoreData:(QDataSet *)dataSet;
--(void) addDataSet:(QDataSet *)dataSet;
+-(BOOL) addDataSet:(QDataSet *)dataSet;
 -(id)   removeDataSet:(NSNumber *)key;
 -(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
 -(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;
