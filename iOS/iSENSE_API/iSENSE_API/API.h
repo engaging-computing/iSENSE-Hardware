@@ -11,8 +11,10 @@
 #import <RTutorial.h>
 #import <RPerson.h>
 #import <RDataSet.h>
+#import <RNews.h>
 #import <RProjectField.h>
 #import "Reachability.h"
+#import <MobileCoreServices/UTType.h>
 
 @interface API : NSObject {
 }
@@ -35,9 +37,11 @@
 -(RProject *)   getProjectWithId:       (int)projectId;
 -(RTutorial *)  getTutorialWithId:      (int)tutorialId;
 -(RDataSet *)   getDataSetWithId:       (int)dataSetId;
+-(RNews *)      getNewsWithId:          (int)newsId;
 -(NSArray *)    getProjectFieldsWithId: (int)projectId;
 -(NSArray *)    getDataSetsWithId:      (int)projectId;
 
+-(NSArray *)    getNewsAtPage:      (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 -(NSArray *)    getProjectsAtPage:  (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 -(NSArray *)    getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 
@@ -49,11 +53,10 @@
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields;
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data;
 
--(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName:(NSString *)name;
--(int)      uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name;
--(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload;
--(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload;
-
+-(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName: (NSString *)name;
+-(int)      uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload     andName:(NSString *)name;
+-(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
+-(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
 /* Convenience Method for Uploading */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original;
 

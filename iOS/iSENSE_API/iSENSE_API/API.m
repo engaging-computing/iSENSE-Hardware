@@ -19,6 +19,8 @@
 #define DELETE  @"DELETE"
 #define NONE    @""
 
+#define BOUNDARY @"*****"
+
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
 
@@ -356,7 +358,6 @@ static RPerson *currentUser;
     return persons;
 }
 
-
 /*
  * Returns the current saved user object.
  *
@@ -428,10 +429,11 @@ static RPerson *currentUser;
     return -1;
 }
 
+// TODO
 -(void)appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
 
 /**
- * Uploads a new data set to a project on iSENSE
+ * Uploads a new data set to a project on iSENSE.
  *
  * @param projectId The ID of the project to upload data to
  * @param dataToUpload The data to be uploaded. Must be in column-major format to upload correctly
@@ -475,9 +477,154 @@ static RPerson *currentUser;
 
 }
 
--(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload     andName:(NSString *)name { return -1; }
--(int)uploadProjectMediaWithId:(int)projectId withFile:(NSFileHandle *)mediaToUpload { return -1; }
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload { return -1; }
+/*
+ * Gets the MIME time from a file path.
+ */
+-(NSString *)getMimeType:(NSString *)path{
+    
+    CFStringRef pathExtension = (__bridge_retained CFStringRef)[path pathExtension];
+    CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, NULL);
+    
+    // The UTI can be converted to a mime type:
+    NSString *mimeType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType);
+    
+    return mimeType;
+}
+
+
+// TODO
+-(int)uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name { return -1; }
+
+/**
+ * Uploads a file to the media section of a project.
+ *
+ * @param projectId The project ID to upload to
+ * @param mediaToUpload The file to upload
+ * @return ??? or -1 if upload fails
+ */
+-(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+       
+    // Make sure there aren't any characters in the name
+    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    
+    // Tries to get the mime type of the specified file
+    NSString *mimeType = [self getMimeType:name];
+   
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:YES];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:POST];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    // add image data   
+    if (mediaToUpload) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:mediaToUpload];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/project/%d?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
+    NSLog(@"%@", request);
+    
+    // do the request thang
+    NSError *requestError;
+    NSHTTPURLResponse *urlResponse;
+    
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) {
+        NSLog(@"Error received from server: %@", requestError);
+        return -1;
+    }
+       
+    return [urlResponse statusCode];
+}
+
+/**
+ * Uploads a file to the media section of a data set.
+ *
+ * @param dataSetId The data set ID to upload to
+ * @param mediaToUpload The file to upload
+ * @return ??? or -1 if upload fails
+ */
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+    
+    // Make sure there aren't any characters in the name
+    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    
+    // Tries to get the mime type of the specified file
+    NSString *mimeType = [self getMimeType:name];
+    
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:YES];
+    [request setTimeoutInterval:30];
+    [request setHTTPMethod:POST];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    // add image data
+    if (mediaToUpload) {
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:mediaToUpload];
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set URL
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/data_set/%d?authenticity_token=%@", baseUrl, dataSetId, [self getEncodedAuthtoken]]]];
+    NSLog(@"%@", request);
+    
+    // do the request thang
+    NSError *requestError;
+    NSHTTPURLResponse *urlResponse;
+    
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) {
+        NSLog(@"Error received from server: %@", requestError);
+        return -1;
+    }
+    
+    return [urlResponse statusCode];
+
+}
 
 /**
  * Reformats a row-major NSDictionary to column-major.
@@ -560,6 +707,59 @@ static RPerson *currentUser;
     }
     
     return nil;
+}
+
+/**
+ * Retrieves a list of news articles on iSENSE.
+ *
+ * @param page Which page of news to start the request from
+ * @param perPage How many entries per page to perform the search with
+ * @param descending Whether the list of articles should be in descending order or not
+ * @param search A string to search all articles for
+ * @return A list of RNews objects
+ */
+-(NSArray *)getNewsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+    NSMutableArray *newsArray = [[NSMutableArray alloc] init];
+
+    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+
+    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"news" withParameters:parameters withRequestType:GET andPostData:nil];
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *inner = [results objectAtIndex:i];
+        RNews *news = [[RNews alloc] init];
+    
+        news.news_id = [inner objectForKey:@"id"];
+        news.name = [inner objectForKey:@"name"];
+        news.url = [inner objectForKey:@"url"];
+        news.hidden = [inner objectForKey:@"hidden"];
+        news.timecreated = [inner objectForKey:@"createdAt"];
+        news.content = [inner objectForKey:@""];
+    
+        [newsArray addObject:news];
+    }
+    
+    return newsArray;
+}
+
+/**
+ * Gets a news article off iSENSE.
+ *
+ * @param newsId The id of the news entry to retrieve
+ * @return An RNews object
+ */
+-(RNews *)getNewsWithId:(int)newsId {
+    RNews *news = [[RNews alloc] init];
+    
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"news/%d", newsId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    news.news_id = [results objectForKey:@"id"];
+    news.name = [results objectForKey:@"name"];
+    news.hidden = [results objectForKey:@"hidden"];
+    news.url = [results objectForKey:@"url"];
+    news.timecreated = [results objectForKey:@"createdAt"];
+    news.content = [results objectForKey:@"content"];
+    
+    return news;
 }
 
 @end
