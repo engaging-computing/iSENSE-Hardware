@@ -11,6 +11,7 @@
 #import <RTutorial.h>
 #import <RPerson.h>
 #import <RDataSet.h>
+#import <RNews.h>
 #import <RProjectField.h>
 #import "Reachability.h"
 #import <MobileCoreServices/UTType.h>
@@ -36,9 +37,11 @@
 -(RProject *)   getProjectWithId:       (int)projectId;
 -(RTutorial *)  getTutorialWithId:      (int)tutorialId;
 -(RDataSet *)   getDataSetWithId:       (int)dataSetId;
+-(RNews *)      getNewsWithId:          (int)newsId;
 -(NSArray *)    getProjectFieldsWithId: (int)projectId;
 -(NSArray *)    getDataSetsWithId:      (int)projectId;
 
+-(NSArray *)    getNewsAtPage:      (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 -(NSArray *)    getProjectsAtPage:  (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 -(NSArray *)    getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 

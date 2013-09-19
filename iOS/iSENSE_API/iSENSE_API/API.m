@@ -358,7 +358,6 @@ static RPerson *currentUser;
     return persons;
 }
 
-
 /*
  * Returns the current saved user object.
  *
@@ -430,10 +429,11 @@ static RPerson *currentUser;
     return -1;
 }
 
+// TODO
 -(void)appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data {}
 
 /**
- * Uploads a new data set to a project on iSENSE
+ * Uploads a new data set to a project on iSENSE.
  *
  * @param projectId The ID of the project to upload data to
  * @param dataToUpload The data to be uploaded. Must be in column-major format to upload correctly
@@ -492,11 +492,11 @@ static RPerson *currentUser;
 }
 
 
-
--(int)uploadCSVWithId:         (int)projectId withFile:(NSFileHandle *)csvToUpload andName:(NSString *)name { return -1; }
+// TODO
+-(int)uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name { return -1; }
 
 /**
- * Uploads a file to the media section of a project
+ * Uploads a file to the media section of a project.
  *
  * @param projectId The project ID to upload to
  * @param mediaToUpload The file to upload
@@ -559,7 +559,8 @@ static RPerson *currentUser;
     return [urlResponse statusCode];
 }
 
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSFileHandle *)mediaToUpload andName:(NSString *)name { return -1; }
+// TODO
+-(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name { return -1; }
 
 /**
  * Reformats a row-major NSDictionary to column-major.
@@ -642,6 +643,59 @@ static RPerson *currentUser;
     }
     
     return nil;
+}
+
+/**
+ * Retrieves a list of news articles on iSENSE.
+ *
+ * @param page Which page of news to start the request from
+ * @param perPage How many entries per page to perform the search with
+ * @param descending Whether the list of articles should be in descending order or not
+ * @param search A string to search all articles for
+ * @return A list of RNews objects
+ */
+-(NSArray *)getNewsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+    NSMutableArray *newsArray = [[NSMutableArray alloc] init];
+
+    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+
+    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"news" withParameters:parameters withRequestType:GET andPostData:nil];
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *inner = [results objectAtIndex:i];
+        RNews *news = [[RNews alloc] init];
+    
+        news.news_id = [inner objectForKey:@"id"];
+        news.name = [inner objectForKey:@"name"];
+        news.url = [inner objectForKey:@"url"];
+        news.hidden = [inner objectForKey:@"hidden"];
+        news.timecreated = [inner objectForKey:@"createdAt"];
+        news.content = [inner objectForKey:@""];
+    
+        [newsArray addObject:news];
+    }
+    
+    return newsArray;
+}
+
+/**
+ * Gets a news article off iSENSE.
+ *
+ * @param newsId The id of the news entry to retrieve
+ * @return An RNews object
+ */
+-(RNews *)getNewsWithId:(int)newsId {
+    RNews *news = [[RNews alloc] init];
+    
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"news/%d", newsId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    news.news_id = [results objectForKey:@"id"];
+    news.name = [results objectForKey:@"name"];
+    news.hidden = [results objectForKey:@"hidden"];
+    news.url = [results objectForKey:@"url"];
+    news.timecreated = [results objectForKey:@"createdAt"];
+    news.content = [results objectForKey:@"content"];
+    
+    return news;
 }
 
 @end
