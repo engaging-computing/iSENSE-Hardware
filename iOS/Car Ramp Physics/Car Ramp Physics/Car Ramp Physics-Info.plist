@@ -7,7 +7,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
@@ -18,6 +18,10 @@
 				<string>logoIOS_Retina.png</string>
 				<string>logoIOS_iPad_regular.png</string>
 				<string>logoIOS_retina_ipad.png</string>
+				<string>CarRampPhysicsLogo57x57.png</string>
+				<string>CarRampPhysicsLogo114x114.png</string>
+				<string>CarRampPhysicsLogo72x72.png</string>
+				<string>CarRampPhysicsLogo144x144.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
