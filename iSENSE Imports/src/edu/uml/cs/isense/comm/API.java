@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
