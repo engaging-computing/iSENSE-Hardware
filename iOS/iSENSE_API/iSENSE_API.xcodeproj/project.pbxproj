@@ -21,6 +21,8 @@
 		39A1CC2D16DFB48700B1979F /* Person.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261616DFA86B0062C3DC /* Person.h */; };
 		39A1CC2E16DFB48700B1979F /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261716DFA86B0062C3DC /* Session.h */; };
 		39A1CC2F16DFB48700B1979F /* SessionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261816DFA86B0062C3DC /* SessionData.h */; };
+		39A9419617EB28B0009270D3 /* RNews.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A9419417EB28B0009270D3 /* RNews.h */; };
+		39A9419717EB28B0009270D3 /* RNews.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A9419517EB28B0009270D3 /* RNews.m */; };
 		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
 		39B63D891778C4950024EB75 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
 		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
@@ -90,6 +92,8 @@
 		39217009176F7ACA0070DFCC /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = headers/Queue.h; sourceTree = "<group>"; };
 		3989BECC17C5556C009C5F21 /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		3989BECD17C5556C009C5F21 /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
+		39A9419417EB28B0009270D3 /* RNews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNews.h; sourceTree = "<group>"; };
+		39A9419517EB28B0009270D3 /* RNews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNews.m; path = headers/RNews.m; sourceTree = "<group>"; wrapsLines = 0; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
@@ -311,6 +315,7 @@
 				B7BEBCCF17C4FDD9005C08C0 /* RProject.h */,
 				B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */,
 				B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */,
+				39A9419417EB28B0009270D3 /* RNews.h */,
 			);
 			name = api_headers;
 			path = headers;
@@ -382,6 +387,7 @@
 		B7E5674817C63D5D00C2DF46 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				39A9419517EB28B0009270D3 /* RNews.m */,
 				B7E5674917C63DCE00C2DF46 /* RDataSet.m */,
 				B7E5674A17C63DCE00C2DF46 /* RPerson.m */,
 				B7E5674B17C63DCE00C2DF46 /* RProject.m */,
@@ -453,6 +459,7 @@
 				B7BEBCD117C4FDDA005C08C0 /* RProject.h in Headers */,
 				B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */,
 				3989BECE17C5556C009C5F21 /* API.h in Headers */,
+				39A9419617EB28B0009270D3 /* RNews.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,6 +579,7 @@
 				B7E5675017C63DCE00C2DF46 /* RProject.m in Sources */,
 				B7E5675117C63DCE00C2DF46 /* RProjectField.m in Sources */,
 				B7E5675217C63DCE00C2DF46 /* RTutorial.m in Sources */,
+				39A9419717EB28B0009270D3 /* RNews.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

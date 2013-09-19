@@ -23,4 +23,10 @@
     return self;
 }
 
+-(NSString *)description {
+    
+    NSString *objString = [NSString stringWithFormat:@"RTutorial: {\n\ttutorial_id: %@\n\tname: %@\n\turl: %@\n\ttimecreated: %@\n\thidden: %@\n\towner_name: %@\n\towner_url: %@\n}", tutorial_id, name, url, timecreated, hidden, owner_name, owner_url];
+    return objString;
+}
+
 @end
