@@ -87,7 +87,8 @@ public class Step1Setup extends Activity {
 			public void onClick(View v) {
 
 				boolean ready = true;
-
+				boolean setUpFields = false;
+				
 				if (dataSetName.getText().toString().equals("")) {
 					dataSetName.setError("Enter a data set name");
 					w.make("Please enter a data set name first",
@@ -127,16 +128,18 @@ public class Step1Setup extends Activity {
 					testLen.setError(null);
 				}
 				if (!expCheck.isChecked()) {
-					String eid = mPrefs.getString("project_id", "");
+					String projID = mPrefs.getString("project_id", "");
 					String fields = mPrefs.getString("accepted_fields", "");
-					if (eid.equals("") || eid.equals("-1")) {
+					String acceptedProj = mPrefs.getString("accepted_proj", "-1");
+					if (projID.equals("") || projID.equals("-1")) {
 						w.make("Please select a project", Waffle.LENGTH_SHORT,
 								Waffle.IMAGE_X);
 						ready = false;
-					} else if (fields.equals("")) {
-						w.make("Please re-select your project and fields",
+					} else if (fields.equals("") || (!projID.equals(acceptedProj))) {
+						w.make("Please select your project fields",
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 						ready = false;
+						setUpFields = true;
 					}
 				}
 				if (ready) {
@@ -162,6 +165,8 @@ public class Step1Setup extends Activity {
 					iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
 					setResult(RESULT_OK, iRet);
 					finish();
+				} else if (setUpFields) {
+					new SensorCheckTask().execute();
 				}
 			}
 		});
@@ -206,14 +211,28 @@ public class Step1Setup extends Activity {
 		testLen = (EditText) findViewById(R.id.step1_test_length);
 
 		projLabel = (TextView) findViewById(R.id.step1_proj_num_label);
-		String exp = mPrefs.getString("project_id", "");
-		if (!(exp.equals("") || exp.equals("-1"))) {
-			projLabel.setText("Project (currently " + exp + ")");
-			dfm = new DataFieldManager(Integer.parseInt(exp), api, mContext, f);
+		
+		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+		SharedPreferences.Editor gppEdit = globalProjPrefs.edit();
+		String proj = globalProjPrefs.getString("project_id_dc", "");
+		if (!(proj.equals(""))) {
+			projLabel.setText("Project (currently " + proj + ")");
+			dfm = new DataFieldManager(Integer.parseInt(proj), api, mContext, f);
+			
+			// reset the global project id so we don't pull it again
+			gppEdit.putString("project_id_dc", "").commit();
+			
+			// switch the global project id to the local project id
+			mEdit.putString("project_id", proj).commit();
 		} else {
-			dfm = new DataFieldManager(-1, api, mContext, f);
-			if (exp.equals("-1"))
+			proj = mPrefs.getString("project_id", "");
+			if (!(proj.equals("") || proj.equals("-1"))) {
+				projLabel.setText("Project (currently " + proj + ")");
+				dfm = new DataFieldManager(Integer.parseInt(proj), api, mContext, f);
+			} else {
+				dfm = new DataFieldManager(-1, api, mContext, f);
 				expCheck.toggle();
+			}
 		}
 
 		remember = (CheckBox) findViewById(R.id.step1_remember);

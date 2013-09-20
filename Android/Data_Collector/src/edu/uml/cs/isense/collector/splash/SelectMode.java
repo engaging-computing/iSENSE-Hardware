@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.uml.cs.isense.collector.DataCollector;
+import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -55,8 +58,8 @@ public class SelectMode extends Activity {
 		dataCollector.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				
+				Intent iDC = new Intent(mContext, DataCollector.class);
+				startActivity(iDC);
 			}
 		});
 
@@ -64,8 +67,8 @@ public class SelectMode extends Activity {
 		manualEntry.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-
+				Intent iME = new Intent(mContext, ManualEntry.class);
+				startActivity(iME);
 			}
 		});
 		
