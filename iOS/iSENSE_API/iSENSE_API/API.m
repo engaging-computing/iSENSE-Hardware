@@ -177,7 +177,7 @@ static RPerson *currentUser;
 -(RDataSet *)getDataSetWithId:(int)dataSetId {
     RDataSet *dataSet = [[RDataSet alloc] init];
     
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_set/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_sets/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
     
     dataSet.ds_id = [results objectForKey:@"id"];
     dataSet.name = [results objectForKey:@"name"];
@@ -186,8 +186,12 @@ static RPerson *currentUser;
     dataSet.timecreated = [results objectForKey:@"createdAt"];
     dataSet.fieldCount = [results objectForKey:@"fieldCount"];
     dataSet.datapointCount = [results objectForKey:@"datapointCount"];
-    dataSet.data = [results objectForKey:@"data"];
     dataSet.project_id = [[results objectForKey:@"project"] objectForKey:@"id"];
+    
+    NSArray *dataArray = [results objectForKey:@"data"];
+    NSMutableDictionary *dataObject = [[NSMutableDictionary alloc] init];
+    [dataObject setObject:dataArray forKey:@"data"];
+    dataSet.data = [self rowsToCols:dataObject];
 
     return dataSet;
 }
@@ -250,19 +254,38 @@ static RPerson *currentUser;
 }
 
 /**
+ * Returns the correct string according to the given SortType.
+ *
+ * @param sort
+ * @return NSString of SortType
+ */
+-(NSString *)getSortType:(SortType)sort {
+    switch (sort) {
+        case RATING: return @"RATING";
+        case CREATED_AT_DESC: return @"created_at%20DESC";
+        case CREATED_AT_ASC: return @"created_at%20ASC";
+        case UPDATED_AT_DESC: return @"updated_at%20DESC";
+        case UPDATED_AT_ASC: return @"updated_at%20ASC";
+    }
+}
+
+/**
  * 	Retrieves multiple projects off of iSENSE.
  *
  * @param page Which page of results to start from. 1-indexed
  * @param perPage How many results to display per page
- * @param descending Whether to display the results in descending order (true) or ascending order (false)
+ * @param sort Accepts a SortType enum
  * @param search A string to search all projects for
  * @return An ArrayList of RProject objects
  */
--(NSArray *)getProjectsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
+-(NSArray *)getProjectsAtPage:(int)page withPageLimit:(int)perPage withFilter:(SortType)sort andQuery:(NSString *)search {
     NSMutableArray *results = [[NSMutableArray alloc] init];
-    NSString *sortMode = descending ? @"DESC" : @"ASC";
+    
+    NSString *sortMode = [self getSortType:sort];
+    NSLog(@"%@", sortMode);
+    
     NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&search=%s", page, perPage, sortMode.UTF8String, search.UTF8String];
-    NSArray *reqResult = (NSArray *)[self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
+    NSArray *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
     
     for (NSDictionary *innerProjJSON in reqResult) {
         RProject *proj = [[RProject alloc] init];
@@ -429,25 +452,47 @@ static RPerson *currentUser;
     return -1;
 }
 
-// TODO
 /**
- * Append new rows of data to the end of an existing data set
+ * Append new rows of data to the end of an existing data set.
  *
  * @param dataSetId The ID of the data set to append to
  * @param newData The new data to append
- */
+ */ // TODO Ask Nick
 -(void)appendDataSetDataWithId:(int)dataSetId andData:(NSDictionary *)data {
+    
+    NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     RDataSet *currentDS = [self getDataSetWithId:dataSetId];
     NSMutableDictionary *existingData = [[NSMutableDictionary alloc] initWithDictionary:currentDS.data];
-    NSArray *keys = [data allKeys];
-    for (int i = 0; i < data.count; i++) {
-        NSArray *newDataPoints = [data objectForKey:keys[i]];
-        for(int j = 0; j < newDataPoints.count; i++) {
-            //[existingData addEntriesFromDictionary:];
+
+    NSLog(@"new data: %@", data);
+    NSLog(@"existing data: %@", existingData);
+
+    for (NSString *key in [data allKeys] ) {
+        NSArray *newDataPoints = [data objectForKey:key];
+        for(int j = 0; j < newDataPoints.count; j++) {
+            [existingData setObject:newDataPoints[j] forKey:key];
         }
     }
     
     
+    NSArray *fields = [self getProjectFieldsWithId:currentDS.project_id.intValue];
+    NSMutableArray *headers = [[NSMutableArray alloc] init];
+    for (RProjectField *projField in fields) {
+        [headers addObject:projField.name];
+    }
+    
+    [requestData setObject:headers forKey:@"headers"];
+    [requestData setObject:existingData forKey:@"data"];
+    [requestData setObject:[NSNumber numberWithInt:dataSetId] forKey:@"id"];
+    
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
+    
+    NSError *error;
+    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
+                                                          options:0
+                                                            error:&error];
+    
+    [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_sets/%d/edit", dataSetId] withParameters:parameters withRequestType:POST andPostData:postReqData];
     
 }
 
@@ -510,6 +555,7 @@ static RPerson *currentUser;
     return mimeType;
 }
 
+// TODO -- DON'T CALL ME
 /**
  * Uploads a CSV file to iSENSE as a new data set.
  *
@@ -517,8 +563,7 @@ static RPerson *currentUser;
  * @param csvToUpload The CSV as an NSData object
  * @param datasetName The name of the dataset
  * @return The ID of the data set created on iSENSE
- */ // TODO
--(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
+ */-(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
     
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -775,7 +820,7 @@ static RPerson *currentUser;
     
     NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
     if (requestError) NSLog(@"Error received from server: %@", requestError);
-    
+        
     if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
         id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
         return parsedJSONResponse;

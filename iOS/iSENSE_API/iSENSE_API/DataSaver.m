@@ -175,6 +175,8 @@
                     dataSetsFailed++;
                     continue;
                 }
+                [api appendDataSetDataWithId:returnID andData:currentDS.data];
+
                 
             }
             
