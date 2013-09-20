@@ -317,7 +317,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            NSArray *projects = [isenseAPI getProjectsAtPage:iSS.page withPageLimit:iSS.perPage withFilter:true andQuery:iSS.query];
+            NSArray *projects = [isenseAPI getProjectsAtPage:iSS.page withPageLimit:iSS.perPage withFilter:CREATED_AT_DESC andQuery:iSS.query];
             
             // remove the spinner
             [projectSpinner stopAnimating];
