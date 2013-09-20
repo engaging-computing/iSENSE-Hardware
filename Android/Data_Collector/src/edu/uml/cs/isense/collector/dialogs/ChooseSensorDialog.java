@@ -230,6 +230,7 @@ public class ChooseSensorDialog extends Activity implements OnClickListener {
 		prefString = prefString.substring(0, prefString.length() - 1);
 		
 		mEdit.putString("accepted_fields", prefString).commit();
+		mEdit.putString("accepted_proj", mPrefs.getString("project_id", "-1")).commit();
 		
 		Log.d("Jeremy", prefString);
 		
