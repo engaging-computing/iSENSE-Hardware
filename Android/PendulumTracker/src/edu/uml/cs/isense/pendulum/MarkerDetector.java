@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class MarkerDetector {
 	
-	private static final String  TAG              = "PendulumTracker::MarkerDetector";
+	private static final String  TAG = "PendulumTracker::MarkerDetector";
 	
     // Lower and Upper bounds for range checking in HSV color space
     private Scalar mLowerBound = new Scalar(0);
@@ -106,6 +106,7 @@ public class MarkerDetector {
         
         // Detect contours
         Imgproc.findContours(resultCopy, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Log.e(TAG, "Contours count: " + contours.size());
 
         // Find max contour area
         List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
@@ -160,6 +161,14 @@ public class MarkerDetector {
 			return new Point(0,0);
 
     }
+    
+    Mat getLastDebugImg()
+    {
+    	// currently edge image
+    	return mResult;
+    }
+    
+    
     
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);
