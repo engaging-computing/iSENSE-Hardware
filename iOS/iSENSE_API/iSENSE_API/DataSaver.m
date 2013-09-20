@@ -174,10 +174,7 @@
                 if (returnID == 0 || returnID == -1) {
                     dataSetsFailed++;
                     continue;
-                }
-                [api appendDataSetDataWithId:returnID andData:currentDS.data];
-
-                
+                }                
             }
             
             // upload pictures to iSENSE TODO - implement with the new API

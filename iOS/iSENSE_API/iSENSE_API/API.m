@@ -282,7 +282,6 @@ static RPerson *currentUser;
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
     NSString *sortMode = [self getSortType:sort];
-    NSLog(@"%@", sortMode);
     
     NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&search=%s", page, perPage, sortMode.UTF8String, search.UTF8String];
     NSArray *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
@@ -299,8 +298,6 @@ static RPerson *currentUser;
         proj.timecreated = [innerProjJSON objectForKey:@"createdAt"];
         proj.owner_name = [innerProjJSON objectForKey:@"ownerName"];
         proj.owner_url = [innerProjJSON objectForKey:@"ownerUrl"];
-        
-        NSLog(@"%@", proj);
         
         [results addObject:proj];
         
@@ -457,32 +454,32 @@ static RPerson *currentUser;
  *
  * @param dataSetId The ID of the data set to append to
  * @param newData The new data to append
- */ // TODO Ask Nick
+ */
 -(void)appendDataSetDataWithId:(int)dataSetId andData:(NSDictionary *)data {
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     RDataSet *currentDS = [self getDataSetWithId:dataSetId];
-    NSMutableDictionary *existingData = [[NSMutableDictionary alloc] initWithDictionary:currentDS.data];
+    NSMutableDictionary *finalData = [[NSMutableDictionary alloc] init];
 
-    NSLog(@"new data: %@", data);
-    NSLog(@"existing data: %@", existingData);
-
-    for (NSString *key in [data allKeys] ) {
-        NSArray *newDataPoints = [data objectForKey:key];
-        for(int j = 0; j < newDataPoints.count; j++) {
-            [existingData setObject:newDataPoints[j] forKey:key];
-        }
-    }
-    
-    
     NSArray *fields = [self getProjectFieldsWithId:currentDS.project_id.intValue];
     NSMutableArray *headers = [[NSMutableArray alloc] init];
     for (RProjectField *projField in fields) {
-        [headers addObject:projField.name];
+        [headers addObject:projField.field_id];
+    }
+        
+    int currentIndex;
+    for (NSNumber *key in currentDS.data.allKeys) {
+        for(currentIndex = 0; currentIndex < headers.count; currentIndex++) {
+            if (key.intValue == ((NSNumber *)headers[currentIndex]).intValue) break;
+        }
+                
+        NSMutableArray *newDataArray = [[NSMutableArray alloc] initWithArray:[currentDS.data objectForKey:key]];
+        [newDataArray addObjectsFromArray:[data objectForKey:[NSString stringWithFormat:@"%d", currentIndex]]];
+        [finalData setObject:newDataArray forKey:[NSString stringWithFormat:@"%d", currentIndex]];
     }
     
     [requestData setObject:headers forKey:@"headers"];
-    [requestData setObject:existingData forKey:@"data"];
+    [requestData setObject:finalData forKey:@"data"];
     [requestData setObject:[NSNumber numberWithInt:dataSetId] forKey:@"id"];
     
     NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
@@ -526,16 +523,12 @@ static RPerson *currentUser;
     NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
                                                        options:0
                                                          error:&error];
-    NSLog(@"Parsed JSONObject = %@", [[NSString alloc] initWithData:postReqData encoding:NSUTF8StringEncoding]);
-    
     if (error) {
         NSLog(@"Error parsing object to JSON: %@", error);
     }
     
     NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
     NSNumber *dataSetId = [requestResult objectForKey:@"id"];
-    
-    NSLog(@"Result = %@", requestResult);
     
     return dataSetId.intValue;
 
