@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">iSENSE Data Collector</string>
+    <string name="app_name">iSENSE Uploader</string>
+    <string name="display_name">iS Uploader</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="iSENSELogo">iSENSE Logo</string>
     <string name="picAndVidCount">Pictures/Videos For This Data Set: \0</string>
@@ -292,5 +293,15 @@
     <string name="select_proj">Select Project</string>
     <string name="select_later">I\'ll select one later</string>
     <string name="remember_setup">Remember my Sample Interval and Test Length</string>
-
+    <string name="welcome_str">Welcome to the iSENSE Uploader.  Select an option below.</string>
+    <string name="continue_with_exist">Continue With an Existing iSENSE Project *</string>
+	<string name="create_new_proj">Create a New Project *</string>
+	<string name="select_proj_later">Select a Project Later</string>
+	<string name="star_equals_welcome">* = requires internet connectivity</string>
+	<string name="what_to_do">What would you like to do?</string>
+	<string name="pre_data_collector_str">Collect Data Using My Device\'s Hardware Sensors</string>
+	<string name="pre_manual_entry_str">Manually Enter Data *</string>
+    <string name="pre_csv_uploader_str">Upload a .csv File From My Device</string>
+    <string name="star_equals_select">* = requires a project first</string>
+	
 </resources>
