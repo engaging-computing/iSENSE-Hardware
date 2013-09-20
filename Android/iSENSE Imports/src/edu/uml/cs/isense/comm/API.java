@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
@@ -515,7 +514,9 @@ public class API {
 			requestData.put("id", ""+projectId);
 			if(!datasetName.equals("")) requestData.put("name", datasetName);
 			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			System.out.println("Are I blank? = " + reqResult);
 			JSONObject jobj = new JSONObject(reqResult);
+			System.out.println("Returning: " + jobj.toString());
 			return jobj.getInt("id");
 		} catch (Exception e) {
 			e.printStackTrace();

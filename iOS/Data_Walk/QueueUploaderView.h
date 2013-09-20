@@ -19,6 +19,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 
+#define KEY_ATTEMPTED_UPLOAD    @"key_attempted_upload"
+
 @interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
     int projID;
 }
