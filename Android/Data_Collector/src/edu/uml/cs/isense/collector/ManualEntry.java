@@ -60,7 +60,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
-import edu.uml.cs.isense.collector.splash.Splash;
+import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.proj.Setup;
@@ -154,8 +154,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		
 		initLocations();
 
-		loginPrefs = new ObscuredSharedPreferences(Splash.mContext,
-				Splash.mContext.getSharedPreferences("USER_INFO",
+		loginPrefs = new ObscuredSharedPreferences(Welcome.mContext,
+				Welcome.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
 		projPrefs = getSharedPreferences("PROJID_MANUAL", 0);
@@ -181,11 +181,18 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
+		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+		String projID = globalProjPrefs.getString("project_id_manual", "");
 		if (projID.equals("")) {
-			Intent iProject = new Intent(this, Setup.class);
-			iProject.putExtra("from_where", "manual");
-			startActivityForResult(iProject, PROJECT_REQUESTED);
+			projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
+			if (!(projID.equals(""))) {
+				loadProjectData(projID);
+			} else {
+				Intent iProject = new Intent(this, Setup.class);
+				iProject.putExtra("from_where", "manual");
+				startActivityForResult(iProject, PROJECT_REQUESTED);
+			}
+			
 		} else {
 			loadProjectData(projID);
 		}
@@ -253,7 +260,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID_MANUAL", 0);
-				loadProjectData(mPrefs.getString(PREFERENCES_PROJ_ID, ""));
+				String projID = mPrefs.getString(PREFERENCES_PROJ_ID, "");
+				loadProjectData(projID);
+				
+				// set the new global to the new project
+				SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+				SharedPreferences.Editor gppe = globalProjPrefs.edit();
+				gppe.putString("project_id_manual", projID).commit();
 			} else {
 				// they may not have fields on screen now
 			}
@@ -281,7 +294,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void loadProjectData(String projString) {
 
 		if (projString != null) {
-			new LoadProjectFieldsTask().execute();
+			new LoadProjectFieldsTask().execute(projString);
 		}
 	}
 
@@ -596,7 +609,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private class LoadProjectFieldsTask extends
-			AsyncTask<Void, Integer, Void> {
+			AsyncTask<String, Integer, Void> {
 		ProgressDialog dia;
 		private boolean error = false;
 
@@ -615,10 +628,13 @@ public class ManualEntry extends Activity implements OnClickListener,
 		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Void doInBackground(String... params) {
 
-			int projID = Integer.parseInt(projPrefs.getString(PREFERENCES_PROJ_ID,
-					"-1"));
+			int projID = Integer.parseInt(params[0]);
+			SharedPreferences sp = getSharedPreferences("to_post_execute", 0);
+			SharedPreferences.Editor spe = sp.edit();
+			spe.putString("project_id", params[0]).commit();
+			
 			if (projID != -1) {
 				fieldOrder = api.getProjectFields(projID);
 			} else {
@@ -632,7 +648,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected void onPostExecute(Void result) {
 
 			if (!error) {
-				String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "-1");
+				SharedPreferences sp = getSharedPreferences("to_post_execute", 0);
+				String projID = sp.getString("project_id", "-1");
 
 				try {
 					fillDataFieldEntryList(Integer.parseInt(projID));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="20dp"
@@ -10,56 +10,69 @@
         android:id="@+id/select_mode_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:text="Select what you would like to do."
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/what_to_do"
         android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:weightSum="3" >
+    <LinearLayout
+        android:id="@+id/select_mode_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/select_mode_star_text"
+        android:layout_below="@id/select_mode_text"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:weightSum="3" >
 
-            <Button
-                android:id="@+id/select_mode_data_collector"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rsense"
-                android:text="Collect Data Using Your Device's Hardware Sensors"
-                android:textColor="#0066FF"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/select_mode_data_collector"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/pre_data_collector_str"
+            android:textColor="#0066FF"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/select_mode_manual_entry"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rsense"
-                android:text="Manually Enter Data"
-                android:textColor="#0066FF"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/select_mode_manual_entry"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/pre_manual_entry_str"
+            android:textColor="#0066FF"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/select_mode_csv_uploader"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rsense"
-                android:text="Upload a .csv File"
-                android:textColor="#0066FF"
-                android:textSize="18sp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/select_mode_csv_uploader"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/pre_csv_uploader_str"
+            android:textColor="#0066FF"
+            android:textSize="18sp" />
+    </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@id/select_mode_star_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/star_equals_select"
+        android:textSize="14sp" />
+
+</RelativeLayout>

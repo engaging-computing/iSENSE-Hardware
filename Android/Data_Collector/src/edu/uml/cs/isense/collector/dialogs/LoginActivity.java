@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.collector.splash.Splash;
+import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
@@ -48,8 +48,8 @@ public class LoginActivity extends Activity {
 		final Button ok = (Button) findViewById(R.id.login_ok);
 		final Button cancel = (Button) findViewById(R.id.login_cancel);
 		
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				   Splash.mContext, Splash.mContext
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences( // TODO - was Splash.mContext
+				   Welcome.mContext, Welcome.mContext
 				   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
 		
 		username.setText(mPrefs.getString("username", ""));
@@ -121,7 +121,7 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(Void voids) {
 			if (success) {
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						Splash.mContext, Splash.mContext
+						Welcome.mContext, Welcome.mContext
 						   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
 				   	mPrefs.edit().putString("username", username.getText().toString()).commit();
 				   	mPrefs.edit().putString("password", password.getText().toString()).commit();

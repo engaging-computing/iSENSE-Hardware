@@ -108,11 +108,18 @@ public class Welcome extends Activity {
 
 				String projID = mPrefs.getString("project_id", "");
 				if (!(projID.equals("") || projID.equals("-1"))) {
-					// TODO - got a project
-				} else {
-					// TODO - cancelled
-				}
-
+					SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+					SharedPreferences.Editor mEdit = globalProjPrefs.edit();
+					mEdit.putString("project_id", projID).commit();
+					mEdit.putString("project_id_dc", projID);
+					mEdit.putString("project_id_manual", projID);
+					mEdit.putString("project_id_csv", projID);
+					mEdit.commit();
+					
+					Intent iSelectMode = new Intent(mContext, SelectMode.class);
+					iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, true);
+					startActivity(iSelectMode);
+				} 
 			}
 		} 
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="20dp"
@@ -10,56 +10,69 @@
         android:id="@+id/welcome_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:text="Welcome to the iSENSE Uploader.  Select an option below."
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/welcome_str"
         android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:weightSum="3" >
+    <LinearLayout
+        android:id="@+id/welcome_button_layout"
+        android:layout_below="@id/welcome_text"
+        android:layout_above="@+id/welcome_star_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:weightSum="3" >
 
-            <Button
-                android:id="@+id/welcome_select_project"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rsense"
-                android:text="Continue With an Existing iSENSE Project"
-                android:textColor="#0066FF"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/welcome_select_project"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/continue_with_exist"
+            android:textColor="#0066FF"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/welcome_create_project"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rsense"
-                android:text="Create a New Project"
-                android:textColor="#0066FF"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/welcome_create_project"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/create_new_proj"
+            android:textColor="#0066FF"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/welcome_no_project"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rsense"
-                android:text="Select a Project Later"
-                android:textColor="#0066FF"
-                android:textSize="18sp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/welcome_no_project"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rsense"
+            android:text="@string/select_proj_later"
+            android:textColor="#0066FF"
+            android:textSize="18sp" />
+    </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@id/welcome_star_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/star_equals_welcome"
+        android:textSize="14sp" />
+
+</RelativeLayout>

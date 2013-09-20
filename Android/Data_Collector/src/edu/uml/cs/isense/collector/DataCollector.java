@@ -200,6 +200,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
 	public static boolean manageUploadQueueAfterLogin = false;
+	public static boolean useDev = false;
 
 	// Strings
 	public static String textToDataSet = "";
@@ -1192,7 +1193,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(false);
+		api.useDev(useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1223,7 +1224,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(false);
+		api.useDev(useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
