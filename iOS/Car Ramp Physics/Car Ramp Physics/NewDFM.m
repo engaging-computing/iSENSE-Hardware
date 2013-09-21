@@ -1,8 +1,8 @@
 //
-//  DataFieldManager.m
-//  iOS Data Collector
+//  NewDFM.m
+//  iOS API
 //
-//  Created by Mike Stowell on 2/21/13.
+//  Created by Virinchi Balabhadrapatruni 9/12/13.
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 //
@@ -44,13 +44,13 @@
     if (order) order = nil;
     order = [[NSMutableArray alloc] init];
     API *api = [API getInstance];
-    dispatch_queue_t queue = dispatch_queue_create("edu.uml.cs.isense.car-ramp-physics", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("edu.uml.cs.isense.api", NULL);
     dispatch_async(queue, ^{
         NSArray *fields = [api getProjectFieldsWithId:projID];
         
         for (RProjectField *field in fields) {
             switch ([field.type intValue]) {
-                case RProjectField.TYPE_NUMBER:
+                case TYPE_NUMBER:
                     if ([[field.name lowercaseString] rangeOfString:@"temp"].location != NSNotFound) {
                         if ([[field.name lowercaseString] rangeOfString:@"c"].location != NSNotFound) {
                             [order addObject:[FieldGrabber grabField:@"temperature_c"]];
@@ -95,13 +95,13 @@
                         [order addObject:[FieldGrabber grabField:@"null_string"]];
                     }
                     break;
-                case RProjectField.TYPE_TIMESTAMP:
+                case TYPE_TIMESTAMP:
                     [order addObject:[FieldGrabber grabField:@"time"]];
                     break;
-                case RProjectField.TYPE_LAT:
+                case TYPE_LAT:
                     [order addObject:[FieldGrabber grabField:@"latitude"]];
                     break;
-                case RProjectField.TYPE_LON:
+                case TYPE_LON:
                     [order addObject:[FieldGrabber grabField:@"longitude"]];
                     break;
                 default:

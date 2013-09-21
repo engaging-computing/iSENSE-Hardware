@@ -6,19 +6,19 @@
 //  Copyright (c) 2013 ECG. All rights reserved.
 //
 
-#import "DataSet.h"
+#import <iSENSE_API/headers/QDataSet.h>
 #import "DataFieldManager.h"
 #import "CRTableViewCell.h"
 
 @interface QueueCell : CRTableViewCell
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)dataSet andKey:(NSNumber *)key;
+- (QueueCell *)setupCellWithDataSet:(QDataSet *)dataSet andKey:(NSNumber *)key;
 - (void) setSessionName:(NSString *)name;
 - (NSNumber *)getKey;
 - (void) setExpNum:(NSString *)exp;
 - (BOOL) dataSetHasInitialExperiment;
 
-@property (nonatomic, retain) DataSet *dataSet;
+@property (nonatomic, retain) QDataSet *dataSet;
 @property (nonatomic, retain) NSNumber *mKey;
 
 

@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "QueueCell.h"
-#import "ExperimentBrowseViewController.h"
+#import "ProjectBrowseViewController.h"
 #import "Waffle.h"
 #import <iSENSE_API/DataFieldManager.h>
 #import <DataSaver.h>
@@ -27,7 +27,7 @@
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) NSMutableArray *selectedMarks;
 @property (nonatomic) NSMutableArray *dataSource;
-@property (nonatomic, assign) iSENSE *iapi;
+@property (nonatomic, assign) API *iapi;
 @property (nonatomic, retain) UIBarButtonItem *edit;
 @property (nonatomic, retain) NSIndexPath *lastClickedCellIndex;
 @property (nonatomic, retain) IBOutlet UIButton *uploadButton;

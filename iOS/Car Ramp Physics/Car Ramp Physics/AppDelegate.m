@@ -100,7 +100,7 @@
 /**
  Returns the managed object context for the application.
  If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
- */
+ 
 - (NSManagedObjectContext *) managedObjectContext {
 	
     if (managedObjectContext != nil) {
@@ -122,7 +122,7 @@
 /**
  * Returns the managed object model for the application.
  *If the model doesn't already exist, it is created by merging all of the models found in the application bundle.
- */
+ 
 - (NSManagedObjectModel *)managedObjectModel {
     if (!managedObjectModel) {
         
@@ -143,7 +143,7 @@
 /**
  Returns the persistent store coordinator for the application.
  If the coordinator doesn't already exist, it is created and the application's store added to it.
- */
+ 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
 	
     if (persistentStoreCoordinator != nil) {
@@ -171,7 +171,7 @@
 		 * The persistent store is not accessible
 		 * The schema for the persistent store is incompatible with current managed object model
 		 Check the error message to determine what the actual problem was.
-		 */
+		 
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		abort();
     }
@@ -185,7 +185,7 @@
 
 /**
  Returns the path to the application's Documents directory.
- */
+ 
 - (NSString *)applicationDocumentsDirectory {
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }
@@ -229,5 +229,5 @@
         
     }
 }
-
+*/
 @end

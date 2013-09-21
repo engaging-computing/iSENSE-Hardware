@@ -12,7 +12,7 @@
 
 @synthesize dataSet, mKey;
 
-- (QueueCell *)setupCellWithDataSet:(DataSet *)ds andKey:(NSNumber *)key {
+- (QueueCell *)setupCellWithDataSet:(QDataSet *)ds andKey:(NSNumber *)key {
     self.mKey = key;
     
     dataSet = ds;
@@ -38,11 +38,11 @@
 
 - (void) setExpNum:(NSString *)exp {
         
-    [dataSet setEid:[NSNumber numberWithInt:[exp intValue]]];
+    [dataSet setProjID:[NSNumber numberWithInt:[exp intValue]]];
 }
 
 - (BOOL) dataSetHasInitialExperiment {
-    NSNumber *initial = [dataSet hasInitialExp];
+    NSNumber *initial = [dataSet hasInitialProj];
     return [initial boolValue];
 }
 
