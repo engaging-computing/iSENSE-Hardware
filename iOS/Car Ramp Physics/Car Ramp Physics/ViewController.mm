@@ -16,7 +16,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, iapi, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -123,8 +123,8 @@
     useDev = TRUE;
     
     
-    iapi = [iSENSE getInstance];
-    [iapi toggleUseDev: useDev];
+    api = [API getInstance];
+    [api useDev: useDev];
     
     if (saver == nil) {
         saver = new RotationDataSaver;
@@ -144,7 +144,7 @@
     timeOver = NO;
     setupDone = NO;
     
-    dfm = [[DataFieldManager alloc] init];
+    dfm = [[NewDFM alloc] init];
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
@@ -161,8 +161,8 @@
         userName = saver->user;
         passWord = saver->pass;
     } else {
-        userName = @"sor";
-        passWord = @"sor";
+        userName = @"mobile";
+        passWord = @"mobile";
         
         
     }
@@ -192,7 +192,7 @@
     if (dataSaver == nil) {
         dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
         NSLog(@"Datasaver Details: %@", dataSaver.description);
-        NSLog(@"Current count = %d", dataSaver.count);
+        NSLog(@"Current count = %d", dataSaver.dataQueue.count);
     }
     
     self.navigationItem.rightBarButtonItem = menuButton;
@@ -282,7 +282,7 @@
         [change_name show];
         
         
-        if (!iapi.isConnectedToInternet){
+        if (![API hasConnectivity]){
             [dfm setEnabledField:x atIndex:fACCEL_X];
             [dfm setEnabledField:y atIndex:fACCEL_Y];
             [dfm setEnabledField:z atIndex:fACCEL_Z];
@@ -301,7 +301,7 @@
 }
 
 - (void) saveModeDialog {
-    if (![iapi isConnectedToInternet]) {
+    if (![API hasConnectivity]) {
         saveMode = [[UIAlertView alloc] initWithTitle:@"No Connectivity" message:@"Could not connect to the Internet through either Wi-Fi or mobile service. You will not be able to upload data to iSENSE until either is enabled.\n* Turning on Save Mode will allow data to be saved until Internet is enabled." delegate:self cancelButtonTitle:@"Try Again" otherButtonTitles:@"Save Mode", nil];
         
         [saveMode show];
@@ -318,7 +318,7 @@
         NSLog(@"Long Press");
         if (!running) {
             // Get Field Order
-            if (!iapi.isConnectedToInternet){
+            if (![API hasConnectivity]){
                 [dfm setEnabledField:x atIndex:fACCEL_X];
                 [dfm setEnabledField:y atIndex:fACCEL_Y];
                 [dfm setEnabledField:z atIndex:fACCEL_Z];
@@ -479,9 +479,14 @@
             });
         }
     });
-    // Update parent JSON object
-    if (dataToBeOrdered != nil)
-        [dataToBeOrdered addObject:fieldsRow];
+    
+    if ([API hasConnectivity]){
+        //Save as JSONObject
+        [dataToBeOrdered addObject:[dfm putDataFromFields:fieldsRow]];
+    } else {
+        [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
+    }
+        
     
     
 }
@@ -622,10 +627,10 @@
 
 - (void) browseExp {
     [experiment dismissWithClickedButtonIndex:1 animated:YES];
-    ExperimentBrowseViewController *browse;
-    browse = [[ExperimentBrowseViewController alloc] init];
-    browse.title = @"Browse for Experiments";
-    browse.chosenExperiment = &expNum;
+    ProjectBrowseViewController *browse;
+    browse = [[ProjectBrowseViewController alloc] init];
+    browse.title = @"Browse for Projects";
+    browse.chosenProject = &expNum;
     [self.navigationController pushViewController:browse animated:YES];
     
 }
@@ -645,7 +650,7 @@
 
 - (void) expCode {
     [experiment dismissWithClickedButtonIndex:0 animated:YES];
-    exp_num = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    exp_num = [[UIAlertView alloc] initWithTitle:@"Enter Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [exp_num setAlertViewStyle:UIAlertViewStylePlainTextInput];
     if (useDev) {
         [exp_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",DEV_DEFAULT_EXP];
@@ -661,77 +666,50 @@
     
     bool uploadable = false;
     
-    if (iapi.isConnectedToInternet)
+    if (![API hasConnectivity])
         expNum = -1;
     
     if (expNum > 1) uploadable = true;
-    [dfm getFieldOrderOfExperiment:expNum];
-    
-    // Organize the data from dataToBeOrdered
-    for (int i = 0; i < [dataToBeOrdered count]; i++) {
-        Fields *f = [dataToBeOrdered objectAtIndex:i];
-        [dfm orderDataFromFields:f];
-        [dataToBeJSONed addObject:dfm.data];
-    }
     
     NSLog(@"Bla");
-    DataSet *ds = [[DataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
-    [ds setEid:[NSNumber numberWithInt:expNum]];
+    [ds setProjID:[NSNumber numberWithInt:expNum]];
     [ds setData:dataToBeJSONed];
     [ds setPicturePaths:nil];
-    [ds setSid:[NSNumber numberWithInt:-1]];
-    [ds setCity:city];
-    [ds setCountry:country];
-    [ds setAddress:address];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
     [ds setParentName:@"CarRampPhysics"];
     NSLog(@"Bla2");
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
-    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.dataQueue.count);
     
     
 }
 
 - (bool) uploadData:(NSString *) description {
     
-    if ([iapi isConnectedToInternet]) {
+    if ([API hasConnectivity]) {
         
-        if (![iapi isLoggedIn]) {
+        
+        
+        if ([[api getCurrentUser].name isEqualToString:@""]) {
             [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
             return false;
             
         }
         
-        session_num = [iapi createSession:sessionName withDescription:description Street:address City:city Country:country toExperiment:[NSNumber numberWithInt: expNum]];
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        [data setObject:dataToBeOrdered forKey:@"data"];
+        [api rowsToCols:data];
         
-        
-        
-        [dfm getFieldOrderOfExperiment:expNum];
-        
-        // Organize the data from dataToBeOrdered
-        for (int i = 0; i < [dataToBeOrdered count]; i++) {
-            Fields *f = [dataToBeOrdered objectAtIndex:i];
-            [dfm orderDataFromFields:f];
-            [dataToBeJSONed addObject:dfm.data];
-        }
-        
-        NSArray *array = [NSArray arrayWithArray:dataToBeJSONed];
-        NSError *error = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array options:0 error:&error];
-        if (error != nil) {
-            NSLog(@"Error:%@", error);
-            return false;
-        }
-        
-        bool success = [iapi putSessionData:jsonData forSession:session_num inExperiment:[NSNumber numberWithInt: expNum]];
+        bool success = [api uploadDataSetWithId:expNum withData:data andName:sessionName];
         if (!success) {
             [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
             [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
-            
+         
         }
         
         
@@ -758,7 +736,7 @@
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
-        if ([dataSaver count] > 0) {
+        if (dataSaver.dataQueue.count > 0) {
             QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
             queueUploader.title = @"Upload saved data";
             [self.navigationController pushViewController:queueUploader animated:YES];
@@ -775,8 +753,8 @@
     };
     void (^codeBlock)() = ^() {
         NSLog(@"Experiment button pressed");
-        experiment = [[UIAlertView alloc] initWithTitle:@"Experiment Code" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-        [experiment addButtonWithTitle:@"Enter Experiment #"];
+        experiment = [[UIAlertView alloc] initWithTitle:@"Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+        [experiment addButtonWithTitle:@"Enter Project ID"];
         [experiment addButtonWithTitle:@"Browse"];
         [experiment addButtonWithTitle:@"QR Code"];
         [experiment addButtonWithTitle:@"Done"];
@@ -811,7 +789,7 @@
     void (^resetBlock)() = ^() {
         NSLog(@"Reset button pressed");
         countdown = recordLength = 10;
-        userName = passWord = @"sor";
+        userName = passWord = @"mobile";
         [self login:userName withPassword:passWord];
         login_status.text = [@"Logged in as: " stringByAppendingString: userName];
         login_status.text = [login_status.text stringByAppendingString:@" Name: "];
@@ -981,8 +959,8 @@
                 [self changeName];
             }
         }
-    } else if ([alertView.title isEqualToString:@"Experiment Code"]){
-        if ([title isEqualToString:@"Enter Experiment #"]) {
+    } else if ([alertView.title isEqualToString:@"Project ID"]){
+        if ([title isEqualToString:@"Enter Project ID"]) {
             [self expCode];
         } else if ([title isEqualToString:@"Browse"]) {
             [self browseExp];
@@ -991,7 +969,7 @@
         } else {
             [experiment dismissWithClickedButtonIndex:3 animated:YES];
         }
-    } else if ([alertView.title isEqualToString:@"Enter Experiment #"]) {
+    } else if ([alertView.title isEqualToString:@"Enter Project ID"]) {
         expNum = [[alertView textFieldAtIndex:0].text intValue];
         if (expNum == 0) {
             if (saveModeEnabled) {
@@ -1030,49 +1008,63 @@
     
 }
 
+// Log into iSENSE
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
-    UIAlertView *message;
-    if (!saver->hasLogin){
-        message = [self getDispatchDialogWithMessage:@"Logging in..."];
-        [message show];
-    }
-    NSLog(@"Making waffle");
-    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
+    // __block BOOL success;
+    // __block RPerson *curUser;
+    
+    UIAlertView *spinnerDialog = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [spinnerDialog show];
+
+    dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_t_dialog", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [iapi login:usernameInput with:passwordInput];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
             if (success) {
-                if (!saver->hasLogin){
-                    NSLog(@"%@", self.view);
-                    [self.view makeWaffle:@"Login Successful!"
-                                 duration:WAFFLE_LENGTH_SHORT
-                                 position:WAFFLE_BOTTOM
-                                    image:WAFFLE_CHECKMARK];
-                }
-                login_status.text = [@"Logged in as: " stringByAppendingString: usernameInput];
-                login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-                login_status.text = [login_status.text stringByAppendingString:firstName];
-                login_status.text = [login_status.text stringByAppendingString:@" "];
-                login_status.text = [login_status.text stringByAppendingString:lastInitial];
-                userName = usernameInput;
-                passWord = passwordInput;
+                [self.view makeWaffle:[NSString stringWithFormat:@"Login as %@ successful", usernameInput]
+                             duration:WAFFLE_LENGTH_SHORT
+                             position:WAFFLE_BOTTOM
+                                image:WAFFLE_CHECKMARK];
                 
-                saver->hasLogin = true;
+                // save the username and password in prefs
+                NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs synchronize];
+                
+                RPerson *curUser = [api getCurrentUser];
+                
+                NSString *loginstat = [@"Logged in as: " stringByAppendingString:curUser.username];
+                loginstat = [loginstat stringByAppendingString:@", Name: "];
+                loginstat = [loginstat stringByAppendingString:firstName];
+                loginstat = [loginstat stringByAppendingString:@" "];
+                loginstat = [loginstat stringByAppendingString:lastInitial];
+                
+                [login_status setText:loginstat];
+                userName = curUser.username;
+                passWord = passwordInput;
+                saver->hasLogin = TRUE;
             } else {
-                [self.view makeWaffle:@"Login Failed!"
+                [self.view makeWaffle:@"Login failed"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
             }
-            if (message != nil)
-                [message dismissWithClickedButtonIndex:nil animated:YES];
+            [spinnerDialog dismissWithClickedButtonIndex:0 animated:YES];
+            
         });
     });
+
+
+                 
+    
     
 }
 
-// This is for the loading spinner when the app starts things
+// Default dispatch_async dialog with custom spinner
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
                                                       message:nil

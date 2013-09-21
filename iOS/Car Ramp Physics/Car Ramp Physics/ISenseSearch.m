@@ -11,42 +11,29 @@
 
 @implementation ISenseSearch
 
-@synthesize query, searchType, buildType, page;
+@synthesize query, buildType, page, perPage;
 
 - (id) init {
     self = [super init];
     if (self) {
         query = @"";
-        searchType = RECENT;
         buildType = NEW;
         page = 1;
+        perPage = 10;
     }
     
     return self;
 }
 
-- (id) initWithQuery:(NSString *)q searchType:(SearchType)st page:(int)p andBuildType:(BuildType)bt {
+- (id)initWithQuery:(NSString *)search page:(int)pageNumber itemsPerPage:(int)itemsPerPage andBuildType:(BuildType)type {
     self = [self init];
     if (self) {
-        query = q;
-        searchType = st;
-        buildType = bt;
-        page = p;
+        query = search;
+        buildType = type;
+        page = pageNumber;
+        perPage = itemsPerPage;
     }
     return self;
-}
-
-- (NSString *) searchTypeToString {
-    switch (searchType) {
-        case RECENT:
-            return @"Recent";
-        case RATING:
-            return @"Rating";
-        case POPULARITY:
-            return @"Popularity";
-        case ACTIVITY:
-            return @"Activity";
-    }
 }
 
 @end
