@@ -209,7 +209,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	
 	private boolean allSelectedDataSetsHaveProjects() {
 		for (QDataSet qds : uq.queue) {
-			if (qds.isUploadable() && qds.getProjID().equals("-1")) {
+			if (qds.isUploadable() && (qds.getProjID().equals("-1") || qds.getProjID().equals("No Proj.")|| qds.getProjID().equals("No Project"))) {
 				return false;
 			}
 		}
