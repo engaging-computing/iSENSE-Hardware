@@ -63,5 +63,7 @@
     <string name="publish">Publish</string>
 	<string name="discard">Discard</string>
 	<string name="view">View</string>
+	<string name="not_logged_in">Not Logged In</string>
+	<string name="linear_accel">Linear Acceleration:   </string>
     
 </resources>

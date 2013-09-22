@@ -246,9 +246,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		new OnCreateLoginTask().execute();
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-				+ " " + mPrefs.getString("username", "") + ", Name: "
-				+ firstName + " " + lastInitial);
+		if (api.getCurrentUser() != null) {
+			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+					+ " " + mPrefs.getString("username", "") + ", Name: "
+					+ firstName + " " + lastInitial);
+		} else {
+			loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+					+ ", Name: " + firstName + " " + lastInitial);
+		}
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		experimentNumber = prefs2.getString("project_id", null);
 		if (experimentNumber == null) {
@@ -986,12 +991,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				if (loggedInAs == null)
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " "
-						+ data.getStringExtra("username")
-						+ ", Name: "
-						+ firstName + " " + lastInitial);
+				if (api.getCurrentUser() != null) {
+					loggedInAs.setText(getResources().getString(
+							R.string.logged_in_as)
+							+ " "
+							+ data.getStringExtra("username")
+							+ ", Name: " + firstName + " " + lastInitial);
+				} else {
+					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+							+ ", Name: " + firstName + " " + lastInitial);
+				}
 				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
 						api, mContext, f);
 				dfm.getOrder();
@@ -1068,12 +1077,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								"USER_INFO", Context.MODE_PRIVATE));
 				if (!inApp)
 					inApp = true;
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " "
-						+ mPrefs.getString("username", "")
-						+ ", Name: "
-						+ firstName + " " + lastInitial);
+				if (api.getCurrentUser() != null) {
+					loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+							+ " " + mPrefs.getString("username", "") + ", Name: "
+							+ firstName + " " + lastInitial);
+				} else {
+					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+							+ ", Name: " + firstName + " " + lastInitial);
+				}
 			} else {
 				if (!inApp)
 					finish();
@@ -1092,12 +1103,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				mOSPEdit.putString("password", DEFAULT_USER).commit();
 
 				new OnCreateLoginTask().execute();
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " "
-						+ mPrefs.getString("username", "")
-						+ ", Name: "
-						+ firstName + " " + lastInitial);
+				if (api.getCurrentUser() != null) {
+					loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+							+ " " + mPrefs.getString("username", "") + ", Name: "
+							+ firstName + " " + lastInitial);
+				} else {
+					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+							+ ", Name: " + firstName + " " + lastInitial);
+				}
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -1243,8 +1256,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			dateString = sdf.format(dt);
 
 			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
-			
-			
 
 			if (api.hasConnectivity()) {
 

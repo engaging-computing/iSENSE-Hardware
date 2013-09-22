@@ -44,7 +44,7 @@
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Linear Acceleration:   "
+                android:text="@string/linear_accel"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
