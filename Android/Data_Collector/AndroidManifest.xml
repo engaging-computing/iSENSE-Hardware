@@ -45,6 +45,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".splash.ProjectCreate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Create New Project"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".splash.SelectMode"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Select Mode"

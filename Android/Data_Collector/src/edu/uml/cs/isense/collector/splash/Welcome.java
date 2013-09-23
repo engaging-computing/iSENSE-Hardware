@@ -37,6 +37,8 @@ public class Welcome extends Activity {
 		mContext = this;
 		w = new Waffle(mContext);
 		api = API.getInstance(mContext);
+		api.useDev(true);
+		
 		mPrefs = getSharedPreferences("PROJID_WELCOME", 0);
 		
 		// Action bar customization for API >= 14
@@ -78,8 +80,8 @@ public class Welcome extends Activity {
 		createProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-
+				Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
+				startActivity(iProjCreate);
 			}
 		});
 		
