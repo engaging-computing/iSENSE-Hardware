@@ -61,7 +61,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 	// iSENSE member variables
 	// use development site
-	Boolean useDevSite = true;
+	Boolean useDevSite = false;
 	// iSENSE uploader
 	API api;
 
