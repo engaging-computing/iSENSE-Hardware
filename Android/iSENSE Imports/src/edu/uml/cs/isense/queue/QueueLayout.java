@@ -382,7 +382,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				String newName = data.getStringExtra("new_name");
 				if (!newName.equals("")) {
 					QDataSet alter = lastDataSetLongClicked;
-					alter.setName(newName); 
+					alter.setName(newName);
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
@@ -454,16 +454,21 @@ public class QueueLayout extends Activity implements OnClickListener {
 			final View data = View.inflate(mContext, R.layout.queueblock_data,
 					null);
 
-			data.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
-
+			if (ds.isUploadable()) {
+				data.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+				data.setTag(QUEUE_BOX_SELECTED);
+			} else {
+				data.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+				data.setTag(QUEUE_BOX_DESELECTED);
+			}
+			
 			makeBlock(data, ds);
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
 			scrollQueue.addView(data, layoutParams);
-			ds.setUploadable(true);
+			//ds.setUploadable(true);
 			data.setContentDescription("" + ds.key);
-			data.setTag(QUEUE_BOX_SELECTED);
 			
 			data.setOnClickListener(new OnClickListener() {
 
@@ -507,14 +512,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 			final View pic = View.inflate(mContext, R.layout.queueblock_pic,
 					null);
 
-			pic.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+			if (ds.isUploadable()) {
+				pic.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+				pic.setTag(QUEUE_BOX_SELECTED);
+			} else {
+				pic.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+				pic.setTag(QUEUE_BOX_DESELECTED);
+			}
 
 			makeBlock(pic, ds);
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
 			scrollQueue.addView(pic, layoutParams);
-			ds.setUploadable(true);
+			//ds.setUploadable(true);
 			pic.setContentDescription("" + ds.key);
 			pic.setTag(QUEUE_BOX_SELECTED);
 
@@ -559,14 +570,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 			final View both = View.inflate(mContext, R.layout.queueblock_pic,
 					null);
 
-			both.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+			if (ds.isUploadable()) {
+				both.setBackgroundResource(R.drawable.listelement_bkgd_changer_selected);
+				both.setTag(QUEUE_BOX_SELECTED);
+			} else {
+				both.setBackgroundResource(R.drawable.listelement_bkgd_changer);
+				both.setTag(QUEUE_BOX_DESELECTED);
+			}
 
 			makeBlock(both, ds);
 			previous = checkPrevious(previous, scrollQueue,
 					(String) ds.getName());
 
 			scrollQueue.addView(both, layoutParams);
-			ds.setUploadable(true);
+			//ds.setUploadable(true);
 			both.setContentDescription("" + ds.key);
 			both.setTag(QUEUE_BOX_SELECTED);
 

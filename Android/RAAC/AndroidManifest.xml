@@ -5,8 +5,8 @@
     android:versionName="5.1" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="11" />
+        android:minSdkVersion="9"
+        android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -16,7 +16,8 @@
 
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/display_name" >
+        android:label="@string/display_name"
+        android:allowBackup="true" >
         
         <activity
             android:name=".MainActivity"
