@@ -135,7 +135,7 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 
 	protected class LoadingThread extends Thread {
 		public void run() {
-			ArrayList<RProject> new_items = api.getProjects(page, PAGE_SIZE, true, query);
+			ArrayList<RProject> new_items = api.getProjects(page, PAGE_SIZE, true, API.CREATED_AT, query);
 
 			if (new_items.size() == 0) {
 				allItemsLoaded = true;
