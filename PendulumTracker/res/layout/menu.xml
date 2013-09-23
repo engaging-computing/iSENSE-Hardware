@@ -6,16 +6,17 @@
          android:showAsAction="ifRoom|withText"/>
      <item 
          android:id="@+id/menu_start"
-         android:title="Start data collection" 
+         android:title="@string/startCollection" 
+         android:icon="@drawable/start_icon"
          android:showAsAction="ifRoom|withText"/>
-     <item 
+     <!-- item 
          android:id="@+id/menu_upload"
          android:title="Stop and upload to iSENSE"
-         android:showAsAction="ifRoom|withText"/>
+         android:showAsAction="ifRoom|withText"/-->
      <item 
          android:id="@+id/menu_exit"
          android:title="Exit Pendulator"
-         android:showAsAction="ifRoom|withText"/>
+         android:showAsAction="never"/>
 
       
  </menu>
