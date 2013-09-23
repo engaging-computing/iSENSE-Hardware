@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/project_create_button_layout"
         android:layout_below="@id/project_create_add_fields_layout"
-        android:background="@android:color/transparent"
+        android:background="#CCCCCC"
         android:padding="5dp"
         android:scrollbars="vertical" >
 

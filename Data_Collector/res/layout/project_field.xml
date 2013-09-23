@@ -19,14 +19,14 @@
         android:layout_height="match_parent"
         android:layout_weight=".35"
         android:hint="@string/field_name"
-        android:textSize="12sp" />
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/project_field_units"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".65"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:hint="@string/units" />
 
 </LinearLayout>
