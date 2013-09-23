@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		api = API.getInstance(getApplicationContext());
-		api.useDev(false);
+		api.useDev(true);
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
