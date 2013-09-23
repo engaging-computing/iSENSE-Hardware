@@ -131,9 +131,9 @@ public class API {
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
 			if(sortOn == CREATED_AT) {
-				sortMode = "created_at%20"+sortMode;
+				sortMode = "created_at "+sortMode;
 			} else if(sortOn == UPDATED_AT) {
-				sortMode = "updated_at%20"+sortMode;
+				sortMode = "updated_at "+sortMode;
 			}
 			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);

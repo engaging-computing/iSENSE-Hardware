@@ -200,7 +200,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
 	public static boolean manageUploadQueueAfterLogin = false;
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 
 	// Strings
 	public static String textToDataSet = "";
