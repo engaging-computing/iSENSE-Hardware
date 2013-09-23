@@ -174,8 +174,7 @@
                 if (returnID == 0 || returnID == -1) {
                     dataSetsFailed++;
                     continue;
-                }
-                
+                }                
             }
             
             // upload pictures to iSENSE TODO - implement with the new API

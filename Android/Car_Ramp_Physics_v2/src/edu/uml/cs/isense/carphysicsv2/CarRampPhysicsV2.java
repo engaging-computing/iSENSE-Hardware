@@ -75,7 +75,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "32";
 	private static final String DEFAULT_USER = "mobile";
-	public static boolean useDev = true;
+	public static boolean useDev = false;
 
 	public static final String VIS_URL_PROD = "http://isenseproject.org/projects/";
 	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
@@ -142,7 +142,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	ProgressDialog dia;
 	double partialProg = 1.0;
 
-	String nameOfSession = "";
+	public static String nameOfSession = "";
 
 	static int mediaCount = 0;
 	static boolean inPausedState = false;
@@ -246,9 +246,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		new OnCreateLoginTask().execute();
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-				+ " " + mPrefs.getString("username", "") + ", Name: "
-				+ firstName + " " + lastInitial);
+		if (api.getCurrentUser() != null) {
+			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+					+ " " + mPrefs.getString("username", "") + ", Name: "
+					+ firstName + " " + lastInitial);
+		} else {
+			loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+					+ ", Name: " + firstName + " " + lastInitial);
+		}
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		experimentNumber = prefs2.getString("project_id", null);
 		if (experimentNumber == null) {
@@ -387,7 +392,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						System.out
 								.println("Honk frogs@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 					}
-					
+
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -459,46 +464,30 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								f.timeMillis = currentTime + elapsedMillis;
 								Log.d("fantastag", "time added");
 
-								if (!saveMode) {
-									if (dfm.getOrderList()
-											.contains(
-													mContext.getString(R.string.accel_x))) {
-										f.accel_x = toThou.format(accel[0]);
-										Log.d("fantastag", "X added");
-									}
-									if (dfm.getOrderList()
-											.contains(
-													mContext.getString(R.string.accel_y))) {
-										f.accel_y = toThou.format(accel[1]);
-										Log.d("fantastag", "Y added");
-									}
-									if (dfm.getOrderList()
-											.contains(
-													mContext.getString(R.string.accel_z))) {
-										f.accel_z = toThou.format(accel[2]);
-										Log.d("fantastag", "Z added");
-									}
-									if (dfm.getOrderList()
-											.contains(
-													mContext.getString(R.string.accel_total))) {
-										f.accel_total = toThou.format(accel[3]);
-										Log.d("fantastag", "Magnitude added");
-									}
-									dataSet.put(dfm.putData());
-									Log.d("tag", "NULLFROG");
-								} else {
+								if (dfm.getOrderList().contains(
+										mContext.getString(R.string.accel_x))) {
 									f.accel_x = toThou.format(accel[0]);
+									Log.d("fantastag", "X added");
+								}
+								if (dfm.getOrderList().contains(
+										mContext.getString(R.string.accel_y))) {
 									f.accel_y = toThou.format(accel[1]);
+									Log.d("fantastag", "Y added");
+								}
+								if (dfm.getOrderList().contains(
+										mContext.getString(R.string.accel_z))) {
 									f.accel_z = toThou.format(accel[2]);
+									Log.d("fantastag", "Z added");
+								}
+								if (dfm.getOrderList()
+										.contains(
+												mContext.getString(R.string.accel_total))) {
 									f.accel_total = toThou.format(accel[3]);
-
-									dataSet.put(dfm.putDataForNoProjectID());
-									Log.d("tag", "NULLTOAD");
+									Log.d("fantastag", "Magnitude added");
 								}
 
-								accelerX.add(Double.valueOf(f.accel_x));
-								accelerY.add(Double.valueOf(f.accel_y));
-								accelerZ.add(Double.valueOf(f.accel_z));
+								dataSet.put(dfm.putDataForNoProjectID());
+								Log.d("tag", "NULLTOAD");
 
 							}
 
@@ -506,8 +495,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}, 0, INTERVAL);
 
 				}
-
-				acceler.clear();
 
 				CarRampPhysicsV2.this.invalidateOptionsMenu();
 
@@ -525,7 +512,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (CarRampPhysicsV2.getApiLevel() < 14) {
 				// If the device isn't on Jelly Bean
 				ToggleButton button = (ToggleButton) findViewById(R.id.toggleButton1);
-				button.setChecked(isLinear); 
+				button.setChecked(isLinear);
 			} else {
 				Switch button = (Switch) findViewById(R.id.switch1);
 				button.setChecked(isLinear);
@@ -772,8 +759,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	public boolean onPrepareOptionsMenu (Menu menu) {
+
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		CarRampPhysicsV2.menu = menu;
 		menu.setGroupEnabled(0, useMenu);
 		return true;
@@ -1004,12 +991,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				if (loggedInAs == null)
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " "
-						+ data.getStringExtra("username")
-						+ ", Name: "
-						+ firstName + " " + lastInitial);
+				if (api.getCurrentUser() != null) {
+					loggedInAs.setText(getResources().getString(
+							R.string.logged_in_as)
+							+ " "
+							+ data.getStringExtra("username")
+							+ ", Name: " + firstName + " " + lastInitial);
+				} else {
+					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+							+ ", Name: " + firstName + " " + lastInitial);
+				}
 				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
 						api, mContext, f);
 				dfm.getOrder();
@@ -1086,12 +1077,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								"USER_INFO", Context.MODE_PRIVATE));
 				if (!inApp)
 					inApp = true;
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " "
-						+ mPrefs.getString("username", "")
-						+ ", Name: "
-						+ firstName + " " + lastInitial);
+				if (api.getCurrentUser() != null) {
+					loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+							+ " " + mPrefs.getString("username", "") + ", Name: "
+							+ firstName + " " + lastInitial);
+				} else {
+					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+							+ ", Name: " + firstName + " " + lastInitial);
+				}
 			} else {
 				if (!inApp)
 					finish();
@@ -1110,12 +1103,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				mOSPEdit.putString("password", DEFAULT_USER).commit();
 
 				new OnCreateLoginTask().execute();
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " "
-						+ mPrefs.getString("username", "")
-						+ ", Name: "
-						+ firstName + " " + lastInitial);
+				if (api.getCurrentUser() != null) {
+					loggedInAs.setText(getResources().getString(R.string.logged_in_as)
+							+ " " + mPrefs.getString("username", "") + ", Name: "
+							+ firstName + " " + lastInitial);
+				} else {
+					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+							+ ", Name: " + firstName + " " + lastInitial);
+				}
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
@@ -1262,22 +1257,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
 
-			if (!saveMode) {
+			if (api.hasConnectivity()) {
 
-				// String experimentNumber = CarRampPhysicsV2.experimentNumber;
-				JSONObject data = new JSONObject();
-				try {
-					data.put("data", dataSet);
-				} catch (JSONException e) {
-
-					e.printStackTrace();
-				}
-
-				data = api.rowsToCols(data);
-
-				dataSetID = api
-						.uploadDataSet(Integer.parseInt(experimentNumber),
-								data, nameOfSession);
+				dataSetID = CarRampPhysicsV2.upload(api, mContext);
 				Log.d("fantagstag", "Data Set: " + dataSetID);
 				if (dataSetID != -1) {
 					sessionUrl = baseSessionUrl + experimentNumber
@@ -1308,6 +1290,148 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	};
 	public boolean uploadSuccessful;
+
+	/**
+	 * Upload function specifically for when projID = -1 initially.
+	 * 
+	 * In this scenario, you'll need to provide an
+	 * {@link edu.uml.cs.isense.comm.API API} instance along with an activity
+	 * context.
+	 * 
+	 * @param api
+	 *            - An instance of API
+	 * @param c
+	 *            - The context of the calling activity
+	 * 
+	 * @return The ID of the data set created on iSENSE, or -1 if the upload
+	 *         failed
+	 */
+	public static int upload(API api, Context c) {
+		if (CarRampPhysicsV2.experimentNumber.equals("-1"))
+			return -1;
+		System.out.println("Need to re-order some data");
+		return upload(DataFieldManager.reOrderData(dataSet,
+				CarRampPhysicsV2.experimentNumber, api, mContext));
+
+	}
+
+	/**
+	 * Attempts to upload data with the given information passed in through the
+	 * QDataSet constructor
+	 * 
+	 * @return The ID of the data set created on iSENSE, or -1 if the upload
+	 *         failed
+	 */
+	public static int upload(String obj) {
+
+		int dataSetID = -1;
+		// switch (type) {
+		// case DATA:
+
+		// TODO - check for closed experiment
+		// if (sid == -1) {
+		//
+		// if (addr.equals("")) {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// "N/A", "N/A", "United States");
+		// } else {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// addr, city + ", " + state, country);
+		// }
+		//
+		// // Failure to create session or not logged in
+		// if (sid == -1) {
+		// success = false;
+		// break;
+		// } else QueueLayout.lastSID = sid;
+		// }
+		//
+		// // Experiment Closed Checker
+		// if (sid == -400) {
+		// success = false;
+		// break;
+		// } else {
+		try {
+			JSONArray dataJSON = new JSONArray(obj);
+			if (!(dataJSON.isNull(0))) {
+
+				// success = UploadQueue.getRapi().putSessionData(sid, eid,
+				// dataJSON);
+
+				JSONObject jobj = new JSONObject();
+				try {
+					jobj.put("data", dataJSON);
+				} catch (JSONException e) {
+					// uh oh
+					e.printStackTrace();
+				}
+				jobj = UploadQueue.getAPI().rowsToCols(jobj);
+
+				System.out.println("JOBJ: " + jobj.toString());
+
+				dataSetID = UploadQueue.getAPI()
+						.uploadDataSet(Integer.parseInt(experimentNumber),
+								jobj, nameOfSession);
+				System.out.println("Data set ID from Upload is: " + dataSetID);
+
+			}
+		} catch (JSONException e) {
+
+		}
+		// }
+		// break;
+		// TODO - pictures and stuff
+		// case PIC:
+		// if (sid == -1) sid = QueueLayout.lastSID;
+		// if (name.equals("")) {
+		// success = UploadQueue.getRapi().uploadPictureToSession(
+		// picture, eid, sid, "*Session Name Not Provided*",
+		// "N/A");
+		// } else {
+		// success = UploadQueue.getRapi().uploadPictureToSession(
+		// picture, eid, sid, name, "N/A");
+		// }
+		//
+		// break;
+		//
+		// case BOTH:
+		// if (sid == -1) {
+		//
+		// if (addr.equals("")) {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// "N/A", "N/A", "United States");
+		// } else {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// addr, city + ", " + state, country);
+		// }
+		//
+		// if (sid == -1) {
+		// success = false;
+		// break;
+		// } else QueueLayout.lastSID = sid;
+		// }
+		//
+		// // Experiment Closed Checker
+		// if (sid == -400) {
+		// success = false;
+		// break;
+		// } else {
+		// JSONArray dataJSON = prepDataForUpload();
+		// if (!(dataJSON.isNull(0))) {
+		//
+		// success = UploadQueue.getRapi().putSessionData(sid, eid,
+		// dataJSON);
+		// success = UploadQueue.getRapi().uploadPictureToSession(
+		// picture, eid, sid, name, "N/A");
+		//
+		// }
+		// }
+		//
+		// break;
+		// }
+
+		return dataSetID;
+	}
 
 	public class UploadTask extends AsyncTask<Void, Integer, Void> {
 

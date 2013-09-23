@@ -11,7 +11,7 @@
 
 @implementation ProjectBrowseViewController
 
-@synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastProjectClicked;
+@synthesize currentPage, currentQuery, scrollHeight, contentHeight, lastProjectClicked, chosenProject;
 
 #define SPINNER_HEIGHT 25
 #define NAVIGATION_CONTROLLER_HEIGHT 75
@@ -154,7 +154,7 @@
 
 - (void)projectChosen {
     NSLog(@"%@", lastProjectClicked.project.owner_name);
-    [self.delegate projectViewController:self didFinishChoosingProject:lastProjectClicked.project.project_id];
+    *chosenProject = lastProjectClicked.project.project_id.intValue;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -317,8 +317,9 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            NSArray *projects = [isenseAPI getProjectsAtPage:iSS.page withPageLimit:iSS.perPage withFilter:CREATED_AT_DESC andQuery:iSS.query];
-            
+            NSLog(@"HELLO WORLD");
+            NSArray *projects = [isenseAPI getProjectsAtPage:iSS.page withPageLimit:iSS.perPage withFilter:true andQuery:iSS.query];
+            NSLog(@"WORLD HELLO");
             // remove the spinner
             [projectSpinner stopAnimating];
             [projectSpinner removeFromSuperview];
