@@ -51,6 +51,9 @@ public class API {
 	private Context context;
 	String authToken = "";
 	RPerson currentUser;
+	
+	public static final int CREATED_AT = 0;
+	public static final int UPDATED_AT = 1;
 
 	/**
 	 * Constructor not to be called by a user of the API
@@ -123,10 +126,15 @@ public class API {
 	 *@param search A string to search all projects for
 	 *@return An ArrayList of Project objects
 	 */
-	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, String search) {
+	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, int sortOn, String search) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
+			if(sortOn == CREATED_AT) {
+				sortMode = "created_at%20"+sortMode;
+			} else if(sortOn == UPDATED_AT) {
+				sortMode = "updated_at%20"+sortMode;
+			}
 			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
