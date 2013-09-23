@@ -15,57 +15,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:weightSum="1" >
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".35"
             android:clickable="false"
             android:focusable="false"
-            android:inputType="text"
             android:text="@string/latitude"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
             android:layout_weight=".65"
             android:clickable="false"
             android:focusable="false"
-            android:inputType="text"
             android:text="@string/deg"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:weightSum="1" >
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".35"
             android:clickable="false"
             android:focusable="false"
-            android:inputType="text"
             android:text="@string/longitude"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
             android:layout_weight=".65"
             android:clickable="false"
             android:focusable="false"
-            android:inputType="text"
             android:text="@string/deg"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
 </LinearLayout>
