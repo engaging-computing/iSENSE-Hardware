@@ -83,8 +83,8 @@
     <string name="change_data">Change Data</string>
     <string name="delete">Delete</string>
     <string name="queue_rename">Enter a new name for your data set:</string>
-    <string name="digits_restriction">	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
-    <string name="numbers_restriction">	    1234567890.-</string>
+    <string name="digits_restriction">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
+    <string name="numbers_restriction">1234567890.-</string>
     <string name="reset">Reset</string>
     <string name="no_thanks">No Thanks</string>
     <string name="can_login_string">	    You have internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
