@@ -13,6 +13,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="15dp"
         android:hint="@string/new_proj_name"
+        android:imeOptions="actionDone"
         android:inputType="text"
         android:textSize="16sp" />
 
@@ -45,13 +46,13 @@
             android:entries="@array/field_type_array"
             android:prompt="@string/field_type" />
 
-        <TextView
+        <Button
+            android:id="@+id/project_create_add_field_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".6"
-            android:background="@android:color/transparent"
             android:padding="10dp"
-            android:text="@string/long_press_field" />
+            android:text="@string/field_type" />
     </LinearLayout>
 
     <ScrollView
