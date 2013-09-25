@@ -27,6 +27,7 @@ public class Welcome extends Activity {
 	public API api;
 	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
+	private static final int PROJECT_CREATE_REQUESTED    = 101;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -81,7 +82,7 @@ public class Welcome extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
-				startActivity(iProjCreate);
+				startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
 			}
 		});
 		
@@ -110,20 +111,34 @@ public class Welcome extends Activity {
 
 				String projID = mPrefs.getString("project_id", "");
 				if (!(projID.equals("") || projID.equals("-1"))) {
-					SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
-					SharedPreferences.Editor mEdit = globalProjPrefs.edit();
-					mEdit.putString("project_id", projID).commit();
-					mEdit.putString("project_id_dc", projID);
-					mEdit.putString("project_id_manual", projID);
-					mEdit.putString("project_id_csv", projID);
-					mEdit.commit();
-					
-					Intent iSelectMode = new Intent(mContext, SelectMode.class);
-					iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, true);
-					startActivity(iSelectMode);
+					setGlobalProjAndEnableManual(projID);
 				} 
 			}
-		} 
+		} else if (requestCode == PROJECT_CREATE_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				int newProjID = data.getIntExtra(ProjectCreate.NEW_PROJECT_ID, 0);
+				if (newProjID != 0) {
+					setGlobalProjAndEnableManual("" + newProjID);
+				} else {
+					// TODO - we got a bad return
+				}
+				
+			}
+		}
+	}
+	
+	private void setGlobalProjAndEnableManual(String projID) {
+		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+		SharedPreferences.Editor mEdit = globalProjPrefs.edit();
+		mEdit.putString("project_id", projID).commit();
+		mEdit.putString("project_id_dc", projID);
+		mEdit.putString("project_id_manual", projID);
+		mEdit.putString("project_id_csv", projID);
+		mEdit.commit();
+		
+		Intent iSelectMode = new Intent(mContext, SelectMode.class);
+		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, true);
+		startActivity(iSelectMode);
 	}
 
 }
