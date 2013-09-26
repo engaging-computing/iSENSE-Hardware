@@ -80,6 +80,7 @@ import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
+import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -200,7 +201,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
 	public static boolean manageUploadQueueAfterLogin = false;
-	public static boolean useDev = true;
 
 	// Strings
 	public static String textToDataSet = "";
@@ -1193,7 +1193,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(useDev);
+		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1224,7 +1224,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(useDev);
+		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
