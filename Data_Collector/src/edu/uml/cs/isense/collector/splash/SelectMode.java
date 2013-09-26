@@ -85,8 +85,7 @@ public class SelectMode extends Activity {
 		csvUploader.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-
+				w.make("This feature will be implemented in the next update!", Waffle.LENGTH_SHORT);
 			}
 		});
 

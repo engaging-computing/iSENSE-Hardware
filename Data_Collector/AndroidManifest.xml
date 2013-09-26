@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="24"
-    android:versionName="3.3.3" >
+    android:versionCode="25"
+    android:versionName="3.4.1" >
 
     <uses-sdk
         android:minSdkVersion="9"

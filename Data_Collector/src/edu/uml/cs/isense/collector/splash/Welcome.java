@@ -26,6 +26,8 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
+	public static boolean useDev = false;
+	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
 	private static final int PROJECT_CREATE_REQUESTED    = 101;
 
@@ -38,7 +40,7 @@ public class Welcome extends Activity {
 		mContext = this;
 		w = new Waffle(mContext);
 		api = API.getInstance(mContext);
-		api.useDev(true);
+		api.useDev(useDev);
 		
 		mPrefs = getSharedPreferences("PROJID_WELCOME", 0);
 		
