@@ -126,4 +126,34 @@
     <string name="long_press_field">(long press a field to delete it)</string>
     <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
     
+    <string name="isense_fields">Fields</string>
+    <string-array name="isense_fields_array">
+        <item></item>
+        <item>Time</item>
+        <item>Accel-X</item>
+        <item>Accel-Y</item>
+        <item>Accel-Z</item>
+        <item>Accel-Magnitude</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>Magnetic-X</item>
+        <item>Magnetic-Y</item>
+        <item>Magnetic-Z</item>
+        <item>Magnetic-Total</item>
+        <item>Angle (Degrees)</item>
+        <item>Angle (Radians)</item>
+        <item>Temp. (Celsius)</item>
+        <item>Pressure</item>
+        <item>Altitude</item>
+        <item>Light</item>
+        <item>Temp. (Fahrenheit)</item>
+        <item>Temp. (Kelvin)</item>
+    </string-array>
+    <string name="field_matching_text">
+        Please confirm that the fields from the project (listed on the left hand side) are matched with sensor data that this application
+        can record (right hand side).  If no match is available, leave the selection on the right hand side blank.
+    </string>
+    <string name="compatible">Compatible</string>
+    <string name="project_field">Project Field</string>
+    
 </resources>

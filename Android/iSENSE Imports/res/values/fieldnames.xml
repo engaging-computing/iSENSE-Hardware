@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="null_string">Null</string>
+    <string name="null_string">strNullID</string>
     <string name="time">Time</string>                           <!-- 0  -->
     <string name="accel_x">Accel-X</string>                     <!-- 1  -->
     <string name="accel_y">Accel-Y</string>                     <!-- 2  -->

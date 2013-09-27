@@ -33,7 +33,7 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class Step1Setup extends Activity {
 
 	private static Button cancel, ok, selProj;
-	private static CheckBox expCheck, remember;
+	private static CheckBox projCheck, remember;
 	private static EditText dataSetName, sInterval, testLen;
 	private static TextView projLabel;
 
@@ -85,15 +85,12 @@ public class Step1Setup extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				boolean ready = true;
-				boolean setUpFields = false;
 				
 				if (dataSetName.getText().toString().equals("")) {
 					dataSetName.setError("Enter a data set name");
 					w.make("Please enter a data set name first",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-					ready = false;
+					return;
 				} else {
 					dataSetName.setError(null);
 				}
@@ -108,7 +105,7 @@ public class Step1Setup extends Activity {
 							+ S_INTERVAL + " ms");
 					w.make("Please enter a valid sample interval",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-					ready = false;
+					return;
 				} else {
 					sInterval.setError(null);
 				}
@@ -123,51 +120,50 @@ public class Step1Setup extends Activity {
 							+ (long) MAX_DATA_POINTS / (1000 / sint) + " s");
 					w.make("Please enter a valid test length",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-					ready = false;
+					return;
 				} else {
 					testLen.setError(null);
 				}
-				if (!expCheck.isChecked()) {
+				if (!projCheck.isChecked()) {
 					String projID = mPrefs.getString("project_id", "");
 					String fields = mPrefs.getString("accepted_fields", "");
 					String acceptedProj = mPrefs.getString("accepted_proj", "-1");
 					if (projID.equals("") || projID.equals("-1")) {
 						w.make("Please select a project", Waffle.LENGTH_SHORT,
 								Waffle.IMAGE_X);
-						ready = false;
+						return;
 					} else if (fields.equals("") || (!projID.equals(acceptedProj))) {
 						w.make("Please select your project fields",
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-						ready = false;
-						setUpFields = true;
+						new SensorCheckTask().execute();
+						return;
 					}
 				}
-				if (ready) {
-					if (expCheck.isChecked())
-						mEdit.putString("project_id", "-1").commit();
-					mEdit.putString("data_set_name",
-							dataSetName.getText().toString()).commit();
-
-					if (remember.isChecked()) {
-						mEdit.putString("s_interval",
-								sInterval.getText().toString()).commit();
-						mEdit.putString("t_length",
-								testLen.getText().toString()).commit();
-						mEdit.putBoolean("remember", true).commit();
-					} else {
-						mEdit.putBoolean("remember", false).commit();
-					}
-
-					Intent iRet = new Intent();
-					iRet.putExtra(DataCollector.STEP_1_DATASET_NAME,
-							dataSetName.getText().toString());
-					iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
-					iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
-					setResult(RESULT_OK, iRet);
-					finish();
-				} else if (setUpFields) {
-					new SensorCheckTask().execute();
+				
+				if (projCheck.isChecked())
+					mEdit.putString("project_id", "-1").commit();
+					
+				mEdit.putString("data_set_name",
+						dataSetName.getText().toString()).commit();
+				
+				if (remember.isChecked()) {
+					mEdit.putString("s_interval",
+							sInterval.getText().toString()).commit();
+					mEdit.putString("t_length",
+							testLen.getText().toString()).commit();
+					mEdit.putBoolean("remember", true).commit();
+				} else {
+					mEdit.putBoolean("remember", false).commit();
 				}
+
+				Intent iRet = new Intent();
+				iRet.putExtra(DataCollector.STEP_1_DATASET_NAME,
+						dataSetName.getText().toString());
+				iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
+				iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
+				setResult(RESULT_OK, iRet);
+				finish();
+				
 			}
 		});
 
@@ -184,19 +180,19 @@ public class Step1Setup extends Activity {
 			}
 		});
 
-		expCheck = (CheckBox) findViewById(R.id.step1_checkbox);
-		expCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		projCheck = (CheckBox) findViewById(R.id.step1_checkbox);
+		projCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				if (expCheck.isChecked()) {
+				if (projCheck.isChecked()) {
 					selProj.setEnabled(false);
 					projLabel.setText("Project");
 				} else {
 					selProj.setEnabled(true);
-					String exp = mPrefs.getString("project_id", "");
-					if (!(exp.equals("") || exp.equals("-1"))) {
-						projLabel.setText("Project (currently " + exp + ")");
+					String proj = mPrefs.getString("project_id", "");
+					if (!(proj.equals("") || proj.equals("-1"))) {
+						projLabel.setText("Project (currently " + proj + ")");
 					} else {
 						projLabel.setText("Project");
 					}
@@ -231,7 +227,7 @@ public class Step1Setup extends Activity {
 				dfm = new DataFieldManager(Integer.parseInt(proj), api, mContext, f);
 			} else {
 				dfm = new DataFieldManager(-1, api, mContext, f);
-				expCheck.toggle();
+				projCheck.toggle();
 			}
 		}
 
@@ -261,18 +257,22 @@ public class Step1Setup extends Activity {
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
+				if (FieldMatching.acceptedFields.isEmpty()) {
 					Intent iSetup = new Intent(mContext, Setup.class);
 					iSetup.putExtra("from_where", "automatic");
 					startActivityForResult(iSetup, SETUP_REQUESTED);
-				} else if (!ChooseSensorDialog.compatible) {
+				} else if (!FieldMatching.compatible) {
 					Intent iSetup = new Intent(mContext, Setup.class);
 					iSetup.putExtra("from_where", "automatic");
 					startActivityForResult(iSetup, SETUP_REQUESTED);
 				} else {
-					acceptedFields = ChooseSensorDialog.acceptedFields;
+					acceptedFields = FieldMatching.acceptedFields;
 					getEnabledFields();
 				}
+			} else if (resultCode == RESULT_CANCELED) {
+				Intent iSetup = new Intent(mContext, Setup.class);
+				iSetup.putExtra("from_where", "automatic");
+				startActivityForResult(iSetup, SETUP_REQUESTED);
 			}
 
 		}
@@ -403,12 +403,12 @@ public class Step1Setup extends Activity {
 
 			OrientationManager.enableRotation(Step1Setup.this);
 
-			new ChooseSensorTask().execute();
+			new FieldMatchingTask().execute();
 		}
 	}
 
 	// Task for checking sensor availability along with enabling/disabling
-	private class ChooseSensorTask extends AsyncTask<Void, Integer, Void> {
+	private class FieldMatchingTask extends AsyncTask<Void, Integer, Void> {
 		RProject p;
 		Intent i;
 		String projNum;
@@ -416,7 +416,7 @@ public class Step1Setup extends Activity {
 		protected Void doInBackground(Void... voids) {
 			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 			projNum = mPrefs.getString("project_id", "");
-			i = new Intent(mContext, ChooseSensorDialog.class);
+			i = new Intent(mContext, FieldMatching.class);
 			p = api.getProject(Integer.parseInt(projNum));
 			
 			return null;

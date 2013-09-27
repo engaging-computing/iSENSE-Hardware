@@ -957,7 +957,7 @@ public class DataFieldManager extends Application {
 				}
 
 				else {
-					order.add(mContext.getString(R.string.null_string));
+					order.add(mContext.getString(R.string.null_string) + field.name);
 					break;
 				}
 
@@ -978,7 +978,7 @@ public class DataFieldManager extends Application {
 
 			// No match (Just about every other category)
 			default:
-				order.add(mContext.getString(R.string.null_string));
+				order.add(mContext.getString(R.string.null_string) + field.name);
 				break;
 
 			}
