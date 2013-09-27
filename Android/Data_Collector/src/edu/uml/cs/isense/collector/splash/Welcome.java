@@ -92,9 +92,7 @@ public class Welcome extends Activity {
 		noProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent iSelectMode = new Intent(mContext, SelectMode.class);
-				iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, false);
-				startActivity(iSelectMode);
+				setGlobalProjAndEnableManual("", false);
 			}
 		});
 
@@ -113,14 +111,14 @@ public class Welcome extends Activity {
 
 				String projID = mPrefs.getString("project_id", "");
 				if (!(projID.equals("") || projID.equals("-1"))) {
-					setGlobalProjAndEnableManual(projID);
+					setGlobalProjAndEnableManual(projID, true);
 				} 
 			}
 		} else if (requestCode == PROJECT_CREATE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				int newProjID = data.getIntExtra(ProjectCreate.NEW_PROJECT_ID, 0);
 				if (newProjID != 0) {
-					setGlobalProjAndEnableManual("" + newProjID);
+					setGlobalProjAndEnableManual("" + newProjID, true);
 				} else {
 					// TODO - we got a bad return
 				}
@@ -129,7 +127,7 @@ public class Welcome extends Activity {
 		}
 	}
 	
-	private void setGlobalProjAndEnableManual(String projID) {
+	private void setGlobalProjAndEnableManual(String projID, boolean enable) {
 		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
 		SharedPreferences.Editor mEdit = globalProjPrefs.edit();
 		mEdit.putString("project_id", projID).commit();
@@ -139,7 +137,7 @@ public class Welcome extends Activity {
 		mEdit.commit();
 		
 		Intent iSelectMode = new Intent(mContext, SelectMode.class);
-		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, true);
+		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, enable);
 		startActivity(iSelectMode);
 	}
 
