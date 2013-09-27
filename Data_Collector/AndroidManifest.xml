@@ -78,6 +78,10 @@
             android:label="Select Fields"
             android:theme="@style/theme_dialog_white" />
         <activity
+            android:name=".dialogs.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white" />
+        <activity
             android:name=".dialogs.MediaManager"
             android:label="Media Manager"
             android:theme="@style/theme_dialog_white" />

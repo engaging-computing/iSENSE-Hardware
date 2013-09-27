@@ -140,7 +140,7 @@ public class ProjectCreate extends Activity {
 		
 	    final View v = (tag == FIELD_TYPE_LOCATION) 
 	    		? View.inflate(mContext, R.layout.project_field_location, null) 
-	    		: View.inflate(mContext, R.layout.project_field, null);;
+	    		: View.inflate(mContext, R.layout.project_field, null);
 		
 		v.setTag(tag);
 		
