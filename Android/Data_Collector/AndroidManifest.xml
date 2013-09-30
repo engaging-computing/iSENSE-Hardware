@@ -74,10 +74,6 @@
             android:theme="@style/AppTheme"
             tools:ignore="MissingRegistered" />
         <activity
-            android:name=".dialogs.ChooseSensorDialog"
-            android:label="Select Fields"
-            android:theme="@style/theme_dialog_white" />
-        <activity
             android:name=".dialogs.FieldMatching"
             android:label="Select Fields"
             android:theme="@style/theme_dialog_white" />
