@@ -1518,7 +1518,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				AmusementPark.mContext,
 				AmusementPark.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		// TODO
+		// TODO this comment is not helpful
 		api.createSession(mPrefs.getString("username", ""),
 				mPrefs.getString("password", ""));
 	}
