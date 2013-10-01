@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:paddingTop="10dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp" >
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" >
 
     <TextView
         android:id="@+id/field_matching_text"
@@ -40,17 +40,34 @@
         android:id="@+id/field_matching_line"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/field_matching_ok"
+        android:layout_above="@+id/field_matching_button_layout"
         android:layout_marginTop="10dp"
         android:background="?android:attr/dividerVertical" />
 
-    <Button
-        android:id="@id/field_matching_ok"
-        style="?android:attr/buttonBarButtonStyle"
+    <LinearLayout
+        android:id="@id/field_matching_button_layout"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="2dp"
-        android:text="@android:string/ok" />
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@id/field_matching_back"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@id/field_matching_ok"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:text="@android:string/ok" />
+    </LinearLayout>
 
 </RelativeLayout>

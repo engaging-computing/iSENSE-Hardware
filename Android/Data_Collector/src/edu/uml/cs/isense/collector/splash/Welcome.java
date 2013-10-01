@@ -26,7 +26,7 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
 	private static final int PROJECT_CREATE_REQUESTED    = 101;

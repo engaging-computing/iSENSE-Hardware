@@ -13,7 +13,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:digits="@string/digits_restriction"
-        android:background="@android:color/white"
         android:hint="@string/search"
         android:imeOptions="actionDone"
         android:textColor="#000000"

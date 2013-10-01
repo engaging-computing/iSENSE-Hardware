@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">iSENSE Uploader</string>
     <string name="display_name">iS Uploader</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="iSENSELogo">iSENSE Logo</string>
@@ -27,39 +25,6 @@
     <string name="sample_interval">Sample Interval (ms)</string>
     <string name="sample_default">Default Value = 50 ms</string>
     <string name="login">Login</string>
-    <string name="about_text">        Welcome to the iSENSE Data Collector Android Application, developed by 
-	    UMass Lowell undergraduates Michael Stowell and Jeremy Poulin of the ECG/iSENSE 
-	    team under Fred Martin.
-
-		\n\nThe Engaging Computing Group “develops new technologies to enable 
-		learners - youth, teachers, undergraduates, and others - be creative in 
-		science, engineering, and computing, and studies how these technologies 
-		improve learning.”
-
-		\n\niSENSE exists as a branch off of the ECG, which involves “teachers 
-		and kids in inquiry-rich science projects with electronic data collection.” 
-		Data collected from iSENSE project may be found on the isenseproject.org
-		website.
-
-		\n\nThis Android application is essentially the general data collection 
-		Android platform to utilize the iSENSE visualization tools.  With this 
-		application, you may simply contribute a data set to an existing iSENSE 
-		project.  Android devices host many sensors, including an accelerometer, 
-		GPS, temperature sensor, gyroscope, magnetic sensor, pressure sensor, 
-		proximity sensor, and more.  These can all be utilized, should your device 
-		support them, to record data and visualize it on the iSENSE website.
-
-		\n\nThe purpose of the Data Collector application is to enable people of 
-		all ages to take advantage of the hardware sensors Android offers and use 
-		them to take real, personalized data and visualize it using a variety of 
-		visualization tools offered by the iSENSE website.
-		
-		\n\nThis application will also enable a user to manually key in data live
-		using the manual-entry portion of this app.  All the user needs to know is
-		his or her project and login information and he or she is ready to go.
-
-		\n\nIn order to use this application, you must have an account on 
-		isenseproject.org.\n\n</string>
     <string name="menu_login">Login</string>
     <string name="menu_media">Media</string>
     <string name="menu_sync">Sync Time</string>
@@ -72,9 +37,6 @@
     <string name="usingProject">Uploading to project #: \0</string>
     <string name="save">Save</string>
     <string name="clear">Clear</string>
-    <string name="auto">Automatic</string>
-    <string name="manual">Manual</string>
-    <string name="splashPrompt">Select \"Automatic\" to record sensor data, or select \"Manual\" to manually key in data.</string>
     <string name="qmark">\&#63;</string>
     <string name="enterDataSetName">Enter Data Set Name Here&#8230;</string>
     <string name="data_set_name">Data Set Name</string>
@@ -91,7 +53,6 @@
 	    data.  However, you can still view your data sets without logging in.  Would you like login now?</string>
     <string name="need_connectivity_string">	    You need internet connectivity in order to login and upload data.  Since we cannot find any of your login credentials and there
 	    is no internet connectivity, you cannot upload data sets yet.  However, you may still view your data sets.</string>
-    <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
     <string name="step1">Step 1: Setup Your Data Set</string>
     <string name="step2">Step 2: Record a Data Set (Hold Down)</string>
     <string name="step3">Step 3: Upload Data Sets</string>
@@ -123,7 +84,6 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="new_proj_name">New Project Name</string>
-    <string name="long_press_field">(long press a field to delete it)</string>
     <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
     
     <string name="isense_fields">Fields</string>
@@ -150,8 +110,8 @@
         <item>Temp. (Kelvin)</item>
     </string-array>
     <string name="field_matching_text">
-        Please confirm that the fields from the project (listed on the left hand side) are matched with sensor data that this application
-        can record (right hand side).  If no match is available, leave the selection on the right hand side blank.
+        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
+        available, leave the drop down blank.
     </string>
     <string name="compatible">Compatible</string>
     <string name="project_field">Project Field</string>
