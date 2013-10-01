@@ -136,6 +136,9 @@ public class FieldMatching extends Activity implements OnClickListener {
 			isEmpty = false;
 		}
 
+		Button back = (Button) findViewById(R.id.field_matching_back);
+		back.setOnClickListener(this);
+		
 		Button okay = (Button) findViewById(R.id.field_matching_ok);
 		okay.setOnClickListener(this);
 
@@ -188,6 +191,11 @@ public class FieldMatching extends Activity implements OnClickListener {
 		case R.id.field_matching_ok:
 			setAcceptedFields();
 			setResult(RESULT_OK);
+			finish();
+			break;
+			
+		case R.id.field_matching_back:
+			setResult(RESULT_CANCELED);
 			finish();
 			break;
 
