@@ -1052,5 +1052,30 @@ public class DataFieldManager extends Application {
 	public void setFields(Fields fields) {
 		this.f = fields;
 	}
+	
+	/**
+	 * Enables all fields for recording data
+	 */
+	public void enableAllFields() {
+		enabledFields[Fields.TIME] = true;
+		enabledFields[Fields.ACCEL_X] = true;
+		enabledFields[Fields.ACCEL_Y] = true;
+		enabledFields[Fields.ACCEL_Z] = true;
+		enabledFields[Fields.ACCEL_TOTAL] = true;
+		enabledFields[Fields.LATITUDE] = true;
+		enabledFields[Fields.LONGITUDE] = true;
+		enabledFields[Fields.MAG_X] = true;
+		enabledFields[Fields.MAG_Y] = true;
+		enabledFields[Fields.MAG_Z] = true;
+		enabledFields[Fields.MAG_TOTAL] = true;
+		enabledFields[Fields.HEADING_DEG] = true;
+		enabledFields[Fields.HEADING_RAD] = true;
+		enabledFields[Fields.TEMPERATURE_C] = true;
+		enabledFields[Fields.TEMPERATURE_F] = true;
+		enabledFields[Fields.TEMPERATURE_K] = true;
+		enabledFields[Fields.PRESSURE] = true;
+		enabledFields[Fields.ALTITUDE] = true;
+		enabledFields[Fields.LIGHT] = true;
+	}
 
 }
