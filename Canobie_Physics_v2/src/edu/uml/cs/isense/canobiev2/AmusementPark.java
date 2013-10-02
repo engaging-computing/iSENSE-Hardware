@@ -77,6 +77,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/* Default Constants */
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
+	private final String USERNAME_KEY = "username";
+	private final String PASSWORD_KEY = "password";
+	private final String ACTIVITY_NAME = "canobielake";
+	private final String PROJ_PREFS_ID = "PROJID";
+	private final String PROJ_ID = "project_id";
+	private final String TIME_OFFSET_PREFS_ID = "time_offset";
+	private final String TIME_OFFSET_KEY = "timeOffset";
 
 	/* UI Handles */
 	private EditText experimentInput;
@@ -138,7 +145,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private int elapsedMinutes = 0;
 	private int elapsedSeconds = 0;
 	private int elapsedMillis = 0;
-	private int totalMillis = 0;
 	private int dataPointCount = 0;
 
 	// Used with Sync Time
@@ -178,6 +184,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		// Think pointer to this activity
 		mContext = this;
 
 		// Initialize everything you're going to need
@@ -236,8 +243,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						// Check to see if a valid project was chosen. If not,
 						// enable all fields for recording.
 						SharedPreferences mPrefs = getSharedPreferences(
-								"PROJID", MODE_PRIVATE);
-						if (mPrefs.getString("project_id", "").equals("-1")) {
+								PROJ_PREFS_ID, MODE_PRIVATE);
+						if (mPrefs.getString(PROJ_ID, "").equals("-1")) {
 							enableAllFields();
 						}
 
@@ -249,8 +256,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						dataSet = new JSONArray();
 						elapsedMillis = 0;
-						totalMillis = 0;
-
 						dataPointCount = 0;
 
 						currentTime = getUploadTime();
@@ -410,13 +415,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 
-		// Will call the login dialogue if no user data is found and update UI
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
-						MODE_PRIVATE));
-		if (!(mPrefs.getString("username", "").equals("")))
-			login();
+		// Silently logs in the user to iSENSE
+		login(false);
 
 		// Rebuilds the upload queue
 		if (uq != null)
@@ -449,7 +449,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			startStop.setEnabled(false);
 			return true;
 		case MENU_ITEM_LOGIN:
-			login();
+			login(true);
 			return true;
 		case MENU_ITEM_UPLOAD:
 			manageUploadQueue();
@@ -568,10 +568,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
-				SharedPreferences mPrefs = getSharedPreferences("time_offset",
+				SharedPreferences mPrefs = getSharedPreferences(TIME_OFFSET_PREFS_ID,
 						0);
 				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putLong("timeOffset", timeOffset);
+				mEditor.putLong(TIME_OFFSET_KEY, timeOffset);
 				mEditor.commit();
 			}
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
@@ -608,8 +608,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			String description = "Automated Submission Through Android Canobie Physics App";
 
-			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			String eid = mPrefs.getString("project_id", "");
+			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
+			String eid = mPrefs.getString(PROJ_ID, "");
 
 			api.createSession(DEFAULT_USERNAME, DEFAULT_PASSWORD);
 
@@ -708,88 +708,127 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		time.setText("Time Elapsed: " + min + ":" + sec);
 	}
 
-	// Everything needed to be initialized for onCreate
+	/**
+	 * Everything needed to be initialized for onCreate in one helpful function.
+	 */
 	private void initVars() {
 
 		api = API.getInstance(this);
 		api.useDev(true);
-		api.createSession(DEFAULT_USERNAME, DEFAULT_PASSWORD);
 
-		// Stores default username and password in Encrypted Shared Preferences
+		// Get the last stored username and password from Encrypted Shared
+		// Preferences
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				AmusementPark.mContext,
 				AmusementPark.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		final SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("username", DEFAULT_USERNAME);
-		mEdit.putString("password", DEFAULT_PASSWORD);
-		mEdit.commit();
 
-		uq = new UploadQueue("canobielake", mContext, api);
+		// If the is no previously store username/password, write in the default
+		// credentials
+		if (mPrefs.getString(USERNAME_KEY, "").equals("")
+				|| mPrefs.getString(PASSWORD_KEY, "").equals("")) {
+			final SharedPreferences.Editor mEdit = mPrefs.edit();
+			mEdit.putString(USERNAME_KEY, DEFAULT_USERNAME);
+			mEdit.putString(PASSWORD_KEY, DEFAULT_PASSWORD);
+			mEdit.commit();
+		}
+		
+		// Login to iSENSE
+		login(false);
 
+		// Create a new upload queue
+		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
+
+		// These store our media objects
 		pictures = new ArrayList<File>();
 		videos = new ArrayList<File>();
 
+		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
 
+		// Have some TVs. TextViews I mean.
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
 		rideName = (TextView) findViewById(R.id.ridename);
-
 		rideName.setText("Ride/St#: " + rideNameString);
 
+		// Start some managers
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+		// Waffles ares UI messages, and fields are used in recording
 		w = new Waffle(this);
 		f = new Fields();
 
+		// These are arrays that store values we may record
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
 		rawMag = new float[3];
 		mag = new float[3];
 
+		// Fire up the GPS chip
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
-
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
 					AmusementPark.this);
 		} else {
-			// TODO Indicate lack of GPS
+			// TODO Ask user to turn on GPS
 		}
 
+		// This is the location we will get back from GPS
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 
+		// Most important feature. Makes the button beep.
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 	}
 
-	// Deals with login and UI display
-	void login() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
-		// TODO
-		api.createSession(mPrefs.getString("username", ""),
-				mPrefs.getString("password", ""));
+	/**
+	 * Logs the user into iSENSE with stored credentials.
+	 * 
+	 * @param enterNewCredentials True if you want to enter new user credentials.
+	 */
+	void login(boolean enterNewCredentials) {
+
+		if (enterNewCredentials) {
+			// TODO call the login activity
+		} else {
+
+			// Get user info from encrypted preferences
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					AmusementPark.mContext,
+					AmusementPark.mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+
+			// login to iSENSE
+			api.createSession(mPrefs.getString(USERNAME_KEY, DEFAULT_USERNAME),
+					mPrefs.getString(PASSWORD_KEY, PASSWORD_KEY));
+		}
 	}
 
-	// Gets the milliseconds since Epoch
+	/**
+	 * Returns the milliseconds elapsed since the Epoch. This includes the time offset from SyncTime.
+	 * 
+	 * @return Did you read the description?
+	 */
 	private long getUploadTime() {
 		Calendar c = Calendar.getInstance();
-		SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
-		timeOffset = mPrefs.getLong("timeOffset", 0);
+		SharedPreferences mPrefs = getSharedPreferences(TIME_OFFSET_PREFS_ID, 0);
+		timeOffset = mPrefs.getLong(TIME_OFFSET_KEY, 0);
 
 		return (((long) c.getTimeInMillis()) + timeOffset);
 	}
 
-	// Task for checking sensor availability along with enabling/disabling
+	/**
+	 * Task for checking sensor availability along with enabling/disabling
+	 * 
+	 * 
+	 * @author jpoulin
+	 */
 	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog dia;
@@ -808,8 +847,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			String eidInput = mPrefs.getString("project_id", "");
+			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
+			String eidInput = mPrefs.getString(PROJ_ID, "");
 
 			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
 					mContext, f);
@@ -833,6 +872,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void getEnabledFields() {
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
@@ -898,7 +940,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	private void showSummary(Date date, String sdFileName) {
 
-		elapsedMillis = totalMillis;
 		elapsedSeconds = elapsedMillis / 1000;
 		elapsedMillis %= 1000;
 		elapsedMinutes = elapsedSeconds / 60;
@@ -993,10 +1034,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
+	/**
+	 * Records a data point, and 
+	 */
 	private void recordData() {
 		dataPointCount++;
 		elapsedMillis += srate;
-		totalMillis = elapsedMillis;
 
 		if (dfm.enabledFields[Fields.ACCEL_X])
 			f.accel_x = toThou.format(accel[0]);
