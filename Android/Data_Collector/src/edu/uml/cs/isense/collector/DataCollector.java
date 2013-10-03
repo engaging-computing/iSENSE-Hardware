@@ -1032,12 +1032,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
-			dfm.getOrderWithExternalAsyncTask();
-
+			
 			sc = dfm.checkCompatibility();
 
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
+			
+			dfm.setOrder(fields);
+			
 			getEnabledFields();
 
 		}
