@@ -650,6 +650,9 @@ public class API {
 					bo.write(i);
 					i = in.read();
 				}
+				String output = bo.toString();
+				JSONObject result = new JSONObject(output);
+				return result.getJSONObject("mo").getInt("id");
 			} catch (IOException e) {
 				return -1;
 			}
@@ -696,6 +699,9 @@ public class API {
 					bo.write(i);
 					i = in.read();
 				}
+				String output = bo.toString();
+				JSONObject result = new JSONObject(output);
+				return result.getJSONObject("mo").getInt("id");
 			} catch (IOException e) {
 				return -1;
 			}
