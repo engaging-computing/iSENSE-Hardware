@@ -88,8 +88,8 @@ public class Main extends Activity implements LocationListener {
 	private Handler mHandler;
 	private TextView latLong;
 	private TextView queueCount;
-	private static final double DEFAULT_LAT = 42.6404;
-	private static final double DEFAULT_LONG = -71.3533;
+	private static final double DEFAULT_LAT = 0;   //42.6404;
+	private static final double DEFAULT_LONG = 0;   // -71.3533;
 	private long curTime;
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
@@ -159,7 +159,7 @@ public class Main extends Activity implements LocationListener {
 				String experimentNum = mPrefs.getString("project_id", "Error");
 
 				if (experimentNum.equals("Error")) {
-					w.make("Please select an experiment first.",
+					w.make("Please select a project first.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
@@ -201,7 +201,7 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Experiment");
+		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
 		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		return true;
@@ -375,7 +375,7 @@ public class Main extends Activity implements LocationListener {
 
 			if (experimentNum.equals("Error")) {
 				uploadError = true;
-				postRunnableWaffleError("No experiment selected to upload pictures to");
+				postRunnableWaffleError("No project selected to upload pictures to");
 				return;
 			}
 
@@ -391,7 +391,7 @@ public class Main extends Activity implements LocationListener {
 				dataRow = dfm.putData();
 			} else {
 				f.timeMillis = curTime;
-				f.latitude = DEFAULT_LAT;
+				f.latitude = DEFAULT_LAT;   
 				f.longitude = DEFAULT_LONG;
 				dataRow = dfm.putData();
 			}
@@ -539,7 +539,7 @@ public class Main extends Activity implements LocationListener {
 			OrientationManager.enableRotation(Main.this);
 
 			if (status400) {
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
+				w.make("Your data cannot be uploaded to this project.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else if (uploadError) {
 				// Do nothing - postRunnableWaffleError takes care of this
