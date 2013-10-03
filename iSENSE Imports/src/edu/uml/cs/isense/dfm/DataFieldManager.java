@@ -174,6 +174,21 @@ public class DataFieldManager extends Application {
 
 		}
 	}
+	
+	/**
+	 * Sets the DataFieldManager's order array based not on project field matching
+	 * but rather the field's returned from from user field matching.
+	 * 
+	 * @param input
+	 * 		A field list built from the FieldMatching dialog.
+	 */
+	public void setOrder(String input) {
+		String[] fields = input.split(",");
+		
+		for (String s : fields) {
+			order.add(s);
+		}
+	}
 
 	/**
 	 * Creates a row of data from the Fields object this class instance contains.
