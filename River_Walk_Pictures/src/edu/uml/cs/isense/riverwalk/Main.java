@@ -1,14 +1,13 @@
 package edu.uml.cs.isense.riverwalk;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,13 +20,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,16 +38,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.LoginActivity;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
-import edu.uml.cs.isense.riverwalk.experiments.ExperimentDialog;
-import edu.uml.cs.isense.riverwalk.objects.DataFieldManager;
-import edu.uml.cs.isense.riverwalk.objects.Fields;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -73,11 +69,10 @@ public class Main extends Activity implements LocationListener {
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
 	private Location loc;
-	private Location roughLoc;
 
 	private Uri imageUri;
 
-	public static RestAPI rapi;
+	public static API api;
 	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
 
@@ -121,26 +116,23 @@ public class Main extends Activity implements LocationListener {
 
 		f = new Fields();
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
+		api = API.getInstance(mContext);
+		api.useDev(true);
 
-		uq = new UploadQueue("generalpictures", mContext, rapi);
+		uq = new UploadQueue("generalpictures", mContext, api);
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		if (mPrefs.getString("experiment_id", "").equals("")) {
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		if (mPrefs.getString("project_id", "").equals("")) {
 			if (dfm == null) {
 				dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-						"experiment_id", "-1")), rapi, mContext, f);
+						"project_id", "-1")), api, mContext, f);
 				dfm.getOrder();
 			}
 		}
 
 		experimentLabel = (TextView) findViewById(R.id.ExperimentLabel);
 		experimentLabel.setText(getResources().getString(R.string.experiment)
-				+ mPrefs.getString("experiment_id", "None Set"));
+				+ mPrefs.getString("project_id", "None Set"));
 
 		mHandler = new Handler();
 
@@ -163,9 +155,8 @@ public class Main extends Activity implements LocationListener {
 					name.setError(null);
 				}
 
-				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				String experimentNum = mPrefs.getString("experiment_id",
-						"Error");
+				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String experimentNum = mPrefs.getString("project_id", "Error");
 
 				if (experimentNum.equals("Error")) {
 					w.make("Please select an experiment first.",
@@ -236,7 +227,7 @@ public class Main extends Activity implements LocationListener {
 		case MENU_ITEM_BROWSE:
 
 			Intent iExperiment = new Intent(getApplicationContext(),
-					ExperimentDialog.class);
+					Setup.class);
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 
 			return true;
@@ -258,7 +249,7 @@ public class Main extends Activity implements LocationListener {
 	protected void onResume() {
 		super.onResume();
 
-		if (!rapi.isLoggedIn())
+		if (api.getCurrentUser() == null)
 			attemptLogin();
 
 		// Rebuilds uploadQueue from saved info
@@ -269,13 +260,13 @@ public class Main extends Activity implements LocationListener {
 
 	private void manageUploadQueue() {
 
-		if (!(rapi.isConnectedToInternet())) {
+		if (!(api.hasConnectivity())) {
 			w.make("Must be connected to the internet to upload.",
 					Waffle.IMAGE_X);
 			return;
 		}
 
-		if (!(rapi.isLoggedIn())) {
+		if (api.getCurrentUser() == null) {
 			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
 			return;
 		}
@@ -379,31 +370,8 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		public void run() {
 
-			// Location
-			List<Address> address = null;
-			String city = "", state = "", country = "", addr = "";
-
-			try {
-				if (roughLoc != null) {
-
-					address = new Geocoder(Main.this, Locale.getDefault())
-							.getFromLocation(roughLoc.getLatitude(),
-									roughLoc.getLongitude(), 1);
-
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
-
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String experimentNum = mPrefs.getString("experiment_id", "Error");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String experimentNum = mPrefs.getString("project_id", "Error");
 
 			if (experimentNum.equals("Error")) {
 				uploadError = true;
@@ -415,33 +383,24 @@ public class Main extends Activity implements LocationListener {
 				initDfm();
 
 			JSONArray dataJSON = new JSONArray();
-			JSONArray dataRow = new JSONArray();
+			JSONObject dataRow = new JSONObject();
 			if (loc.getLatitude() != 0) {
-				f.time = curTime;
-				f.lat = loc.getLatitude();
-				f.lon = loc.getLongitude();
-				f.text = descriptionStr;
+				f.timeMillis = curTime;
+				f.latitude = loc.getLatitude();
+				f.longitude = loc.getLongitude();
 				dataRow = dfm.putData();
 			} else {
-				f.time = curTime;
-				f.lat = DEFAULT_LAT;
-				f.lon = DEFAULT_LONG;
-				f.text = descriptionStr;
+				f.timeMillis = curTime;
+				f.latitude = DEFAULT_LAT;
+				f.longitude = DEFAULT_LONG;
 				dataRow = dfm.putData();
 			}
 			dataJSON.put(dataRow);
 
-			DataSet ds;
-			if (address != null && address.size() > 0)
-				ds = new DataSet(DataSet.Type.BOTH, name.getText().toString()
-						+ ": " + descriptionStr, makeThisDatePretty(curTime),
-						experimentNum, dataJSON.toString(), picture, -1, city,
-						state, country, addr);
-			else
-				ds = new DataSet(DataSet.Type.BOTH, name.getText().toString()
-						+ ": " + descriptionStr, makeThisDatePretty(curTime),
-						experimentNum, dataJSON.toString(), picture, -1,
-						"Lowell", "MA", "USA", "Pawtucket Blvd.");
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
+					.toString() + ": " + descriptionStr,
+					makeThisDatePretty(curTime), experimentNum,
+					dataJSON.toString(), picture);
 
 			uq.addDataSetToQueue(ds);
 
@@ -449,10 +408,10 @@ public class Main extends Activity implements LocationListener {
 	};
 
 	private void initDfm() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String experimentInput = mPrefs.getString("experiment_id", "");
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String experimentInput = mPrefs.getString("project_id", "");
 
-		dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+		dfm = new DataFieldManager(Integer.parseInt(experimentInput), api,
 				mContext, f);
 		dfm.getOrder();
 	}
@@ -479,18 +438,14 @@ public class Main extends Activity implements LocationListener {
 
 		} else if (requestCode == EXPERIMENT_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
-				String eidString = data.getStringExtra("eid");
+				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String eidString = mPrefs.getString("project_id", "");
 
 				experimentLabel.setText(getResources().getString(
 						R.string.experiment)
 						+ eidString);
 
-				// SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				// SharedPreferences.Editor mEdit = mPrefs.edit();
-				// mEdit.putInt("experiment_id",
-				// Integer.parseInt(eidString)).commit();
-
-				dfm = new DataFieldManager(Integer.parseInt(eidString), rapi,
+				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();
 			}
@@ -540,14 +495,15 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		roughLoc = location;
 	}
 
 	@Override
-	public void onProviderDisabled(String provider) {}
+	public void onProviderDisabled(String provider) {
+	}
 
 	@Override
-	public void onProviderEnabled(String provider) {}
+	public void onProviderEnabled(String provider) {
+	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -612,13 +568,14 @@ public class Main extends Activity implements LocationListener {
 			return;
 		}
 
-		if (rapi.isConnectedToInternet()) {
-			boolean success = rapi.login(mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
-			if (!success) {
-				w.make("Experiencing wifi difficulties - check your wifi signal.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-			}
+		if (api.hasConnectivity()) {
+			new LoginTask().execute();
+			
+			// can't check success or not
+//			if (!success) {
+//				w.make("Experiencing wifi difficulties - check your wifi signal.",
+//						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+//			}
 		}
 	}
 
@@ -648,7 +605,6 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
-		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
 
 	@Override
@@ -711,6 +667,23 @@ public class Main extends Activity implements LocationListener {
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy",
 				Locale.US);
 		return sdf.format(time);
+	}
+
+	// Attempts to login with current user information
+	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					mContext, mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+
+			boolean success = api.createSession(
+					mPrefs.getString("username", ""),
+					mPrefs.getString("password", ""));
+			return success;
+		}
+
 	}
 
 }

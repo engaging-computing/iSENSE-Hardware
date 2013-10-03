@@ -18,6 +18,7 @@ import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.dfm.SensorCompatibility.SensorTypes;
+import edu.uml.cs.isense.supplements.OrientationManager;
 
 public class FieldMatching extends Activity implements OnClickListener {
 
@@ -38,6 +39,8 @@ public class FieldMatching extends Activity implements OnClickListener {
 		
 		mContext = this;
 		compatible = true;
+		
+		OrientationManager.disableRotation((Activity) mContext);
 		
 		LinkedList<String> fields = Step1Setup.dfm.getOrderList();
 		sensors = Step1Setup.sc;
@@ -112,7 +115,6 @@ public class FieldMatching extends Activity implements OnClickListener {
 
 				if (field.equals(getString(R.string.null_string))) {
 					nullViewCount++;
-					//v.setVisibility(View.GONE);
 				}
 			}
 
@@ -136,6 +138,9 @@ public class FieldMatching extends Activity implements OnClickListener {
 			isEmpty = false;
 		}
 
+		Button back = (Button) findViewById(R.id.field_matching_back);
+		back.setOnClickListener(this);
+		
 		Button okay = (Button) findViewById(R.id.field_matching_ok);
 		okay.setOnClickListener(this);
 
@@ -188,18 +193,15 @@ public class FieldMatching extends Activity implements OnClickListener {
 		case R.id.field_matching_ok:
 			setAcceptedFields();
 			setResult(RESULT_OK);
+			OrientationManager.enableRotation((Activity) mContext);
 			finish();
 			break;
-
-//		case R.id.check_layout:
-//			CheckedTextView ctv = (CheckedTextView) v
-//					.findViewById(R.id.sensorlabel);
-//			if (ctv.isChecked())
-//				ctv.setCheckMarkDrawable(R.drawable.red_x);
-//			else
-//				ctv.setCheckMarkDrawable(R.drawable.checkmark);
-//			ctv.toggle();
-//			break;
+			
+		case R.id.field_matching_back:
+			setResult(RESULT_CANCELED);
+			OrientationManager.enableRotation((Activity) mContext);
+			finish();
+			break;
 		}
 
 	}
@@ -241,12 +243,14 @@ public class FieldMatching extends Activity implements OnClickListener {
 		mEdit.putString("accepted_fields", prefString).commit();
 		mEdit.putString("accepted_proj", mPrefs.getString("project_id", "-1")).commit();
 		
+		System.out.println("Accepted: " + prefString);
 	}
 	
 	@Override
 	public void onBackPressed() {
-		setAcceptedFields();
-		setResult(RESULT_OK);
+		//setAcceptedFields();
+		setResult(RESULT_CANCELED);
+		OrientationManager.enableRotation((Activity) mContext);
 		finish();
 	}
 

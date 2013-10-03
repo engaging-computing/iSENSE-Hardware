@@ -292,6 +292,8 @@ public class Step1Setup extends Activity {
 		}
 
 		for (String s : acceptedFields) {
+			System.out.println("Got back: " + s);
+			
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[Fields.TIME] = true;
 
