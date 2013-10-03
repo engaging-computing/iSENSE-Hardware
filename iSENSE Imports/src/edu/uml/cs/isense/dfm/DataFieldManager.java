@@ -1092,5 +1092,54 @@ public class DataFieldManager extends Application {
 		enabledFields[Fields.ALTITUDE] = true;
 		enabledFields[Fields.LIGHT] = true;
 	}
+	
+	/**
+	 * Set the enabled fields from the acceptedFields parameter. 
+	 * 
+	 * @param acceptedFields LinkedList of field strings
+	 */
+	public void setEnabledFields(LinkedList<String> acceptedFields) {
+		
+		for (String s : acceptedFields) {
+			if (s.equals(getString(R.string.time)))
+				enabledFields[Fields.TIME] = true;
+			if (s.equals(getString(R.string.accel_x)))
+				enabledFields[Fields.ACCEL_X] = true;
+			if (s.equals(getString(R.string.accel_y)))
+				enabledFields[Fields.ACCEL_Y] = true;
+			if (s.equals(getString(R.string.accel_z)))
+				enabledFields[Fields.ACCEL_Z] = true;
+			if (s.equals(getString(R.string.accel_total)))
+				enabledFields[Fields.ACCEL_TOTAL] = true;
+			if (s.equals(getString(R.string.latitude)))
+				enabledFields[Fields.LATITUDE] = true;
+			if (s.equals(getString(R.string.longitude)))
+				enabledFields[Fields.LONGITUDE] = true;
+			if (s.equals(getString(R.string.magnetic_x)))
+				enabledFields[Fields.MAG_X] = true;
+			if (s.equals(getString(R.string.magnetic_y)))
+				enabledFields[Fields.MAG_Y] = true;
+			if (s.equals(getString(R.string.magnetic_z)))
+				enabledFields[Fields.MAG_Z] = true;
+			if (s.equals(getString(R.string.magnetic_total)))
+				enabledFields[Fields.MAG_TOTAL] = true;
+			if (s.equals(getString(R.string.heading_deg)))
+				enabledFields[Fields.HEADING_DEG] = true;
+			if (s.equals(getString(R.string.heading_rad)))
+				enabledFields[Fields.HEADING_RAD] = true;
+			if (s.equals(getString(R.string.temperature_c)))
+				enabledFields[Fields.TEMPERATURE_C] = true;
+			if (s.equals(getString(R.string.temperature_f)))
+				enabledFields[Fields.TEMPERATURE_F] = true;
+			if (s.equals(getString(R.string.temperature_k)))
+				enabledFields[Fields.TEMPERATURE_K] = true;
+			if (s.equals(getString(R.string.pressure)))
+				enabledFields[Fields.PRESSURE] = true;
+			if (s.equals(getString(R.string.altitude)))
+				enabledFields[Fields.ALTITUDE] = true;
+			if (s.equals(getString(R.string.luminous_flux)))
+				enabledFields[Fields.LIGHT] = true;
+		}
+	}
 
 }

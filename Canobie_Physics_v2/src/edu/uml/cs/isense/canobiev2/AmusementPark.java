@@ -31,6 +31,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -108,6 +110,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/* Work Flow Variables */
 	private boolean isRunning = false;
+	private boolean uploadSuccessful = false;
 
 	/* Recording Constants */
 	private final int SAMPLE_INTERVAL = 50;
@@ -140,19 +143,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private MediaPlayer mMediaPlayer;
 
 	public static ArrayList<File> pictures;
-	public static ArrayList<File> videos;
 
-	private int elapsedMinutes = 0;
-	private int elapsedSeconds = 0;
-	private int elapsedMillis = 0;
-	private int dataPointCount = 0;
+	private int dataPointCount = 0, elapsedMillis;
 
 	// Used with Sync Time
 	private long currentTime = 0;
 	private long timeOffset = 0;
 
-	private String dateString, s_elapsedSeconds, s_elapsedMillis,
-			s_elapsedMinutes;
+	private String dateString;
 
 	/* Important Objects */
 	private API api;
@@ -161,15 +159,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	DecimalFormat toThou = new DecimalFormat("######0.000");
 
-	String nameOfSession = "";
+	String nameOfDataSet = "";
 	static String partialSessionName = "";
-
-	public static boolean inPausedState = false;
-
 	private static boolean useMenu = true;
 	private static boolean setupDone = false;
-	private static boolean status400 = false;
-	private static boolean uploadSuccess = false;
 
 	public static String textToSession = "";
 	public static String toSendOut = "";
@@ -402,11 +395,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onPause() {
 		super.onPause();
 
-		/* Stop the current sensors to save battery. */
+		// Stop the current sensors to save battery.
 		mLocationManager.removeUpdates(AmusementPark.this);
 		mSensorManager.unregisterListener(AmusementPark.this);
 
-		/* Cancel the recording timer */
+		// Cancel the recording timer
 		if (recordingTimer != null)
 			recordingTimer.cancel();
 	}
@@ -568,8 +561,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
-				SharedPreferences mPrefs = getSharedPreferences(TIME_OFFSET_PREFS_ID,
-						0);
+				SharedPreferences mPrefs = getSharedPreferences(
+						TIME_OFFSET_PREFS_ID, 0);
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong(TIME_OFFSET_KEY, timeOffset);
 				mEditor.commit();
@@ -581,9 +574,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			startStop.setEnabled(true);
-			/* TODO ProjectCreate.acceptedFields */
-			// acceptedFields = .acceptedFields;
-			getEnabledFields();
+			/* TODO fieldMatching.acceptedFields */
+			// acceptedFields = fieldMatcher.acceptedFields;
+			dfm.setEnabledFields(acceptedFields);
 		}
 
 	}
@@ -598,53 +591,57 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-			status400 = false;
-			int sessionId = -1;
 
+			// Create a time stamp for the dataSet
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss",
 					Locale.US);
 			Date dt = new Date();
 			String dateString = sdf.format(dt);
 
-			String description = "Automated Submission Through Android Canobie Physics App";
+			// Create name from time stamp
+			String name = nameOfDataSet + " - " + dateString;
 
+			// Retrieve project id
 			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
-			String eid = mPrefs.getString(PROJ_ID, "");
+			String projId = mPrefs.getString(PROJ_ID, "");
 
-			api.createSession(DEFAULT_USERNAME, DEFAULT_PASSWORD);
-
-			// createSession Success Check
-			if (sessionId == -1) {
-				uploadSuccess = false;
-			} else {
-				uploadSuccess = true;
+			// Make sure the user is logged in
+			if (api.getCurrentUser() == null) {
+				login(false);
 			}
 
-			// Experiment Closed Checker
-			if (sessionId == -400) {
-				status400 = true;
-			} else {
-				status400 = false;
-				if (uploadSuccess)
-					// TODO uploadSuccess = api
-					// .putSessionData(sessionId, eid, dataSet);
-
-					// Saves data for later upload
-					if (!uploadSuccess) {
-						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
-								nameOfSession + " - " + dateString,
-								description, eid, dataSet.toString(), null);
-						uq.addDataSetToQueue(ds);
-					}
-
-				pictureArray.clear();
+			// Creates a new JSONObject that wraps the data and changes it from row major to column major
+			JSONObject data = new JSONObject();
+			try {
+				data.put("data", dataSet);
+				data = api.rowsToCols(data);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
+
+			// Tries to upload the data set
+			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
+			uploadSuccessful = (dataSetId <= 0) ? true : false;
+			
+			// Saves data for later upload
+			if (!uploadSuccessful) {
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, name,
+						getResources().getString(R.id.description), projId, dataSet.toString(), null);
+				uq.addDataSetToQueue(ds);
+			}
+
+			// Empties the picture array
+			pictureArray.clear();
 
 		}
 
 	};
 
-	// Control task for uploading data
+	/**
+	 * 
+	 * 
+	 * @author jpoulin
+	 */
 	private class UploadTask extends AsyncTask<String, Void, String> {
 
 		ProgressDialog dia;
@@ -677,10 +674,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			MediaManager.mediaCount = 0;
 
-			if (status400)
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-			else if (!uploadSuccess) {
+			if (uploadSuccessful) {
 				w.make("Data was not uploaded - saved instead",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			} else {
@@ -695,6 +689,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
+	/**
+	 * Writes the passed in time to the main screen.
+	 * 
+	 * @param seconds
+	 */
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -732,7 +731,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			mEdit.putString(PASSWORD_KEY, DEFAULT_PASSWORD);
 			mEdit.commit();
 		}
-		
+
 		// Login to iSENSE
 		login(false);
 
@@ -741,7 +740,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		// These store our media objects
 		pictures = new ArrayList<File>();
-		videos = new ArrayList<File>();
 
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
@@ -761,14 +759,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		w = new Waffle(this);
 		f = new Fields();
 
-		// These are arrays that store values we may record
+		// These are arrays that store values we may record. Who knows, maybe we'll use them.
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
 		rawMag = new float[3];
 		mag = new float[3];
 
-		// Fire up the GPS chip
+		// Fire up the GPS chip (not literally)
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -790,7 +788,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/**
 	 * Logs the user into iSENSE with stored credentials.
 	 * 
-	 * @param enterNewCredentials True if you want to enter new user credentials.
+	 * @param enterNewCredentials
+	 *            True if you want to enter new user credentials.
 	 */
 	void login(boolean enterNewCredentials) {
 
@@ -811,7 +810,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	/**
-	 * Returns the milliseconds elapsed since the Epoch. This includes the time offset from SyncTime.
+	 * Returns the milliseconds elapsed since the Epoch. This includes the time
+	 * offset from SyncTime.
 	 * 
 	 * @return Did you read the description?
 	 */
@@ -825,7 +825,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/**
 	 * Task for checking sensor availability along with enabling/disabling
-	 * 
 	 * 
 	 * @author jpoulin
 	 */
@@ -873,51 +872,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	/**
-	 * 
+	 * Set all dfm's fields to enabled. 
 	 */
-	private void getEnabledFields() {
-		for (String s : acceptedFields) {
-			if (s.equals(getString(R.string.time)))
-				dfm.enabledFields[Fields.TIME] = true;
-			if (s.equals(getString(R.string.accel_x)))
-				dfm.enabledFields[Fields.ACCEL_X] = true;
-			if (s.equals(getString(R.string.accel_y)))
-				dfm.enabledFields[Fields.ACCEL_Y] = true;
-			if (s.equals(getString(R.string.accel_z)))
-				dfm.enabledFields[Fields.ACCEL_Z] = true;
-			if (s.equals(getString(R.string.accel_total)))
-				dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
-			if (s.equals(getString(R.string.latitude)))
-				dfm.enabledFields[Fields.LATITUDE] = true;
-			if (s.equals(getString(R.string.longitude)))
-				dfm.enabledFields[Fields.LONGITUDE] = true;
-			if (s.equals(getString(R.string.magnetic_x)))
-				dfm.enabledFields[Fields.MAG_X] = true;
-			if (s.equals(getString(R.string.magnetic_y)))
-				dfm.enabledFields[Fields.MAG_Y] = true;
-			if (s.equals(getString(R.string.magnetic_z)))
-				dfm.enabledFields[Fields.MAG_Z] = true;
-			if (s.equals(getString(R.string.magnetic_total)))
-				dfm.enabledFields[Fields.MAG_TOTAL] = true;
-			if (s.equals(getString(R.string.heading_deg)))
-				dfm.enabledFields[Fields.HEADING_DEG] = true;
-			if (s.equals(getString(R.string.heading_rad)))
-				dfm.enabledFields[Fields.HEADING_RAD] = true;
-			if (s.equals(getString(R.string.temperature_c)))
-				dfm.enabledFields[Fields.TEMPERATURE_C] = true;
-			if (s.equals(getString(R.string.temperature_f)))
-				dfm.enabledFields[Fields.TEMPERATURE_F] = true;
-			if (s.equals(getString(R.string.temperature_k)))
-				dfm.enabledFields[Fields.TEMPERATURE_K] = true;
-			if (s.equals(getString(R.string.pressure)))
-				dfm.enabledFields[Fields.PRESSURE] = true;
-			if (s.equals(getString(R.string.altitude)))
-				dfm.enabledFields[Fields.ALTITUDE] = true;
-			if (s.equals(getString(R.string.luminous_flux)))
-				dfm.enabledFields[Fields.LIGHT] = true;
-		}
-	}
-
 	private void enableAllFields() {
 
 		dfm = new DataFieldManager(-1, api, mContext, f);
@@ -926,8 +882,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	}
 
-	// Prompts the user to upload the rest of their content
-	// upon successful upload of data
+	/**
+	 * Prompts the user to upload the rest of their content
+	 * upon successful upload of data.
+	 */
 	private void manageUploadQueue() {
 		if (!uq.emptyQueue()) {
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
@@ -937,38 +895,66 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			w.make("No data to upload.", Waffle.IMAGE_CHECK);
 		}
 	}
+	
+	/**
+	 * Turns elapsedMillis into readable strings.
+	 * 
+	 * @author jpoulin
+	 */
+	private class ElapsedTime {
+		private String elapsedMillis;
+		private String elapsedSeconds;
+		private String elapsedMinutes;
+		
+		/**
+		 * Dis is a contructor.
+		 * 
+		 * @param milliseconds
+		 */
+		ElapsedTime(int milliseconds) {
+			int seconds, minutes;
+			
+			seconds = milliseconds / 1000;
+			milliseconds %= 1000;
+			minutes = seconds / 60;
+			seconds %= 60;
+			
+			if (seconds < 10) {
+				elapsedSeconds = "0" + seconds;
+			} else {
+				elapsedSeconds = "" + seconds;
+			}
 
+			if (milliseconds < 10) {
+				elapsedMillis = "00" + milliseconds;
+			} else if (milliseconds < 100) {
+				elapsedMillis = "0" + milliseconds;
+			} else {
+				elapsedMillis = "" + milliseconds;
+			}
+
+			if (minutes < 10) {
+				elapsedMinutes = "0" + minutes;
+			} else {
+				elapsedMinutes = "" + minutes;
+			}		
+		}
+		
+	}
+
+	/**
+	 * Makes a summary dialog.
+	 * @param date Time of upload
+	 * @param sdFileName Name of the written csv
+	 */
 	private void showSummary(Date date, String sdFileName) {
 
-		elapsedSeconds = elapsedMillis / 1000;
-		elapsedMillis %= 1000;
-		elapsedMinutes = elapsedSeconds / 60;
-		elapsedSeconds %= 60;
-
-		if (elapsedSeconds < 10) {
-			s_elapsedSeconds = "0" + elapsedSeconds;
-		} else {
-			s_elapsedSeconds = "" + elapsedSeconds;
-		}
-
-		if (elapsedMillis < 10) {
-			s_elapsedMillis = "00" + elapsedMillis;
-		} else if (elapsedMillis < 100) {
-			s_elapsedMillis = "0" + elapsedMillis;
-		} else {
-			s_elapsedMillis = "" + elapsedMillis;
-		}
-
-		if (elapsedMinutes < 10) {
-			s_elapsedMinutes = "0" + elapsedMinutes;
-		} else {
-			s_elapsedMinutes = "" + elapsedMinutes;
-		}
-
+		ElapsedTime time = new ElapsedTime(elapsedMillis);
+		
 		Intent iSummary = new Intent(mContext, Summary.class);
-		iSummary.putExtra("millis", s_elapsedMillis)
-				.putExtra("seconds", s_elapsedSeconds)
-				.putExtra("minutes", s_elapsedMinutes)
+		iSummary.putExtra("millis", time.elapsedMillis)
+				.putExtra("seconds", time.elapsedSeconds)
+				.putExtra("minutes", time.elapsedMinutes)
 				.putExtra("append", "Filename: \n" + sdFileName)
 				.putExtra("date", getNiceDateString(date))
 				.putExtra("points", "" + dataPointCount);
@@ -977,7 +963,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	}
 
-	// Registers Sensors
+	/**
+	 * Turns on only the sensors you need to record data.
+	 */
 	@SuppressLint("InlinedApi")
 	private void registerSensors() {
 		if (mSensorManager != null && setupDone && dfm != null) {
@@ -1035,7 +1023,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	/**
-	 * Records a data point, and 
+	 * Records a data point, puts it into the dataSet object, and writes it to a csv string.
 	 */
 	private void recordData() {
 		dataPointCount++;
