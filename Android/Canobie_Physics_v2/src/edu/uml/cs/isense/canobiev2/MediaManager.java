@@ -168,8 +168,7 @@ public class MediaManager extends Activity {
 			int orientation_ColumnIndex = cursor
 					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
 			if (cursor.moveToFirst()) {
-				@SuppressWarnings("unused")
-				String orientation = cursor.getString(orientation_ColumnIndex);
+				cursor.getString(orientation_ColumnIndex);
 				return new File(cursor.getString(file_ColumnIndex));
 			}
 			return null;
@@ -261,23 +260,16 @@ public class MediaManager extends Activity {
 	}
 
 	// Assists with differentiating between displays for dialogues
-	@SuppressWarnings("deprecation")
 	private static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
+		return android.os.Build.VERSION.SDK_INT;
 	}
 
 	// Adds pictures to the SD Card
 	public void pushPicture() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
-		String uploadSessionString;
 
 		String dateString = sdf.format(dt);
-
-		if (AmusementPark.partialSessionName.equals(""))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = AmusementPark.partialSessionName;
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -288,10 +280,9 @@ public class MediaManager extends Activity {
 
 		for (int i = 0; i < AmusementPark.pictures.size(); i++) {
 			File f = AmusementPark.pictures.get(i);
-			File newFile = new File(folder, uploadSessionString + "-"
-					+ dateString + ".jpeg");
+			File newFile = new File(folder, dateString + ".jpeg");
 			f.renameTo(newFile);
-			AmusementPark.pictureArray.add(newFile);
+			AmusementPark.pictures.add(newFile);
 		}
 		AmusementPark.pictures.clear();
 	}
@@ -300,14 +291,8 @@ public class MediaManager extends Activity {
 	public void pushVideo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
 		Date dt = new Date();
-		String uploadSessionString;
 
 		String dateString = sdf.format(dt);
-
-		if (AmusementPark.partialSessionName.equals(""))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = AmusementPark.partialSessionName;
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -318,8 +303,7 @@ public class MediaManager extends Activity {
 
 		for (int i = 0; i < AmusementPark.videos.size(); i++) {
 			File f = AmusementPark.videos.get(i);
-			File newFile = new File(folder, uploadSessionString + " - "
-					+ dateString + ".3gp");
+			File newFile = new File(folder, dateString + ".3gp");
 			f.renameTo(newFile);
 		}
 		AmusementPark.videos.clear();
@@ -328,15 +312,6 @@ public class MediaManager extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (AmusementPark.pictures.size() > 0)
-			pushPicture();
-		if (AmusementPark.videos.size() > 0)
-			pushVideo();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
 		if (AmusementPark.pictures.size() > 0)
 			pushPicture();
 		if (AmusementPark.videos.size() > 0)
