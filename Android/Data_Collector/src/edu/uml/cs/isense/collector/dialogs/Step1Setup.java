@@ -23,9 +23,8 @@ import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
-import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -44,7 +43,7 @@ public class Step1Setup extends Activity {
 	private SharedPreferences.Editor mEdit;
 
 	private static final int SETUP_REQUESTED = 100;
-	private static final int CHOOSE_SENSORS_REQUESTED = 101;
+	private static final int FIELD_MATCHING_REQUESTED = 101;
 
 	public static final int S_INTERVAL = 50;
 	public static final int TEST_LENGTH = 600;
@@ -54,7 +53,6 @@ public class Step1Setup extends Activity {
 	public static LinkedList<String> acceptedFields;
 	public static DataFieldManager dfm;
 	public static Fields f;
-	public static SensorCompatibility sc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +83,7 @@ public class Step1Setup extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				if (dataSetName.getText().toString().equals("")) {
 					dataSetName.setError("Enter a data set name");
 					w.make("Please enter a data set name first",
@@ -127,43 +125,45 @@ public class Step1Setup extends Activity {
 				if (!projCheck.isChecked()) {
 					String projID = mPrefs.getString("project_id", "");
 					String fields = mPrefs.getString("accepted_fields", "");
-					String acceptedProj = mPrefs.getString("accepted_proj", "-1");
+					String acceptedProj = mPrefs.getString("accepted_proj",
+							"-1");
 					if (projID.equals("") || projID.equals("-1")) {
 						w.make("Please select a project", Waffle.LENGTH_SHORT,
 								Waffle.IMAGE_X);
 						return;
-					} else if (fields.equals("") || (!projID.equals(acceptedProj))) {
+					} else if (fields.equals("")
+							|| (!projID.equals(acceptedProj))) {
 						w.make("Please select your project fields",
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 						new SensorCheckTask().execute();
 						return;
 					}
 				}
-				
+
 				if (projCheck.isChecked())
 					mEdit.putString("project_id", "-1").commit();
-					
+
 				mEdit.putString("data_set_name",
 						dataSetName.getText().toString()).commit();
-				
+
 				if (remember.isChecked()) {
 					mEdit.putString("s_interval",
 							sInterval.getText().toString()).commit();
-					mEdit.putString("t_length",
-							testLen.getText().toString()).commit();
+					mEdit.putString("t_length", testLen.getText().toString())
+							.commit();
 					mEdit.putBoolean("remember", true).commit();
 				} else {
 					mEdit.putBoolean("remember", false).commit();
 				}
 
 				Intent iRet = new Intent();
-				iRet.putExtra(DataCollector.STEP_1_DATASET_NAME,
-						dataSetName.getText().toString());
+				iRet.putExtra(DataCollector.STEP_1_DATASET_NAME, dataSetName
+						.getText().toString());
 				iRet.putExtra(DataCollector.STEP_1_SAMPLE_INTERVAL, sint);
 				iRet.putExtra(DataCollector.STEP_1_TEST_LENGTH, tlen);
 				setResult(RESULT_OK, iRet);
 				finish();
-				
+
 			}
 		});
 
@@ -207,24 +207,26 @@ public class Step1Setup extends Activity {
 		testLen = (EditText) findViewById(R.id.step1_test_length);
 
 		projLabel = (TextView) findViewById(R.id.step1_proj_num_label);
-		
-		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+
+		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ",
+				0);
 		SharedPreferences.Editor gppEdit = globalProjPrefs.edit();
 		String proj = globalProjPrefs.getString("project_id_dc", "");
 		if (!(proj.equals(""))) {
 			projLabel.setText("Project (currently " + proj + ")");
 			dfm = new DataFieldManager(Integer.parseInt(proj), api, mContext, f);
-			
+
 			// reset the global project id so we don't pull it again
 			gppEdit.putString("project_id_dc", "").commit();
-			
+
 			// switch the global project id to the local project id
 			mEdit.putString("project_id", proj).commit();
 		} else {
 			proj = mPrefs.getString("project_id", "");
 			if (!(proj.equals("") || proj.equals("-1"))) {
 				projLabel.setText("Project (currently " + proj + ")");
-				dfm = new DataFieldManager(Integer.parseInt(proj), api, mContext, f);
+				dfm = new DataFieldManager(Integer.parseInt(proj), api,
+						mContext, f);
 			} else {
 				dfm = new DataFieldManager(-1, api, mContext, f);
 				projCheck.toggle();
@@ -255,7 +257,7 @@ public class Step1Setup extends Activity {
 				new SensorCheckTask().execute();
 
 			}
-		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
+		} else if (requestCode == FIELD_MATCHING_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				if (FieldMatching.acceptedFields.isEmpty()) {
 					Intent iSetup = new Intent(mContext, Setup.class);
@@ -293,7 +295,7 @@ public class Step1Setup extends Activity {
 
 		for (String s : acceptedFields) {
 			System.out.println("Got back: " + s);
-			
+
 			if (s.equals(getString(R.string.time)))
 				dfm.enabledFields[Fields.TIME] = true;
 
@@ -390,9 +392,7 @@ public class Step1Setup extends Activity {
 
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
-			dfm.getOrder();
-
-			sc = dfm.checkCompatibility();
+			dfm.getOrderWithExternalAsyncTask();
 
 			publishProgress(100);
 			return null;
@@ -405,33 +405,11 @@ public class Step1Setup extends Activity {
 
 			OrientationManager.enableRotation(Step1Setup.this);
 
-			new FieldMatchingTask().execute();
-		}
-	}
-
-	// Task for checking sensor availability along with enabling/disabling
-	private class FieldMatchingTask extends AsyncTask<Void, Integer, Void> {
-		RProject p;
-		Intent i;
-		String projNum;
-		@Override
-		protected Void doInBackground(Void... voids) {
-			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			projNum = mPrefs.getString("project_id", "");
-			i = new Intent(mContext, FieldMatching.class);
-			p = api.getProject(Integer.parseInt(projNum));
+			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
+			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST,
+					dfm.convertOrderToStringArray());
 			
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			i.putExtra("expnum", projNum);
-			if (p != null)
-				i.putExtra("expname", p.name);
-			else
-				i.putExtra("expname", "");
-			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
+			startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.dialogs;
+package edu.uml.cs.isense.dfm;
 
 import java.util.LinkedList;
 
@@ -14,19 +14,43 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
-import edu.uml.cs.isense.dfm.SensorCompatibility.SensorTypes;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.supplements.OrientationManager;
 
-public class FieldMatching extends Activity implements OnClickListener {
+/**
+ * The FieldMatching class lists off fields from a project, which the implementor must pass in
+ * as an intent extra to DFM_ORDER_LIST, and makes a best attempt of matching them with known
+ * field names in the system.  It provides drop-down menus for users to reconfigure fields they
+ * would like to record for this project.  When this activity finishes, fields accepted by the
+ * user are stored in the acceptedFields LinkedList, which is public for any implementation to grab.
+ * 
+ * @author iSENSE Android Development Team
+ */
+public class FieldMatching extends Activity {
+	
+	/**
+	 * The hard-coded String key that the implementor should pair with a String[] of their
+	 * DataFieldManager instance's order array.  Please note this must be a String[], but 
+	 * DFM's order field is a LinkedList.  See 
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#convertOrderToStringArray() convertOrderToStringArray()}
+	 * to easily convert order into a String[].
+	 */
+	public static final String DFM_ORDER_LIST = "dfm_order_list";
 
-	SensorCompatibility sensors;
-	LinearLayout scrollViewLayout;
+	/**
+	 * The list of fields the user accepts with.  In other words, it will be a
+	 * list of all the fields selected in the drop-down menus.
+	 */
 	public static LinkedList<String> acceptedFields;
+	
+	/**
+	 * A public boolean that can be checked upon return of this activity to see if the project
+	 * was compatible with the app or not.  A typical implementation would ask the user to select
+	 * a new project and launch the FieldMatching activity again with that new project.
+	 */
 	public static boolean compatible;
 	
+	private LinearLayout scrollViewLayout;
 	private int nullViewCount = 0;
 	private boolean isEmpty = false;
 	private TextView errorTV;
@@ -42,8 +66,21 @@ public class FieldMatching extends Activity implements OnClickListener {
 		
 		OrientationManager.disableRotation((Activity) mContext);
 		
-		LinkedList<String> fields = Step1Setup.dfm.getOrderList();
-		sensors = Step1Setup.sc;
+		LinkedList<String> fields = null;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			String[] sa = extras.getStringArray(DFM_ORDER_LIST);
+			if (sa == null || sa.length == 0) {
+				throw new RuntimeException("Incorrect usage of FieldMatching: the array passed has no fields or wasn't passed to DFM_ORDER_LIST");
+			}
+			 fields = DataFieldManager.convertStringArrayToLinkedList(sa);
+		} else {
+			throw new RuntimeException("Incorrect usage of FieldMatching: please pass in dfm's order list");
+		}
+		
+		if (fields == null) {
+			throw new RuntimeException("Something went terribly wrong.  Make sure you're passing in the order list correctly.");
+		}
 
 		scrollViewLayout = (LinearLayout) findViewById(R.id.field_matching_view);
 
@@ -60,58 +97,55 @@ public class FieldMatching extends Activity implements OnClickListener {
 				} else
 					name.setText(field);
 				
-				TextView compat = (TextView) v.findViewById(R.id.field_match_cell_compatible);
 				Spinner selector = (Spinner) v.findViewById(R.id.field_match_cell_spinner);
 				
 				if (field.contains(getString(R.string.null_string))) {
-					setCompatibilityAndSelection(compat, selector, -1);
+					selector.setSelection(0);
 				} else if (field.equals(getString(R.string.time))) {
-					setCompatibilityAndSelection(compat, selector, Fields.TIME);
+					selector.setSelection(Fields.TIME + 1);
 				} else if (field.equals(getString(R.string.latitude))) {
-					setCompatibilityAndSelection(compat, selector, Fields.LATITUDE);
+					selector.setSelection(Fields.LATITUDE + 1);
 				} else if (field.equals(getString(R.string.longitude))) {
-					setCompatibilityAndSelection(compat, selector, Fields.LONGITUDE);
+					selector.setSelection(Fields.LONGITUDE + 1);
 				} else if (field.equals(getString(R.string.accel_x))) {
-					setCompatibilityAndSelection(compat, selector, Fields.ACCEL_X, SensorTypes.ACCELEROMETER);
+					selector.setSelection(Fields.ACCEL_X + 1);
 				} else if (field.equals(getString(R.string.accel_y))) {
-					setCompatibilityAndSelection(compat, selector, Fields.ACCEL_Y, SensorTypes.ACCELEROMETER);
+					selector.setSelection(Fields.ACCEL_Y + 1);
 				} else if (field.equals(getString(R.string.accel_z))) {
-					setCompatibilityAndSelection(compat, selector, Fields.ACCEL_Z, SensorTypes.ACCELEROMETER);
+					selector.setSelection(Fields.ACCEL_Z + 1);
 				} else if (field.equals(getString(R.string.accel_total))) {
-					setCompatibilityAndSelection(compat, selector, Fields.ACCEL_TOTAL, SensorTypes.ACCELEROMETER);
+					selector.setSelection(Fields.ACCEL_TOTAL + 1);
 				} else if (field.equals(getString(R.string.magnetic_x))) {
-					setCompatibilityAndSelection(compat, selector, Fields.MAG_X, SensorTypes.MAGNETIC_FIELD);
+					selector.setSelection(Fields.MAG_X);
 				} else if (field.equals(getString(R.string.magnetic_y))) {
-					setCompatibilityAndSelection(compat, selector, Fields.MAG_Y, SensorTypes.MAGNETIC_FIELD);
+					selector.setSelection(Fields.MAG_Y + 1);
 				} else if (field.equals(getString(R.string.magnetic_z))) {
-					setCompatibilityAndSelection(compat, selector, Fields.MAG_Z, SensorTypes.MAGNETIC_FIELD);
+					selector.setSelection(Fields.MAG_Z + 1);
 				} else if (field.equals(getString(R.string.magnetic_total))) {
-					setCompatibilityAndSelection(compat, selector, Fields.MAG_TOTAL, SensorTypes.MAGNETIC_FIELD);
+					selector.setSelection(Fields.MAG_TOTAL + 1);
 				} else if (field.equals(getString(R.string.heading_deg))) {
-					setCompatibilityAndSelection(compat, selector, Fields.HEADING_DEG, SensorTypes.ORIENTATION);
+					selector.setSelection(Fields.HEADING_DEG + 1);
 				} else if (field.equals(getString(R.string.heading_rad))) {
-					setCompatibilityAndSelection(compat, selector, Fields.HEADING_RAD, SensorTypes.ORIENTATION);
+					selector.setSelection(Fields.HEADING_RAD + 1);
 				} else if (field.equals(getString(R.string.temperature_c))) {
-					setCompatibilityAndSelection(compat, selector, Fields.TEMPERATURE_C, SensorTypes.AMBIENT_TEMPERATURE);
+					selector.setSelection(Fields.TEMPERATURE_C + 1);
 				} else if (field.equals(getString(R.string.temperature_f))) {
-					setCompatibilityAndSelection(compat, selector, Fields.TEMPERATURE_F, SensorTypes.AMBIENT_TEMPERATURE);
+					selector.setSelection(Fields.TEMPERATURE_F + 1);
 				} else if (field.equals(getString(R.string.temperature_k))) {
-					setCompatibilityAndSelection(compat, selector, Fields.TEMPERATURE_K, SensorTypes.AMBIENT_TEMPERATURE);
+					selector.setSelection(Fields.TEMPERATURE_K + 1);
 				} else if (field.equals(getString(R.string.pressure))) {
-					setCompatibilityAndSelection(compat, selector, Fields.PRESSURE, SensorTypes.PRESSURE);
+					selector.setSelection(Fields.PRESSURE + 1);
 				} else if (field.equals(getString(R.string.luminous_flux))) {
-					setCompatibilityAndSelection(compat, selector, Fields.LIGHT, SensorTypes.LIGHT);
+					selector.setSelection(Fields.LIGHT + 1);
 				} else if (field.equals(getString(R.string.altitude))) {
-					setCompatibilityAndSelection(compat, selector, Fields.ALTITUDE, SensorTypes.PRESSURE, SensorTypes.AMBIENT_TEMPERATURE);
+					selector.setSelection(Fields.ALTITUDE + 1);
 				}
 
 				LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 					     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 				layoutParams.setMargins(1, 1, 1, 1);
-				
 				scrollViewLayout.addView(v, layoutParams);
-				v.setOnClickListener(this);
 
 				if (field.equals(getString(R.string.null_string))) {
 					nullViewCount++;
@@ -125,8 +159,8 @@ public class FieldMatching extends Activity implements OnClickListener {
 			errorTV.setBackgroundColor(Color.TRANSPARENT);
 			if (isEmpty) errorTV.setText(getString(R.string.invalidProject));
 			else {
-				errorTV.setText(getString(R.string.noCompatibleFields));
 				compatible = false;
+				errorTV.setText(getString(R.string.noCompatibleFields));
 			}
 			scrollViewLayout.addView(errorTV);
 			
@@ -139,70 +173,23 @@ public class FieldMatching extends Activity implements OnClickListener {
 		}
 
 		Button back = (Button) findViewById(R.id.field_matching_back);
-		back.setOnClickListener(this);
+		back.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				setResult(RESULT_CANCELED);
+				OrientationManager.enableRotation((Activity) mContext);
+				finish();
+			}
+		});
 		
 		Button okay = (Button) findViewById(R.id.field_matching_ok);
-		okay.setOnClickListener(this);
-
-	}
-	
-	// Always compatible
-	void setCompatibilityAndSelection(TextView compat, Spinner selector, int index) {
-		if (index == -1) {
-			compat.setTextColor(Color.parseColor("#00AA00"));
-			compat.setText("");
-			selector.setSelection(index + 1);
-		} else {
-			compat.setTextColor(Color.parseColor("#00AA00"));
-			compat.setText(R.string.compatible);
-			selector.setSelection(index + 1);
-		}
-		
-	}
-	
-	// Check compatibility against SensorTypes
-	void setCompatibilityAndSelection(TextView compat, Spinner selector, int index, SensorTypes sensor) {
-		if (sensors.isCompatible(sensor)) {
-			compat.setTextColor(Color.parseColor("#00AA00"));
-			compat.setText(R.string.compatible);
-			selector.setSelection(index + 1);
-		} else {
-			compat.setTextColor(Color.parseColor("#AA0000"));
-			compat.setText(R.string.incompatible);
-			selector.setSelection(index + 1);
-		}
-	}
-	
-	// Double compatibility check for fields like altitude
-	void setCompatibilityAndSelection(TextView compat, Spinner selector, int index, SensorTypes sensor1, SensorTypes sensor2) {
-		if (sensors.isCompatible(sensor1) && sensors.isCompatible(sensor2)) {
-			compat.setTextColor(Color.parseColor("#00AA00"));
-			compat.setText(R.string.compatible);
-			selector.setSelection(index + 1);
-		} else {
-			compat.setTextColor(Color.parseColor("#AA0000"));
-			compat.setText(R.string.incompatible);
-			selector.setSelection(index + 1);
-		}
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-
-		case R.id.field_matching_ok:
-			setAcceptedFields();
-			setResult(RESULT_OK);
-			OrientationManager.enableRotation((Activity) mContext);
-			finish();
-			break;
-			
-		case R.id.field_matching_back:
-			setResult(RESULT_CANCELED);
-			OrientationManager.enableRotation((Activity) mContext);
-			finish();
-			break;
-		}
+		okay.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				setAcceptedFields();
+				setResult(RESULT_OK);
+				OrientationManager.enableRotation((Activity) mContext);
+				finish();
+			}
+		});
 
 	}
 
@@ -242,13 +229,10 @@ public class FieldMatching extends Activity implements OnClickListener {
 		
 		mEdit.putString("accepted_fields", prefString).commit();
 		mEdit.putString("accepted_proj", mPrefs.getString("project_id", "-1")).commit();
-		
-		System.out.println("Accepted: " + prefString);
 	}
 	
 	@Override
 	public void onBackPressed() {
-		//setAcceptedFields();
 		setResult(RESULT_CANCELED);
 		OrientationManager.enableRotation((Activity) mContext);
 		finish();

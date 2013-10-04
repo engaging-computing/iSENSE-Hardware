@@ -86,34 +86,4 @@
     <string name="new_proj_name">New Project Name</string>
     <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
     
-    <string name="isense_fields">Fields</string>
-    <string-array name="isense_fields_array">
-        <item></item>
-        <item>Time</item>
-        <item>Accel-X</item>
-        <item>Accel-Y</item>
-        <item>Accel-Z</item>
-        <item>Accel-Magnitude</item>
-        <item>Latitude</item>
-        <item>Longitude</item>
-        <item>Magnetic-X</item>
-        <item>Magnetic-Y</item>
-        <item>Magnetic-Z</item>
-        <item>Magnetic-Total</item>
-        <item>Angle (Degrees)</item>
-        <item>Angle (Radians)</item>
-        <item>Temp. (Celsius)</item>
-        <item>Pressure</item>
-        <item>Altitude</item>
-        <item>Light</item>
-        <item>Temp. (Fahrenheit)</item>
-        <item>Temp. (Kelvin)</item>
-    </string-array>
-    <string name="field_matching_text">
-        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
-        available, leave the drop down blank.
-    </string>
-    <string name="compatible">Compatible</string>
-    <string name="project_field">Project Field</string>
-    
 </resources>

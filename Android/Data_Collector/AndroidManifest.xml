@@ -74,10 +74,6 @@
             android:theme="@style/AppTheme"
             tools:ignore="MissingRegistered" />
         <activity
-            android:name=".dialogs.FieldMatching"
-            android:label="Select Fields"
-            android:theme="@style/theme_dialog_white" />
-        <activity
             android:name=".dialogs.MediaManager"
             android:label="Media Manager"
             android:theme="@style/theme_dialog_white" />
@@ -175,6 +171,11 @@
         <activity
             android:name="edu.uml.cs.isense.queue.NoInitialProject"
             android:label="No Associated Projects"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
 

@@ -42,6 +42,8 @@ public class Fields {
 	}
 	
 	// Constants
+	public static final int NUM_FIELDS = 19;
+	
 	public static final int TIME = 0;
 	public static final int ACCEL_X = 1;
 	public static final int ACCEL_Y = 2;
