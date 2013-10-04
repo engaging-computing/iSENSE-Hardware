@@ -1,7 +1,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /**                                                                                               **/
-/**      IIIIIIIIIIIII            General Purpose Amusement Park App             SSSSSSSSS        **/
+/**      IIIIIIIIIIIII            General Purpose Amusement Park Appication      SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                    Original Creator: John Fertita            SSS                **/
 /**           III                    Optimized By:     Jeremy Poulin,           SSS               **/
@@ -26,21 +26,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -48,9 +45,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -58,27 +53,12 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
-import android.provider.Settings;
-import android.text.InputType;
-import android.text.method.NumberKeyListener;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -86,7 +66,6 @@ import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.dfm.SensorCompatibility;
-import edu.uml.cs.isense.proj.BrowseProjects;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -97,40 +76,54 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
+	/* Default Constants */
+	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_PASSWORD = "mobile";
+	private final String USERNAME_KEY = "username";
+	private final String PASSWORD_KEY = "password";
+	private final String ACTIVITY_NAME = "canobielake";
+	private final String PROJ_PREFS_ID = "PROJID";
+	private final String PROJ_ID = "project_id";
+	private final String TIME_OFFSET_PREFS_ID = "time_offset";
+	private final String TIME_OFFSET_KEY = "timeOffset";
+
 	/* UI Handles */
 	private EditText experimentInput;
-	private EditText seats;
 	private Spinner rides;
 	private TextView rideName;
 	private TextView time;
 	private TextView values;
-	private CheckBox canobieCheck;
-	private CheckBox selectLater;
-	private EditText sampleRate;
 	private Button startStop;
-	private Button browseButton;
 
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
 	public static SensorCompatibility sc;
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
-	private LocationManager mRoughLocManager;
 	private Location loc;
-	private Location roughLoc;
-	private Timer timeTimer;
-	private Timer timeElapsedTimer;
+	private Timer recordingTimer;
 	private UploadQueue uq;
 	private Vibrator vibrator;
 
-	LinkedList<String> acceptedFields;
-	Fields f;
+	/* Other Important Objects */
+	private LinkedList<String> acceptedFields;
+	private Fields f;
+	private String dataToBeWrittenToFile;
+	private MediaPlayer mMediaPlayer;
+	public static ArrayList<File> pictures;
+	public static ArrayList<File> videos;
+	private API api;
+	public static Context mContext;
+	private Waffle w;
 
 	/* Work Flow Variables */
-	private boolean running = false;
+	private boolean isRunning = false;
+	private boolean uploadSuccessful = false;
+	private static boolean useMenu = true;
+	private static boolean setupDone = false;
 
 	/* Recording Constants */
-	private final int INTERVAL = 50;
+	private final int SAMPLE_INTERVAL = 50;
 
 	/* Recording Variables */
 	private String rideNameString = "NOT SET";
@@ -142,133 +135,43 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private String temperature = "";
 	private String pressure = "";
 	private String light = "";
-	private long srate = INTERVAL;
+	private long srate = SAMPLE_INTERVAL;
 
+	/* Menu Items */
 	private final int MENU_ITEM_SETUP = 0;
 	private final int MENU_ITEM_LOGIN = 1;
 	private final int MENU_ITEM_UPLOAD = 2;
 	private final int MENU_ITEM_TIME = 3;
 	private final int MENU_ITEM_MEDIA = 4;
 
-	private final int SAVE_DATA = 5;
-	private final int DIALOG_CHOICE = 6;
-	private final int RECORDING_STOPPED = 7;
-	private final int DIALOG_NO_GPS = 8;
-	private final int DIALOG_FORCE_STOP = 9;
-
-	private final int DIALOG_CANCELED = 0;
-	private final int DIALOG_OK = 1;
-
-	private final int SYNC_TIME_REQUESTED = 0;
+	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
 	private final int EXPERIMENT_CODE = 2;
 	private final int CHOOSE_SENSORS_REQUESTED = 3;
-	private final int LOGIN_ACTIVITY_REQUESTED = 4;
+	private final int SYNC_TIME_REQUESTED = 4;
 
-	/* DFM Variables */
-	private final int TIME = 0;
-	private final int ACCEL_X = 1;
-	private final int ACCEL_Y = 2;
-	private final int ACCEL_Z = 3;
-	private final int ACCEL_TOTAL = 4;
-	private final int LATITUDE = 5;
-	private final int LONGITUDE = 6;
-	private final int MAG_X = 7;
-	private final int MAG_Y = 8;
-	private final int MAG_Z = 9;
-	private final int MAG_TOTAL = 10;
-	private final int HEADING_DEG = 11;
-	private final int HEADING_RAD = 12;
-	private final int TEMPERATURE_C = 13;
-	private final int PRESSURE = 14;
-	private final int ALTITUDE = 15;
-	private final int LIGHT = 16;
-	private final int TEMPERATURE_F = 17;
-	private final int TEMPERATURE_K = 18;
+	private int dataPointCount = 0, elapsedMillis;
 
-	private int count = 0;
-	private String data;
-
-	private MediaPlayer mMediaPlayer;
-
-	public static ArrayList<File> pictures;
-	public static ArrayList<File> videos;
-
-	private static int rideIndex = 0;
-
-	private int elapsedMinutes = 0;
-	private int elapsedSeconds = 0;
-	private int elapsedMillis = 0;
-	private int totalMillis = 0;
-	private int dataPointCount = 0;
-	private int countToStop = 0;
-	private int len = 0;
-	private int len2 = 0;
-	private int secondsElapsed = 0;
-
+	/* Used with Sync Time */
 	private long currentTime = 0;
-	private long timeOffset = 0;
+	private long timeOffset = 0;	
 
-	private String dateString, s_elapsedSeconds, s_elapsedMillis,
-			s_elapsedMinutes;
+	String nameOfDataSet = "";
 
-	public static API api;
-	static Waffle w;
-
-	DecimalFormat toThou = new DecimalFormat("######0.000");
-
-	ProgressDialog dia;
-	double partialProg = 1.0;
-
-	private EditText sessionName;
-	String nameOfSession = "";
-	static String partialSessionName = "";
-
-	public static boolean inPausedState = false;
-
-	private static int mwidth = 1;
-	private static boolean useMenu = true;
-	private static boolean beginWrite = true;
-	private static boolean setupDone = false;
-	private static boolean canobieIsChecked = true;
-	private static boolean canobieBackup = true;
-	private static boolean status400 = false;
-	private static boolean sdCardError = false;
-	private static boolean uploadSuccess = false;
-	private static boolean writeCSVFile = true;
-
-	private Handler mHandler;
-	private boolean throughHandler = false;
-
-	File SDFile;
-	FileWriter gpxwriter;
-	BufferedWriter out;
-
-	public static String textToSession = "";
-	public static String toSendOut = "";
 	private static String stNumber = "1";
 
-	private static String sdFileName = "";
-	private static String niceDateString = "";
-
 	public static JSONArray dataSet;
-
-	public static Context mContext;
-
-	public static ArrayList<File> pictureArray = new ArrayList<File>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		// Think pointer to this activity
 		mContext = this;
 
 		// Initialize everything you're going to need
 		initVars();
-
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
 
 		// Main Layout Button for Recording Data
 		startStop.setOnLongClickListener(new OnLongClickListener() {
@@ -279,76 +182,64 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				if (!setupDone || rideName.getText().toString() == null) {
 
 					startStop.setEnabled(false);
-					showDialog(MENU_ITEM_SETUP);
 					w.make("You must setup before recording data.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 
-					running = false;
-					return running;
+					// TODO Launch setup
+
+					isRunning = false;
+					return isRunning;
 
 				} else {
 
+					// Vibrate and Beep
 					vibrator.vibrate(300);
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
 
-					if (running) {
-
-						if (writeCSVFile)
-							writeToSDCard(null, 'f');
-
+					// Stop the recording
+					if (isRunning) {
+						isRunning = false;
 						setupDone = false;
 						useMenu = true;
 
+						// Unregister sensors to save battery
 						mSensorManager.unregisterListener(AmusementPark.this);
 
-						startStop.setText(getResources().getString(
-								R.string.startString));
-						startStop
-								.setBackgroundResource(R.drawable.button_rsense);
-						startStop.setTextColor(Color.parseColor("#0066FF"));
+						// Update the main button
+						enableMainButton(false);
 
+						// Reset main UI
 						time.setText(getResources().getString(
 								R.string.timeElapsed));
 						rideName.setText("Ride/St#: NOT SET");
 
-						timeTimer.cancel();
-						timeElapsedTimer.cancel();
-						count++;
+						// Cancel the recording timer
+						recordingTimer.cancel();
 
-						if (sdCardError)
-							w.make("Could not write file to SD Card.",
-									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+						return isRunning;
 
-						if (throughHandler)
-							showDialog(RECORDING_STOPPED);
-						else
-							showDialog(DIALOG_CHOICE);
-
-						running = false;
-						return running;
+						// Start the recording
 					} else {
+						isRunning = true;
 
-						SharedPreferences mPrefs = getSharedPreferences("EID",
-								0);
-						if (mPrefs.getString("experiment_id", "").equals("-1")) {
+						// Check to see if a valid project was chosen. If not,
+						// enable all fields for recording.
+						SharedPreferences mPrefs = getSharedPreferences(
+								PROJ_PREFS_ID, MODE_PRIVATE);
+						if (mPrefs.getString(PROJ_ID, "").equals("-1")) {
 							enableAllFields();
-							writeCSVFile = false;
-						} else
-							writeCSVFile = true;
+						}
+
+						// Create a file so that we can write results to the
+						// sdCard
+						prepWriteToSDCard(new Date());
 
 						registerSensors();
 
 						dataSet = new JSONArray();
-						secondsElapsed = 0;
 						elapsedMillis = 0;
-						totalMillis = 0;
-						len = 0;
-						len2 = 0;
 						dataPointCount = 0;
-						countToStop = 0;
-						beginWrite = true;
-						sdCardError = false;
 
 						currentTime = getUploadTime();
 
@@ -377,133 +268,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 											SensorManager.SENSOR_DELAY_FASTEST);
 						}
 
-						data = "Accel-X, Accel-Y, Accel-Z, Accel-Total, Mag-X, Mag-Y, Mag-Z, Mag-Total"
+						dataToBeWrittenToFile = "Accel-X, Accel-Y, Accel-Z, Accel-Total, Mag-X, Mag-Y, Mag-Z, Mag-Total"
 								+ "Latitude, Longitude, Time\n";
-						running = true;
 						startStop.setText(getResources().getString(
 								R.string.stopString));
 						startStop
 								.setBackgroundResource(R.drawable.button_rsense_stop);
 						startStop.setTextColor(Color.parseColor("#FFFFFF"));
 
-						timeElapsedTimer = new Timer();
-						timeElapsedTimer.scheduleAtFixedRate(new TimerTask() {
+						recordingTimer = new Timer();
+						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										setTime(secondsElapsed++);
-										countToStop++;
-
-										if (countToStop >= 600) {
-
-											timeTimer.cancel();
-											timeElapsedTimer.cancel();
-
-											mHandler.post(new Runnable() {
-												@Override
-												public void run() {
-													throughHandler = true;
-													startStop
-															.performLongClick();
-												}
-											});
-
-										}
-									}
-								});
-							}
-						}, 0, 1000);
-
-						timeTimer = new Timer();
-						timeTimer.scheduleAtFixedRate(new TimerTask() {
-							public void run() {
-
-								dataPointCount++;
-								count = (count + 1) % 2;
-								elapsedMillis += srate;
-								totalMillis = elapsedMillis;
-
-								len++;
-								len2++;
-
-								if (dfm.enabledFields[ACCEL_X])
-									f.accel_x = toThou.format(accel[0]);
-								if (dfm.enabledFields[ACCEL_Y])
-									f.accel_y = toThou.format(accel[1]);
-								if (dfm.enabledFields[ACCEL_Z])
-									f.accel_z = toThou.format(accel[2]);
-								if (dfm.enabledFields[ACCEL_TOTAL])
-									f.accel_total = toThou.format(accel[3]);
-								if (dfm.enabledFields[LATITUDE])
-									f.latitude = loc.getLatitude();
-								if (dfm.enabledFields[LONGITUDE])
-									f.longitude = loc.getLongitude();
-								if (dfm.enabledFields[HEADING_DEG])
-									f.angle_deg = toThou.format(orientation[0]);
-								if (dfm.enabledFields[HEADING_RAD])
-									f.angle_rad = ""
-											+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-								if (dfm.enabledFields[MAG_X])
-									f.mag_x = "" + mag[0];
-								if (dfm.enabledFields[MAG_Y])
-									f.mag_y = "" + mag[1];
-								if (dfm.enabledFields[MAG_Z])
-									f.mag_z = "" + mag[2];
-								if (dfm.enabledFields[MAG_TOTAL])
-									f.mag_total = ""
-											+ Math.sqrt(Math.pow(
-													Double.parseDouble(f.mag_x),
-													2)
-													+ Math.pow(
-															Double.parseDouble(f.mag_y),
-															2)
-													+ Math.pow(
-															Double.parseDouble(f.mag_z),
-															2));
-								if (dfm.enabledFields[TIME])
-									f.timeMillis = currentTime + elapsedMillis;
-								if (dfm.enabledFields[TEMPERATURE_C])
-									f.temperature_c = temperature;
-								if (dfm.enabledFields[TEMPERATURE_F])
-									if (temperature.equals(""))
-										f.temperature_f = temperature;
-									else
-										f.temperature_f = ""
-												+ ((Double
-														.parseDouble(temperature) * 1.8) + 32);
-								if (dfm.enabledFields[TEMPERATURE_K])
-									if (temperature.equals(""))
-										f.temperature_k = temperature;
-									else
-										f.temperature_k = ""
-												+ (Double
-														.parseDouble(temperature) + 273.15);
-								if (dfm.enabledFields[PRESSURE])
-									f.pressure = pressure;
-								if (dfm.enabledFields[ALTITUDE])
-									f.altitude = calcAltitude();
-								if (dfm.enabledFields[LIGHT])
-									f.lux = light;
-
-								dataSet.put(dfm.putData());
-								data = dfm.writeSdCardLine();
-
-								if (writeCSVFile) {
-									if (beginWrite) {
-										String header = dfm.writeHeaderLine();
-										writeToSDCard(header, 's');
-										writeToSDCard(data, 'u');
-									} else {
-										writeToSDCard(data, 'u');
-									}
-								}
-
+								recordData();
 							}
 						}, 0, srate);
 					}
-					running = true;
-					return running;
+
+					return isRunning;
 
 				}
 			}
@@ -512,157 +293,118 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	}
 
-	// (s)tarts, (u)pdates, and (f)inishes writing the .csv to the SD Card
-	// containing "data"
-	public void writeToSDCard(String data, char code) {
-		switch (code) {
-		case 's':
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss",
-					Locale.US);
-			SimpleDateFormat niceFormat = new SimpleDateFormat(
-					"MM/dd/yyyy, HH:mm:ss", Locale.US);
+	private void enableMainButton(boolean enable) {
+		if (enable) {
 
-			Date dt = new Date();
-
-			dateString = sdf.format(dt);
-			niceDateString = niceFormat.format(dt);
-
-			File folder = new File(Environment.getExternalStorageDirectory()
-					+ "/iSENSE");
-
-			if (!folder.exists()) {
-				folder.mkdir();
-			}
-
-			sdFileName = rides.getSelectedItem() + "-" + stNumber + "-"
-					+ dateString + ".csv";
-			SDFile = new File(folder, sdFileName);
-
-			try {
-				gpxwriter = new FileWriter(SDFile);
-				out = new BufferedWriter(gpxwriter);
-				out.write(data);
-				beginWrite = false;
-			} catch (IOException e) {
-				sdCardError = true;
-			} catch (Exception e) {
-				sdCardError = true;
-			}
-
-			break;
-
-		case 'u':
-			try {
-				out.append(data);
-			} catch (IOException e) {
-			} catch (Exception e) {
-			}
-
-			break;
-
-		case 'f':
-			try {
-				if (out != null)
-					out.close();
-				if (gpxwriter != null)
-					gpxwriter.close();
-			} catch (IOException e) {
-				sdCardError = true;
-			}
-
-			break;
-
-		default:
-			sdCardError = true;
-			break;
+		} else {
+			startStop.setText(getResources().getString(R.string.startString));
+			startStop.setBackgroundResource(R.drawable.button_rsense);
+			startStop.setTextColor(Color.parseColor("#0066FF"));
 		}
+	}
+
+	/**
+	 * Returns a nicely formatted date.
+	 * 
+	 * @param date
+	 *            Date you wish to convert
+	 * @return The date in string form: MM/dd/yyyy, HH:mm:ss
+	 */
+	String getNiceDateString(Date date) {
+
+		SimpleDateFormat niceFormat = new SimpleDateFormat(
+				"MM/dd/yyyy, HH:mm:ss", Locale.US);
+
+		return niceFormat.format(date);
+	}
+
+	/**
+	 * Prepares a file for writing date to the sdCard.
+	 * 
+	 * @param date
+	 *            Time stamp for the file name
+	 * @return Newly created file on sdCard
+	 */
+	private File prepWriteToSDCard(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss",
+				Locale.US);
+
+		String dateString = sdf.format(date);
+
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/iSENSE");
+
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+
+		String sdFileName = rides.getSelectedItem() + "-" + stNumber + "-"
+				+ dateString + ".csv";
+		File sdFile = new File(folder, sdFileName);
+
+		return sdFile;
+
+	}
+
+	/**
+	 * Attempts to write out a string to a file.
+	 * 
+	 * @param data
+	 *            The data in string form
+	 * @param sdFile
+	 *            The file to write the data to
+	 * @return True if success, false if failed with exception.
+	 */
+	private boolean writeToSDCard(String data, File sdFile) {
+		try {
+			// Prepare the writers
+			FileWriter gpxwriter = new FileWriter(sdFile);
+			BufferedWriter out = new BufferedWriter(gpxwriter);
+
+			// Write out the data
+			out.write(data);
+
+			// Close the output stream
+			if (out != null)
+				out.close();
+			if (gpxwriter != null)
+				gpxwriter.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+
+		// Stop the current sensors to save battery.
 		mLocationManager.removeUpdates(AmusementPark.this);
-		mRoughLocManager.removeUpdates(AmusementPark.this);
 		mSensorManager.unregisterListener(AmusementPark.this);
-		if (timeTimer != null)
-			timeTimer.cancel();
-		if (timeElapsedTimer != null)
-			timeElapsedTimer.cancel();
-		inPausedState = true;
+
+		// Cancel the recording timer
+		if (recordingTimer != null)
+			recordingTimer.cancel();
 	}
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		mLocationManager.removeUpdates(AmusementPark.this);
-		mRoughLocManager.removeUpdates(AmusementPark.this);
-		mSensorManager.unregisterListener(AmusementPark.this);
-		if (timeTimer != null)
-			timeTimer.cancel();
-		if (timeElapsedTimer != null)
-			timeElapsedTimer.cancel();
-		inPausedState = true;
-
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		inPausedState = false;
-
-	}
-
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onResume() {
 		super.onResume();
-		inPausedState = false;
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
 
-		// Will call the login dialogue if necessary and update UI
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
-		if (!(mPrefs.getString("username", "").equals("")))
-			login();
+		// Silently logs in the user to iSENSE
+		login(false);
 
+		// Rebuilds the upload queue
 		if (uq != null)
 			uq.buildQueueFromFile();
 
-	}
-
-	// Overridden to prevent user from exiting app unless back button is pressed
-	// twice
-	@Override
-	public void onBackPressed() {
-
-		if (!w.isDisplaying) {
-			if (running)
-				w.make("Cannot exit via BACK while recording data; use HOME instead.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			else
-				w.make("Double press \"Back\" to exit.");
-
-		} else if (w.canPerformTask && !running) {
-			super.onBackPressed();
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_SETUP, Menu.NONE, "Setup").setIcon(
-				R.drawable.ic_menu_settings);
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login").setIcon(
-				R.drawable.ic_menu_login);
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload").setIcon(
-				R.drawable.ic_menu_upload);
-		menu.add(Menu.NONE, MENU_ITEM_TIME, Menu.NONE, "Sync Time").setIcon(
-				R.drawable.ic_menu_synctime);
-		menu.add(Menu.NONE, MENU_ITEM_MEDIA, Menu.NONE, "Media").setIcon(
-				R.drawable.ic_menu_media);
-		return true;
 	}
 
 	@Override
@@ -688,10 +430,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		switch (item.getItemId()) {
 		case MENU_ITEM_SETUP:
 			startStop.setEnabled(false);
-			showDialog(MENU_ITEM_SETUP);
 			return true;
 		case MENU_ITEM_LOGIN:
-			showDialog(MENU_ITEM_LOGIN);
+			login(true);
 			return true;
 		case MENU_ITEM_UPLOAD:
 			manageUploadQueue();
@@ -712,13 +453,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
 
+	/**
+	 * Stores some data into our global objects as quickly as we get new points.
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		DecimalFormat toThou = new DecimalFormat("######0.000");
 		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
-					|| dfm.enabledFields[ACCEL_Z]
-					|| dfm.enabledFields[ACCEL_TOTAL]) {
+			if (dfm.enabledFields[Fields.ACCEL_X]
+					|| dfm.enabledFields[Fields.ACCEL_Y]
+					|| dfm.enabledFields[Fields.ACCEL_Z]
+					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 
 				rawAccel = event.values.clone();
 				accel[0] = event.values[0];
@@ -729,7 +475,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String yPrepend = accel[1] > 0 ? "+" : "";
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
-				if (count == 0) {
+				if (!isRunning) {
 					values.setText("X: " + xPrepend
 							+ threeDigit.format(accel[0]) + "\nY: " + yPrepend
 							+ threeDigit.format(accel[1]) + "\nZ: " + zPrepend
@@ -742,10 +488,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
-					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
-					|| dfm.enabledFields[HEADING_DEG]
-					|| dfm.enabledFields[HEADING_RAD]) {
+			if (dfm.enabledFields[Fields.MAG_X]
+					|| dfm.enabledFields[Fields.MAG_Y]
+					|| dfm.enabledFields[Fields.MAG_Z]
+					|| dfm.enabledFields[Fields.MAG_TOTAL]
+					|| dfm.enabledFields[Fields.HEADING_DEG]
+					|| dfm.enabledFields[Fields.HEADING_RAD]) {
 
 				rawMag = event.values.clone();
 
@@ -763,15 +511,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-			if (dfm.enabledFields[TEMPERATURE_C]
-					|| dfm.enabledFields[TEMPERATURE_F]
-					|| dfm.enabledFields[TEMPERATURE_K])
+			if (dfm.enabledFields[Fields.TEMPERATURE_C]
+					|| dfm.enabledFields[Fields.TEMPERATURE_F]
+					|| dfm.enabledFields[Fields.TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
-			if (dfm.enabledFields[PRESSURE])
+			if (dfm.enabledFields[Fields.PRESSURE])
 				pressure = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-			if (dfm.enabledFields[LIGHT])
+			if (dfm.enabledFields[Fields.LIGHT])
 				light = toThou.format(event.values[0]);
 		}
 	}
@@ -779,7 +527,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		roughLoc = location;
 	}
 
 	@Override
@@ -792,445 +539,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-	}
-
-	protected Dialog onCreateDialog(final int id) {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog = null;
-
-		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-		switch (id) {
-		case MENU_ITEM_SETUP:
-
-			dialog = getSavePrompt(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case DIALOG_OK:
-						partialSessionName = sessionName.getText().toString();
-						setupDone = true;
-						canobieBackup = canobieIsChecked;
-						rideName.setText("Ride/St#: " + rideNameString + " "
-								+ stNumber);
-
-						SharedPreferences mPrefs = getSharedPreferences("EID",
-								0);
-						String expId = mPrefs.getString("experiment_id", "");
-						if (expId.equals("-1"))
-							startStop.setEnabled(true);
-						else
-							new SensorCheckTask().execute();
-
-						break;
-					case DIALOG_CANCELED:
-						canobieIsChecked = canobieBackup;
-						startStop.setEnabled(true);
-
-						break;
-					}
-					rideName.setText("Ride/St#: " + rideNameString + " "
-							+ stNumber);
-
-				}
-			}, "Configure Options");
-			dialog.setCancelable(true);
-			dialog.setOnCancelListener(new OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					canobieIsChecked = canobieBackup;
-					startStop.setEnabled(true);
-				}
-			});
-
-			sessionName.setText(partialSessionName);
-			break;
-
-		case MENU_ITEM_LOGIN:
-			startActivityForResult(new Intent(mContext, LoginActivity.class),
-					LOGIN_ACTIVITY_REQUESTED);
-			break;
-
-		case SAVE_DATA:
-
-			dialog = getSavePrompt(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case DIALOG_OK:
-						if (len == 0 || len2 == 0)
-							w.make("There is no data to upload!",
-									Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-						showDialog(DIALOG_CHOICE);
-						partialSessionName = sessionName.getText().toString();
-						break;
-					case DIALOG_CANCELED:
-						break;
-					}
-					rideName.setText("Ride/St#: " + rideNameString + " "
-							+ stNumber);
-
-				}
-			}, "Final Step");
-			sessionName.setText(partialSessionName);
-			break;
-
-		case DIALOG_CHOICE:
-
-			builder.setTitle("Select An Action:")
-					.setMessage(
-							"Would you like to upload your data and media to iSENSE?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-
-									if (len == 0 || len2 == 0)
-										w.make("There is no data to upload!",
-												Waffle.LENGTH_LONG,
-												Waffle.IMAGE_X);
-									else {
-										new Task().execute();
-									}
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-									w.make("Data set deleted",
-											Waffle.LENGTH_SHORT,
-											Waffle.IMAGE_CHECK);
-									// if (!choiceViaMenu)
-									// showSummary();
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case RECORDING_STOPPED:
-
-			throughHandler = false;
-
-			builder.setTitle("Time Up")
-					.setMessage(
-							"You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum "
-									+ "recording time at 10 minutes and have stopped recording for you.  Press OK to continue.")
-					.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									showDialog(DIALOG_CHOICE);
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_GPS:
-
-			builder.setTitle("No GPS Provider Found")
-					.setMessage(
-							"Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?")
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_FORCE_STOP:
-
-			builder.setTitle("Data Recording Halted")
-					.setMessage(
-							"You exited the app while data was still being recorded.  Data has stopped recording.")
-					.setCancelable(false)
-					.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									startStop.performLongClick();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
-		default:
-			dialog = null;
-			break;
-		}
-
-		return dia;
-
-	}
-
-	// Method to create a data-saving prompt with "message" as the message
-	private AlertDialog getSavePrompt(final Handler h, String message) {
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		canobieIsChecked = canobieBackup;
-
-		LayoutInflater vi = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = vi.inflate(R.layout.setup, null);
-
-		builder.setView(v);
-
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-
-		rides = (Spinner) v.findViewById(R.id.rides);
-
-		final ArrayAdapter<CharSequence> generalAdapter = ArrayAdapter
-				.createFromResource(this, R.array.rides_array,
-						android.R.layout.simple_spinner_item);
-		generalAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		final ArrayAdapter<CharSequence> canobieAdapter = ArrayAdapter
-				.createFromResource(this, R.array.canobie_array,
-						android.R.layout.simple_spinner_item);
-		canobieAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		if (canobieIsChecked)
-			rides.setAdapter(canobieAdapter);
-		else
-			rides.setAdapter(generalAdapter);
-
-		seats = (EditText) v.findViewById(R.id.studentNumber);
-
-		sessionName = (EditText) v.findViewById(R.id.sessionName);
-
-		experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
-		String expId = mPrefs.getString("experiment_id", "");
-		if (expId.equals("-1"))
-			expId = "";
-		experimentInput.setText(expId);
-
-		sampleRate = (EditText) v.findViewById(R.id.srate);
-		sampleRate.setText(mPrefs.getString("sample_rate", ""));
-
-		experimentInput.setKeyListener(new NumberKeyListener() {
-			@Override
-			public int getInputType() {
-				return InputType.TYPE_CLASS_PHONE;
-			}
-
-			@Override
-			protected char[] getAcceptedChars() {
-				return new char[] { '0', '1', '2', '3', '4', '5', '6', '7',
-						'8', '9' };
-			}
-		});
-
-		browseButton = (Button) v.findViewById(R.id.BrowseButton);
-		browseButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!api.hasConnectivity()) {
-					w.make("You must enable wifi or mobile connectivity to do this.",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-				} else {
-
-					Intent experimentIntent = new Intent(
-							getApplicationContext(), BrowseProjects.class);
-
-					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
-				}
-
-			}
-
-		});
-
-		selectLater = (CheckBox) v.findViewById(R.id.select_exp_later);
-		boolean select = mPrefs.getBoolean("select_later", false);
-		if (select) {
-			experimentInput.setEnabled(false);
-			browseButton.setEnabled(false);
-		} else
-			selectLater.toggle();
-		selectLater.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				if (isChecked) {
-					experimentInput.setEnabled(false);
-					browseButton.setEnabled(false);
-				} else {
-					experimentInput.setEnabled(true);
-					browseButton.setEnabled(true);
-				}
-			}
-		});
-
-		canobieCheck = (CheckBox) v.findViewById(R.id.isCanobie);
-		if (canobieIsChecked)
-			canobieCheck.setChecked(true);
-		else
-			canobieCheck.setChecked(false);
-
-		canobieCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-
-				if (canobieCheck.isChecked()) {
-					canobieIsChecked = true;
-					rides.setAdapter(canobieAdapter);
-				} else {
-					canobieIsChecked = false;
-					rides.setAdapter(generalAdapter);
-				}
-
-			}
-
-		});
-
-		rides.setSelection(rideIndex);
-		seats.setText(stNumber);
-
-		builder.setTitle(message)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(
-									DialogInterface dialoginterface, int i) {
-							}
-						}).setCancelable(false);
-
-		final AlertDialog ad = builder.create();
-		ad.setOnShowListener(new DialogInterface.OnShowListener() {
-			@Override
-			public void onShow(DialogInterface dialog) {
-				Button positive = ad.getButton(DialogInterface.BUTTON_POSITIVE);
-				positive.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						boolean pass = true;
-
-						if (sessionName.getText().length() == 0) {
-							sessionName.setError("Enter a Name");
-							pass = false;
-						}
-						if (!selectLater.isChecked()) {
-							if (experimentInput.getText().length() == 0) {
-								experimentInput.setError("Enter an Experiment");
-								pass = false;
-							}
-						}
-						if (seats.getText().length() == 0) {
-							seats.setError("Enter a St#");
-							pass = false;
-						}
-						if (sampleRate.getText().length() == 0) {
-							sampleRate.setError("Enter a Sample Interval");
-							pass = false;
-						}
-						try {
-							if (Long.parseLong(sampleRate.getText().toString()) < INTERVAL) {
-								sampleRate.setError("Interval Must be >= "
-										+ INTERVAL);
-								pass = false;
-							}
-						} catch (NumberFormatException e) {
-							pass = false;
-						}
-
-						if (pass) {
-							rideIndex = rides.getSelectedItemPosition();
-							stNumber = seats.getText().toString();
-
-							rideNameString = (String) rides.getSelectedItem();
-
-							nameOfSession = sessionName.getText().toString()
-									+ " - " + rideNameString + " " + stNumber;
-
-							srate = Long.parseLong(sampleRate.getText()
-									.toString());
-
-							SharedPreferences mPrefs = getSharedPreferences(
-									"EID", 0);
-							SharedPreferences.Editor mEditor = mPrefs.edit();
-
-							if (selectLater.isChecked()) {
-								mEditor.putBoolean("select_later", true)
-										.commit();
-								mEditor.putString("experiment_id", "-1")
-										.commit();
-							} else {
-								mEditor.putBoolean("select_later", false)
-										.commit();
-								mEditor.putString("experiment_id",
-										experimentInput.getText().toString())
-										.commit();
-							}
-
-							mEditor.putString("sample_rate",
-									sampleRate.getText().toString()).commit();
-
-							final Message dialogOk = Message.obtain();
-							dialogOk.setTarget(h);
-							dialogOk.what = DIALOG_OK;
-
-							dialogOk.sendToTarget();
-
-							ad.dismiss();
-						}
-					}
-				});
-
-				Button negative = ad.getButton(DialogInterface.BUTTON_NEGATIVE);
-				negative.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						final Message dialogOk = Message.obtain();
-						dialogOk.setTarget(h);
-						dialogOk.what = DIALOG_CANCELED;
-						dialogOk.sendToTarget();
-
-						ad.dismiss();
-					}
-				});
-			}
-		});
-
-		return ad;
 	}
 
 	// Performs tasks after returning to main UI from previous activities
@@ -1247,10 +555,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
-				SharedPreferences mPrefs = getSharedPreferences("time_offset",
-						0);
+				SharedPreferences mPrefs = getSharedPreferences(
+						TIME_OFFSET_PREFS_ID, 0);
 				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putLong("timeOffset", timeOffset);
+				mEditor.putLong(TIME_OFFSET_KEY, timeOffset);
 				mEditor.commit();
 			}
 		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
@@ -1260,21 +568,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			startStop.setEnabled(true);
-			if (resultCode == RESULT_OK) {
-				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
-					startStop.setEnabled(false);
-					showDialog(MENU_ITEM_SETUP);
-				} else if (!ChooseSensorDialog.compatible) {
-					startStop.setEnabled(false);
-					showDialog(MENU_ITEM_SETUP);
-				} else {
-					acceptedFields = ChooseSensorDialog.acceptedFields;
-					getEnabledFields();
-				}
-			} else if (resultCode == RESULT_CANCELED) {
-				setupDone = false;
-				showDialog(MENU_ITEM_SETUP);
-			}
+			/* TODO fieldMatching.acceptedFields */
+			// acceptedFields = fieldMatcher.acceptedFields;
+			dfm.setEnabledFields(acceptedFields);
 		}
 
 	}
@@ -1289,98 +585,67 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-			status400 = false;
-			int sessionId = -1;
-			String city = "", state = "", country = "", addr = "";
-			List<Address> address = null;
 
+			// Create a time stamp for the dataSet
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss",
 					Locale.US);
 			Date dt = new Date();
 			String dateString = sdf.format(dt);
 
+			// Create name from time stamp
+			String name = nameOfDataSet + " - " + dateString;
+
+			// Retrieve project id
+			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
+			String projId = mPrefs.getString(PROJ_ID, "");
+
+			// Make sure the user is logged in
+			if (api.getCurrentUser() == null) {
+				login(false);
+			}
+
+			// Creates a new JSONObject that wraps the data and changes it from row major to column major
+			JSONObject data = new JSONObject();
 			try {
-				if (roughLoc != null) {
-					address = new Geocoder(AmusementPark.this,
-							Locale.getDefault()).getFromLocation(
-							roughLoc.getLatitude(), roughLoc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
-					}
-				}
-			} catch (IOException e) {
+				data.put("data", dataSet);
+				data = api.rowsToCols(data);
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 
-			String description = "Automated Submission Through Android Canobie Physics App";
-
-			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			String eid = mPrefs.getString("project_id", "");
-
-			api.createSession("mobile", "mobile");
-
-			// if (address == null || address.size() <= 0) {
-			// sessionId = rapi.createSession(eid, nameOfSession, description,
-			// "N/A", "N/A", "United States");
-			// } else {
-			// sessionId = rapi.createSession(eid, nameOfSession, description,
-			// addr, city + ", " + state, country);
-			// }
-
-			// createSession Success Check
-			if (sessionId == -1) {
-				uploadSuccess = false;
-			} else {
-				uploadSuccess = true;
+			// Tries to upload the data set
+			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
+			uploadSuccessful = (dataSetId <= 0) ? true : false;
+			
+			// Saves data for later upload
+			if (!uploadSuccessful) {
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, name,
+						getResources().getString(R.id.description), projId, dataSet.toString(), null);
+				uq.addDataSetToQueue(ds);
 			}
 
-			// Experiment Closed Checker
-			if (sessionId == -400) {
-				status400 = true;
-			} else {
-				status400 = false;
-				if (uploadSuccess)
-					// TODO uploadSuccess = api
-					// .putSessionData(sessionId, eid, dataSet);
-
-					// Saves data for later upload
-					if (!uploadSuccess) {
-						QDataSet ds = new QDataSet(QDataSet.Type.DATA,
-								nameOfSession + " - " + dateString,
-								description, eid, dataSet.toString(), null);
-						uq.addDataSetToQueue(ds);
-					}
-
-				// int pic = pictureArray.size();
-				//
-				// while (pic > 0) {
-				// boolean picSuccess = api.uploadPictureToSession(
-				// pictureArray.get(pic - 1), eid, sessionId,
-				// nameOfSession, description);
-				//
-				// // Saves pictures for later upload
-				// if (!picSuccess) {
-				// QDataSet ds = new QDataSet(QDataSet.Type.PIC,
-				// nameOfSession + " - " + dateString,
-				// description, eid, null,
-				// pictureArray.get(pic - 1));
-				// uq.addDataSetToQueue(ds);
-				// }
-				// pic--;
-				// }
-
-				pictureArray.clear();
-			}
+			// Empties the picture array
+			pictures.clear();
+			videos.clear();
 
 		}
 
 	};
 
-	// Control task for uploading data
-	private class Task extends AsyncTask<Void, Integer, Void> {
+	/**
+	 * Uploads data to iSENSE or something.
+	 * 
+	 * @author jpoulin
+	 */
+	private class UploadTask extends AsyncTask<String, Void, String> {
+
+		ProgressDialog dia;
+
+		@Override
+		protected String doInBackground(String... strings) {
+			uploader.run();
+			return strings[0];
+		}
 
 		@Override
 		protected void onPreExecute() {
@@ -1394,28 +659,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 
 		@Override
-		protected Void doInBackground(Void... voids) {
-
-			uploader.run();
-			publishProgress(100);
-			return null;
-
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
+		protected void onPostExecute(String sdFileName) {
 
 			dia.setMessage("Done");
-			dia.cancel();
+			dia.dismiss();
 
-			len = 0;
-			len2 = 0;
 			MediaManager.mediaCount = 0;
 
-			if (status400)
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-			else if (!uploadSuccess) {
+			if (uploadSuccessful) {
 				w.make("Data was not uploaded - saved instead",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			} else {
@@ -1424,11 +675,17 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				manageUploadQueue();
 			}
 
-			showSummary();
+			Date date = new Date();
+			showSummary(date, sdFileName);
 
 		}
 	}
 
+	/**
+	 * Writes the passed in time to the main screen.
+	 * 
+	 * @param seconds
+	 */
 	public void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
@@ -1442,98 +699,131 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		time.setText("Time Elapsed: " + min + ":" + sec);
 	}
 
-	// Everything needed to be initialized for onCreate
+	/**
+	 * Everything needed to be initialized for onCreate in one helpful function.
+	 */
 	private void initVars() {
 
-		mHandler = new Handler();
-
-		Display deviceDisplay = getWindowManager().getDefaultDisplay();
-		mwidth = deviceDisplay.getWidth();
-
 		api = API.getInstance(this);
-		api.useDev(false);
-		// TODO
-		api.createSession("physics", "physics");
+		api.useDev(true);
+
+		// Get the last stored username and password from Encrypted Shared
+		// Preferences
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				AmusementPark.mContext,
 				AmusementPark.mContext.getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
-		final SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString("username", "physics");
-		mEdit.putString("password", "physics");
-		mEdit.commit();
 
-		uq = new UploadQueue("canobielake", mContext, api);
+		// If the is no previously store username/password, write in the default
+		// credentials
+		if (mPrefs.getString(USERNAME_KEY, "").equals("")
+				|| mPrefs.getString(PASSWORD_KEY, "").equals("")) {
+			final SharedPreferences.Editor mEdit = mPrefs.edit();
+			mEdit.putString(USERNAME_KEY, DEFAULT_USERNAME);
+			mEdit.putString(PASSWORD_KEY, DEFAULT_PASSWORD);
+			mEdit.commit();
+		}
 
+		// Login to iSENSE
+		login(false);
+
+		// Create a new upload queue
+		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
+
+		// These store our media objects
 		pictures = new ArrayList<File>();
 		videos = new ArrayList<File>();
 
+		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
 
+		// Have some TVs. TextViews I mean.
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
 		rideName = (TextView) findViewById(R.id.ridename);
-
 		rideName.setText("Ride/St#: " + rideNameString);
 
+		// Start some managers
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+		// Waffles ares UI messages, and fields are used in recording
 		w = new Waffle(this);
 		f = new Fields();
 
+		// These are arrays that store values we may record. Who knows, maybe we'll use them.
 		accel = new float[4];
 		orientation = new float[3];
 		rawAccel = new float[3];
 		rawMag = new float[3];
 		mag = new float[3];
 
+		// Fire up the GPS chip (not literally)
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
-
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0,
 					AmusementPark.this);
-			mRoughLocManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, AmusementPark.this);
 		} else {
-			showDialog(DIALOG_NO_GPS);
+			// TODO Ask user to turn on GPS
 		}
 
+		// This is the location we will get back from GPS
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 
+		// Most important feature. Makes the button beep.
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 	}
 
-	// Deals with login and UI display
-	void login() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
-		// TODO
-		api.createSession(mPrefs.getString("username", ""),
-				mPrefs.getString("password", ""));
+	/**
+	 * Logs the user into iSENSE with stored credentials.
+	 * 
+	 * @param enterNewCredentials
+	 *            True if you want to enter new user credentials.
+	 */
+	void login(boolean enterNewCredentials) {
+
+		if (enterNewCredentials) {
+			// TODO call the login activity
+		} else {
+
+			// Get user info from encrypted preferences
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					AmusementPark.mContext,
+					AmusementPark.mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+
+			// login to iSENSE
+			api.createSession(mPrefs.getString(USERNAME_KEY, DEFAULT_USERNAME),
+					mPrefs.getString(PASSWORD_KEY, PASSWORD_KEY));
+		}
 	}
 
-	// Gets the milliseconds since Epoch
+	/**
+	 * Returns the milliseconds elapsed since the Epoch. This includes the time
+	 * offset from SyncTime.
+	 * 
+	 * @return Did you read the description?
+	 */
 	private long getUploadTime() {
 		Calendar c = Calendar.getInstance();
-		SharedPreferences mPrefs = getSharedPreferences("time_offset", 0);
-		timeOffset = mPrefs.getLong("timeOffset", 0);
+		SharedPreferences mPrefs = getSharedPreferences(TIME_OFFSET_PREFS_ID, 0);
+		timeOffset = mPrefs.getLong(TIME_OFFSET_KEY, 0);
 
 		return (((long) c.getTimeInMillis()) + timeOffset);
 	}
 
-	// Task for checking sensor availability along with enabling/disabling
+	/**
+	 * Task for checking sensor availability along with enabling/disabling
+	 * 
+	 * @author jpoulin
+	 */
 	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
+
+		ProgressDialog dia;
 
 		@Override
 		protected void onPreExecute() {
@@ -1549,8 +839,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... voids) {
 
-			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			String eidInput = mPrefs.getString("project_id", "");
+			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
+			String eidInput = mPrefs.getString(PROJ_ID, "");
 
 			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
 					mContext, f);
@@ -1568,83 +858,27 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dia.setMessage("Done");
 			dia.cancel();
 
-			Intent i = new Intent(mContext, ChooseSensorDialog.class);
+			Intent i = new Intent(mContext, SensorCompatibility.class);
 			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
 
 		}
 	}
 
-	private void getEnabledFields() {
-		for (String s : acceptedFields) {
-			if (s.equals(getString(R.string.time)))
-				dfm.enabledFields[TIME] = true;
-			if (s.equals(getString(R.string.accel_x)))
-				dfm.enabledFields[ACCEL_X] = true;
-			if (s.equals(getString(R.string.accel_y)))
-				dfm.enabledFields[ACCEL_Y] = true;
-			if (s.equals(getString(R.string.accel_z)))
-				dfm.enabledFields[ACCEL_Z] = true;
-			if (s.equals(getString(R.string.accel_total)))
-				dfm.enabledFields[ACCEL_TOTAL] = true;
-			if (s.equals(getString(R.string.latitude)))
-				dfm.enabledFields[LATITUDE] = true;
-			if (s.equals(getString(R.string.longitude)))
-				dfm.enabledFields[LONGITUDE] = true;
-			if (s.equals(getString(R.string.magnetic_x)))
-				dfm.enabledFields[MAG_X] = true;
-			if (s.equals(getString(R.string.magnetic_y)))
-				dfm.enabledFields[MAG_Y] = true;
-			if (s.equals(getString(R.string.magnetic_z)))
-				dfm.enabledFields[MAG_Z] = true;
-			if (s.equals(getString(R.string.magnetic_total)))
-				dfm.enabledFields[MAG_TOTAL] = true;
-			if (s.equals(getString(R.string.heading_deg)))
-				dfm.enabledFields[HEADING_DEG] = true;
-			if (s.equals(getString(R.string.heading_rad)))
-				dfm.enabledFields[HEADING_RAD] = true;
-			if (s.equals(getString(R.string.temperature_c)))
-				dfm.enabledFields[TEMPERATURE_C] = true;
-			if (s.equals(getString(R.string.temperature_f)))
-				dfm.enabledFields[TEMPERATURE_F] = true;
-			if (s.equals(getString(R.string.temperature_k)))
-				dfm.enabledFields[TEMPERATURE_K] = true;
-			if (s.equals(getString(R.string.pressure)))
-				dfm.enabledFields[PRESSURE] = true;
-			if (s.equals(getString(R.string.altitude)))
-				dfm.enabledFields[ALTITUDE] = true;
-			if (s.equals(getString(R.string.luminous_flux)))
-				dfm.enabledFields[LIGHT] = true;
-		}
-	}
-
+	/**
+	 * Set all dfm's fields to enabled. 
+	 */
 	private void enableAllFields() {
 
 		dfm = new DataFieldManager(-1, api, mContext, f);
 		dfm.getOrder();
+		dfm.enableAllFields();
 
-		dfm.enabledFields[TIME] = true;
-		dfm.enabledFields[ACCEL_X] = true;
-		dfm.enabledFields[ACCEL_Y] = true;
-		dfm.enabledFields[ACCEL_Z] = true;
-		dfm.enabledFields[ACCEL_TOTAL] = true;
-		dfm.enabledFields[LATITUDE] = true;
-		dfm.enabledFields[LONGITUDE] = true;
-		dfm.enabledFields[MAG_X] = true;
-		dfm.enabledFields[MAG_Y] = true;
-		dfm.enabledFields[MAG_Z] = true;
-		dfm.enabledFields[MAG_TOTAL] = true;
-		dfm.enabledFields[HEADING_DEG] = true;
-		dfm.enabledFields[HEADING_RAD] = true;
-		dfm.enabledFields[TEMPERATURE_C] = true;
-		dfm.enabledFields[TEMPERATURE_F] = true;
-		dfm.enabledFields[TEMPERATURE_K] = true;
-		dfm.enabledFields[PRESSURE] = true;
-		dfm.enabledFields[ALTITUDE] = true;
-		dfm.enabledFields[LIGHT] = true;
 	}
 
-	// Prompts the user to upload the rest of their content
-	// upon successful upload of data
+	/**
+	 * Prompts the user to upload the rest of their content
+	 * upon successful upload of data.
+	 */
 	private void manageUploadQueue() {
 		if (!uq.emptyQueue()) {
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
@@ -1654,94 +888,125 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			w.make("No data to upload.", Waffle.IMAGE_CHECK);
 		}
 	}
+	
+	/**
+	 * Turns elapsedMillis into readable strings.
+	 * 
+	 * @author jpoulin
+	 */
+	private class ElapsedTime {
+		private String elapsedMillis;
+		private String elapsedSeconds;
+		private String elapsedMinutes;
+		
+		/**
+		 * Everybody likes strings.
+		 * 
+		 * @param milliseconds
+		 */
+		ElapsedTime(int milliseconds) {
+			int seconds, minutes;
+			
+			seconds = milliseconds / 1000;
+			milliseconds %= 1000;
+			minutes = seconds / 60;
+			seconds %= 60;
+			
+			if (seconds < 10) {
+				elapsedSeconds = "0" + seconds;
+			} else {
+				elapsedSeconds = "" + seconds;
+			}
 
-	private void showSummary() {
+			if (milliseconds < 10) {
+				elapsedMillis = "00" + milliseconds;
+			} else if (milliseconds < 100) {
+				elapsedMillis = "0" + milliseconds;
+			} else {
+				elapsedMillis = "" + milliseconds;
+			}
 
-		elapsedMillis = totalMillis;
-		elapsedSeconds = elapsedMillis / 1000;
-		elapsedMillis %= 1000;
-		elapsedMinutes = elapsedSeconds / 60;
-		elapsedSeconds %= 60;
-
-		if (elapsedSeconds < 10) {
-			s_elapsedSeconds = "0" + elapsedSeconds;
-		} else {
-			s_elapsedSeconds = "" + elapsedSeconds;
+			if (minutes < 10) {
+				elapsedMinutes = "0" + minutes;
+			} else {
+				elapsedMinutes = "" + minutes;
+			}		
 		}
+		
+	}
 
-		if (elapsedMillis < 10) {
-			s_elapsedMillis = "00" + elapsedMillis;
-		} else if (elapsedMillis < 100) {
-			s_elapsedMillis = "0" + elapsedMillis;
-		} else {
-			s_elapsedMillis = "" + elapsedMillis;
-		}
+	/**
+	 * Makes a summary dialog.
+	 * @param date Time of upload
+	 * @param sdFileName Name of the written csv
+	 */
+	private void showSummary(Date date, String sdFileName) {
 
-		if (elapsedMinutes < 10) {
-			s_elapsedMinutes = "0" + elapsedMinutes;
-		} else {
-			s_elapsedMinutes = "" + elapsedMinutes;
-		}
-
-		String appendMe = "";
-		if (sdCardError)
-			appendMe = "File not written to SD Card.";
-		else
-			appendMe = "Filename: \n" + sdFileName;
-
+		ElapsedTime time = new ElapsedTime(elapsedMillis);
+		
 		Intent iSummary = new Intent(mContext, Summary.class);
-		iSummary.putExtra("millis", s_elapsedMillis)
-				.putExtra("seconds", s_elapsedSeconds)
-				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe).putExtra("date", niceDateString)
+		iSummary.putExtra("millis", time.elapsedMillis)
+				.putExtra("seconds", time.elapsedSeconds)
+				.putExtra("minutes", time.elapsedMinutes)
+				.putExtra("append", "Filename: \n" + sdFileName)
+				.putExtra("date", getNiceDateString(date))
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
 
 	}
 
-	// Registers Sensors
+	/**
+	 * Turns on only the sensors you need to record data.
+	 */
+	@SuppressLint("InlinedApi")
 	private void registerSensors() {
 		if (mSensorManager != null && setupDone && dfm != null) {
 
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y]
-					|| dfm.enabledFields[ACCEL_Z]
-					|| dfm.enabledFields[ACCEL_TOTAL]) {
+			if (dfm.enabledFields[Fields.ACCEL_X]
+					|| dfm.enabledFields[Fields.ACCEL_Y]
+					|| dfm.enabledFields[Fields.ACCEL_Z]
+					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y]
-					|| dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL]
-					|| dfm.enabledFields[HEADING_DEG]
-					|| dfm.enabledFields[HEADING_RAD]) {
+			if (dfm.enabledFields[Fields.MAG_X]
+					|| dfm.enabledFields[Fields.MAG_Y]
+					|| dfm.enabledFields[Fields.MAG_Z]
+					|| dfm.enabledFields[Fields.MAG_TOTAL]
+					|| dfm.enabledFields[Fields.HEADING_DEG]
+					|| dfm.enabledFields[Fields.HEADING_RAD]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[TEMPERATURE_C]
-					|| dfm.enabledFields[TEMPERATURE_F]
-					|| dfm.enabledFields[TEMPERATURE_K]
-					|| dfm.enabledFields[ALTITUDE]) {
-				mSensorManager
-						.registerListener(
-								AmusementPark.this,
-								mSensorManager
-										.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
-								SensorManager.SENSOR_DELAY_FASTEST);
+			if (dfm.enabledFields[Fields.TEMPERATURE_C]
+					|| dfm.enabledFields[Fields.TEMPERATURE_F]
+					|| dfm.enabledFields[Fields.TEMPERATURE_K]
+					|| dfm.enabledFields[Fields.ALTITUDE]) {
+				if (getApiLevel() >= 14) {
+					mSensorManager
+							.registerListener(
+									AmusementPark.this,
+									mSensorManager
+											.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+									SensorManager.SENSOR_DELAY_FASTEST);
+				}
 			}
 
-			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
+			if (dfm.enabledFields[Fields.PRESSURE]
+					|| dfm.enabledFields[Fields.ALTITUDE]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
-			if (dfm.enabledFields[LIGHT]) {
+			if (dfm.enabledFields[Fields.LIGHT]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 						SensorManager.SENSOR_DELAY_FASTEST);
@@ -1750,24 +1015,68 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Calculates Altitude from Temperature and Pressure if Possible
-	private String calcAltitude() {
-		if ((dfm.enabledFields[TEMPERATURE_C]
-				|| dfm.enabledFields[TEMPERATURE_F] || dfm.enabledFields[TEMPERATURE_K])
-				&& dfm.enabledFields[PRESSURE]) {
-			if (pressure.equals("") || temperature.equals("")) {
-				return "";
-			} else {
-				double temp = Math.pow(1013.25 / Double.parseDouble(pressure),
-						(1 / 5.257));
-				temp *= (Double.parseDouble(temperature) + 273.15);
-				temp /= 0.0065;
+	/**
+	 * Records a data point, puts it into the dataSet object, and writes it to a csv string.
+	 */
+	private void recordData() {
+		dataPointCount++;
+		elapsedMillis += srate;
+		
+		DecimalFormat toThou = new DecimalFormat("######0.000");
 
-				String altitude = toThou.format(temp);
-				return altitude;
-			}
-		} else
-			return "";
+		if (dfm.enabledFields[Fields.ACCEL_X])
+			f.accel_x = toThou.format(accel[0]);
+		if (dfm.enabledFields[Fields.ACCEL_Y])
+			f.accel_y = toThou.format(accel[1]);
+		if (dfm.enabledFields[Fields.ACCEL_Z])
+			f.accel_z = toThou.format(accel[2]);
+		if (dfm.enabledFields[Fields.ACCEL_TOTAL])
+			f.accel_total = toThou.format(accel[3]);
+		if (dfm.enabledFields[Fields.LATITUDE])
+			f.latitude = loc.getLatitude();
+		if (dfm.enabledFields[Fields.LONGITUDE])
+			f.longitude = loc.getLongitude();
+		if (dfm.enabledFields[Fields.HEADING_DEG])
+			f.angle_deg = toThou.format(orientation[0]);
+		if (dfm.enabledFields[Fields.HEADING_RAD])
+			f.angle_rad = ""
+					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+		if (dfm.enabledFields[Fields.MAG_X])
+			f.mag_x = "" + mag[0];
+		if (dfm.enabledFields[Fields.MAG_Y])
+			f.mag_y = "" + mag[1];
+		if (dfm.enabledFields[Fields.MAG_Z])
+			f.mag_z = "" + mag[2];
+		if (dfm.enabledFields[Fields.MAG_TOTAL])
+			f.mag_total = ""
+					+ Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
+							+ Math.pow(Double.parseDouble(f.mag_y), 2)
+							+ Math.pow(Double.parseDouble(f.mag_z), 2));
+		if (dfm.enabledFields[Fields.TIME])
+			f.timeMillis = currentTime + elapsedMillis;
+		if (dfm.enabledFields[Fields.TEMPERATURE_C])
+			f.temperature_c = temperature;
+		if (dfm.enabledFields[Fields.TEMPERATURE_F])
+			if (temperature.equals(""))
+				f.temperature_f = temperature;
+			else
+				f.temperature_f = ""
+						+ ((Double.parseDouble(temperature) * 1.8) + 32);
+		if (dfm.enabledFields[Fields.TEMPERATURE_K])
+			if (temperature.equals(""))
+				f.temperature_k = temperature;
+			else
+				f.temperature_k = ""
+						+ (Double.parseDouble(temperature) + 273.15);
+		if (dfm.enabledFields[Fields.PRESSURE])
+			f.pressure = pressure;
+		if (dfm.enabledFields[Fields.ALTITUDE])
+			f.altitude = "" + loc.getAltitude();
+		if (dfm.enabledFields[Fields.LIGHT])
+			f.lux = light;
+
+		dataSet.put(dfm.putData());
+		dataToBeWrittenToFile = dfm.writeSdCardLine();
 	}
 
 }

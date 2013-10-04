@@ -58,7 +58,7 @@ public class Setup extends Activity implements OnClickListener {
 	 * Use this String constant to build a SharedPreferences object
 	 * in which you may obtain the project ID returned by this Activity.
 	 */
-	public static String PREFS_ID   = "PROJID";
+	public static String PROJ_PREFS_ID   = "PROJID";
 	/**
 	 * The constant for the "key" parameter in a
 	 * SharedPreference's getString(key, defValue) call.
@@ -95,23 +95,23 @@ public class Setup extends Activity implements OnClickListener {
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
-					PREFS_ID = "PROJID_MANUAL";
+					PROJ_PREFS_ID = "PROJID_MANUAL";
 				} else if (fromWhere.equals("queue")) {
-					PREFS_ID = "PROJID_QUEUE";
+					PROJ_PREFS_ID = "PROJID_QUEUE";
 				} else if (fromWhere.equals("welcome")) {
-					PREFS_ID = "PROJID_WELCOME";
+					PROJ_PREFS_ID = "PROJID_WELCOME";
 				} else {
-					PREFS_ID = "PROJID";
+					PROJ_PREFS_ID = "PROJID";
 				}
 			} else {
-				PREFS_ID = "PROJID";
+				PROJ_PREFS_ID = "PROJID";
 			}	
 		} else {
-			PREFS_ID = "PROJID";
+			PROJ_PREFS_ID = "PROJID";
 		}
 		
 		
-		mPrefs = getSharedPreferences(PREFS_ID, 0);
+		mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
 		String projID = mPrefs.getString(PROJECT_ID, "").equals("-1") ? "" : mPrefs.getString(PROJECT_ID, "");
 		
 		projInput = (EditText) findViewById(R.id.projectInput);
