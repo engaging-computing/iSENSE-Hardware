@@ -31,7 +31,8 @@
     <string name="select_all">Select All</string>
     <string name="deselect_all">Deselect All</string>
     <string name="delete_selected">Delete Selected</string>
-    <string name="sure_delete_selected">	    Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.</string>
+    <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.</string>
+    
     <!-- SyncTime -->
     <string name="syncTime">        Synchronizing time is useful when using multiple devices to record data at the
 	    same time.  By default, many Android devices\' clocks will not match one
@@ -67,5 +68,37 @@
         states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
         sets with no associated project and select \"Select Project\" to associate the data set with a project.
     </string>
+    
+    <!-- Field matching -->
+    <string name="isense_fields">Fields</string>
+    <!-- Field matching array: make sure the items here are equivalent to the fields in fieldname.xml -->
+    <string-array name="isense_fields_array">
+        <item></item>
+        <item>Time</item>
+        <item>Accel-X</item>
+        <item>Accel-Y</item>
+        <item>Accel-Z</item>
+        <item>Accel-Magnitude</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>Magnetic-X</item>
+        <item>Magnetic-Y</item>
+        <item>Magnetic-Z</item>
+        <item>Magnetic-Magnitude</item>
+        <item>Angle (Degrees)</item>
+        <item>Angle (Radians)</item>
+        <item>Temp. (Celsius)</item>
+        <item>Pressure</item>
+        <item>Altitude</item>
+        <item>Light</item>
+        <item>Temp. (Fahrenheit)</item>
+        <item>Temp. (Kelvin)</item>
+    </string-array>
+    <string name="field_matching_text">
+        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
+        available, leave the drop down blank.
+    </string>
+    <string name="project_field">Project Field</string>
+    <string name="back">Back</string>
 
 </resources>
