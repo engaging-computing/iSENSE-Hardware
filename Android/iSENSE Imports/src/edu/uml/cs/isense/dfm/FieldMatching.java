@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.dialogs;
+package edu.uml.cs.isense.dfm;
 
 import java.util.LinkedList;
 
@@ -14,16 +14,43 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.supplements.OrientationManager;
 
-public class FieldMatching extends Activity implements OnClickListener {
+/**
+ * The FieldMatching class lists off fields from a project, which the implementor must pass in
+ * as an intent extra to DFM_ORDER_LIST, and makes a best attempt of matching them with known
+ * field names in the system.  It provides drop-down menus for users to reconfigure fields they
+ * would like to record for this project.  When this activity finishes, fields accepted by the
+ * user are stored in the acceptedFields LinkedList, which is public for any implementation to grab.
+ * 
+ * @author iSENSE Android Development Team
+ */
+public class FieldMatching extends Activity {
+	
+	/**
+	 * The hard-coded String key that the implementor should pair with a String[] of their
+	 * DataFieldManager instance's order array.  Please note this must be a String[], but 
+	 * DFM's order field is a LinkedList.  See 
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#convertOrderToStringArray() convertOrderToStringArray()}
+	 * to easily convert order into a String[].
+	 */
+	public static final String DFM_ORDER_LIST = "dfm_order_list";
 
-	LinearLayout scrollViewLayout;
+	/**
+	 * The list of fields the user accepts with.  In other words, it will be a
+	 * list of all the fields selected in the drop-down menus.
+	 */
 	public static LinkedList<String> acceptedFields;
 	
+	/**
+	 * A public boolean that can be checked upon return of this activity to see if the project
+	 * was compatible with the app or not.  A typical implementation would ask the user to select
+	 * a new project and launch the FieldMatching activity again with that new project.
+	 */
 	public static boolean compatible;
+	
+	private LinearLayout scrollViewLayout;
 	private int nullViewCount = 0;
 	private boolean isEmpty = false;
 	private TextView errorTV;
@@ -39,7 +66,21 @@ public class FieldMatching extends Activity implements OnClickListener {
 		
 		OrientationManager.disableRotation((Activity) mContext);
 		
-		LinkedList<String> fields = Step1Setup.dfm.getOrderList();
+		LinkedList<String> fields = null;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			String[] sa = extras.getStringArray(DFM_ORDER_LIST);
+			if (sa == null || sa.length == 0) {
+				throw new RuntimeException("Incorrect usage of FieldMatching: the array passed has no fields or wasn't passed to DFM_ORDER_LIST");
+			}
+			 fields = DataFieldManager.convertStringArrayToLinkedList(sa);
+		} else {
+			throw new RuntimeException("Incorrect usage of FieldMatching: please pass in dfm's order list");
+		}
+		
+		if (fields == null) {
+			throw new RuntimeException("Something went terribly wrong.  Make sure you're passing in the order list correctly.");
+		}
 
 		scrollViewLayout = (LinearLayout) findViewById(R.id.field_matching_view);
 
@@ -104,9 +145,7 @@ public class FieldMatching extends Activity implements OnClickListener {
 					     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 				layoutParams.setMargins(1, 1, 1, 1);
-				
 				scrollViewLayout.addView(v, layoutParams);
-				v.setOnClickListener(this);
 
 				if (field.equals(getString(R.string.null_string))) {
 					nullViewCount++;
@@ -134,30 +173,23 @@ public class FieldMatching extends Activity implements OnClickListener {
 		}
 
 		Button back = (Button) findViewById(R.id.field_matching_back);
-		back.setOnClickListener(this);
+		back.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				setResult(RESULT_CANCELED);
+				OrientationManager.enableRotation((Activity) mContext);
+				finish();
+			}
+		});
 		
 		Button okay = (Button) findViewById(R.id.field_matching_ok);
-		okay.setOnClickListener(this);
-
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-
-		case R.id.field_matching_ok:
-			setAcceptedFields();
-			setResult(RESULT_OK);
-			OrientationManager.enableRotation((Activity) mContext);
-			finish();
-			break;
-			
-		case R.id.field_matching_back:
-			setResult(RESULT_CANCELED);
-			OrientationManager.enableRotation((Activity) mContext);
-			finish();
-			break;
-		}
+		okay.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				setAcceptedFields();
+				setResult(RESULT_OK);
+				OrientationManager.enableRotation((Activity) mContext);
+				finish();
+			}
+		});
 
 	}
 
@@ -197,8 +229,6 @@ public class FieldMatching extends Activity implements OnClickListener {
 		
 		mEdit.putString("accepted_fields", prefString).commit();
 		mEdit.putString("accepted_proj", mPrefs.getString("project_id", "-1")).commit();
-		
-		System.out.println("Accepted: " + prefString);
 	}
 	
 	@Override

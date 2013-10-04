@@ -1019,6 +1019,41 @@ public class DataFieldManager extends Application {
 	}
 	
 	/**
+	 * Converts order into a String[]
+	 * 
+	 * @return
+	 * 		order in the form of a String[]
+	 */
+	public String[] convertOrderToStringArray() {
+		
+		String[] sa = new String[order.size()];
+		int i = 0;
+		
+		for (String s : order)
+			sa[i++] = s;
+		
+		return sa;
+	}
+	
+	/**
+	 * Converts a String[] back into a LinkedList of Strings
+	 * 
+	 * @param
+	 * 		sa - the String[] to convert
+	 * @return
+	 * 		sa in the form of a LinkedList of Strings
+	 */
+	public static LinkedList<String> convertStringArrayToLinkedList(String[] sa) {
+	
+		LinkedList<String> lls = new LinkedList<String>();
+		
+		for (String s : sa)
+			lls.add(s);
+		
+		return lls;
+	}
+	
+	/**
 	 * Getter for the Fields object associated with this instance of DataFieldManager
 	 * 
 	 * @return
