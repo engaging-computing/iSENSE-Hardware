@@ -105,12 +105,22 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private UploadQueue uq;
 	private Vibrator vibrator;
 
-	LinkedList<String> acceptedFields;
-	Fields f;
+	/* Other Important Objects */
+	private LinkedList<String> acceptedFields;
+	private Fields f;
+	private String dataToBeWrittenToFile;
+	private MediaPlayer mMediaPlayer;
+	public static ArrayList<File> pictures;
+	public static ArrayList<File> videos;
+	private API api;
+	public static Context mContext;
+	private Waffle w;
 
 	/* Work Flow Variables */
 	private boolean isRunning = false;
 	private boolean uploadSuccessful = false;
+	private static boolean useMenu = true;
+	private static boolean setupDone = false;
 
 	/* Recording Constants */
 	private final int SAMPLE_INTERVAL = 50;
@@ -127,50 +137,30 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private String light = "";
 	private long srate = SAMPLE_INTERVAL;
 
+	/* Menu Items */
 	private final int MENU_ITEM_SETUP = 0;
 	private final int MENU_ITEM_LOGIN = 1;
 	private final int MENU_ITEM_UPLOAD = 2;
 	private final int MENU_ITEM_TIME = 3;
 	private final int MENU_ITEM_MEDIA = 4;
 
+	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
 	private final int EXPERIMENT_CODE = 2;
 	private final int CHOOSE_SENSORS_REQUESTED = 3;
 	private final int SYNC_TIME_REQUESTED = 4;
 
-	private String dataToBeWrittenToFile;
-
-	private MediaPlayer mMediaPlayer;
-
-	public static ArrayList<File> pictures;
-
 	private int dataPointCount = 0, elapsedMillis;
 
-	// Used with Sync Time
+	/* Used with Sync Time */
 	private long currentTime = 0;
-	private long timeOffset = 0;
-
-	private String dateString;
-
-	/* Important Objects */
-	private API api;
-	public static Context mContext;
-	private Waffle w;
-
-	DecimalFormat toThou = new DecimalFormat("######0.000");
+	private long timeOffset = 0;	
 
 	String nameOfDataSet = "";
-	static String partialSessionName = "";
-	private static boolean useMenu = true;
-	private static boolean setupDone = false;
 
-	public static String textToSession = "";
-	public static String toSendOut = "";
 	private static String stNumber = "1";
 
 	public static JSONArray dataSet;
-
-	public static ArrayList<File> pictureArray = new ArrayList<File>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -339,7 +329,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss",
 				Locale.US);
 
-		dateString = sdf.format(date);
+		String dateString = sdf.format(date);
 
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
@@ -463,8 +453,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
 
+	/**
+	 * Stores some data into our global objects as quickly as we get new points.
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		DecimalFormat toThou = new DecimalFormat("######0.000");
 		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			if (dfm.enabledFields[Fields.ACCEL_X]
@@ -631,14 +625,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 
 			// Empties the picture array
-			pictureArray.clear();
+			pictures.clear();
+			videos.clear();
 
 		}
 
 	};
 
 	/**
-	 * 
+	 * Uploads data to iSENSE or something.
 	 * 
 	 * @author jpoulin
 	 */
@@ -648,11 +643,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		protected String doInBackground(String... strings) {
-
 			uploader.run();
-
 			return strings[0];
-
 		}
 
 		@Override
@@ -740,6 +732,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		// These store our media objects
 		pictures = new ArrayList<File>();
+		videos = new ArrayList<File>();
 
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
@@ -907,7 +900,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		private String elapsedMinutes;
 		
 		/**
-		 * Dis is a contructor.
+		 * Everybody likes strings.
 		 * 
 		 * @param milliseconds
 		 */
@@ -1028,6 +1021,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private void recordData() {
 		dataPointCount++;
 		elapsedMillis += srate;
+		
+		DecimalFormat toThou = new DecimalFormat("######0.000");
 
 		if (dfm.enabledFields[Fields.ACCEL_X])
 			f.accel_x = toThou.format(accel[0]);
