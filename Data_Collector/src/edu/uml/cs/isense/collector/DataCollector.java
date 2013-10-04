@@ -973,7 +973,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				"project_id", "-1")), api, mContext, f);
 		dfm.getOrder();
 
-		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
+		for (int i = 0; i < Fields.NUM_FIELDS; i++)
 			dfm.enabledFields[i] = true;
 
 		String acceptedFields = getResources().getString(R.string.time) + ","
