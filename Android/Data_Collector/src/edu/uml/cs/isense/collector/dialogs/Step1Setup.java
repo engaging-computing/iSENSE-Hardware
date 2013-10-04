@@ -24,7 +24,6 @@ import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -54,7 +53,6 @@ public class Step1Setup extends Activity {
 	public static LinkedList<String> acceptedFields;
 	public static DataFieldManager dfm;
 	public static Fields f;
-	public static SensorCompatibility sc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -391,8 +389,6 @@ public class Step1Setup extends Activity {
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
 			dfm.getOrder();
-
-			sc = dfm.checkCompatibility();
 
 			publishProgress(100);
 			return null;
