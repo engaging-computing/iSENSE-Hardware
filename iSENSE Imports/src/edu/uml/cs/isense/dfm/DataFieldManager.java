@@ -32,7 +32,6 @@ public class DataFieldManager extends Application {
 	private ArrayList<RProjectField> projFields;
 	private LinkedList<String> order;
 	private Fields f;
-	private SensorCompatibility sc = new SensorCompatibility();
 	
 	/**
 	 * Boolean array of size 19 containing a list of fields enabled for recording data.
@@ -646,35 +645,6 @@ public class DataFieldManager extends Application {
 		b.append("\n");
 
 		return b.toString();
-	}
-
-	/**
-	 * Determines which sensors are potentially available on the user's device based on
-	 * which sensors devices with a similar API level typically have.
-	 * 
-	 * @return
-	 * 		A {@link edu.uml.cs.isense.dfm.SensorCampatibility} object.
-	 */
-	public SensorCompatibility checkCompatibility() {
-
-		int apiLevel = android.os.Build.VERSION.SDK_INT;
-		int apiVal = 0;
-		int[][] dispatch = sc.compatDispatch;
-
-		if (apiLevel <= 8)
-			apiVal = 0;
-		if (apiLevel > 8 && apiLevel < 14)
-			apiVal = 1;
-		if (apiLevel > 14)
-			apiVal = 2;
-
-		for (int i = 0; i <= 5; i++) {
-			int temp = dispatch[apiVal][i];
-			if (temp == 1)
-				sc.compatible[i] = true;
-		}
-
-		return sc;
 	}
 
 	/**

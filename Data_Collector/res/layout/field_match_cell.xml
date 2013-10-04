@@ -4,38 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/listelement_bkgd_changer"
-    android:orientation="vertical"
-    tools:ignore="Overdraw" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1" >
-
-        <TextView
-            android:id="@+id/field_match_cell_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:singleLine="true"
-            android:text="@string/project_field"
-            android:textSize="14sp" />
-
-        <Spinner
-            android:id="@+id/field_match_cell_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:entries="@array/isense_fields_array"
-            android:prompt="@string/isense_fields" />
-    </LinearLayout>
+    android:orientation="horizontal"
+    android:weightSum="1" >
 
     <TextView
-        android:id="@+id/field_match_cell_compatible"
+        android:id="@+id/field_match_cell_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/compatible"
+        android:layout_weight=".5"
+        android:layout_gravity="center"
+        android:singleLine="true"
+        android:text="@string/project_field"
         android:textSize="14sp" />
+
+    <Spinner
+        android:id="@+id/field_match_cell_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:entries="@array/isense_fields_array"
+        android:prompt="@string/isense_fields" />
 
 </LinearLayout>
