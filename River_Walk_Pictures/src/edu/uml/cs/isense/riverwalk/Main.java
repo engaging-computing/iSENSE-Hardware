@@ -31,6 +31,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -159,7 +160,7 @@ public class Main extends Activity implements LocationListener {
 				String experimentNum = mPrefs.getString("project_id", "Error");
 
 				if (experimentNum.equals("Error")) {
-					w.make("Please select a project first.",
+					w.make("Please select an project first.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
@@ -631,7 +632,8 @@ public class Main extends Activity implements LocationListener {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-
+						
+						Log.d("tag", "latitude ="+ loc.getLatitude());
 						if (loc.getLatitude() != 0)
 							latLong.setText("Lat: " + loc.getLatitude()
 									+ "\nLong: " + loc.getLongitude());
