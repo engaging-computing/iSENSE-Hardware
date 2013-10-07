@@ -1193,7 +1193,7 @@ public class DataWalk extends Activity implements LocationListener,
 						}
 						
 						//Rajia Stealing these Text Boxes for now
-						loggedInAs.setText("Total Distance: " + roundTwoDecimals(total_distance)+ " Meters" +  " / "+ total_distance* conversion_meters_to_miles + "Miles");
+						loggedInAs.setText("Total Distance: " + roundTwoDecimals(total_distance)+ " Meters" +  " / "+ roundTwoDecimals(total_distance* conversion_meters_to_miles) + "Miles");
 						rateBox.setText("Velocity: " + roundTwoDecimals(velocity *2.23694) + " MPH " + roundTwoDecimals(velocity)+ " M/Sec");
 					
 					}
