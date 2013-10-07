@@ -62,6 +62,7 @@ import edu.uml.cs.isense.waffle.Waffle;
  * records Geo-location data.
  * 
  * @author Rajia
+ *Rajia: Reminder android:icon="@drawable/datawalk_logo" removed from manifest
  */
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener, Listener {
@@ -98,18 +99,18 @@ public class DataWalk extends Activity implements LocationListener,
 	/* iSENSE API Globals and Constants */
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String DEFAULT_PROJECT = "79";
+	private final String DEFAULT_PROJECT = "108";
 	public static final String USERNAME_KEY = "username";
 	public static final String PASSWORD_KEY = "password";
 
 	private String loginName = "";
 	private String loginPass = "";
-	private String projectID = "79";
+	private String projectID = "108";
 	private String projectURL = "";
 	private String dataSetName = "";
 	private String baseprojectURL = "http://isenseproject.org/projects/";
 	private int dataSetID = -1;
-	private String emptyProjectId = "79";
+	private String emptyProjectId = "108";
 	
 
 	/* Manage Work Flow Between Activities */
@@ -151,6 +152,8 @@ public class DataWalk extends Activity implements LocationListener,
 	
 	//Rajia: 
 	float distance=0;
+	float total_distance = 0; 
+	double conversion_meters_to_miles = 0.000621371; 
 	float velocity=0;
 	float deltaTime = 0;
 	boolean bFirstPoint = true;
@@ -1163,7 +1166,8 @@ public class DataWalk extends Activity implements LocationListener,
 							bFirstPoint=false;
 						}
 						distance = loc.distanceTo(prevLoc);
-			
+						//10/3 Raj
+						total_distance = distance + total_distance;
 						//Calculate Velocity
 						velocity = distance/nSeconds;
 						
@@ -1189,8 +1193,8 @@ public class DataWalk extends Activity implements LocationListener,
 						}
 						
 						//Rajia Stealing these Text Boxes for now
-						loggedInAs.setText("Distance: " + roundTwoDecimals(distance)+ " Meters");
-						rateBox.setText("Velocity: " + roundTwoDecimals(velocity *2.23694) + " MPH " + roundTwoDecimals(velocity)+ " M/Sec    ");
+						loggedInAs.setText("Total Distance: " + roundTwoDecimals(total_distance)+ " Meters" +  " / "+ total_distance* conversion_meters_to_miles + "Miles");
+						rateBox.setText("Velocity: " + roundTwoDecimals(velocity *2.23694) + " MPH " + roundTwoDecimals(velocity)+ " M/Sec");
 					
 					}
 				});
@@ -1214,9 +1218,11 @@ public class DataWalk extends Activity implements LocationListener,
 						dataJSON.put("0", "u " + time);
 						dataJSON.put("1", accel[3]);
 						//Rajia Store new Velocity values into JSON object
+						//10/3 Rajia put total_distance values into JSON object
 						dataJSON.put("2", velocity);
-						dataJSON.put("3", loc.getLatitude());
-						dataJSON.put("4", loc.getLongitude());
+						dataJSON.put("3", total_distance);
+						dataJSON.put("4", loc.getLatitude());
+						dataJSON.put("5", loc.getLongitude());
 						
 				
 						// Save this data point if GPS says it has a lock
