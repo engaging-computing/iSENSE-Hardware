@@ -19,7 +19,7 @@
         android:id="@+id/select_mode_button_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/select_mode_star_text"
+        android:layout_above="@+id/select_mode_star_star_text"
         android:layout_below="@id/select_mode_text"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
@@ -66,10 +66,20 @@
     </LinearLayout>
 
     <TextView
-        android:id="@id/select_mode_star_text"
+        android:id="@+id/select_mode_star_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/star_star_equals"
+        android:textSize="14sp" />
+    
+    <TextView
+        android:id="@id/select_mode_star_star_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/select_mode_star_text"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:text="@string/star_equals_select"

@@ -137,7 +137,7 @@ public class Welcome extends Activity {
 		mEdit.commit();
 		
 		Intent iSelectMode = new Intent(mContext, SelectMode.class);
-		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, enable);
+		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_AND_CSV, enable);
 		startActivity(iSelectMode);
 	}
 
