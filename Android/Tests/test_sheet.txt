@@ -2,6 +2,8 @@
 
 ----------------------------------------------------------------------
 
+			      SUMMARY
+
 Please prepend each .apk file with "beta_" and append it with "_vX_X".
 For example, if we were testing the Uploader app on version 3.2, we
 would call the .apk file
@@ -12,30 +14,38 @@ list your file to be tested in this .txt file.
 
 IF YOUR APP IS NOT LISTED HERE, IT WILL NOT BE TESTED.
 
+Also, write a short description of what testers should be looking for
+with your update.
+
 After testing any application listed here, please leave your name and
 a brief response as to how the app test went in the comments section
-below.  Sample .apks and comments are provided.  Please follow the 
-same format to keep things consistent.
+below.
 
 ---------------------------------------------------------------------
 
                         .APK FILES TO TEST
 
-beta_sample_app_v5_0.apk
-beta_other_app_v2_1.apk
+beta_Uploader_v3_5.apk
+
+---------------------------------------------------------------------
+
+			 WHAT TO LOOK FOR
+
+beta_Uploader_v3_5.apk:
+
+- added .csv file uploading ability
+- added ability to create a project
+- added field matching to Data Collector
+- redesigned whole Splash/intro UI
 
 ---------------------------------------------------------------------
 
                              COMMENTS
 
-beta_sample_app_v5_0.apk
+beta_Uploader_v3_5.apk:
 
-John Doe: app test went smoothly, no bugs
-Bob Brown: the recording button isn't wide enough
-
-beta_other_app_v2_1.apk
-
-John Doe: I made the app force close: reproducable by recording data,
-hitting the power button, and turning the device back on.
+Mike S: everything looks fine for now.  Did a lot of extensive tests
+regarding logged in/not logged in, with/without internet, etc.  App
+seems to handle all cases correctly.
 
 ---------------------------------------------------------------------
