@@ -84,7 +84,6 @@ import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -255,7 +254,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Waffle w;
 	public static DataFieldManager dfm;
 	public static Fields f;
-	public static SensorCompatibility sc;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -975,7 +973,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				"project_id", "-1")), api, mContext, f);
 		dfm.getOrder();
 
-		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
+		for (int i = 0; i < Fields.NUM_FIELDS; i++)
 			dfm.enabledFields[i] = true;
 
 		String acceptedFields = getResources().getString(R.string.time) + ","
@@ -1013,8 +1011,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					mContext, f);
 			dfm.getOrder();
 
-			sc = dfm.checkCompatibility();
-
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 			getEnabledFields();
@@ -1032,8 +1028,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
-			
-			sc = dfm.checkCompatibility();
 
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);

@@ -32,7 +32,6 @@ public class DataFieldManager extends Application {
 	private ArrayList<RProjectField> projFields;
 	private LinkedList<String> order;
 	private Fields f;
-	private SensorCompatibility sc = new SensorCompatibility();
 	
 	/**
 	 * Boolean array of size 19 containing a list of fields enabled for recording data.
@@ -649,35 +648,6 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Determines which sensors are potentially available on the user's device based on
-	 * which sensors devices with a similar API level typically have.
-	 * 
-	 * @return
-	 * 		A {@link edu.uml.cs.isense.dfm.SensorCampatibility} object.
-	 */
-	public SensorCompatibility checkCompatibility() {
-
-		int apiLevel = android.os.Build.VERSION.SDK_INT;
-		int apiVal = 0;
-		int[][] dispatch = sc.compatDispatch;
-
-		if (apiLevel <= 8)
-			apiVal = 0;
-		if (apiLevel > 8 && apiLevel < 14)
-			apiVal = 1;
-		if (apiLevel > 14)
-			apiVal = 2;
-
-		for (int i = 0; i <= 5; i++) {
-			int temp = dispatch[apiVal][i];
-			if (temp == 1)
-				sc.compatible[i] = true;
-		}
-
-		return sc;
-	}
-
-	/**
 	 * Writes the first line in a .csv file for the project you
 	 * are recording data for.  Data can then by appended to this by calling
 	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeSdCardLine() writeSdCardLine()}.
@@ -1049,6 +1019,41 @@ public class DataFieldManager extends Application {
 	}
 	
 	/**
+	 * Converts order into a String[]
+	 * 
+	 * @return
+	 * 		order in the form of a String[]
+	 */
+	public String[] convertOrderToStringArray() {
+		
+		String[] sa = new String[order.size()];
+		int i = 0;
+		
+		for (String s : order)
+			sa[i++] = s;
+		
+		return sa;
+	}
+	
+	/**
+	 * Converts a String[] back into a LinkedList of Strings
+	 * 
+	 * @param
+	 * 		sa - the String[] to convert
+	 * @return
+	 * 		sa in the form of a LinkedList of Strings
+	 */
+	public static LinkedList<String> convertStringArrayToLinkedList(String[] sa) {
+	
+		LinkedList<String> lls = new LinkedList<String>();
+		
+		for (String s : sa)
+			lls.add(s);
+		
+		return lls;
+	}
+	
+	/**
 	 * Getter for the Fields object associated with this instance of DataFieldManager
 	 * 
 	 * @return
@@ -1066,6 +1071,80 @@ public class DataFieldManager extends Application {
 	 */
 	public void setFields(Fields fields) {
 		this.f = fields;
+	}
+	
+	/**
+	 * Enables all fields for recording data
+	 */
+	public void enableAllFields() {
+		enabledFields[Fields.TIME] = true;
+		enabledFields[Fields.ACCEL_X] = true;
+		enabledFields[Fields.ACCEL_Y] = true;
+		enabledFields[Fields.ACCEL_Z] = true;
+		enabledFields[Fields.ACCEL_TOTAL] = true;
+		enabledFields[Fields.LATITUDE] = true;
+		enabledFields[Fields.LONGITUDE] = true;
+		enabledFields[Fields.MAG_X] = true;
+		enabledFields[Fields.MAG_Y] = true;
+		enabledFields[Fields.MAG_Z] = true;
+		enabledFields[Fields.MAG_TOTAL] = true;
+		enabledFields[Fields.HEADING_DEG] = true;
+		enabledFields[Fields.HEADING_RAD] = true;
+		enabledFields[Fields.TEMPERATURE_C] = true;
+		enabledFields[Fields.TEMPERATURE_F] = true;
+		enabledFields[Fields.TEMPERATURE_K] = true;
+		enabledFields[Fields.PRESSURE] = true;
+		enabledFields[Fields.ALTITUDE] = true;
+		enabledFields[Fields.LIGHT] = true;
+	}
+	
+	/**
+	 * Set the enabled fields from the acceptedFields parameter. 
+	 * 
+	 * @param acceptedFields LinkedList of field strings
+	 */
+	public void setEnabledFields(LinkedList<String> acceptedFields) {
+		
+		for (String s : acceptedFields) {
+			if (s.equals(getString(R.string.time)))
+				enabledFields[Fields.TIME] = true;
+			if (s.equals(getString(R.string.accel_x)))
+				enabledFields[Fields.ACCEL_X] = true;
+			if (s.equals(getString(R.string.accel_y)))
+				enabledFields[Fields.ACCEL_Y] = true;
+			if (s.equals(getString(R.string.accel_z)))
+				enabledFields[Fields.ACCEL_Z] = true;
+			if (s.equals(getString(R.string.accel_total)))
+				enabledFields[Fields.ACCEL_TOTAL] = true;
+			if (s.equals(getString(R.string.latitude)))
+				enabledFields[Fields.LATITUDE] = true;
+			if (s.equals(getString(R.string.longitude)))
+				enabledFields[Fields.LONGITUDE] = true;
+			if (s.equals(getString(R.string.magnetic_x)))
+				enabledFields[Fields.MAG_X] = true;
+			if (s.equals(getString(R.string.magnetic_y)))
+				enabledFields[Fields.MAG_Y] = true;
+			if (s.equals(getString(R.string.magnetic_z)))
+				enabledFields[Fields.MAG_Z] = true;
+			if (s.equals(getString(R.string.magnetic_total)))
+				enabledFields[Fields.MAG_TOTAL] = true;
+			if (s.equals(getString(R.string.heading_deg)))
+				enabledFields[Fields.HEADING_DEG] = true;
+			if (s.equals(getString(R.string.heading_rad)))
+				enabledFields[Fields.HEADING_RAD] = true;
+			if (s.equals(getString(R.string.temperature_c)))
+				enabledFields[Fields.TEMPERATURE_C] = true;
+			if (s.equals(getString(R.string.temperature_f)))
+				enabledFields[Fields.TEMPERATURE_F] = true;
+			if (s.equals(getString(R.string.temperature_k)))
+				enabledFields[Fields.TEMPERATURE_K] = true;
+			if (s.equals(getString(R.string.pressure)))
+				enabledFields[Fields.PRESSURE] = true;
+			if (s.equals(getString(R.string.altitude)))
+				enabledFields[Fields.ALTITUDE] = true;
+			if (s.equals(getString(R.string.luminous_flux)))
+				enabledFields[Fields.LIGHT] = true;
+		}
 	}
 
 }
