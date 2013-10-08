@@ -71,13 +71,6 @@ public class LoginActivity extends Activity {
 
 	private void showFailure() {
 
-		// if(rapi.connection == "NONE") {
-		// message = noConnection;
-		// }
-		// else if(rapi.connection == "600") {
-		// message = unknownUser;
-		// }
-
 		if (api.hasConnectivity()) {
 			message = unknownUser;
 		} else {
