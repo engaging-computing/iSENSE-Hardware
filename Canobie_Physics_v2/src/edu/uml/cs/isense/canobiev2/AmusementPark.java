@@ -778,7 +778,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	}
 
-
 	/**
 	 * Logs the user into iSENSE with stored credentials.
 	 * 
@@ -801,7 +800,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			api.createSession(mPrefs.getString(USERNAME_KEY, DEFAULT_USERNAME),
 					mPrefs.getString(PASSWORD_KEY, PASSWORD_KEY));
 		}
-
 	}
 
 	/**
