@@ -89,8 +89,8 @@ public class Main extends Activity implements LocationListener {
 	private Handler mHandler;
 	private TextView latLong;
 	private TextView queueCount;
-	private static final double DEFAULT_LAT = 0;   //42.6404;
-	private static final double DEFAULT_LONG = 0;   // -71.3533;
+	private static final double DEFAULT_LAT = 0;
+	private static final double DEFAULT_LONG = 0;
 	private long curTime;
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
