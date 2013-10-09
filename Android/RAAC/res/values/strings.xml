@@ -17,7 +17,7 @@
     <string name="menu_settime">Sync PINPoint Time</string>
     <string name="menu_setsensors">Select Sensor</string>
     <string name="menu_login">Retry Login</string>
-    <string name="menu_experiment">Set Experiment</string>
+    <string name="menu_experiment">Set Project</string>
     <string name="menu_prefs">Preferences</string>
     
     <string name="minval">Minimum</string>
@@ -30,13 +30,13 @@
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
     
-    <string name="prefs_label_expr">Experiment Settings</string>
+    <string name="prefs_label_expr">Project Settings</string>
     <string name="prefs_label_conn">Connection Settings</string>
     <string name="prefs_label">Settings</string>
-    <string name="prefs_expid_title">Experiment ID</string>
-    <string name="prefs_expid_desc">The ID number of the experiment on iSENSE that you want to upload data to</string>
+    <string name="prefs_expid_title">Project ID</string>
+    <string name="prefs_expid_desc">The ID number of the project on iSENSE that you want to upload data to</string>
     <string name="prefs_gname_title">Group Name</string>
-    <string name="prefs_gname_desc">The name of your experiment group</string>
+    <string name="prefs_gname_desc">The name of your project group</string>
     <string name="prefs_auto_title">Auto-Upload</string>
     <string name="prefs_auto_desc">Automatically pull data and upload it to iSENSE after connecting to a PINPoint</string>
     <string name="prefs_auto2_title">Auto-Connect</string>
