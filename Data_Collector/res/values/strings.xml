@@ -68,8 +68,9 @@
 	<string name="what_to_do">What would you like to do?</string>
 	<string name="pre_data_collector_str">Collect Data Using My Device\'s Hardware Sensors</string>
 	<string name="pre_manual_entry_str">Manually Enter Data *</string>
-    <string name="pre_csv_uploader_str">Upload a .csv File From My Device</string>
+    <string name="pre_csv_uploader_str">Upload a .csv File From My Device **</string>
     <string name="star_equals_select">* = requires a project first</string>
+    <string name="star_star_equals">** = requires a project and internet connectivity</string>
     
     <string name="field_type">Add Field</string>
     <string-array name="field_type_array">

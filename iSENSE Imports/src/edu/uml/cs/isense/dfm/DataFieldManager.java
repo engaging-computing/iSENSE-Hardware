@@ -548,9 +548,9 @@ public class DataFieldManager extends Application {
 			} else if (s.equals(mContext.getString(R.string.time))) {
 				firstLineWritten = true;
 				if (start)
-					b.append(f.timeMillis);
+					b.append("u " + f.timeMillis);
 				else
-					b.append(", ").append(f.timeMillis);
+					b.append(", ").append("u " + f.timeMillis);
 
 			} else if (s.equals(mContext.getString(R.string.luminous_flux))) {
 				firstLineWritten = true;
