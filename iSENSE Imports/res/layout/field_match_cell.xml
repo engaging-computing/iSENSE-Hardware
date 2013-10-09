@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/listelement_bkgd_changer"
     android:orientation="horizontal"
+    android:padding="10dp"
     android:weightSum="1" >
 
     <TextView
