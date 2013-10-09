@@ -504,6 +504,7 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public void onProviderEnabled(String provider) {
+		
 	}
 
 	@Override
