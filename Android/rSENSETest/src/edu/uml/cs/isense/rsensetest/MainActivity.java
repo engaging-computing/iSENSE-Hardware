@@ -255,17 +255,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class UploadTask extends AsyncTask<Void, Void, Void> {
+	private class UploadTask extends AsyncTask<JSONObject, Void, Void> {
 		@Override
-		protected Void doInBackground(Void... params) {
-			JSONObject newData = new JSONObject();
-			try {
-				newData.put("0", new JSONArray().put("2013/08/05 10:50:20"));
-				newData.put("1", new JSONArray().put("119"));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			api.uploadDataSet(2, newData, "mobile upload testfuyf");
+		protected Void doInBackground(JSONObject... params) {
+			api.uploadDataSet(2, params[0], "mobile upload testfuyf");
 			return null;
 		}
 
