@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
@@ -31,7 +32,10 @@ public class DataFieldManager extends Application {
 
 	private ArrayList<RProjectField> projFields;
 	private LinkedList<String> order;
+	private LinkedList<String> realOrder; // the actual fields in the project, used for .csv file header writing
 	private Fields f;
+	
+	private String CSV_DELIMITER = "-:;_--:-;-;_::-;";
 	
 	/**
 	 * Boolean array of size 19 containing a list of fields enabled for recording data.
@@ -68,6 +72,7 @@ public class DataFieldManager extends Application {
 		this.projID = projID;
 		this.api = api;
 		this.order = new LinkedList<String>();
+		this.realOrder = new LinkedList<String>();
 		this.mContext = mContext;
 		this.f = f;
 	}
@@ -665,7 +670,10 @@ public class DataFieldManager extends Application {
 		if (projID == -1)
 			return "";
 
-		for (String unitName : this.order) {
+		for (String unitName : this.realOrder) {
+			
+			System.out.println("Header = " + unitName);
+			
 			if (start)
 				b.append(unitName);
 			else
@@ -864,9 +872,52 @@ public class DataFieldManager extends Application {
 			getProjectFieldOrder();
 		}
 	}
+	
+	public void writeProjectFields() {
+		
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		
+		StringBuilder sb = new StringBuilder();
+		boolean start = true;
+		
+		for (String s : this.realOrder) {
+			if (start)
+				sb.append(s);
+			else
+				sb.append(CSV_DELIMITER).append(s);
+			
+			start = false;
+		}
+		
+		String out = sb.toString(); System.out.println("Now: " + out);
+		mEdit.putString("csv_order", out).commit();
+		
+	}
+	
+	public void getProjectFieldsAndSetCSVOrder() {
+		
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+		
+		String in = mPrefs.getString("csv_order", "");
+		if (in.equals("")) return;
+		
+		String[] parts = in.split(CSV_DELIMITER);
+		this.realOrder.clear();
+		
+		for (String s : parts) {
+			System.out.println("Piece: " + s);
+			this.realOrder.add(s);
+		}
+		
+	}
 
 	private void getProjectFieldOrder() {
 		for (RProjectField field : projFields) {
+			
+			System.out.println("Real order: " + field.name);
+			realOrder.add(field.name);
+			
 			switch (field.type) {
 
 			// Number
