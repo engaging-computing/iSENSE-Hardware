@@ -119,10 +119,7 @@ public class Welcome extends Activity {
 				int newProjID = data.getIntExtra(ProjectCreate.NEW_PROJECT_ID, 0);
 				if (newProjID != 0) {
 					setGlobalProjAndEnableManual("" + newProjID, true);
-				} else {
-					// TODO - we got a bad return
 				}
-				
 			}
 		}
 	}
