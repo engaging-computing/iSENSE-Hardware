@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
-import edu.uml.cs.isense.raac.pincushion.PinComm;
+import edu.uml.cs.isense.pinports.exceptions.NoConnectionException;
+import edu.uml.cs.isense.pinports.pincushion.PinComm;
 
 public class SensorSelector extends Activity implements OnClickListener {
 
