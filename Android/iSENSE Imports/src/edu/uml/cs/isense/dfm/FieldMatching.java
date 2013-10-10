@@ -70,21 +70,14 @@ public class FieldMatching extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			String[] sa = extras.getStringArray(DFM_ORDER_LIST);
-			if (sa == null || sa.length == 0) {
-				throw new RuntimeException("Incorrect usage of FieldMatching: the array passed has no fields or wasn't passed to DFM_ORDER_LIST");
-			}
 			 fields = DataFieldManager.convertStringArrayToLinkedList(sa);
 		} else {
 			throw new RuntimeException("Incorrect usage of FieldMatching: please pass in dfm's order list");
 		}
-		
-		if (fields == null) {
-			throw new RuntimeException("Something went terribly wrong.  Make sure you're passing in the order list correctly.");
-		}
-
+	
 		scrollViewLayout = (LinearLayout) findViewById(R.id.field_matching_view);
 
-		if (fields.isEmpty()) {
+		if (fields == null || fields.isEmpty()) {
 			isEmpty = true;
 		} else {
 			for (String field : fields) {
