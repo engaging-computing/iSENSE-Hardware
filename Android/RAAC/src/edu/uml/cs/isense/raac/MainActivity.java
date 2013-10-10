@@ -89,10 +89,10 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
-import edu.uml.cs.isense.raac.pincushion.BluetoothService;
-import edu.uml.cs.isense.raac.pincushion.PinComm;
-import edu.uml.cs.isense.raac.pincushion.pinpointInterface;
+import edu.uml.cs.isense.pinports.exceptions.NoConnectionException;
+import edu.uml.cs.isense.pinports.pincushion.BluetoothService;
+import edu.uml.cs.isense.pinports.pincushion.PinComm;
+import edu.uml.cs.isense.pinports.pincushion.pinpointInterface;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity implements OnClickListener {
