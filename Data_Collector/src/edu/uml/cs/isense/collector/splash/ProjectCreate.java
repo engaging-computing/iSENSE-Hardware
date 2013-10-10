@@ -105,6 +105,33 @@ public class ProjectCreate extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// check to see if the project has a name
+				if (projectName.getText().toString().length() == 0) {
+					w.make("Please enter a new project name", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+					projectName.setError("Enter a new project name");
+					return;
+				} else
+					projectName.setError(null);
+				
+				// check to see if the project has fields
+				if (fieldScroll.getChildCount() == 0) {
+					w.make("Enter some fields for your project", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+					return;
+				} else {
+					for (int i = 0; i < fieldScroll.getChildCount(); i++) {
+						View cell = fieldScroll.getChildAt(i);
+						EditText fieldName = (EditText) cell.findViewById(R.id.project_field_name);
+						if (fieldName.getText().toString().length() == 0) {
+							w.make("Please a name for field #" + i + 1, Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+							fieldName.setError("Enter a field name");
+							return;
+						} else
+							fieldName.setError(null);
+						
+					}
+				}
+				
+				// project and all fields have names - create the project after checking login status
 				createProjectAfterCheckingLogin();
 			}
 		});
@@ -368,9 +395,9 @@ public class ProjectCreate extends Activity {
 				setResult(RESULT_OK, iRet);
 				finish();
 				
-			} else {
-				// TODO - we failed
-			}
+			} else
+				w.make("Project failed to create - please try again", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+			
 		}
 	}
 	
