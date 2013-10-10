@@ -1437,6 +1437,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						setUpRecordingDescription();
+						
+						// get csv order
+						dfm.getProjectFieldsAndSetCSVOrder();
 
 						// start running task
 						running = true;

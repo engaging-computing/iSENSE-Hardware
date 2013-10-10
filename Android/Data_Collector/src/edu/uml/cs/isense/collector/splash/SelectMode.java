@@ -131,7 +131,7 @@ public class SelectMode extends Activity {
 				}
 
 				String[] comp = filepath.split("\\.");
-				System.out.println(filepath + " honk " + comp.length);
+
 				if (comp.length == 0
 						|| !(comp[comp.length - 1].toLowerCase(Locale.US)
 								.equals("csv"))) {
@@ -263,7 +263,7 @@ public class SelectMode extends Activity {
 			dia.cancel();
 			OrientationManager.enableRotation(SelectMode.this);
 
-			if (dsid == -1) {
+			if (dsid <= 0) {
 				w.make(".csv File Failed to Upload", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_X);
 			} else {
