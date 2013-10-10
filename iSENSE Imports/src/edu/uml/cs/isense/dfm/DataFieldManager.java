@@ -873,6 +873,13 @@ public class DataFieldManager extends Application {
 		}
 	}
 	
+	/**
+	 * Writes the fields for the project out to SharedPreferences, designed to aid
+	 * the writing of .csv files using
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getProjectFieldsAndSetCSVOrder() getProjectFieldsAndSetCSVOrder}
+	 * when prepared to write a .csv file.
+	 * 
+	 */
 	public void writeProjectFields() {
 		
 		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
@@ -895,6 +902,12 @@ public class DataFieldManager extends Application {
 		
 	}
 	
+	/**
+	 * Retrieve the fields written to SharedPreferences from
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeProjectFields() writeProjectFields()},
+	 * primarily designed for writing the header line in a .csv file.
+	 * 
+	 */
 	public void getProjectFieldsAndSetCSVOrder() {
 		
 		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
