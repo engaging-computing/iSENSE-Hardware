@@ -93,7 +93,7 @@
         
         NSData *imageFile = UIImageJPEGRepresentation(imageToUse, 1);
         NSLog(@"Original path %@", path.description);
-        [_api uploadDataSetMediaWithId:766 withFile:imageFile andName:imageName];
+        [_api uploadDataSetMediaWithId:1073 withFile:imageFile andName:imageName];
     }
     
     // Handle a movied picked from a photo album
