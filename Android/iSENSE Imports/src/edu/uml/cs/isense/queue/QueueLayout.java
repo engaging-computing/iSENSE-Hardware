@@ -72,6 +72,68 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private Waffle w;
 	private API api;
 	private DataFieldManager dfm;
+	
+	/**
+	 * This class is used to cache projects and fields from user field matching
+	 * for the current QueueLayout instance.  This way, if a user performs field
+	 * matching on a project, this class will be used internally to ensure the
+	 * user doesn't have to continually perform field matching for the same 
+	 * project ID.
+	 */
+	private class CachedFieldDatabase {
+		
+		private class QLProject {
+			private LinkedList<String> projects;
+			private LinkedList<LinkedList<String>> fields;
+			
+			public QLProject() {
+				this.projects = new LinkedList<String>();
+				this.fields   = new LinkedList<LinkedList<String>>();
+			}
+			
+			public void addProject(String projID, LinkedList<String> projFields) {
+				this.projects.add(projID);
+				this.fields.add(projFields);
+			}
+			
+			public int count() {
+				return projects.size();
+			}
+			
+			public String getProjectAt(int i) {
+				return projects.get(i);
+			}
+			
+			public LinkedList<String> getFieldsAt(int i) {
+				return fields.get(i);
+			}
+			
+		}
+		
+		private QLProject p;
+		
+		public CachedFieldDatabase() {
+			this.p = new QLProject();
+		}
+		
+		public void addProject(String projID, LinkedList<String> projFields) {
+			this.p.addProject(projID, projFields);
+		}
+		
+		public LinkedList<String> getFieldsForProject(String projID) {
+			
+			for (int i = 0; i < p.count(); i++) {
+				String s = p.getProjectAt(i);
+				if (s.equals(projID))
+					return p.getFieldsAt(i);
+			}
+			
+			return null;
+		}
+		
+	}
+	
+	private CachedFieldDatabase cfd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +144,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 		w = new Waffle(mContext);
 
 		api = API.getInstance(mContext);
+		
+		cfd = new CachedFieldDatabase();
 
 		Bundle extras = getIntent().getExtras();
 		parentName = extras.getString(PARENT_NAME);
@@ -426,7 +490,24 @@ public class QueueLayout extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == ALTER_DATA_PROJ_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				new PrepForFieldMatchTask().execute();
+
+				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
+				String projectInput = mPrefs.getString("project_id", "");
+				
+				LinkedList<String> fields = cfd.getFieldsForProject(projectInput);
+				if (fields != null) {
+					QDataSet alter = lastDataSetLongClicked;
+					alter.setProj(mPrefs.getString("project_id", "No Proj."));
+					alter.setFields(FieldMatching.acceptedFields);
+
+					uq.removeItemWithKey(lastDataSetLongClicked.key);
+					scrollQueue.removeView(lastViewLongClicked);
+
+					uq.addDataSetToQueue(alter);
+					addViewToScrollQueue(alter);
+				} else
+					new PrepForFieldMatchTask().execute();
+				
 			}
 		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -455,9 +536,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
 				} else {
 					SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
+					String projectInput = mPrefs.getString("project_id", "No Proj.");
+					
+					cfd.addProject(projectInput, FieldMatching.acceptedFields);
 					
 					QDataSet alter = lastDataSetLongClicked;
-					alter.setProj(mPrefs.getString("project_id", "No Proj."));
+					alter.setProj(projectInput);
 					alter.setFields(FieldMatching.acceptedFields);
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
@@ -514,7 +598,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			dia.cancel();
 
 			OrientationManager.enableRotation(QueueLayout.this);
-
+			
 			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
 
 			String[] dfmOrderList = dfm.convertOrderToStringArray();
