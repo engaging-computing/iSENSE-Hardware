@@ -398,7 +398,7 @@ public class Main extends Activity implements LocationListener {
 			}
 			dataJSON.put(dataRow);
 
-			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()  //data set to be uploaded
 					.toString() + ": " + descriptionStr,
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
