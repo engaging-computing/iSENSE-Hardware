@@ -1311,7 +1311,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			return -1;
 		System.out.println("Need to re-order some data");
 		return upload(DataFieldManager.reOrderData(dataSet,
-				CarRampPhysicsV2.experimentNumber, api, mContext));
+				CarRampPhysicsV2.experimentNumber, api, mContext, null));
 
 	}
 

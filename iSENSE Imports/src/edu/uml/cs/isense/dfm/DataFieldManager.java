@@ -709,17 +709,20 @@ public class DataFieldManager extends Application {
 	 * 		- An {@link edu.uml.cs.isense.comm.API API} class instance.
 	 * @param c
 	 * 		- The context of the Activity calling this function 
+	 * @param fieldOrder
+	 * 		- The list of fields matched using the FieldMatching class, or null if FieldMatching wasn't used.
 	 * @return
 	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
 	 * 		
 	 */
 	public static String reOrderData(JSONArray data, String projID, API api,
-			Context c) {
+			Context c, LinkedList<String> fieldOrder) {
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
-		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(projID), api,
-				c);
+		if (fieldOrder == null || fieldOrder.size() == 0)
+			fieldOrder = getOrder(Integer.parseInt(projID), api, c);
+		
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
