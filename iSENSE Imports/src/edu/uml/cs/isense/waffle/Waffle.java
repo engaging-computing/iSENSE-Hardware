@@ -32,6 +32,9 @@ import android.widget.Toast;
  * 
  */
 public class Waffle {
+	
+	private Toast toast;
+	
 	/**
 	 * Boolean trigger that informs whether or not a Waffle message is currently
 	 * being displayed.
@@ -88,6 +91,7 @@ public class Waffle {
 		this.isDisplaying = false;
 		this.canPerformTask = false;
 		this.context = c;
+		
 	}
 	
 	/**
@@ -146,7 +150,7 @@ public class Waffle {
 			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
 			background.setBackgroundResource(background_id);
 
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 			if (length == Toast.LENGTH_LONG)
 				toast.setDuration(Toast.LENGTH_LONG);
@@ -210,7 +214,7 @@ public class Waffle {
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);
 
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 			if (length == Toast.LENGTH_LONG)
 				toast.setDuration(Toast.LENGTH_LONG);
@@ -261,7 +265,7 @@ public class Waffle {
 					.findViewById(R.id.waffle_check);
 			image.setVisibility(View.GONE);
 
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 			if (length == Toast.LENGTH_LONG)
 				toast.setDuration(Toast.LENGTH_LONG);
@@ -328,7 +332,7 @@ public class Waffle {
 			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
 			background.setBackgroundResource(background_id);
 
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 
 			toast.setDuration(Toast.LENGTH_SHORT);
@@ -371,7 +375,7 @@ public class Waffle {
 			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
 			background.setBackgroundResource(R.drawable.toast_background_default);
 
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 			if (length == Toast.LENGTH_LONG)
 				toast.setDuration(Toast.LENGTH_LONG);
@@ -432,7 +436,7 @@ public class Waffle {
 			TextView text = (TextView) layout.findViewById(R.id.text);
 			text.setText(message);
 			
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 
 			toast.setDuration(Toast.LENGTH_SHORT);
@@ -478,7 +482,7 @@ public class Waffle {
 			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
 			background.setBackgroundResource(background_id);
 
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 
 			toast.setDuration(Toast.LENGTH_SHORT);
@@ -502,7 +506,7 @@ public class Waffle {
 	 */
 	@SuppressLint("NewApi")
 	public void make(String message) {
-
+		
 		if (!isDisplaying) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -519,7 +523,7 @@ public class Waffle {
 			LinearLayout background = (LinearLayout) layout.findViewById(R.id.toast_layout_root);
 			background.setBackgroundResource(R.drawable.toast_background_default);
 			
-			Toast toast = new Toast(context);
+			toast = new Toast(context);
 			toast.setGravity(Gravity.BOTTOM, 0, 50);
 
 			toast.setDuration(Toast.LENGTH_SHORT);
@@ -542,11 +546,12 @@ public class Waffle {
 		@Override
 		protected Void doInBackground(Void... voids) {
 			try {
-				Thread.sleep(1500);
-				canPerformTask = false;
-				Thread.sleep(2000);
+				if (toast.getDuration() == Toast.LENGTH_SHORT)
+					Thread.sleep(2000);
+				else
+					Thread.sleep(3500);
 			} catch (InterruptedException e) {
-				canPerformTask = false;
+				
 				e.printStackTrace();
 			}
 			return null;
@@ -555,6 +560,7 @@ public class Waffle {
 		@Override
 		protected void onPostExecute(Void voids) {
 			isDisplaying = false;
+			canPerformTask = false;
 		}
 	}
 
