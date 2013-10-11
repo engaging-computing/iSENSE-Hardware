@@ -778,21 +778,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	// Deals with login and UI display
-	void login() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
-		// TODO this comment is not helpful
-		api.createSession(mPrefs.getString("username", ""),
-				mPrefs.getString("password", ""));
-=======
-=======
-
->>>>>>> origin
 	/**
 	 * Logs the user into iSENSE with stored credentials.
 	 * 
@@ -815,11 +800,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			api.createSession(mPrefs.getString(USERNAME_KEY, DEFAULT_USERNAME),
 					mPrefs.getString(PASSWORD_KEY, PASSWORD_KEY));
 		}
-<<<<<<< HEAD
->>>>>>> upstream/master
-=======
-
->>>>>>> origin
 	}
 
 	/**
