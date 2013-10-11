@@ -31,6 +31,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,8 +89,8 @@ public class Main extends Activity implements LocationListener {
 	private Handler mHandler;
 	private TextView latLong;
 	private TextView queueCount;
-	private static final double DEFAULT_LAT = 42.6404;
-	private static final double DEFAULT_LONG = -71.3533;
+	private static final double DEFAULT_LAT = 0;
+	private static final double DEFAULT_LONG = 0;
 	private long curTime;
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
@@ -159,7 +160,7 @@ public class Main extends Activity implements LocationListener {
 				String experimentNum = mPrefs.getString("project_id", "Error");
 
 				if (experimentNum.equals("Error")) {
-					w.make("Please select an experiment first.",
+					w.make("Please select an project first.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
@@ -201,7 +202,7 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Experiment");
+		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
 		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		return true;
@@ -375,7 +376,7 @@ public class Main extends Activity implements LocationListener {
 
 			if (experimentNum.equals("Error")) {
 				uploadError = true;
-				postRunnableWaffleError("No experiment selected to upload pictures to");
+				postRunnableWaffleError("No project selected to upload pictures to");
 				return;
 			}
 
@@ -391,13 +392,13 @@ public class Main extends Activity implements LocationListener {
 				dataRow = dfm.putData();
 			} else {
 				f.timeMillis = curTime;
-				f.latitude = DEFAULT_LAT;
+				f.latitude = DEFAULT_LAT;   
 				f.longitude = DEFAULT_LONG;
 				dataRow = dfm.putData();
 			}
 			dataJSON.put(dataRow);
 
-			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()  //data set to be uploaded
 					.toString() + ": " + descriptionStr,
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
@@ -503,6 +504,7 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public void onProviderEnabled(String provider) {
+		
 	}
 
 	@Override
@@ -539,7 +541,7 @@ public class Main extends Activity implements LocationListener {
 			OrientationManager.enableRotation(Main.this);
 
 			if (status400) {
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
+				w.make("Your data cannot be uploaded to this project.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else if (uploadError) {
 				// Do nothing - postRunnableWaffleError takes care of this
@@ -631,7 +633,8 @@ public class Main extends Activity implements LocationListener {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-
+						
+						Log.d("tag", "latitude ="+ loc.getLatitude());
 						if (loc.getLatitude() != 0)
 							latLong.setText("Lat: " + loc.getLatitude()
 									+ "\nLong: " + loc.getLongitude());
