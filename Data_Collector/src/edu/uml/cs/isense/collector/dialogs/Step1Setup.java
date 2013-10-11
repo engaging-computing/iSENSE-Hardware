@@ -87,7 +87,7 @@ public class Step1Setup extends Activity {
 				if (dataSetName.getText().toString().equals("")) {
 					dataSetName.setError("Enter a data set name");
 					w.make("Please enter a data set name first",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				} else {
 					dataSetName.setError(null);
@@ -102,7 +102,7 @@ public class Step1Setup extends Activity {
 					sInterval.setError("Enter a sample interval >= "
 							+ S_INTERVAL + " ms");
 					w.make("Please enter a valid sample interval",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				} else {
 					sInterval.setError(null);
@@ -117,7 +117,7 @@ public class Step1Setup extends Activity {
 					testLen.setError("Enter a test length <= "
 							+ (long) MAX_DATA_POINTS / (1000 / sint) + " s");
 					w.make("Please enter a valid test length",
-							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				} else {
 					testLen.setError(null);
@@ -127,14 +127,14 @@ public class Step1Setup extends Activity {
 					String fields = mPrefs.getString("accepted_fields", "");
 					String acceptedProj = mPrefs.getString("accepted_proj",
 							"-1");
-					if (projID.equals("") || projID.equals("-1")) {
+					if (projID.equals("") || projID.equals("-1") || projID.equals("0")) {
 						w.make("Please select a project", Waffle.LENGTH_SHORT,
-								Waffle.IMAGE_X);
+								Waffle.IMAGE_WARN);
 						return;
 					} else if (fields.equals("")
 							|| (!projID.equals(acceptedProj))) {
 						w.make("Please select your project fields",
-								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 						new SensorCheckTask().execute();
 						return;
 					}
@@ -171,9 +171,9 @@ public class Step1Setup extends Activity {
 		selProj.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!api.hasConnectivity())
-					w.make("No internet connectivity found - searching only cached projects",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+//				if (!api.hasConnectivity())
+//					w.make("No internet connectivity found - searching only cached projects",
+//							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				Intent iSetup = new Intent(mContext, Setup.class);
 				iSetup.putExtra("from_where", "automatic");
 				startActivityForResult(iSetup, SETUP_REQUESTED);
@@ -393,6 +393,7 @@ public class Step1Setup extends Activity {
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
 			dfm.getOrderWithExternalAsyncTask();
+			dfm.writeProjectFields();
 
 			publishProgress(100);
 			return null;
@@ -406,9 +407,10 @@ public class Step1Setup extends Activity {
 			OrientationManager.enableRotation(Step1Setup.this);
 
 			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
-			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST,
-					dfm.convertOrderToStringArray());
 			
+			String[] dfmOrderList = dfm.convertOrderToStringArray();
+			
+			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST,dfmOrderList);
 			startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
 		}
 	}
