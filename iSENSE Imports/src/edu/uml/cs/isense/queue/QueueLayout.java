@@ -497,8 +497,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				LinkedList<String> fields = cfd.getFieldsForProject(projectInput);
 				if (fields != null) {
 					QDataSet alter = lastDataSetLongClicked;
-					alter.setProj(mPrefs.getString("project_id", "No Proj."));
-					alter.setFields(FieldMatching.acceptedFields);
+					alter.setProj(projectInput);
+					alter.setFields(fields);
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
