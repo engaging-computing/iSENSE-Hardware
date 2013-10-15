@@ -70,7 +70,7 @@ public class FieldMatching extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			String[] sa = extras.getStringArray(DFM_ORDER_LIST);
-			 fields = DataFieldManager.convertStringArrayToLinkedList(sa);
+			fields = DataFieldManager.convertStringArrayToLinkedList(sa);
 		} else {
 			throw new RuntimeException("Incorrect usage of FieldMatching: please pass in dfm's order list");
 		}

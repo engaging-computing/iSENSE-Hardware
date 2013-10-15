@@ -2,6 +2,7 @@ package edu.uml.cs.isense.queue;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -70,18 +71,21 @@ public class QDataSet implements Serializable {
 
 	private boolean hasInitialProject = true;
 
-	// Data Only
 	/**
 	 * String in JSONArray.toString() format containing all the data to upload
 	 * to iSENSE.
 	 */
 	private String data;
 
-	// Picture Only
 	/**
 	 * File containing the media in the data set.
 	 */
 	private File picture;
+	
+	/**
+	 * Used with FieldMatching when no initial project is set.
+	 */
+	private LinkedList<String> fields;
 
 	/**
 	 * Contructs an object of type QDataSet
@@ -112,6 +116,7 @@ public class QDataSet implements Serializable {
 		this.picture = picture;
 		this.key = new Random().nextLong();
 		this.hasInitialProject = projID.equals("-1") ? false : true;
+		this.fields = new LinkedList<String>();
 	}
 
 	/**
@@ -134,9 +139,9 @@ public class QDataSet implements Serializable {
 			return -1;
 
 		if (!this.hasInitialProject) {
-			System.out.println("Need to re-order some data");
+			System.out.println("Need to re-order some data with fields: " + this.fields.toString());
 			this.data = DataFieldManager.reOrderData(prepDataForUpload(),
-					this.projID, api, c);
+					this.projID, api, c, this.fields);
 		}
 
 		return upload();
@@ -235,6 +240,14 @@ public class QDataSet implements Serializable {
 
 	protected boolean getHasInitialProject() {
 		return this.hasInitialProject;
+	}
+	
+	protected void setFields(LinkedList<String> fieldList) {
+		this.fields = fieldList;
+	}
+	
+	protected LinkedList<String> getFields() {
+		return this.fields;
 	}
 
 	/**
