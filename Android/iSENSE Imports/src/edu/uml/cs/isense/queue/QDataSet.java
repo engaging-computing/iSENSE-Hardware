@@ -139,7 +139,7 @@ public class QDataSet implements Serializable {
 			return -1;
 
 		if (!this.hasInitialProject) {
-			System.out.println("Need to re-order some data");
+			System.out.println("Need to re-order some data with fields: " + this.fields.toString());
 			this.data = DataFieldManager.reOrderData(prepDataForUpload(),
 					this.projID, api, c, this.fields);
 		}
