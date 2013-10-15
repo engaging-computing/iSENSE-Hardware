@@ -621,7 +621,7 @@ static RPerson *currentUser;
  *
  * @param projectId The project ID to upload to
  * @param mediaToUpload The file to upload
- * @return ??? or -1 if upload fails
+ * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
        
@@ -677,8 +677,10 @@ static RPerson *currentUser;
         NSLog(@"Error received from server: %@", requestError);
         return -1;
     }
+    
+    NSNumber *mediaObjectId = (NSNumber *)urlResponse;
        
-    return [urlResponse statusCode];
+    return mediaObjectId.intValue;
 }
 
 /**

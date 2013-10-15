@@ -1439,7 +1439,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 						setUpRecordingDescription();
 						
-						// get csv order
+						// get csv order (not used if project is -1: perhaps add that check here?)
 						dfm.getProjectFieldsAndSetCSVOrder();
 
 						// start running task
