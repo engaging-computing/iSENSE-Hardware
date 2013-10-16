@@ -465,31 +465,7 @@ public class Main extends Activity implements LocationListener {
 			}
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
 			
-			descriptionStr = getSringExtra(Description.PHOTO_DESCRIPTION, -1);
-			
-//			int selection = data.getIntExtra(Description.RADIO_SELECTION, -1);
-//
-//			switch (selection) {
-//			case 1:
-//				descriptionStr = getResources().getString(
-//						R.string.ecosystemChanges_short);
-//				break;
-//			case 2:
-//				descriptionStr = getResources().getString(
-//						R.string.foodwebElements_short);
-//				break;
-//			case 3:
-//				descriptionStr = getResources().getString(
-//						R.string.habitat_short);
-//				break;
-//			case 4:
-//				descriptionStr = getResources().getString(
-//						R.string.invasiveSpecies_short);
-//				break;
-//			default:
-//				descriptionStr = getResources().getString(R.string.other);
-//				break;
-//			}
+			descriptionStr = Description.photo_description;  // set descriptionStr equal to photo_description in Description.java
 
 			new UploadTask().execute();
 		}
