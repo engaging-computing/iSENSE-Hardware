@@ -33,6 +33,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,9 +62,9 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 
-	private static final int MENU_ITEM_BROWSE = 0;
-	private static final int MENU_ITEM_LOGIN = 1;
-	private static final int MENU_ITEM_UPLOAD = 2;
+//	private static final int MENU_ITEM_BROWSE = 0;
+//	private static final int MENU_ITEM_LOGIN = 1;
+//	private static final int MENU_ITEM_UPLOAD = 2;
 
 	private static final int TIMER_LOOP = 1000;
 
@@ -199,52 +200,83 @@ public class Main extends Activity implements LocationListener {
 		} else if (w.canPerformTask)
 			super.onBackPressed();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
-		return true;
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
 	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(0).setEnabled(false);
-			menu.getItem(1).setEnabled(false);
-			menu.getItem(2).setEnabled(false);
-		} else {
-			menu.getItem(0).setEnabled(true);
-			menu.getItem(1).setEnabled(true);
-			menu.getItem(2).setEnabled(true);
-		}
-		return true;
-	}
-
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_ITEM_BROWSE:
-
-			Intent iExperiment = new Intent(getApplicationContext(),
-					Setup.class);
-			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
-
-			return true;
-
-		case MENU_ITEM_LOGIN:
-			startActivityForResult(new Intent(getApplicationContext(),
-					LoginActivity.class), LOGIN_REQUESTED);
-			return true;
-
-		case MENU_ITEM_UPLOAD:
-			manageUploadQueue();
-			return true;
-		}
-
-		return false;
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.MENU_ITEM_UPLOAD:
+	        	manageUploadQueue();
+	            return true;
+	            
+	        case R.id.MENU_ITEM_BROWSE:
+	        	Intent iExperiment = new Intent(getApplicationContext(),
+						Setup.class);
+				startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+	            return true;
+	            
+	        case R.id.MENU_ITEM_LOGIN:
+	        	startActivityForResult(new Intent(getApplicationContext(),
+						LoginActivity.class), LOGIN_REQUESTED);
+	            return true;
+	            
+	        default:
+	            return false;
+	    }
 	}
+	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
+//		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
+//		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
+//		return true;
+//	}
+
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		if (!useMenu) {
+//			menu.getItem(0).setEnabled(false);
+//			menu.getItem(1).setEnabled(false);
+//			menu.getItem(2).setEnabled(false);
+//		} else {
+//			menu.getItem(0).setEnabled(true);
+//			menu.getItem(1).setEnabled(true);
+//			menu.getItem(2).setEnabled(true);
+//		}
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case MENU_ITEM_BROWSE:
+//
+//			Intent iExperiment = new Intent(getApplicationContext(),
+//					Setup.class);
+//			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+//
+//			return true;
+//
+//		case MENU_ITEM_LOGIN:
+//			startActivityForResult(new Intent(getApplicationContext(),
+//					LoginActivity.class), LOGIN_REQUESTED);
+//			return true;
+//
+//		case MENU_ITEM_UPLOAD:
+//			manageUploadQueue();
+//			return true;
+//		}
+//
+//		return false;
+//	}
 
 	@Override
 	protected void onResume() {
@@ -380,15 +412,18 @@ public class Main extends Activity implements LocationListener {
 				return;
 			}
 
-			if (dfm == null)
+			//if (dfm == null)
 				initDfm();
 
 			JSONArray dataJSON = new JSONArray();
 			JSONObject dataRow = new JSONObject();
 			if (loc.getLatitude() != 0) {
 				f.timeMillis = curTime;
+				System.out.println("curTime =" + f.timeMillis);
 				f.latitude = loc.getLatitude();
+				System.out.println("Latitude =" + f.latitude);
 				f.longitude = loc.getLongitude();
+				System.out.println("Longitude =" + f.longitude);
 				dataRow = dfm.putData();
 			} else {
 				f.timeMillis = curTime;
@@ -403,6 +438,8 @@ public class Main extends Activity implements LocationListener {
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
 
+			System.out.println("experimentNum = " + experimentNum);
+			
 			uq.addDataSetToQueue(ds);
 
 		}
@@ -411,10 +448,12 @@ public class Main extends Activity implements LocationListener {
 	private void initDfm() {
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		String experimentInput = mPrefs.getString("project_id", "");
-
+		System.out.println("experimentInput ="+ experimentInput);
 		dfm = new DataFieldManager(Integer.parseInt(experimentInput), api,
 				mContext, f);
-		dfm.getOrder();
+		dfm.getOrderWithExternalAsyncTask();
+		dfm.enableAllFields();
+		System.out.println("order =" + dfm.getOrderList());
 	}
 
 	@Override
