@@ -80,10 +80,10 @@ import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
+import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -189,7 +189,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static float accel[];
 	private static float mag[];
 	private static float orientation[];
-
+	
 	/* Publicized Variables */
 
 	// Lists and Queues
@@ -200,7 +200,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static boolean inPausedState = false;
 	public static boolean terminateThroughPowerOff = false;
 	public static boolean manageUploadQueueAfterLogin = false;
-	public static boolean useDev = true;
 
 	// Strings
 	public static String textToDataSet = "";
@@ -255,7 +254,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static Waffle w;
 	public static DataFieldManager dfm;
 	public static Fields f;
-	public static SensorCompatibility sc;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -975,7 +973,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				"project_id", "-1")), api, mContext, f);
 		dfm.getOrder();
 
-		for (int i = 0; i < Fields.TEMPERATURE_K; i++)
+		for (int i = 0; i < Fields.NUM_FIELDS; i++)
 			dfm.enabledFields[i] = true;
 
 		String acceptedFields = getResources().getString(R.string.time) + ","
@@ -1013,8 +1011,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					mContext, f);
 			dfm.getOrder();
 
-			sc = dfm.checkCompatibility();
-
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
 			getEnabledFields();
@@ -1032,12 +1028,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 					mContext, f);
-			dfm.getOrderWithExternalAsyncTask();
-
-			sc = dfm.checkCompatibility();
 
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
+			
+			dfm.setOrder(fields);
+			
 			getEnabledFields();
 
 		}
@@ -1193,7 +1189,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(useDev);
+		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1224,7 +1220,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
 		api = API.getInstance(getApplicationContext());
-		api.useDev(useDev);
+		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
 		uq.buildQueueFromFile();
@@ -1421,6 +1417,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
 				Intent iSetup = new Intent(mContext, Step1Setup.class);
 				startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 			}
@@ -1441,6 +1438,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						setUpRecordingDescription();
+						
+						// get csv order (not used if project is -1: perhaps add that check here?)
+						dfm.getProjectFieldsAndSetCSVOrder();
 
 						// start running task
 						running = true;
@@ -1746,8 +1746,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 			
-//			if (dfm.getOrderList.size() == 0)
-//				TODO - API error checking for this case
+			// what is dfm order is 0?
 
 			super.onPostExecute(result);
 		}

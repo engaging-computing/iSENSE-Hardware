@@ -89,10 +89,10 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.raac.exceptions.NoConnectionException;
-import edu.uml.cs.isense.raac.pincushion.BluetoothService;
-import edu.uml.cs.isense.raac.pincushion.PinComm;
-import edu.uml.cs.isense.raac.pincushion.pinpointInterface;
+import edu.uml.cs.isense.pinports.exceptions.NoConnectionException;
+import edu.uml.cs.isense.pinports.pincushion.BluetoothService;
+import edu.uml.cs.isense.pinports.pincushion.PinComm;
+import edu.uml.cs.isense.pinports.pincushion.pinpointInterface;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity implements OnClickListener {
@@ -171,7 +171,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		api = API.getInstance(getApplicationContext());
-		api.useDev(true);
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -1082,7 +1081,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			for (int i = 0; i < timeData.size(); i++) {
 				dataJSON = new JSONObject();
 				try {
-					dataJSON.put("0", "U " + timeData.get(i));
+					dataJSON.put("0", "u " + timeData.get(i));
 					dataJSON.put("1", bta1Data.get(i));
 				} catch (JSONException e) {
 					e.printStackTrace();
