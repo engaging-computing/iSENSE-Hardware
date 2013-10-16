@@ -42,7 +42,7 @@ public class Description extends Activity {
 			public void onClick(View v) {
 				String photo_description = ((EditText) findViewById(R.id.editTextDescribe)).getText().toString();      //descriptionStr = ((EditText) findViewById(R.id.editTextDescribe)).getText().toString();
 				Intent ret = new Intent();
-				ret.putExtra(PHOTO_DESCRIPTION, photo_description );
+				ret.putExtra(PHOTO_DESCRIPTION, photo_description);
 //				int selection = getRadioSelection();
 //				if (selection != -1) {
 //					Intent ret = new Intent();
