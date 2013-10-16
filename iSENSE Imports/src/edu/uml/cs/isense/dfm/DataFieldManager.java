@@ -672,8 +672,6 @@ public class DataFieldManager extends Application {
 
 		for (String unitName : this.realOrder) {
 			
-			System.out.println("Header = " + unitName);
-			
 			if (start)
 				b.append(unitName);
 			else
@@ -709,17 +707,20 @@ public class DataFieldManager extends Application {
 	 * 		- An {@link edu.uml.cs.isense.comm.API API} class instance.
 	 * @param c
 	 * 		- The context of the Activity calling this function 
+	 * @param fieldOrder
+	 * 		- The list of fields matched using the FieldMatching class, or null if FieldMatching wasn't used.
 	 * @return
 	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
 	 * 		
 	 */
 	public static String reOrderData(JSONArray data, String projID, API api,
-			Context c) {
+			Context c, LinkedList<String> fieldOrder) {
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
-		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(projID), api,
-				c);
+		if (fieldOrder == null || fieldOrder.size() == 0)
+			fieldOrder = getOrder(Integer.parseInt(projID), api, c);
+		
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
@@ -730,8 +731,7 @@ public class DataFieldManager extends Application {
 				for (int j = 0; j < fieldOrder.size(); j++) {
 					String s = fieldOrder.get(j);
 					try {
-						// Compare against hard-coded strings. make sure this
-						// a.getResources() thing works
+						// Compare against hard-coded strings
 						if (s.equals(a.getResources().getString(
 								R.string.accel_x))) {
 							outRow.put(j + "", row.getString(Fields.ACCEL_X));
@@ -832,7 +832,7 @@ public class DataFieldManager extends Application {
 							outRow.put(j + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
-						outRow.put(j + "", null);
+						outRow.put(j + "", "");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -897,7 +897,7 @@ public class DataFieldManager extends Application {
 			start = false;
 		}
 		
-		String out = sb.toString(); System.out.println("Now: " + out);
+		String out = sb.toString();
 		mEdit.putString("csv_order", out).commit();
 		
 	}
@@ -919,7 +919,6 @@ public class DataFieldManager extends Application {
 		this.realOrder.clear();
 		
 		for (String s : parts) {
-			System.out.println("Piece: " + s);
 			this.realOrder.add(s);
 		}
 		
@@ -927,8 +926,7 @@ public class DataFieldManager extends Application {
 
 	private void getProjectFieldOrder() {
 		for (RProjectField field : projFields) {
-			
-			System.out.println("Real order: " + field.name);
+
 			realOrder.add(field.name);
 			
 			switch (field.type) {
