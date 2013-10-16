@@ -202,9 +202,9 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
 		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
 		return true;
 	}
 
@@ -464,29 +464,32 @@ public class Main extends Activity implements LocationListener {
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
-			int selection = data.getIntExtra(Description.RADIO_SELECTION, -1);
-
-			switch (selection) {
-			case 1:
-				descriptionStr = getResources().getString(
-						R.string.ecosystemChanges_short);
-				break;
-			case 2:
-				descriptionStr = getResources().getString(
-						R.string.foodwebElements_short);
-				break;
-			case 3:
-				descriptionStr = getResources().getString(
-						R.string.habitat_short);
-				break;
-			case 4:
-				descriptionStr = getResources().getString(
-						R.string.invasiveSpecies_short);
-				break;
-			default:
-				descriptionStr = getResources().getString(R.string.other);
-				break;
-			}
+			
+			descriptionStr = getSringExtra(Description.PHOTO_DESCRIPTION, -1);
+			
+//			int selection = data.getIntExtra(Description.RADIO_SELECTION, -1);
+//
+//			switch (selection) {
+//			case 1:
+//				descriptionStr = getResources().getString(
+//						R.string.ecosystemChanges_short);
+//				break;
+//			case 2:
+//				descriptionStr = getResources().getString(
+//						R.string.foodwebElements_short);
+//				break;
+//			case 3:
+//				descriptionStr = getResources().getString(
+//						R.string.habitat_short);
+//				break;
+//			case 4:
+//				descriptionStr = getResources().getString(
+//						R.string.invasiveSpecies_short);
+//				break;
+//			default:
+//				descriptionStr = getResources().getString(R.string.other);
+//				break;
+//			}
 
 			new UploadTask().execute();
 		}
