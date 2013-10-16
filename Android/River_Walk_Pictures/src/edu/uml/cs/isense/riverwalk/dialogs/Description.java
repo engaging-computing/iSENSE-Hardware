@@ -7,31 +7,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import edu.uml.cs.isense.riverwalk.R;
 
 public class Description extends Activity {
-	
-	public static final String RADIO_SELECTION = "radio_selection";
-	
-	private RadioButton rb1;
-	private RadioButton rb2;
-	private RadioButton rb3;
-	private RadioButton rb4;
-	private RadioButton rb5;
+	public static final String PHOTO_DESCRIPTION = "photo_description";
+//	public static final String RADIO_SELECTION = "radio_selection";
+//	
+//	private RadioButton rb1;
+//	private RadioButton rb2;
+//	private RadioButton rb3;
+//	private RadioButton rb4;
+//	private RadioButton rb5;
 	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.description);
-		
-		rb1 = (RadioButton) findViewById(R.id.radioButton1);
-		rb2 = (RadioButton) findViewById(R.id.radioButton2);
-		rb3 = (RadioButton) findViewById(R.id.radioButton3);
-		rb4 = (RadioButton) findViewById(R.id.radioButton4);
-		rb5 = (RadioButton) findViewById(R.id.radioButton5);
-		
+//		
+//		rb1 = (RadioButton) findViewById(R.id.radioButton1);
+//		rb2 = (RadioButton) findViewById(R.id.radioButton2);
+//		rb3 = (RadioButton) findViewById(R.id.radioButton3);
+//		rb4 = (RadioButton) findViewById(R.id.radioButton4);
+//		rb5 = (RadioButton) findViewById(R.id.radioButton5);
+//		
 		if (android.os.Build.VERSION.SDK_INT >= 11)
 			setFinishOnTouchOutside(false);
 		
@@ -39,16 +40,19 @@ public class Description extends Activity {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				int selection = getRadioSelection();
-				if (selection != -1) {
-					Intent ret = new Intent();
-					ret.putExtra(RADIO_SELECTION, selection);
-					setResult(RESULT_OK, ret);
-					finish();
-				} else {
-					// fail
-				}
-				
+				String photo_description = ((EditText) findViewById(R.id.editTextDescribe)).getText().toString();      //descriptionStr = ((EditText) findViewById(R.id.editTextDescribe)).getText().toString();
+				Intent ret = new Intent();
+				ret.putExtra(PHOTO_DESCRIPTION, photo_description);
+//				int selection = getRadioSelection();
+//				if (selection != -1) {
+//					Intent ret = new Intent();
+//					ret.putExtra(RADIO_SELECTION, selection);
+//					setResult(RESULT_OK, ret);
+//					finish();
+//				} else {
+//					// fail
+//				}
+				finish();
 			}
 		});
 		
@@ -58,20 +62,20 @@ public class Description extends Activity {
 	@Override
 	public void onBackPressed() {}
 	
-	int getRadioSelection() {
-		if (rb1.isChecked())
-			return 1;
-		else if (rb2.isChecked())
-			return 2;
-		else if (rb3.isChecked())
-			return 3;
-		else if (rb4.isChecked())
-			return 4;
-		else if (rb5.isChecked())
-			return 5;
-		
-		return -1;
-		
-	}
+//	int getRadioSelection() {
+//		if (rb1.isChecked())
+//			return 1;
+//		else if (rb2.isChecked())
+//			return 2;
+//		else if (rb3.isChecked())
+//			return 3;
+//		else if (rb4.isChecked())
+//			return 4;
+//		else if (rb5.isChecked())
+//			return 5;
+//		
+//		return -1;
+//		
+//	}
 	
 }
