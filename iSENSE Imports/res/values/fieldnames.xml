@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="null_string">Null</string>
+    <!-- iSENSE fields: make sure the items here are equivalent to the fields array in strings.xml -->
+    <string name="null_string">strNullID</string>
     <string name="time">Time</string>                           <!-- 0  -->
     <string name="accel_x">Accel-X</string>                     <!-- 1  -->
     <string name="accel_y">Accel-Y</string>                     <!-- 2  -->
     <string name="accel_z">Accel-Z</string>                     <!-- 3  -->
-    <string name="accel_total">Accel-Total</string>             <!-- 4  -->
+    <string name="accel_total">Accel-Magnitude</string>         <!-- 4  -->
     <string name="latitude">Latitude</string>                   <!-- 5  -->
     <string name="longitude">Longitude</string>                 <!-- 6  -->
     <string name="magnetic_x">Magnetic-X</string>               <!-- 7  -->
     <string name="magnetic_y">Magnetic-Y</string>               <!-- 8  --> 
     <string name="magnetic_z">Magnetic-Z</string>               <!-- 9  -->
-    <string name="magnetic_total">Magnetic-Total</string>       <!-- 10 -->
-    <string name="heading_deg">Heading-Deg</string>             <!-- 11 -->
-    <string name="heading_rad">Heading-Rad</string>             <!-- 12 -->
-    <string name="temperature_c">Temperature-C</string>         <!-- 13 -->
+    <string name="magnetic_total">Magnetic-Magnitude</string>   <!-- 10 -->
+    <string name="heading_deg">Angle (Degrees)</string>         <!-- 11 -->
+    <string name="heading_rad">Angle (Radians)</string>         <!-- 12 -->
+    <string name="temperature_c">Temp. (Celsius)</string>       <!-- 13 -->
     <string name="pressure">Pressure</string>                   <!-- 14 -->
     <string name="altitude">Altitude</string>                   <!-- 15 -->
-    <string name="luminous_flux">Luminous Flux</string>         <!-- 16 -->
-    
-    <string name="temperature_f">Temperature-F</string>         <!-- 17 -->
-    <string name="temperature_k">Temperature-K</string>			<!-- 18 -->
+    <string name="luminous_flux">Light</string>         		<!-- 16 -->
+    <string name="temperature_f">Temp. (Fahrenheit)</string>    <!-- 17 -->
+    <string name="temperature_k">Temp. (Kelvin)</string>		<!-- 18 -->
     
     <string name="compatible">Compatible</string>
     <string name="incompatible">Incompatible</string>
@@ -30,9 +30,7 @@
     <string name="invalidProject">No fields found for this project. 
         This project may have been deleted, or may not exist at all. There is also a
         chance that you are simply not connected to the internet and thus cannot currently
-        get project fields.  The only projects that may be available while not connected
-        to the internet are ones you have used in the past with internet connectivity
-        available. (Hitting \"Okay\" will return you to the configuration menu to select 
+        get project fields.  (Selecting \"OK\" will return you to the configuration menu to select 
         a new project.)
     </string>
     

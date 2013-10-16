@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.datawalk_v2;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -41,6 +42,7 @@ import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
@@ -85,6 +87,10 @@ public class DataWalk extends Activity implements LocationListener,
 	private UploadQueue uq;
 	private SensorManager mSensorManager;
 	private Location loc;
+	//Rajia: Added Previous Location and Location Times
+	private Location prevLoc;
+	long locTime=0;
+	long prevLocTime=0;
 	private Timer recordTimer;
 	private Timer gpsTimer;
 	private Waffle w;
@@ -92,18 +98,18 @@ public class DataWalk extends Activity implements LocationListener,
 	/* iSENSE API Globals and Constants */
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String DEFAULT_PROJECT = "13";
+	private final String DEFAULT_PROJECT = "79";
 	public static final String USERNAME_KEY = "username";
 	public static final String PASSWORD_KEY = "password";
 
 	private String loginName = "";
 	private String loginPass = "";
-	private String projectID = "13";
+	private String projectID = "79";
 	private String projectURL = "";
 	private String dataSetName = "";
 	private String baseprojectURL = "http://isenseproject.org/projects/";
 	private int dataSetID = -1;
-	private String emptyProjectId = "-1";
+	private String emptyProjectId = "79";
 	
 
 	/* Manage Work Flow Between Activities */
@@ -143,6 +149,11 @@ public class DataWalk extends Activity implements LocationListener,
 	private int timerTick = 0;
 	private int waitingCounter = 0;
 	
+	//Rajia: 
+	float distance=0;
+	float velocity=0;
+	float deltaTime = 0;
+	boolean bFirstPoint = true;
 	
 	/* Menu Items */
 
@@ -304,6 +315,7 @@ public class DataWalk extends Activity implements LocationListener,
 		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
 		rateBox = (TextView) findViewById(R.id.RateBx);
 		latLong = (TextView) findViewById(R.id.myLocation);
+		
 		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
 		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
 	}
@@ -467,6 +479,8 @@ public class DataWalk extends Activity implements LocationListener,
 			loc = location;
 			gpsWorking = true;
 		} else {
+			//Rajia will that fix the random velocity problem
+			prevLoc.set(loc);
 			gpsWorking = false;
 		}
 	}
@@ -585,10 +599,11 @@ public class DataWalk extends Activity implements LocationListener,
 		mLocationManager.addGpsStatusListener(this);
 
 		// Check if GPS is enabled. If not, direct user to their settings.
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-			mLocationManager.requestLocationUpdates(
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+					mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(criteria, true), 0, 0,
 					DataWalk.this);
+		}
 		else {
 			Intent i = new Intent(DataWalk.this, NoGps.class);
 			startActivityForResult(i, DIALOG_NO_GPS);
@@ -596,6 +611,8 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Save new GPS points in our loc variable
 		loc = new Location(mLocationManager.getBestProvider(criteria, true));
+		//Rajia 
+		prevLoc = loc;
 	}
 
 	/**
@@ -656,7 +673,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// iSENSE API
 		api = API.getInstance(mContext);
-		api.useDev(true);
+		api.useDev(false);
 
 		// Upload Queue
 		uq = new UploadQueue("data_walk", mContext, api);
@@ -667,6 +684,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// GPS
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	
 		initLocationManager();
 		waitingForGPS();
 
@@ -1087,8 +1105,13 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// If there are 3 or fewer satellites that we are connected, we've
 		// probably lost GPS a lock
-		if (count < 4)
+	    if (count < 4) {
 			gpsWorking = false;
+			//Rajia Will that fix the random velocity problem
+			prevLoc.set(loc);
+			//Rajia: Toasting number of GPS Sattelites - Tablet is driving me crazy
+			Toast.makeText(getApplicationContext(),"Fewer than 4 Sats", Toast.LENGTH_SHORT).show();
+		}
 	} 
 	
 	/**
@@ -1108,18 +1131,50 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Reset timer variables
 		final long startTime = System.currentTimeMillis();
+		
 		elapsedMillis = 0;
 		timerTick = 0;
+		
+		//Rajia Set First Point to false hopefully this will fix the big velocity issue
+		bFirstPoint = true;
 
 		// Creates a new timer that runs every second
 		recordTimer = new Timer();
 		recordTimer.scheduleAtFixedRate(new TimerTask() {
 
 			public void run() {
-
+				
 				// Increase the timerTick count
 				timerTick++;
 
+				//Rajia: Begin Distance and Velocity Calculation
+				//     : Only if GPS is working
+				
+				//Convert Interval to Seconds
+				int nSeconds = mInterval/1000;
+				
+				if (gpsWorking){
+					if (timerTick % nSeconds == 0 ) {
+						
+						//For first point we do not have a previous location yet 
+						//   This will happen only once
+						if (bFirstPoint) {
+							prevLoc.set(loc);
+							bFirstPoint=false;
+						}
+						distance = loc.distanceTo(prevLoc);
+			
+						//Calculate Velocity
+						velocity = distance/nSeconds;
+						
+						//Rajia: Now this location will be the previous one the next time we get here
+						prevLoc.set(loc);
+					}
+				
+				}
+				//Rajia: End Velocity Calculation
+
+				
 				// Update the main UI with the correct number of seconds
 				runOnUiThread(new Runnable() {
 
@@ -1132,32 +1187,43 @@ public class DataWalk extends Activity implements LocationListener,
 							timeElapsedBox.setText("Time Elapsed: " + timerTick
 									+ " seconds");
 						}
+						
+						//Rajia Stealing these Text Boxes for now
+						loggedInAs.setText("Distance: " + roundTwoDecimals(distance)+ " Meters");
+						rateBox.setText("Velocity: " + roundTwoDecimals(velocity *2.23694) + " MPH " + roundTwoDecimals(velocity)+ " M/Sec    ");
+					
 					}
 				});
 
+				
 				// Every n seconds which is determined by interval
 				// (not including time 0)
 				if ((timerTick % (mInterval / 1000)) == 0 && timerTick != 0) {
 
 					// Prepare a new row of data
 					JSONObject dataJSON = new JSONObject();
-
+					
 					// Determine how long you've been recording for
 					elapsedMillis += mInterval;
 					long time = startTime + elapsedMillis;
+					
 
 					try {
 
 						// Store new values into JSON Object
 						dataJSON.put("0", "u " + time);
 						dataJSON.put("1", accel[3]);
-						dataJSON.put("2", loc.getLatitude());
-						dataJSON.put("3", loc.getLongitude());
-
+						//Rajia Store new Velocity values into JSON object
+						dataJSON.put("2", velocity);
+						dataJSON.put("3", loc.getLatitude());
+						dataJSON.put("4", loc.getLongitude());
+						
+				
 						// Save this data point if GPS says it has a lock
 						if (gpsWorking) {
+					
 							dataSet.put(dataJSON);
-
+						
 							// Updated the number of points recorded here and on
 							// the main UI
 							dataPointCount++;
@@ -1165,9 +1231,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 								@Override
 								public void run() {
-									pointsUploadedBox
-											.setText("Points Recorded: "
-													+ dataPointCount);
+									pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
 								}
 
 							});
@@ -1181,6 +1245,15 @@ public class DataWalk extends Activity implements LocationListener,
 
 		}, 0, TIMER_LOOP);
 
+	}
+	
+	//Rajia Added this to format numbers 
+	//  code example lifted from 
+	//      http://www.java-forums.org/advanced-java/4130-rounding-double-two-decimal-places.htm
+	double roundTwoDecimals(double d)
+	{
+	    DecimalFormat twoDForm = new DecimalFormat("#.##");
+	    return Double.valueOf(twoDForm.format(d));
 	}
 
 }

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
@@ -31,8 +32,10 @@ public class DataFieldManager extends Application {
 
 	private ArrayList<RProjectField> projFields;
 	private LinkedList<String> order;
+	private LinkedList<String> realOrder; // the actual fields in the project, used for .csv file header writing
 	private Fields f;
-	private SensorCompatibility sc = new SensorCompatibility();
+	
+	private String CSV_DELIMITER = "-:;_--:-;-;_::-;";
 	
 	/**
 	 * Boolean array of size 19 containing a list of fields enabled for recording data.
@@ -69,6 +72,7 @@ public class DataFieldManager extends Application {
 		this.projID = projID;
 		this.api = api;
 		this.order = new LinkedList<String>();
+		this.realOrder = new LinkedList<String>();
 		this.mContext = mContext;
 		this.f = f;
 	}
@@ -172,6 +176,21 @@ public class DataFieldManager extends Application {
 			projFields = api.getProjectFields(projID);
 			getProjectFieldOrder();
 
+		}
+	}
+	
+	/**
+	 * Sets the DataFieldManager's order array based not on project field matching
+	 * but rather the field's returned from from user field matching.
+	 * 
+	 * @param input
+	 * 		A field list built from the FieldMatching dialog.
+	 */
+	public void setOrder(String input) {
+		String[] fields = input.split(",");
+		
+		for (String s : fields) {
+			order.add(s);
 		}
 	}
 
@@ -534,9 +553,9 @@ public class DataFieldManager extends Application {
 			} else if (s.equals(mContext.getString(R.string.time))) {
 				firstLineWritten = true;
 				if (start)
-					b.append(f.timeMillis);
+					b.append("u " + f.timeMillis);
 				else
-					b.append(", ").append(f.timeMillis);
+					b.append(", ").append("u " + f.timeMillis);
 
 			} else if (s.equals(mContext.getString(R.string.luminous_flux))) {
 				firstLineWritten = true;
@@ -634,35 +653,6 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Determines which sensors are potentially available on the user's device based on
-	 * which sensors devices with a similar API level typically have.
-	 * 
-	 * @return
-	 * 		A {@link edu.uml.cs.isense.dfm.SensorCampatibility} object.
-	 */
-	public SensorCompatibility checkCompatibility() {
-
-		int apiLevel = android.os.Build.VERSION.SDK_INT;
-		int apiVal = 0;
-		int[][] dispatch = sc.compatDispatch;
-
-		if (apiLevel <= 8)
-			apiVal = 0;
-		if (apiLevel > 8 && apiLevel < 14)
-			apiVal = 1;
-		if (apiLevel > 14)
-			apiVal = 2;
-
-		for (int i = 0; i <= 5; i++) {
-			int temp = dispatch[apiVal][i];
-			if (temp == 1)
-				sc.compatible[i] = true;
-		}
-
-		return sc;
-	}
-
-	/**
 	 * Writes the first line in a .csv file for the project you
 	 * are recording data for.  Data can then by appended to this by calling
 	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeSdCardLine() writeSdCardLine()}.
@@ -680,7 +670,8 @@ public class DataFieldManager extends Application {
 		if (projID == -1)
 			return "";
 
-		for (String unitName : this.order) {
+		for (String unitName : this.realOrder) {
+			
 			if (start)
 				b.append(unitName);
 			else
@@ -716,17 +707,20 @@ public class DataFieldManager extends Application {
 	 * 		- An {@link edu.uml.cs.isense.comm.API API} class instance.
 	 * @param c
 	 * 		- The context of the Activity calling this function 
+	 * @param fieldOrder
+	 * 		- The list of fields matched using the FieldMatching class, or null if FieldMatching wasn't used.
 	 * @return
 	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
 	 * 		
 	 */
 	public static String reOrderData(JSONArray data, String projID, API api,
-			Context c) {
+			Context c, LinkedList<String> fieldOrder) {
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
-		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(projID), api,
-				c);
+		if (fieldOrder == null || fieldOrder.size() == 0)
+			fieldOrder = getOrder(Integer.parseInt(projID), api, c);
+		
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
@@ -737,8 +731,7 @@ public class DataFieldManager extends Application {
 				for (int j = 0; j < fieldOrder.size(); j++) {
 					String s = fieldOrder.get(j);
 					try {
-						// Compare against hard-coded strings. make sure this
-						// a.getResources() thing works
+						// Compare against hard-coded strings
 						if (s.equals(a.getResources().getString(
 								R.string.accel_x))) {
 							outRow.put(j + "", row.getString(Fields.ACCEL_X));
@@ -839,7 +832,7 @@ public class DataFieldManager extends Application {
 							outRow.put(j + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
-						outRow.put(j + "", null);
+						outRow.put(j + "", "");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -879,9 +872,63 @@ public class DataFieldManager extends Application {
 			getProjectFieldOrder();
 		}
 	}
+	
+	/**
+	 * Writes the fields for the project out to SharedPreferences, designed to aid
+	 * the writing of .csv files using
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getProjectFieldsAndSetCSVOrder() getProjectFieldsAndSetCSVOrder}
+	 * when prepared to write a .csv file.
+	 * 
+	 */
+	public void writeProjectFields() {
+		
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		
+		StringBuilder sb = new StringBuilder();
+		boolean start = true;
+		
+		for (String s : this.realOrder) {
+			if (start)
+				sb.append(s);
+			else
+				sb.append(CSV_DELIMITER).append(s);
+			
+			start = false;
+		}
+		
+		String out = sb.toString();
+		mEdit.putString("csv_order", out).commit();
+		
+	}
+	
+	/**
+	 * Retrieve the fields written to SharedPreferences from
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeProjectFields() writeProjectFields()},
+	 * primarily designed for writing the header line in a .csv file.
+	 * 
+	 */
+	public void getProjectFieldsAndSetCSVOrder() {
+		
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+		
+		String in = mPrefs.getString("csv_order", "");
+		if (in.equals("")) return;
+		
+		String[] parts = in.split(CSV_DELIMITER);
+		this.realOrder.clear();
+		
+		for (String s : parts) {
+			this.realOrder.add(s);
+		}
+		
+	}
 
 	private void getProjectFieldOrder() {
 		for (RProjectField field : projFields) {
+
+			realOrder.add(field.name);
+			
 			switch (field.type) {
 
 			// Number
@@ -957,7 +1004,7 @@ public class DataFieldManager extends Application {
 				}
 
 				else {
-					order.add(mContext.getString(R.string.null_string));
+					order.add(mContext.getString(R.string.null_string) + field.name);
 					break;
 				}
 
@@ -978,7 +1025,7 @@ public class DataFieldManager extends Application {
 
 			// No match (Just about every other category)
 			default:
-				order.add(mContext.getString(R.string.null_string));
+				order.add(mContext.getString(R.string.null_string) + field.name);
 				break;
 
 			}
@@ -1034,6 +1081,41 @@ public class DataFieldManager extends Application {
 	}
 	
 	/**
+	 * Converts order into a String[]
+	 * 
+	 * @return
+	 * 		order in the form of a String[]
+	 */
+	public String[] convertOrderToStringArray() {
+		
+		String[] sa = new String[order.size()];
+		int i = 0;
+		
+		for (String s : order)
+			sa[i++] = s;
+		
+		return sa;
+	}
+	
+	/**
+	 * Converts a String[] back into a LinkedList of Strings
+	 * 
+	 * @param
+	 * 		sa - the String[] to convert
+	 * @return
+	 * 		sa in the form of a LinkedList of Strings
+	 */
+	public static LinkedList<String> convertStringArrayToLinkedList(String[] sa) {
+	
+		LinkedList<String> lls = new LinkedList<String>();
+		
+		for (String s : sa)
+			lls.add(s);
+		
+		return lls;
+	}
+	
+	/**
 	 * Getter for the Fields object associated with this instance of DataFieldManager
 	 * 
 	 * @return
@@ -1051,6 +1133,80 @@ public class DataFieldManager extends Application {
 	 */
 	public void setFields(Fields fields) {
 		this.f = fields;
+	}
+	
+	/**
+	 * Enables all fields for recording data
+	 */
+	public void enableAllFields() {
+		enabledFields[Fields.TIME] = true;
+		enabledFields[Fields.ACCEL_X] = true;
+		enabledFields[Fields.ACCEL_Y] = true;
+		enabledFields[Fields.ACCEL_Z] = true;
+		enabledFields[Fields.ACCEL_TOTAL] = true;
+		enabledFields[Fields.LATITUDE] = true;
+		enabledFields[Fields.LONGITUDE] = true;
+		enabledFields[Fields.MAG_X] = true;
+		enabledFields[Fields.MAG_Y] = true;
+		enabledFields[Fields.MAG_Z] = true;
+		enabledFields[Fields.MAG_TOTAL] = true;
+		enabledFields[Fields.HEADING_DEG] = true;
+		enabledFields[Fields.HEADING_RAD] = true;
+		enabledFields[Fields.TEMPERATURE_C] = true;
+		enabledFields[Fields.TEMPERATURE_F] = true;
+		enabledFields[Fields.TEMPERATURE_K] = true;
+		enabledFields[Fields.PRESSURE] = true;
+		enabledFields[Fields.ALTITUDE] = true;
+		enabledFields[Fields.LIGHT] = true;
+	}
+	
+	/**
+	 * Set the enabled fields from the acceptedFields parameter. 
+	 * 
+	 * @param acceptedFields LinkedList of field strings
+	 */
+	public void setEnabledFields(LinkedList<String> acceptedFields) {
+		
+		for (String s : acceptedFields) {
+			if (s.equals(getString(R.string.time)))
+				enabledFields[Fields.TIME] = true;
+			if (s.equals(getString(R.string.accel_x)))
+				enabledFields[Fields.ACCEL_X] = true;
+			if (s.equals(getString(R.string.accel_y)))
+				enabledFields[Fields.ACCEL_Y] = true;
+			if (s.equals(getString(R.string.accel_z)))
+				enabledFields[Fields.ACCEL_Z] = true;
+			if (s.equals(getString(R.string.accel_total)))
+				enabledFields[Fields.ACCEL_TOTAL] = true;
+			if (s.equals(getString(R.string.latitude)))
+				enabledFields[Fields.LATITUDE] = true;
+			if (s.equals(getString(R.string.longitude)))
+				enabledFields[Fields.LONGITUDE] = true;
+			if (s.equals(getString(R.string.magnetic_x)))
+				enabledFields[Fields.MAG_X] = true;
+			if (s.equals(getString(R.string.magnetic_y)))
+				enabledFields[Fields.MAG_Y] = true;
+			if (s.equals(getString(R.string.magnetic_z)))
+				enabledFields[Fields.MAG_Z] = true;
+			if (s.equals(getString(R.string.magnetic_total)))
+				enabledFields[Fields.MAG_TOTAL] = true;
+			if (s.equals(getString(R.string.heading_deg)))
+				enabledFields[Fields.HEADING_DEG] = true;
+			if (s.equals(getString(R.string.heading_rad)))
+				enabledFields[Fields.HEADING_RAD] = true;
+			if (s.equals(getString(R.string.temperature_c)))
+				enabledFields[Fields.TEMPERATURE_C] = true;
+			if (s.equals(getString(R.string.temperature_f)))
+				enabledFields[Fields.TEMPERATURE_F] = true;
+			if (s.equals(getString(R.string.temperature_k)))
+				enabledFields[Fields.TEMPERATURE_K] = true;
+			if (s.equals(getString(R.string.pressure)))
+				enabledFields[Fields.PRESSURE] = true;
+			if (s.equals(getString(R.string.altitude)))
+				enabledFields[Fields.ALTITUDE] = true;
+			if (s.equals(getString(R.string.luminous_flux)))
+				enabledFields[Fields.LIGHT] = true;
+		}
 	}
 
 }

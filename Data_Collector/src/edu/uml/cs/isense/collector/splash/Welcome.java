@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +27,8 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
+	public static boolean useDev = true;
+	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
 	private static final int PROJECT_CREATE_REQUESTED    = 101;
 
@@ -38,7 +41,7 @@ public class Welcome extends Activity {
 		mContext = this;
 		w = new Waffle(mContext);
 		api = API.getInstance(mContext);
-		api.useDev(true);
+		api.useDev(useDev);
 		
 		mPrefs = getSharedPreferences("PROJID_WELCOME", 0);
 		
@@ -76,23 +79,32 @@ public class Welcome extends Activity {
 				}
 			}
 		});
+		String selectProjectText = "<font COLOR=\"#0066FF\">" + "Continue With an Existing iSENSE Project" + "</font>"
+				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires Internet)" + "</font>";
+		selectProject.setText(Html.fromHtml(selectProjectText));
 
 		final Button createProject = (Button) findViewById(R.id.welcome_create_project);
 		createProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
-				startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
+				if (!api.hasConnectivity())
+					w.make("You need to have internet connectivity to do this",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				else {
+					Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
+					startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
+				}
 			}
 		});
+		String createProjectText = "<font COLOR=\"#0066FF\">" + "Create a new Project" + "</font>"
+				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires Internet)" + "</font>";
+		createProject.setText(Html.fromHtml(createProjectText));
 		
 		final Button noProject = (Button) findViewById(R.id.welcome_no_project);
 		noProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent iSelectMode = new Intent(mContext, SelectMode.class);
-				iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, false);
-				startActivity(iSelectMode);
+				setGlobalProjAndEnableManual("", false);
 			}
 		});
 
@@ -111,23 +123,20 @@ public class Welcome extends Activity {
 
 				String projID = mPrefs.getString("project_id", "");
 				if (!(projID.equals("") || projID.equals("-1"))) {
-					setGlobalProjAndEnableManual(projID);
+					setGlobalProjAndEnableManual(projID, true);
 				} 
 			}
 		} else if (requestCode == PROJECT_CREATE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				int newProjID = data.getIntExtra(ProjectCreate.NEW_PROJECT_ID, 0);
 				if (newProjID != 0) {
-					setGlobalProjAndEnableManual("" + newProjID);
-				} else {
-					// TODO - we got a bad return
+					setGlobalProjAndEnableManual("" + newProjID, true);
 				}
-				
 			}
 		}
 	}
 	
-	private void setGlobalProjAndEnableManual(String projID) {
+	private void setGlobalProjAndEnableManual(String projID, boolean enable) {
 		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
 		SharedPreferences.Editor mEdit = globalProjPrefs.edit();
 		mEdit.putString("project_id", projID).commit();
@@ -137,7 +146,7 @@ public class Welcome extends Activity {
 		mEdit.commit();
 		
 		Intent iSelectMode = new Intent(mContext, SelectMode.class);
-		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, true);
+		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_AND_CSV, enable);
 		startActivity(iSelectMode);
 	}
 
