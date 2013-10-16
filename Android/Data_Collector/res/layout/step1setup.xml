@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:inputType="text"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:maxLength="5" />
         
         <TextView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/sample_default"
             android:textSize="14sp"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:inputType="phone"
             android:maxLength="5"
             android:digits="1234567890" />
