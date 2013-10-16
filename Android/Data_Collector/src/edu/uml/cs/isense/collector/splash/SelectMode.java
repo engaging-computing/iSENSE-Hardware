@@ -113,12 +113,12 @@ public class SelectMode extends Activity {
 			if (!en) {
 				manualEntry.setEnabled(false);
 				String m = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
-						+ "<br/>" + "<font COLOR=\"#E2C345\">" + "(requires project)" + "</font>";
+						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project)" + "</font>";
 				manualEntry.setText(Html.fromHtml(m));
 				
 				csvUploader.setEnabled(false);
 				String c = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
-						+ "<br/>" + "<font COLOR=\"#E2C345\">" + "(requires project and Internet)" + "</font>";
+						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project and Internet)" + "</font>";
 				csvUploader.setText(Html.fromHtml(c));
 			}
 		}
