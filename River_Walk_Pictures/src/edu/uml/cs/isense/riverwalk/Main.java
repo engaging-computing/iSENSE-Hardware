@@ -31,7 +31,9 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,9 +62,9 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 
-	private static final int MENU_ITEM_BROWSE = 0;
-	private static final int MENU_ITEM_LOGIN = 1;
-	private static final int MENU_ITEM_UPLOAD = 2;
+//	private static final int MENU_ITEM_BROWSE = 0;
+//	private static final int MENU_ITEM_LOGIN = 1;
+//	private static final int MENU_ITEM_UPLOAD = 2;
 
 	private static final int TIMER_LOOP = 1000;
 
@@ -88,8 +90,8 @@ public class Main extends Activity implements LocationListener {
 	private Handler mHandler;
 	private TextView latLong;
 	private TextView queueCount;
-	private static final double DEFAULT_LAT = 42.6404;
-	private static final double DEFAULT_LONG = -71.3533;
+	private static final double DEFAULT_LAT = 0;
+	private static final double DEFAULT_LONG = 0;
 	private long curTime;
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
@@ -159,7 +161,7 @@ public class Main extends Activity implements LocationListener {
 				String experimentNum = mPrefs.getString("project_id", "Error");
 
 				if (experimentNum.equals("Error")) {
-					w.make("Please select an experiment first.",
+					w.make("Please select an project first.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
@@ -198,52 +200,83 @@ public class Main extends Activity implements LocationListener {
 		} else if (w.canPerformTask)
 			super.onBackPressed();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Experiment");
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
-		return true;
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
 	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(0).setEnabled(false);
-			menu.getItem(1).setEnabled(false);
-			menu.getItem(2).setEnabled(false);
-		} else {
-			menu.getItem(0).setEnabled(true);
-			menu.getItem(1).setEnabled(true);
-			menu.getItem(2).setEnabled(true);
-		}
-		return true;
-	}
-
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_ITEM_BROWSE:
-
-			Intent iExperiment = new Intent(getApplicationContext(),
-					Setup.class);
-			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
-
-			return true;
-
-		case MENU_ITEM_LOGIN:
-			startActivityForResult(new Intent(getApplicationContext(),
-					LoginActivity.class), LOGIN_REQUESTED);
-			return true;
-
-		case MENU_ITEM_UPLOAD:
-			manageUploadQueue();
-			return true;
-		}
-
-		return false;
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.MENU_ITEM_UPLOAD:
+	        	manageUploadQueue();
+	            return true;
+	            
+	        case R.id.MENU_ITEM_BROWSE:
+	        	Intent iExperiment = new Intent(getApplicationContext(),
+						Setup.class);
+				startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+	            return true;
+	            
+	        case R.id.MENU_ITEM_LOGIN:
+	        	startActivityForResult(new Intent(getApplicationContext(),
+						LoginActivity.class), LOGIN_REQUESTED);
+	            return true;
+	            
+	        default:
+	            return false;
+	    }
 	}
+	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
+//		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
+//		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
+//		return true;
+//	}
+
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		if (!useMenu) {
+//			menu.getItem(0).setEnabled(false);
+//			menu.getItem(1).setEnabled(false);
+//			menu.getItem(2).setEnabled(false);
+//		} else {
+//			menu.getItem(0).setEnabled(true);
+//			menu.getItem(1).setEnabled(true);
+//			menu.getItem(2).setEnabled(true);
+//		}
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case MENU_ITEM_BROWSE:
+//
+//			Intent iExperiment = new Intent(getApplicationContext(),
+//					Setup.class);
+//			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+//
+//			return true;
+//
+//		case MENU_ITEM_LOGIN:
+//			startActivityForResult(new Intent(getApplicationContext(),
+//					LoginActivity.class), LOGIN_REQUESTED);
+//			return true;
+//
+//		case MENU_ITEM_UPLOAD:
+//			manageUploadQueue();
+//			return true;
+//		}
+//
+//		return false;
+//	}
 
 	@Override
 	protected void onResume() {
@@ -375,33 +408,38 @@ public class Main extends Activity implements LocationListener {
 
 			if (experimentNum.equals("Error")) {
 				uploadError = true;
-				postRunnableWaffleError("No experiment selected to upload pictures to");
+				postRunnableWaffleError("No project selected to upload pictures to");
 				return;
 			}
 
-			if (dfm == null)
+			//if (dfm == null)
 				initDfm();
 
 			JSONArray dataJSON = new JSONArray();
 			JSONObject dataRow = new JSONObject();
 			if (loc.getLatitude() != 0) {
 				f.timeMillis = curTime;
+				System.out.println("curTime =" + f.timeMillis);
 				f.latitude = loc.getLatitude();
+				System.out.println("Latitude =" + f.latitude);
 				f.longitude = loc.getLongitude();
+				System.out.println("Longitude =" + f.longitude);
 				dataRow = dfm.putData();
 			} else {
 				f.timeMillis = curTime;
-				f.latitude = DEFAULT_LAT;
+				f.latitude = DEFAULT_LAT;   
 				f.longitude = DEFAULT_LONG;
 				dataRow = dfm.putData();
 			}
 			dataJSON.put(dataRow);
 
-			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()  //data set to be uploaded
 					.toString() + ": " + descriptionStr,
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
 
+			System.out.println("experimentNum = " + experimentNum);
+			
 			uq.addDataSetToQueue(ds);
 
 		}
@@ -410,10 +448,12 @@ public class Main extends Activity implements LocationListener {
 	private void initDfm() {
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		String experimentInput = mPrefs.getString("project_id", "");
-
+		System.out.println("experimentInput ="+ experimentInput);
 		dfm = new DataFieldManager(Integer.parseInt(experimentInput), api,
 				mContext, f);
-		dfm.getOrder();
+		dfm.getOrderWithExternalAsyncTask();
+		dfm.enableAllFields();
+		System.out.println("order =" + dfm.getOrderList());
 	}
 
 	@Override
@@ -463,29 +503,8 @@ public class Main extends Activity implements LocationListener {
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
-			int selection = data.getIntExtra(Description.RADIO_SELECTION, -1);
-
-			switch (selection) {
-			case 1:
-				descriptionStr = getResources().getString(
-						R.string.ecosystemChanges_short);
-				break;
-			case 2:
-				descriptionStr = getResources().getString(
-						R.string.foodwebElements_short);
-				break;
-			case 3:
-				descriptionStr = getResources().getString(
-						R.string.habitat_short);
-				break;
-			case 4:
-				descriptionStr = getResources().getString(
-						R.string.invasiveSpecies_short);
-				break;
-			default:
-				descriptionStr = getResources().getString(R.string.other);
-				break;
-			}
+			
+			descriptionStr = Description.photo_description;  // set descriptionStr equal to photo_description in Description.java
 
 			new UploadTask().execute();
 		}
@@ -503,6 +522,7 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	public void onProviderEnabled(String provider) {
+		
 	}
 
 	@Override
@@ -539,7 +559,7 @@ public class Main extends Activity implements LocationListener {
 			OrientationManager.enableRotation(Main.this);
 
 			if (status400) {
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
+				w.make("Your data cannot be uploaded to this project.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else if (uploadError) {
 				// Do nothing - postRunnableWaffleError takes care of this
@@ -631,7 +651,8 @@ public class Main extends Activity implements LocationListener {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-
+						
+						Log.d("tag", "latitude ="+ loc.getLatitude());
 						if (loc.getLatitude() != 0)
 							latLong.setText("Lat: " + loc.getLatitude()
 									+ "\nLong: " + loc.getLongitude());
