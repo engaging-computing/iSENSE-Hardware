@@ -183,6 +183,11 @@
             android:label="Select a File"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
 
         <service android:name="edu.uml.cs.isense.collector.DataCollectorService" >
         </service>
