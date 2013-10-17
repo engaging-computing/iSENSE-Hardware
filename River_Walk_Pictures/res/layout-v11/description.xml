@@ -21,7 +21,11 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textDescribe"
         android:ems="10" 
-        android:inputType="text"/>
+        android:maxLength="50"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences"
+        android:textCursorDrawable="@null"/>
 
     <Button
         android:id="@+id/description_okay"
