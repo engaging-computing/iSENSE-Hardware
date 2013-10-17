@@ -686,7 +686,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 					(String) ds.getName());
 
 			scrollQueue.addView(data, layoutParams);
-			// ds.setUploadable(true);
 			data.setContentDescription("" + ds.key);
 
 			data.setOnClickListener(new OnClickListener() {
@@ -748,7 +747,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 					(String) ds.getName());
 
 			scrollQueue.addView(pic, layoutParams);
-			// ds.setUploadable(true);
 			pic.setContentDescription("" + ds.key);
 			pic.setTag(QUEUE_BOX_SELECTED);
 
@@ -806,7 +804,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 					(String) ds.getName());
 
 			scrollQueue.addView(both, layoutParams);
-			// ds.setUploadable(true);
 			both.setContentDescription("" + ds.key);
 			both.setTag(QUEUE_BOX_SELECTED);
 
