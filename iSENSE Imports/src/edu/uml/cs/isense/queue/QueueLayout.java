@@ -2,6 +2,9 @@ package edu.uml.cs.isense.queue;
 
 import java.util.LinkedList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -73,66 +76,68 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private API api;
 	private DataFieldManager dfm;
 	
+	private LinkedList<String> dataSetUploadStatus;
+
 	/**
 	 * This class is used to cache projects and fields from user field matching
-	 * for the current QueueLayout instance.  This way, if a user performs field
+	 * for the current QueueLayout instance. This way, if a user performs field
 	 * matching on a project, this class will be used internally to ensure the
-	 * user doesn't have to continually perform field matching for the same 
+	 * user doesn't have to continually perform field matching for the same
 	 * project ID.
 	 */
 	private class CachedFieldDatabase {
-		
+
 		private class QLProject {
 			private LinkedList<String> projects;
 			private LinkedList<LinkedList<String>> fields;
-			
+
 			public QLProject() {
 				this.projects = new LinkedList<String>();
-				this.fields   = new LinkedList<LinkedList<String>>();
+				this.fields = new LinkedList<LinkedList<String>>();
 			}
-			
+
 			public void addProject(String projID, LinkedList<String> projFields) {
 				this.projects.add(projID);
 				this.fields.add(projFields);
 			}
-			
+
 			public int count() {
 				return projects.size();
 			}
-			
+
 			public String getProjectAt(int i) {
 				return projects.get(i);
 			}
-			
+
 			public LinkedList<String> getFieldsAt(int i) {
 				return fields.get(i);
 			}
-			
+
 		}
-		
+
 		private QLProject p;
-		
+
 		public CachedFieldDatabase() {
 			this.p = new QLProject();
 		}
-		
+
 		public void addProject(String projID, LinkedList<String> projFields) {
 			this.p.addProject(projID, projFields);
 		}
-		
+
 		public LinkedList<String> getFieldsForProject(String projID) {
-			
+
 			for (int i = 0; i < p.count(); i++) {
 				String s = p.getProjectAt(i);
 				if (s.equals(projID))
 					return p.getFieldsAt(i);
 			}
-			
+
 			return null;
 		}
-		
+
 	}
-	
+
 	private CachedFieldDatabase cfd;
 
 	@Override
@@ -144,7 +149,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		w = new Waffle(mContext);
 
 		api = API.getInstance(mContext);
-		
+
 		cfd = new CachedFieldDatabase();
 
 		Bundle extras = getIntent().getExtras();
@@ -237,6 +242,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					setResultAndFinish(RESULT_OK);
 					return;
 				} else {
+					dataSetUploadStatus = new LinkedList<String>();
 					new UploadSDTask().execute();
 					// clear the queue so we can re-add un-uploaded data sets
 					// from the mirrorQueue
@@ -323,18 +329,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 			createRunnable(uploadSet);
 
 			OrientationManager.disableRotation(QueueLayout.this);
-
-			dia = new ProgressDialog(QueueLayout.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while \"" + uploadSet.getName()
-					+ "\" is uploaded...");
-			dia.setCancelable(false);
-			try {
-				dia.show();
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-				dialogShow = false;
-			}
+			if (doThings) {
+				dia = new ProgressDialog(QueueLayout.this);
+				dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				dia.setMessage("Please wait while \"" + uploadSet.getName()
+						+ "\" is uploaded...");
+				dia.setCancelable(false);
+				try {
+					dia.show();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+					dialogShow = false;
+				}
+			} else
+				dia = null;
 
 		}
 
@@ -351,24 +359,44 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(Void voids) {
-			Waffle w = new Waffle(mContext);
 
 			if (!doThings) {
-				w.make("\"" + uploadSet.getName() + "\" chosen not to upload",
-						Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+			
+				dataSetUploadStatus.add(uploadSet.getName() + 
+						": <font COLOR=\"#888888\">selected not to upload</font>");
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
-			} else if (dataSetID != -1)
-				w.make("Upload success for \"" + uploadSet.getName() + "\"",
-						Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-			else if (uploadSet.getProjID().equals("-1")) {
-				w.make("Select a project first for \"" + uploadSet.getName()
-						+ "\"", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			
+			} else if (dataSetID != -1) {
+
+				dataSetUploadStatus.add(uploadSet.getName() + 
+						": <font COLOR=\"#07B50A\">upload successful</font>");
+			
+			} else if (uploadSet.getProjID().equals("-1")) {
+				
+				dataSetUploadStatus.add(uploadSet.getName() + 
+						": <font COLOR=\"#D9A414\">requires a project first</font>");
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
-			} else {
-				w.make("Upload failed - project is closed, deleted, or contains broken data sets",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+			
+			} else if (dataSetID == -1) {
+				
+				// try to see if the data was formatted incorrectly (i.e. was a JSONArray, not JSONObject)
+				JSONObject data = null;
+				try {
+					data = new JSONObject(uploadSet.getData());
+				} catch (JSONException e) {
+					data = null;
+				} finally {
+					if (data != null) {
+						dataSetUploadStatus.add(uploadSet.getName() + 
+								": <font COLOR=\"#ED0909\">project for this data set may not exist</font>");
+					} else {
+						dataSetUploadStatus.add(uploadSet.getName() + 
+								": <font COLOR=\"#ED0909\">data set formatted incorrectly</font>");
+					}	
+				}
+				
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			}
@@ -378,13 +406,23 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			if (uq.mirrorQueue.isEmpty()) {
 				uq.storeAndReRetrieveQueue(true);
+				
+				String[] sa = new String[dataSetUploadStatus.size()];
+				int i = 0;
+				
+				for (String s : dataSetUploadStatus)
+					sa[i++] = s;
+				
+				Intent iSum = new Intent(mContext, QueueSummary.class);
+				iSum.putExtra(QueueSummary.SUMMARY_ARRAY, sa);
+				startActivity(iSum);
+				
 				setResultAndFinish(RESULT_OK);
 				return;
 			} else {
-				// if (uploadSuccess)
 				continueUploading();
 			}
-
+			
 			OrientationManager.enableRotation(QueueLayout.this);
 		}
 	}
@@ -491,10 +529,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 		} else if (requestCode == ALTER_DATA_PROJ_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
+				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE",
+						0);
 				String projectInput = mPrefs.getString("project_id", "");
-				
-				LinkedList<String> fields = cfd.getFieldsForProject(projectInput);
+
+				LinkedList<String> fields = cfd
+						.getFieldsForProject(projectInput);
 				if (fields != null) {
 					QDataSet alter = lastDataSetLongClicked;
 					alter.setProj(projectInput);
@@ -507,7 +547,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					addViewToScrollQueue(alter);
 				} else
 					new PrepForFieldMatchTask().execute();
-				
+
 			}
 		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -535,11 +575,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 					iProj.putExtra("from_where", "queue");
 					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
 				} else {
-					SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
-					String projectInput = mPrefs.getString("project_id", "No Proj.");
-					
+					SharedPreferences mPrefs = getSharedPreferences(
+							"PROJID_QUEUE", 0);
+					String projectInput = mPrefs.getString("project_id",
+							"No Proj.");
+
 					cfd.addProject(projectInput, FieldMatching.acceptedFields);
-					
+
 					QDataSet alter = lastDataSetLongClicked;
 					alter.setProj(projectInput);
 					alter.setFields(FieldMatching.acceptedFields);
@@ -555,12 +597,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 				Intent iProj = new Intent(mContext, Setup.class);
 				iProj.putExtra("from_where", "queue");
 				startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
-			}	
+			}
 		}
 
 	}
 
-	// Task for getting dfm's order array before calling the FieldMatching dialog
+	// Task for getting dfm's order array before calling the FieldMatching
+	// dialog
 	private class PrepForFieldMatchTask extends AsyncTask<Void, Integer, Void> {
 
 		private ProgressDialog dia;
@@ -598,12 +641,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 			dia.cancel();
 
 			OrientationManager.enableRotation(QueueLayout.this);
-			
+
 			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
 
 			String[] dfmOrderList = dfm.convertOrderToStringArray();
 
 			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST, dfmOrderList);
+			iFieldMatch.putExtra(FieldMatching.SHOULD_BUILD_PREFS_STRING, false);
 			startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
 		}
 	}
