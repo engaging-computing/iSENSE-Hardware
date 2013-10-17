@@ -621,7 +621,7 @@ static RPerson *currentUser;
  *
  * @param projectId The project ID to upload to
  * @param mediaToUpload The file to upload
- * @return ??? or -1 if upload fails
+ * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
        
@@ -649,7 +649,7 @@ static RPerson *currentUser;
     // add image data   
     if (mediaToUpload) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"upload\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:mediaToUpload];
         [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -677,8 +677,10 @@ static RPerson *currentUser;
         NSLog(@"Error received from server: %@", requestError);
         return -1;
     }
+    
+    NSNumber *mediaObjectId = (NSNumber *)urlResponse;
        
-    return [urlResponse statusCode];
+    return mediaObjectId.intValue;
 }
 
 /**
@@ -714,7 +716,7 @@ static RPerson *currentUser;
     // add image data
     if (mediaToUpload) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"upload\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:mediaToUpload];
         [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];

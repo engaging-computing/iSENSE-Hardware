@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -89,6 +90,9 @@ public class SelectMode extends Activity {
 				startActivity(iME);
 			}
 		});
+		String manualEntryText = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
+				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires project)" + "</font>";
+		manualEntry.setText(Html.fromHtml(manualEntryText));
 
 		final Button csvUploader = (Button) findViewById(R.id.select_mode_csv_uploader);
 		csvUploader.setOnClickListener(new OnClickListener() {
@@ -98,6 +102,9 @@ public class SelectMode extends Activity {
 				startActivityForResult(iFileBrowse, UPLOAD_CSV_REQUESTED);
 			}
 		});
+		String csvUploaderText = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
+				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires project and Internet)" + "</font>";
+		csvUploader.setText(Html.fromHtml(csvUploaderText));
 
 		// Determine if we should disable manual entry and .csv uploader
 		Bundle extras = getIntent().getExtras();
@@ -105,7 +112,14 @@ public class SelectMode extends Activity {
 			boolean en = extras.getBoolean(ENABLE_MANUAL_AND_CSV);
 			if (!en) {
 				manualEntry.setEnabled(false);
+				String m = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
+						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project)" + "</font>";
+				manualEntry.setText(Html.fromHtml(m));
+				
 				csvUploader.setEnabled(false);
+				String c = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
+						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project and Internet)" + "</font>";
+				csvUploader.setText(Html.fromHtml(c));
 			}
 		}
 
