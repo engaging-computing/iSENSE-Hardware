@@ -271,6 +271,7 @@
     
     if (data) data = nil;
     data = [[NSMutableArray alloc] init];
+    [self addAllFieldsToOrder];
     
     for (NSString *s in order) {
         if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]]) {
@@ -450,7 +451,14 @@
     NSMutableArray *row;
     
     [self getFieldOrderOfProject:projID];
+    [order addObject:[FieldGrabber grabField:@"accel_x"]];
+    [order addObject:[FieldGrabber grabField:@"accel_y"]];
+    [order addObject:[FieldGrabber grabField:@"accel_z"]];
+    [order addObject:[FieldGrabber grabField:@"accel_total"]];
+    [order addObject:[FieldGrabber grabField:@"time"]];
 
+    NSLog(@"oldData: %@", oldData);
+    
     for (int i = 0; i < [oldData count]; i++) {
         @try {
             row = [oldData objectAtIndex:i];
@@ -460,7 +468,9 @@
             for (int j = 0 ; j < order.count ; j++) {
                 NSString *s = [order objectAtIndex:j];
                 @try {
+                    NSLog(@"s = %@", s);
                     if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]]) {
+                        NSLog(@"object: %@", row);
                         [outRow setObject:[row objectAtIndex:fACCEL_X] forKey:[NSString stringWithFormat:@"%d", j]];
                         continue;
                     }
@@ -536,21 +546,23 @@
                         [outRow setObject:[row objectAtIndex:fPRESSURE] forKey:[NSString stringWithFormat:@"%d", j]];
                         continue;
                     }
+                    NSLog(@"NULLFROG");
                     [outRow setObject:nil forKey:[NSString stringWithFormat:@"%d", j]];
                 }
                 @catch (NSException *exception) {
-                    //
+                    NSLog(@"Problems");
                 }
             }
             
-        [outData addObject:outRow];
+            [outData addObject:outRow];
+            NSLog( @"OutData: %@", outData );
         }
         @catch (NSException *exception) {
-            //
+            NSLog(@"99 Problems");
         }
     }
         
-    return outData;
+    return [NSString stringWithFormat:@"%@", outData];
 }
 
 

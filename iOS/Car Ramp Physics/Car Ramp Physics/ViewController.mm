@@ -480,12 +480,8 @@
         }
     });
     
-    if ([API hasConnectivity]){
-        //Save as JSONObject
-        [dataToBeOrdered addObject:[dfm putDataFromFields:fieldsRow]];
-    } else {
-        [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
-    }
+    [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
+    [menuButton setEnabled:NO];
         
     
     
@@ -509,6 +505,7 @@
     // Stop Timers
     [timer invalidate];
     [recordDataTimer invalidate];
+    [menuButton setEnabled:YES];
     
     // Stop Sensors
     if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
@@ -557,6 +554,7 @@
     // Stop Timers
     [timer invalidate];
     [recordDataTimer invalidate];
+    [menuButton setEnabled:YES];
     
     // Stop Sensors
     if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
@@ -665,6 +663,7 @@
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     bool uploadable = false;
+    [menuButton setEnabled:YES];
     
     if (![API hasConnectivity])
         expNum = -1;
@@ -672,7 +671,7 @@
     if (expNum > 1) uploadable = true;
     
     NSLog(@"Bla");
-    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setProjID:[NSNumber numberWithInt:expNum]];
@@ -692,7 +691,10 @@
     
     if ([API hasConnectivity]) {
         
-        
+        /** REORDER DATA HERE **/
+        NSLog(@"Data to be ordered: %@", dataToBeOrdered);
+        NSString *result = [dfm reOrderData:dataToBeOrdered forProjectID:expNum];
+        NSLog(@"Reorder result: %@", result);
         
         if ([[api getCurrentUser].name isEqualToString:@""]) {
             [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
@@ -800,7 +802,7 @@
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
     RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Settings" action:settingsBlock];
-    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Experiment" action:codeBlock];
+    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
     RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];

@@ -16,6 +16,7 @@
 		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7636B54E179EC3BC00DE6C7C /* QueueCell.m */; };
+		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099C2178DD92D00425A27 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BB178DD92D00425A27 /* button_dark.png */; };
 		765099C5178DD92D00425A27 /* button_light_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BE178DD92D00425A27 /* button_light_long.png */; };
 		765099C6178DD92D00425A27 /* button_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BF178DD92D00425A27 /* button_light.png */; };
@@ -127,6 +128,7 @@
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		7636B54D179EC3BC00DE6C7C /* QueueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
 		7636B54E179EC3BC00DE6C7C /* QueueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueCell.m; sourceTree = "<group>"; };
+		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		765099BB178DD92D00425A27 /* button_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_dark.png; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */,
 				76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */,
 				7655BCDA17AC2064005FA0AD /* libiSENSE_API.a in Frameworks */,
 				76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */,
@@ -251,6 +254,7 @@
 		7669F01D178B275C00E51AD0 = {
 			isa = PBXGroup;
 			children = (
+				76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */,
 				76A4916617A1585A007F5E90 /* SystemConfiguration.framework */,
 				7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */,
 				7669F02F178B275C00E51AD0 /* Car Ramp Physics */,
