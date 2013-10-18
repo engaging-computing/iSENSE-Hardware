@@ -92,6 +92,16 @@
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
             android:name=".CarRampLoginActivity"
             android:label="Login to iSENSE"
             android:theme="@style/theme_dialog_white" />
