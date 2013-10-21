@@ -24,7 +24,6 @@
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
         mainView.backgroundColor = [HexColor colorWithHexString:@"EEEEEE"];
         self.view = mainView;
-        [mainView release];
         
         // Prepare ExperimentInfo Frame
         experimentInfo = [[UIView alloc] initWithFrame:CGRectMake(325, 42, 433, self.view.bounds.size.height - 44)];
@@ -37,7 +36,7 @@
         [self setCenter:experimentInfo forSpinner:experimentInfoSpinner];
         
         // Prepare choose experiment button
-        chooseExperiment = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
+        chooseExperiment = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 170, experimentInfo.frame.size.width - 40, 100);
         [chooseExperiment setTitleColor:[HexColor colorWithHexString:@"5C93DB"] forState:UIControlStateNormal];
         [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
@@ -48,7 +47,6 @@
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - NAVIGATION_CONTROLLER_HEIGHT)];
         mainView.backgroundColor = [UIColor whiteColor];
         self.view = mainView;
-        [mainView release];
     }
     
     // Prepare search bar
@@ -85,7 +83,6 @@
     // Load the first 10 experiments. (And more if screen size is large.)
     ISenseSearch *newSearch = [[ISenseSearch alloc] init];
     [self updateScrollView:newSearch];
-    [newSearch release];
     
 }
 
@@ -180,9 +177,7 @@
    
     ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:query searchType:RECENT page:1 andBuildType:NEW];
     [self updateScrollView:newSearch];
-    [newSearch release];
     
-    [query release];
     
     [scrollView addSubview:bottomSpinnerBlock];
     [experimentSpinner startAnimating];
@@ -201,12 +196,11 @@
     if (!(caller == lastExperimentClicked)) {
         if (lastExperimentClicked) {
             [lastExperimentClicked switchToDarkImage:FALSE];
-            [lastExperimentClicked release];
         } else  {
             experimentInfo.hidden = NO;
         }
         
-        lastExperimentClicked = [caller retain];
+        lastExperimentClicked = caller;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             
@@ -247,7 +241,6 @@
         // Add image to experimentInfo
         dispatch_async(dispatch_get_main_queue(), ^{
             [experimentInfo addSubview:imageView];
-            [imageView release];
         });
     } else {
         imageView.image = [UIImage imageNamed:@"novis_photo.png"];
@@ -256,7 +249,6 @@
         // Add image to experimentInfo
         dispatch_async(dispatch_get_main_queue(), ^{
             [experimentInfo addSubview:imageView];
-            [imageView release];
         });
 
     }
@@ -292,8 +284,6 @@
         [experimentInfo addSubview:chooseExperiment];   
 
         // Release subviews
-        [experimentTitle release];
-        [additionalInfo release];
     
         [experimentInfoSpinner stopAnimating];
     });
@@ -326,10 +316,10 @@
         
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSMutableArray *experiments = [[isenseAPI getExperiments:[NSNumber numberWithInt:iSS.page]
+        NSMutableArray *experiments = [isenseAPI getExperiments:[NSNumber numberWithInt:iSS.page]
                                                        withLimit:[NSNumber numberWithInt:15]
                                                        withQuery:iSS.query
-                                                         andSort:[iSS searchTypeToString]] retain];
+                                                         andSort:[iSS searchTypeToString]];
                         
         dispatch_async(dispatch_get_main_queue(), ^{
             // remove the spinner
@@ -357,7 +347,6 @@
                                                                          target:self
                                                                          action:@selector(onExperimentButtonClicked:)];                
                 [scrollView addSubview:block];
-                [block release];
                 maxHeight += 54; // adds 4 pixels of padding
             }
             
@@ -365,7 +354,6 @@
                 UILabel *noExperimentsFound = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 310, 20)];
                 noExperimentsFound.text = @"No experiments found.";
                 [scrollView addSubview:noExperimentsFound];
-                [noExperimentsFound release];
                 maxHeight += 20;
             }
             
@@ -388,7 +376,6 @@
                 [self updateScrollView:iSS];
             }
     
-            [experiments release];
     
         });
         
@@ -403,13 +390,9 @@
         
         ISenseSearch *newSearch = [[ISenseSearch alloc] initWithQuery:currentQuery searchType:RECENT page:(currentPage + 1) andBuildType:APPEND];
         [self updateScrollView:newSearch];
-        [newSearch release];
         
     }
 }
 
-- (void) dealloc {
-    [super dealloc];
-}
 
 @end

@@ -57,13 +57,11 @@
                                                                   target:self
                                                                   action:@selector(displayMenu:)];
     self.navigationItem.rightBarButtonItem = menuButton;
-    [menuButton release];
     
     UITapGestureRecognizer *tapGestureM = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                   action:@selector(hideKeyboard)];
     tapGestureM.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGestureM];
-    [tapGestureM release];
     
     [self initLocations];
     
@@ -107,17 +105,10 @@
     sessionNameInput.tag = TAG_DEFAULT;
     
     if (rds == nil) {
-        rds = new RotationDataSaver;
-        rds->doesHaveName = false;
-        rds->doesHaveData = false;
-        rds->sesName = [[[NSString alloc] init] retain];
-        rds->data = [[[NSMutableArray alloc] init] retain];
-        for (NSInteger i = 0; i < 100; ++i)
-            [rds->data addObject:[NSNull null]];
-        
+        rds = [[RotationDataSaver alloc] init];
     } else {
-        if (rds->doesHaveName)
-            sessionNameInput.text = rds->sesName;
+        if ([rds doesHaveName])
+            sessionNameInput.text = [rds sesName];
     }
     
     // experiment number
@@ -131,8 +122,8 @@
             [self cleanRDSData];
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
-            if (rds != nil && rds->doesHaveData)
-                [self fillDataFieldEntryList:expNum withData:rds->data];
+            if (rds != nil && [rds doesHaveData])
+                [self fillDataFieldEntryList:expNum withData:[rds data]];
             else
                 [self fillDataFieldEntryList:expNum withData:nil];
         }
@@ -143,7 +134,7 @@
             expNum = exp;
             expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
-            if (rds != nil) rds->doesHaveData = true;
+            if (rds != nil) rds.doesHaveData = true;
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
             if (!initialExpDialogOpen) {
@@ -155,7 +146,6 @@
                                                         otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
                 message.tag = MANUAL_MENU_EXPERIMENT;
                 [message show];
-                [message release];
                 
                 expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
             }
@@ -177,7 +167,7 @@
     // DataSaver from Data_CollectorAppDelegate
     if (dataSaver == nil) {
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
-        NSLog(@"Current count = %d", dataSaver.count);
+        NSLog(@"Current count = %d", dataSaver.dataQueue.count);
     }
     
     [self initLocations];
@@ -186,10 +176,10 @@
 }
 
 - (void) cleanRDSData {
-    rds->doesHaveData = false;
-    [rds->data removeAllObjects];
+    rds.doesHaveData = false;
+    [rds.data removeAllObjects];
     for (NSInteger i = 0; i < 100; ++i)
-        [rds->data addObject:[NSNull null]];
+        [rds.data addObject:[NSNull null]];
 }
 
 // Sets up listeners for keyboard
@@ -312,25 +302,22 @@
     if (textField.tag >= TAG_TEXT) {
         if (textField.text.length > 0) {
             int TAG_VAL = (lastField.tag >= TAG_NUMERIC) ? TAG_NUMERIC : TAG_TEXT;
-            NSString *text = [lastField.text retain];
-            rds->doesHaveData = true;
-            [rds->data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:text];
-            [text release];
+            NSString *text = lastField.text;
+            rds.doesHaveData = true;
+            [rds.data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:text];
         } else {
             int TAG_VAL = (lastField.tag >= TAG_NUMERIC) ? TAG_NUMERIC : TAG_TEXT;
-            [rds->data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:[NSNull null]];
+            [rds.data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:[NSNull null]];
         }
     } else {
         if (sessionNameInput.text.length > 0) {
-            rds->doesHaveName = true;
-            rds->sesName = [[sessionNameInput text] retain];
+            rds.doesHaveName = true;
+            rds.sesName = [sessionNameInput text];
         } else {
-            rds->doesHaveName = false;
+            rds.doesHaveName = false;
         }
     }
-    /* should probably be a 
-     [test release];
-     here */
+    
 }
 
 
@@ -355,23 +342,12 @@
 }
 
 - (void) dealloc {
-	[logo release];
-	[loggedInAsLabel release];
-	[expNumLabel release];
-	[upload release];
-	[clear release];
-	[sessionNameInput release];
-	[media release];
-	[scrollView release];
     
-    [locationManager release];
-    locationManager = nil;
     
     [self unregisterKeyboardNotifications];
     
     //[rds release];
     
-	[super dealloc];
 }
 
 - (void) initLocations {
@@ -386,9 +362,9 @@
 
 // Reset address fields for next session
 - (void)resetAddressFields {
-    city = [[NSString alloc] initWithString:@"N/a"];
-    country = [[NSString alloc] initWithString:@"N/a"];
-    address = [[NSString alloc] initWithString:@"N/a"];
+    city = @"N/A";
+    country = @"N/A";
+    address = @"N/A";
 }
 
 // method not called on real device - don't assign a location to a global variable here
@@ -434,9 +410,8 @@
                 hasSessionName = FALSE;
         
             else {
-                NSMutableArray *dataJSON = [[self getDataFromFields] retain];
+                NSMutableArray *dataJSON = [self getDataFromFields];
                 [self saveDataSet:dataJSON withDescription:@"Data set from iOS Data Collector - Manual Entry."];
-                [dataJSON release];
                 uploadSuccess = TRUE;
             }
         
@@ -470,7 +445,6 @@
     [message setTag:CLEAR_FIELDS_DIALOG];
     [message setAlertViewStyle:UIAlertViewStyleDefault];
     [message show];
-    [message release];
 }
 
 - (IBAction) mediaOnClick:(id)sender {
@@ -489,7 +463,6 @@
                                  otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
-	[popupQuery release];
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -500,11 +473,10 @@
 	switch (buttonIndex) {
         case MANUAL_MENU_UPLOAD:
             
-            if (dataSaver.count > 0) {
+            if (dataSaver.dataQueue.count > 0) {
                 queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
                 queueUploader.title = @"Manage and Upload Sessions";
                 [self.navigationController pushViewController:queueUploader animated:YES];
-                [queueUploader release];
             } else {
                 [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
             }
@@ -519,7 +491,6 @@
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
             message.tag = MANUAL_MENU_EXPERIMENT;
             [message show];
-            [message release];
             
 			break;
             
@@ -536,7 +507,6 @@
             [message textFieldAtIndex:0].delegate = self;
             [message textFieldAtIndex:1].delegate = self;
             [message show];
-            [message release];
             
             break;
             
@@ -571,7 +541,6 @@
             [message textFieldAtIndex:0].tag = TAG_MANUAL_EXP;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
@@ -582,7 +551,6 @@
             browseView.chosenExperiment = &expNum;
             browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
@@ -609,7 +577,6 @@
                 
                 [message setAlertViewStyle:UIAlertViewStyleDefault];
                 [message show];
-                [message release];
                 
            }
             
@@ -639,7 +606,7 @@
         if (buttonIndex != OPTION_CANCELED) {
             sessionNameInput.text = @"";
             
-            rds->doesHaveName = false;
+            rds.doesHaveName = false;
             [self cleanRDSData];
             
             for (UIView *element in scrollView.subviews) {
@@ -789,7 +756,7 @@
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         
-        NSMutableArray *fieldOrder = [[iapi getExperimentFields:[NSNumber numberWithInt:eid]] retain];
+        NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -813,7 +780,6 @@
                     if (data == nil)
                         scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
                     else {
-                        [data retain];
                         scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 }
@@ -822,7 +788,6 @@
                 
             }
             
-            [fieldOrder release];
             
             scrollHeight += SCROLLVIEW_TEXT_HEIGHT;
             CGFloat scrollWidth = scrollView.frame.size.width;
@@ -838,7 +803,6 @@
                 noFields.backgroundColor = [UIColor clearColor];
                 noFields.textColor = [HexColor colorWithHexString:@"000000"];
                 [scrollView addSubview: noFields];
-                [noFields release];
             } else {
                 // adjust scrollview's bottom bit
                 UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
@@ -909,9 +873,8 @@
     fieldContents.font = [UIFont systemFontOfSize:24];
     fieldContents.borderStyle = UITextBorderStyleRoundedRect;
     if (data != nil && !([data isKindOfClass:[NSNull class]])) {
-        NSString *tmp = [[NSString stringWithString:data] retain];
+        NSString *tmp = [NSString stringWithString:data];
         fieldContents.text = tmp;
-        [tmp release];
     }
     
     if (type != TYPE_DEFAULT) {
@@ -941,8 +904,6 @@
     [scrollView addSubview:fieldName];
     [scrollView addSubview:fieldContents];
     
-    [fieldName release];
-    [fieldContents release];
     
     return (int) Y_FIELDCONTENTS;
 }
@@ -1022,9 +983,8 @@
 
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
     [dataEncapsulator addObject:data];
-    [data release];
     
-    return [dataEncapsulator autorelease];
+    return dataEncapsulator;
 
 }
 
@@ -1047,8 +1007,7 @@
     spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
-    [spinner release];
-    return [message autorelease];
+    return message;
 }
 
 - (BOOL) handleNewQRCode:(NSURL *)url {
@@ -1067,8 +1026,8 @@
         [self cleanRDSData];
         [self fillDataFieldEntryList:expNum withData:nil];
     } else {
-        if (rds != nil && rds->doesHaveData)
-            [self fillDataFieldEntryList:expNum withData:rds->data];
+        if (rds != nil && rds.doesHaveData)
+            [self fillDataFieldEntryList:expNum withData:[rds data]];
         else
             [self fillDataFieldEntryList:expNum withData:nil];
     }
@@ -1087,7 +1046,7 @@
     
     QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionNameInput.text];
-    [ds setParentName:[[[NSString alloc] initWithString:PARENT_MANUAL] autorelease]];
+    [ds setParentName:PARENT_MANUAL];
     [ds setDataDescription:description];
     [ds setProjID:[NSNumber numberWithInt:expNum]];
     [ds setData:dataJSON];
@@ -1096,9 +1055,8 @@
     [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
-    [ds release];
     NSLog(@"There are %d images in imageList.", imageList.count);
-    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.count);
+    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.dataQueue.count);
     
     [imageList removeAllObjects];
     
@@ -1109,11 +1067,11 @@
     if (geoCoder) {
         [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             if ([placemarks count] > 0) {
-                city = [[[placemarks objectAtIndex:0] locality] retain];
-                country = [[[placemarks objectAtIndex:0] country] retain];
+                city = [[placemarks objectAtIndex:0] locality];
+                country = [[placemarks objectAtIndex:0] country];
                 NSString *subThoroughFare = [[placemarks objectAtIndex:0] subThoroughfare];
                 NSString *thoroughFare = [[placemarks objectAtIndex:0] thoroughfare];
-                address = [[NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare] retain];
+                address = [NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare];
                 
                 if (!address || !city || !country)
                     [self resetAddressFields];

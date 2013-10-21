@@ -65,12 +65,11 @@
     UIToolbar* SITool = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 40)];
     SITool.barStyle = UIBarStyleBlackTranslucent;
     SITool.items = [NSArray arrayWithObjects:
-                    [[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
-                           [[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditingSampleInterval)] autorelease],
+                    [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                           [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditingSampleInterval)],
                            nil];
     [SITool sizeToFit];
     sampleInterval.inputAccessoryView = SITool;
-    [SITool release];
     
     testLength.delegate = self;
     testLength.keyboardType = UIKeyboardTypeNumberPad;
@@ -78,12 +77,11 @@
     UIToolbar* TLTool = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 40)];
     TLTool.barStyle = UIBarStyleBlackTranslucent;
     TLTool.items = [NSArray arrayWithObjects:
-                    [[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
-                    [[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditingTestLength)] autorelease],
+                    [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                    [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneEditingTestLength)],
                     nil];
     [TLTool sizeToFit];
     testLength.inputAccessoryView = TLTool;
-    [TLTool release];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
@@ -249,7 +247,6 @@
                                otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
     message.tag = MENU_EXPERIMENT;
     [message show];
-    [message release];
 }
 
 - (IBAction)selectLaterToggled:(UISwitch *)switcher {
@@ -290,7 +287,6 @@
             [message textFieldAtIndex:0].tag = TAG_STEPONE_EXP;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
@@ -300,7 +296,6 @@
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNumInteger;
             [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
                 
@@ -325,7 +320,6 @@
                 
                 [message setAlertViewStyle:UIAlertViewStyleDefault];
                 [message show];
-                [message release];
                 
             }
         }
@@ -349,7 +343,6 @@
             SensorSelection *ssView = [[SensorSelection alloc] init];
             ssView.title = @"Sensor Selection";
             [self.navigationController pushViewController:ssView animated:YES];
-            [ssView release];
         }
         
     } 
@@ -386,19 +379,6 @@
     
 }
 
-- (void) dealloc {
- 
-    [sessionName release];
-    [sampleInterval release];
-    [testLength release];
-    [expNumLabel release];
-    [rememberMe release];
-    [selectExp release];
-    [selectLater release];
-    [ok release];
-    
-    [super dealloc];
-}
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
@@ -419,7 +399,6 @@
         SensorSelection *ssView = [[SensorSelection alloc] init];
         ssView.title = @"Sensor Selection";
         [self.navigationController pushViewController:ssView animated:YES];
-        [ssView release];
     }
 }
 
@@ -516,7 +495,6 @@
     SensorSelection *ssView = [[SensorSelection alloc] init];
     ssView.title = @"Sensor Selection";
     [self.navigationController pushViewController:ssView animated:YES];
-    [ssView release];
     
     return YES;
 }

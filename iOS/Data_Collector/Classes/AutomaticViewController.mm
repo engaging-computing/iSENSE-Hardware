@@ -54,12 +54,10 @@ dataToBeOrdered, backFromQueue;
     // Immediately kill the timers with fire
     if (timer != nil) {
         [timer invalidate];
-        [timer release];
         timer = nil;
     }
     if (recordDataTimer != nil) {
         [recordDataTimer invalidate];
-        [recordDataTimer release];
         recordDataTimer = nil;
     }
     
@@ -128,11 +126,10 @@ dataToBeOrdered, backFromQueue;
     BOOL enableStep3 = false;
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
-        QDataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
         if ([tmp.parentName isEqualToString:PARENT_AUTOMATIC]) {
             enableStep3 = true;
         }
-        [tmp release];
     }
     
     if (enableStep3) {
@@ -210,7 +207,6 @@ dataToBeOrdered, backFromQueue;
                                  otherButtonTitles:@"Login", @"Media", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
-	[popupQuery release];
 }
 
 // Allows the device to rotate as necessary.
@@ -240,23 +236,6 @@ dataToBeOrdered, backFromQueue;
         return UIInterfaceOrientationMaskAll;
 }
 
-// Release all the extras
-- (void)dealloc {
-    [mainLogo release];
-    [mainLogoBackground release];
-    [step1 release];
-    [step2 release];
-    [step3 release];
-    [menuButton release];
-    [step1Label release];
-    [step3Label release];
-    
-    [locationManager release];
-    locationManager = nil;
-    
-    [super dealloc];
-    
-}
 
 // Log you into to iSENSE using the iSENSE API
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
@@ -324,7 +303,7 @@ dataToBeOrdered, backFromQueue;
         NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
         SystemSoundID soundID;
         NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
-        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
+        AudioServicesCreateSystemSoundID((CFURLRef)CFBridgingRetain(filePath), &soundID);
         AudioServicesPlaySystemSound(soundID);
     }
 }
@@ -354,15 +333,14 @@ dataToBeOrdered, backFromQueue;
     dataToBeOrdered = [[NSMutableArray alloc] init];
     
     // Start the new timers TODO - put them on dispatch?
-    recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
-    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
+    recordDataTimer = [NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES];
 }
 
 - (void) updateElapsedTime {
     
     if (!isRecording || timer == nil) {
         [timer invalidate];
-        [timer release];
         timer = nil;
     }
     
@@ -395,7 +373,6 @@ dataToBeOrdered, backFromQueue;
     if (!isRecording || recordDataTimer == nil) {
         
         [recordDataTimer invalidate];
-        [recordDataTimer release];
         recordDataTimer = nil;
         
     } else {
@@ -462,7 +439,6 @@ dataToBeOrdered, backFromQueue;
             }
             // else NOTHING IS WRONG!!!
             
-            [fieldsRow release];
             
         });
     }
@@ -485,10 +461,8 @@ dataToBeOrdered, backFromQueue;
 -(void) stopRecording:(CMMotionManager *)finalMotionManager {
     // Stop Timers
     [timer invalidate];
-    [timer release];
     timer = nil;
     [recordDataTimer invalidate];
-    [recordDataTimer release];
     recordDataTimer = nil;
     
     // Stop Sensors
@@ -512,7 +486,6 @@ dataToBeOrdered, backFromQueue;
     [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
     [message show];
-    [message release];
     
 }
 
@@ -546,7 +519,6 @@ dataToBeOrdered, backFromQueue;
             [message textFieldAtIndex:0].delegate = self;
             [message textFieldAtIndex:1].delegate = self;
             [message show];
-            [message release];
             
             break;
             
@@ -629,7 +601,7 @@ dataToBeOrdered, backFromQueue;
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [ds setName:sessionName];
-            [ds setParentName:[[[NSString alloc] initWithString:PARENT_AUTOMATIC] autorelease]];
+            [ds setParentName:PARENT_AUTOMATIC];
             [ds setDataDescription:description];
             [ds setProjID:[NSNumber numberWithInt:expNum]];
             [ds setData:dataToBeJSONed];
@@ -639,7 +611,6 @@ dataToBeOrdered, backFromQueue;
             
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
-            [ds release];
             
             [self.view makeWaffle:@"Data set saved"
                          duration:WAFFLE_LENGTH_SHORT
@@ -657,11 +628,11 @@ dataToBeOrdered, backFromQueue;
     if (geoCoder) {
         [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             if ([placemarks count] > 0) {
-                city = [[[placemarks objectAtIndex:0] locality] retain];
-                country = [[[placemarks objectAtIndex:0] country] retain];
+                city = [[placemarks objectAtIndex:0] locality];
+                country = [[placemarks objectAtIndex:0] country];
                 NSString *subThoroughFare = [[placemarks objectAtIndex:0] subThoroughfare];
                 NSString *thoroughFare = [[placemarks objectAtIndex:0] thoroughfare];
-                address = [[NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare] retain];
+                address = [NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare];
                 
                 if (!address || !city || !country)
                     [self resetAddressFields];
@@ -677,9 +648,9 @@ dataToBeOrdered, backFromQueue;
 
 // Reset address fields for next session
 - (void)resetAddressFields {
-    city = [[NSString alloc] initWithString:@"N/A"];
-    country = [[NSString alloc] initWithString:@"N/A"];
-    address = [[NSString alloc] initWithString:@"N/A"];
+    city = @"N/A";
+    country = @"N/A";
+    address = @"N/A";
 }
 
 // This is for the loading spinner when the app starts automatic mode
@@ -693,8 +664,7 @@ dataToBeOrdered, backFromQueue;
     spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
-    [spinner release];
-    return [message autorelease];
+    return message;
 }
 
 // Calls step one to get an experiment, sample interval, test length, etc.
@@ -703,7 +673,6 @@ dataToBeOrdered, backFromQueue;
     StepOneSetup *stepView = [[StepOneSetup alloc] init];
     stepView.title = @"Step 1: Setup";
     [self.navigationController pushViewController:stepView animated:YES];
-    [stepView release];
     
 }
 
@@ -718,7 +687,6 @@ dataToBeOrdered, backFromQueue;
     QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
     queueUploader.title = @"Step 3: Manage and Upload Sessions";
     [self.navigationController pushViewController:queueUploader animated:YES];
-    [queueUploader release];
     
 }
 

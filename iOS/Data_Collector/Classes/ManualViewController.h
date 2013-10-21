@@ -15,12 +15,7 @@
 #import "QueueUploaderView.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 
-typedef struct _RotationDataSaver {
-    NSString *sesName;
-    NSMutableArray *data;
-    bool doesHaveName;
-    bool doesHaveData;
-} RotationDataSaver;
+#import "RotationDataSaver.h"
 
 @interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
 	
@@ -73,32 +68,32 @@ typedef struct _RotationDataSaver {
 
 
 // UI Properties
-@property (nonatomic, retain) IBOutlet UIImageView  *logo;
-@property (nonatomic, retain) IBOutlet UILabel      *loggedInAsLabel;
-@property (nonatomic, retain) IBOutlet UILabel      *expNumLabel;
-@property (nonatomic, retain) IBOutlet UIButton     *upload;
-@property (nonatomic, retain) IBOutlet UIButton     *clear;
-@property (nonatomic, retain) IBOutlet UITextField  *sessionNameInput;
-@property (nonatomic, retain) IBOutlet UIButton     *media;
-@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, strong) IBOutlet UIImageView  *logo;
+@property (nonatomic, strong) IBOutlet UILabel      *loggedInAsLabel;
+@property (nonatomic, strong) IBOutlet UILabel      *expNumLabel;
+@property (nonatomic, strong) IBOutlet UIButton     *upload;
+@property (nonatomic, strong) IBOutlet UIButton     *clear;
+@property (nonatomic, strong) IBOutlet UITextField  *sessionNameInput;
+@property (nonatomic, strong) IBOutlet UIButton     *media;
+@property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
 
-@property (nonatomic, retain) UITextField           *activeField;
-@property (nonatomic, retain) UITextField           *lastField;
+@property (nonatomic, strong) UITextField           *activeField;
+@property (nonatomic, strong) UITextField           *lastField;
 
 // Non-UI Properties
 @property (nonatomic, copy)   NSString               *qrResults;
-@property (nonatomic, retain) CLLocationManager      *locationManager;
+@property (nonatomic, strong) CLLocationManager      *locationManager;
 @property (nonatomic, assign) int                     expNum;
 @property (nonatomic, assign) bool                    keyboardDismissProper;
 @property (nonatomic, assign) BOOL                    browsing;
 @property (nonatomic, assign) BOOL                    initialExpDialogOpen;
-@property (nonatomic, assign) CLGeocoder             *geoCoder;
+@property (nonatomic, strong) CLGeocoder             *geoCoder;
 @property (nonatomic, copy)   NSString               *city;
 @property (nonatomic, copy)   NSString               *address;
 @property (nonatomic, copy)   NSString               *country;
-@property (nonatomic, retain) DataSaver              *dataSaver;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) NSMutableArray         *imageList;
+@property (nonatomic, strong) DataSaver              *dataSaver;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSMutableArray         *imageList;
 
 
 @end

@@ -25,8 +25,8 @@
 
 - (IBAction) okOnClick:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UITableView *table;
-@property (nonatomic, retain) IBOutlet UIButton *ok;
+@property (nonatomic, strong) IBOutlet UITableView *table;
+@property (nonatomic, strong) IBOutlet UIButton *ok;
 
 @property (nonatomic) int fieldNumber;
 
