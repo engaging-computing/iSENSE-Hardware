@@ -25,13 +25,13 @@
 - (BOOL) handleNewQRCode:(NSURL *)url;
 - (id) initWithParentName:(NSString *)parentName;
 
-@property (nonatomic, assign) iSENSE *iapi;
-@property (nonatomic, copy) NSString *parent;
-@property (nonatomic, retain) DataSaver *dataSaver;
-@property (nonatomic, assign) IBOutlet UITableView *mTableView;
-@property (assign) int currentIndex;
-@property (nonatomic, retain) NSIndexPath *lastClickedCellIndex;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) NSMutableDictionary *limitedTempQueue;
+@property (nonatomic, strong) iSENSE *iapi;
+@property (nonatomic, copy)   NSString *parent;
+@property (nonatomic, strong) DataSaver *dataSaver;
+@property (nonatomic, strong) IBOutlet UITableView *mTableView;
+@property (assign)            int currentIndex;
+@property (nonatomic, strong) NSIndexPath *lastClickedCellIndex;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSMutableDictionary *limitedTempQueue;
 
 @end

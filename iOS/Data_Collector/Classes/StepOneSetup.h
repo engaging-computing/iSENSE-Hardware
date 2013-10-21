@@ -32,13 +32,13 @@
 
 - (BOOL) handleNewQRCode:(NSURL *)url;
 
-@property (nonatomic, retain) IBOutlet UITextField *sessionName;
-@property (nonatomic, retain) IBOutlet UITextField *sampleInterval;
-@property (nonatomic, retain) IBOutlet UITextField *testLength;
-@property (nonatomic, retain) IBOutlet UILabel     *expNumLabel;
-@property (nonatomic, retain) IBOutlet UISwitch    *rememberMe;
-@property (nonatomic, retain) IBOutlet UIButton    *selectExp;
-@property (nonatomic, retain) IBOutlet UISwitch    *selectLater;
-@property (nonatomic, retain) IBOutlet UIButton    *ok;
+@property (nonatomic, strong) IBOutlet UITextField *sessionName;
+@property (nonatomic, strong) IBOutlet UITextField *sampleInterval;
+@property (nonatomic, strong) IBOutlet UITextField *testLength;
+@property (nonatomic, strong) IBOutlet UILabel     *expNumLabel;
+@property (nonatomic, strong) IBOutlet UISwitch    *rememberMe;
+@property (nonatomic, strong) IBOutlet UIButton    *selectExp;
+@property (nonatomic, strong) IBOutlet UISwitch    *selectLater;
+@property (nonatomic, strong) IBOutlet UIButton    *ok;
 
 @end

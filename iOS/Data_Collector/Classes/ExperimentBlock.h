@@ -17,7 +17,7 @@
 
 }
 
-@property (nonatomic, retain) Experiment *experiment;
+@property (nonatomic, strong) Experiment *experiment;
 
 - (id)initWithFrame:(CGRect)frame experiment:(Experiment*)exp target:(id)target action:(SEL)selector;
 - (void)switchToDarkImage:(bool)booleanSwitch;

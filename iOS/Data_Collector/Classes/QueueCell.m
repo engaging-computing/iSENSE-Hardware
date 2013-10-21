@@ -44,7 +44,7 @@
     self.dataType.text = tmpDataType;
     [self setCheckedSwitch:ds.uploadable.boolValue];
     
-    dataSet = [ds retain];
+    dataSet = ds;
     
     return self;
 }
@@ -100,9 +100,5 @@
     return [initial boolValue];
 }
 
--(void)dealloc {
-    [super dealloc];
-    [dataSet release];
-}
 
 @end

@@ -34,11 +34,11 @@
 - (void) loadExperimentInfomationForIPad;
 
 @property (nonatomic, assign) int currentPage;
-@property (nonatomic, retain) NSString *currentQuery;
+@property (nonatomic, strong) NSString *currentQuery;
 @property (nonatomic, assign) int scrollHeight;
 @property (nonatomic, assign) int *chosenExperiment;
 @property (nonatomic, assign) int contentHeight;
-@property (nonatomic, retain) ExperimentBlock *lastExperimentClicked;
+@property (nonatomic, strong) ExperimentBlock *lastExperimentClicked;
 
 @end
 
