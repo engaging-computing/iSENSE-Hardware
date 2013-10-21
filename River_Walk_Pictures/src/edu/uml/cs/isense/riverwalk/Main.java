@@ -248,12 +248,6 @@ public class Main extends Activity implements LocationListener {
 
 	private void manageUploadQueue() {
 
-		if (!(api.hasConnectivity())) {
-			w.make("Must be connected to the internet to upload.",
-					Waffle.IMAGE_X);
-			return;
-		}
-
 		if (api.getCurrentUser() == null) {
 			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
 			return;
