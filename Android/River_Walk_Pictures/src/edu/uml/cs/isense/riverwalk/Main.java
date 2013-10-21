@@ -195,8 +195,7 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	public void onBackPressed() {
 		if (!w.isDisplaying) {
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-					Waffle.IMAGE_CHECK);
+			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT);
 		} else if (w.canPerformTask)
 			super.onBackPressed();
 	}
