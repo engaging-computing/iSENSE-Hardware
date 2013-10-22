@@ -234,7 +234,7 @@
             
             break;
             
-        case QUEUE_SELECT_EXP:
+        case QUEUE_SELECT_PROJ:
             
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             if (![cell dataSetHasInitialExperiment]) {
@@ -244,7 +244,7 @@
                                                     delegate:self
                                            cancelButtonTitle:@"Cancel"
                                            otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-                message.tag = QUEUE_SELECT_EXP;
+                message.tag = QUEUE_SELECT_PROJ;
                 [message show];
             }
             
@@ -272,8 +272,8 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setSessionName:newSessionName];
         }
-    } else if (actionSheet.tag == QUEUE_SELECT_EXP) {
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+    } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
+        if (buttonIndex == OPTION_ENTER_PROJECT_NUMBER) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
                                                               message:nil
@@ -281,14 +281,14 @@
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message textFieldAtIndex:0].tag = TAG_QUEUE_EXP;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_PROJ;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
             
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+        } else if (buttonIndex == OPTION_BROWSE_PROJECTS) {
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
@@ -325,7 +325,7 @@
             }
             
         }
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
@@ -350,7 +350,7 @@
     NSString *exp = arr[2];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
     
     QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
     [cell setExpNum:exp];
@@ -521,7 +521,7 @@
             
             return (newLength > 255) ? NO : YES;
             
-        case TAG_QUEUE_EXP:
+        case TAG_QUEUE_PROJ:
             if (![self containsAcceptedDigits:string])
                 return NO;
             

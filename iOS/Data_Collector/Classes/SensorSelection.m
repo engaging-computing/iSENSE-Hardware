@@ -58,7 +58,7 @@
     self.navigationItem.hidesBackButton = YES;
 	
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] integerValue];
+    int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] integerValue];
     
     dfm = [[DataFieldManager alloc] init];
     [dfm getFieldOrderOfExperiment:exp];

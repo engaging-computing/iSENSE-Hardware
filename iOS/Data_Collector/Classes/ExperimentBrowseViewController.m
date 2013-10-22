@@ -39,7 +39,7 @@
         chooseExperiment = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         chooseExperiment.frame = CGRectMake(20, self.view.bounds.size.height - 170, experimentInfo.frame.size.width - 40, 100);
         [chooseExperiment setTitleColor:[HexColor colorWithHexString:@"5C93DB"] forState:UIControlStateNormal];
-        [chooseExperiment setTitle:[StringGrabber grabString:@"choose_experiment"] forState:UIControlStateNormal];
+        [chooseExperiment setTitle:[StringGrabber grabString:@"choose_project"] forState:UIControlStateNormal];
         [chooseExperiment addTarget:self action:@selector(experimentChosen) forControlEvents:UIControlEventTouchUpInside];
 
     } else {

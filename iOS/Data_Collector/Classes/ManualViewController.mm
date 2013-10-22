@@ -14,7 +14,7 @@
 @implementation ManualViewController
 
 @synthesize loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
+@synthesize expNum, locationManager, browsing, initialProjDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -113,9 +113,9 @@
     
     // experiment number
     if (expNum && expNum > 0) {
-        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
+        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", expNum]];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setValue:[NSString stringWithFormat:@"%d", expNum] forKey:[StringGrabber grabString:@"key_exp_manual"]];
+        [prefs setValue:[NSString stringWithFormat:@"%d", expNum] forKey:[StringGrabber grabString:@"key_proj_manual"]];
         
         if (browsing == YES) {
             browsing = NO;
@@ -129,25 +129,25 @@
         }
     } else {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_manual"]] intValue];
+        int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
         if (exp > 0) {
             expNum = exp;
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             if (rds != nil) rds.doesHaveData = true;
             [self fillDataFieldEntryList:expNum withData:nil];
         } else {
-            if (!initialExpDialogOpen) {
-                initialExpDialogOpen = true;
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose an experiment:"
+            if (!initialProjDialogOpen) {
+                initialProjDialogOpen = true;
+                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose a project:"
                                                                   message:nil
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-                message.tag = MANUAL_MENU_EXPERIMENT;
+                                                        otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                message.tag = MANUAL_MENU_PROJECT;
                 [message show];
                 
-                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:@"_"];
+                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:@"_"];
             }
         }
     }
@@ -480,13 +480,13 @@
             
             break;
             
-		case MANUAL_MENU_EXPERIMENT:
+		case MANUAL_MENU_PROJECT:
             message = [[UIAlertView alloc] initWithTitle:nil
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
                                        otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-            message.tag = MANUAL_MENU_EXPERIMENT;
+            message.tag = MANUAL_MENU_PROJECT;
             [message show];
             
 			break;
@@ -522,9 +522,9 @@
             [self login:usernameInput withPassword:passwordInput];
         }
         
-    } else if (actionSheet.tag == MANUAL_MENU_EXPERIMENT){
+    } else if (actionSheet.tag == MANUAL_MENU_PROJECT){
         
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+        if (buttonIndex == OPTION_ENTER_PROJECT_NUMBER) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
                                                               message:nil
@@ -532,16 +532,16 @@
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message textFieldAtIndex:0].tag = TAG_MANUAL_EXP;
+            [message textFieldAtIndex:0].tag = TAG_MANUAL_PROJ;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
             
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+        } else if (buttonIndex == OPTION_BROWSE_PROJECTS) {
             
-            initialExpDialogOpen = false;
+            initialProjDialogOpen = false;
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
@@ -579,21 +579,21 @@
             
         }
         
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
-        initialExpDialogOpen = false;
+        initialProjDialogOpen = false;
         
         if (buttonIndex != OPTION_CANCELED) {
 
             [self cleanRDSData];
             
-            NSString *expNumString = [[actionSheet textFieldAtIndex:0] text];
-            expNum = [expNumString intValue];
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num"
+            NSString *projNumString = [[actionSheet textFieldAtIndex:0] text];
+            expNum = [projNumString intValue];
+            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
                                                                     with:[NSString stringWithFormat:@"%d", expNum]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_manual"]];
+            [prefs setValue:projNumString forKey:[StringGrabber grabString:@"key_proj_manual"]];
             
             [self fillDataFieldEntryList:expNum withData:nil];
         }
@@ -630,7 +630,7 @@
         return (newLength > 100) ? NO : YES;
     }
     
-    if (textField.tag == TAG_MANUAL_EXP) {
+    if (textField.tag == TAG_MANUAL_PROJ) {
         NSUInteger newLength = [textField.text length] + [string length] - range.length;
         
         if (![self containsAcceptedDigits:string])
@@ -1016,10 +1016,10 @@
     NSString *exp = arr[2];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
     
     expNum = [exp intValue];
-    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"exp_num" with:[NSString stringWithFormat:@"%d", expNum]];
+    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", expNum]];
     
     if (browsing == YES) {
         browsing = NO;
@@ -1039,7 +1039,7 @@
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_manual"]] intValue];
+    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
     
     bool uploadable = false;
     if (expNum > 1) uploadable = true;

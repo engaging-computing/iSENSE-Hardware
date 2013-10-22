@@ -12,7 +12,7 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
+@synthesize isRecording, motionManager, dataToBeJSONed, projNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, dataSetName,
 sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate,
 dataToBeOrdered, backFromQueue;
 
@@ -165,7 +165,7 @@ dataToBeOrdered, backFromQueue;
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         backFromSetup = [prefs boolForKey:[StringGrabber grabString:@"key_setup_complete"]];
         
-        // We have a session name, sample interval, and test length ready
+        // We have a data set name, sample interval, and test length ready
         if (backFromSetup) {
             
             // retrieve the data from the setup dialog
@@ -175,9 +175,9 @@ dataToBeOrdered, backFromQueue;
             NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
             testLength = [testLengthString integerValue];
             
-            sessionName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            dataSetName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
             
-            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+            projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
             
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -276,11 +276,11 @@ dataToBeOrdered, backFromQueue;
     if (sender.state == UIGestureRecognizerStateBegan) {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         if (!isRecording) {
-            // Get the experiment
-            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+            // Get the project
+            projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
             
             // Get Field Order
-            [dfm getFieldOrderOfExperiment:expNum];
+            [dfm getFieldOrderOfExperiment:projNum];
             [self getEnabledFields];
             
             // Change the UI
@@ -489,13 +489,13 @@ dataToBeOrdered, backFromQueue;
     
 }
 
-// Fetch the experiments from iSENSE
-- (void) getExperiments {
+// Fetch the projects from iSENSE
+- (void) getProjects {
     NSMutableArray *results = [isenseAPI getExperiments:[NSNumber numberWithUnsignedInt:1] withLimit:[NSNumber numberWithUnsignedInt:10] withQuery:@"" andSort:@"recent"];
-    if ([results count] == 0) NSLog(@"No experiments found.");
+    if ([results count] == 0) NSLog(@"No projects found.");
     
     NSMutableArray *resultsFields = [isenseAPI getExperimentFields:[NSNumber numberWithUnsignedInt:514]];
-    if ([resultsFields count] == 0) NSLog(@"No experiment fields found.");
+    if ([resultsFields count] == 0) NSLog(@"No project fields found.");
     
 }
 
@@ -552,7 +552,7 @@ dataToBeOrdered, backFromQueue;
             
             NSString *description = [[actionSheet textFieldAtIndex:0] text];
             if ([description length] == 0) {
-                description = @"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application.";
+                description = @"Data set recorded and uploaded from mobile device using iSENSE iOS Uploader application.";
             }
             
             [self saveDataSetWithDescription:description];
@@ -580,10 +580,10 @@ dataToBeOrdered, backFromQueue;
     dispatch_async(queue, ^{
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+        projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
         
         bool uploadable = false;
-        if (expNum > 1) uploadable = true;
+        if (projNum > 1) uploadable = true;
         
         QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                                   inManagedObjectContext:managedObjectContext]
@@ -600,14 +600,14 @@ dataToBeOrdered, backFromQueue;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [ds setName:sessionName];
+            [ds setName:dataSetName];
             [ds setParentName:PARENT_AUTOMATIC];
             [ds setDataDescription:description];
-            [ds setProjID:[NSNumber numberWithInt:expNum]];
+            [ds setProjID:[NSNumber numberWithInt:projNum]];
             [ds setData:dataToBeJSONed];
             [ds setPicturePaths:nil];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-            [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
+            [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
             
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
@@ -646,7 +646,7 @@ dataToBeOrdered, backFromQueue;
     }
 }
 
-// Reset address fields for next session
+// Reset address fields for next data set
 - (void)resetAddressFields {
     city = @"N/A";
     country = @"N/A";
@@ -667,7 +667,7 @@ dataToBeOrdered, backFromQueue;
     return message;
 }
 
-// Calls step one to get an experiment, sample interval, test length, etc.
+// Calls step one to get an project, sample interval, test length, etc.
 - (IBAction) setup:(UIButton *)sender {
     
     StepOneSetup *stepView = [[StepOneSetup alloc] init];
@@ -685,7 +685,7 @@ dataToBeOrdered, backFromQueue;
     [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
     
     QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
-    queueUploader.title = @"Step 3: Manage and Upload Sessions";
+    queueUploader.title = @"Step 3: Upload";
     [self.navigationController pushViewController:queueUploader animated:YES];
     
 }
@@ -710,7 +710,7 @@ dataToBeOrdered, backFromQueue;
 // Enabled fields check
 - (void) getEnabledFields {
     
-    if (expNum == -1) {
+    if (projNum == -1) {
         [self setupDFMWithAllFields];
     } else {
         int i = 0;
@@ -855,9 +855,9 @@ dataToBeOrdered, backFromQueue;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
     NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
-    NSString *sesName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    NSString *dsName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
     [step1Label setText:[NSString stringWithFormat:@"Recording data for \"%@\" at a sample interval of %@ ms for %@ sec",
-                     sesName, sampleIntervalString, testLengthString]];
+                     dsName, sampleIntervalString, testLengthString]];
     
     [step3Label setText:@"Time Elapsed: 0:00\nData Point Count: 0"];
     

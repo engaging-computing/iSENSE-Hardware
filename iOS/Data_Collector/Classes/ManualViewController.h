@@ -67,7 +67,6 @@
 
 
 // UI Properties
-@property (nonatomic, strong) IBOutlet UIImageView  *logo;
 @property (nonatomic, strong) IBOutlet UILabel      *loggedInAsLabel;
 @property (nonatomic, strong) IBOutlet UILabel      *expNumLabel;
 @property (nonatomic, strong) IBOutlet UIButton     *upload;
@@ -85,7 +84,7 @@
 @property (nonatomic, assign) int                     expNum;
 @property (nonatomic, assign) bool                    keyboardDismissProper;
 @property (nonatomic, assign) BOOL                    browsing;
-@property (nonatomic, assign) BOOL                    initialExpDialogOpen;
+@property (nonatomic, assign) BOOL                    initialProjDialogOpen;
 @property (nonatomic, strong) CLGeocoder             *geoCoder;
 @property (nonatomic, copy)   NSString               *city;
 @property (nonatomic, copy)   NSString               *address;
