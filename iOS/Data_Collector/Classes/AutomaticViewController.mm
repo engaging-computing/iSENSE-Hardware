@@ -859,10 +859,6 @@ dataToBeOrdered, backFromQueue;
     [step1Label setText:[NSString stringWithFormat:@"Recording data for \"%@\" at a sample interval of %@ ms for %@ sec",
                      sesName, sampleIntervalString, testLengthString]];
     
-    
-    [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"004400"]];
-    [mainLogo setImage:[UIImage imageNamed:@"rsense_logo_recording"]];
-    
     [step3Label setText:@"Time Elapsed: 0:00\nData Point Count: 0"];
     
 }
@@ -881,9 +877,6 @@ dataToBeOrdered, backFromQueue;
     [step3Label setAlpha:0.0];
     
     step2.titleLabel.textColor = [HexColor colorWithHexString:@"000066"];
-    
-    [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"000066"]];
-    [mainLogo setImage:[UIImage imageNamed:@"rsense_logo"]];
 
 }
 

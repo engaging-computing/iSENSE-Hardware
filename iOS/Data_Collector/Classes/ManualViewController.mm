@@ -13,7 +13,7 @@
 
 @implementation ManualViewController
 
-@synthesize logo, loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
+@synthesize loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
 @synthesize expNum, locationManager, browsing, initialExpDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -343,10 +343,7 @@
 
 - (void) dealloc {
     
-    
     [self unregisterKeyboardNotifications];
-    
-    //[rds release];
     
 }
 
@@ -362,7 +359,7 @@
 
 // Reset address fields for next session
 - (void)resetAddressFields {
-    city = @"N/A";
+    city    = @"N/A";
     country = @"N/A";
     address = @"N/A";
 }
@@ -807,7 +804,10 @@
                 // adjust scrollview's bottom bit
                 UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
                 if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT)];
+                    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPAD)];
+                    else
+                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPHONE)];
                 } else {
                     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - LANDSCAPE_BOTTOM_CUT_IPAD)];

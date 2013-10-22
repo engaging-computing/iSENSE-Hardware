@@ -54,7 +54,8 @@
 #define UI_FIELDCONTENTS        1
 
 // manual scrollview oddity patches
-#define PORTRAIT_BOTTOM_CUT         30
+#define PORTRAIT_BOTTOM_CUT_IPAD    30
+#define PORTRAIT_BOTTOM_CUT_IPHONE  20
 #define LANDSCAPE_BOTTOM_CUT_IPAD   1
 #define LANDSCAPE_BOTTOM_CUT_IPHONE 80
 #define TOP_ELEMENT_ADJUSTMENT      30

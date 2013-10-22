@@ -20,7 +20,6 @@
 @interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
 	
 	// UI Elements
-	UIImageView  *logo;
 	UILabel      *loggedInAsLabel;
 	UILabel      *expNumLabel;
 	UIButton     *upload;

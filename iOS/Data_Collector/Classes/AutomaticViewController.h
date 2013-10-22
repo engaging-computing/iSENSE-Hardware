@@ -20,7 +20,6 @@
 #import "StepOneSetup.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>  {
-	IBOutlet UIImageView *mainLogo;
     IBOutlet UILabel *mainLogoBackground;
     IBOutlet UIButton *step1;
     IBOutlet UIButton *step2;
