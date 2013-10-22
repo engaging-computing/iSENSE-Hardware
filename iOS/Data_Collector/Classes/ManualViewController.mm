@@ -13,8 +13,8 @@
 
 @implementation ManualViewController
 
-@synthesize loggedInAsLabel, expNumLabel, upload, clear, sessionNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
-@synthesize expNum, locationManager, browsing, initialProjDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
+@synthesize loggedInAsLabel, projNumLabel, upload, clear, dataSetNameInput, media, scrollView, activeField, lastField, keyboardDismissProper;
+@synthesize projNum, locationManager, browsing, initialProjDialogOpen, city, address, country, geoCoder, dataSaver, managedObjectContext, imageList;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -95,47 +95,47 @@
     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    // session name
-    [self.sessionNameInput addTarget:self
+    // data set name
+    [self.dataSetNameInput addTarget:self
                               action:@selector(textFieldFinished:)
                     forControlEvents:UIControlEventEditingDidEndOnExit];
-    sessionNameInput.delegate = self;
-    sessionNameInput.enablesReturnKeyAutomatically = NO;
-    sessionNameInput.borderStyle = UITextBorderStyleRoundedRect;
-    sessionNameInput.tag = TAG_DEFAULT;
+    dataSetNameInput.delegate = self;
+    dataSetNameInput.enablesReturnKeyAutomatically = NO;
+    dataSetNameInput.borderStyle = UITextBorderStyleRoundedRect;
+    dataSetNameInput.tag = TAG_DEFAULT;
     
     if (rds == nil) {
         rds = [[RotationDataSaver alloc] init];
     } else {
         if ([rds doesHaveName])
-            sessionNameInput.text = [rds sesName];
+            dataSetNameInput.text = [rds dsName];
     }
     
-    // experiment number
-    if (expNum && expNum > 0) {
-        expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", expNum]];
+    // project number
+    if (projNum > 0) {
+        projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setValue:[NSString stringWithFormat:@"%d", expNum] forKey:[StringGrabber grabString:@"key_proj_manual"]];
+        [prefs setValue:[NSString stringWithFormat:@"%d", projNum] forKey:[StringGrabber grabString:@"key_proj_manual"]];
         
         if (browsing == YES) {
             browsing = NO;
             [self cleanRDSData];
-            [self fillDataFieldEntryList:expNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil];
         } else {
             if (rds != nil && [rds doesHaveData])
-                [self fillDataFieldEntryList:expNum withData:[rds data]];
+                [self fillDataFieldEntryList:projNum withData:[rds data]];
             else
-                [self fillDataFieldEntryList:expNum withData:nil];
+                [self fillDataFieldEntryList:projNum withData:nil];
         }
     } else {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
-        if (exp > 0) {
-            expNum = exp;
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
-                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
+        int proj = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
+        if (proj > 0) {
+            projNum = proj;
+            projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
+                                                                    with:[NSString stringWithFormat:@"%d", projNum]];
             if (rds != nil) rds.doesHaveData = true;
-            [self fillDataFieldEntryList:expNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil];
         } else {
             if (!initialProjDialogOpen) {
                 initialProjDialogOpen = true;
@@ -147,7 +147,7 @@
                 message.tag = MANUAL_MENU_PROJECT;
                 [message show];
                 
-                expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:@"_"];
+                projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:@"_"];
             }
         }
     }
@@ -310,9 +310,9 @@
             [rds.data replaceObjectAtIndex:(lastField.tag - TAG_VAL) withObject:[NSNull null]];
         }
     } else {
-        if (sessionNameInput.text.length > 0) {
+        if (dataSetNameInput.text.length > 0) {
             rds.doesHaveName = true;
-            rds.sesName = [sessionNameInput text];
+            rds.dsName = [dataSetNameInput text];
         } else {
             rds.doesHaveName = false;
         }
@@ -329,7 +329,6 @@
 }
 
 - (void) viewDidUnload {
-    //[locationManager stopUpdatingLocation];
     [super viewDidUnload];
 }
 
@@ -338,7 +337,6 @@
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
     NSLog(@"view did appear");
-    //[self updateExpNumLabel];
 }
 
 - (void) dealloc {
@@ -357,7 +355,7 @@
     }
 }
 
-// Reset address fields for next session
+// Reset address fields for next data set
 - (void)resetAddressFields {
     city    = @"N/A";
     country = @"N/A";
@@ -397,14 +395,14 @@
     
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
-        BOOL exp = TRUE, hasSessionName = TRUE, uploadSuccess = FALSE;
+        BOOL proj = TRUE, hasDataSetName = TRUE, uploadSuccess = FALSE;
         
-        if (expNum == 0 || expNum == -1)
-            exp = FALSE;
+        if (projNum <= 0)
+            proj = FALSE;
         
         else
-            if ([[sessionNameInput text] isEqualToString:@""])
-                hasSessionName = FALSE;
+            if ([[dataSetNameInput text] isEqualToString:@""])
+                hasDataSetName = FALSE;
         
             else {
                 NSMutableArray *dataJSON = [self getDataFromFields];
@@ -414,13 +412,13 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if (!exp)
-                [self.view makeWaffle:@"Please enter an experiment first"
+            if (!proj)
+                [self.view makeWaffle:@"Please enter a project first"
                              duration:WAFFLE_LENGTH_LONG
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_WARNING];
-            if (!hasSessionName)
-                [self.view makeWaffle:@"Please enter a session name first"
+            if (!hasDataSetName)
+                [self.view makeWaffle:@"Please enter a data set name first"
                              duration:WAFFLE_LENGTH_LONG
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_WARNING];
@@ -434,7 +432,7 @@
 }
 
 - (IBAction) clearOnClick:(id)sender {
-	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Are you sure you want to clear your session name and all field data?"
+	UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Are you sure you want to clear your data set name and all field data?"
                                                       message:nil
                                                      delegate:self
                                             cancelButtonTitle:@"Cancel"
@@ -457,7 +455,7 @@
                                  delegate:self
                                  cancelButtonTitle:@"Cancel"
                                  destructiveButtonTitle:nil
-                                 otherButtonTitles:@"Upload", @"Experiment", @"Login", nil];
+                                 otherButtonTitles:@"Upload", @"Project", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
 }
@@ -472,7 +470,7 @@
             
             if (dataSaver.dataQueue.count > 0) {
                 queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
-                queueUploader.title = @"Manage and Upload Sessions";
+                queueUploader.title = @"Upload";
                 [self.navigationController pushViewController:queueUploader animated:YES];
             } else {
                 [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
@@ -485,7 +483,7 @@
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                                       otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
             message.tag = MANUAL_MENU_PROJECT;
             [message show];
             
@@ -526,7 +524,7 @@
         
         if (buttonIndex == OPTION_ENTER_PROJECT_NUMBER) {
             
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Project #:"
                                                               message:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
@@ -544,8 +542,8 @@
             initialProjDialogOpen = false;
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNum;
+            browseView.title = @"Browse Projects";
+            browseView.chosenExperiment = &projNum;
             browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
             
@@ -588,20 +586,20 @@
             [self cleanRDSData];
             
             NSString *projNumString = [[actionSheet textFieldAtIndex:0] text];
-            expNum = [projNumString intValue];
-            expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
-                                                                    with:[NSString stringWithFormat:@"%d", expNum]];
+            projNum = [projNumString intValue];
+            projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
+                                                                    with:[NSString stringWithFormat:@"%d", projNum]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:projNumString forKey:[StringGrabber grabString:@"key_proj_manual"]];
             
-            [self fillDataFieldEntryList:expNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil];
         }
         
     } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
         
         if (buttonIndex != OPTION_CANCELED) {
-            sessionNameInput.text = @"";
+            dataSetNameInput.text = @"";
             
             rds.doesHaveName = false;
             [self cleanRDSData];
@@ -642,7 +640,7 @@
     if (![self containsAcceptedCharacters:string])
         return NO;
     
-	if (textField == sessionNameInput) {
+	if (textField == dataSetNameInput) {
         
 		NSUInteger newLength = [textField.text length] + [string length] - range.length;
 		return (newLength > 52) ? NO : YES;
@@ -747,7 +745,7 @@
     
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving experiment fields..."];
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving project fields..."];
     [message show];
         
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
@@ -760,24 +758,24 @@
             int objNumber = 0;
             int scrollHeight = 0;
             
-            for (ExperimentField *expField in fieldOrder) {
+            for (ExperimentField *projField in fieldOrder) {
                 
-                if (expField.type_id.intValue == GEOSPACIAL || expField.type_id.intValue == TIME) {
-                    if (expField.unit_id.intValue == UNIT_LATITUDE) {
-                        scrollHeight = [self addDataField:expField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
-                    } else if (expField.unit_id.intValue == UNIT_LONGITUDE) {
-                        scrollHeight = [self addDataField:expField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
+                if (projField.type_id.intValue == GEOSPACIAL || projField.type_id.intValue == TIME) {
+                    if (projField.unit_id.intValue == UNIT_LATITUDE) {
+                        scrollHeight = [self addDataField:projField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
+                    } else if (projField.unit_id.intValue == UNIT_LONGITUDE) {
+                        scrollHeight = [self addDataField:projField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
                     } else /* Time */ {
                         // if (data == nil)
-                        scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
+                        scrollHeight = [self addDataField:projField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
                         // else
                         //    scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 } else {
                     if (data == nil)
-                        scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
+                        scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
                     else {
-                        scrollHeight = [self addDataField:expField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 }
                 
@@ -794,9 +792,9 @@
                 
                 UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT)];
                 if ([iapi isConnectedToInternet])
-                    noFields.text = @"Invalid experiment.";
+                    noFields.text = @"Invalid project.";
                 else
-                    noFields.text = @"Cannot find experiment fields while not connected to the internet.";
+                    noFields.text = @"Cannot find project fields while not connected to the internet.";
                 noFields.backgroundColor = [UIColor clearColor];
                 noFields.textColor = [HexColor colorWithHexString:@"000000"];
                 [scrollView addSubview: noFields];
@@ -830,7 +828,7 @@
     });
 }
 
-- (int) addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
+- (int) addDataField:(ExperimentField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
     
     CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
@@ -865,7 +863,7 @@
     }
     fieldName.backgroundColor = [UIColor clearColor];
     fieldName.textColor = [UIColor blackColor];
-    fieldName.text = [StringGrabber concatenate:expField.field_name withHardcodedString:@"colon"];
+    fieldName.text = [StringGrabber concatenate:projField.field_name withHardcodedString:@"colon"];
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
     fieldContents.delegate = self;
@@ -891,8 +889,8 @@
         }
     }
     
-    NSLog(@"type id = %d", expField.type_id.intValue);
-    if (expField.type_id.intValue == TEXT) {
+    NSLog(@"type id = %d", projField.type_id.intValue);
+    if (projField.type_id.intValue == TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
         fieldContents.tag = TAG_TEXT + objNum;
     } else {
@@ -989,7 +987,7 @@
 }
 
 - (void) hideKeyboard {
-    [sessionNameInput resignFirstResponder];
+    [dataSetNameInput resignFirstResponder];
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UITextField class]]) {
             [element resignFirstResponder];
@@ -1013,23 +1011,23 @@
 - (BOOL) handleNewQRCode:(NSURL *)url {
     
     NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-    NSString *exp = arr[2];
+    NSString *proj = arr[2];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
+    [prefs setValue:proj forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
     
-    expNum = [exp intValue];
-    expNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", expNum]];
+    projNum = [proj intValue];
+    projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
     
     if (browsing == YES) {
         browsing = NO;
         [self cleanRDSData];
-        [self fillDataFieldEntryList:expNum withData:nil];
+        [self fillDataFieldEntryList:projNum withData:nil];
     } else {
         if (rds != nil && rds.doesHaveData)
-            [self fillDataFieldEntryList:expNum withData:[rds data]];
+            [self fillDataFieldEntryList:projNum withData:[rds data]];
         else
-            [self fillDataFieldEntryList:expNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil];
     }
     
     return YES;
@@ -1039,20 +1037,20 @@
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
+    projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
     
     bool uploadable = false;
-    if (expNum > 1) uploadable = true;
+    if (projNum > 1) uploadable = true;
     
     QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-    [ds setName:sessionNameInput.text];
+    [ds setName:dataSetNameInput.text];
     [ds setParentName:PARENT_MANUAL];
     [ds setDataDescription:description];
-    [ds setProjID:[NSNumber numberWithInt:expNum]];
+    [ds setProjID:[NSNumber numberWithInt:projNum]];
     [ds setData:dataJSON];
     [ds setPicturePaths:[imageList copy]];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     NSLog(@"There are %d images in imageList.", imageList.count);

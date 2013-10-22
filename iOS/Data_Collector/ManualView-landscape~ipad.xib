@@ -41,7 +41,7 @@
 					<object class="IBUILabel" id="684675078">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 20}, {412, 21}}</string>
+						<string key="NSFrame">{{20, 20}, {400, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="573235145"/>
@@ -76,7 +76,7 @@
 					<object class="IBUILabel" id="573235145">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{428, 19}, {412, 22}}</string>
+						<string key="NSFrame">{{428, 19}, {576, 22}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="218671435"/>
@@ -220,7 +220,6 @@
 				<string key="NSFrame">{{0, 64}, {1024, 704}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
@@ -250,14 +249,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">expNumLabel</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="573235145"/>
-					</object>
-					<int key="connectionID">12</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">loggedInAsLabel</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="684675078"/>
@@ -282,14 +273,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">sessionNameInput</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="438642380"/>
-					</object>
-					<int key="connectionID">17</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">upload</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="218671435"/>
@@ -303,6 +286,22 @@
 						<reference key="destination" ref="191373211"/>
 					</object>
 					<int key="connectionID">19</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSetNameInput</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="438642380"/>
+					</object>
+					<int key="connectionID">26</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">projNumLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="573235145"/>
+					</object>
+					<int key="connectionID">27</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -421,7 +420,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">25</int>
+			<int key="maxID">27</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -454,12 +453,11 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="clear">UIButton</string>
-						<string key="expNumLabel">UILabel</string>
+						<string key="dataSetNameInput">UITextField</string>
 						<string key="loggedInAsLabel">UILabel</string>
-						<string key="logo">UIImageView</string>
 						<string key="media">UIButton</string>
+						<string key="projNumLabel">UILabel</string>
 						<string key="scrollView">UIScrollView</string>
-						<string key="sessionNameInput">UITextField</string>
 						<string key="upload">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -467,29 +465,25 @@
 							<string key="name">clear</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="expNumLabel">
-							<string key="name">expNumLabel</string>
-							<string key="candidateClassName">UILabel</string>
+						<object class="IBToOneOutletInfo" key="dataSetNameInput">
+							<string key="name">dataSetNameInput</string>
+							<string key="candidateClassName">UITextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="loggedInAsLabel">
 							<string key="name">loggedInAsLabel</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="logo">
-							<string key="name">logo</string>
-							<string key="candidateClassName">UIImageView</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="media">
 							<string key="name">media</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="projNumLabel">
+							<string key="name">projNumLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="scrollView">
 							<string key="name">scrollView</string>
 							<string key="candidateClassName">UIScrollView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="sessionNameInput">
-							<string key="name">sessionNameInput</string>
-							<string key="candidateClassName">UITextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="upload">
 							<string key="name">upload</string>

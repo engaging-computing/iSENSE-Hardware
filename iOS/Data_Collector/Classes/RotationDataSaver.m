@@ -10,11 +10,11 @@
 
 @implementation RotationDataSaver
 
-@synthesize sesName, data, doesHaveName, doesHaveData;
+@synthesize dsName, data, doesHaveName, doesHaveData;
 
 - (id) init {
     if (self = [super init]) {
-        sesName = [[NSString alloc] init];
+        dsName = [[NSString alloc] init];
         
         data = [[NSMutableArray alloc] init];
         for (NSInteger i = 0; i < 100; ++i)
