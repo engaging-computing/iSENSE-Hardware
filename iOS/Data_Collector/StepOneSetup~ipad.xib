@@ -408,14 +408,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">selectExp</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="226187633"/>
-					</object>
-					<int key="connectionID">169</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">selectLater</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="579027843"/>
@@ -440,11 +432,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">expNumLabel</string>
+						<string key="label">projNumLabel</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="687096788"/>
 					</object>
-					<int key="connectionID">192</int>
+					<int key="connectionID">194</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">selectProj</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="226187633"/>
+					</object>
+					<int key="connectionID">195</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -457,12 +457,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">experimentOnClick:</string>
+						<string key="label">projectOnClick:</string>
 						<reference key="source" ref="226187633"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">188</int>
+					<int key="connectionID">193</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -623,7 +623,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">192</int>
+			<int key="maxID">195</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -631,18 +631,18 @@
 					<string key="className">StepOneSetup</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="experimentOnClick:">UIButton</string>
 						<string key="okOnClick:">UIButton</string>
+						<string key="projectOnClick:">UIButton</string>
 						<string key="rememberMeToggled:">UISwitch</string>
 						<string key="selectLaterToggled:">UISwitch</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="experimentOnClick:">
-							<string key="name">experimentOnClick:</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 						<object class="IBActionInfo" key="okOnClick:">
 							<string key="name">okOnClick:</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBActionInfo" key="projectOnClick:">
+							<string key="name">projectOnClick:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="rememberMeToggled:">
@@ -655,23 +655,23 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="expNumLabel">UILabel</string>
 						<string key="ok">UIButton</string>
+						<string key="projNumLabel">UILabel</string>
 						<string key="rememberMe">UISwitch</string>
 						<string key="sampleInterval">UITextField</string>
-						<string key="selectExp">UIButton</string>
 						<string key="selectLater">UISwitch</string>
+						<string key="selectProj">UIButton</string>
 						<string key="sessionName">UITextField</string>
 						<string key="testLength">UITextField</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="expNumLabel">
-							<string key="name">expNumLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="ok">
 							<string key="name">ok</string>
 							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="projNumLabel">
+							<string key="name">projNumLabel</string>
+							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="rememberMe">
 							<string key="name">rememberMe</string>
@@ -681,13 +681,13 @@
 							<string key="name">sampleInterval</string>
 							<string key="candidateClassName">UITextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="selectExp">
-							<string key="name">selectExp</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="selectLater">
 							<string key="name">selectLater</string>
 							<string key="candidateClassName">UISwitch</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="selectProj">
+							<string key="name">selectProj</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="sessionName">
 							<string key="name">sessionName</string>

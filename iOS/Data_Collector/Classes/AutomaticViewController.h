@@ -20,8 +20,6 @@
 #import "StepOneSetup.h"
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>  {
-	IBOutlet UIImageView *mainLogo;
-    IBOutlet UILabel *mainLogoBackground;
     IBOutlet UIButton *step1;
     IBOutlet UIButton *step2;
     IBOutlet UIButton *step3;
@@ -36,7 +34,7 @@
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer *)sender;
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)password;
-- (void) getExperiments;
+- (void) getProjects;
 - (void) recordData;
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error;
@@ -49,7 +47,7 @@
 @property (nonatomic) int  recordingRate;
 
 @property (nonatomic, assign) float sampleInterval;
-@property (nonatomic, copy) NSString *sessionName;
+@property (nonatomic, copy) NSString *dataSetName;
 @property (nonatomic) int testLength;
 
 @property (nonatomic, strong) NSTimer *timer;
@@ -57,7 +55,7 @@
 @property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, strong) NSMutableArray *dataToBeOrdered;
-@property (nonatomic, assign) int expNum;
+@property (nonatomic, assign) int projNum;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) DataFieldManager *dfm;
 

@@ -19,19 +19,9 @@
 
 @interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
 	
-	// UI Elements
-	UIImageView  *logo;
-	UILabel      *loggedInAsLabel;
-	UILabel      *expNumLabel;
-	UIButton     *upload;
-	UIButton     *clear;
-	UITextField  *sessionNameInput;
-	UIButton     *media;
-	UIScrollView *scrollView;
-	
 	// Non-UI Elements
 	iSENSE   *iapi;
-	NSString *sessionName;
+	NSString *dataSetName;
     RotationDataSaver *rds;
     
     CLLocationManager *locationManager;
@@ -53,7 +43,7 @@
 - (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
 - (void)   fillDataFieldEntryList:(int)eid withData:(NSMutableArray *) data;
-- (int)    addDataField:(ExperimentField *)expField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
+- (int)    addDataField:(ExperimentField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
 - (void)   hideKeyboard;
 - (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
 - (void)   cleanRDSData;
@@ -68,12 +58,11 @@
 
 
 // UI Properties
-@property (nonatomic, strong) IBOutlet UIImageView  *logo;
 @property (nonatomic, strong) IBOutlet UILabel      *loggedInAsLabel;
-@property (nonatomic, strong) IBOutlet UILabel      *expNumLabel;
+@property (nonatomic, strong) IBOutlet UILabel      *projNumLabel;
 @property (nonatomic, strong) IBOutlet UIButton     *upload;
 @property (nonatomic, strong) IBOutlet UIButton     *clear;
-@property (nonatomic, strong) IBOutlet UITextField  *sessionNameInput;
+@property (nonatomic, strong) IBOutlet UITextField  *dataSetNameInput;
 @property (nonatomic, strong) IBOutlet UIButton     *media;
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
 
@@ -83,10 +72,10 @@
 // Non-UI Properties
 @property (nonatomic, copy)   NSString               *qrResults;
 @property (nonatomic, strong) CLLocationManager      *locationManager;
-@property (nonatomic, assign) int                     expNum;
+@property (nonatomic, assign) int                     projNum;
 @property (nonatomic, assign) bool                    keyboardDismissProper;
 @property (nonatomic, assign) BOOL                    browsing;
-@property (nonatomic, assign) BOOL                    initialExpDialogOpen;
+@property (nonatomic, assign) BOOL                    initialProjDialogOpen;
 @property (nonatomic, strong) CLGeocoder             *geoCoder;
 @property (nonatomic, copy)   NSString               *city;
 @property (nonatomic, copy)   NSString               *address;

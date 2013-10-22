@@ -10,7 +10,7 @@
 
 @interface RotationDataSaver : NSObject
 
-@property (nonatomic, strong) NSString *sesName;
+@property (nonatomic, strong) NSString *dsName;
 @property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, assign) bool doesHaveName;
 @property (nonatomic, assign) bool doesHaveData;

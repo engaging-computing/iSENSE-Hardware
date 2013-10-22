@@ -11,7 +11,7 @@
 
 @implementation StepOneSetup
 
-@synthesize sessionName, sampleInterval, testLength, expNumLabel, rememberMe, selectExp, selectLater, ok;
+@synthesize sessionName, sampleInterval, testLength, projNumLabel, rememberMe, selectProj, selectLater, ok;
 
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
@@ -57,7 +57,7 @@
     [iapi toggleUseDev:YES];
     
     sessionName.delegate = self;
-    sessionName.tag = TAG_STEP1_SESSION_NAME;
+    sessionName.tag = TAG_STEP1_DATA_SET_NAME;
     
     sampleInterval.delegate = self;
     sampleInterval.keyboardType = UIKeyboardTypeNumberPad;
@@ -90,7 +90,7 @@
     [prefs setBool:false forKey:@"sensor_done"];
     sensorsSelected = false;
     
-    NSString *defaultSesName = [prefs stringForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    NSString *defaultSesName = [prefs stringForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
     NSString *newSesName = ([defaultSesName length] == 0) ? @"" : defaultSesName;
     [sessionName setText:newSesName];
     
@@ -112,26 +112,26 @@
         rememberMe.on = false;
     }
     
-    NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+    NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
     if ([defaultExp length] != 0) {
         if ([defaultExp isEqualToString:@"-1"]) {
             selectLater.on = true;
-            selectExp.enabled = NO;
-            selectExp.alpha = 0.5;
+            selectProj.enabled = NO;
+            selectProj.alpha = 0.5;
         } else {
-            NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
-            [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+            NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
+            [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
             selectLater.on = false;
         }
     } else {
         if (defaultExp == NULL) {
             selectLater.on = false;
-            selectExp.enabled = YES;
-            selectExp.alpha = 1.0;
+            selectProj.enabled = YES;
+            selectProj.alpha = 1.0;
         } else {
             selectLater.on = true;
-            selectExp.enabled = NO;
-            selectExp.alpha = 0.5;
+            selectProj.enabled = NO;
+            selectProj.alpha = 0.5;
         }
     }
     
@@ -187,7 +187,7 @@
     }
     
     if (!selectLater.on) {
-        NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
         
         if (eid == NULL || [eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
             if (ready == true)
@@ -210,10 +210,10 @@
     }
     
     if (ready) {
-        [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+        [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
         
         if (selectLater.on)
-            [prefs setValue:@"-1" forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            [prefs setValue:@"-1" forKey:[StringGrabber grabString:@"key_proj_automatic"]];
         
         if (rememberMe.on)
             [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
@@ -239,31 +239,31 @@
     
 }
 
-- (IBAction)experimentOnClick:(UIButton *)expButton {
+- (IBAction)projectOnClick:(UIButton *)projButton {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:nil
                                          message:nil
                                         delegate:self
                                cancelButtonTitle:@"Cancel"
                                otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-    message.tag = MENU_EXPERIMENT;
+    message.tag = MENU_PROJECT;
     [message show];
 }
 
 - (IBAction)selectLaterToggled:(UISwitch *)switcher {
     if (switcher.on) {
-        selectExp.enabled = NO;
-        selectExp.alpha = 0.5;
+        selectProj.enabled = NO;
+        selectProj.alpha = 0.5;
         
-        [expNumLabel setText:[StringGrabber grabString:@"current_exp_label"]];
+        [projNumLabel setText:[StringGrabber grabString:@"current_proj_label"]];
     } else {
-        selectExp.enabled = YES;
-        selectExp.alpha = 1.0;
+        selectProj.enabled = YES;
+        selectProj.alpha = 1.0;
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *curExp = [prefs valueForKey:[StringGrabber grabString:@"key_exp_automatic"]];
+        NSString *curExp = [prefs valueForKey:[StringGrabber grabString:@"key_proj_automatic"]];
         if ([curExp length] != 0 && [curExp integerValue] != -1) {
             NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", curExp];
-            [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+            [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
         }
     }
 }
@@ -271,9 +271,9 @@
 - (IBAction)rememberMeToggled:(UISwitch *)switcher {}
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == MENU_EXPERIMENT){
+    if (actionSheet.tag == MENU_PROJECT){
         
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+        if (buttonIndex == OPTION_ENTER_PROJECT_NUMBER) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
                                                               message:nil
@@ -281,20 +281,20 @@
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message textFieldAtIndex:0].tag = TAG_STEPONE_EXP;
+            [message textFieldAtIndex:0].tag = TAG_STEPONE_PROJ;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
             
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+        } else if (buttonIndex == OPTION_BROWSE_PROJECTS) {
             
             [self rememberPrefs];
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNumInteger;
+            browseView.chosenExperiment = &projNumInteger;
             [self.navigationController pushViewController:browseView animated:YES];
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
@@ -324,18 +324,18 @@
             }
         }
         
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
             NSString *expNum = [[actionSheet textFieldAtIndex:0] text];
-            expNumInteger = [expNum integerValue];
+            projNumInteger = [expNum integerValue];
            
             NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", expNum];
-            [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+            [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+            [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_proj_automatic"]];
             
             [self rememberPrefs];
             
@@ -364,13 +364,13 @@
             [prefs setBool:false forKey:@"sensor_done"];
         } else {
             // make sure user didn't use the back button
-            if (expNumInteger != 0) {
-                NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", expNumInteger];
-                [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+            if (projNumInteger != 0) {
+                NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", projNumInteger];
+                [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
                 
                 NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                NSString *expNumString = [NSString stringWithFormat:@"%d", expNumInteger];
-                [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_exp_automatic"]];
+                NSString *expNumString = [NSString stringWithFormat:@"%d", projNumInteger];
+                [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_proj_automatic"]];
                 
                 displaySensorSelectFromBrowse = true;
             }
@@ -393,7 +393,7 @@
         displaySensorSelectFromBrowse = false;
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+        [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
         
         // launch the sensor selection dialog
         SensorSelection *ssView = [[SensorSelection alloc] init];
@@ -424,7 +424,7 @@
     
     switch (textField.tag) {
             
-        case TAG_STEP1_SESSION_NAME:
+        case TAG_STEP1_DATA_SET_NAME:
             if (![self containsAcceptedCharacters:string])
                 return NO;
             
@@ -442,7 +442,7 @@
 
             return (newLength > 10) ? NO : YES;
             
-        case TAG_STEPONE_EXP:
+        case TAG_STEPONE_PROJ:
             if (![self containsAcceptedDigits:string])
                 return NO;
             
@@ -482,12 +482,12 @@
     NSString *exp = arr[2];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_automatic"]];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_automatic"]];
 
-    expNumInteger = [exp integerValue];
+    projNumInteger = [exp integerValue];
     
     NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
-    [expNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_exp_label" with:newExpLabel]];
+    [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
     
     [self rememberPrefs];
     
@@ -502,7 +502,7 @@
 - (void) rememberPrefs {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
     
     if (rememberMe.on)
         [prefs setBool:true forKey:[StringGrabber grabString:@"key_remember_me_check"]];
