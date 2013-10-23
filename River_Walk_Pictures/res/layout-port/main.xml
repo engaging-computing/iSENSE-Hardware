@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -38,53 +37,24 @@
             android:textCursorDrawable="@null" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/takePicture"
-        android:background="@drawable/button_color"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="20dp"
-        android:paddingTop="16dip"
-        android:text="@+string/takePic"
-        android:textSize="30sp"
-        android:textColor="@android:color/white" />
-
-    <LinearLayout
-        android:id="@+id/locationBlock"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/myLocation"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/black"
-            android:text="@+string/noLocation0"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
         android:orientation="horizontal"
         android:weightSum="2" >
 
         <TextView
+            android:layout_marginLeft="5dp"
             android:id="@+id/queueCountLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="left"
             android:text="@string/queueCount"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/ExperimentLabel"
@@ -93,8 +63,38 @@
             android:gravity="left"
             android:layout_weight="1"
             android:text="@string/experiment"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
     </LinearLayout>
+    
+    
+    <Button
+        android:id="@+id/takePicture"
+        android:background="@drawable/button_rsense"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="20dp"
+        android:paddingTop="16dip"
+        android:text="@+string/takePic"
+        android:textSize="30sp"
+        android:textColor="@android:color/black" />
+
+	 <LinearLayout
+	        android:id="@+id/locationBlock"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" 
+	        android:layout_gravity="center_horizontal">
+	
+	        <TextView
+	            android:id="@+id/myLocation"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@+string/noLocation0"
+	            android:textColor="@android:color/black"
+	            android:textSize="16sp"
+	            android:layout_marginBottom="5dp"/>
+	  </LinearLayout>   
 
 </LinearLayout>

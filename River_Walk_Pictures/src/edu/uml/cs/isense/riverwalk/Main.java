@@ -195,8 +195,7 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	public void onBackPressed() {
 		if (!w.isDisplaying) {
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-					Waffle.IMAGE_CHECK);
+			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT);
 		} else if (w.canPerformTask)
 			super.onBackPressed();
 	}
@@ -232,51 +231,6 @@ public class Main extends Activity implements LocationListener {
 	    }
 	}
 	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
-//		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Project");
-//		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
-//		return true;
-//	}
-
-//	@Override
-//	public boolean onPrepareOptionsMenu(Menu menu) {
-//		if (!useMenu) {
-//			menu.getItem(0).setEnabled(false);
-//			menu.getItem(1).setEnabled(false);
-//			menu.getItem(2).setEnabled(false);
-//		} else {
-//			menu.getItem(0).setEnabled(true);
-//			menu.getItem(1).setEnabled(true);
-//			menu.getItem(2).setEnabled(true);
-//		}
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case MENU_ITEM_BROWSE:
-//
-//			Intent iExperiment = new Intent(getApplicationContext(),
-//					Setup.class);
-//			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
-//
-//			return true;
-//
-//		case MENU_ITEM_LOGIN:
-//			startActivityForResult(new Intent(getApplicationContext(),
-//					LoginActivity.class), LOGIN_REQUESTED);
-//			return true;
-//
-//		case MENU_ITEM_UPLOAD:
-//			manageUploadQueue();
-//			return true;
-//		}
-//
-//		return false;
-//	}
 
 	@Override
 	protected void onResume() {
@@ -292,12 +246,6 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	private void manageUploadQueue() {
-
-		if (!(api.hasConnectivity())) {
-			w.make("Must be connected to the internet to upload.",
-					Waffle.IMAGE_X);
-			return;
-		}
 
 		if (api.getCurrentUser() == null) {
 			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
@@ -608,8 +556,7 @@ public class Main extends Activity implements LocationListener {
 		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				&& mRoughLocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0, Main.this);
