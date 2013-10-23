@@ -17,7 +17,7 @@
 #import <MobileCoreServices/UTType.h>
 
 typedef enum {
-    RATING,
+    SORT_RATING,
     CREATED_AT_DESC,
     CREATED_AT_ASC,
     UPDATED_AT_DESC,

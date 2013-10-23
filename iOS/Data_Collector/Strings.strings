@@ -16,8 +16,8 @@
 
 
 "logged_in_as"                  = "Logged in as: ";
-"exp_num"                       = "Experiment #: ";
-"choose_experiment"             = "This is my experiment.";
+"proj_num"                      = "Project #: ";
+"choose_project"                = "This is my project.";
 
 "stop_button_text"              = "STOP\n(Press and Hold)";
 "start_button_text"             = "START\n(Press and Hold)";
@@ -37,11 +37,11 @@
 
 "key_username"                  = "username";
 "key_password"                  = "password";
-"key_exp_automatic"             = "expnum_automatic";
-"key_exp_manual"                = "expnum_manual";
+"key_proj_automatic"            = "projnum_automatic";
+"key_proj_manual"               = "projnum_manual";
 "key_remember_me"               = "rememberme";
-"key_select_later"              = "selectexplater";
-"key_step1_session_name"        = "step1sessionname";
+"key_select_later"              = "selectprojlater";
+"key_step1_data_set_name"       = "step1datasetname";
 "key_remember_me_check"         = "remembermecheck";
 "key_sample_interval"           = "defaultsampleinterval";
 "key_test_length"               = "defaulttestlength";
@@ -49,7 +49,7 @@
 "key_back_from_queue"           = "backfromdataqueue";
 "key_step_2_enabled"            = "keepstep2enabled";
 
-"current_exp_label"             = "Experiment";
+"current_proj_label"            = "Project";
 
 "loading"                       = "Loading ...";
 

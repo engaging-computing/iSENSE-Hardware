@@ -59,7 +59,6 @@
                 message.tag = QUEUE_LOGIN;
                 [message setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
                 [message show];
-                [message release];
             } else {
                 [self loginAndUploadWithUsername:user withPassword:pass];
             }
@@ -133,7 +132,6 @@
     lpgr.minimumPressDuration = 0.5;
     lpgr.delegate = self;
     [self.mTableView addGestureRecognizer:lpgr];
-    [lpgr release];
     
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
@@ -144,11 +142,10 @@
     
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
-        QDataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
         if ([tmp.parentName isEqualToString:parent]) {
             [limitedTempQueue setObject:tmp forKey:keys[i]];
         }
-        [tmp release];
     }
     
 }
@@ -174,7 +171,6 @@
                                                  otherButtonTitles:@"Rename", @"Change Description", @"Select Experiment", nil];
                     popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                     [popupQuery showInView:self.view];
-                    [popupQuery release];
                 } else {
                     UIActionSheet *popupQuery = [[UIActionSheet alloc]
                                                  initWithTitle:nil
@@ -184,7 +180,6 @@
                                                  otherButtonTitles:@"Rename", @"Change Description", nil];
                     popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                     [popupQuery showInView:self.view];
-                    [popupQuery release];
                 }
             }
         }
@@ -220,7 +215,6 @@
             [message textFieldAtIndex:0].tag = TAG_QUEUE_RENAME;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
             break;
             
@@ -237,11 +231,10 @@
             [message textFieldAtIndex:0].tag = TAG_QUEUE_DESC;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
             break;
             
-        case QUEUE_SELECT_EXP:
+        case QUEUE_SELECT_PROJ:
             
             cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             if (![cell dataSetHasInitialExperiment]) {
@@ -251,9 +244,8 @@
                                                     delegate:self
                                            cancelButtonTitle:@"Cancel"
                                            otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
-                message.tag = QUEUE_SELECT_EXP;
+                message.tag = QUEUE_SELECT_PROJ;
                 [message show];
-                [message release];
             }
             
 			break;
@@ -280,8 +272,8 @@
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setSessionName:newSessionName];
         }
-    } else if (actionSheet.tag == QUEUE_SELECT_EXP) {
-        if (buttonIndex == OPTION_ENTER_EXPERIMENT_NUMBER) {
+    } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
+        if (buttonIndex == OPTION_ENTER_PROJECT_NUMBER) {
             
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Enter Experiment #:"
                                                               message:nil
@@ -289,22 +281,20 @@
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = EXPERIMENT_MANUAL_ENTRY;
+            message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
-            [message textFieldAtIndex:0].tag = TAG_QUEUE_EXP;
+            [message textFieldAtIndex:0].tag = TAG_QUEUE_PROJ;
             [message textFieldAtIndex:0].delegate = self;
             [message show];
-            [message release];
             
-        } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
+        } else if (buttonIndex == OPTION_BROWSE_PROJECTS) {
             
             ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
             browseView.title = @"Browse for Experiments";
             browseView.chosenExperiment = &expNum;
             browsing = true;
             [self.navigationController pushViewController:browseView animated:YES];
-            [browseView release];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             
@@ -331,12 +321,11 @@
                 
                 [message setAlertViewStyle:UIAlertViewStyleDefault];
                 [message show];
-                [message release];
                 
             }
             
         }
-    } else if (actionSheet.tag == EXPERIMENT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
@@ -361,7 +350,7 @@
     NSString *exp = arr[2];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
     
     QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
     [cell setExpNum:exp];
@@ -408,11 +397,10 @@
     if (cell == nil) {
         UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
         cell = (QueueCell *) tmpVC.view;
-        [tmpVC release];
     }
     
     NSArray *keys = [limitedTempQueue allKeys];
-    QDataSet *tmp = [[limitedTempQueue objectForKey:keys[indexPath.row]] retain];
+    QDataSet *tmp = [limitedTempQueue objectForKey:keys[indexPath.row]];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     if (browsing == true && indexPath.row == lastClickedCellIndex.row) {
@@ -422,7 +410,6 @@
             [cell setExpNum:expNumString];
     }
     
-    [tmp release];
     
     return cell;
 }
@@ -482,8 +469,7 @@
     spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
-    [spinner release];
-    return [message autorelease];
+    return message;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -535,7 +521,7 @@
             
             return (newLength > 255) ? NO : YES;
             
-        case TAG_QUEUE_EXP:
+        case TAG_QUEUE_PROJ:
             if (![self containsAcceptedDigits:string])
                 return NO;
             
@@ -546,9 +532,5 @@
     }
 }
 
--(void)dealloc {
-    [limitedTempQueue release];
-    [super dealloc];
-}
 
 @end
