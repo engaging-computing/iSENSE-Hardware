@@ -14,6 +14,6 @@
 	UITextView *aboutText;
 }
 
-@property (nonatomic, retain) IBOutlet UITextView *aboutText;
+@property (nonatomic, strong) IBOutlet UITextView *aboutText;
 
 @end

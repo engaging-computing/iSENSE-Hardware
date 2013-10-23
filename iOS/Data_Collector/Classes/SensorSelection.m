@@ -58,7 +58,7 @@
     self.navigationItem.hidesBackButton = YES;
 	
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] integerValue];
+    int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] integerValue];
     
     dfm = [[DataFieldManager alloc] init];
     [dfm getFieldOrderOfExperiment:exp];
@@ -79,7 +79,6 @@
     int accel   = [sc getCompatibilityForSensorType:sACCELEROMETER];
     int light   = [sc getCompatibilityForSensorType:sAMBIENT_LIGHT];
     int gyro    = [sc getCompatibilityForSensorType:sGYROSCOPE];
-    [sc release];
     //int proxi   = [sc getCompatibilityForSensorType:sPROXIMITY];
     
     CMMotionManager *motionManager = [[CMMotionManager alloc] init];
@@ -117,7 +116,6 @@
         }
     }
     
-    [motionManager release];
     
     table.backgroundColor = [UIColor clearColor];
     
@@ -132,11 +130,6 @@
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
-- (void) dealloc {
-    [table release];
-    [ok release];
-    [super dealloc];
-}
 
 - (IBAction)okOnClick:(id)sender {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -169,7 +162,6 @@
         }
         
         cell = (SensorCell *)tempController.view;
-        [tempController release];
     }
 
     bool cellEnabled = (([[selectedCells objectAtIndex:indexPath.row] integerValue]) == 1) ? true : false;
