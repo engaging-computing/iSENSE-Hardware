@@ -21,7 +21,8 @@
             android:paddingTop="12dip"
             android:text="@+string/firstName"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp" 
+            android:paddingLeft="5dp"/>
 
         <EditText
             android:id="@+id/name"
@@ -34,38 +35,41 @@
             android:inputType="textCapSentences"
             android:maxLength="50"
             android:textColor="@android:color/black"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null" 
+            android:paddingRight="5dp"/>
     </RelativeLayout>
 
     
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2" >
 
         <TextView
-            android:layout_marginLeft="5dp"
-            android:id="@+id/queueCountLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="@string/queueCount"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/ExperimentLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:layout_weight="1"
             android:text="@string/experiment"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textSize="16sp" 
+            android:paddingLeft = "10dp"/>
+
+        <TextView
+            android:id="@+id/queueCountLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:gravity="left"
+            android:text="@string/queueCount"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:paddingRight = "10dp" />
+
+     </RelativeLayout>
     
     
     <Button
