@@ -4,11 +4,60 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:id="@+id/bottom_contents"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/locationBlock"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/myLocation"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@+string/noLocation0"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            
+            <TextView
+                android:id="@+id/queueCountLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/queueCount"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+            
+               <TextView
+                android:id="@+id/ExperimentLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/experiment"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+            
+            
+        </LinearLayout>
+
+        
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/main_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottom_contents"
         android:baselineAligned="false" >
 
         <RelativeLayout
@@ -50,40 +99,6 @@
                     android:textColor="@android:color/black"
                     android:textCursorDrawable="@null" />
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/queueCountLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:gravity="left"
-                android:text="@string/queueCount"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/ExperimentLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:gravity="left"
-                android:text="@string/experiment"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/myLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:text="@+string/noLocation0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
         </RelativeLayout>
 
         <LinearLayout
