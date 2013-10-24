@@ -13,7 +13,7 @@
 #import <iSENSE_API/API.h>
 
 #import "QueueConstants.h"
-#import "ProjectBrowseViewController.h"
+#import <iSENSE_API/ProjectBrowseViewController.h>
 #import <iSENSE_API/Waffle.h>
 
 #import <AVFoundation/AVFoundation.h>
