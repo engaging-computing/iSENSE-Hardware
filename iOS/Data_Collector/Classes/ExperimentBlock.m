@@ -20,7 +20,7 @@
     if (self) {
         
         // Initialization code
-        experiment = [exp retain];
+        experiment = exp;
         _target = target;
         _selector = selector;
         self.multipleTouchEnabled = false;
@@ -50,8 +50,6 @@
         // Add the label to the main view
         [self addSubview:experimentNameLabel];
         [self addSubview:experimentDescriptionLabel];
-        [experimentDescriptionLabel release];
-        [experimentNameLabel release];
         
     }
     return self;
@@ -75,12 +73,13 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    
     [_target performSelector:_selector withObject:self];
+    
+    #pragma clang diagnostic pop
 }
 
-- (void) dealloc {
-    [experiment release];
-    [super dealloc];
-}
 
 @end

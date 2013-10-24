@@ -261,7 +261,7 @@ static RPerson *currentUser;
  */
 -(NSString *)getSortType:(SortType)sort {
     switch (sort) {
-        case RATING: return @"RATING";
+        case SORT_RATING: return @"RATING";
         case CREATED_AT_DESC: return @"created_at%20DESC";
         case CREATED_AT_ASC: return @"created_at%20ASC";
         case UPDATED_AT_DESC: return @"updated_at%20DESC";

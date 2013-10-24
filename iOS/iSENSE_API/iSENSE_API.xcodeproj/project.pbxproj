@@ -40,6 +40,15 @@
 		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
 		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
 		B712DE241796D17000A30CAC /* QDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* QDataSet.h */; };
+		B72AED7C18194741008FE242 /* HexColor.h in Headers */ = {isa = PBXBuildFile; fileRef = B72AED7B18194741008FE242 /* HexColor.h */; };
+		B72AED81181948A1008FE242 /* ISenseSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = B72AED7F181948A1008FE242 /* ISenseSearch.h */; };
+		B72AED82181948A1008FE242 /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = B72AED80181948A1008FE242 /* ISenseSearch.m */; };
+		B72AED85181948A8008FE242 /* ProjectBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = B72AED83181948A8008FE242 /* ProjectBlock.m */; };
+		B72AED86181948A8008FE242 /* ProjectBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = B72AED84181948A8008FE242 /* ProjectBlock.h */; };
+		B72AED89181948AF008FE242 /* ProjectBrowseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B72AED87181948AF008FE242 /* ProjectBrowseViewController.h */; };
+		B72AED8A181948AF008FE242 /* ProjectBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B72AED88181948AF008FE242 /* ProjectBrowseViewController.m */; };
+		B72AED8E181949C4008FE242 /* projectblock_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = B72AED8C181949C4008FE242 /* projectblock_clean.png */; };
+		B72AED8F181949C4008FE242 /* projectblock_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B72AED8D181949C4008FE242 /* projectblock_dark.png */; };
 		B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */; };
 		B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */; };
 		B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB3179D8D1D00B891B0 /* Fields.h */; };
@@ -121,6 +130,15 @@
 		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
 		B712DE211796D17000A30CAC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
 		B712DE221796D17000A30CAC /* QDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QDataSet.h; path = headers/QDataSet.h; sourceTree = "<group>"; };
+		B72AED7B18194741008FE242 /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColor.h; sourceTree = "<group>"; };
+		B72AED7F181948A1008FE242 /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
+		B72AED80181948A1008FE242 /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
+		B72AED83181948A8008FE242 /* ProjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBlock.m; sourceTree = "<group>"; };
+		B72AED84181948A8008FE242 /* ProjectBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBlock.h; sourceTree = "<group>"; };
+		B72AED87181948AF008FE242 /* ProjectBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowseViewController.h; sourceTree = "<group>"; };
+		B72AED88181948AF008FE242 /* ProjectBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowseViewController.m; sourceTree = "<group>"; };
+		B72AED8C181949C4008FE242 /* projectblock_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_clean.png; sourceTree = "<group>"; };
+		B72AED8D181949C4008FE242 /* projectblock_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_dark.png; sourceTree = "<group>"; };
 		B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
 		B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
 		B73CFDB3179D8D1D00B891B0 /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
@@ -281,6 +299,8 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				B72AED7D1819484B008FE242 /* browse_projects */,
+				B72AED7A18194720008FE242 /* hex_color */,
 				3989BECB17C5552C009C5F21 /* isense_api */,
 				B7EBFDB817A01419006B90A8 /* reachability */,
 				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
@@ -347,6 +367,45 @@
 				39FF262216DFA8760062C3DC /* SessionData.m */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		B72AED7A18194720008FE242 /* hex_color */ = {
+			isa = PBXGroup;
+			children = (
+				B72AED7B18194741008FE242 /* HexColor.h */,
+			);
+			name = hex_color;
+			sourceTree = "<group>";
+		};
+		B72AED7D1819484B008FE242 /* browse_projects */ = {
+			isa = PBXGroup;
+			children = (
+				B72AED8B181949BD008FE242 /* images */,
+				B72AED7E18194879008FE242 /* objects */,
+				B72AED87181948AF008FE242 /* ProjectBrowseViewController.h */,
+				B72AED88181948AF008FE242 /* ProjectBrowseViewController.m */,
+			);
+			name = browse_projects;
+			sourceTree = "<group>";
+		};
+		B72AED7E18194879008FE242 /* objects */ = {
+			isa = PBXGroup;
+			children = (
+				B72AED83181948A8008FE242 /* ProjectBlock.m */,
+				B72AED84181948A8008FE242 /* ProjectBlock.h */,
+				B72AED7F181948A1008FE242 /* ISenseSearch.h */,
+				B72AED80181948A1008FE242 /* ISenseSearch.m */,
+			);
+			name = objects;
+			sourceTree = "<group>";
+		};
+		B72AED8B181949BD008FE242 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				B72AED8C181949C4008FE242 /* projectblock_clean.png */,
+				B72AED8D181949C4008FE242 /* projectblock_dark.png */,
+			);
+			name = images;
 			sourceTree = "<group>";
 		};
 		B73B842D179ED48E0003007F /* dataset */ = {
@@ -464,6 +523,10 @@
 				B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */,
 				3989BECE17C5556C009C5F21 /* API.h in Headers */,
 				39A9419617EB28B0009270D3 /* RNews.h in Headers */,
+				B72AED7C18194741008FE242 /* HexColor.h in Headers */,
+				B72AED81181948A1008FE242 /* ISenseSearch.h in Headers */,
+				B72AED86181948A8008FE242 /* ProjectBlock.h in Headers */,
+				B72AED89181948AF008FE242 /* ProjectBrowseViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +605,8 @@
 				B7F09EF91794599100725483 /* waffle_warn.png in Resources */,
 				B7F09EFA1794599100725483 /* waffle_x.png in Resources */,
 				B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */,
+				B72AED8E181949C4008FE242 /* projectblock_clean.png in Resources */,
+				B72AED8F181949C4008FE242 /* projectblock_dark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,6 +649,9 @@
 				B7E5675117C63DCE00C2DF46 /* RProjectField.m in Sources */,
 				B7E5675217C63DCE00C2DF46 /* RTutorial.m in Sources */,
 				39A9419717EB28B0009270D3 /* RNews.m in Sources */,
+				B72AED82181948A1008FE242 /* ISenseSearch.m in Sources */,
+				B72AED85181948A8008FE242 /* ProjectBlock.m in Sources */,
+				B72AED8A181948AF008FE242 /* ProjectBrowseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

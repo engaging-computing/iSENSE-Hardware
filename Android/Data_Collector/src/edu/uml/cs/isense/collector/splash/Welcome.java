@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,6 +28,7 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
+	private int actionBarTapCount = 0;
 	public static boolean useDev = true;
 	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
@@ -62,6 +64,9 @@ public class Welcome extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		// Set listeners for the buttons
@@ -108,6 +113,34 @@ public class Welcome extends Activity {
 			}
 		});
 
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	
+	    	String other = (useDev) ? "production" : "dev";
+	       
+	    	switch (++actionBarTapCount) {
+	    	case 5:
+	    		w.make("2 more taps to enter " + other + " mode");
+	    		break;
+	    	case 6:
+	    		w.make("1 more tap to enter " + other + " mode");
+	    		break;
+	    	case 7:
+	    		w.make("Now in " + other + " mode");
+	    		useDev = !useDev;
+	    		api.useDev(useDev);
+	    		actionBarTapCount = 0;
+	    		break;
+	    	}
+	    	
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
