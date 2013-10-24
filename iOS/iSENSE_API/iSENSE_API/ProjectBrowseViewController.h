@@ -9,11 +9,12 @@
 
 #import <UIKit/UIKit.h>
 #import <iSENSE_API/API.h>
+#import <iSENSE_API/HexColor.h>
+
 #import "ProjectBlock.h"
 #import "ISenseSearch.h"
-#import "StringGrabber.h"
-#import "Constants.h"
-#import "HexColor.h"
+
+#define kCHOOSE_PROJECT @"This is my project."
 
 @class ProjectBrowseViewController;
 
@@ -47,7 +48,7 @@
 @property (nonatomic, assign) int scrollHeight;
 @property (nonatomic, assign) int contentHeight;
 @property (nonatomic, retain) ProjectBlock *lastProjectClicked;
-@property (nonatomic, weak) id <ProjectBrowseViewControllerDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id <ProjectBrowseViewControllerDelegate> delegate;
 
 @end
 

@@ -24,7 +24,7 @@
         
         // Bound, allocate, and customize the main view
         mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 1024 - NAVIGATION_CONTROLLER_HEIGHT)];
-        mainView.backgroundColor = [HexColor colorWithHexString:@"EEEEEE"];
+        mainView.backgroundColor = UIColorFromHex(0xEEEEEE);
         self.view = mainView;
         
         // Prepare ProjectInfo Frame
@@ -40,8 +40,8 @@
         // Prepare choose Project button
         chooseProject = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         chooseProject.frame = CGRectMake(20, self.view.bounds.size.height - 170, projectInfo.frame.size.width - 40, 100);
-        [chooseProject setTitleColor:[HexColor colorWithHexString:@"5C93DB"] forState:UIControlStateNormal];
-        [chooseProject setTitle:[StringGrabber grabString:@"choose_Project"] forState:UIControlStateNormal];
+        [chooseProject setTitleColor:UIColorFromHex(0x5C93DB)forState:UIControlStateNormal];
+        [chooseProject setTitle:kCHOOSE_PROJECT forState:UIControlStateNormal];
         //[chooseProject addTarget:self action:@selector(projectChosen) forControlEvents:UIControlEventTouchUpInside];
 
     } else {

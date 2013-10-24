@@ -14,7 +14,7 @@
 #import <iSENSE_API/Waffle.h>
 #import <iSENSE_API/API.h>
 #import <RPerson.h>
-#import "ProjectBrowseViewController.h"
+#import <iSENSE_API/ProjectBrowseViewController.h>
 #import "DWAppDelegate.h"
 #import <iSENSE_API/headers/DataSaver.h>
 #import "QueueUploaderView.h"
