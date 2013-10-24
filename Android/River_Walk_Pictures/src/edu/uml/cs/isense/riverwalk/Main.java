@@ -191,7 +191,8 @@ public class Main extends Activity implements LocationListener {
 		});
 
 	}
-
+	
+	// double tap back button to exit
 	@Override
 	public void onBackPressed() {
 		if (!w.isDisplaying) {
@@ -206,7 +207,7 @@ public class Main extends Activity implements LocationListener {
 	    return true;
 	}
 	
-	
+	// menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle item selection
@@ -225,6 +226,13 @@ public class Main extends Activity implements LocationListener {
 	        	startActivityForResult(new Intent(getApplicationContext(),
 						LoginActivity.class), LOGIN_REQUESTED);
 	            return true;
+	            
+	        case R.id.MENU_ITEM_CONTINUOUS:
+//	        	Intent iExperiment = new Intent(getApplicationContext(),
+//						ContinousDialog.class);
+//				startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+	        	//TODO show layout for continuous shooting
+	            return true;    
 	            
 	        default:
 	            return false;
@@ -539,11 +547,7 @@ public class Main extends Activity implements LocationListener {
 		if (api.hasConnectivity()) {
 			new LoginTask().execute();
 			
-			// can't check success or not
-//			if (!success) {
-//				w.make("Experiencing wifi difficulties - check your wifi signal.",
-//						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-//			}
+
 		}
 	}
 
@@ -589,6 +593,7 @@ public class Main extends Activity implements LocationListener {
 		mTimer = null;
 	}
 
+	//no gps signal
 	private void waitingForGPS() {
 		mTimer = new Timer();
 		mTimer.scheduleAtFixedRate(new TimerTask() {
