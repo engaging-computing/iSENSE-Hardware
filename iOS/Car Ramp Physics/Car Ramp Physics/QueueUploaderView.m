@@ -398,13 +398,13 @@
 
 // There is a single column in this table
 - (NSInteger *)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return (NSInteger *)1;
 }
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (dataSaver == nil) NSLog(@"Why am I nil?");
-    return dataSaver.dataQueue.count;
+    return (NSInteger *)dataSaver.dataQueue.count;
 }
 
 

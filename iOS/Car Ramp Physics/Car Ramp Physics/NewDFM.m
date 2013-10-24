@@ -34,23 +34,48 @@
     return enabledFields[index];
 }
 
-- (NSMutableArray *) getFieldOrderOfProject:(int)projID {
+// Default dispatch_async dialog with custom spinner
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
+}
+
+- (void) getFieldOrderOfProject:(int)projID {
     
     if (projID == -1) {
         [self addAllFieldsToOrder];
-        return order;
+        return;
     }
     
     if (order) order = nil;
     order = [[NSMutableArray alloc] init];
     API *api = [API getInstance];
-    dispatch_queue_t queue = dispatch_queue_create("edu.uml.cs.isense.api", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("edu.uml.cs.isense.dfm", NULL);
     dispatch_async(queue, ^{
         NSArray *fields = [api getProjectFieldsWithId:projID];
         
+        // log fields
+        NSLog(@"Fields: %@", fields);
+        
         for (RProjectField *field in fields) {
+            
+            // log all info field
+            NSLog(@"Field Type: %@", field.type);
+            
             switch ([field.type intValue]) {
                 case TYPE_NUMBER:
+                    
+                    // log field.name
+                    NSLog(@"Field Name: %@", field.name);
+                    
                     if ([[field.name lowercaseString] rangeOfString:@"temp"].location != NSNotFound) {
                         if ([[field.name lowercaseString] rangeOfString:@"c"].location != NSNotFound) {
                             [order addObject:[FieldGrabber grabField:@"temperature_c"]];
@@ -112,7 +137,6 @@
     });
     
         
-    return order;
 }
 
 - (NSMutableDictionary *) putDataFromFields:(Fields *)f {
@@ -450,14 +474,7 @@
     NSMutableDictionary *outRow;
     NSMutableArray *row;
     
-    [self getFieldOrderOfProject:projID];
-    [order addObject:[FieldGrabber grabField:@"accel_x"]];
-    [order addObject:[FieldGrabber grabField:@"accel_y"]];
-    [order addObject:[FieldGrabber grabField:@"accel_z"]];
-    [order addObject:[FieldGrabber grabField:@"accel_total"]];
-    [order addObject:[FieldGrabber grabField:@"time"]];
-
-    NSLog(@"oldData: %@", oldData);
+    //[self getFieldOrderOfProject:projID];
     
     for (int i = 0; i < [oldData count]; i++) {
         @try {
@@ -468,9 +485,7 @@
             for (int j = 0 ; j < order.count ; j++) {
                 NSString *s = [order objectAtIndex:j];
                 @try {
-                    NSLog(@"s = %@", s);
                     if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]]) {
-                        NSLog(@"object: %@", row);
                         [outRow setObject:[row objectAtIndex:fACCEL_X] forKey:[NSString stringWithFormat:@"%d", j]];
                         continue;
                     }
@@ -546,7 +561,6 @@
                         [outRow setObject:[row objectAtIndex:fPRESSURE] forKey:[NSString stringWithFormat:@"%d", j]];
                         continue;
                     }
-                    NSLog(@"NULLFROG");
                     [outRow setObject:nil forKey:[NSString stringWithFormat:@"%d", j]];
                 }
                 @catch (NSException *exception) {
@@ -555,14 +569,13 @@
             }
             
             [outData addObject:outRow];
-            NSLog( @"OutData: %@", outData );
         }
         @catch (NSException *exception) {
             NSLog(@"99 Problems");
         }
     }
         
-    return [NSString stringWithFormat:@"%@", outData];
+    return outData;
 }
 
 
