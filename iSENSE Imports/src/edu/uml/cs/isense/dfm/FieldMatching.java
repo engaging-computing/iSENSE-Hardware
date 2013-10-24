@@ -50,6 +50,14 @@ public class FieldMatching extends Activity {
 	 */
 	public static boolean compatible;
 	
+	/**
+	 * This hardcoded String is used to identify whether or not the FieldMatching class should build
+	 * a String containing accepted fields in SharedPreferences.
+	 */
+	public static String SHOULD_BUILD_PREFS_STRING = "should_build_prefs_string";
+	
+	private static boolean shouldBuildPrefsString = true;
+	
 	private LinearLayout scrollViewLayout;
 	private int nullViewCount = 0;
 	private boolean isEmpty = false;
@@ -71,6 +79,8 @@ public class FieldMatching extends Activity {
 		if (extras != null) {
 			String[] sa = extras.getStringArray(DFM_ORDER_LIST);
 			fields = DataFieldManager.convertStringArrayToLinkedList(sa);
+			
+			shouldBuildPrefsString = extras.getBoolean(SHOULD_BUILD_PREFS_STRING, true);
 		} else {
 			throw new RuntimeException("Incorrect usage of FieldMatching: please pass in dfm's order list");
 		}
@@ -201,7 +211,8 @@ public class FieldMatching extends Activity {
 			
 		}
 		
-		buildPrefsString();
+		if (shouldBuildPrefsString)
+			buildPrefsString();
 
 	}
 	
