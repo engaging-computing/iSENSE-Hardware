@@ -62,10 +62,6 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 
-//	private static final int MENU_ITEM_BROWSE = 0;
-//	private static final int MENU_ITEM_LOGIN = 1;
-//	private static final int MENU_ITEM_UPLOAD = 2;
-
 	private static final int TIMER_LOOP = 1000;
 
 	private LocationManager mLocationManager;
@@ -78,7 +74,6 @@ public class Main extends Activity implements LocationListener {
 	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
 
-	// private static boolean gpsWorking = false;
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
 	public static boolean initialLoginStatus = true;
@@ -90,8 +85,6 @@ public class Main extends Activity implements LocationListener {
 	private Handler mHandler;
 	private TextView latLong;
 	private TextView queueCount;
-	private static final double DEFAULT_LAT = 0;
-	private static final double DEFAULT_LONG = 0;
 	private long curTime;
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
@@ -228,9 +221,6 @@ public class Main extends Activity implements LocationListener {
 	            return true;
 	            
 	        case R.id.MENU_ITEM_CONTINUOUS:
-//	        	Intent iExperiment = new Intent(getApplicationContext(),
-//						ContinousDialog.class);
-//				startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 	        	//TODO show layout for continuous shooting
 	            return true;    
 	            
@@ -253,6 +243,7 @@ public class Main extends Activity implements LocationListener {
 				+ uq.queueSize());
 	}
 
+	//uploads the data if logged in and queue is not empty
 	private void manageUploadQueue() {
 
 		if (api.getCurrentUser() == null) {
@@ -271,6 +262,7 @@ public class Main extends Activity implements LocationListener {
 
 	}
 
+	//onStart initialize location manager
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -371,7 +363,7 @@ public class Main extends Activity implements LocationListener {
 			//if (dfm == null)
 				initDfm();
 
-			JSONArray dataJSON = new JSONArray();
+			JSONArray dataJSON = new JSONArray();		//data is set into JSONArray to be uploaded
 			JSONObject dataRow = new JSONObject();
 			if (loc.getLatitude() != 0) {
 				f.timeMillis = curTime;
@@ -382,9 +374,13 @@ public class Main extends Activity implements LocationListener {
 				System.out.println("Longitude =" + f.longitude);
 				dataRow = dfm.putData();
 			} else {
-				f.timeMillis = curTime;
-				f.latitude = DEFAULT_LAT;   
-				f.longitude = DEFAULT_LONG;
+				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				f.timeMillis = curTime;	
+				System.out.println("curTime (no gps) =" + f.timeMillis);    //TODO
+				f.latitude = loc.getLatitude();  
+				System.out.println("Latitude (no gps) =" + f.latitude);
+				f.longitude = loc.getLongitude(); 
+				System.out.println("Longitude (no gps) =" + f.longitude);
 				dataRow = dfm.putData();
 			}
 			dataJSON.put(dataRow);
