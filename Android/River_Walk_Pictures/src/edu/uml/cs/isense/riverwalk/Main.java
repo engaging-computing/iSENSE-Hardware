@@ -99,7 +99,6 @@ public class Main extends Activity implements LocationListener {
 	private ProgressDialog dia;
 	private DataFieldManager dfm;
 	private Fields f;
-
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -367,6 +366,12 @@ public class Main extends Activity implements LocationListener {
 
 			JSONArray dataJSON = new JSONArray();		//data is set into JSONArray to be uploaded
 			JSONObject dataRow = new JSONObject();
+			
+			if (!api.hasConnectivity()){
+				experimentNum = "-1";
+			}
+				
+				
 			if (loc.getLatitude() != 0) {
 				f.timeMillis = curTime;
 				System.out.println("curTime =" + f.timeMillis);
@@ -374,7 +379,13 @@ public class Main extends Activity implements LocationListener {
 				System.out.println("Latitude =" + f.latitude);
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
-				dataRow = dfm.putData();
+				
+				if (!experimentNum.equals("-1")){
+					dataJSON.put(dfm.putData());
+				}else{
+					dataJSON.put(dfm.putDataForNoProjectID());
+				}
+				
 			} else { //no gps
 				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
 				f.timeMillis = curTime;	
@@ -383,8 +394,14 @@ public class Main extends Activity implements LocationListener {
 				System.out.println("Latitude (no gps) =" + f.latitude);
 				f.longitude = loc.getLongitude(); 
 				System.out.println("Longitude (no gps) =" + f.longitude);
-				dataRow = dfm.putData();
+				
+				if (!experimentNum.equals("-1")){
+					dataJSON.put(dfm.putData());
+				}else{
+					dataJSON.put(dfm.putDataForNoProjectID());
+				}
 			}
+			
 			dataJSON.put(dataRow); 
 
 			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()  //data set to be uploaded
