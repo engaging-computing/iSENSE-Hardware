@@ -220,9 +220,9 @@ public class Main extends Activity implements LocationListener {
 						LoginActivity.class), LOGIN_REQUESTED);
 	            return true;
 	            
-	        case R.id.MENU_ITEM_CONTINUOUS:
+	        //case R.id.MENU_ITEM_CONTINUOUS:
 	        	//TODO show layout for continuous shooting
-	            return true;    
+	         //   return true;    
 	            
 	        default:
 	            return false;
@@ -347,6 +347,7 @@ public class Main extends Activity implements LocationListener {
 		});
 	}
 
+	//upload pictures
 	private Runnable uploader = new Runnable() {
 		@Override
 		public void run() {
@@ -373,8 +374,8 @@ public class Main extends Activity implements LocationListener {
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
 				dataRow = dfm.putData();
-			} else {
-				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			} else { //no gps
+				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
 				f.timeMillis = curTime;	
 				System.out.println("curTime (no gps) =" + f.timeMillis);    //TODO
 				f.latitude = loc.getLatitude();  
