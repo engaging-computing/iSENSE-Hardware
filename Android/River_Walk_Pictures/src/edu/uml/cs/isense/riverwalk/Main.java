@@ -100,6 +100,7 @@ public class Main extends Activity implements LocationListener {
 	private DataFieldManager dfm;
 	private Fields f;
 
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -220,9 +221,9 @@ public class Main extends Activity implements LocationListener {
 						LoginActivity.class), LOGIN_REQUESTED);
 	            return true;
 	            
-	        case R.id.MENU_ITEM_CONTINUOUS:
+	        //case R.id.MENU_ITEM_CONTINUOUS:
 	        	//TODO show layout for continuous shooting
-	            return true;    
+	         //   return true;    
 	            
 	        default:
 	            return false;
@@ -347,6 +348,7 @@ public class Main extends Activity implements LocationListener {
 		});
 	}
 
+	//upload pictures
 	private Runnable uploader = new Runnable() {
 		@Override
 		public void run() {
@@ -373,8 +375,8 @@ public class Main extends Activity implements LocationListener {
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
 				dataRow = dfm.putData();
-			} else {
-				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			} else { //no gps
+				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
 				f.timeMillis = curTime;	
 				System.out.println("curTime (no gps) =" + f.timeMillis);    //TODO
 				f.latitude = loc.getLatitude();  
@@ -383,7 +385,7 @@ public class Main extends Activity implements LocationListener {
 				System.out.println("Longitude (no gps) =" + f.longitude);
 				dataRow = dfm.putData();
 			}
-			dataJSON.put(dataRow);
+			dataJSON.put(dataRow); 
 
 			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()  //data set to be uploaded
 					.toString() + ": " + descriptionStr,
@@ -397,7 +399,7 @@ public class Main extends Activity implements LocationListener {
 		}
 	};
 
-	private void initDfm() {
+	private void initDfm() {											//sets up data field manager
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		String experimentInput = mPrefs.getString("project_id", "");
 		System.out.println("experimentInput ="+ experimentInput);
@@ -409,10 +411,10 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) { //passes in a request code
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) {
+		if (requestCode == CAMERA_PIC_REQUESTED) { 						//request to takes picture
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
 				picture = convertImageUriToFile(imageUri);
@@ -428,7 +430,7 @@ public class Main extends Activity implements LocationListener {
 
 			}
 
-		} else if (requestCode == EXPERIMENT_REQUESTED) {
+		} else if (requestCode == EXPERIMENT_REQUESTED) {			//obtains data fields from project on isense
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 				String eidString = mPrefs.getString("project_id", "");
@@ -441,14 +443,14 @@ public class Main extends Activity implements LocationListener {
 						mContext, f);
 				dfm.getOrder();
 			}
-		} else if (requestCode == LOGIN_REQUESTED) {
+		} else if (requestCode == LOGIN_REQUESTED) {				//shows dialog to login
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("LOGIN", 0);
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putBoolean("logged_in", true);
 				mEditor.commit();
 			}
-		} else if (requestCode == NO_GPS_REQUESTED) {
+		} else if (requestCode == NO_GPS_REQUESTED) {				//asks the user if they would like to enable gps
 			showGpsDialog = true;
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
@@ -547,7 +549,7 @@ public class Main extends Activity implements LocationListener {
 		}
 	}
 
-	// initialize location listener to get a point
+	// initialize location listener to get a pair of coordinates
 	private void initLocManager() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
