@@ -66,18 +66,19 @@
     [self initLocations];
     
     // iSENSE API
-    iapi = [iSENSE getInstance];
-    [iapi toggleUseDev:YES];
-    if ([iapi isLoggedIn])
-        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+    api = [API getInstance];
+    [api useDev:TRUE];
+    
+    if ([api getCurrentUser] != nil)
+        loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[[api getCurrentUser] username]];
     else {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         NSString *username = [prefs stringForKey:[StringGrabber grabString:@"key_username"]];
         NSString *password = [prefs stringForKey:[StringGrabber grabString:@"key_password"]];
         if ([username length] != 0) {
-            bool success = [iapi login:username with:password];
+            bool success = [api createSessionWithUsername:username andPassword:password];
             if (success) {
-                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[[api getCurrentUser] username]];
             } else {
                 loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:@"_"]; 
             }
@@ -463,13 +464,12 @@
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
 	UIAlertView *message;
-    QueueUploaderView *queueUploader;
 
 	switch (buttonIndex) {
         case MANUAL_MENU_UPLOAD:
             
-            if (dataSaver.dataQueue.count > 0) {
-                queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
+            if ([dataSaver dataSetCountWithParentName:PARENT_MANUAL] > 0) {
+                QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
                 queueUploader.title = @"Upload";
                 [self.navigationController pushViewController:queueUploader animated:YES];
             } else {
@@ -530,7 +530,7 @@
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = PROJECT_MANUAL_ENTRY;
+            message.tag = PROJ_MANUAL;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             [message textFieldAtIndex:0].tag = TAG_MANUAL_PROJ;
@@ -541,9 +541,9 @@
             
             initialProjDialogOpen = false;
             
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
+            ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
             browseView.title = @"Browse Projects";
-            browseView.chosenExperiment = &projNum;
+            browseView.delegate = self;
             browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
             
@@ -577,7 +577,7 @@
             
         }
         
-    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJ_MANUAL) {
         
         initialProjDialogOpen = false;
         
@@ -714,7 +714,7 @@
         
     dispatch_queue_t queue = dispatch_queue_create("manual_login_from_login_function", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [iapi login:usernameInput with:passwordInput];
+        BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.view makeWaffle:@"Login Successful!"
@@ -728,7 +728,7 @@
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
                 
-                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[iapi getLoggedInUsername]];
+                loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[[api getCurrentUser] username]];
             } else {
                 [self.view makeWaffle:@"Login Failed!"
                             duration:WAFFLE_LENGTH_SHORT
@@ -751,26 +751,21 @@
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         
-        NSMutableArray *fieldOrder = [iapi getExperimentFields:[NSNumber numberWithInt:eid]];
+        NSArray *fieldOrder = [api getProjectFieldsWithId:eid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
             int objNumber = 0;
             int scrollHeight = 0;
             
-            for (ExperimentField *projField in fieldOrder) {
+            for (RProjectField *projField in fieldOrder) {
                 
-                if (projField.type_id.intValue == GEOSPACIAL || projField.type_id.intValue == TIME) {
-                    if (projField.unit_id.intValue == UNIT_LATITUDE) {
-                        scrollHeight = [self addDataField:projField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
-                    } else if (projField.unit_id.intValue == UNIT_LONGITUDE) {
-                        scrollHeight = [self addDataField:projField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
-                    } else /* Time */ {
-                        // if (data == nil)
-                        scrollHeight = [self addDataField:projField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
-                        // else
-                        //    scrollHeight = [self addDataField:expField withType:TYPE_TIME andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
-                    }
+                if (projField.type.intValue == TYPE_LAT) {
+                    scrollHeight = [self addDataField:projField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
+                } else if (projField.type.intValue == TYPE_LON) {
+                     scrollHeight = [self addDataField:projField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
+                } else if (projField.type.intValue == TYPE_TIMESTAMP) {
+                    scrollHeight = [self addDataField:projField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
                 } else {
                     if (data == nil)
                         scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
@@ -778,9 +773,8 @@
                         scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
                     }
                 }
-                
+            
                 ++objNumber;
-                
             }
             
             
@@ -791,12 +785,12 @@
             if (scrollView.subviews.count == 0) {
                 
                 UILabel *noFields = [[UILabel alloc] initWithFrame:CGRectMake(0, SCROLLVIEW_Y_OFFSET, IPAD_WIDTH_PORTRAIT, SCROLLVIEW_LABEL_HEIGHT)];
-                if ([iapi isConnectedToInternet])
+                if ([API hasConnectivity])
                     noFields.text = @"Invalid project.";
                 else
                     noFields.text = @"Cannot find project fields while not connected to the internet.";
                 noFields.backgroundColor = [UIColor clearColor];
-                noFields.textColor = [HexColor colorWithHexString:@"000000"];
+                noFields.textColor = UIColorFromHex(0x000000);
                 [scrollView addSubview: noFields];
             } else {
                 // adjust scrollview's bottom bit
@@ -828,7 +822,7 @@
     });
 }
 
-- (int) addDataField:(ExperimentField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
+- (int) addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
     
     CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
@@ -863,7 +857,7 @@
     }
     fieldName.backgroundColor = [UIColor clearColor];
     fieldName.textColor = [UIColor blackColor];
-    fieldName.text = [StringGrabber concatenate:projField.field_name withHardcodedString:@"colon"];
+    fieldName.text = [StringGrabber concatenate:projField.name withHardcodedString:@"colon"];
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
     fieldContents.delegate = self;
@@ -879,18 +873,17 @@
         fieldContents.enabled = NO;
         if (type == TYPE_LATITUDE) {
             fieldContents.text = [StringGrabber grabString:@"auto_lat"];
-            fieldContents.backgroundColor = [HexColor colorWithHexString:@"AAAAAA"];
+            fieldContents.backgroundColor = UIColorFromHex(0xAAAAAA);
         } else if (type == TYPE_LONGITUDE) {
             fieldContents.text = [StringGrabber grabString:@"auto_long"];
-            fieldContents.backgroundColor = [HexColor colorWithHexString:@"AAAAAA"];
+            fieldContents.backgroundColor = UIColorFromHex(0xAAAAAA);
         } else {
             fieldContents.text = [StringGrabber grabString:@"auto_time"];
-            fieldContents.backgroundColor = [HexColor colorWithHexString:@"AAAAAA"];
+            fieldContents.backgroundColor = UIColorFromHex(0xAAAAAA);
         }
     }
-    
-    NSLog(@"type id = %d", projField.type_id.intValue);
-    if (projField.type_id.intValue == TEXT) {
+
+    if (projField.type.intValue == TYPE_TEXT) {
         fieldContents.keyboardType = UIKeyboardTypeNamePhonePad;
         fieldContents.tag = TAG_TEXT + objNum;
     } else {
@@ -943,7 +936,7 @@
 }
 
 - (NSMutableArray *) getDataFromFields {
-    NSMutableArray *data = [[NSMutableArray alloc] init];
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     int count = 0;
     
     for (UIView *element in scrollView.subviews) {
@@ -953,27 +946,27 @@
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
                 double lat = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
-                [data addObject:latitude];
+                [data setValue:latitude forKey:[NSString stringWithFormat:@"%d", count]];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
                 double lon = lc2d.longitude;
                 NSString *longitude = [NSString stringWithFormat:@"%lf", lon];
-                [data addObject:longitude];
+                [data setValue:longitude forKey:[NSString stringWithFormat:@"%d", count]];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
                 
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
                 NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
-                [data addObject:currentTime];
+                [data setValue:currentTime forKey:[NSString stringWithFormat:@"%d", count]];
                 
             } else {
                 
                 if ([((UITextField *) element).text length] != 0)
-                    [data addObject:((UITextField *) element).text];
+                    [data setValue:((UITextField *) element).text forKey:[NSString stringWithFormat:@"%d", count]];
                 else
-                    [data addObject:@""];
+                    [data setValue:@"" forKey:[NSString stringWithFormat:@"%d", count]];
             }
         }
         count++;
@@ -1162,6 +1155,17 @@
     }
     
     [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+    projNum = [project intValue];
+    projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
+                                                             with:[NSString stringWithFormat:@"%d", projNum]];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:[NSString stringWithFormat:@"%d", project.intValue] forKey:[StringGrabber grabString:@"key_proj_manual"]];
+    
+    [self fillDataFieldEntryList:projNum withData:nil];
 }
 
 @end

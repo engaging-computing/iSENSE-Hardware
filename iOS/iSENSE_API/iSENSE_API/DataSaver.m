@@ -171,6 +171,8 @@
 //                }
                 
                 int returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:currentDS.data andName:currentDS.name];
+                NSLog(@"Data set ID: %d", returnID);
+                
                 if (returnID == 0 || returnID == -1) {
                     dataSetsFailed++;
                     continue;

@@ -177,18 +177,18 @@
     name = [prefs stringForKey:[StringGrabber grabString:@"first_name"]];
     [nameTextField setText:name];
     
-    int proj = [prefs integerForKey:[StringGrabber grabString:@"project_id"]];
+    int proj = [prefs integerForKey:KEY_PROJECT_ID];
     if (proj == 0)
         projectID = kDEFAULT_PROJECT;
     else
         projectID = proj;
-    [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+    [prefs setInteger:projectID forKey:KEY_PROJECT_ID];
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
     
-    NSString *curUser = [prefs objectForKey:[StringGrabber grabString:@"key_username"]];
+    NSString *curUser = [prefs objectForKey:KEY_USERNAME];
     if ([curUser length] == 0) {
-        [prefs setObject:kDEFAULT_USER forKey:[StringGrabber grabString:@"key_username"]];
-        [prefs setObject:kDEFAULT_PASS forKey:[StringGrabber grabString:@"key_password"]];
+        [prefs setObject:kDEFAULT_USER forKey:KEY_USERNAME];
+        [prefs setObject:kDEFAULT_PASS forKey:KEY_PASSWORD];
         [prefs synchronize];
     }
     
@@ -364,7 +364,7 @@
     }
     NSString *dataSetName = [NSString stringWithFormat:@"%@ - %@", usersName, [self getDateAndTime]];
     NSString *description = @"Data set uploaded from the iSENSE Data Walk iOS mobile application";
-    int projID = [prefs integerForKey:[StringGrabber grabString:@"project_id"]];
+    int projID = [prefs integerForKey:KEY_PROJECT_ID];
     NSMutableDictionary *mutableData = [[NSMutableDictionary alloc] init];
     [mutableData setObject:data forKey:@"data"];
     NSDictionary *dataJObj = [api rowsToCols:mutableData];
@@ -721,7 +721,7 @@
             projectID = [projNum intValue];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+            [prefs setInteger:projectID forKey:KEY_PROJECT_ID];
             
             [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
         }
@@ -743,9 +743,9 @@
         if (buttonIndex != kOPTION_CANCELED) {
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setObject:kDEFAULT_USER forKey:[StringGrabber grabString:@"key_username"]];
-            [prefs setObject:kDEFAULT_PASS forKey:[StringGrabber grabString:@"key_password"]];
-            [prefs setInteger:kDEFAULT_PROJECT forKey:[StringGrabber grabString:@"project_id"]];
+            [prefs setObject:kDEFAULT_USER forKey:KEY_USERNAME];
+            [prefs setObject:kDEFAULT_PASS forKey:KEY_PASSWORD];
+            [prefs setInteger:kDEFAULT_PROJECT forKey:KEY_PROJECT_ID];
             [prefs setInteger:kDEFAULT_REC_INTERVAL forKey:[StringGrabber grabString:@"recording_interval"]];
             [prefs synchronize];
             
@@ -776,8 +776,8 @@
                      
                      // save the username and password in prefs
                      NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
-                     [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
-                     [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                     [prefs setObject:usernameInput forKey:KEY_USERNAME];
+                     [prefs setObject:passwordInput forKey:KEY_PASSWORD];
                      [prefs synchronize];
                      
                      RPerson *curUser = [api getCurrentUser];
@@ -890,8 +890,7 @@
 // Checks to see if the string contains only digits 0 - 9
 - (BOOL) containsAcceptedDigits:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-    [[NSCharacterSet characterSetWithCharactersInString:
-      [StringGrabber grabString:@"accepted_digits"]] invertedSet];
+    [[NSCharacterSet characterSetWithCharactersInString:kACCEPTED_DIGITS] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
@@ -1043,7 +1042,7 @@
     projectID = project.intValue;
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setInteger:projectID forKey:[StringGrabber grabString:@"project_id"]];
+    [prefs setInteger:projectID forKey:KEY_PROJECT_ID];
     
     [selectProject setTitle:[NSString stringWithFormat:@"to project %d", projectID] forState:UIControlStateNormal];
 

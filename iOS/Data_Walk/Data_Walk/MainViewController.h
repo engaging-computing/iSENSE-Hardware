@@ -17,7 +17,8 @@
 #import <iSENSE_API/ProjectBrowseViewController.h>
 #import "DWAppDelegate.h"
 #import <iSENSE_API/headers/DataSaver.h>
-#import "QueueUploaderView.h"
+#import <iSENSE_API/QueueUploaderView.h>
+#import <iSENSE_API/ISKeys.h>
 
 typedef void (^APIBlock)(void);
 

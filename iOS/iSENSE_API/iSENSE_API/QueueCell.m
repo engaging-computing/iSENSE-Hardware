@@ -3,7 +3,7 @@
 //  Data_Collector
 //
 //  Created by Jeremy Poulin on 7/2/13.
-//
+//  Modified by Mike Stowell
 //
 
 #import "QueueCell.h"
@@ -18,7 +18,6 @@
 
 - (QueueCell *)setupCellWithDataSet:(QDataSet *)ds andKey:(NSNumber *)key {
     
-    // TODO - is this the right way to do this?
     self.dataSet = ds;
     
     self.mKey = key;
