@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import <iSENSE_API/API.h>
-#import <iSENSE_API/HexColor.h>
+#import <iSENSE_API/ISKeys.h>
 
 #import "ProjectBlock.h"
 #import "ISenseSearch.h"

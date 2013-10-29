@@ -53,8 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    iapi = [iSENSE getInstance];
-    [iapi toggleUseDev:YES];
+    api = [API getInstance];
     
     sessionName.delegate = self;
     sessionName.tag = TAG_STEP1_DATA_SET_NAME;
@@ -281,7 +280,7 @@
                                                     cancelButtonTitle:@"Cancel"
                                                     otherButtonTitles:@"Okay", nil];
             
-            message.tag = PROJECT_MANUAL_ENTRY;
+            message.tag = PROJ_MANUAL;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
             [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             [message textFieldAtIndex:0].tag = TAG_STEPONE_PROJ;
@@ -292,9 +291,9 @@
             
             [self rememberPrefs];
             
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &projNumInteger;
+            ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
+            browseView.title = @"Browse Projects";
+            browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
@@ -324,18 +323,18 @@
             }
         }
         
-    } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
+    } else if (actionSheet.tag == PROJ_MANUAL) {
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            NSString *expNum = [[actionSheet textFieldAtIndex:0] text];
-            projNumInteger = [expNum integerValue];
+            NSString *projNum = [[actionSheet textFieldAtIndex:0] text];
+            projNumInteger = [projNum integerValue];
            
-            NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", expNum];
-            [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
+            NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", projNum];
+            [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setValue:expNum forKey:[StringGrabber grabString:@"key_proj_automatic"]];
+            [prefs setValue:projNum forKey:[StringGrabber grabString:@"key_proj_automatic"]];
             
             [self rememberPrefs];
             
@@ -362,18 +361,6 @@
             
             // Set the sensor_done key back to false again
             [prefs setBool:false forKey:@"sensor_done"];
-        } else {
-            // make sure user didn't use the back button
-            if (projNumInteger != 0) {
-                NSString *newExpLabel = [NSString stringWithFormat:@" (currently %d)", projNumInteger];
-                [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
-                
-                NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                NSString *expNumString = [NSString stringWithFormat:@"%d", projNumInteger];
-                [prefs setValue:expNumString forKey:[StringGrabber grabString:@"key_proj_automatic"]];
-                
-                displaySensorSelectFromBrowse = true;
-            }
         }
     }
     
@@ -521,6 +508,22 @@
         [prefs setValue:[testLength text] forKey:[StringGrabber grabString:@"key_test_length"]];
     
     [prefs setBool:true forKey:@"return_with_prefs"];
+}
+
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+    
+    projNumInteger = project.intValue;
+    
+    if (projNumInteger != 0) {
+        NSString *newProjLabel = [NSString stringWithFormat:@" (currently %d)", projNumInteger];
+        [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *projNumString = [NSString stringWithFormat:@"%d", projNumInteger];
+        [prefs setValue:projNumString forKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        
+        displaySensorSelectFromBrowse = true;
+    }
 }
 
 @end

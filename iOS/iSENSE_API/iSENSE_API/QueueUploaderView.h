@@ -3,26 +3,38 @@
 //  iSENSE_API
 //
 //  Created by Jeremy Poulin on 6/26/13.
+//  Modified by Mike Stowell
 //  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "DWAppDelegate.h"
-#import "QueueCell.h"
-#import <iSENSE_API/headers/DataSaver.h>
-#import <iSENSE_API/API.h>
+
+#import "DataSaver.h"
+#import "API.h"
+#import "ProjectBrowseViewController.h"
+#import "Waffle.h"
+#import "ISKeys.h"
 
 #import "QueueConstants.h"
-#import <iSENSE_API/ProjectBrowseViewController.h>
-#import <iSENSE_API/Waffle.h>
+#import "QueueCell.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 
 #define KEY_ATTEMPTED_UPLOAD    @"key_attempted_upload"
 
+// Parent name constants: add a new one for each app
+#define PARENT_AUTOMATIC    @"Automatic"
+#define PARENT_MANUAL       @"Manual"
+#define PARENT_DATA_WALK    @"DataWalk"
+#define PARENT_CAR_RAMP     @"CarRampPhysics"
+#define PARENT_CANOBIE      @"CanobiePhysics"
+
 @interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
     int projID;
+    
+    // bundle for resource files in the iSENSE_API_Bundle
+    NSBundle *isenseBundle;
 }
 
 - (IBAction) upload:(id)sender;
