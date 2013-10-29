@@ -3,11 +3,11 @@
 //  Data_Collector
 //
 //  Created by Jeremy Poulin on 7/2/13.
-//
+//  Modified by Mike Stowell
 //
 
 #import <UIKit/UIKit.h>
-#import <iSENSE_API/headers/QDataSet.h>
+#import "QDataSet.h"
 
 @interface QueueCell : UITableViewCell
 

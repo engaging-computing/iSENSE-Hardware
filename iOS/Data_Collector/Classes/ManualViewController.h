@@ -12,15 +12,17 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
-#import "QueueUploaderView.h"
+#import <iSENSE_API/QueueUploaderView.h>
 #import <MobileCoreServices/UTCoreTypes.h>
+#import <iSENSE_API/ProjectBrowseViewController.h>
+#import <iSENSE_API/ISKeys.h>
 
 #import "RotationDataSaver.h"
 
-@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
+@interface ManualViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, ProjectBrowseViewControllerDelegate> {
 	
 	// Non-UI Elements
-	iSENSE   *iapi;
+	API   *api;
 	NSString *dataSetName;
     RotationDataSaver *rds;
     
@@ -43,7 +45,7 @@
 - (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
 - (void)   fillDataFieldEntryList:(int)eid withData:(NSMutableArray *) data;
-- (int)    addDataField:(ExperimentField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
+- (int)    addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
 - (void)   hideKeyboard;
 - (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
 - (void)   cleanRDSData;

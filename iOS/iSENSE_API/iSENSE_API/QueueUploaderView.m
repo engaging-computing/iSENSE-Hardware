@@ -3,6 +3,7 @@
 //  iSENSE_API
 //
 //  Created by Jeremy Poulin on 6/26/13.
+//  Modified by Mike Stowell
 //  Copyright (c) 2013 Jeremy Poulin. All rights reserved.
 //
 
@@ -12,7 +13,7 @@
 
 @synthesize api, mTableView, currentIndex, dataSaver, managedObjectContext, lastClickedCellIndex, parent, limitedTempQueue;
 
-// Initialize the view
+// Initialize the view - TODO this shouldn't ever be used, right?  do we need it?
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -26,6 +27,7 @@
     if (self) {
         api = [API getInstance];
         parent = parentName;
+        isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
     }
     return self;
 }
@@ -45,8 +47,8 @@
         
     } else {
         NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
-        NSString *user = [prefs objectForKey:[StringGrabber grabString:@"key_username"]];
-        NSString *pass = [prefs objectForKey:[StringGrabber grabString:@"key_password"]];
+        NSString *user = [prefs objectForKey:KEY_USERNAME];
+        NSString *pass = [prefs objectForKey:KEY_PASSWORD];
         
         if ([API hasConnectivity]) {
             
@@ -78,24 +80,28 @@
     
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"queue_layout-landscape~ipad"
+            [isenseBundle loadNibNamed:@"queue_layout-landscape~ipad"
                                           owner:self
                                         options:nil];
             [self viewDidLoad];
         } else {
-            [[NSBundle mainBundle] loadNibNamed:@"queue_layout~ipad"
+            [isenseBundle loadNibNamed:@"queue_layout~ipad"
                                           owner:self
                                         options:nil];
             [self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"queue_layout-landscape~iphone"
+            [isenseBundle loadNibNamed:@"queue_layout-landscape~iphone"
                                           owner:self
                                         options:nil];
             [self viewDidLoad];
         } else {
-            [[NSBundle mainBundle] loadNibNamed:@"queue_layout~iphone"
+            
+            NSString *name = [[NSBundle mainBundle] resourcePath];
+            NSLog(@"HONKYFROG: %@", name);
+            
+            [isenseBundle loadNibNamed:@"queue_layout~iphone"
                                           owner:self
                                         options:nil];
             [self viewDidLoad];
@@ -115,14 +121,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Managed Object Context for Data_CollectorAppDelegate
+    // Note: if an app crashes while loading the QueueUploaderView, please check to ensure
+    // the application's delegate has implemented a managedObjectContext and dataSaver
+    // variable, named exactly like that.
+    
+    // Managed Object Context for App Delegate (where id = the application delegate)
     if (managedObjectContext == nil) {
-        managedObjectContext = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+        managedObjectContext = [(id)[[UIApplication sharedApplication] delegate] managedObjectContext];
     }
     
     // Get dataSaver from the App Delegate
     if (dataSaver == nil) {
-        dataSaver = [(DWAppDelegate *)[[UIApplication sharedApplication] delegate] dataSaver];
+        dataSaver = [(id)[[UIApplication sharedApplication] delegate] dataSaver];
     }
     
     currentIndex = 0;
@@ -325,7 +335,7 @@
             [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
+            [prefs setInteger:projID forKey:KEY_PROJECT_ID];
         }
         
     } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
@@ -351,7 +361,7 @@
     [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setInteger:projID forKey:[StringGrabber grabString:@"project_id"]];
+    [prefs setInteger:projID forKey:KEY_PROJECT_ID];
     
 }
 
@@ -361,7 +371,7 @@
 //    NSString *exp = arr[2];
 //    
 //    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]];
+//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]]; // if you uncomment this, make a new key_exp_manual
 //    
 //    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
 //    [cell setExpNum:exp];
@@ -405,7 +415,7 @@
     static NSString *cellIndetifier = @"QueueCellIdentifier";
     QueueCell *cell = (QueueCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
-        UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:nil];
+        UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"QueueCell" bundle:isenseBundle];
         cell = (QueueCell *) tmpVC.view;
     }
     
@@ -430,8 +440,8 @@
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
-                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
-                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs setObject:usernameInput forKey:KEY_USERNAME];
+                [prefs setObject:passwordInput forKey:KEY_PASSWORD];
                 [prefs synchronize];
                 
                 [message setTitle:@"Uploading data sets..."];
@@ -489,16 +499,14 @@
 
 - (BOOL) containsAcceptedCharacters:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-    [[NSCharacterSet characterSetWithCharactersInString:
-      [StringGrabber grabString:@"accepted_chars"]] invertedSet];
+    [[NSCharacterSet characterSetWithCharactersInString:kACCEPTED_CHARS] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }
 
 - (BOOL) containsAcceptedDigits:(NSString *)mString {
     NSCharacterSet *unwantedCharacters =
-    [[NSCharacterSet characterSetWithCharactersInString:
-      [StringGrabber grabString:@"accepted_digits"]] invertedSet];
+    [[NSCharacterSet characterSetWithCharactersInString:kACCEPTED_DIGITS] invertedSet];
     
     return ([mString rangeOfCharacterFromSet:unwantedCharacters].location == NSNotFound) ? YES : NO;
 }

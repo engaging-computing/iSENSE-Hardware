@@ -16,7 +16,7 @@
 // constants for dialogs
 #define MENU_PROJECT                  0
 #define MENU_LOGIN                    1
-#define PROJECT_MANUAL_ENTRY          118
+#define PROJ_MANUAL                   118
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5

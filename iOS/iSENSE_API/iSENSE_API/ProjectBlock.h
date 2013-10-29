@@ -15,7 +15,7 @@
     UIImageView *background;
     SEL _selector;
     id _target;
-
+    NSBundle *isenseBundle;
 }
 
 @property (nonatomic, strong) RProject *project;

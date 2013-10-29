@@ -23,10 +23,12 @@
         project = proj;
         _target = target;
         _selector = selector;
+        isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
         self.multipleTouchEnabled = false;
         
         // Backround image
-        background = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"projectblock_clean.png"]];
+        NSString *cleanImagePath = [isenseBundle pathForResource:@"projectblock_clean" ofType:@"png"];
+        background = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:cleanImagePath]];
         [self addSubview:background];
         
         // Center Project Information in a Label
@@ -57,9 +59,11 @@
 
 - (void) switchToDarkImage:(bool)booleanSwitch {
     if (booleanSwitch) {
-        background.image = [UIImage imageNamed:@"projectblock_dark.png"];
+        NSString *darkImagePath = [isenseBundle pathForResource:@"projectblock_dark" ofType:@"png"];
+        background.image = [UIImage imageWithContentsOfFile:darkImagePath];
     } else {
-        background.image = [UIImage imageNamed:@"projectblock_clean.png"];
+        NSString *cleanImagePath = [isenseBundle pathForResource:@"projectblock_clean" ofType:@"png"];
+        background.image = [UIImage imageWithContentsOfFile:cleanImagePath];
     }
 }
 

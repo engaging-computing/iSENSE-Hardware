@@ -13,7 +13,7 @@
 @implementation AutomaticViewController
 
 @synthesize isRecording, motionManager, dataToBeJSONed, projNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, dataSetName,
-sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate,
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, api, longClickRecognizer, backFromSetup, recordingRate,
 dataToBeOrdered, backFromQueue;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
@@ -102,9 +102,9 @@ dataToBeOrdered, backFromQueue;
     menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu)];
     self.navigationItem.rightBarButtonItem = menuButton;
     
-    // Attempt Login
-    isenseAPI = [iSENSE getInstance];
-    [isenseAPI toggleUseDev:YES];
+    // API setup
+    api = [API getInstance];
+    [api useDev:TRUE];
     
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
@@ -245,7 +245,7 @@ dataToBeOrdered, backFromQueue;
     
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [isenseAPI login:usernameInput with:passwordInput];
+        BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.view makeWaffle:@"Login Successful!"
@@ -489,16 +489,6 @@ dataToBeOrdered, backFromQueue;
     
 }
 
-// Fetch the projects from iSENSE
-- (void) getProjects {
-    NSMutableArray *results = [isenseAPI getExperiments:[NSNumber numberWithUnsignedInt:1] withLimit:[NSNumber numberWithUnsignedInt:10] withQuery:@"" andSort:@"recent"];
-    if ([results count] == 0) NSLog(@"No projects found.");
-    
-    NSMutableArray *resultsFields = [isenseAPI getExperimentFields:[NSNumber numberWithUnsignedInt:514]];
-    if ([resultsFields count] == 0) NSLog(@"No project fields found.");
-    
-}
-
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
 	UIAlertView *message;
@@ -679,14 +669,18 @@ dataToBeOrdered, backFromQueue;
 // Launches a view that allows the user to upload and manage his/her datasets
 - (IBAction) uploadData:(UIButton *)sender {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    backFromQueue = true;
-    [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
-    [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
-    
-    QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
-    queueUploader.title = @"Step 3: Upload";
-    [self.navigationController pushViewController:queueUploader animated:YES];
+    if ([dataSaver dataSetCountWithParentName:PARENT_AUTOMATIC] > 0) {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        backFromQueue = true;
+        [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+        [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+        
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
+        queueUploader.title = @"Step 3: Upload";
+        [self.navigationController pushViewController:queueUploader animated:YES];
+    } else {
+        [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
+    }
     
 }
 
@@ -842,7 +836,7 @@ dataToBeOrdered, backFromQueue;
 - (void) setRecordingLayout {
     
     [step2 setTitle:@"STOP\n(Press and Hold)" forState:UIControlStateNormal];
-    [step2 setTitleColor:[HexColor colorWithHexString:@"59B048"] forState:UIControlStateNormal];
+    [step2 setTitleColor:UIColorFromHex(0x59B048) forState:UIControlStateNormal];
 
     [step1 setAlpha:0.0];
     [step3 setAlpha:0.0];
@@ -866,7 +860,7 @@ dataToBeOrdered, backFromQueue;
 - (void) setNonRecordingLayout {
 
     [step2 setTitle:@"Step 2: Record a Data Set (Hold Down)" forState:UIControlStateNormal];
-    [step2 setTitleColor:[HexColor colorWithHexString:@"4C6FD9"] forState:UIControlStateNormal];
+    [step2 setTitleColor:UIColorFromHex(0x4C6FD9) forState:UIControlStateNormal];
     
     [step1 setAlpha:1.0];
     [step3 setAlpha:1.0];
@@ -876,7 +870,7 @@ dataToBeOrdered, backFromQueue;
     [step1Label setAlpha:0.0];
     [step3Label setAlpha:0.0];
     
-    step2.titleLabel.textColor = [HexColor colorWithHexString:@"000066"];
+    step2.titleLabel.textColor = UIColorFromHex(0x000066);
 
 }
 
