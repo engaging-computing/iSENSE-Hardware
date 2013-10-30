@@ -11,6 +11,7 @@
 #import "AboutView.h"
 #import "GuideView.h"
 #import <iSENSE_API/headers/DataSaver.h>
+#import "Constants.h"
 
 @interface Data_CollectorAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;

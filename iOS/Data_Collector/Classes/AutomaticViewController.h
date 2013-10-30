@@ -11,13 +11,14 @@
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 #import <iSENSE_API/headers/DataSaver.h>
-#import "QueueUploaderView.h"
+#import <iSENSE_API/QueueUploaderView.h>
 #import "Data_CollectorAppDelegate.h"
-#import "ExperimentBrowseViewController.h"
+#import <iSENSE_API/ProjectBrowseViewController.h>
 #import "Constants.h"
 #import <iSENSE_API/DataFieldManager.h>
 #import "Data_CollectorAppDelegate.h"
 #import "StepOneSetup.h"
+#import <iSENSE_API/ISKeys.h>
 
 @interface AutomaticViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>  {
     IBOutlet UIButton *step1;
@@ -34,12 +35,11 @@
 - (IBAction) onRecordLongClick:(UILongPressGestureRecognizer *)sender;
 
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)password;
-- (void) getProjects;
 - (void) recordData;
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error;
 
-@property (nonatomic, strong) iSENSE *isenseAPI;
+@property (nonatomic, strong) API *api;
 @property (nonatomic) BOOL isRecording;
 @property (nonatomic) BOOL backFromSetup;
 @property (nonatomic) BOOL backFromQueue;

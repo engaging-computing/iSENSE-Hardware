@@ -11,14 +11,15 @@
 #import <iSENSE_API/SensorCompatibility.h>
 #import <iSENSE_API/SensorEnums.h>
 #import "SensorSelection.h"
+#import <iSENSE_API/ProjectBrowseViewController.h>
 
 #import "Data_CollectorAppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 
-@interface StepOneSetup : UIViewController <UITextFieldDelegate> {
+@interface StepOneSetup : UIViewController <UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
     
-    iSENSE *iapi;
+    API *api;
     int projNumInteger;
     bool sensorsSelected;
     bool displaySensorSelectFromBrowse;

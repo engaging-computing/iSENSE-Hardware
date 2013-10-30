@@ -10,7 +10,7 @@
 #import "Data_CollectorAppDelegate.h"
 #import "ManualViewController.h"
 #import "StepOneSetup.h"
-#import "QueueUploaderView.h"
+#import <iSENSE_API/QueueUploaderView.h>
 
 @implementation Data_CollectorAppDelegate
 
