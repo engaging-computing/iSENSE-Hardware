@@ -47,6 +47,7 @@ import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.LoginActivity;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
@@ -61,7 +62,8 @@ public class Main extends Activity implements LocationListener {
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
-
+	private static final int CONTINUOUS_REQUESTED = 107;
+	
 	private static final int TIMER_LOOP = 1000;
 
 	private LocationManager mLocationManager;
@@ -220,9 +222,12 @@ public class Main extends Activity implements LocationListener {
 						LoginActivity.class), LOGIN_REQUESTED);
 	            return true;
 	            
-	        //case R.id.MENU_ITEM_CONTINUOUS:
+	        case R.id.MENU_ITEM_CONTINUOUS:
+	        	Intent continuous = new Intent(getApplicationContext(),
+						Continuous.class);
+				startActivityForResult(continuous, CONTINUOUS_REQUESTED);
 	        	//TODO show layout for continuous shooting
-	         //   return true;    
+	            return true;    
 	            
 	        default:
 	            return false;
@@ -478,6 +483,11 @@ public class Main extends Activity implements LocationListener {
 			descriptionStr = Description.photo_description;  // set descriptionStr equal to photo_description in Description.java
 
 			new UploadTask().execute();
+		} else if (requestCode == CONTINUOUS_REQUESTED) {
+			
+			
+
+			//TODO
 		}
 
 	}

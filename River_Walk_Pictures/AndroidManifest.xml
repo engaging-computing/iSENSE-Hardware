@@ -63,6 +63,10 @@
             android:name=".dialogs.Description"
             android:label="Describe Photo"
             android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.Continuous"
+            android:label="Continuous Photo Shooting"
+            android:theme="@style/DialogTheme" />
         
         
         <!-- from iSENSE imports -->
