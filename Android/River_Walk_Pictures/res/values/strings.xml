@@ -62,7 +62,8 @@
 	<string name="upload">Upload</string>
 	<string name="project">Project</string>
 	<string name="login">Login</string>
-	<string name="auto">Auto Shoot</string>
+	<string name="continuous">Continuously Take Photos</string>
+	<string name="interval">Time Interval (seconds):</string>
     
 	
 	
