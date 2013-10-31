@@ -148,15 +148,6 @@
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
-    
-    if (saver->hasName){
-        firstName = saver->first;
-        lastInitial = saver->last;
-    } else {
-        firstName = @"No Name";
-        lastInitial = @"Provided";
-    }
-    
     if (saver->hasLogin){
         userName = saver->user;
         passWord = saver->pass;
@@ -166,6 +157,16 @@
         
         
     }
+    
+    if (saver->hasName){
+        firstName = saver->first;
+        lastInitial = saver->last;
+    } else {
+        firstName = @"Mobile";
+        lastInitial = @"U.";
+    }
+    
+    
     
     
     if (saveModeEnabled) {
@@ -480,12 +481,8 @@
         }
     });
     
-    if ([API hasConnectivity]){
-        //Save as JSONObject
-        [dataToBeOrdered addObject:[dfm putDataFromFields:fieldsRow]];
-    } else {
-        [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
-    }
+    [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
+    [menuButton setEnabled:NO];
         
     
     
@@ -509,6 +506,7 @@
     // Stop Timers
     [timer invalidate];
     [recordDataTimer invalidate];
+    [menuButton setEnabled:YES];
     
     // Stop Sensors
     if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
@@ -557,6 +555,7 @@
     // Stop Timers
     [timer invalidate];
     [recordDataTimer invalidate];
+    [menuButton setEnabled:YES];
     
     // Stop Sensors
     if (finalMotionManager.accelerometerActive) [finalMotionManager stopAccelerometerUpdates];
@@ -665,6 +664,7 @@
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     bool uploadable = false;
+    [menuButton setEnabled:YES];
     
     if (![API hasConnectivity])
         expNum = -1;
@@ -672,7 +672,7 @@
     if (expNum > 1) uploadable = true;
     
     NSLog(@"Bla");
-    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:sessionName];
     [ds setDataDescription:description];
     [ds setProjID:[NSNumber numberWithInt:expNum]];
@@ -693,7 +693,6 @@
     if ([API hasConnectivity]) {
         
         
-        
         if ([[api getCurrentUser].name isEqualToString:@""]) {
             [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
             return false;
@@ -701,7 +700,7 @@
         }
         
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-        [data setObject:dataToBeOrdered forKey:@"data"];
+        [data setObject:dataToBeJSONed forKey:@"data"];
         [api rowsToCols:data];
         
         bool success = [api uploadDataSetWithId:expNum withData:data andName:sessionName];
@@ -747,7 +746,7 @@
     };
     void (^settingsBlock)() = ^() {
         NSLog(@"Record Settings button pressed");
-        UIActionSheet *settings_menu = [[UIActionSheet alloc] initWithTitle:@"Settings" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Variables", @"Length", @"Name", nil];
+        UIActionSheet *settings_menu = [[UIActionSheet alloc] initWithTitle:@"Settings" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Length", @"Name", nil];
         [settings_menu showInView:self.view];
         
     };
@@ -800,7 +799,7 @@
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
     RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Settings" action:settingsBlock];
-    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Experiment" action:codeBlock];
+    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
     RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
@@ -817,24 +816,15 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    if (buttonIndex == 0){
-        VariablesViewController *var;
-        // Override point for customization after application launch.
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            var = [[VariablesViewController alloc] initWithNibName:@"VariablesViewController_iPhone" bundle:nil];
-        } else {
-            var = [[VariablesViewController alloc] initWithNibName:@"VariablesViewController_iPad" bundle:nil];
-        }
-        
-        [self.navigationController pushViewController:var animated:YES];
-    } else if (buttonIndex == 1) {
+    
+    if (buttonIndex == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         lengthField = [alert textFieldAtIndex:0];
         lengthField.inputView = picker;
         [self setPickerDefault];
         [alert show];
-    } else if (buttonIndex == 2){
+    } else if (buttonIndex == 1){
         change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
         
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
@@ -893,6 +883,15 @@
         if ([title isEqualToString:@"Discard"]) {
             [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
+            UIAlertView *gettingFields = [self getDispatchDialogWithMessage:@"Preparing data for upload..."];
+            [gettingFields show];
+            if ([API hasConnectivity]){
+                /** REORDER DATA HERE **/
+                [self CRPorderSetup];
+                dataToBeJSONed = [dfm reOrderData:dataToBeOrdered forProjectID:expNum];
+                NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
+            }
+            [gettingFields dismissWithClickedButtonIndex:nil animated:YES];
             UIAlertView *dis = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
             [dis show];
             dispatch_queue_t queue = dispatch_queue_create("upload", NULL);
@@ -992,6 +991,16 @@
             [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
         }
     }
+}
+
+- (void) CRPorderSetup {
+    NSMutableArray *order = [dfm order];
+    [order addObject:[FieldGrabber grabField:@"time"]];
+    [order addObject:[FieldGrabber grabField:@"accel_x"]];
+    [order addObject:[FieldGrabber grabField:@"accel_y"]];
+    [order addObject:[FieldGrabber grabField:@"accel_z"]];
+    [order addObject:[FieldGrabber grabField:@"accel_total"]];
+    [dfm setOrder:order];
 }
 
 - (void) changeName {
