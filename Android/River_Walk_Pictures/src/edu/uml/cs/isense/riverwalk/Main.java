@@ -62,7 +62,10 @@ public class Main extends Activity implements LocationListener {
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
-	private static final int CONTINUOUS_REQUESTED = 107;
+	
+	public static boolean continuous = false;
+	public static int continuousInterval = 1;
+	private boolean recording = false;
 	
 	private static final int TIMER_LOOP = 1000;
 
@@ -101,6 +104,7 @@ public class Main extends Activity implements LocationListener {
 	private ProgressDialog dia;
 	private DataFieldManager dfm;
 	private Fields f;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -161,31 +165,84 @@ public class Main extends Activity implements LocationListener {
 					return;
 				}
 
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
+				//TODO
+				if (continuous == false){
+					String state = Environment.getExternalStorageState();
+					if (Environment.MEDIA_MOUNTED.equals(state)) {
+	
+						ContentValues values = new ContentValues();
+	
+						imageUri = getContentResolver().insert(
+								MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+								values);
+	
+						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+	
+						OrientationManager.disableRotation(Main.this);
+						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+					} else {
+						w.make("Cannot write to external storage.",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					}
 
-					ContentValues values = new ContentValues();
-
-					imageUri = getContentResolver().insert(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							values);
-
-					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-					OrientationManager.disableRotation(Main.this);
-					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-				} else {
-					w.make("Cannot write to external storage.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				} else { //if continuous == true
+					if (recording == false){
+						takePicture.setBackgroundColor(0xFF00FF00);
+						takePicture.setText("Recording Push to Stop");
+						recording = true;
+						continuouslytakephotos();
+					} else {
+						Main.takePicture.setText(R.string.takePicContinuous);
+						Main.takePicture.setBackgroundColor(R.drawable.button_rsense);
+						recording = false;
+					}
 				}
-
 			}
-
 		});
 
 	}
+	
+	private void continuouslytakephotos(){
+		//TODO
+
+		while(recording){	
+			//take a picture
+			String state = Environment.getExternalStorageState();
+			if (Environment.MEDIA_MOUNTED.equals(state)) {
+	
+				ContentValues values = new ContentValues();
+	
+				imageUri = getContentResolver().insert(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+						values);
+	
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+				intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+	
+				OrientationManager.disableRotation(Main.this);
+				startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+				
+				try
+		        {
+		          Thread.sleep(1000 * Continuous.continuous_interval);
+		        } catch (InterruptedException e)
+		        {
+		            e.printStackTrace();
+		        }
+				
+			} else {
+				w.make("Cannot write to external storage.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						recording = false;
+			}
+			
+			
+		}
+	}
+	
 	
 	// double tap back button to exit
 	@Override
@@ -225,7 +282,7 @@ public class Main extends Activity implements LocationListener {
 	        case R.id.MENU_ITEM_CONTINUOUS:
 	        	Intent continuous = new Intent(getApplicationContext(),
 						Continuous.class);
-				startActivityForResult(continuous, CONTINUOUS_REQUESTED);
+				startActivity(continuous);
 	        	//TODO show layout for continuous shooting
 	            return true;    
 	            
@@ -394,7 +451,7 @@ public class Main extends Activity implements LocationListener {
 			} else { //no gps
 				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
 				f.timeMillis = curTime;	
-				System.out.println("curTime (no gps) =" + f.timeMillis);    //TODO
+				System.out.println("curTime (no gps) =" + f.timeMillis);   
 				f.latitude = loc.getLatitude();  
 				System.out.println("Latitude (no gps) =" + f.latitude);
 				f.longitude = loc.getLongitude(); 
@@ -436,22 +493,28 @@ public class Main extends Activity implements LocationListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) { //passes in a request code
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) { 						//request to takes picture
-			if (resultCode == RESULT_OK) {
-				curTime = System.currentTimeMillis();
-				picture = convertImageUriToFile(imageUri);
-
-				takePicture.setEnabled(true);
-
-				uq.buildQueueFromFile();
-				queueCount.setText(getResources()
-						.getString(R.string.queueCount) + uq.queueSize());
-
-				Intent iDesc = new Intent(Main.this, Description.class);
-				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-
+		if (requestCode == CAMERA_PIC_REQUESTED) { 	//request to takes picture
+			
+			if (continuous == false){ //record picture
+				if (resultCode == RESULT_OK) {
+					curTime = System.currentTimeMillis();
+					picture = convertImageUriToFile(imageUri);
+	
+					takePicture.setEnabled(true);
+	
+					uq.buildQueueFromFile();
+					queueCount.setText(getResources()
+							.getString(R.string.queueCount) + uq.queueSize());
+	
+					if(continuous == false){ //if continuously recording do not ask for description
+					Intent iDesc = new Intent(Main.this, Description.class);
+					startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
+					}
+				}
 			}
-
+			
+			//TODO
+			
 		} else if (requestCode == EXPERIMENT_REQUESTED) {			//obtains data fields from project on isense
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
@@ -483,15 +546,12 @@ public class Main extends Activity implements LocationListener {
 			descriptionStr = Description.photo_description;  // set descriptionStr equal to photo_description in Description.java
 
 			new UploadTask().execute();
-		} else if (requestCode == CONTINUOUS_REQUESTED) {
-			
-			
-
-			//TODO
 		}
-
 	}
 
+	
+	
+	
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;

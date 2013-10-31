@@ -98,7 +98,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:background="@drawable/button_rsense"
-                android:text="@string/takePic"
+                android:text="@string/takePicSingle"
                 android:textColor="@android:color/black"
                 android:textSize="30sp" />
         </LinearLayout>

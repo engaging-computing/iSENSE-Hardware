@@ -78,7 +78,7 @@
         android:layout_weight="1"
         android:layout_margin="20dp"
         android:paddingTop="16dip"
-        android:text="@+string/takePic"
+        android:text="@string/takePicSingle"
         android:textSize="30sp"
         android:textColor="@android:color/black" />
 
