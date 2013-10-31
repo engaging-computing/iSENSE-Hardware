@@ -7,7 +7,7 @@
     <string name="upload">Upload</string>
     
     <string name="firstName">Group Name: \0</string>
-    <string name="takePic">Press Here to Take a Picture</string>
+    <string name="takePicSingle">Press Here to Take a Picture</string>
     <string name="iSlogo">iSENSE Logo</string>
     <string name="queueCount">Picture Count: \0</string>
     
@@ -64,6 +64,7 @@
 	<string name="login">Login</string>
 	<string name="continuous">Continuously Take Photos</string>
 	<string name="interval">Time Interval (seconds):</string>
+	<string name="takePicContinuous">Press Here to Continuously Take Pictures</string>
     
 	
 	
