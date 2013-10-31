@@ -4,17 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/textInterval"
+ 
+        <CheckBox
+            android:id="@+id/checkContinuous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time interval:" />
+            android:text="@string/continuous" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/interval" />
 
+        <EditText
+            android:id="@+id/etInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" >
+        </EditText>
+
+        <Button
+        android:id="@+id/description_okay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:text="@string/okay" />
+        
 </LinearLayout>

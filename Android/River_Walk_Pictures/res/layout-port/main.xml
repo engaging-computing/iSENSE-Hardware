@@ -78,7 +78,7 @@
         android:layout_weight="1"
         android:layout_margin="20dp"
         android:paddingTop="16dip"
-        android:text="@+string/takePic"
+        android:text="@string/takePicSingle"
         android:textSize="30sp"
         android:textColor="@android:color/black" />
 
@@ -96,7 +96,7 @@
 	            android:text="@+string/noLocation0"
 	            android:textColor="@android:color/black"
 	            android:textSize="16sp"
-	            android:layout_marginBottom="5dp"/>
+	            android:layout_marginBottom="20dp"/>
 	  </LinearLayout>   
 
 </LinearLayout>
