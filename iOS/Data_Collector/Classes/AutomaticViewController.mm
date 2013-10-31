@@ -14,7 +14,7 @@
 
 @synthesize isRecording, motionManager, dataToBeJSONed, projNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, dataSetName,
 sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, api, longClickRecognizer, backFromSetup, recordingRate,
-dataToBeOrdered, backFromQueue;
+dataToBeOrdered, backFromQueue, f;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -156,8 +156,8 @@ dataToBeOrdered, backFromQueue;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Reinitialize setup and queue to false
-    backFromSetup = false;
+//    // Reinitialize setup and queue to false TODO - really? shouldn't these be at the bottom?
+//    backFromSetup = false;
     
     // If true, then we're coming back from another ViewController
     if (self.isMovingToParentViewController == NO) {
@@ -186,6 +186,9 @@ dataToBeOrdered, backFromQueue;
         }
         
     }
+    
+    // Reinitialize setup and queue to false
+    backFromSetup = false;
     
 }
 
@@ -278,11 +281,20 @@ dataToBeOrdered, backFromQueue;
         if (!isRecording) {
             // Get the project
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
-            
+
             // Get Field Order
-            [dfm getOrder];
+            //[dfm getOrder];
             //[dfm getFieldOrderOfExperiment:projNum]; TODO
-            [self getEnabledFields];
+            //[self getEnabledFields];
+            f = [[Fields alloc] init];
+            dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:f];
+            [dfm getOrder];
+            
+//            if (projNum == -1) {
+//                [dfm getOrder];
+//            } else {
+//                [dfm getOrder];
+//            }
             
             // Change the UI
             [self setRecordingLayout];
@@ -434,12 +446,25 @@ dataToBeOrdered, backFromQueue;
                     fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].z];
             }
             
-            // update data object
-            if (dataToBeOrdered != nil) {
-                [dataToBeOrdered addObject:fieldsRow];
-            }
-            // else NOTHING IS WRONG!!!
+            // TODO there's more fields, right...?
+
             
+            // update data object
+            if (dataToBeOrdered == nil)
+                dataToBeOrdered = [[NSMutableArray alloc] init];
+
+            //[dataToBeOrdered addObject:fieldsRow];
+      
+            if (dataToBeOrdered != nil) {
+                [dfm setFields:fieldsRow];
+
+                if (projNum == -1) {
+                    [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
+                } else {
+                    [dataToBeOrdered addObject:[dfm putData]];
+                }
+
+            }
             
         });
     }
@@ -546,7 +571,9 @@ dataToBeOrdered, backFromQueue;
                 description = @"Data set recorded and uploaded from mobile device using iSENSE iOS Uploader application.";
             }
             
+            NSLog(@"save");
             [self saveDataSetWithDescription:description];
+            NSLog(@"safe!!");
             [self setEnabled:true forButton:step3];
             
                         
@@ -555,21 +582,24 @@ dataToBeOrdered, backFromQueue;
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
+        
     } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
         // TODO - media code
     }
+    
+    NSLog(@"dont mattah what ya shoveling");
 }
 
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     
-    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
-    [message show];
+//    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
+//    [message show];
     
-    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
-    dispatch_async(queue, ^{
-        
+//    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
+//    dispatch_async(queue, ^{
+    
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
         
@@ -580,7 +610,7 @@ dataToBeOrdered, backFromQueue;
                                                                   inManagedObjectContext:managedObjectContext]
                        insertIntoManagedObjectContext:managedObjectContext];
         
-        dataToBeJSONed = [[NSMutableArray alloc] init];
+//        dataToBeJSONed = [[NSMutableArray alloc] init];
         
         // Organize the data from dataToBeOrdered TODO - what is this crap? can we just do the line below?
 //        for (int i = 0; i < [dataToBeOrdered count]; i++) {
@@ -590,15 +620,15 @@ dataToBeOrdered, backFromQueue;
 //        }
         
         // @Mike: dfm.data is currently nil so of course it is going to crash here
-        [dataToBeJSONed addObject:dfm.data];
+//        [dataToBeJSONed addObject:dfm.data];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
+//        dispatch_async(dispatch_get_main_queue(), ^{
+    
             [ds setName:dataSetName];
             [ds setParentName:PARENT_AUTOMATIC];
             [ds setDataDescription:description];
             [ds setProjID:[NSNumber numberWithInt:projNum]];
-            [ds setData:dataToBeJSONed];
+            [ds setData:dataToBeOrdered];
             [ds setPicturePaths:nil];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
             [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
@@ -611,9 +641,10 @@ dataToBeOrdered, backFromQueue;
                          position:WAFFLE_BOTTOM
                             image:WAFFLE_CHECKMARK];
             
-            [message dismissWithClickedButtonIndex:nil animated:YES];
-        });
-    });
+//            [message dismissWithClickedButtonIndex:nil animated:YES];
+//        });
+//        
+//    });
     
 }
 

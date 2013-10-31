@@ -14,7 +14,7 @@
 
 @implementation DataFieldManager
 
-@synthesize order, data, realOrder;
+@synthesize order, realOrder;
 
 //- (id) init {
 //    [self disableAllFields];
@@ -74,9 +74,11 @@
         [order addObject:sGYRO_Y];
         [order addObject:sGYRO_Z];
     
+        [self enableAllFields];
     
     } else {
         projFields = [[api getProjectFieldsWithId:projID] mutableCopy];
+        [self getProjectFieldOrder];
     }
     
 }
@@ -88,16 +90,19 @@
         [realOrder addObject:field.name];
         
         switch (field.type.intValue) {
-            case TYPE_NUMBER:
+            case TYPE_NUMBER: // TODO - should we enable fields here too?
                 
                 // Temperature
                 if ([field.name.lowercaseString rangeOfString:@"temp"].location != NSNotFound) {
                     if ([field.unit.lowercaseString rangeOfString:@"c"].location != NSNotFound) {
                         [order addObject:sTEMPERATURE_C];
+                        enabledFields[fTEMPERATURE_C] = true;
                     } else if ([field.unit.lowercaseString rangeOfString:@"k"].location != NSNotFound) {
                         [order addObject:sTEMPERATURE_K];
+                        enabledFields[fTEMPERATURE_K] = true;
                     } else {
                         [order addObject:sTEMPERATURE_F];
+                        enabledFields[fTEMPERATURE_F] = true;
                     }
                     break;
                 }
@@ -105,12 +110,14 @@
                 // Potential Altitude
                 else if ([field.name.lowercaseString rangeOfString:@"altitude"].location != NSNotFound) {
                     [order addObject:sALTITUDE];
+                    enabledFields[fALTITUDE] = true;
                     break;
                 }
                 
                 // Light
                 else if ([field.name.lowercaseString rangeOfString:@"light"].location != NSNotFound) {
                     [order addObject:sLUX];
+                    enabledFields[fLUX] = true;
                     break;
                 }
                 
@@ -119,8 +126,10 @@
                          [field.name.lowercaseString rangeOfString:@"angle"].location != NSNotFound) {
                     if ([field.unit.lowercaseString rangeOfString:@"rad"].location != NSNotFound) {
                         [order addObject:sANGLE_RAD];
+                        enabledFields[fANGLE_RAD] = true;
                     } else {
                         [order addObject:sANGLE_DEG];
+                        enabledFields[fANGLE_DEG] = true;
                     }
                     break;
                 }
@@ -129,12 +138,16 @@
                 else if ([field.name.lowercaseString rangeOfString:@"magnetic"].location != NSNotFound) {
                     if ([field.unit.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
                         [order addObject:sMAG_X];
+                        enabledFields[fMAG_X] = true;
                     } else if ([field.unit.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
                         [order addObject:sMAG_Y];
+                        enabledFields[fMAG_Y] = true;
                     } else if ([field.unit.lowercaseString rangeOfString:@"z"].location != NSNotFound) {
                         [order addObject:sMAG_Z];
+                        enabledFields[fMAG_Z] = true;
                     } else {
                         [order addObject:sMAG_TOTAL];
+                        enabledFields[fMAG_TOTAL] = true;
                     }
                     break;
                 }
@@ -143,12 +156,16 @@
                 else if ([field.name.lowercaseString rangeOfString:@"accel"].location != NSNotFound) {
                     if ([field.unit.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
                         [order addObject:sACCEL_X];
+                        enabledFields[fACCEL_X] = true;
                     } else if ([field.unit.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
                         [order addObject:sACCEL_Y];
+                        enabledFields[fACCEL_Y] = true;
                     } else if ([field.unit.lowercaseString rangeOfString:@"z"].location != NSNotFound) {
                         [order addObject:sACCEL_Z];
+                        enabledFields[fACCEL_Z] = true;
                     } else {
                         [order addObject:sACCEL_TOTAL];
+                        enabledFields[fACCEL_TOTAL] = true;
                     }
                     break;
                 }
@@ -156,6 +173,7 @@
                 // Pressure
                 else if ([field.name.lowercaseString rangeOfString:@"pressure"].location != NSNotFound) {
                     [order addObject:sPRESSURE];
+                    enabledFields[fPRESSURE] = true;
                     break;
                 }
                 
@@ -163,10 +181,13 @@
                 else if ([field.name.lowercaseString rangeOfString:@"gyro"].location != NSNotFound) {
                     if ([field.unit.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
                         [order addObject:sGYRO_X];
+                        enabledFields[fGYRO_X] = true;
                     } else if ([field.unit.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
                         [order addObject:sGYRO_Y];
+                        enabledFields[fGYRO_Y] = true;
                     } else {
                         [order addObject:sGYRO_Z];
+                        enabledFields[fGYRO_Z] = true;
                     }
                     break;
                 }
@@ -182,16 +203,19 @@
             case TYPE_TIMESTAMP:
                 
                 [order addObject:sTIME_MILLIS];
+                enabledFields[fTIME_MILLIS] = true;
                 break;
                 
             case TYPE_LAT:
                 
                 [order addObject:sLATITUDE];
+                enabledFields[fLATITUDE] = true;
                 break;
                 
             case TYPE_LON:
                 
                 [order addObject:sLONGITUDE];
+                enabledFields[fLONGITUDE] = true;
                 break;
                 
             default:
@@ -222,6 +246,10 @@
 
 - (Fields *) getFields {
     return f;
+}
+
+- (void) setFields:(Fields *)fields {
+    f = fields;
 }
 
 - (void) enableAllFields {
@@ -462,91 +490,91 @@
     NSMutableArray *dataJSON = [[NSMutableArray alloc] init];
     
     if (enabledFields[fACCEL_X])
-        [dataJSON addObject:f.accel_x];
+        [dataJSON addObject:(f.accel_x == nil) ? @"" : f.accel_x];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fACCEL_Y])
-        [dataJSON addObject:f.accel_y];
+        [dataJSON addObject:(f.accel_y == nil) ? @"" : f.accel_y];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fACCEL_Z])
-        [dataJSON addObject:f.accel_z];
+        [dataJSON addObject:(f.accel_z == nil) ? @"" : f.accel_z];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fACCEL_TOTAL])
-        [dataJSON addObject:f.accel_total];
+        [dataJSON addObject:(f.accel_total == nil) ? @"" : f.accel_total];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTEMPERATURE_C])
-        [dataJSON addObject:f.temperature_c];
+        [dataJSON addObject:(f.temperature_c == nil) ? @"" : f.temperature_c];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTEMPERATURE_F])
-        [dataJSON addObject:f.temperature_f];
+        [dataJSON addObject:(f.temperature_f == nil) ? @"" : f.temperature_f];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTEMPERATURE_K])
-        [dataJSON addObject:f.temperature_k];
+        [dataJSON addObject:(f.temperature_k == nil) ? @"" : f.temperature_k];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTIME_MILLIS])
-        [dataJSON addObject:f.time_millis];
+        [dataJSON addObject:(f.time_millis == nil) ? @"" : f.time_millis];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fLUX])
-        [dataJSON addObject:f.lux];
+        [dataJSON addObject:(f.lux == nil) ? @"" : f.lux];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fANGLE_DEG])
-        [dataJSON addObject:f.angle_deg];
+        [dataJSON addObject:(f.angle_deg == nil) ? @"" : f.angle_deg];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fANGLE_RAD])
-        [dataJSON addObject:f.angle_rad];
+        [dataJSON addObject:(f.angle_rad == nil) ? @"" : f.angle_rad];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fLATITUDE])
-        [dataJSON addObject:f.latitude];
+        [dataJSON addObject:(f.latitude == nil) ? @"" : f.latitude];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fLONGITUDE])
-        [dataJSON addObject:f.longitude];
+        [dataJSON addObject:(f.longitude == nil) ? @"" : f.longitude];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_X])
-        [dataJSON addObject:f.mag_x];
+        [dataJSON addObject:(f.mag_x == nil) ? @"" : f.mag_x];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_Y])
-        [dataJSON addObject:f.mag_y];
+        [dataJSON addObject:(f.mag_y == nil) ? @"" : f.mag_y];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_Z])
-        [dataJSON addObject:f.mag_z];
+        [dataJSON addObject:(f.mag_z == nil) ? @"" : f.mag_z];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_TOTAL])
-        [dataJSON addObject:f.mag_total];
+        [dataJSON addObject:(f.mag_total == nil) ? @"" : f.mag_total];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fALTITUDE])
-        [dataJSON addObject:f.altitude];
+        [dataJSON addObject:(f.altitude == nil) ? @"" : f.altitude];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fPRESSURE])
-        [dataJSON addObject:f.pressure];
+        [dataJSON addObject:(f.pressure == nil) ? @"" : f.pressure];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fGYRO_X])
-        [dataJSON addObject:f.gyro_x];
+        [dataJSON addObject:(f.gyro_x == nil) ? @"" : f.gyro_x];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fGYRO_Y])
-        [dataJSON addObject:f.gyro_y];
+        [dataJSON addObject:(f.gyro_y == nil) ? @"" : f.gyro_y];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fGYRO_Z])
-        [dataJSON addObject:f.gyro_z];
+        [dataJSON addObject:(f.gyro_z == nil) ? @"" : f.gyro_z];
     else
         [dataJSON addObject:@""];
 

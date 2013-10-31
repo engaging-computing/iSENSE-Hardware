@@ -31,6 +31,7 @@
 - (NSMutableArray *) getProjectFields;
 - (NSMutableArray *) getOrderList;
 - (Fields *) getFields;
+- (void) setFields:(Fields *)fields;
 - (void) enableAllFields;
 - (void) setEnabledFields:(NSMutableArray *)acceptedFields;
 - (NSMutableDictionary *) putData;
@@ -43,7 +44,6 @@
 
 /* old properties */
 @property (nonatomic, retain) NSMutableArray *order;
-@property (nonatomic, retain) NSMutableArray *data;
 
 /* new properties */
 @property (nonatomic, retain) NSMutableArray *realOrder;
