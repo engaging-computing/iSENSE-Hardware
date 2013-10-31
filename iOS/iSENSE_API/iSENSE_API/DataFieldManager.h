@@ -21,13 +21,9 @@
     NSMutableArray *projFields;
 }
 
-/* old methods */
-- (void) setEnabledField:(bool)value atIndex:(int)index;
-- (bool) enabledFieldAtIndex:(int)index;
-- (id) reOrderData:(id)oldData forExperimentID:(int)eid;
-
 /* new methods */
-- (id) instanceWithProjID:(int)projectID API:(API *)isenseAPI andFields:(Fields *)fields;
+- (id) initWithProjID:(int)projectID API:(API *)isenseAPI andFields:(Fields *)fields;
++ (NSMutableArray *) getOrderForProjID:(int)projectID API:(API *)isenseAPI;
 - (void) getOrder;
 - (void) getProjectFieldOrder;
 - (int) getProjID;
@@ -39,8 +35,11 @@
 - (void) setEnabledFields:(NSMutableArray *)acceptedFields;
 - (NSMutableDictionary *) putData;
 - (NSMutableArray *) putDataForNoProjectID;
-+ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)api andFieldOrder:(NSMutableArray *)fieldOrder;
++ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)isenseAPI andFieldOrder:(NSMutableArray *)fieldOrder;
 
+/* old methods */
+- (void) setEnabledField:(bool)value atIndex:(int)index;
+- (bool) enabledFieldAtIndex:(int)index;
 
 /* old properties */
 @property (nonatomic, retain) NSMutableArray *order;

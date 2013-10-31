@@ -16,22 +16,34 @@
 
 @synthesize order, data, realOrder;
 
-- (id) init {
-    [self disableAllFields];
-    return self;
-}
+//- (id) init {
+//    [self disableAllFields];
+//    return self;
+//}
 
-- (id) instanceWithProjID:(int)projectID API:(API *)isenseAPI andFields:(Fields *)fields {
+- (id) initWithProjID:(int)projectID API:(API *)isenseAPI andFields:(Fields *)fields {
+ 
+    self = [super init];
+    if (!self) return nil;
     
     projID = projectID;
     api    = isenseAPI;
     f      = fields;
     
+    [self disableAllFields];
+    
     order     = [[NSMutableArray alloc] init];
     realOrder = [[NSMutableArray alloc] init];
     
-    return [self init];
+    return self;
 }
+
++ (NSMutableArray *) getOrderForProjID:(int)projectID API:(API *)isenseAPI {
+    DataFieldManager *d = [[DataFieldManager alloc] initWithProjID:projectID API:isenseAPI andFields:nil];
+    [d getOrder];
+    return d.order;
+}
+
 
 - (void) getOrder {
     if (order.count != 0)
@@ -258,7 +270,7 @@
             enabledFields[fMAG_Y] = true;
         else if ([s isEqualToString:sMAG_Z])
             enabledFields[fMAG_Z] = true;
-        else if ([s isEqualToString:fMAG_TOTAL])
+        else if ([s isEqualToString:sMAG_TOTAL])
             enabledFields[fMAG_TOTAL] = true;
         else if ([s isEqualToString:sALTITUDE])
             enabledFields[fALTITUDE] = true;
@@ -544,7 +556,7 @@
     
 }
 
-+ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)api andFieldOrder:(NSMutableArray *)fieldOrder {
++ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)isenseAPI andFieldOrder:(NSMutableArray *)fieldOrder {
     
     NSMutableArray *row     = [[NSMutableArray alloc] init];
     NSMutableArray *outData = [[NSMutableArray alloc] init];
@@ -552,10 +564,112 @@
     
     int len = data.count;
     if (fieldOrder == nil || fieldOrder.count == 0)
-        ; // TODO: getOrder(proj, api, c);
+        fieldOrder = [DataFieldManager getOrderForProjID:projectID API:isenseAPI];
     
     for (int i = 0; i < len; i++) {
-        // TODO - this stuff
+        
+        row = [data objectAtIndex:i];
+        outRow = [[NSMutableDictionary alloc] init];
+        
+        for (int j = 0; j < fieldOrder.count; j++) {
+            
+            NSString *s = [fieldOrder objectAtIndex:j];
+            
+            if ([s isEqualToString:sACCEL_X]) {
+                [outRow setObject:[row objectAtIndex:fACCEL_X] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sACCEL_Y]) {
+                [outRow setObject:[row objectAtIndex:fACCEL_Y] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sACCEL_Z]) {
+                [outRow setObject:[row objectAtIndex:fACCEL_Z] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sACCEL_TOTAL]) {
+                [outRow setObject:[row objectAtIndex:fACCEL_TOTAL] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sTEMPERATURE_C]) {
+                [outRow setObject:[row objectAtIndex:fTEMPERATURE_C] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sTEMPERATURE_F]) {
+                [outRow setObject:[row objectAtIndex:fTEMPERATURE_F] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sTEMPERATURE_K]) {
+                [outRow setObject:[row objectAtIndex:fTEMPERATURE_K] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sTIME_MILLIS]) {
+                [outRow setObject:[NSString stringWithFormat:@"u %@",[row objectAtIndex:fTIME_MILLIS]] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sLUX]) {
+                [outRow setObject:[row objectAtIndex:fLUX] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sANGLE_DEG]) {
+                [outRow setObject:[row objectAtIndex:fANGLE_DEG] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sANGLE_RAD]) {
+                [outRow setObject:[row objectAtIndex:fANGLE_RAD] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sLATITUDE]) {
+                [outRow setObject:[row objectAtIndex:fLATITUDE] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sLONGITUDE]) {
+                [outRow setObject:[row objectAtIndex:fLONGITUDE] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sMAG_X]) {
+                [outRow setObject:[row objectAtIndex:fMAG_X] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sMAG_Y]) {
+                [outRow setObject:[row objectAtIndex:fMAG_Y] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sMAG_Z]) {
+                [outRow setObject:[row objectAtIndex:fMAG_Z] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sMAG_TOTAL]) {
+                [outRow setObject:[row objectAtIndex:fMAG_TOTAL] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sALTITUDE]) {
+                [outRow setObject:[row objectAtIndex:fALTITUDE] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sPRESSURE]) {
+                [outRow setObject:[row objectAtIndex:fPRESSURE] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sGYRO_X]) {
+                [outRow setObject:[row objectAtIndex:fGYRO_X] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sGYRO_Y]) {
+                [outRow setObject:[row objectAtIndex:fGYRO_Y] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            if ([s isEqualToString:sGYRO_Z]) {
+                [outRow setObject:[row objectAtIndex:fGYRO_Z] forKey:[NSString stringWithFormat:@"%d", j]];
+                continue;
+            }
+            
+            [outRow setObject:@"" forKey:[NSString stringWithFormat:@"%d", j]];
+            
+        }
+        
+        [outData addObject:outRow];
+        
     }
         
     return outData;
@@ -570,75 +684,6 @@
 
 - (bool) enabledFieldAtIndex:(int)index {
     return enabledFields[index];
-}
-
-- (id) reOrderData:(id)oldData forExperimentID:(int)eid {
-    
-    NSMutableArray *outData = [[NSMutableArray alloc] init];
-    //[self getFieldOrderOfExperiment:eid];
-    
-    for (NSMutableArray *row in oldData) {
-        
-        NSLog(@"%@", row.description);
-        
-        NSMutableArray *outRow = [[NSMutableArray alloc] init];
-        
-        for (NSString *s in order) {
-            NSLog(@"World");
-            if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]])
-                [outRow addObject:[row objectAtIndex:fACCEL_X]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"accel_y"]])
-                [outRow addObject:[row objectAtIndex:fACCEL_Y]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"accel_z"]])
-                [outRow addObject:[row objectAtIndex:fACCEL_Z]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"accel_total"]])
-                [outRow addObject:[row objectAtIndex:fACCEL_TOTAL]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"temperature_c"]])
-                [outRow addObject:[row objectAtIndex:fTEMPERATURE_C]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"temperature_f"]])
-                [outRow addObject:[row objectAtIndex:fTEMPERATURE_F]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"temperature_k"]])
-                [outRow addObject:[row objectAtIndex:fTEMPERATURE_K]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"time"]])
-                [outRow addObject:[row objectAtIndex:fTIME_MILLIS]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"luminous_flux"]])
-                [outRow addObject:[row objectAtIndex:fLUX]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"heading_deg"]])
-                [outRow addObject:[row objectAtIndex:fANGLE_DEG]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"heading_rad"]])
-                [outRow addObject:[row objectAtIndex:fANGLE_RAD]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"latitude"]])
-                [outRow addObject:[row objectAtIndex:fLATITUDE]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"longitude"]])
-                [outRow addObject:[row objectAtIndex:fLONGITUDE]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_x"]])
-                [outRow addObject:[row objectAtIndex:fMAG_X]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_y"]])
-                [outRow addObject:[row objectAtIndex:fMAG_Y]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_z"]])
-                [outRow addObject:[row objectAtIndex:fMAG_Z]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"magnetic_total"]])
-                [outRow addObject:[row objectAtIndex:fMAG_TOTAL]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"altitude"]])
-                [outRow addObject:[row objectAtIndex:fALTITUDE]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"pressure"]])
-                [outRow addObject:[row objectAtIndex:fPRESSURE]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"gyroscope_x"]])
-                [outRow addObject:[row objectAtIndex:fGYRO_X]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"gyroscope_y"]])
-                [outRow addObject:[row objectAtIndex:fGYRO_Y]];
-            else if ([s isEqualToString:[FieldGrabber grabField:@"gyroscope_z"]])
-                [outRow addObject:[row objectAtIndex:fGYRO_Z]];
-            else
-                [outRow addObject:@""];
-            NSLog(@"NULLFROGS");
-        }
-        
-        
-        [outData addObject:outRow];
-    }
-    
-    return outData;
 }
 
 

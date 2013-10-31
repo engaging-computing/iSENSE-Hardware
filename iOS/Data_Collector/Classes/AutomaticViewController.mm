@@ -280,7 +280,8 @@ dataToBeOrdered, backFromQueue;
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
             
             // Get Field Order
-            [dfm getFieldOrderOfExperiment:projNum];
+            [dfm getOrder];
+            //[dfm getFieldOrderOfExperiment:projNum]; TODO
             [self getEnabledFields];
             
             // Change the UI
@@ -581,12 +582,15 @@ dataToBeOrdered, backFromQueue;
         
         dataToBeJSONed = [[NSMutableArray alloc] init];
         
-        // Organize the data from dataToBeOrdered
-        for (int i = 0; i < [dataToBeOrdered count]; i++) {
-            Fields *f = [dataToBeOrdered objectAtIndex:i];
-            [dfm orderDataFromFields:f];
-            [dataToBeJSONed addObject:dfm.data];
-        }
+        // Organize the data from dataToBeOrdered TODO - what is this crap? can we just do the line below?
+//        for (int i = 0; i < [dataToBeOrdered count]; i++) {
+//            Fields *f = [dataToBeOrdered objectAtIndex:i];
+//            [dfm orderDataFromFields:f];
+//            [dataToBeJSONed addObject:dfm.data];
+//        }
+        
+        // @Mike: dfm.data is currently nil so of course it is going to crash here
+        [dataToBeJSONed addObject:dfm.data];
 
         dispatch_async(dispatch_get_main_queue(), ^{
             
