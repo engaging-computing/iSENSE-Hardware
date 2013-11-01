@@ -10,6 +10,7 @@
 #import "AboutViewController.h"
 #import "iSENSE.h"
 #import "StringGrabber.h"
+#import "FieldGrabber.h"
 #import "ProjectBrowseViewController.h"
 #import "NewDFM.h"
 #import "Constants.h"

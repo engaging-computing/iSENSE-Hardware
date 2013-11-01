@@ -9,20 +9,43 @@
 
 #import <Foundation/Foundation.h>
 #import "Fields.h"
+#import "API.h"
 
 @interface DataFieldManager : NSObject {
-
     bool enabledFields[22];
+    
+    int projID;
+    API *api;
+    Fields *f;
+    
+    NSMutableArray *projFields;
 }
 
-- (NSMutableArray *) getFieldOrderOfExperiment:(int)exp;
-- (NSMutableArray *) orderDataFromFields:(Fields *)f;
+/* new methods */
+- (id) initWithProjID:(int)projectID API:(API *)isenseAPI andFields:(Fields *)fields;
++ (NSMutableArray *) getOrderForProjID:(int)projectID API:(API *)isenseAPI;
+- (void) getOrder;
+- (void) getProjectFieldOrder;
+- (int) getProjID;
+- (void) setProjID:(int)projectID;
+- (NSMutableArray *) getProjectFields;
+- (NSMutableArray *) getOrderList;
+- (Fields *) getFields;
+- (void) setFields:(Fields *)fields;
+- (void) enableAllFields;
+- (void) setEnabledFields:(NSMutableArray *)acceptedFields;
+- (NSMutableDictionary *) putData;
+- (NSMutableArray *) putDataForNoProjectID;
++ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)isenseAPI andFieldOrder:(NSMutableArray *)fieldOrder;
+
+/* old methods */
 - (void) setEnabledField:(bool)value atIndex:(int)index;
 - (bool) enabledFieldAtIndex:(int)index;
-- (void) addAllFieldsToOrder;
-- (id) reOrderData:(id)oldData forExperimentID:(int)eid;
 
+/* old properties */
 @property (nonatomic, retain) NSMutableArray *order;
-@property (nonatomic, retain) NSMutableArray *data;
+
+/* new properties */
+@property (nonatomic, retain) NSMutableArray *realOrder;
 
 @end

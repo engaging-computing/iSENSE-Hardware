@@ -58,6 +58,7 @@
 @property (nonatomic, assign) int projNum;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) DataFieldManager *dfm;
+@property (nonatomic, strong) Fields *f;
 
 @property (nonatomic, strong) CLGeocoder *geoCoder;
 @property (nonatomic, copy) NSString *city;

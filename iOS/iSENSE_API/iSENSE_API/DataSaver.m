@@ -62,7 +62,7 @@
     } else {
         tmp = [dataQueue removeFromQueueWithKey:key];
     }
-
+    
     [managedObjectContext deleteObject:tmp];
     [self commitMOCChanges];
     
@@ -90,7 +90,7 @@
         NSNumber *tmp = [dataQueue.allKeys objectAtIndex:i];
         [self removeDataSet:tmp];
     }
-
+    
     [dataQueue removeAllObjects];
     [self commitMOCChanges];
 }
@@ -156,56 +156,54 @@
             dataSetsToUpload++;
             
             // organize data if no initial project was found
-            if (currentDS.hasInitialProj.boolValue == FALSE) {
-                DataFieldManager *dfm = [[DataFieldManager alloc] init];
-                currentDS.data = [dfm reOrderData:currentDS.data forExperimentID:currentDS.projID.intValue];
-            }
+            if (currentDS.hasInitialProj.boolValue == FALSE)
+                currentDS.data = [DataFieldManager reOrderData:currentDS.data forProjectID:currentDS.projID.intValue API:api andFieldOrder:nil];
+            
             
             // upload to iSENSE
+            int returnID = -1;
             if (((NSArray *)currentDS.data).count) {
-//                NSError *error = nil;
-//                NSData *dataJSON = [NSJSONSerialization dataWithJSONObject:currentDS.data options:0 error:&error];
-//                if (error != nil) {
-//                    NSLog(@"%@", error);
-//                    return false;
-//                }
                 
-                int returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:currentDS.data andName:currentDS.name];
+                NSMutableDictionary *jobj = [[NSMutableDictionary alloc] init];
+                [jobj setObject:currentDS.data forKey:@"data"];
+                jobj = [[api rowsToCols:jobj] mutableCopy];
+                
+                returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
                 NSLog(@"Data set ID: %d", returnID);
                 
                 if (returnID == 0 || returnID == -1) {
                     dataSetsFailed++;
                     continue;
-                }                
+                }
             }
             
-            // upload pictures to iSENSE TODO - implement with the new API
-//            if (((NSArray *)currentDS.picturePaths).count) {
-//                NSArray *pictures = (NSArray *) currentDS.picturePaths;
-//                NSMutableArray *newPicturePaths = [NSMutableArray alloc];
-//                bool failedAtLeastOnce = false;
-//                
-//                // loop through all the images and try to upload them
-//                for (int i = 0; i < pictures.count; i++) {
-//                    
-//                    // track the images that fail to upload
-//                    if (![isenseAPI upload:pictures[i] toExperiment:currentDS.projID forSession:currentDS.sid withName:currentDS.name andDescription:currentDS.dataDescription]) {
-//                        dataSetsFailed++;
-//                        failedAtLeastOnce = true;
-//                        [newPicturePaths addObject:pictures[i]];
-//                        continue;
-//                    }
-//
-//                }
-//            
-//                // add back the images that need to be uploaded
-//                if (failedAtLeastOnce) {
-//                    currentDS.picturePaths = newPicturePaths;
-//                    continue;
-//                }
-//            }
+            // upload pictures to iSENSE
+            if (((NSArray *)currentDS.picturePaths).count) {
+                NSArray *pictures = (NSArray *) currentDS.picturePaths;
+                NSMutableArray *newPicturePaths = [NSMutableArray alloc];
+                bool failedAtLeastOnce = false;
             
-        [dataSetsToBeRemoved addObject:currentKey];
+                // loop through all the images and try to upload them
+                for (int i = 0; i < pictures.count; i++) {
+            
+                    // track the images that fail to upload
+                    if (![api uploadDataSetMediaWithId:returnID withFile:pictures[i] andName:currentDS.name]) {
+                        dataSetsFailed++;
+                        failedAtLeastOnce = true;
+                        [newPicturePaths addObject:pictures[i]];
+                        continue;
+                    }
+            
+                }
+            
+                // add back the images that need to be uploaded
+                if (failedAtLeastOnce) {
+                    currentDS.picturePaths = newPicturePaths;
+                    continue;
+                }
+            }
+            
+            [dataSetsToBeRemoved addObject:currentKey];
             
         } else {
             continue;
@@ -224,8 +222,8 @@
             [prefs setInteger:DATA_UPLOAD_SUCCESS forKey:KEY_DATA_UPLOADED];
             status = TRUE;
         }
-    else
-        [prefs setInteger:DATA_NONE_UPLOADED forKey:KEY_DATA_UPLOADED];
+        else
+            [prefs setInteger:DATA_NONE_UPLOADED forKey:KEY_DATA_UPLOADED];
     
     return status;
 }
@@ -255,7 +253,7 @@
             // remove garbage
             [self.dataQueue removeObjectForKey:keys[i]];
         } else {
-           // keep data set
+            // keep data set
         }
     }
     [self commitMOCChanges];

@@ -25,7 +25,6 @@
 		39A9419717EB28B0009270D3 /* RNews.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A9419517EB28B0009270D3 /* RNews.m */; };
 		39AD183A17553765002969FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39AD183917553765002969FA /* CoreData.framework */; };
 		39B63D891778C4950024EB75 /* Experiment.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FF261116DFA86B0062C3DC /* Experiment.h */; };
-		39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */; };
 		39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EFB9EA172AD8F800A6BD2A /* Queue.m */; };
 		39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E316DFA28A0062C3DC /* Foundation.framework */; };
 		39FF262316DFA8760062C3DC /* iSENSE.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF261A16DFA8760062C3DC /* iSENSE.m */; };
@@ -36,6 +35,7 @@
 		39FF262816DFA8760062C3DC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262016DFA8760062C3DC /* Person.m */; };
 		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
 		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
+		76444EDF180F069300C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EDE180F069300C41E3D /* MobileCoreServices.framework */; };
 		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
 		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
 		B712DE241796D17000A30CAC /* QDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* QDataSet.h */; };
@@ -54,6 +54,7 @@
 		B72B1B86181EE02300613F2E /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EC669F18199AAB007B5B48 /* queue_layout-landscape~ipad.xib */; };
 		B72B1B87181EE02300613F2E /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EC66A118199AAB007B5B48 /* queue_layout~ipad.xib */; };
 		B72B1B88181EE02300613F2E /* QueueCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EC66A018199AAB007B5B48 /* QueueCell~ipad.xib */; };
+		B73091CB18228FE0009EC24C /* DataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = B73091CA18228FE0009EC24C /* DataSaver.m */; };
 		B73CFDB1179D8D1400B891B0 /* DataFieldManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */; };
 		B73CFDB2179D8D1400B891B0 /* DataFieldManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */; };
 		B73CFDB5179D8D1D00B891B0 /* Fields.h in Headers */ = {isa = PBXBuildFile; fileRef = B73CFDB3179D8D1D00B891B0 /* Fields.h */; };
@@ -115,7 +116,6 @@
 		39A9419417EB28B0009270D3 /* RNews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNews.h; sourceTree = "<group>"; };
 		39A9419517EB28B0009270D3 /* RNews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNews.m; path = headers/RNews.m; sourceTree = "<group>"; wrapsLines = 0; };
 		39AD183917553765002969FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		39EFB9EA172AD8F800A6BD2A /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiSENSE_API.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FF25E316DFA28A0062C3DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -136,6 +136,7 @@
 		39FF262016DFA8760062C3DC /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		39FF262116DFA8760062C3DC /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
 		39FF262216DFA8760062C3DC /* SessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionData.m; sourceTree = "<group>"; };
+		76444EDE180F069300C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B7034E491781F6EA00D6F0BA /* SensorEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SensorEnums.h; sourceTree = "<group>"; };
 		B712DE211796D17000A30CAC /* DataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataSaver.h; path = headers/DataSaver.h; sourceTree = "<group>"; };
 		B712DE221796D17000A30CAC /* QDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QDataSet.h; path = headers/QDataSet.h; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		B72AED8C181949C4008FE242 /* projectblock_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projectblock_clean.png; path = ../iSENSE_API/projectblock_clean.png; sourceTree = "<group>"; };
 		B72AED8D181949C4008FE242 /* projectblock_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projectblock_dark.png; path = ../iSENSE_API/projectblock_dark.png; sourceTree = "<group>"; };
 		B72AED9418194EFF008FE242 /* ISKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISKeys.h; sourceTree = "<group>"; };
+		B73091CA18228FE0009EC24C /* DataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSaver.m; sourceTree = "<group>"; };
 		B73CFDAF179D8D1400B891B0 /* DataFieldManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldManager.h; sourceTree = "<group>"; };
 		B73CFDB0179D8D1400B891B0 /* DataFieldManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataFieldManager.m; sourceTree = "<group>"; };
 		B73CFDB3179D8D1D00B891B0 /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76444EDF180F069300C41E3D /* MobileCoreServices.framework in Frameworks */,
 				B7EBFDC217A0186A006B90A8 /* SystemConfiguration.framework in Frameworks */,
 				39AD183A17553765002969FA /* CoreData.framework in Frameworks */,
 				39FF25E416DFA28A0062C3DC /* Foundation.framework in Frameworks */,
@@ -256,7 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				B7EC669418199A70007B5B48 /* QueueUploaderView.m */,
-				39EFB9E5172AD6BC00A6BD2A /* DataSaver.m */,
+				B73091CA18228FE0009EC24C /* DataSaver.m */,
 				39EFB9EF172ADE9F00A6BD2A /* objects */,
 			);
 			name = src_queue_saver;
@@ -314,6 +317,7 @@
 		39FF25E216DFA28A0062C3DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76444EDE180F069300C41E3D /* MobileCoreServices.framework */,
 				B7EBFDC117A0186A006B90A8 /* SystemConfiguration.framework */,
 				39AD183917553765002969FA /* CoreData.framework */,
 				39FF25E316DFA28A0062C3DC /* Foundation.framework */,
@@ -671,7 +675,6 @@
 				39FF262816DFA8760062C3DC /* Person.m in Sources */,
 				39FF262916DFA8760062C3DC /* Session.m in Sources */,
 				39FF262A16DFA8760062C3DC /* SessionData.m in Sources */,
-				39EFB9E7172AD6BC00A6BD2A /* DataSaver.m in Sources */,
 				39EFB9EC172AD8F800A6BD2A /* Queue.m in Sources */,
 				B7F2D820177B69F400F9A58D /* SensorCompatibility.m in Sources */,
 				B7F09EFE1794599E00725483 /* Waffle.m in Sources */,
@@ -692,6 +695,7 @@
 				B72AED8A181948AF008FE242 /* ProjectBrowseViewController.m in Sources */,
 				B7EC669218199A67007B5B48 /* QueueCell.m in Sources */,
 				B7EC669618199A70007B5B48 /* QueueUploaderView.m in Sources */,
+				B73091CB18228FE0009EC24C /* DataSaver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
