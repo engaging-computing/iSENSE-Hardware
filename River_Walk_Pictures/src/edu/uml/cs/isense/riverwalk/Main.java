@@ -150,7 +150,7 @@ public class Main extends Activity implements LocationListener {
 			@Override
 			public void onClick(View v) {
 				//TODO
-				if (continuous == false){
+				
 				
 				if (name.getText().length() == 0) {
 					name.setError("Enter a name");
@@ -168,6 +168,7 @@ public class Main extends Activity implements LocationListener {
 					return;
 				}
 				
+				if (continuous == false){
 					String state = Environment.getExternalStorageState();
 					if (Environment.MEDIA_MOUNTED.equals(state)) {
 	
@@ -188,7 +189,7 @@ public class Main extends Activity implements LocationListener {
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					}
 
-				} else { //if continuous == true
+				} else if( continuous == true) { //if continuous == true
 					if (recording == false){
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setText("Recording Push to Stop");
@@ -205,25 +206,11 @@ public class Main extends Activity implements LocationListener {
 
 	}
 	
+	
 	private void continuouslytakephotos(){
 		//TODO
 		while(recording){	
 			//take a picture
-			if (name.getText().length() == 0) {
-				name.setError("Enter a name");
-				return;
-			} else {
-				name.setError(null);
-			}
-
-			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			String experimentNum = mPrefs.getString("project_id", "Error");
-
-			if (experimentNum.equals("Error")) {
-				w.make("Please select an project first.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-				return;
-			}
 			
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -245,11 +232,11 @@ public class Main extends Activity implements LocationListener {
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
-//				try {Thread.sleep(1000 * continuousInterval);
-//                } catch (InterruptedException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
+				try {Thread.sleep(1000 * continuousInterval);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 			
 		}
 	}
