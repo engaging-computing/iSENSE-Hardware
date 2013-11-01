@@ -164,10 +164,9 @@
             int returnID = -1;
             if (((NSArray *)currentDS.data).count) {
                 
-                NSDictionary *rawJObjData = [[NSDictionary alloc] init];
                 NSMutableDictionary *jobj = [[NSMutableDictionary alloc] init];
-                [rawJObjData setValue:currentDS.data forKey:@"data"];
-                jobj = [[api rowsToCols:rawJObjData] mutableCopy];
+                [jobj setObject:currentDS.data forKey:@"data"];
+                jobj = [[api rowsToCols:jobj] mutableCopy];
                 
                 returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
                 NSLog(@"Data set ID: %d", returnID);
