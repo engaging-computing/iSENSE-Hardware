@@ -1337,7 +1337,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Code for polling sensors for data periodically - called by service
-	public static void pollForData() {
+	public static void pollForData() { 
+		// TODO should there be a new Fields object for each row recorded? else duplicate data
+		// if so, then ensure you set dfm's field objects each time
+		
 		dataPointCount++;
 		elapsedMillis += sampleInterval;
 		totalMillis = elapsedMillis;
