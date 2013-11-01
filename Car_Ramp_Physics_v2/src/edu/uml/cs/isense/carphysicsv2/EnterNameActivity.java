@@ -30,7 +30,7 @@ public class EnterNameActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.entername);
+		setContentView(R.layout.enter_name);
 
 		mContext = this;
 

@@ -17,7 +17,7 @@ public class LoginError extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login_show_error);
+		setContentView(R.layout.login_error);
 		
 		Bundle extras = getIntent().getExtras();
 		message = extras.getString("message");

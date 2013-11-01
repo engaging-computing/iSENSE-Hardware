@@ -37,18 +37,18 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.logindialog);
+		setContentView(R.layout.login_dialog);
 
 		mContext = this;
 		
 		api = API.getInstance(mContext);
 
-		username = (EditText) findViewById(R.id.usernameInput);
-		password = (EditText) findViewById(R.id.passwordInput);
-		final Button ok = (Button) findViewById(R.id.login_ok);
-		final Button cancel = (Button) findViewById(R.id.login_cancel);
+		username = (EditText) findViewById(R.id.edittext_username);
+		password = (EditText) findViewById(R.id.edittext_password);
+		final Button ok = (Button) findViewById(R.id.button_ok);
+		final Button cancel = (Button) findViewById(R.id.button_cancel);
 		
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences( // TODO - was Splash.mContext
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				   Welcome.mContext, Welcome.mContext
 				   .getSharedPreferences("USER_INFO", Context.MODE_PRIVATE));
 		

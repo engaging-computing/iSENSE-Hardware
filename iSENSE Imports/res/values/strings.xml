@@ -100,5 +100,11 @@
     </string>
     <string name="project_field">Project Field</string>
     <string name="back">Back</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="login">Login</string>
+    <string name="first_name">First Name:</string>
+    <string name="last_initial">Last Initial:</string>
+    
 
 </resources>
