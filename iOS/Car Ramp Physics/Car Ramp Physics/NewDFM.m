@@ -34,23 +34,48 @@
     return enabledFields[index];
 }
 
-- (NSMutableArray *) getFieldOrderOfProject:(int)projID {
+// Default dispatch_async dialog with custom spinner
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
+}
+
+- (void) getFieldOrderOfProject:(int)projID {
     
     if (projID == -1) {
         [self addAllFieldsToOrder];
-        return order;
+        return;
     }
     
     if (order) order = nil;
     order = [[NSMutableArray alloc] init];
     API *api = [API getInstance];
-    dispatch_queue_t queue = dispatch_queue_create("edu.uml.cs.isense.api", NULL);
+    dispatch_queue_t queue = dispatch_queue_create("edu.uml.cs.isense.dfm", NULL);
     dispatch_async(queue, ^{
         NSArray *fields = [api getProjectFieldsWithId:projID];
         
+        // log fields
+        NSLog(@"Fields: %@", fields);
+        
         for (RProjectField *field in fields) {
+            
+            // log all info field
+            NSLog(@"Field Type: %@", field.type);
+            
             switch ([field.type intValue]) {
                 case TYPE_NUMBER:
+                    
+                    // log field.name
+                    NSLog(@"Field Name: %@", field.name);
+                    
                     if ([[field.name lowercaseString] rangeOfString:@"temp"].location != NSNotFound) {
                         if ([[field.name lowercaseString] rangeOfString:@"c"].location != NSNotFound) {
                             [order addObject:[FieldGrabber grabField:@"temperature_c"]];
@@ -112,7 +137,6 @@
     });
     
         
-    return order;
 }
 
 - (NSMutableDictionary *) putDataFromFields:(Fields *)f {
@@ -271,6 +295,7 @@
     
     if (data) data = nil;
     data = [[NSMutableArray alloc] init];
+    [self addAllFieldsToOrder];
     
     for (NSString *s in order) {
         if ([s isEqualToString:[FieldGrabber grabField:@"accel_x"]]) {
@@ -449,8 +474,8 @@
     NSMutableDictionary *outRow;
     NSMutableArray *row;
     
-    [self getFieldOrderOfProject:projID];
-
+    //[self getFieldOrderOfProject:projID];
+    
     for (int i = 0; i < [oldData count]; i++) {
         @try {
             row = [oldData objectAtIndex:i];
@@ -539,14 +564,14 @@
                     [outRow setObject:nil forKey:[NSString stringWithFormat:@"%d", j]];
                 }
                 @catch (NSException *exception) {
-                    //
+                    NSLog(@"Problems");
                 }
             }
             
-        [outData addObject:outRow];
+            [outData addObject:outRow];
         }
         @catch (NSException *exception) {
-            //
+            NSLog(@"99 Problems");
         }
     }
         

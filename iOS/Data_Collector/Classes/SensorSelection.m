@@ -60,8 +60,8 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int exp = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] integerValue];
     
-    dfm = [[DataFieldManager alloc] init];
-    [dfm getFieldOrderOfExperiment:exp];
+    dfm = [[DataFieldManager alloc] initWithProjID:exp API:[API getInstance] andFields:nil];
+    [dfm getOrder];
     fieldNumber = [[dfm order] count];
     
     fieldNames = [[NSMutableArray alloc] init];
