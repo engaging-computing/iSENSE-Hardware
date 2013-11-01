@@ -149,6 +149,9 @@ public class Main extends Activity implements LocationListener {
 
 			@Override
 			public void onClick(View v) {
+				//TODO
+				if (continuous == false){
+				
 				if (name.getText().length() == 0) {
 					name.setError("Enter a name");
 					return;
@@ -164,9 +167,7 @@ public class Main extends Activity implements LocationListener {
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
-
-				//TODO
-				if (continuous == false){
+				
 					String state = Environment.getExternalStorageState();
 					if (Environment.MEDIA_MOUNTED.equals(state)) {
 	
@@ -206,39 +207,49 @@ public class Main extends Activity implements LocationListener {
 	
 	private void continuouslytakephotos(){
 		//TODO
-
 		while(recording){	
 			//take a picture
-			String state = Environment.getExternalStorageState();
-			if (Environment.MEDIA_MOUNTED.equals(state)) {
-	
-				ContentValues values = new ContentValues();
-	
-				imageUri = getContentResolver().insert(
-						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-						values);
-	
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-				intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-	
-				OrientationManager.disableRotation(Main.this);
-				startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-				
-				try
-		        {
-		          Thread.sleep(1000 * Continuous.continuous_interval);
-		        } catch (InterruptedException e)
-		        {
-		            e.printStackTrace();
-		        }
-				
+			if (name.getText().length() == 0) {
+				name.setError("Enter a name");
+				return;
 			} else {
-				w.make("Cannot write to external storage.",
+				name.setError(null);
+			}
+
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String experimentNum = mPrefs.getString("project_id", "Error");
+
+			if (experimentNum.equals("Error")) {
+				w.make("Please select an project first.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-						recording = false;
+				return;
 			}
 			
+				String state = Environment.getExternalStorageState();
+				if (Environment.MEDIA_MOUNTED.equals(state)) {
+
+					ContentValues values = new ContentValues();
+
+					imageUri = getContentResolver().insert(
+							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+							values);
+
+					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+
+					OrientationManager.disableRotation(Main.this);
+					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+				} else {
+					w.make("Cannot write to external storage.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				}
+
+//				try {Thread.sleep(1000 * continuousInterval);
+//                } catch (InterruptedException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
 			
 		}
 	}
@@ -506,10 +517,10 @@ public class Main extends Activity implements LocationListener {
 					queueCount.setText(getResources()
 							.getString(R.string.queueCount) + uq.queueSize());
 	
-					if(continuous == false){ //if continuously recording do not ask for description
+					//if(continuous == false){ //if continuously recording do not ask for description
 					Intent iDesc = new Intent(Main.this, Description.class);
 					startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-					}
+					//}
 				}
 			}
 			
