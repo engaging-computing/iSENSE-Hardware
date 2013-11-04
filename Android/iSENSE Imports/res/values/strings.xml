@@ -105,6 +105,9 @@
     <string name="login">Login</string>
     <string name="first_name">First Name:</string>
     <string name="last_initial">Last Initial:</string>
+    <string name="def_username">Mobile</string>
+    <string name="def_last_initial">U.</string>
+    <string name="use_isense_name">Use iSENSE Account Name</string>
     
 
 </resources>

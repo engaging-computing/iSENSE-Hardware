@@ -65,7 +65,7 @@
             android:label="Manual"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".dialogs.LoginActivity"
+            android:name="edu.uml.cs.isense.credentials.LoginActivity"
             android:label="Login"
             android:theme="@style/theme_dialog_white" />
         <activity
@@ -78,7 +78,7 @@
             android:label="Media Manager"
             android:theme="@style/theme_dialog_white" />
         <activity
-            android:name=".dialogs.LoginError"
+            android:name="edu.uml.cs.isense.credentials.LoginError"
             android:label="Login Failed"
             android:theme="@style/theme_dialog_white" />
         <activity
