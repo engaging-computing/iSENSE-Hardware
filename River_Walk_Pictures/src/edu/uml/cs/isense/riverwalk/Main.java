@@ -194,7 +194,7 @@ public class Main extends Activity implements LocationListener {
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setText("Recording Push to Stop");
 						recording = true;
-						continuouslytakephotos();
+						continuouslytakephotos.run();
 					} else {
 						Main.takePicture.setText(R.string.takePicContinuous);
 						Main.takePicture.setBackgroundColor(R.drawable.button_rsense);
@@ -206,12 +206,15 @@ public class Main extends Activity implements LocationListener {
 
 	}
 	
+
+//		//TODO
 	
-	private void continuouslytakephotos(){
-		//TODO
-		while(recording){	
+	
+	private Runnable continuouslytakephotos = new Runnable() {
+		@Override
+		public void run() {
 			//take a picture
-			
+			while(recording){
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
 
@@ -237,9 +240,9 @@ public class Main extends Activity implements LocationListener {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-			
+			}
 		}
-	}
+	};
 	
 	
 	// double tap back button to exit
