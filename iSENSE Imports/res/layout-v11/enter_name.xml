@@ -3,6 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <CheckedTextView
+        android:id="@+id/checkedtextview_use_isense_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:checked="true"
+        android:text="@string/use_isense_name" />
+
     <TextView
         android:id="@+id/textview_name"
         android:layout_width="wrap_content"
@@ -15,9 +23,13 @@
         android:id="@id/edittext_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/checkedtextview_use_isense_name"
         android:layout_toRightOf="@id/textview_name"
+        android:digits="@string/digits_restriction"
+        android:enabled="false"
         android:inputType="textCapSentences"
-        android:maxLength="12" />
+        android:maxLength="12"
+        android:text="@string/def_username" />
 
     <TextView
         android:id="@+id/textview_initial"
@@ -33,9 +45,12 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/edittext_name"
         android:layout_below="@id/edittext_name"
+        android:digits="@string/digits_restriction"
+        android:enabled="false"
         android:inputType="textCapSentences"
         android:maxLength="1"
-        android:singleLine="true" >
+        android:singleLine="true"
+        android:text="@string/def_last_initial" >
     </EditText>
 
     <View
