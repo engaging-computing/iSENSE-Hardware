@@ -11,6 +11,7 @@ import edu.uml.cs.isense.datawalk_v2.R;
  * 
  * @author Rajia
  */
+
 public class Help extends Activity {
 
 	private Button okButton;
@@ -19,11 +20,11 @@ public class Help extends Activity {
 	public void onCreate(Bundle savedInstanceBundle) {
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.help_dialog);
-
+		this.setTitle("How to Create a New Project: ");
 		// Creates the OK button so users can leave
 		okButton = (Button) findViewById(R.id.helpOkButton);
 		okButton.setOnClickListener(new View.OnClickListener() {
-
+		
 			@Override
 			public void onClick(View v) {
 				finish();
