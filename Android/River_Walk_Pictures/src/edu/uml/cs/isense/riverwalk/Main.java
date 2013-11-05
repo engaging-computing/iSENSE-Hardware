@@ -62,7 +62,8 @@ public class Main extends Activity implements LocationListener {
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
-	private static final int CONTINUOUS_PIC_REQUESTED = 107;
+	private static final int CONTINUOUS_REQUESTED = 107;
+	
 	
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
@@ -208,10 +209,6 @@ public class Main extends Activity implements LocationListener {
 	}
 	
 
-	//TODO
-	
-	
-	
 
 private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 {
@@ -308,7 +305,6 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 	        	Intent continuous = new Intent(getApplicationContext(),
 						Continuous.class);
 				startActivity(continuous);
-	        	//TODO show layout for continuous shooting
 	            return true;    
 	            
 	        default:
@@ -519,13 +515,10 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == CAMERA_PIC_REQUESTED) { 	//request to takes picture
-			
-			
+
 				if (resultCode == RESULT_OK) {
 					curTime = System.currentTimeMillis();
 					picture = convertImageUriToFile(imageUri);
-	
-					takePicture.setEnabled(true);
 	
 					uq.buildQueueFromFile();
 					queueCount.setText(getResources()
@@ -542,6 +535,10 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 			
 			
 			//TODO
+				
+		} else if (requestCode == CONTINUOUS_REQUESTED) {
+			
+			
 			
 		} else if (requestCode == EXPERIMENT_REQUESTED) {			//obtains data fields from project on isense
 			if (resultCode == Activity.RESULT_OK) {
