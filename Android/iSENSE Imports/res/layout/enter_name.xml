@@ -63,24 +63,14 @@
         android:text="@string/def_last_initial" >
     </EditText>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:layout_below="@id/edittext_initial"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/dividerVertical" />
-
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/divider"
+        android:layout_below="@id/edittext_initial"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/button_ok"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@android:string/ok" />
