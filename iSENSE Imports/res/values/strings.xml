@@ -32,7 +32,7 @@
     <string name="deselect_all">Deselect All</string>
     <string name="delete_selected">Delete Selected</string>
     <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.</string>
-    
+
     <!-- SyncTime -->
     <string name="syncTime">Synchronizing time is useful when using multiple devices to record data at the
 	    same time.  By default, many Android devices\' clocks will not match one
@@ -63,12 +63,10 @@
     <string name="retry">Try Again</string>
     <string name="instructions"><u>Instructions:</u></string>
     <string name="reset">Reset</string>
-    <string name="no_initial_proj">
-        One or more of the data sets you have selected to upload have no associated project.  This is indicated by the text that
+    <string name="no_initial_proj">        One or more of the data sets you have selected to upload have no associated project.  This is indicated by the text that
         states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
-        sets with no associated project and select \"Select Project\" to associate the data set with a project.
-    </string>
-    
+        sets with no associated project and select \"Select Project\" to associate the data set with a project.</string>
+
     <!-- Field matching -->
     <string name="isense_fields">Fields</string>
     <!-- Field matching array: make sure the items here are equivalent to the fields in fieldname.xml -->
@@ -94,10 +92,9 @@
         <item>Temp. (Fahrenheit)</item>
         <item>Temp. (Kelvin)</item>
     </string-array>
-    <string name="field_matching_text">
-        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
-        available, leave the drop down blank.
-    </string>
+
+    <string name="field_matching_text">        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
+        available, leave the drop down blank.</string>
     <string name="project_field">Project Field</string>
     <string name="back">Back</string>
     <string name="username">Username:</string>
@@ -108,6 +105,8 @@
     <string name="def_username">Mobile</string>
     <string name="def_last_initial">U.</string>
     <string name="use_isense_name">Use iSENSE Account Name</string>
-    
+    <string name="enter_name_prompt">Please Enter Your Name</string>
+    <string name="login_error_prompt">Login Failed</string>
+    <string name="login_prompt">Login to iSENSE</string>
 
 </resources>

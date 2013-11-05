@@ -789,7 +789,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					RECORDING_LENGTH_REQUESTED);
 			return true;
 		case R.id.changename:
-			startActivityForResult(new Intent(this, EnterNameActivity.class),
+			startActivityForResult(new Intent(this, EnterName.class),
 					resultGotName);
 			return true;
 		case R.id.reset:

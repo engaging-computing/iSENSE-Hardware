@@ -27,6 +27,7 @@
         android:layout_toRightOf="@id/textview_name"
         android:digits="@string/digits_restriction"
         android:enabled="false"
+        android:imeOptions="actionNext"
         android:inputType="textCapSentences"
         android:maxLength="12"
         android:text="@string/def_username" />
@@ -47,6 +48,7 @@
         android:layout_below="@id/edittext_name"
         android:digits="@string/digits_restriction"
         android:enabled="false"
+        android:imeOptions="actionDone"
         android:inputType="textCapSentences"
         android:maxLength="1"
         android:singleLine="true"

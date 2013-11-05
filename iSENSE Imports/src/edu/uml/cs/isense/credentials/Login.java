@@ -14,7 +14,7 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
-public class LoginActivity extends Activity {
+public class Login extends Activity {
 	
 	public static final String PREFERENCES_KEY_OBSCURRED_USER_INFO = "OBSCURRED_USER_INFO";
 	public static final String PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME = "USERNAME";
@@ -47,7 +47,7 @@ public class LoginActivity extends Activity {
 		password = (EditText) findViewById(R.id.edittext_password);
 		
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				   baseContext, getSharedPreferences(PREFERENCES_KEY_OBSCURRED_USER_INFO, MODE_PRIVATE));
+				   baseContext, baseContext.getSharedPreferences(PREFERENCES_KEY_OBSCURRED_USER_INFO, MODE_PRIVATE));
 		username.setText(mPrefs.getString(PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME));
 		password.setText(mPrefs.getString(PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD));
 		

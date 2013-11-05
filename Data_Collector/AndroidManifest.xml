@@ -65,10 +65,6 @@
             android:label="Manual"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="edu.uml.cs.isense.credentials.LoginActivity"
-            android:label="Login"
-            android:theme="@style/theme_dialog_white" />
-        <activity
             android:name="edu.uml.cs.isense.sync.SyncTime"
             android:label="Synchronize Time"
             android:theme="@style/AppTheme"
@@ -76,10 +72,6 @@
         <activity
             android:name=".dialogs.MediaManager"
             android:label="Media Manager"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="Login Failed"
             android:theme="@style/theme_dialog_white" />
         <activity
             android:name=".dialogs.Summary"

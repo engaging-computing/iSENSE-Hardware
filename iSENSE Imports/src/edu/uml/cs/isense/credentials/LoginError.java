@@ -16,7 +16,7 @@ public class LoginError extends Activity {
 		setContentView(R.layout.login_error);
 		
 		Bundle extras = getIntent().getExtras();
-		String message = extras.getString(LoginActivity.INTENT_KEY_MESSAGE);
+		String message = extras.getString(Login.INTENT_KEY_MESSAGE);
 		
 		final TextView error = (TextView) findViewById(R.id.textview_show_error);
 		error.setText(message);
