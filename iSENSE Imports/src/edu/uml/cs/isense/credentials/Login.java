@@ -22,8 +22,8 @@ public class Login extends Activity {
 	public static final String INTENT_KEY_MESSAGE = "MESSAGE";
 	public static final int RESULT_ERROR = 1;
 	
-	private static final String MESSAGE_UNKNOWN_USER = "Connection to internet has been found, but the username or password was incorrect.  Please try again.";
-	private static final String MESSAGE_NO_CONNECTION = "No connection to internet through either wifi or mobile found.  Please enable one to continue, then try again."; 
+	private static final String MESSAGE_UNKNOWN_USER = "Connection to Internet has been found, but the username or password was incorrect.  Please try again.";
+	private static final String MESSAGE_NO_CONNECTION = "No connection to Internet through either WiFi or mobile found.  Please enable one to continue, then try again."; 
 
 	private static final String DEFAULT_USERNAME = "mobile";
 	private static final String DEFAULT_PASSWORD = "mobile";

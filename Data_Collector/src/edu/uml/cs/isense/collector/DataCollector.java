@@ -81,7 +81,7 @@ import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.credentials.LoginActivity;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -189,7 +189,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static float accel[];
 	private static float mag[];
 	private static float orientation[];
-	
+
 	/* Publicized Variables */
 
 	// Lists and Queues
@@ -246,7 +246,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static FileWriter gpxwriter;
 	private static BufferedWriter out;
 	private static Context mContext;
-	
+
 	public static JSONArray dataSet;
 
 	// Custom
@@ -463,8 +463,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prepare the menu (enable/disable properly)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-//		if (!preLoad)
-//			setMenuStatus(true);
+		// if (!preLoad)
+		// setMenuStatus(true);
 		if (!useMenu) {
 
 			menu.getItem(0).setEnabled(false);
@@ -476,7 +476,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
-			
+
 		}
 		return true;
 	}
@@ -486,7 +486,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_item_login:
-			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			Intent iLogin = new Intent(mContext, Login.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
 		case R.id.menu_item_sync:
@@ -649,7 +649,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				} else if (returnCode.equals("Failed")) {
 
-					Intent i = new Intent(mContext, LoginActivity.class);
+					Intent i = new Intent(mContext, Login.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
 					// should never get here
@@ -714,7 +714,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CAN_LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				Intent iLogin = new Intent(mContext, LoginActivity.class);
+				Intent iLogin = new Intent(mContext, Login.class);
 				startActivityForResult(iLogin, LOGIN_REQUESTED);
 			} else if (resultCode == RESULT_CANCELED) {
 				if (manageUploadQueueAfterLogin) {
@@ -1031,9 +1031,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
-			
+
 			dfm.setOrder(fields);
-			
+
 			getEnabledFields();
 
 		}
@@ -1337,10 +1337,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Code for polling sensors for data periodically - called by service
-	public static void pollForData() { 
-		// TODO should there be a new Fields object for each row recorded? else duplicate data
+	public static void pollForData() {
+		// TODO should there be a new Fields object for each row recorded? else
+		// duplicate data
 		// if so, then ensure you set dfm's field objects each time
-		
+
 		dataPointCount++;
 		elapsedMillis += sampleInterval;
 		totalMillis = elapsedMillis;
@@ -1420,7 +1421,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				Intent iSetup = new Intent(mContext, Step1Setup.class);
 				startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 			}
@@ -1441,8 +1442,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						setUpRecordingDescription();
-						
-						// get csv order (not used if project is -1: perhaps add that check here?)
+
+						// get csv order (not used if project is -1: perhaps add
+						// that check here?)
 						dfm.getProjectFieldsAndSetCSVOrder();
 
 						// start running task
@@ -1546,7 +1548,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 						writeToSDCard(null, 'f');
 
 					setMenuStatus(true);
-					
+
 					step2.setText(R.string.step2);
 					setTime(0);
 
@@ -1658,8 +1660,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe)
-				.putExtra("date", dateString)
+				.putExtra("append", appendMe).putExtra("date", dateString)
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
@@ -1702,15 +1703,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
-			
+
 			preLoad = false;
 			useMenu = true;
 
 			if (mMenu != null) {
-			//	onPrepareOptionsMenu(mMenu);
+				// onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);
 			}
-			
+
 			setContentView(R.layout.automatic_concept);
 			initMainUI();
 			assignVars();
@@ -1748,7 +1749,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dia.cancel();
 
 			OrientationManager.enableRotation(DataCollector.this);
-			
+
 			// what is dfm order is 0?
 
 			super.onPostExecute(result);
@@ -1785,7 +1786,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// }
 
 		}
-		
+
 		if (useMenu && android.os.Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 	}

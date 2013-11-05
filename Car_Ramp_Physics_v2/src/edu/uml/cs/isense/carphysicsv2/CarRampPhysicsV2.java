@@ -66,6 +66,7 @@ import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
@@ -232,8 +233,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		if (savedInstanceState == null) {
 			if (firstName.equals("") || lastInitial.equals("")) {
 				if (!dontPromptMeTwice) {
-					startActivityForResult(new Intent(mContext,
-							EnterNameActivity.class), resultGotName);
+					startActivityForResult(
+							new Intent(mContext, EnterName.class),
+							resultGotName);
 				}
 			}
 		}
@@ -998,7 +1000,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 							+ data.getStringExtra("username")
 							+ ", Name: " + firstName + " " + lastInitial);
 				} else {
-					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+					loggedInAs.setText(getResources().getString(
+							R.string.not_logged_in)
 							+ ", Name: " + firstName + " " + lastInitial);
 				}
 				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
@@ -1078,11 +1081,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (!inApp)
 					inApp = true;
 				if (api.getCurrentUser() != null) {
-					loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-							+ " " + mPrefs.getString("username", "") + ", Name: "
-							+ firstName + " " + lastInitial);
+					loggedInAs.setText(getResources().getString(
+							R.string.logged_in_as)
+							+ " "
+							+ mPrefs.getString("username", "")
+							+ ", Name: " + firstName + " " + lastInitial);
 				} else {
-					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+					loggedInAs.setText(getResources().getString(
+							R.string.not_logged_in)
 							+ ", Name: " + firstName + " " + lastInitial);
 				}
 			} else {
@@ -1104,11 +1110,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				new OnCreateLoginTask().execute();
 				if (api.getCurrentUser() != null) {
-					loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-							+ " " + mPrefs.getString("username", "") + ", Name: "
-							+ firstName + " " + lastInitial);
+					loggedInAs.setText(getResources().getString(
+							R.string.logged_in_as)
+							+ " "
+							+ mPrefs.getString("username", "")
+							+ ", Name: " + firstName + " " + lastInitial);
 				} else {
-					loggedInAs.setText(getResources().getString(R.string.not_logged_in)
+					loggedInAs.setText(getResources().getString(
+							R.string.not_logged_in)
 							+ ", Name: " + firstName + " " + lastInitial);
 				}
 

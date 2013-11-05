@@ -24,7 +24,7 @@ import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.credentials.LoginActivity;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.supplements.FileBrowser;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -170,7 +170,7 @@ public class SelectMode extends Activity {
 
 					} else if (returnCode.equals("Failed")) {
 						
-						Intent i = new Intent(mContext, LoginActivity.class);
+						Intent i = new Intent(mContext, Login.class);
 						startActivityForResult(i, LOGIN_REQUESTED);
 						
 					}
@@ -224,7 +224,7 @@ public class SelectMode extends Activity {
 				tempFilepath = filepath;
 				w.make("Please log in", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 				
-				Intent i = new Intent(mContext, LoginActivity.class);
+				Intent i = new Intent(mContext, Login.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
 			} else {
 				new UploadCSVTask().execute(filepath);

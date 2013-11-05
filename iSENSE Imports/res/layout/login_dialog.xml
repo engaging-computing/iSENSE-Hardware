@@ -42,25 +42,15 @@
         android:paddingLeft="6dip"
         android:singleLine="true" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:layout_below="@id/textview_password"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/dividerVertical" />
-
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/divider"
+        android:layout_below="@id/edittext_password"
         android:orientation="horizontal"
         android:weightSum="2" >
 
         <Button
             android:id="@+id/button_cancel"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="2dp"
@@ -70,7 +60,6 @@
 
         <Button
             android:id="@+id/button_ok"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="2dp"
