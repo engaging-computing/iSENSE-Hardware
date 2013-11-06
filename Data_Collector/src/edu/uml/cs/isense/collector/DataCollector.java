@@ -189,7 +189,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static float accel[];
 	private static float mag[];
 	private static float orientation[];
-
+	
 	/* Publicized Variables */
 
 	// Lists and Queues
@@ -1337,7 +1337,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Code for polling sensors for data periodically - called by service
-	public static void pollForData() {
+	public static void pollForData() { 
+		// TODO should there be a new Fields object for each row recorded? else duplicate data
+		// if so, then ensure you set dfm's field objects each time
+		
 		dataPointCount++;
 		elapsedMillis += sampleInterval;
 		totalMillis = elapsedMillis;
@@ -1417,6 +1420,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
 				Intent iSetup = new Intent(mContext, Step1Setup.class);
 				startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 			}
@@ -1437,6 +1441,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					} else {
 
 						setUpRecordingDescription();
+						
+						// get csv order (not used if project is -1: perhaps add that check here?)
+						dfm.getProjectFieldsAndSetCSVOrder();
 
 						// start running task
 						running = true;
@@ -1742,8 +1749,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			OrientationManager.enableRotation(DataCollector.this);
 			
-//			if (dfm.getOrderList.size() == 0)
-//				TODO - API error checking for this case
+			// what is dfm order is 0?
 
 			super.onPostExecute(result);
 		}

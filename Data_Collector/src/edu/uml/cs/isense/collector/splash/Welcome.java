@@ -10,6 +10,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +28,7 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
+	private int actionBarTapCount = 0;
 	public static boolean useDev = true;
 	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
@@ -61,6 +64,9 @@ public class Welcome extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		// Set listeners for the buttons
@@ -78,15 +84,26 @@ public class Welcome extends Activity {
 				}
 			}
 		});
+		String selectProjectText = "<font COLOR=\"#0066FF\">" + "Continue With an Existing iSENSE Project" + "</font>"
+				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires Internet)" + "</font>";
+		selectProject.setText(Html.fromHtml(selectProjectText));
 
 		final Button createProject = (Button) findViewById(R.id.welcome_create_project);
 		createProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
-				startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
+				if (!api.hasConnectivity())
+					w.make("You need to have internet connectivity to do this",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				else {
+					Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
+					startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
+				}
 			}
 		});
+		String createProjectText = "<font COLOR=\"#0066FF\">" + "Create a new Project" + "</font>"
+				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires Internet)" + "</font>";
+		createProject.setText(Html.fromHtml(createProjectText));
 		
 		final Button noProject = (Button) findViewById(R.id.welcome_no_project);
 		noProject.setOnClickListener(new OnClickListener() {
@@ -96,6 +113,34 @@ public class Welcome extends Activity {
 			}
 		});
 
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	
+	    	String other = (useDev) ? "production" : "dev";
+	       
+	    	switch (++actionBarTapCount) {
+	    	case 5:
+	    		w.make("2 more taps to enter " + other + " mode");
+	    		break;
+	    	case 6:
+	    		w.make("1 more tap to enter " + other + " mode");
+	    		break;
+	    	case 7:
+	    		w.make("Now in " + other + " mode");
+	    		useDev = !useDev;
+	    		api.useDev(useDev);
+	    		actionBarTapCount = 0;
+	    		break;
+	    	}
+	    	
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
@@ -119,10 +164,7 @@ public class Welcome extends Activity {
 				int newProjID = data.getIntExtra(ProjectCreate.NEW_PROJECT_ID, 0);
 				if (newProjID != 0) {
 					setGlobalProjAndEnableManual("" + newProjID, true);
-				} else {
-					// TODO - we got a bad return
 				}
-				
 			}
 		}
 	}
@@ -137,7 +179,7 @@ public class Welcome extends Activity {
 		mEdit.commit();
 		
 		Intent iSelectMode = new Intent(mContext, SelectMode.class);
-		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_ENTRY, enable);
+		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_AND_CSV, enable);
 		startActivity(iSelectMode);
 	}
 

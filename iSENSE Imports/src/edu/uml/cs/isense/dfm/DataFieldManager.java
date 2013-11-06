@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
@@ -31,7 +32,10 @@ public class DataFieldManager extends Application {
 
 	private ArrayList<RProjectField> projFields;
 	private LinkedList<String> order;
+	private LinkedList<String> realOrder; // the actual fields in the project, used for .csv file header writing
 	private Fields f;
+	
+	private String CSV_DELIMITER = "-:;_--:-;-;_::-;";
 	
 	/**
 	 * Boolean array of size 19 containing a list of fields enabled for recording data.
@@ -68,6 +72,7 @@ public class DataFieldManager extends Application {
 		this.projID = projID;
 		this.api = api;
 		this.order = new LinkedList<String>();
+		this.realOrder = new LinkedList<String>();
 		this.mContext = mContext;
 		this.f = f;
 	}
@@ -548,9 +553,9 @@ public class DataFieldManager extends Application {
 			} else if (s.equals(mContext.getString(R.string.time))) {
 				firstLineWritten = true;
 				if (start)
-					b.append(f.timeMillis);
+					b.append("u " + f.timeMillis);
 				else
-					b.append(", ").append(f.timeMillis);
+					b.append(", ").append("u " + f.timeMillis);
 
 			} else if (s.equals(mContext.getString(R.string.luminous_flux))) {
 				firstLineWritten = true;
@@ -665,7 +670,8 @@ public class DataFieldManager extends Application {
 		if (projID == -1)
 			return "";
 
-		for (String unitName : this.order) {
+		for (String unitName : this.realOrder) {
+			
 			if (start)
 				b.append(unitName);
 			else
@@ -701,17 +707,20 @@ public class DataFieldManager extends Application {
 	 * 		- An {@link edu.uml.cs.isense.comm.API API} class instance.
 	 * @param c
 	 * 		- The context of the Activity calling this function 
+	 * @param fieldOrder
+	 * 		- The list of fields matched using the FieldMatching class, or null if FieldMatching wasn't used.
 	 * @return
 	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
 	 * 		
 	 */
 	public static String reOrderData(JSONArray data, String projID, API api,
-			Context c) {
+			Context c, LinkedList<String> fieldOrder) {
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
-		LinkedList<String> fieldOrder = getOrder(Integer.parseInt(projID), api,
-				c);
+		if (fieldOrder == null || fieldOrder.size() == 0)
+			fieldOrder = getOrder(Integer.parseInt(projID), api, c);
+		
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
@@ -722,8 +731,7 @@ public class DataFieldManager extends Application {
 				for (int j = 0; j < fieldOrder.size(); j++) {
 					String s = fieldOrder.get(j);
 					try {
-						// Compare against hard-coded strings. make sure this
-						// a.getResources() thing works
+						// Compare against hard-coded strings
 						if (s.equals(a.getResources().getString(
 								R.string.accel_x))) {
 							outRow.put(j + "", row.getString(Fields.ACCEL_X));
@@ -824,7 +832,7 @@ public class DataFieldManager extends Application {
 							outRow.put(j + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
-						outRow.put(j + "", null);
+						outRow.put(j + "", "");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -864,9 +872,63 @@ public class DataFieldManager extends Application {
 			getProjectFieldOrder();
 		}
 	}
+	
+	/**
+	 * Writes the fields for the project out to SharedPreferences, designed to aid
+	 * the writing of .csv files using
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getProjectFieldsAndSetCSVOrder() getProjectFieldsAndSetCSVOrder}
+	 * when prepared to write a .csv file.
+	 * 
+	 */
+	public void writeProjectFields() {
+		
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		
+		StringBuilder sb = new StringBuilder();
+		boolean start = true;
+		
+		for (String s : this.realOrder) {
+			if (start)
+				sb.append(s);
+			else
+				sb.append(CSV_DELIMITER).append(s);
+			
+			start = false;
+		}
+		
+		String out = sb.toString();
+		mEdit.putString("csv_order", out).commit();
+		
+	}
+	
+	/**
+	 * Retrieve the fields written to SharedPreferences from
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeProjectFields() writeProjectFields()},
+	 * primarily designed for writing the header line in a .csv file.
+	 * 
+	 */
+	public void getProjectFieldsAndSetCSVOrder() {
+		
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+		
+		String in = mPrefs.getString("csv_order", "");
+		if (in.equals("")) return;
+		
+		String[] parts = in.split(CSV_DELIMITER);
+		this.realOrder.clear();
+		
+		for (String s : parts) {
+			this.realOrder.add(s);
+		}
+		
+	}
 
 	private void getProjectFieldOrder() {
 		for (RProjectField field : projFields) {
+
+			realOrder.add(field.name);
+			
 			switch (field.type) {
 
 			// Number
