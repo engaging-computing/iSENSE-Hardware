@@ -114,6 +114,7 @@ public class Main extends Activity implements LocationListener {
 	private Fields f;
 	
 	public static final int MEDIA_TYPE_IMAGE = 1;
+	private Camera mCamera;
 	
 	
 	@Override
@@ -225,7 +226,7 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
         super.onPreExecute();
 
         //this method will be running on UI thread
-        
+        OrientationManager.disableRotation(Main.this);	
     }
     @Override
     protected Void doInBackground(Void... params) {
@@ -237,12 +238,14 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 			String state = Environment.getExternalStorageState();
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
 				
-			Camera mCamera = null;	
+			mCamera = null;	
 		    try {
 		        mCamera = Camera.open(); // attempt to get a Camera instance
 		    }
 		    catch (Exception e){
 		        // Camera is not available (in use or does not exist)
+		    	mCamera.release();	//release camera so other applications can use it
+		    	return null;
 		    }
 		    
 	    	ContentValues values = new ContentValues();
@@ -251,14 +254,15 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 					values);
 			
-			OrientationManager.disableRotation(Main.this);	   
+			   
 		    mCamera.takePicture(null, null, mPicture);	//takes a picture
 
-			mCamera.release();	//release camera so other applications can use it
+			
 			
 			} else {
-				w.make("Cannot write to external storage.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+//				w.make("Cannot write to external storage.",
+//						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				//TODO
 				return null;
 			}
 
@@ -275,7 +279,10 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-
+        		Main.takePicture.setText(R.string.takePicContinuous);
+				Main.takePicture.setBackgroundColor(R.drawable.button_rsense);
+				recording = false;
+				OrientationManager.enableRotation(Main.this);	
         //this method will be running on UI thread
 
     }
@@ -297,7 +304,38 @@ private PictureCallback mPicture = new PictureCallback() {
     }
 };
 
+/** Create a File for saving an image or video */
+private static File getOutputMediaFile(int type){
+    // To be safe, you should check that the SDCard is mounted
+    // using Environment.getExternalStorageState() before doing this.
 
+    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+              Environment.DIRECTORY_PICTURES), "MyCameraApp");
+    // This location works best if you want the created images to be shared
+    // between applications and persist after your app has been uninstalled.
+
+    // Create the storage directory if it does not exist
+    if (! mediaStorageDir.exists()){
+        if (! mediaStorageDir.mkdirs()){
+            Log.d("MyCameraApp", "failed to create directory");
+            return null;
+        }
+    }
+    
+    // Create a media file name
+    File mediaFile;
+    if (type == MEDIA_TYPE_IMAGE){
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+        "IMG_"+ ".jpg");
+//    } else if(type == MEDIA_TYPE_VIDEO) {
+//        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+//        "VID_"+ timeStamp + ".mp4");
+    } else {
+        return null;
+    }
+
+    return mediaFile;
+}
     
 	// double tap back button to exit
 	@Override
@@ -724,6 +762,8 @@ private PictureCallback mPicture = new PictureCallback() {
 	protected void onStop() {
 		super.onStop();
 
+		mCamera.release();	//release camera so other applications can use it
+		
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
 
