@@ -22,6 +22,16 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
         <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
             android:name=".DataWalk"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/display_name"
