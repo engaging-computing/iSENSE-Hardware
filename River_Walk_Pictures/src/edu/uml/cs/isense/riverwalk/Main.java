@@ -1,6 +1,9 @@
 package edu.uml.cs.isense.riverwalk;
 
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Timer;
@@ -20,6 +23,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -54,6 +59,7 @@ import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
+
 
 public class Main extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 101;
@@ -106,6 +112,8 @@ public class Main extends Activity implements LocationListener {
 	//private ProgressDialog dia;
 	private DataFieldManager dfm;
 	private Fields f;
+	
+	public static final int MEDIA_TYPE_IMAGE = 1;
 	
 	
 	@Override
@@ -228,19 +236,26 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
     	while(recording){
 			String state = Environment.getExternalStorageState();
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
+				
+			Camera mCamera = null;	
+		    try {
+		        mCamera = Camera.open(); // attempt to get a Camera instance
+		    }
+		    catch (Exception e){
+		        // Camera is not available (in use or does not exist)
+		    }
+		    
+	    	ContentValues values = new ContentValues();
+	    	
+			imageUri = getContentResolver().insert(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+					values);
+			
+			OrientationManager.disableRotation(Main.this);	   
+		    mCamera.takePicture(null, null, mPicture);	//takes a picture
 
-				ContentValues values = new ContentValues();
-
-				imageUri = getContentResolver().insert(
-						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-						values);
-
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-				intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-				OrientationManager.disableRotation(Main.this);
-				startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+			mCamera.release();	//release camera so other applications can use it
+			
 			} else {
 				w.make("Cannot write to external storage.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
@@ -256,7 +271,7 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
     	
         return null;
     }
-
+    
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
@@ -265,6 +280,24 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 
     }
 }
+
+private PictureCallback mPicture = new PictureCallback() {
+
+    @Override
+    public void onPictureTaken(byte[] data, Camera camera) {
+    	
+    	
+        picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+        
+        if (picture == null){
+//            Log.d(TAG, "Error creating media file, check storage permissions: " +
+//                e.getMessage());
+            return;
+        }
+    }
+};
+
+
     
 	// double tap back button to exit
 	@Override
