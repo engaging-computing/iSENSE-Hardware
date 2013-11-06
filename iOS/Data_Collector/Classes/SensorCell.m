@@ -7,6 +7,7 @@
 //
 
 #import "SensorCell.h"
+#import <iSENSE_API/ISKeys.h>
 
 @implementation SensorCell
 
@@ -25,27 +26,27 @@
     switch (compat) {
         case NOT_AVAILABLE:
             [compatible setText:@"Not Compatible"];
-            [compatible setTextColor:[HexColor colorWithHexString:@"DE1F22"]];
+            [compatible setTextColor:UIColorFromHex(0xDE1F22)];
             break;
             
         case AVAILABLE:
             [compatible setText:@"Compatible"];
-            [compatible setTextColor:[HexColor colorWithHexString:@"5BED18"]];
+            [compatible setTextColor:UIColorFromHex(0x5BED18)];
             break;
             
         case AVAIL_CONNECTIVITY:
             [compatible setText:@"Compatible (with connectivity)"];
-            [compatible setTextColor:[HexColor colorWithHexString:@"5BED18"]];
+            [compatible setTextColor:UIColorFromHex(0x5BED18)];
             break;
             
         case AVAIL_WIFI_ONLY:
             [compatible setText:@"Compatible (with WiFi enabled)"];
-            [compatible setTextColor:[HexColor colorWithHexString:@"5BED18"]];
+            [compatible setTextColor:UIColorFromHex(0x5BED18)];
             break;
             
         case NOT_DETECTED:
             [compatible setText:@"Cannot determine compatibility"];
-            [compatible setTextColor:[HexColor colorWithHexString:@"EDCD18"]];
+            [compatible setTextColor:UIColorFromHex(0xEDCD18)];
             break;
     }
     

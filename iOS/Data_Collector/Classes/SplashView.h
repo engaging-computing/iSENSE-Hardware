@@ -22,8 +22,8 @@
 - (IBAction) loadManual:(id)sender;
 - (void) viewDidAppear:(BOOL)animated;
 
-@property (nonatomic, retain) IBOutlet UIImageView *dataCollectorLogo;
-@property (nonatomic, retain) IBOutlet UIButton *automatic;
-@property (nonatomic, retain) IBOutlet UIButton *manual;
+@property (nonatomic, strong) IBOutlet UIImageView *dataCollectorLogo;
+@property (nonatomic, strong) IBOutlet UIButton *automatic;
+@property (nonatomic, strong) IBOutlet UIButton *manual;
 
 @end

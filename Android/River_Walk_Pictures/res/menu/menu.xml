@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/MENU_ITEM_UPLOAD"
+          android:title="@string/upload"
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_BROWSE"
+          android:title="@string/project" 
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_LOGIN"
+          android:title="@string/login" 
+          android:showAsAction="ifRoom"/>
+</menu>

@@ -10,12 +10,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-#define PARENT_AUTOMATIC    @"Automatic"
-#define PARENT_MANUAL       @"Manual"
-#define PARENT_DATA_WALK    @"DataWalk"
-#define PARENT_CAR_RAMP     @"CarRampPhysics"
-#define PARENT_CANOBIE      @"CanobiePhysics"
-
 @interface QDataSet : NSManagedObject
 
 @property (nonatomic, retain) id data;

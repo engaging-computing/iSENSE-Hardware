@@ -11,6 +11,7 @@
 #import "AboutView.h"
 #import "GuideView.h"
 #import <iSENSE_API/headers/DataSaver.h>
+#import "Constants.h"
 
 @interface Data_CollectorAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
@@ -28,18 +29,18 @@
 - (void) setLastController:(UIViewController *)uivc;
 - (void) setReturnToClass:(int)ret;
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UINavigationController *navControl;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem *about;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem *guide;
+@property (nonatomic, strong) IBOutlet UIWindow *window;
+@property (nonatomic, strong) IBOutlet UINavigationController *navControl;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *about;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *guide;
 
 // DataSaver
-@property (nonatomic, retain) IBOutlet DataSaver *dataSaver;
+@property (nonatomic, strong) IBOutlet DataSaver *dataSaver;
 
 // Core Data Stuffs
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong, readonly) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 

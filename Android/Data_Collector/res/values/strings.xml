@@ -49,10 +49,10 @@
     <string name="numbers_restriction">1234567890.-</string>
     <string name="reset">Reset</string>
     <string name="no_thanks">No Thanks</string>
-    <string name="can_login_string">	    You have internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
+    <string name="can_login_string">You have Internet connectivity, but you have not logged into our application yet.  Logging in now will enable you to upload your
 	    data.  However, you can still view your data sets without logging in.  Would you like login now?</string>
-    <string name="need_connectivity_string">	    You need internet connectivity in order to login and upload data.  Since we cannot find any of your login credentials and there
-	    is no internet connectivity, you cannot upload data sets yet.  However, you may still view your data sets.</string>
+    <string name="need_connectivity_string">You need Internet connectivity in order to login and upload data.  Since we cannot find any of your login credentials and there
+	    is no Internet connectivity, you cannot upload data sets yet.  However, you may still view your data sets.</string>
     <string name="step1">Step 1: Setup Your Data Set</string>
     <string name="step2">Step 2: Record a Data Set (Hold Down)</string>
     <string name="step3">Step 3: Upload Data Sets</string>
@@ -61,15 +61,13 @@
     <string name="remember_setup">Remember my Sample Interval and Test Length</string>
     
     <string name="welcome_str">Welcome to the iSENSE Uploader.  Select an option below.</string>
-    <string name="continue_with_exist">Continue With an Existing iSENSE Project *</string>
-	<string name="create_new_proj">Create a New Project *</string>
+    <string name="continue_with_exist">Continue With an Existing iSENSE Project\n(requires Internet)</string>
+	<string name="create_new_proj">Create a New Project\n(requires Internet)</string>
 	<string name="select_proj_later">Select a Project Later</string>
-	<string name="star_equals_welcome">* = requires internet connectivity</string>
 	<string name="what_to_do">What would you like to do?</string>
 	<string name="pre_data_collector_str">Collect Data Using My Device\'s Hardware Sensors</string>
-	<string name="pre_manual_entry_str">Manually Enter Data *</string>
-    <string name="pre_csv_uploader_str">Upload a .csv File From My Device</string>
-    <string name="star_equals_select">* = requires a project first</string>
+	<string name="pre_manual_entry_str">Manually Enter Data\n(requires project)</string>
+    <string name="pre_csv_uploader_str">Upload a .csv File From My Device\n(requires project and Internet)</string>
     
     <string name="field_type">Add Field</string>
     <string-array name="field_type_array">

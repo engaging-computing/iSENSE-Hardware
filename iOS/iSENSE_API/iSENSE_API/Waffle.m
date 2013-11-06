@@ -68,13 +68,17 @@ static NSString *kDurationKey = @"CSToastDurationKey";
 
 - (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position image:(NSString *)image {
     UIImage *display;
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
     
     if ([image isEqual:WAFFLE_CHECKMARK]) {
-        display = [UIImage imageNamed:@"waffle_check"];
+        NSString *checkImagePath = [isenseBundle pathForResource:@"waffle_check" ofType:@"png"];
+        display = [UIImage imageWithContentsOfFile:checkImagePath];
     } else if ([image isEqual:WAFFLE_WARNING]) {
-        display = [UIImage imageNamed:@"waffle_warn"];
+        NSString *warnImagePath = [isenseBundle pathForResource:@"waffle_warn" ofType:@"png"];
+        display = [UIImage imageWithContentsOfFile:warnImagePath];
     } else {
-        display = [UIImage imageNamed:@"waffle_x"];
+        NSString *xImagePath = [isenseBundle pathForResource:@"waffle_x" ofType:@"png"];
+        display = [UIImage imageWithContentsOfFile:xImagePath];
     }
     
     UIView *toast = [self makeViewForMessage:message title:nil image:display];
@@ -83,13 +87,17 @@ static NSString *kDurationKey = @"CSToastDurationKey";
 
 - (void)makeWaffle:(NSString *)message duration:(CGFloat)interval position:(id)position title:(NSString *)title image:(NSString *)image {
     UIImage *display;
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
     
     if ([image isEqual:WAFFLE_CHECKMARK]) {
-        display = [UIImage imageNamed:@"waffle_check"];
+        NSString *checkImagePath = [isenseBundle pathForResource:@"waffle_check" ofType:@"png"];
+        display = [UIImage imageWithContentsOfFile:checkImagePath];
     } else if ([image isEqual:WAFFLE_WARNING]) {
-        display = [UIImage imageNamed:@"waffle_warn"];
+        NSString *warnImagePath = [isenseBundle pathForResource:@"waffle_warn" ofType:@"png"];
+        display = [UIImage imageWithContentsOfFile:warnImagePath];
     } else {
-        display = [UIImage imageNamed:@"waffle_x"];
+        NSString *xImagePath = [isenseBundle pathForResource:@"waffle_x" ofType:@"png"];
+        display = [UIImage imageWithContentsOfFile:xImagePath];
     }
     
     UIView *toast = [self makeViewForMessage:message title:title image:display];
