@@ -86,7 +86,7 @@ static RPerson *currentUser;
 }
 
 /**
- * Log in to iSENSE. After calling this function, authenticated API functions will work properly.
+ * Log in to iSENSE. After calling this function, if success is returned, authenticated API functions will work properly.
  *
  * @param username The username of the user to log in as
  * @param password The password of the user to log in as
@@ -388,7 +388,7 @@ static RPerson *currentUser;
 }
 
 /**
- * Gets a user off of iSENSE.
+ * Gets the user profile specified with the username from iSENSE.
  *
  * @param username The username of the user to retrieve
  * @return An RPerson object
@@ -548,7 +548,6 @@ static RPerson *currentUser;
     return mimeType;
 }
 
-// TODO -- DON'T CALL ME
 /**
  * Uploads a CSV file to iSENSE as a new data set.
  *
@@ -602,7 +601,7 @@ static RPerson *currentUser;
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/projects/%d/CSVUpload?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
     NSLog(@"%@", request);
     
-    // do the request thang
+    // send request
     NSError *requestError;
     NSHTTPURLResponse *urlResponse;
     
@@ -668,7 +667,7 @@ static RPerson *currentUser;
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/project/%d?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
     NSLog(@"%@", request);
     
-    // do the request thang
+    // send the request
     NSError *requestError;
     NSHTTPURLResponse *urlResponse;
     
@@ -688,7 +687,7 @@ static RPerson *currentUser;
  *
  * @param dataSetId The data set ID to upload to
  * @param mediaToUpload The file to upload
- * @return ??? or -1 if upload fails
+ * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
     
@@ -735,7 +734,7 @@ static RPerson *currentUser;
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/data_set/%d?authenticity_token=%@", baseUrl, dataSetId, [self getEncodedAuthtoken]]]];
     NSLog(@"%@", request);
     
-    // do the request thang
+    // send request
     NSError *requestError;
     NSHTTPURLResponse *urlResponse;
     
@@ -745,7 +744,9 @@ static RPerson *currentUser;
         return -1;
     }
     
-    return [urlResponse statusCode];
+    NSNumber *mediaObjectID = (NSNumber *)urlResponse;
+    
+    return mediaObjectID.intValue;
 
 }
 
@@ -773,9 +774,9 @@ static RPerson *currentUser;
 }
 
 /**
-  * Bro, do you even read the function names?
+  * Converts the user's authentication token to a percent-escaped, HTTP-friendly string
   *
-  * @return An percent escaped version of the current user authentication token
+  * @return A percent escaped version of the current user authentication token
   */
 -(NSString *)getEncodedAuthtoken {
     CFStringRef encodedToken = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, CFBridgingRetain(authenticityToken), NULL, CFSTR("!*'();:@&=+@,/?#[]"), kCFStringEncodingUTF8);
