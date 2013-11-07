@@ -18,7 +18,7 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
  * This class opens a dialog message so that the user can login to iSENSE. If an
  * error occurs, it opens up a LoginError activity to display the error message.
  * 
- * @author jpoulin
+ * @author iSENSE Android Development Team
  */
 public class Login extends Activity {
 
@@ -129,7 +129,6 @@ public class Login extends Activity {
 	 * This class attempts to login to iSENSE and writes user info to
 	 * preferences if it is successful. Otherwise, it calls LoginError.
 	 * 
-	 * @author jpoulin
 	 */
 	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 

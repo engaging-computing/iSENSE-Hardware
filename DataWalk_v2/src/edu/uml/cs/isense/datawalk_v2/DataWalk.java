@@ -42,12 +42,14 @@ import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.EnterName;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
+import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -95,8 +97,6 @@ public class DataWalk extends Activity implements LocationListener,
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "156";
-	public static final String USERNAME_KEY = "username";
-	public static final String PASSWORD_KEY = "password";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -113,7 +113,6 @@ public class DataWalk extends Activity implements LocationListener,
 	public static String firstName = "";
 	public static String lastInitial = "";
 	
-	public static final String USER_PREFS_KEY = "USERID";
 	public static final String INTERVAL_PREFS_KEY = "INTERVALID";
 	public static final String INTERVAL_VALUE_KEY = "interval_val";
 
@@ -174,7 +173,7 @@ public class DataWalk extends Activity implements LocationListener,
 		// Gets first name and last initial the first time
 		if (firstName.equals("") || lastInitial.equals("")) {
 			startActivityForResult(
-					new Intent(mContext, EnterNameActivity.class),
+					new Intent(mContext, EnterName.class),
 					NAME_REQUESTED);
 		}
 		
@@ -767,16 +766,34 @@ public class DataWalk extends Activity implements LocationListener,
 
 			// Return of EnterNameActivity
 		} else if (requestCode == NAME_REQUESTED) {
-
-			// the user entered a valid name so update the main UI
+			
 			if (resultCode == RESULT_OK) {
-				nameTxtBox.setText("Name: " + firstName + " " + lastInitial);
+				SharedPreferences namePrefs = getSharedPreferences(EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+				
+				if (namePrefs.getBoolean(EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME, true)) {
+					RPerson user = api.getCurrentUser();
+					
+					firstName = user.name;
+					lastInitial = "";
+					
+					nameTxtBox.setText(getResources().getString(
+							R.string.name)
+							+ ": " + firstName);
+					
+				} else {
+					firstName = namePrefs.getString(EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME, "");
+					lastInitial = namePrefs.getString(EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL, "");
+					
+					nameTxtBox.setText(getResources().getString(
+							R.string.name)
+							+ ": " + firstName + " " + lastInitial);
+				}
+				
+				
 			} else {
-				// Calls the enter name activity if a name has not yet been
-				// entered.
 				if (firstName.equals("") || lastInitial.equals("")) {
 					startActivityForResult(new Intent(mContext,
-							EnterNameActivity.class), NAME_REQUESTED);
+							EnterName.class), NAME_REQUESTED);
 					w.make("You must enter your name before starting to record data.",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 				}
@@ -806,11 +823,11 @@ public class DataWalk extends Activity implements LocationListener,
 				// their default value
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						DataWalk.mContext,
-						DataWalk.mContext.getSharedPreferences(USER_PREFS_KEY,
+						DataWalk.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 								Context.MODE_PRIVATE));
 				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putString(DataWalk.USERNAME_KEY, loginName);
-				mEditor.putString(DataWalk.PASSWORD_KEY, loginPass);
+				mEditor.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, loginName);
+				mEditor.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, loginPass);
 				mEditor.commit();
 
 				// Tell the user his settings are back to default
@@ -819,7 +836,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Launch the EnterNameActivity
 				startActivityForResult(new Intent(mContext,
-						EnterNameActivity.class), NAME_REQUESTED);
+						EnterName.class), NAME_REQUESTED);
 
 			}
 
@@ -830,25 +847,37 @@ public class DataWalk extends Activity implements LocationListener,
 				// Get the new login information from preferences
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						DataWalk.mContext,
-						DataWalk.mContext.getSharedPreferences(USER_PREFS_KEY,
+						DataWalk.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 								Context.MODE_PRIVATE));
-				loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
+				loginName = mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 						DEFAULT_USERNAME);
-				loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
+				loginPass = mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 						DEFAULT_USERNAME);
 
 				// Set the UI to the new login name
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
 						+ " " + loginName);
-			} else {
-				//A lo 
-				// Set the UI to say you aren't logged in 
-				//TODO What if you are still logged in as default?
-				//loggedInAs.setText(getResources().getString(R.string.logged_in_as + ""+ loginName));
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " " + loginName);
+				
+				SharedPreferences namePrefs = getSharedPreferences(EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+				
+				if (namePrefs.getBoolean(EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME, true)) {
+					RPerson user = api.getCurrentUser();
+					
+					firstName = user.name;
+					lastInitial = "";
+					
+					nameTxtBox.setText(getResources().getString(
+							R.string.name)
+							+ ": " + firstName);
+					
+				}
+				
+				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				startActivityForResult(new Intent(mContext, Login.class), LOGIN_ISENSE_REQUESTED);
+
 			}
 		}
 
@@ -904,14 +933,14 @@ public class DataWalk extends Activity implements LocationListener,
 
 		case R.id.login:
 			// Launch the dialog that allows users to login to iSENSE
-			startActivityForResult(new Intent(this, LoginIsense.class),
+			startActivityForResult(new Intent(this, Login.class),
 					LOGIN_ISENSE_REQUESTED);
 			return true;
 
 		case R.id.NameChange:
 			// Launch the dialog that allows users to enter his/her firstname
 			// and last initial
-			startActivityForResult(new Intent(this, EnterNameActivity.class),
+			startActivityForResult(new Intent(this, EnterName.class),
 					NAME_REQUESTED);
 			return true;
 
@@ -963,10 +992,10 @@ public class DataWalk extends Activity implements LocationListener,
 			// Retrieve user credentials from shared preferences
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					DataWalk.mContext, DataWalk.mContext.getSharedPreferences(
-							USER_PREFS_KEY, Context.MODE_PRIVATE));
-			loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
+			loginName = mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 					DEFAULT_USERNAME);
-			loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
+			loginPass = mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 					DEFAULT_PASSWORD);
 
 		}
@@ -1002,10 +1031,10 @@ public class DataWalk extends Activity implements LocationListener,
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 							DataWalk.mContext,
 							DataWalk.mContext.getSharedPreferences(
-									USER_PREFS_KEY, Context.MODE_PRIVATE));
+									Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
 					SharedPreferences.Editor mEditor = mPrefs.edit();
-					mEditor.putString(DataWalk.USERNAME_KEY, loginName);
-					mEditor.putString(DataWalk.PASSWORD_KEY, loginName);
+					mEditor.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, loginName);
+					mEditor.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, loginName);
 					mEditor.commit();
 
 					// Update the UI with the new logged in username
@@ -1018,7 +1047,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// Failed to login with these credentials, so try again
 					if (loginName.length() == 0 || loginPass.length() == 0) {
 						startActivityForResult(new Intent(mContext,
-								LoginIsense.class), LOGIN_ISENSE_REQUESTED);
+								Login.class), LOGIN_ISENSE_REQUESTED);
 
 						// Tell the user his/her credentials are wrong
 						w.make("Invalid username or password.",
