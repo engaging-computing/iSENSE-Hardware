@@ -2,8 +2,6 @@ package edu.uml.cs.isense.riverwalk;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Timer;
@@ -22,7 +20,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.PorterDuff;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -69,7 +66,6 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int CONTINUOUS_REQUESTED = 107;
-	
 	
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
@@ -154,8 +150,6 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		takePicture = (Button) findViewById(R.id.takePicture);
-		takePicture.getBackground().setColorFilter(0xFF99CCFF,
-				PorterDuff.Mode.MULTIPLY);
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -203,12 +197,11 @@ public class Main extends Activity implements LocationListener {
 				} else if( continuous == true) { //if continuous == true
 					if (recording == false){
 						takePicture.setBackgroundColor(0xFF00FF00);
-						takePicture.setText("Recording Push to Stop");
+						takePicture.setTextColor(0xFF000000);
+						takePicture.setText("Recording Press to Stop");
 						recording = true;
 						new continuouslytakephotos().execute();
 					} else {
-						Main.takePicture.setText(R.string.takePicContinuous);
-						Main.takePicture.setBackgroundColor(R.drawable.button_rsense);
 						recording = false;
 					}
 				}
@@ -238,14 +231,17 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 			String state = Environment.getExternalStorageState();
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
 				
+			int cameraId = 0;	
+				
 			mCamera = null;	
-		    try {
-		        mCamera = Camera.open(); // attempt to get a Camera instance
-		    }
-		    catch (Exception e){
-		        // Camera is not available (in use or does not exist)
-		    	mCamera.release();	//release camera so other applications can use it
-		    	return null;
+//		    try {
+//		    	mCamera = Camera.open(cameraId); // attempt to get a Camera instance
+//		    }
+//		    catch (Exception e){
+//		        // Camera is not available (in use or does not exist)
+//		    	e.printStackTrace();
+			if (false == safeCameraOpen(cameraId)){ //run function to open camera 
+		    	return null;						//if function does not open camera return null
 		    }
 		    
 	    	ContentValues values = new ContentValues();
@@ -257,7 +253,7 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 			   
 		    mCamera.takePicture(null, null, mPicture);	//takes a picture
 
-			
+		    mCamera.release();	//release camera so other applications can use it
 			
 			} else {
 //				w.make("Cannot write to external storage.",
@@ -280,13 +276,36 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         		Main.takePicture.setText(R.string.takePicContinuous);
-				Main.takePicture.setBackgroundColor(R.drawable.button_rsense);
+        		Main.takePicture.setTextColor(0xFF0066FF);
+				Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
+				
 				recording = false;
 				OrientationManager.enableRotation(Main.this);	
         //this method will be running on UI thread
 
     }
 }
+
+private boolean safeCameraOpen(int id) {
+    boolean qOpened = false;
+  
+    try {
+    	if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
+    	
+        mCamera = Camera.open(id);
+        qOpened = (mCamera != null);
+    } catch (Exception e) {
+        Log.e(getString(R.string.app_name), "failed to open Camera");
+        e.printStackTrace();
+    }
+
+    return qOpened;    
+}
+
+
 
 private PictureCallback mPicture = new PictureCallback() {
 
@@ -761,8 +780,6 @@ private static File getOutputMediaFile(int type){
 	@Override
 	protected void onStop() {
 		super.onStop();
-
-		mCamera.release();	//release camera so other applications can use it
 		
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
