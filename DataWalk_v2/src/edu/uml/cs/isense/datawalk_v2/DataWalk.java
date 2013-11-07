@@ -119,7 +119,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 	/* Manage Work Flow Within DataWalk.java */
 	private boolean running = false;
-	private boolean gpsWorking = false;
+	private boolean gpsWorking = true;
 	private boolean useMenu = true;
 
 	/* Recording Globals */
@@ -1102,12 +1102,15 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// If there are 3 or fewer satellites that we are connected, we've
 		// probably lost GPS a lock
-	    if (count < 4) {
+	    if(gpsWorking ==true){
+	    	w.make("Weak GPS signal.",Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+	    }
+		if (count < 4) {
 			gpsWorking = false;
 			//Rajia Will that fix the random velocity problem
 			prevLoc.set(loc);
 			//Rajia: Waffeling number of GPS Sattelites 
-			w.make("Weak GPS signal.",Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+			//w.make("Weak GPS signal.",Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 		}
 	} 
 	
@@ -1205,7 +1208,7 @@ public class DataWalk extends Activity implements LocationListener,
 						//+ " Relative: "+ roundTwoDecimals(relDistance*0.000621371)+" Miles " + roundTwoDecimals(relDistance)+ " Meters" );
 						
 						rateBox.setText("Velocity: " + roundTwoDecimals(velocity *2.23694) + " MPH " + roundTwoDecimals(velocity)+ " M/Sec    ");
-					
+						
 					}
 				});
 
