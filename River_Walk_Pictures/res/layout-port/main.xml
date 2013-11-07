@@ -80,7 +80,7 @@
         android:paddingTop="16dip"
         android:text="@string/takePicSingle"
         android:textSize="30sp"
-        android:textColor="@android:color/black" />
+        android:textColor="#0066FF" />
 
 	 <LinearLayout
 	        android:id="@+id/locationBlock"

@@ -99,7 +99,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/button_rsense"
                 android:text="@string/takePicSingle"
-                android:textColor="@android:color/black"
+                android:textColor="#0066FF"
                 android:textSize="30sp" />
         </LinearLayout>
     </LinearLayout>
