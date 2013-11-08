@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="24"
-    android:versionName="3.3.3" >
+    android:versionCode="26"
+    android:versionName="3.5" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -45,6 +45,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".splash.ProjectCreate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Create New Project"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".splash.SelectMode"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Select Mode"
@@ -68,10 +73,6 @@
             android:label="Synchronize Time"
             android:theme="@style/AppTheme"
             tools:ignore="MissingRegistered" />
-        <activity
-            android:name=".dialogs.ChooseSensorDialog"
-            android:label="Select Fields"
-            android:theme="@style/theme_dialog_white" />
         <activity
             android:name=".dialogs.MediaManager"
             android:label="Media Manager"
@@ -170,6 +171,21 @@
         <activity
             android:name="edu.uml.cs.isense.queue.NoInitialProject"
             android:label="No Associated Projects"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.supplements.FileBrowser"
+            android:label="Select a File"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
 

@@ -95,6 +95,14 @@
             android:name="edu.uml.cs.isense.exp.Setup"
             android:label="Select an Experiment"
             android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white" />
     </application>
 
 </manifest>

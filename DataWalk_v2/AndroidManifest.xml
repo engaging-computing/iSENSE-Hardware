@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
-    android:versionCode="14"
-    android:versionName="2.1.4" >
+    android:versionCode="15"
+    android:versionName="2.2" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,6 +21,16 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name=".DataWalk"
             android:configChanges="orientation|keyboardHidden|screenSize"
