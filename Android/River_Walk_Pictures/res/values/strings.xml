@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">River Walk</string>
+    <string name="app_name">iS River Walk</string>
     <string name="experiments_no_items">No projects were found.</string>
     <string name="app_name_experiments">Projects</string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
     <string name="upload">Upload</string>
     
     <string name="firstName">Group Name: \0</string>
-    <string name="takePic">Press Here to Take a Picture</string>
+    <string name="takePicSingle">Press Here to Take a Picture</string>
     <string name="iSlogo">iSENSE Logo</string>
     <string name="queueCount">Picture Count: \0</string>
     
@@ -24,7 +24,7 @@
 	<string name="username">Username : \0</string>
     <string name="password">Password  : \0</string>
 	<string name="cancel">Cancel</string>
-    <string name="okay">Okay</string>
+    <string name="okay">OK</string>
     <string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="gpsString">
@@ -62,6 +62,9 @@
 	<string name="upload">Upload</string>
 	<string name="project">Project</string>
 	<string name="login">Login</string>
+	<string name="continuous">Continuously Take Photos</string>
+	<string name="interval">Time Interval (seconds):</string>
+	<string name="takePicContinuous">Press Here to Continuously Take Pictures</string>
     
 	
 	
