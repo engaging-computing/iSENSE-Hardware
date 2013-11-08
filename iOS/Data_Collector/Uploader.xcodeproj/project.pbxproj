@@ -68,6 +68,16 @@
 		B75046D81774CD710034B42C /* Automatic-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046D71774CD710034B42C /* Automatic-landscape~iphone.xib */; };
 		B75046DA1774CD9D0034B42C /* Automatic~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046D91774CD9D0034B42C /* Automatic~ipad.xib */; };
 		B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */; };
+		B77EEE8F182932ED008DFE7C /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B77EEE8D182932ED008DFE7C /* WelcomeViewController.m */; };
+		B77EEE90182932ED008DFE7C /* Welcome~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE8E182932ED008DFE7C /* Welcome~iphone.xib */; };
+		B77EEE921829347D008DFE7C /* Welcome-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE911829347D008DFE7C /* Welcome-landscape~iphone.xib */; };
+		B77EEE94182989C2008DFE7C /* Welcome~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE93182989C2008DFE7C /* Welcome~ipad.xib */; };
+		B77EEE9618298A5C008DFE7C /* Welcome-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE9518298A5C008DFE7C /* Welcome-landscape~ipad.xib */; };
+		B77EEE9A18298EA2008DFE7C /* SelectModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B77EEE9818298EA1008DFE7C /* SelectModeViewController.m */; };
+		B77EEE9B18298EA2008DFE7C /* SelectMode~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE9918298EA1008DFE7C /* SelectMode~iphone.xib */; };
+		B77EEE9D18298F7D008DFE7C /* SelectMode-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE9C18298F7D008DFE7C /* SelectMode-landscape~iphone.xib */; };
+		B77EEE9F1829903D008DFE7C /* SelectMode~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEE9E1829903D008DFE7C /* SelectMode~ipad.xib */; };
+		B77EEEA118299126008DFE7C /* SelectMode-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B77EEEA018299126008DFE7C /* SelectMode-landscape~ipad.xib */; };
 		B7EBFB3016DF9D8300125169 /* ManualView-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */; };
 		B7EBFDC417A0193E006B90A8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		B7EEB0751816A459001E7FEB /* uploader_logo_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = B7EEB0711816A458001E7FEB /* uploader_logo_retina.png */; };
@@ -183,6 +193,18 @@
 		B75046D71774CD710034B42C /* Automatic-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B75046D91774CD9D0034B42C /* Automatic~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic~ipad.xib"; sourceTree = "<group>"; };
 		B75046DB1774CDD00034B42C /* Automatic-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Automatic-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B77EEE8C182932ED008DFE7C /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		B77EEE8D182932ED008DFE7C /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		B77EEE8E182932ED008DFE7C /* Welcome~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "Welcome~iphone.xib"; path = "Classes/Welcome~iphone.xib"; sourceTree = "<group>"; };
+		B77EEE911829347D008DFE7C /* Welcome-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Welcome-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B77EEE93182989C2008DFE7C /* Welcome~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Welcome~ipad.xib"; sourceTree = "<group>"; };
+		B77EEE9518298A5C008DFE7C /* Welcome-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Welcome-landscape~ipad.xib"; sourceTree = "<group>"; };
+		B77EEE9718298EA1008DFE7C /* SelectModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectModeViewController.h; sourceTree = "<group>"; };
+		B77EEE9818298EA1008DFE7C /* SelectModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectModeViewController.m; sourceTree = "<group>"; };
+		B77EEE9918298EA1008DFE7C /* SelectMode~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "SelectMode~iphone.xib"; path = "Classes/SelectMode~iphone.xib"; sourceTree = "<group>"; };
+		B77EEE9C18298F7D008DFE7C /* SelectMode-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SelectMode-landscape~iphone.xib"; sourceTree = "<group>"; };
+		B77EEE9E1829903D008DFE7C /* SelectMode~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SelectMode~ipad.xib"; sourceTree = "<group>"; };
+		B77EEEA018299126008DFE7C /* SelectMode-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SelectMode-landscape~ipad.xib"; sourceTree = "<group>"; };
 		B7EBFB2E16DF9CCE00125169 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~iphone.xib"; sourceTree = "<group>"; };
 		B7EBFDC317A0193E006B90A8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -376,6 +398,10 @@
 				B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */,
 				B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */,
 				B72302B91783204000DD8B16 /* SensorCell~iphone.xib */,
+				B77EEE9918298EA1008DFE7C /* SelectMode~iphone.xib */,
+				B77EEE9C18298F7D008DFE7C /* SelectMode-landscape~iphone.xib */,
+				B77EEE8E182932ED008DFE7C /* Welcome~iphone.xib */,
+				B77EEE911829347D008DFE7C /* Welcome-landscape~iphone.xib */,
 			);
 			name = "Layout-iPhone";
 			sourceTree = "<group>";
@@ -394,6 +420,10 @@
 				B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */,
 				B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */,
 				B7375CDB1784A40600906119 /* SensorCell~ipad.xib */,
+				B77EEE9E1829903D008DFE7C /* SelectMode~ipad.xib */,
+				B77EEEA018299126008DFE7C /* SelectMode-landscape~ipad.xib */,
+				B77EEE93182989C2008DFE7C /* Welcome~ipad.xib */,
+				B77EEE9518298A5C008DFE7C /* Welcome-landscape~ipad.xib */,
 			);
 			name = "Layout-iPad";
 			sourceTree = "<group>";
@@ -417,6 +447,10 @@
 				52572B8E1691F788009037A7 /* AboutView.m */,
 				52572B921691F796009037A7 /* GuideView.h */,
 				52572B931691F796009037A7 /* GuideView.m */,
+				B77EEE8C182932ED008DFE7C /* WelcomeViewController.h */,
+				B77EEE8D182932ED008DFE7C /* WelcomeViewController.m */,
+				B77EEE9718298EA1008DFE7C /* SelectModeViewController.h */,
+				B77EEE9818298EA1008DFE7C /* SelectModeViewController.m */,
 			);
 			name = Splash;
 			sourceTree = "<group>";
@@ -597,6 +631,14 @@
 				B7EEB0761816A459001E7FEB /* uploader_logo.png in Resources */,
 				B7EEB0771816A459001E7FEB /* uploader_logo_ipad.png in Resources */,
 				B7EEB0781816A459001E7FEB /* uploader_logo_ipad_retina.png in Resources */,
+				B77EEE90182932ED008DFE7C /* Welcome~iphone.xib in Resources */,
+				B77EEE921829347D008DFE7C /* Welcome-landscape~iphone.xib in Resources */,
+				B77EEE94182989C2008DFE7C /* Welcome~ipad.xib in Resources */,
+				B77EEE9618298A5C008DFE7C /* Welcome-landscape~ipad.xib in Resources */,
+				B77EEE9B18298EA2008DFE7C /* SelectMode~iphone.xib in Resources */,
+				B77EEE9D18298F7D008DFE7C /* SelectMode-landscape~iphone.xib in Resources */,
+				B77EEE9F1829903D008DFE7C /* SelectMode~ipad.xib in Resources */,
+				B77EEEA118299126008DFE7C /* SelectMode-landscape~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -619,6 +661,8 @@
 				B72302AC17831A7D00DD8B16 /* SensorSelection.m in Sources */,
 				B72302BD1783260700DD8B16 /* SensorCell.m in Sources */,
 				B7062016181592B1003C158E /* RotationDataSaver.m in Sources */,
+				B77EEE8F182932ED008DFE7C /* WelcomeViewController.m in Sources */,
+				B77EEE9A18298EA2008DFE7C /* SelectModeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
