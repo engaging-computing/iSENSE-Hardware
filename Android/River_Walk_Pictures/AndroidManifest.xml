@@ -19,7 +19,7 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
             android:name=".Main"
@@ -62,6 +62,10 @@
         <activity
             android:name=".dialogs.Description"
             android:label="Describe Photo"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".dialogs.Continuous"
+            android:label="Continuous Photo Shooting"
             android:theme="@style/DialogTheme" />
         
         
