@@ -152,11 +152,13 @@ public class Main extends Activity implements LocationListener {
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
 
+			
+			//Push take picture button
 			@Override
 			public void onClick(View v) {
-				//TODO
+				//TODO	
 				
-				
+				//Check that a group name was entered, and a project was selected
 				if (name.getText().length() == 0) {
 					name.setError("Enter a name");
 					return;
@@ -173,6 +175,7 @@ public class Main extends Activity implements LocationListener {
 					return;
 				}
 				
+				//take a single picture when continuous mode is not active
 				if (continuous == false){
 					String state = Environment.getExternalStorageState();
 					if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -194,13 +197,18 @@ public class Main extends Activity implements LocationListener {
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					}
 
+					//Continuously take pictures
 				} else if( continuous == true) { //if continuous == true
 					if (recording == false){
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setTextColor(0xFF000000);
 						takePicture.setText("Recording Press to Stop");
 						recording = true;
-						new continuouslytakephotos().execute();
+						if (new continuouslytakephotos().execute() == null){
+							//camera returns null (camera did not initiate)
+						}
+						
+					//Stop continuously taking pictures
 					} else {
 						recording = false;
 					}
@@ -211,7 +219,7 @@ public class Main extends Activity implements LocationListener {
 	}
 	
 
-
+//continuously take pictures in AsyncTask (a seperate thread)
 private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 {
     @Override
@@ -240,7 +248,7 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 //		    catch (Exception e){
 //		        // Camera is not available (in use or does not exist)
 //		    	e.printStackTrace();
-			if (false == safeCameraOpen(cameraId)){ //run function to open camera 
+			if (false == safeCameraOpen(cameraId)){ //Open instance of the camera
 		    	return null;						//if function does not open camera return null
 		    }
 		    
