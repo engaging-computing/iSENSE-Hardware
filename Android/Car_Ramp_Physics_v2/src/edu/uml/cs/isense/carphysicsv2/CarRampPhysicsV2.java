@@ -993,13 +993,21 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		} else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+				
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						mContext,
+						mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+								Context.MODE_PRIVATE));
+				String loginName = mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						"");
+				
 				if (loggedInAs == null)
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
 				if (api.getCurrentUser() != null) {
 					loggedInAs.setText(getResources().getString(
 							R.string.logged_in_as)
 							+ " "
-							+ data.getStringExtra(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME)
+							+ loginName
 							+ ", Name: " + firstName + " " + lastInitial);
 				} else {
 					loggedInAs.setText(getResources().getString(
