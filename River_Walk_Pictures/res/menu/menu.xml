@@ -9,4 +9,7 @@
     <item android:id="@+id/MENU_ITEM_LOGIN"
           android:title="@string/login" 
           android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_CONTINUOUS"
+          android:title="@string/continuous" 
+          android:showAsAction="ifRoom"/>
 </menu>

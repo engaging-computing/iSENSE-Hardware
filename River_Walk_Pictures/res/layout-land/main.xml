@@ -2,96 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/bottom_contents"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/black"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/locationBlock"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/myLocation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/black"
-                android:text="@+string/noLocation0"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:orientation="horizontal"
-            android:weightSum="2" >
-
-            <TextView
-                android:id="@+id/queueCountLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/queueCount"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/ExperimentLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="@string/experiment"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </LinearLayout>
+   
 
     <LinearLayout
         android:id="@+id/main_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_contents"
         android:baselineAligned="false" >
 
         <RelativeLayout
             android:id="@+id/main_left"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@android:color/transparent" >
 
-            <ImageView
-                android:id="@+id/ImageViewLogo"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="#000033"
-                android:contentDescription="@string/iSlogo"
-                android:scaleType="fitCenter"
-                android:src="@drawable/rsense_logo" />
-
-            <RelativeLayout
-                android:layout_centerInParent="true"
+            <TextView
+                android:id="@+id/queueCountLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="@string/queueCount"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@android:color/transparent"
                 android:orientation="vertical" >
 
                 <TextView
@@ -117,6 +61,29 @@
                     android:textColor="@android:color/black"
                     android:textCursorDrawable="@null" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/ExperimentLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignRight="@+id/relativeLayout1"
+                android:gravity="left"
+                android:text="@string/experiment"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+            
+            
+             <TextView
+	            android:id="@+id/myLocation"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@+string/noLocation0"
+	            android:textColor="@android:color/black"
+	            android:textSize="16sp"
+	            android:layout_marginBottom="5dp"
+	            android:layout_alignParentBottom="true"/>
+
         </RelativeLayout>
 
         <LinearLayout
@@ -130,9 +97,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                android:background="@drawable/button_color"
-                android:text="@string/takePic"
-                android:textColor="@android:color/white"
+                android:background="@drawable/button_rsense"
+                android:text="@string/takePicSingle"
+                android:textColor="#0066FF"
                 android:textSize="30sp" />
         </LinearLayout>
     </LinearLayout>

@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dip"
         android:layout_marginTop="5dip"
         android:text="@string/username" />
 
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/usernameInput"
+        android:layout_marginLeft="5dip"
         android:layout_marginTop="5dip"
         android:text="@string/password" />
 
