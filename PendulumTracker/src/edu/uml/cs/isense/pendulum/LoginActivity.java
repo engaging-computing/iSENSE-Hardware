@@ -53,7 +53,8 @@ public class LoginActivity extends Activity {
 				} else {
 					ColorBlobDetectionActivity.firstName   = firstNameInput.getText().toString();
 					ColorBlobDetectionActivity.lastInitial = lastInitialInput.getText().toString();
-					ColorBlobDetectionActivity.mDataCollectionEnabled = true;
+					ColorBlobDetectionActivity.mSessionCreated = true; /////
+					//ColorBlobDetectionActivity.mDataCollectionEnabled = true; /////
 					setResult(NAME_SUCCESSFUL, null);
 					// make keyboard disappear
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
