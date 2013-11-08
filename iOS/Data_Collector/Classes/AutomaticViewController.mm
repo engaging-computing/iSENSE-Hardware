@@ -12,9 +12,9 @@
 
 @implementation AutomaticViewController
 
-@synthesize isRecording, motionManager, dataToBeJSONed, expNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, sessionName,
-sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, isenseAPI, longClickRecognizer, backFromSetup, recordingRate,
-dataToBeOrdered, backFromQueue;
+@synthesize isRecording, motionManager, dataToBeJSONed, projNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, dataSetName,
+sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, api, longClickRecognizer, backFromSetup, recordingRate,
+dataToBeOrdered, backFromQueue, f;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -54,12 +54,10 @@ dataToBeOrdered, backFromQueue;
     // Immediately kill the timers with fire
     if (timer != nil) {
         [timer invalidate];
-        [timer release];
         timer = nil;
     }
     if (recordDataTimer != nil) {
         [recordDataTimer invalidate];
-        [recordDataTimer release];
         recordDataTimer = nil;
     }
     
@@ -104,9 +102,9 @@ dataToBeOrdered, backFromQueue;
     menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self action:@selector(displayMenu)];
     self.navigationItem.rightBarButtonItem = menuButton;
     
-    // Attempt Login
-    isenseAPI = [iSENSE getInstance];
-    [isenseAPI toggleUseDev:YES];
+    // API setup
+    api = [API getInstance];
+    [api useDev:TRUE];
     
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
@@ -128,11 +126,10 @@ dataToBeOrdered, backFromQueue;
     BOOL enableStep3 = false;
     NSArray *keys = [dataSaver.dataQueue allKeys];
     for (int i = 0; i < keys.count; i++) {
-        QDataSet *tmp = [[dataSaver.dataQueue objectForKey:keys[i]] retain];
+        QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[i]];
         if ([tmp.parentName isEqualToString:PARENT_AUTOMATIC]) {
             enableStep3 = true;
         }
-        [tmp release];
     }
     
     if (enableStep3) {
@@ -159,8 +156,8 @@ dataToBeOrdered, backFromQueue;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Reinitialize setup and queue to false
-    backFromSetup = false;
+//    // Reinitialize setup and queue to false TODO - really? shouldn't these be at the bottom?
+//    backFromSetup = false;
     
     // If true, then we're coming back from another ViewController
     if (self.isMovingToParentViewController == NO) {
@@ -168,7 +165,7 @@ dataToBeOrdered, backFromQueue;
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         backFromSetup = [prefs boolForKey:[StringGrabber grabString:@"key_setup_complete"]];
         
-        // We have a session name, sample interval, and test length ready
+        // We have a data set name, sample interval, and test length ready
         if (backFromSetup) {
             
             // retrieve the data from the setup dialog
@@ -178,9 +175,9 @@ dataToBeOrdered, backFromQueue;
             NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
             testLength = [testLengthString integerValue];
             
-            sessionName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+            dataSetName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
             
-            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+            projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
             
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -189,6 +186,9 @@ dataToBeOrdered, backFromQueue;
         }
         
     }
+    
+    // Reinitialize setup and queue to false
+    backFromSetup = false;
     
 }
 
@@ -210,7 +210,6 @@ dataToBeOrdered, backFromQueue;
                                  otherButtonTitles:@"Login", @"Media", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[popupQuery showInView:self.view];
-	[popupQuery release];
 }
 
 // Allows the device to rotate as necessary.
@@ -240,23 +239,6 @@ dataToBeOrdered, backFromQueue;
         return UIInterfaceOrientationMaskAll;
 }
 
-// Release all the extras
-- (void)dealloc {
-    [mainLogo release];
-    [mainLogoBackground release];
-    [step1 release];
-    [step2 release];
-    [step3 release];
-    [menuButton release];
-    [step1Label release];
-    [step3Label release];
-    
-    [locationManager release];
-    locationManager = nil;
-    
-    [super dealloc];
-    
-}
 
 // Log you into to iSENSE using the iSENSE API
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
@@ -266,7 +248,7 @@ dataToBeOrdered, backFromQueue;
     
     dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [isenseAPI login:usernameInput with:passwordInput];
+        BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.view makeWaffle:@"Login Successful!"
@@ -297,12 +279,22 @@ dataToBeOrdered, backFromQueue;
     if (sender.state == UIGestureRecognizerStateBegan) {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         if (!isRecording) {
-            // Get the experiment
-            expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
-            
+            // Get the project
+            projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
+
             // Get Field Order
-            [dfm getFieldOrderOfExperiment:expNum];
-            [self getEnabledFields];
+            //[dfm getOrder];
+            //[dfm getFieldOrderOfExperiment:projNum]; TODO
+            //[self getEnabledFields];
+            f = [[Fields alloc] init];
+            dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:f];
+            [dfm getOrder];
+            
+//            if (projNum == -1) {
+//                [dfm getOrder];
+//            } else {
+//                [dfm getOrder];
+//            }
             
             // Change the UI
             [self setRecordingLayout];
@@ -324,7 +316,7 @@ dataToBeOrdered, backFromQueue;
         NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
         SystemSoundID soundID;
         NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
-        AudioServicesCreateSystemSoundID((CFURLRef)filePath, &soundID);
+        AudioServicesCreateSystemSoundID((CFURLRef)CFBridgingRetain(filePath), &soundID);
         AudioServicesPlaySystemSound(soundID);
     }
 }
@@ -354,15 +346,14 @@ dataToBeOrdered, backFromQueue;
     dataToBeOrdered = [[NSMutableArray alloc] init];
     
     // Start the new timers TODO - put them on dispatch?
-    recordDataTimer = [[NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES] retain];
-    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES] retain];
+    recordDataTimer = [NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateElapsedTime) userInfo:nil repeats:YES];
 }
 
 - (void) updateElapsedTime {
     
     if (!isRecording || timer == nil) {
         [timer invalidate];
-        [timer release];
         timer = nil;
     }
     
@@ -395,7 +386,6 @@ dataToBeOrdered, backFromQueue;
     if (!isRecording || recordDataTimer == nil) {
         
         [recordDataTimer invalidate];
-        [recordDataTimer release];
         recordDataTimer = nil;
         
     } else {
@@ -456,13 +446,25 @@ dataToBeOrdered, backFromQueue;
                     fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].z];
             }
             
-            // update data object
-            if (dataToBeOrdered != nil) {
-                [dataToBeOrdered addObject:fieldsRow];
-            }
-            // else NOTHING IS WRONG!!!
+            // TODO there's more fields, right...?
+
             
-            [fieldsRow release];
+            // update data object
+            if (dataToBeOrdered == nil)
+                dataToBeOrdered = [[NSMutableArray alloc] init];
+
+            //[dataToBeOrdered addObject:fieldsRow];
+      
+            if (dataToBeOrdered != nil) {
+                [dfm setFields:fieldsRow];
+
+                if (projNum == -1) {
+                    [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
+                } else {
+                    [dataToBeOrdered addObject:[dfm putData]];
+                }
+
+            }
             
         });
     }
@@ -485,10 +487,8 @@ dataToBeOrdered, backFromQueue;
 -(void) stopRecording:(CMMotionManager *)finalMotionManager {
     // Stop Timers
     [timer invalidate];
-    [timer release];
     timer = nil;
     [recordDataTimer invalidate];
-    [recordDataTimer release];
     recordDataTimer = nil;
     
     // Stop Sensors
@@ -512,17 +512,6 @@ dataToBeOrdered, backFromQueue;
     [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [message textFieldAtIndex:0].keyboardType = UIKeyboardTypeDefault;
     [message show];
-    [message release];
-    
-}
-
-// Fetch the experiments from iSENSE
-- (void) getExperiments {
-    NSMutableArray *results = [isenseAPI getExperiments:[NSNumber numberWithUnsignedInt:1] withLimit:[NSNumber numberWithUnsignedInt:10] withQuery:@"" andSort:@"recent"];
-    if ([results count] == 0) NSLog(@"No experiments found.");
-    
-    NSMutableArray *resultsFields = [isenseAPI getExperimentFields:[NSNumber numberWithUnsignedInt:514]];
-    if ([resultsFields count] == 0) NSLog(@"No experiment fields found.");
     
 }
 
@@ -546,7 +535,6 @@ dataToBeOrdered, backFromQueue;
             [message textFieldAtIndex:0].delegate = self;
             [message textFieldAtIndex:1].delegate = self;
             [message show];
-            [message release];
             
             break;
             
@@ -580,10 +568,12 @@ dataToBeOrdered, backFromQueue;
             
             NSString *description = [[actionSheet textFieldAtIndex:0] text];
             if ([description length] == 0) {
-                description = @"Session data gathered and uploaded from mobile phone using iSENSE DataCollector application.";
+                description = @"Data set recorded and uploaded from mobile device using iSENSE iOS Uploader application.";
             }
             
+            NSLog(@"save");
             [self saveDataSetWithDescription:description];
+            NSLog(@"safe!!");
             [self setEnabled:true forButton:step3];
             
                         
@@ -592,63 +582,69 @@ dataToBeOrdered, backFromQueue;
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
             
         }
+        
     } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
         // TODO - media code
     }
+    
+    NSLog(@"dont mattah what ya shoveling");
 }
 
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
     
     
-    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
-    [message show];
+//    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
+//    [message show];
     
-    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
-    dispatch_async(queue, ^{
-        
+//    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
+//    dispatch_async(queue, ^{
+    
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        expNum = [[prefs stringForKey:[StringGrabber grabString:@"key_exp_automatic"]] intValue];
+        projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
         
         bool uploadable = false;
-        if (expNum > 1) uploadable = true;
+        if (projNum > 1) uploadable = true;
         
         QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                                   inManagedObjectContext:managedObjectContext]
                        insertIntoManagedObjectContext:managedObjectContext];
         
-        dataToBeJSONed = [[NSMutableArray alloc] init];
+//        dataToBeJSONed = [[NSMutableArray alloc] init];
         
-        // Organize the data from dataToBeOrdered
-        for (int i = 0; i < [dataToBeOrdered count]; i++) {
-            Fields *f = [dataToBeOrdered objectAtIndex:i];
-            [dfm orderDataFromFields:f];
-            [dataToBeJSONed addObject:dfm.data];
-        }
+        // Organize the data from dataToBeOrdered TODO - what is this crap? can we just do the line below?
+//        for (int i = 0; i < [dataToBeOrdered count]; i++) {
+//            Fields *f = [dataToBeOrdered objectAtIndex:i];
+//            [dfm orderDataFromFields:f];
+//            [dataToBeJSONed addObject:dfm.data];
+//        }
+        
+        // @Mike: dfm.data is currently nil so of course it is going to crash here
+//        [dataToBeJSONed addObject:dfm.data];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [ds setName:sessionName];
-            [ds setParentName:[[[NSString alloc] initWithString:PARENT_AUTOMATIC] autorelease]];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+    
+            [ds setName:dataSetName];
+            [ds setParentName:PARENT_AUTOMATIC];
             [ds setDataDescription:description];
-            [ds setProjID:[NSNumber numberWithInt:expNum]];
-            [ds setData:dataToBeJSONed];
+            [ds setProjID:[NSNumber numberWithInt:projNum]];
+            [ds setData:dataToBeOrdered];
             [ds setPicturePaths:nil];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-            [ds setHasInitialProj:[NSNumber numberWithBool:(expNum != -1)]];
+            [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
             
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
-            [ds release];
             
             [self.view makeWaffle:@"Data set saved"
                          duration:WAFFLE_LENGTH_SHORT
                          position:WAFFLE_BOTTOM
                             image:WAFFLE_CHECKMARK];
             
-            [message dismissWithClickedButtonIndex:nil animated:YES];
-        });
-    });
+//            [message dismissWithClickedButtonIndex:nil animated:YES];
+//        });
+//        
+//    });
     
 }
 
@@ -657,11 +653,11 @@ dataToBeOrdered, backFromQueue;
     if (geoCoder) {
         [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             if ([placemarks count] > 0) {
-                city = [[[placemarks objectAtIndex:0] locality] retain];
-                country = [[[placemarks objectAtIndex:0] country] retain];
+                city = [[placemarks objectAtIndex:0] locality];
+                country = [[placemarks objectAtIndex:0] country];
                 NSString *subThoroughFare = [[placemarks objectAtIndex:0] subThoroughfare];
                 NSString *thoroughFare = [[placemarks objectAtIndex:0] thoroughfare];
-                address = [[NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare] retain];
+                address = [NSString stringWithFormat:@"%@ %@", subThoroughFare, thoroughFare];
                 
                 if (!address || !city || !country)
                     [self resetAddressFields];
@@ -675,11 +671,11 @@ dataToBeOrdered, backFromQueue;
     }
 }
 
-// Reset address fields for next session
+// Reset address fields for next data set
 - (void)resetAddressFields {
-    city = [[NSString alloc] initWithString:@"N/A"];
-    country = [[NSString alloc] initWithString:@"N/A"];
-    address = [[NSString alloc] initWithString:@"N/A"];
+    city = @"N/A";
+    country = @"N/A";
+    address = @"N/A";
 }
 
 // This is for the loading spinner when the app starts automatic mode
@@ -693,32 +689,33 @@ dataToBeOrdered, backFromQueue;
     spinner.center = CGPointMake(139.5, 75.5);
     [message addSubview:spinner];
     [spinner startAnimating];
-    [spinner release];
-    return [message autorelease];
+    return message;
 }
 
-// Calls step one to get an experiment, sample interval, test length, etc.
+// Calls step one to get an project, sample interval, test length, etc.
 - (IBAction) setup:(UIButton *)sender {
     
     StepOneSetup *stepView = [[StepOneSetup alloc] init];
     stepView.title = @"Step 1: Setup";
     [self.navigationController pushViewController:stepView animated:YES];
-    [stepView release];
     
 }
 
 // Launches a view that allows the user to upload and manage his/her datasets
 - (IBAction) uploadData:(UIButton *)sender {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    backFromQueue = true;
-    [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
-    [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
-    
-    QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
-    queueUploader.title = @"Step 3: Manage and Upload Sessions";
-    [self.navigationController pushViewController:queueUploader animated:YES];
-    [queueUploader release];
+    if ([dataSaver dataSetCountWithParentName:PARENT_AUTOMATIC] > 0) {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        backFromQueue = true;
+        [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+        [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+        
+        QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_AUTOMATIC];
+        queueUploader.title = @"Step 3: Upload";
+        [self.navigationController pushViewController:queueUploader animated:YES];
+    } else {
+        [self.view makeWaffle:@"No data to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
+    }
     
 }
 
@@ -742,7 +739,7 @@ dataToBeOrdered, backFromQueue;
 // Enabled fields check
 - (void) getEnabledFields {
     
-    if (expNum == -1) {
+    if (projNum == -1) {
         [self setupDFMWithAllFields];
     } else {
         int i = 0;
@@ -874,7 +871,7 @@ dataToBeOrdered, backFromQueue;
 - (void) setRecordingLayout {
     
     [step2 setTitle:@"STOP\n(Press and Hold)" forState:UIControlStateNormal];
-    [step2 setTitleColor:[HexColor colorWithHexString:@"59B048"] forState:UIControlStateNormal];
+    [step2 setTitleColor:UIColorFromHex(0x59B048) forState:UIControlStateNormal];
 
     [step1 setAlpha:0.0];
     [step3 setAlpha:0.0];
@@ -887,13 +884,9 @@ dataToBeOrdered, backFromQueue;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
     NSString *testLengthString = [prefs valueForKey:[StringGrabber grabString:@"key_test_length"]];
-    NSString *sesName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_session_name"]];
+    NSString *dsName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
     [step1Label setText:[NSString stringWithFormat:@"Recording data for \"%@\" at a sample interval of %@ ms for %@ sec",
-                     sesName, sampleIntervalString, testLengthString]];
-    
-    
-    [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"004400"]];
-    [mainLogo setImage:[UIImage imageNamed:@"rsense_logo_recording"]];
+                     dsName, sampleIntervalString, testLengthString]];
     
     [step3Label setText:@"Time Elapsed: 0:00\nData Point Count: 0"];
     
@@ -902,7 +895,7 @@ dataToBeOrdered, backFromQueue;
 - (void) setNonRecordingLayout {
 
     [step2 setTitle:@"Step 2: Record a Data Set (Hold Down)" forState:UIControlStateNormal];
-    [step2 setTitleColor:[HexColor colorWithHexString:@"4C6FD9"] forState:UIControlStateNormal];
+    [step2 setTitleColor:UIColorFromHex(0x4C6FD9) forState:UIControlStateNormal];
     
     [step1 setAlpha:1.0];
     [step3 setAlpha:1.0];
@@ -912,10 +905,7 @@ dataToBeOrdered, backFromQueue;
     [step1Label setAlpha:0.0];
     [step3Label setAlpha:0.0];
     
-    step2.titleLabel.textColor = [HexColor colorWithHexString:@"000066"];
-    
-    [mainLogoBackground setBackgroundColor:[HexColor colorWithHexString:@"000066"]];
-    [mainLogo setImage:[UIImage imageNamed:@"rsense_logo"]];
+    step2.titleLabel.textColor = UIColorFromHex(0x000066);
 
 }
 

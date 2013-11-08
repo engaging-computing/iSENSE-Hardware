@@ -3,6 +3,7 @@ package edu.uml.cs.isense.comm;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,6 +52,9 @@ public class API {
 	private Context context;
 	String authToken = "";
 	RPerson currentUser;
+	
+	public static final int CREATED_AT = 0;
+	public static final int UPDATED_AT = 1;
 
 	/**
 	 * Constructor not to be called by a user of the API
@@ -123,10 +127,15 @@ public class API {
 	 *@param search A string to search all projects for
 	 *@return An ArrayList of Project objects
 	 */
-	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, String search) {
+	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, int sortOn, String search) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
+			if(sortOn == CREATED_AT) {
+				sortMode = "created_at "+sortMode;
+			} else if(sortOn == UPDATED_AT) {
+				sortMode = "updated_at "+sortMode;
+			}
 			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
@@ -613,17 +622,17 @@ public class API {
 	 * 
 	 * @param projectId The project ID to upload to
 	 * @param mediaToUpload The file to upload
-	 * @return ??? or -1 if upload fails
+	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
 	public int uploadProjectMedia(int projectId, File mediaToUpload) {
 		try {
-			URL url = new URL(baseURL+"/media_objects/saveMedia/project/"+projectId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			URL url = new URL(baseURL+"/media_objects/saveMedia/project/"+projectId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&non_wys=true");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 
 			MultipartEntity entity = new MultipartEntity();
-			entity.addPart("file", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
+			entity.addPart("upload", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
 			
 			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
 			connection.setRequestProperty("Accept", "application/json");
@@ -633,8 +642,18 @@ public class API {
 			} finally {
 				out.close();
 			}
-			connection.getResponseCode();
-			InputStream in = new BufferedInputStream(connection.getInputStream());
+			InputStream in = null;
+			try {
+				int response = connection.getResponseCode();
+				if (response >= 200 && response < 300) {
+					in = new BufferedInputStream(connection.getInputStream());
+				} else {
+					in = new BufferedInputStream(connection.getErrorStream());
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return -1;
+			}
 			try {
 				ByteArrayOutputStream bo = new ByteArrayOutputStream();
 				int i = in.read();
@@ -642,12 +661,18 @@ public class API {
 					bo.write(i);
 					i = in.read();
 				}
+				String output = bo.toString();
+				
+				int mediaObjID = Integer.parseInt(output);
+				return mediaObjID;
 			} catch (IOException e) {
 				return -1;
-			}
-			finally {
+			}  catch (NumberFormatException e) {
+				return -1;
+			} finally {
 				in.close();
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -659,17 +684,17 @@ public class API {
 	 * 
 	 * @param dataSetId The data set ID to upload to
 	 * @param mediaToUpload The file to upload
-	 * @return ??? or -1 if upload fails
+	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
 	public int uploadDataSetMedia(int dataSetId, File mediaToUpload) {
 		try {
-			URL url = new URL(baseURL+"/media_objects/saveMedia/data_set/"+dataSetId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
+			URL url = new URL(baseURL+"/media_objects/saveMedia/data_set/"+dataSetId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&non_wys=true");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 
 			MultipartEntity entity = new MultipartEntity();
-			entity.addPart("file", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
+			entity.addPart("upload", new FileBody(mediaToUpload, URLConnection.guessContentTypeFromName(mediaToUpload.getName())));
 			
 			connection.setRequestProperty("Content-Type", entity.getContentType().getValue());
 			connection.setRequestProperty("Accept", "application/json");
@@ -679,8 +704,19 @@ public class API {
 			} finally {
 				out.close();
 			}
-			connection.getResponseCode();
-			InputStream in = new BufferedInputStream(connection.getInputStream());
+			
+			InputStream in = null;
+			try {
+				int response = connection.getResponseCode();
+				if (response >= 200 && response < 300) {
+					in = new BufferedInputStream(connection.getInputStream());
+				} else {
+					in = new BufferedInputStream(connection.getErrorStream());
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return -1;
+			}
 			try {
 				ByteArrayOutputStream bo = new ByteArrayOutputStream();
 				int i = in.read();
@@ -688,10 +724,16 @@ public class API {
 					bo.write(i);
 					i = in.read();
 				}
+				String output = bo.toString();
+
+				int mediaObjID = Integer.parseInt(output);
+				return mediaObjID;
+				
 			} catch (IOException e) {
 				return -1;
-			}
-			finally {
+			} catch (NumberFormatException e) {
+				return -1;
+			} finally {
 				in.close();
 			}
 		} catch (Exception e) {

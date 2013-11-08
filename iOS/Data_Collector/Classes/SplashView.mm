@@ -33,22 +33,17 @@
 }
 
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 - (IBAction) loadAutomatic:(id)sender {
     AutomaticViewController *autoView = [[AutomaticViewController alloc] init];
     autoView.title = @"Automatic";
     [self.navigationController pushViewController:autoView animated:YES];
-    [autoView release];
 }
 
 - (IBAction) loadManual:(id)sender {
 	ManualViewController *manualViewController = [[ManualViewController alloc] init];
 	manualViewController.title = @"Manual";
 	[self.navigationController pushViewController:manualViewController animated:YES];
-	[manualViewController release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

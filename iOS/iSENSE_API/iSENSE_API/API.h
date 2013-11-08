@@ -16,6 +16,14 @@
 #import "Reachability.h"
 #import <MobileCoreServices/UTType.h>
 
+typedef enum {
+    SORT_RATING,
+    CREATED_AT_DESC,
+    CREATED_AT_ASC,
+    UPDATED_AT_DESC,
+    UPDATED_AT_ASC
+} SortType;
+
 @interface API : NSObject {
 }
 
@@ -42,7 +50,7 @@
 -(NSArray *)    getDataSetsWithId:      (int)projectId;
 
 -(NSArray *)    getNewsAtPage:      (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
--(NSArray *)    getProjectsAtPage:  (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
+-(NSArray *)    getProjectsAtPage:  (int)page withPageLimit:(int)perPage withFilter:(SortType)descending andQuery:(NSString *)search;
 -(NSArray *)    getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 
 /* Requires an Authentication Key */
@@ -57,6 +65,7 @@
 -(int)      uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload     andName:(NSString *)name;
 -(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
 -(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
+
 /* Convenience Method for Uploading */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original;
 

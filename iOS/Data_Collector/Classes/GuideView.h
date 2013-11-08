@@ -14,6 +14,6 @@
 	UITextView *guideText;
 }
 
-@property (nonatomic, retain) IBOutlet UITextView *guideText;
+@property (nonatomic, strong) IBOutlet UITextView *guideText;
 
 @end

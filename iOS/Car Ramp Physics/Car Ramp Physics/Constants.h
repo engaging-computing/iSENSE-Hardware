@@ -62,8 +62,8 @@
 #define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
 #define PROD_VIS_URL @"http://isenseproject.org/highvis.php?sessions="
 
-#define DEV_DEFAULT_EXP 596
-#define PROD_DEFAULT_EXP 409
+#define DEV_DEFAULT_EXP 32
+#define PROD_DEFAULT_EXP 12
 
 #define FIRST_NAME_FIELD 9001
 #define LAST_NAME_FIELD 9002

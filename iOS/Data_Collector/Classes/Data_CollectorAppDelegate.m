@@ -10,7 +10,7 @@
 #import "Data_CollectorAppDelegate.h"
 #import "ManualViewController.h"
 #import "StepOneSetup.h"
-#import "QueueUploaderView.h"
+#import <iSENSE_API/QueueUploaderView.h>
 
 @implementation Data_CollectorAppDelegate
 
@@ -98,7 +98,7 @@
 
         NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
         NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"QDataSetModel" withExtension:@"momd"];
-        managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL] retain];
+        managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL];
         if (!managedObjectModel) {
             NSLog(@"Problem");
             abort();
@@ -160,16 +160,6 @@
 }
 
 
-- (void)dealloc {
-    [dataSaver release];
-    [managedObjectModel release];
-    [managedObjectContext release];
-    [persistentStoreCoordinator release];
-    
-    [window release];
-	[navControl release];
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark Custom Functions
@@ -178,14 +168,12 @@
 	AboutView *aboutView = [[AboutView alloc] init];
 	aboutView.title = @"About";
 	[self.navControl pushViewController:aboutView animated:YES];
-	[aboutView release];
 }
 
 - (IBAction) showGuide:(id)sender {
 	GuideView *guideView = [[GuideView alloc] init];
 	guideView.title = @"Guide";
 	[self.navControl pushViewController:guideView animated:YES];
-	[guideView release];
 }
 
 // Get the dataSets from the queue :D
@@ -194,7 +182,7 @@
    
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] retain];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
         
@@ -210,9 +198,6 @@
         }
         
         // release the fetched objects
-        [dataSetEntity release];
-        [mutableFetchResults release];
-        [request release];
     }
 }
 

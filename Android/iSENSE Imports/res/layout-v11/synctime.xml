@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -71,7 +72,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_rsense"
                 android:text="@string/send"
-                android:textColor="#0066FF" />
+                android:textColor="#0066FF"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/receiveButton"
@@ -83,14 +85,16 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_rsense"
                 android:text="@string/receive"
-                android:textColor="#0066FF" />
+                android:textColor="#0066FF"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            tools:ignore="ButtonStyle" >
 
             <Button
                 android:id="@+id/buttonGoBack"

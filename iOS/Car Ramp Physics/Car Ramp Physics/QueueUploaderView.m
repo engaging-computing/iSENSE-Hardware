@@ -30,7 +30,7 @@
     }
     
     if (self) {
-        iapi = [iSENSE getInstance];
+        iapi = [API getInstance];
     }
     return self;
     
@@ -42,7 +42,7 @@
     NSLog(@"%@", dataSaver.dataQueue.description);
     
     // Words n stuff
-    if ([iapi isLoggedIn]) {
+   // if ([iapi isLoggedIn]) {
         
         // Do zee upload thang
         bool uploadSuccessful = [dataSaver upload:@"CarRampPhysics"];
@@ -50,12 +50,12 @@
         
         [self.navigationController popViewControllerAnimated:YES];
         
-    } else {
+   // } else {
         
         
         [self.navigationController popViewControllerAnimated:YES];
         
-    }
+   // }
     
 }
 
@@ -246,30 +246,66 @@
 	
 }
 
+// Log into iSENSE
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
-    UIAlertView *message;
-    dispatch_queue_t queue = dispatch_queue_create("automatic_login_from_login_function", NULL);
+    // __block BOOL success;
+    // __block RPerson *curUser;
+    
+    UIAlertView *spinnerDialog = [self getDispatchDialogWithMessage:@"Logging in..."];
+    [spinnerDialog show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_t_dialog", NULL);
     dispatch_async(queue, ^{
-        BOOL success = [iapi login:usernameInput with:passwordInput];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            BOOL success = [iapi createSessionWithUsername:usernameInput andPassword:passwordInput];
             if (success) {
-                [self.view makeWaffle:@"Login Successful!"
+                [self.view makeWaffle:[NSString stringWithFormat:@"Login as %@ successful", usernameInput]
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_CHECKMARK];
+                
+                // save the username and password in prefs
+                NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
+                [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
+                [prefs synchronize];
+                
+                RPerson *curUser = [iapi getCurrentUser];
+                
             } else {
-                [self.view makeWaffle:@"Login Failed!"
+                [self.view makeWaffle:@"Login failed"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
             }
-            if (message != nil)
-                [message dismissWithClickedButtonIndex:nil animated:YES];
+            [spinnerDialog dismissWithClickedButtonIndex:0 animated:YES];
+            
         });
     });
     
+    
+    
+    
+    
 }
+
+// Default dispatch_async dialog with custom spinner
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
+}
+
 
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -308,9 +344,9 @@
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
             int expNum;
-            ExperimentBrowseViewController *browseView = [[ExperimentBrowseViewController alloc] init];
-            browseView.title = @"Browse for Experiments";
-            browseView.chosenExperiment = &expNum;
+            ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
+            browseView.title = @"Browse for Projects";
+            browseView.chosenProject = &expNum;
             [self.navigationController pushViewController:browseView animated:YES];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
@@ -362,13 +398,13 @@
 
 // There is a single column in this table
 - (NSInteger *)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return (NSInteger *)1;
 }
 
 // There are as many rows as there are DataSets
 - (NSInteger *)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (dataSaver == nil) NSLog(@"Why am I nil?");
-    return dataSaver.count;
+    return (NSInteger *)dataSaver.dataQueue.count;
 }
 
 
@@ -384,7 +420,7 @@
     }
     
     NSArray *keys = [dataSaver.dataQueue allKeys];
-    DataSet *tmp = [dataSaver.dataQueue objectForKey:keys[indexPath.row]];
+    QDataSet *tmp = [dataSaver.dataQueue objectForKey:keys[indexPath.row]];
     [cell setupCellWithDataSet:tmp andKey:keys[indexPath.row]];
     
     // Check if the cell is currently selected (marked)

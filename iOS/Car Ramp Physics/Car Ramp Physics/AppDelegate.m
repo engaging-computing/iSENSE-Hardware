@@ -36,11 +36,13 @@
 {
     NSLog(@"got barcode: %@", url);
     
-    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+    NSRange range = [[url absoluteString] rangeOfString:@"projects"];
     
-    NSString *exp = arr[2];
+    NSMutableCharacterSet *_slashes = [NSMutableCharacterSet characterSetWithCharactersInString:@"/"];
     
-    int expNum = [exp intValue];
+    NSString *proj = [[[url absoluteString] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
+    
+    int expNum = [proj intValue];
     
     NSLog(@"ExpNum: %d", expNum);
     
@@ -94,131 +96,104 @@
     
 }
 
-#pragma mark -
-#pragma mark Core Data stack
+- (void)saveContext {
+    NSError *error = nil;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext != nil) {
+        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }
+}
 
-/**
- Returns the managed object context for the application.
- If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
- */
-- (NSManagedObjectContext *) managedObjectContext {
-	
+#pragma mark - Core Data stack
+
+// Returns the managed object context for the application.
+// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+- (NSManagedObjectContext *)managedObjectContext {
     if (managedObjectContext != nil) {
         return managedObjectContext;
     }
-	
+    
+    //    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    //    if (coordinator != nil) {
+    //        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+    //        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    //    }
+    
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
         managedObjectContext = [[NSManagedObjectContext alloc] init];
         [managedObjectContext setPersistentStoreCoordinator: coordinator];
     }
-    
     [self fetchDataSets];
     
     return managedObjectContext;
 }
 
-
-/**
- * Returns the managed object model for the application.
- *If the model doesn't already exist, it is created by merging all of the models found in the application bundle.
- */
+// Returns the managed object model for the application.
+// If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel {
+    if (managedObjectModel != nil) {
+        return managedObjectModel;
+    }
+    //    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Data_Walk" withExtension:@"momd"];
+    //    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
+    NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
+    NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"QDataSetModel" withExtension:@"momd"];
+    managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL];
     if (!managedObjectModel) {
-        
-        NSString *staticLibraryBundlePath = [[NSBundle mainBundle] pathForResource:@"iSENSE_API_Bundle" ofType:@"bundle"];
-        NSURL *staticLibraryMOMURL = [[NSBundle bundleWithPath:staticLibraryBundlePath] URLForResource:@"DataSetModel" withExtension:@"momd"];
-        managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:staticLibraryMOMURL];
-        NSLog(@"%@", managedObjectModel.entities.description);
-        if (!managedObjectModel) {
-            NSLog(@"Problem");
-            abort();
-        }
+        NSLog(@"Problem");
+        abort();
     }
     
     return managedObjectModel;
 }
 
-
-/**
- Returns the persistent store coordinator for the application.
- If the coordinator doesn't already exist, it is created and the application's store added to it.
- */
+// Returns the persistent store coordinator for the application.
+// If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-	
     if (persistentStoreCoordinator != nil) {
         return persistentStoreCoordinator;
     }
-	
-    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"CarPhysics.sqlite"]];
-	
-	NSError *error = nil;
+    
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Data_Walk.sqlite"];
+    
+    NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                             
-                             [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
-                             
-                             [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-    
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) {
-		/*
-		 Replace this implementation with code to handle the error appropriately.
-		 
-		 abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-		 
-		 Typical reasons for an error here include:
-		 * The persistent store is not accessible
-		 * The schema for the persistent store is incompatible with current managed object model
-		 Check the error message to determine what the actual problem was.
-		 */
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-		abort();
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+        
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
     }
-	
+    
     return persistentStoreCoordinator;
 }
 
+#pragma mark - Application's Documents directory
 
-#pragma mark -
-#pragma mark Application's Documents directory
-
-/**
- Returns the path to the application's Documents directory.
- */
-- (NSString *)applicationDocumentsDirectory {
-	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+// Returns the URL to the application's Documents directory.
+- (NSURL *)applicationDocumentsDirectory {
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-}
-
-
-#pragma mark -
-#pragma mark Custom Functions
-
-// Get the dataSets from the queue :D
+#pragma mark - Custom Functions
+// Get the dataSets from the queue
 - (void) fetchDataSets {
-    
     
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"DataSet" inManagedObjectContext:managedObjectContext];
+    NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext];
     if (dataSetEntity) {
         [request setEntity:dataSetEntity];
         
         // Actually make the request
         NSError *error = nil;
         NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        if (mutableFetchResults == nil) {
-            // dats a problem
-        } else {
-            NSLog(@"Description: %@, %d", mutableFetchResults.description, mutableFetchResults.count);
-        }
         
         dataSaver = [[DataSaver alloc] initWithContext:managedObjectContext];
         

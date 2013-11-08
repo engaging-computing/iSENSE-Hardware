@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		760D196C179585FB00C123D6 /* logoIOS_Regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196B179585FB00C123D6 /* logoIOS_Regular.png */; };
-		760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D196E179585FF00C123D6 /* logoIOS_Retina.png */; };
-		760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */; };
-		760D19731795861400C123D6 /* logoIOS_retina_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 760D19721795861400C123D6 /* logoIOS_retina_ipad.png */; };
 		760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 760D197517958A4300C123D6 /* QueueUploaderView.m */; };
 		760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */; };
 		760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197E17958AF600C123D6 /* queue_layout~iphone.xib */; };
@@ -20,12 +16,8 @@
 		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7636B54E179EC3BC00DE6C7C /* QueueCell.m */; };
-		765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */; };
-		765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B2178DD32200425A27 /* ExperimentBlock.m */; };
-		765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 765099B5178DD34D00425A27 /* ISenseSearch.m */; };
+		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099C2178DD92D00425A27 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BB178DD92D00425A27 /* button_dark.png */; };
-		765099C3178DD92D00425A27 /* button_experiment_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BC178DD92D00425A27 /* button_experiment_clean.png */; };
-		765099C4178DD92D00425A27 /* button_experiment_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BD178DD92D00425A27 /* button_experiment_dark.png */; };
 		765099C5178DD92D00425A27 /* button_light_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BE178DD92D00425A27 /* button_light_long.png */; };
 		765099C6178DD92D00425A27 /* button_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BF178DD92D00425A27 /* button_light.png */; };
 		765099C7178DD92D00425A27 /* noimagedata_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099C0178DD92D00425A27 /* noimagedata_normal.png */; };
@@ -76,6 +68,15 @@
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
 		76C54CF41799704100B93A67 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76C54CF31799704100B93A67 /* button-37.wav */; };
 		76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C54CF81799754300B93A67 /* AudioToolbox.framework */; };
+		76DF6A7C17E3A81B00CF5DDD /* ProjectBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */; };
+		76DF6A7D17E3A81B00CF5DDD /* ProjectBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */; };
+		76DF6A8017E4FD2100CF5DDD /* projectblock_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */; };
+		76DF6A8117E4FD2100CF5DDD /* projectblock_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */; };
+		76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */; };
+		76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */; };
+		76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */; };
+		76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */; };
+		76DF6A8C17E778F500CF5DDD /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
 		76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E91F8617945E2E001749FC /* VariablesViewController.m */; };
 		76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */; };
@@ -115,10 +116,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		760D196B179585FB00C123D6 /* logoIOS_Regular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_Regular.png; sourceTree = "<group>"; };
-		760D196E179585FF00C123D6 /* logoIOS_Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_Retina.png; sourceTree = "<group>"; };
-		760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_iPad_regular.png; sourceTree = "<group>"; };
-		760D19721795861400C123D6 /* logoIOS_retina_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoIOS_retina_ipad.png; sourceTree = "<group>"; };
 		760D197517958A4300C123D6 /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
 		760D197917958A4C00C123D6 /* QueueUploaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
 		760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
@@ -131,17 +128,10 @@
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		7636B54D179EC3BC00DE6C7C /* QueueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
 		7636B54E179EC3BC00DE6C7C /* QueueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueCell.m; sourceTree = "<group>"; };
+		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
-		765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentBrowseViewController.h; path = ../ExperimentBrowseViewController.h; sourceTree = "<group>"; };
-		765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExperimentBrowseViewController.m; path = ../ExperimentBrowseViewController.m; sourceTree = "<group>"; };
-		765099B1178DD32200425A27 /* ExperimentBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExperimentBlock.h; sourceTree = "<group>"; };
-		765099B2178DD32200425A27 /* ExperimentBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExperimentBlock.m; sourceTree = "<group>"; };
-		765099B4178DD34D00425A27 /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
-		765099B5178DD34D00425A27 /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		765099BB178DD92D00425A27 /* button_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_dark.png; sourceTree = "<group>"; };
-		765099BC178DD92D00425A27 /* button_experiment_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_experiment_clean.png; sourceTree = "<group>"; };
-		765099BD178DD92D00425A27 /* button_experiment_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_experiment_dark.png; sourceTree = "<group>"; };
 		765099BE178DD92D00425A27 /* button_light_long.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_light_long.png; sourceTree = "<group>"; };
 		765099BF178DD92D00425A27 /* button_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_light.png; sourceTree = "<group>"; };
 		765099C0178DD92D00425A27 /* noimagedata_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimagedata_normal.png; sourceTree = "<group>"; };
@@ -201,6 +191,18 @@
 		76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
 		76C54CF31799704100B93A67 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		76C54CF81799754300B93A67 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		76DF6A7517E3A81B00CF5DDD /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
+		76DF6A7717E3A81B00CF5DDD /* ProjectBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBlock.h; sourceTree = "<group>"; };
+		76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBlock.m; sourceTree = "<group>"; };
+		76DF6A7917E3A81B00CF5DDD /* ProjectBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowseViewController.h; sourceTree = "<group>"; };
+		76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowseViewController.m; sourceTree = "<group>"; };
+		76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_clean.png; sourceTree = "<group>"; };
+		76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_dark.png; sourceTree = "<group>"; };
+		76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo57x57.png; path = ../CarRampPhysicsLogo57x57.png; sourceTree = "<group>"; };
+		76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo114x114.png; path = ../CarRampPhysicsLogo114x114.png; sourceTree = "<group>"; };
+		76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo72x72.png; path = ../CarRampPhysicsLogo72x72.png; sourceTree = "<group>"; };
+		76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo144x144.png; path = ../CarRampPhysicsLogo144x144.png; sourceTree = "<group>"; };
+		76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		76E91F8517945E2E001749FC /* VariablesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariablesViewController.h; sourceTree = "<group>"; };
 		76E91F8617945E2E001749FC /* VariablesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariablesViewController.m; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */,
 				76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */,
 				7655BCDA17AC2064005FA0AD /* libiSENSE_API.a in Frameworks */,
 				76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */,
@@ -251,11 +254,8 @@
 		7669F01D178B275C00E51AD0 = {
 			isa = PBXGroup;
 			children = (
+				76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */,
 				76A4916617A1585A007F5E90 /* SystemConfiguration.framework */,
-				760D19721795861400C123D6 /* logoIOS_retina_ipad.png */,
-				760D19701795860F00C123D6 /* logoIOS_iPad_regular.png */,
-				760D196E179585FF00C123D6 /* logoIOS_Retina.png */,
-				760D196B179585FB00C123D6 /* logoIOS_Regular.png */,
 				7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */,
 				7669F02F178B275C00E51AD0 /* Car Ramp Physics */,
 				7669F028178B275C00E51AD0 /* Frameworks */,
@@ -312,6 +312,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		76DF6A8A17E4FF8D00CF5DDD /* AppLogos */ = {
+			isa = PBXGroup;
+			children = (
+				76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */,
+				76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */,
+				76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */,
+				76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */,
+			);
+			name = AppLogos;
+			sourceTree = "<group>";
+		};
 		76E91F8E1794789F001749FC /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -345,6 +356,9 @@
 		76E91F91179478B7001749FC /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				76DF6A7517E3A81B00CF5DDD /* ISenseSearch.h */,
+				76DF6A7717E3A81B00CF5DDD /* ProjectBlock.h */,
+				76DF6A7917E3A81B00CF5DDD /* ProjectBrowseViewController.h */,
 				76A5159417E239AE0044F668 /* NewDFM.h */,
 				7636B54D179EC3BC00DE6C7C /* QueueCell.h */,
 				761D27601795C1A30056FA8C /* Queue.h */,
@@ -354,9 +368,6 @@
 				76785B771791E07B001D6E3A /* CRTableViewCell.h */,
 				76778D1A17919A6B0067ABA1 /* HexColor.h */,
 				765099B7178DD39500425A27 /* Constants.h */,
-				765099B4178DD34D00425A27 /* ISenseSearch.h */,
-				765099B1178DD32200425A27 /* ExperimentBlock.h */,
-				765099AE178DD30D00425A27 /* ExperimentBrowseViewController.h */,
 				76B58D7B178C5D16006E1425 /* StringGrabber.h */,
 				76EF01A1178B571F00CBE38C /* RNGridMenu.h */,
 				7669F038178B275C00E51AD0 /* AppDelegate.h */,
@@ -369,6 +380,9 @@
 		76E91F92179478DF001749FC /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */,
+				76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */,
+				76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */,
 				761D275D1795C1960056FA8C /* Queue.m */,
 				760D197517958A4300C123D6 /* QueueUploaderView.m */,
 				7636B54E179EC3BC00DE6C7C /* QueueCell.m */,
@@ -376,9 +390,6 @@
 				76E91F8617945E2E001749FC /* VariablesViewController.m */,
 				76785B781791E07B001D6E3A /* CRTableViewCell.m */,
 				76778D1B17919A6B0067ABA1 /* HexColor.m */,
-				765099B5178DD34D00425A27 /* ISenseSearch.m */,
-				765099B2178DD32200425A27 /* ExperimentBlock.m */,
-				765099AF178DD30D00425A27 /* ExperimentBrowseViewController.m */,
 				76B58D7C178C5D16006E1425 /* StringGrabber.m */,
 				76EF01A2178B571F00CBE38C /* RNGridMenu.m */,
 				7669F039178B275C00E51AD0 /* AppDelegate.m */,
@@ -393,12 +404,13 @@
 		76E91F93179478FC001749FC /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				76DF6A8A17E4FF8D00CF5DDD /* AppLogos */,
+				76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */,
+				76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */,
 				7669F03B178B275C00E51AD0 /* Default.png */,
 				7669F03D178B275C00E51AD0 /* Default@2x.png */,
 				7669F03F178B275C00E51AD0 /* Default-568h@2x.png */,
 				765099BB178DD92D00425A27 /* button_dark.png */,
-				765099BC178DD92D00425A27 /* button_experiment_clean.png */,
-				765099BD178DD92D00425A27 /* button_experiment_dark.png */,
 				765099BE178DD92D00425A27 /* button_light_long.png */,
 				765099BF178DD92D00425A27 /* button_light.png */,
 				765099C0178DD92D00425A27 /* noimagedata_normal.png */,
@@ -525,8 +537,6 @@
 				76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */,
 				76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */,
 				765099C2178DD92D00425A27 /* button_dark.png in Resources */,
-				765099C3178DD92D00425A27 /* button_experiment_clean.png in Resources */,
-				765099C4178DD92D00425A27 /* button_experiment_dark.png in Resources */,
 				765099C5178DD92D00425A27 /* button_light_long.png in Resources */,
 				765099C6178DD92D00425A27 /* button_light.png in Resources */,
 				765099C7178DD92D00425A27 /* noimagedata_normal.png in Resources */,
@@ -535,10 +545,6 @@
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
 				76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */,
 				76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */,
-				760D196C179585FB00C123D6 /* logoIOS_Regular.png in Resources */,
-				760D196F179585FF00C123D6 /* logoIOS_Retina.png in Resources */,
-				760D19711795860F00C123D6 /* logoIOS_iPad_regular.png in Resources */,
-				760D19731795861400C123D6 /* logoIOS_retina_ipad.png in Resources */,
 				760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */,
 				760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */,
 				760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */,
@@ -550,6 +556,12 @@
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
 				76C54CF41799704100B93A67 /* button-37.wav in Resources */,
+				76DF6A8017E4FD2100CF5DDD /* projectblock_clean.png in Resources */,
+				76DF6A8117E4FD2100CF5DDD /* projectblock_dark.png in Resources */,
+				76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */,
+				76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */,
+				76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */,
+				76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,15 +572,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				765099B3178DD33900425A27 /* ExperimentBlock.m in Sources */,
 				76B58D8B178C72B0006E1425 /* StringGrabber.m in Sources */,
 				7669F036178B275C00E51AD0 /* main.m in Sources */,
 				7669F03A178B275C00E51AD0 /* AppDelegate.m in Sources */,
 				7669F043178B275C00E51AD0 /* ViewController.mm in Sources */,
 				76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */,
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
-				765099B0178DD30D00425A27 /* ExperimentBrowseViewController.m in Sources */,
-				765099B6178DD34D00425A27 /* ISenseSearch.m in Sources */,
 				76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */,
 				76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */,
 				76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */,
@@ -577,6 +586,9 @@
 				761D275E1795C1960056FA8C /* Queue.m in Sources */,
 				7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */,
 				76A5159617E239AE0044F668 /* NewDFM.m in Sources */,
+				76DF6A7C17E3A81B00CF5DDD /* ProjectBlock.m in Sources */,
+				76DF6A7D17E3A81B00CF5DDD /* ProjectBrowseViewController.m in Sources */,
+				76DF6A8C17E778F500CF5DDD /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,7 +724,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Car Ramp Physics";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -730,7 +742,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Car Ramp Physics";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

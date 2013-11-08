@@ -1,18 +1,18 @@
 package edu.uml.cs.isense.riverwalk;
 
+
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
+//import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,14 +20,12 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.PorterDuff;
-import android.location.Address;
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,26 +33,30 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import edu.uml.cs.isense.comm.RestAPI;
-import edu.uml.cs.isense.queue.DataSet;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.LoginActivity;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
-import edu.uml.cs.isense.riverwalk.experiments.ExperimentDialog;
-import edu.uml.cs.isense.riverwalk.objects.DataFieldManager;
-import edu.uml.cs.isense.riverwalk.objects.Fields;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
+
 
 public class Main extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 101;
@@ -63,25 +65,24 @@ public class Main extends Activity implements LocationListener {
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
-
-	private static final int MENU_ITEM_BROWSE = 0;
-	private static final int MENU_ITEM_LOGIN = 1;
-	private static final int MENU_ITEM_UPLOAD = 2;
-
+	private static final int CONTINUOUS_REQUESTED = 107;
+	
+	public static boolean continuous = false;
+	public static int continuousInterval = 1;
+	private boolean recording = false;
+	
 	private static final int TIMER_LOOP = 1000;
 
 	private LocationManager mLocationManager;
 	private LocationManager mRoughLocManager;
 	private Location loc;
-	private Location roughLoc;
 
 	private Uri imageUri;
 
-	public static RestAPI rapi;
+	public static API api;
 	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
 
-	// private static boolean gpsWorking = false;
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
 	public static boolean initialLoginStatus = true;
@@ -93,8 +94,6 @@ public class Main extends Activity implements LocationListener {
 	private Handler mHandler;
 	private TextView latLong;
 	private TextView queueCount;
-	private static final double DEFAULT_LAT = 42.6404;
-	private static final double DEFAULT_LONG = -71.3533;
 	private long curTime;
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
@@ -106,10 +105,14 @@ public class Main extends Activity implements LocationListener {
 	public static Button takePicture;
 	static boolean useMenu = true;
 
-	private ProgressDialog dia;
+	//private ProgressDialog dia;
 	private DataFieldManager dfm;
 	private Fields f;
-
+	
+	public static final int MEDIA_TYPE_IMAGE = 1;
+	private Camera mCamera;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,26 +124,23 @@ public class Main extends Activity implements LocationListener {
 
 		f = new Fields();
 
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-		rapi.useDev(false);
+		api = API.getInstance(mContext);
+		api.useDev(true);
 
-		uq = new UploadQueue("generalpictures", mContext, rapi);
+		uq = new UploadQueue("generalpictures", mContext, api);
 
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		if (mPrefs.getString("experiment_id", "").equals("")) {
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		if (mPrefs.getString("project_id", "").equals("")) {
 			if (dfm == null) {
 				dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-						"experiment_id", "-1")), rapi, mContext, f);
+						"project_id", "-1")), api, mContext, f);
 				dfm.getOrder();
 			}
 		}
 
 		experimentLabel = (TextView) findViewById(R.id.ExperimentLabel);
 		experimentLabel.setText(getResources().getString(R.string.experiment)
-				+ mPrefs.getString("experiment_id", "None Set"));
+				+ mPrefs.getString("project_id", "None Set"));
 
 		mHandler = new Handler();
 
@@ -150,12 +150,13 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		takePicture = (Button) findViewById(R.id.takePicture);
-		takePicture.getBackground().setColorFilter(0xFF99CCFF,
-				PorterDuff.Mode.MULTIPLY);
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				//TODO
+				
+				
 				if (name.getText().length() == 0) {
 					name.setError("Enter a name");
 					return;
@@ -163,102 +164,250 @@ public class Main extends Activity implements LocationListener {
 					name.setError(null);
 				}
 
-				SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				String experimentNum = mPrefs.getString("experiment_id",
-						"Error");
+				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String experimentNum = mPrefs.getString("project_id", "Error");
 
 				if (experimentNum.equals("Error")) {
-					w.make("Please select an experiment first.",
+					w.make("Please select an project first.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
 				}
+				
+				if (continuous == false){
+					String state = Environment.getExternalStorageState();
+					if (Environment.MEDIA_MOUNTED.equals(state)) {
+	
+						ContentValues values = new ContentValues();
+	
+						imageUri = getContentResolver().insert(
+								MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+								values);
+	
+						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+	
+						OrientationManager.disableRotation(Main.this);
+						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+					} else {
+						w.make("Cannot write to external storage.",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					}
 
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues values = new ContentValues();
-
-					imageUri = getContentResolver().insert(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							values);
-
-					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-					OrientationManager.disableRotation(Main.this);
-					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-				} else {
-					w.make("Cannot write to external storage.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				} else if( continuous == true) { //if continuous == true
+					if (recording == false){
+						takePicture.setBackgroundColor(0xFF00FF00);
+						takePicture.setTextColor(0xFF000000);
+						takePicture.setText("Recording Press to Stop");
+						recording = true;
+						new continuouslytakephotos().execute();
+					} else {
+						recording = false;
+					}
 				}
-
 			}
-
 		});
 
 	}
+	
 
+
+private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
+{
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        //this method will be running on UI thread
+        OrientationManager.disableRotation(Main.this);	
+    }
+    @Override
+    protected Void doInBackground(Void... params) {
+
+        //this method will be running on background thread so don't update UI frome here
+        //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
+
+    	while(recording){
+			String state = Environment.getExternalStorageState();
+			if (Environment.MEDIA_MOUNTED.equals(state)) {
+				
+			int cameraId = 0;	
+				
+			mCamera = null;	
+//		    try {
+//		    	mCamera = Camera.open(cameraId); // attempt to get a Camera instance
+//		    }
+//		    catch (Exception e){
+//		        // Camera is not available (in use or does not exist)
+//		    	e.printStackTrace();
+			if (false == safeCameraOpen(cameraId)){ //run function to open camera 
+		    	return null;						//if function does not open camera return null
+		    }
+		    
+	    	ContentValues values = new ContentValues();
+	    	
+			imageUri = getContentResolver().insert(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+					values);
+			
+			   
+		    mCamera.takePicture(null, null, mPicture);	//takes a picture
+
+		    mCamera.release();	//release camera so other applications can use it
+			
+			} else {
+//				w.make("Cannot write to external storage.",
+//						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				//TODO
+				return null;
+			}
+
+			try {Thread.sleep(1000 * continuousInterval);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+		}
+    	
+        return null;
+    }
+    
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+        		Main.takePicture.setText(R.string.takePicContinuous);
+        		Main.takePicture.setTextColor(0xFF0066FF);
+				Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
+				
+				recording = false;
+				OrientationManager.enableRotation(Main.this);	
+        //this method will be running on UI thread
+
+    }
+}
+
+private boolean safeCameraOpen(int id) {
+    boolean qOpened = false;
+  
+    try {
+    	if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
+    	
+        mCamera = Camera.open(id);
+        qOpened = (mCamera != null);
+    } catch (Exception e) {
+        Log.e(getString(R.string.app_name), "failed to open Camera");
+        e.printStackTrace();
+    }
+
+    return qOpened;    
+}
+
+
+
+private PictureCallback mPicture = new PictureCallback() {
+
+    @Override
+    public void onPictureTaken(byte[] data, Camera camera) {
+    	
+    	
+        picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+        
+        if (picture == null){
+//            Log.d(TAG, "Error creating media file, check storage permissions: " +
+//                e.getMessage());
+            return;
+        }
+    }
+};
+
+/** Create a File for saving an image or video */
+private static File getOutputMediaFile(int type){
+    // To be safe, you should check that the SDCard is mounted
+    // using Environment.getExternalStorageState() before doing this.
+
+    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+              Environment.DIRECTORY_PICTURES), "MyCameraApp");
+    // This location works best if you want the created images to be shared
+    // between applications and persist after your app has been uninstalled.
+
+    // Create the storage directory if it does not exist
+    if (! mediaStorageDir.exists()){
+        if (! mediaStorageDir.mkdirs()){
+            Log.d("MyCameraApp", "failed to create directory");
+            return null;
+        }
+    }
+    
+    // Create a media file name
+    File mediaFile;
+    if (type == MEDIA_TYPE_IMAGE){
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+        "IMG_"+ ".jpg");
+//    } else if(type == MEDIA_TYPE_VIDEO) {
+//        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+//        "VID_"+ timeStamp + ".mp4");
+    } else {
+        return null;
+    }
+
+    return mediaFile;
+}
+    
+	// double tap back button to exit
 	@Override
 	public void onBackPressed() {
 		if (!w.isDisplaying) {
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT,
-					Waffle.IMAGE_CHECK);
+			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT);
 		} else if (w.canPerformTask)
 			super.onBackPressed();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_BROWSE, Menu.NONE, "Experiment");
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login");
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload");
-		return true;
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
 	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(0).setEnabled(false);
-			menu.getItem(1).setEnabled(false);
-			menu.getItem(2).setEnabled(false);
-		} else {
-			menu.getItem(0).setEnabled(true);
-			menu.getItem(1).setEnabled(true);
-			menu.getItem(2).setEnabled(true);
-		}
-		return true;
-	}
-
+	
+	// menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_ITEM_BROWSE:
-
-			Intent iExperiment = new Intent(getApplicationContext(),
-					ExperimentDialog.class);
-			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
-
-			return true;
-
-		case MENU_ITEM_LOGIN:
-			startActivityForResult(new Intent(getApplicationContext(),
-					LoginActivity.class), LOGIN_REQUESTED);
-			return true;
-
-		case MENU_ITEM_UPLOAD:
-			manageUploadQueue();
-			return true;
-		}
-
-		return false;
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.MENU_ITEM_UPLOAD:
+	        	manageUploadQueue();
+	            return true;
+	            
+	        case R.id.MENU_ITEM_BROWSE:
+	        	Intent iExperiment = new Intent(getApplicationContext(),
+						Setup.class);
+				startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+	            return true;
+	            
+	        case R.id.MENU_ITEM_LOGIN:
+	        	startActivityForResult(new Intent(getApplicationContext(),
+						LoginActivity.class), LOGIN_REQUESTED);
+	            return true;
+	            
+	        case R.id.MENU_ITEM_CONTINUOUS:
+	        	Intent continuous = new Intent(getApplicationContext(),
+						Continuous.class);
+				startActivity(continuous);
+	            return true;    
+	            
+	        default:
+	            return false;
+	    }
 	}
+	
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if (!rapi.isLoggedIn())
+		if (api.getCurrentUser() == null)
 			attemptLogin();
 
 		// Rebuilds uploadQueue from saved info
@@ -267,15 +416,10 @@ public class Main extends Activity implements LocationListener {
 				+ uq.queueSize());
 	}
 
+	//uploads the data if logged in and queue is not empty
 	private void manageUploadQueue() {
 
-		if (!(rapi.isConnectedToInternet())) {
-			w.make("Must be connected to the internet to upload.",
-					Waffle.IMAGE_X);
-			return;
-		}
-
-		if (!(rapi.isLoggedIn())) {
+		if (api.getCurrentUser() == null) {
 			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
 			return;
 		}
@@ -291,6 +435,7 @@ public class Main extends Activity implements LocationListener {
 
 	}
 
+	//onStart initialize location manager
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -375,195 +520,181 @@ public class Main extends Activity implements LocationListener {
 		});
 	}
 
+	//upload pictures
 	private Runnable uploader = new Runnable() {
 		@Override
 		public void run() {
 
-			// Location
-			List<Address> address = null;
-			String city = "", state = "", country = "", addr = "";
-
-			try {
-				if (roughLoc != null) {
-
-					address = new Geocoder(Main.this, Locale.getDefault())
-							.getFromLocation(roughLoc.getLatitude(),
-									roughLoc.getLongitude(), 1);
-
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
-
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String experimentNum = mPrefs.getString("experiment_id", "Error");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String experimentNum = mPrefs.getString("project_id", "Error");
 
 			if (experimentNum.equals("Error")) {
 				uploadError = true;
-				postRunnableWaffleError("No experiment selected to upload pictures to");
+				postRunnableWaffleError("No project selected to upload pictures to");
 				return;
 			}
 
-			if (dfm == null)
+			//if (dfm == null)
 				initDfm();
 
-			JSONArray dataJSON = new JSONArray();
-			JSONArray dataRow = new JSONArray();
-			if (loc.getLatitude() != 0) {
-				f.time = curTime;
-				f.lat = loc.getLatitude();
-				f.lon = loc.getLongitude();
-				f.text = descriptionStr;
-				dataRow = dfm.putData();
-			} else {
-				f.time = curTime;
-				f.lat = DEFAULT_LAT;
-				f.lon = DEFAULT_LONG;
-				f.text = descriptionStr;
-				dataRow = dfm.putData();
+			JSONArray dataJSON = new JSONArray();		//data is set into JSONArray to be uploaded
+			JSONObject dataRow = new JSONObject();
+			
+			if (!api.hasConnectivity()){
+				experimentNum = "-1";
 			}
-			dataJSON.put(dataRow);
+				
+				
+			if (loc.getLatitude() != 0) {
+				f.timeMillis = curTime;
+				System.out.println("curTime =" + f.timeMillis);
+				f.latitude = loc.getLatitude();
+				System.out.println("Latitude =" + f.latitude);
+				f.longitude = loc.getLongitude();
+				System.out.println("Longitude =" + f.longitude);
+				
+				if (!experimentNum.equals("-1")){
+					dataJSON.put(dfm.putData());
+				}else{
+					dataJSON.put(dfm.putDataForNoProjectID());
+				}
+				
+			} else { //no gps
+				loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
+				f.timeMillis = curTime;	
+				System.out.println("curTime (no gps) =" + f.timeMillis);   
+				f.latitude = loc.getLatitude();  
+				System.out.println("Latitude (no gps) =" + f.latitude);
+				f.longitude = loc.getLongitude(); 
+				System.out.println("Longitude (no gps) =" + f.longitude);
+				
+				if (!experimentNum.equals("-1")){
+					dataJSON.put(dfm.putData());
+				}else{
+					dataJSON.put(dfm.putDataForNoProjectID());
+				}
+			}
+			
+			dataJSON.put(dataRow); 
 
-			DataSet ds;
-			if (address != null && address.size() > 0)
-				ds = new DataSet(DataSet.Type.BOTH, name.getText().toString()
-						+ ": " + descriptionStr, makeThisDatePretty(curTime),
-						experimentNum, dataJSON.toString(), picture, -1, city,
-						state, country, addr);
-			else
-				ds = new DataSet(DataSet.Type.BOTH, name.getText().toString()
-						+ ": " + descriptionStr, makeThisDatePretty(curTime),
-						experimentNum, dataJSON.toString(), picture, -1,
-						"Lowell", "MA", "USA", "Pawtucket Blvd.");
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()  //data set to be uploaded
+					.toString() + ": " + descriptionStr,
+					makeThisDatePretty(curTime), experimentNum,
+					dataJSON.toString(), picture);
 
+			System.out.println("experimentNum = " + experimentNum);
+			
 			uq.addDataSetToQueue(ds);
 
 		}
 	};
 
-	private void initDfm() {
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		String experimentInput = mPrefs.getString("experiment_id", "");
-
-		dfm = new DataFieldManager(Integer.parseInt(experimentInput), rapi,
+	private void initDfm() {											//sets up data field manager
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String experimentInput = mPrefs.getString("project_id", "");
+		System.out.println("experimentInput ="+ experimentInput);
+		dfm = new DataFieldManager(Integer.parseInt(experimentInput), api,
 				mContext, f);
-		dfm.getOrder();
+		dfm.getOrderWithExternalAsyncTask();
+		dfm.enableAllFields();
+		System.out.println("order =" + dfm.getOrderList());
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) { //passes in a request code
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				curTime = System.currentTimeMillis();
-				picture = convertImageUriToFile(imageUri);
+		if (requestCode == CAMERA_PIC_REQUESTED) { 	//request to takes picture
 
-				takePicture.setEnabled(true);
+				if (resultCode == RESULT_OK) {
+					curTime = System.currentTimeMillis();
+					picture = convertImageUriToFile(imageUri);
+	
+					uq.buildQueueFromFile();
+					queueCount.setText(getResources()
+							.getString(R.string.queueCount) + uq.queueSize());
 
-				uq.buildQueueFromFile();
-				queueCount.setText(getResources()
-						.getString(R.string.queueCount) + uq.queueSize());
-
-				Intent iDesc = new Intent(Main.this, Description.class);
-				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-
-			}
-
-		} else if (requestCode == EXPERIMENT_REQUESTED) {
+					if(continuous == false){ //if continuously recording do not ask for description
+						Intent iDesc = new Intent(Main.this, Description.class);
+						startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
+					} 
+					
+					new UploadTask().execute();
+				
+				}
+			
+			
+			//TODO
+				
+		} else if (requestCode == CONTINUOUS_REQUESTED) {
+			
+			
+			
+		} else if (requestCode == EXPERIMENT_REQUESTED) {			//obtains data fields from project on isense
 			if (resultCode == Activity.RESULT_OK) {
-				String eidString = data.getStringExtra("eid");
+				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String eidString = mPrefs.getString("project_id", "");
 
 				experimentLabel.setText(getResources().getString(
 						R.string.experiment)
 						+ eidString);
 
-				// SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-				// SharedPreferences.Editor mEdit = mPrefs.edit();
-				// mEdit.putInt("experiment_id",
-				// Integer.parseInt(eidString)).commit();
-
-				dfm = new DataFieldManager(Integer.parseInt(eidString), rapi,
+				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();
 			}
-		} else if (requestCode == LOGIN_REQUESTED) {
+		} else if (requestCode == LOGIN_REQUESTED) {				//shows dialog to login
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("LOGIN", 0);
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putBoolean("logged_in", true);
 				mEditor.commit();
 			}
-		} else if (requestCode == NO_GPS_REQUESTED) {
+		} else if (requestCode == NO_GPS_REQUESTED) {				//asks the user if they would like to enable gps
 			showGpsDialog = true;
 			if (resultCode == RESULT_OK) {
 				startActivity(new Intent(
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
-			int selection = data.getIntExtra(Description.RADIO_SELECTION, -1);
+			
+			descriptionStr = Description.photo_description;  // set descriptionStr equal to photo_description in Description.java
 
-			switch (selection) {
-			case 1:
-				descriptionStr = getResources().getString(
-						R.string.ecosystemChanges_short);
-				break;
-			case 2:
-				descriptionStr = getResources().getString(
-						R.string.foodwebElements_short);
-				break;
-			case 3:
-				descriptionStr = getResources().getString(
-						R.string.habitat_short);
-				break;
-			case 4:
-				descriptionStr = getResources().getString(
-						R.string.invasiveSpecies_short);
-				break;
-			default:
-				descriptionStr = getResources().getString(R.string.other);
-				break;
-			}
-
-			new UploadTask().execute();
 		}
-
 	}
 
+	
+	
+	
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		roughLoc = location;
 	}
 
 	@Override
-	public void onProviderDisabled(String provider) {}
+	public void onProviderDisabled(String provider) {
+	}
 
 	@Override
-	public void onProviderEnabled(String provider) {}
+	public void onProviderEnabled(String provider) {
+		
+	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	private class UploadTask extends AsyncTask<Void, Integer, Void> {
+	private class UploadTask extends AsyncTask<Void, Integer, Void> { //adds picture to queue 
 
 		@Override
 		protected void onPreExecute() {
 			OrientationManager.disableRotation(Main.this);
 
-			dia = new ProgressDialog(Main.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Saving picture...");
-			dia.setCancelable(false);
-			dia.show();
+//			dia = new ProgressDialog(Main.this);
+//			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//			dia.setMessage("Saving picture...");
+//			dia.setCancelable(false);
+//			dia.show();
 		}
 
 		@Override
@@ -578,12 +709,12 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		protected void onPostExecute(Void voids) {
 
-			dia.cancel();
+	//		dia.cancel();
 
 			OrientationManager.enableRotation(Main.this);
 
 			if (status400) {
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
+				w.make("Your data cannot be uploaded to this project.  It has been closed.",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else if (uploadError) {
 				// Do nothing - postRunnableWaffleError takes care of this
@@ -612,17 +743,14 @@ public class Main extends Activity implements LocationListener {
 			return;
 		}
 
-		if (rapi.isConnectedToInternet()) {
-			boolean success = rapi.login(mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
-			if (!success) {
-				w.make("Experiencing wifi difficulties - check your wifi signal.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-			}
+		if (api.hasConnectivity()) {
+			new LoginTask().execute();
+			
+
 		}
 	}
 
-	// initialize location listener to get a point
+	// initialize location listener to get a pair of coordinates
 	private void initLocManager() {
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -631,8 +759,7 @@ public class Main extends Activity implements LocationListener {
 		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				&& mRoughLocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(c, true), 0, 0, Main.this);
@@ -648,13 +775,12 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		loc = new Location(mLocationManager.getBestProvider(c, true));
-		roughLoc = new Location(mRoughLocManager.getBestProvider(c, true));
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
+		
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
 
@@ -666,6 +792,7 @@ public class Main extends Activity implements LocationListener {
 		mTimer = null;
 	}
 
+	//no gps signal
 	private void waitingForGPS() {
 		mTimer = new Timer();
 		mTimer.scheduleAtFixedRate(new TimerTask() {
@@ -675,7 +802,8 @@ public class Main extends Activity implements LocationListener {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-
+						
+						Log.d("tag", "latitude ="+ loc.getLatitude());
 						if (loc.getLatitude() != 0)
 							latLong.setText("Lat: " + loc.getLatitude()
 									+ "\nLong: " + loc.getLongitude());
@@ -711,6 +839,23 @@ public class Main extends Activity implements LocationListener {
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy",
 				Locale.US);
 		return sdf.format(time);
+	}
+
+	// Attempts to login with current user information
+	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					mContext, mContext.getSharedPreferences("USER_INFO",
+							Context.MODE_PRIVATE));
+
+			boolean success = api.createSession(
+					mPrefs.getString("username", ""),
+					mPrefs.getString("password", ""));
+			return success;
+		}
+
 	}
 
 }

@@ -3,8 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
-    android:versionCode="14"
-    android:versionName="2.1.4" >
+    android:versionCode="15"
+    android:versionName="2.2" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -92,6 +92,16 @@
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
             android:name=".CarRampLoginActivity"
             android:label="Login to iSENSE"
             android:theme="@style/theme_dialog_white" />
@@ -114,6 +124,10 @@
         <activity
             android:name=".SaveModeDialog"
             android:label="Save Mode?"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected Data Sets"
             android:theme="@style/theme_dialog_white" />
     </application>
 

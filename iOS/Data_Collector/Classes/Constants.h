@@ -14,9 +14,9 @@
 #define DEFAULT_SAMPLE_INTERVAL      125
 
 // constants for dialogs
-#define MENU_EXPERIMENT               0
+#define MENU_PROJECT                  0
 #define MENU_LOGIN                    1
-#define EXPERIMENT_MANUAL_ENTRY       118
+#define PROJ_MANUAL                   118
 #define CLEAR_FIELDS_DIALOG           3
 #define MENU_UPLOAD                   4
 #define DESCRIPTION_AUTOMATIC         5
@@ -24,13 +24,13 @@
 
 // constants for manual dialog
 #define MANUAL_MENU_UPLOAD            0
-#define MANUAL_MENU_EXPERIMENT        1
+#define MANUAL_MENU_PROJECT           1
 #define MANUAL_MENU_LOGIN             2
 
 // options for action sheet
 #define OPTION_CANCELED                0
-#define OPTION_ENTER_EXPERIMENT_NUMBER 1
-#define OPTION_BROWSE_EXPERIMENTS      2
+#define OPTION_ENTER_PROJECT_NUMBER    1
+#define OPTION_BROWSE_PROJECTS         2
 #define OPTION_SCAN_QR_CODE            3
 
 // types of text field data
@@ -54,7 +54,8 @@
 #define UI_FIELDCONTENTS        1
 
 // manual scrollview oddity patches
-#define PORTRAIT_BOTTOM_CUT         30
+#define PORTRAIT_BOTTOM_CUT_IPAD    30
+#define PORTRAIT_BOTTOM_CUT_IPHONE  20
 #define LANDSCAPE_BOTTOM_CUT_IPAD   1
 #define LANDSCAPE_BOTTOM_CUT_IPHONE 80
 #define TOP_ELEMENT_ADJUSTMENT      30
@@ -77,10 +78,6 @@
 #define TAG_DEFAULT 1000
 #define TAG_TEXT    5000
 #define TAG_NUMERIC 6000
-
-// tags for the UITextFields in Automatic
-#define TAG_AUTOMATIC_SESSION_TITLE   9001
-#define TAG_AUTOMATIC_SAMPLE_INTERVAL 9002
 
 // constants for moving Automatic's view up when keyboard present
 #define KEY_OFFSET_SESSION_LAND_IPHONE  75
@@ -107,7 +104,7 @@
 #define MAX_DATA_POINTS (1000/S_INTERVAL) * TEST_LENGTH
 
 // step one setup text field tags
-#define TAG_STEP1_SESSION_NAME      1000
+#define TAG_STEP1_DATA_SET_NAME     1000
 #define TAG_STEP1_SAMPLE_INTERVAL   1001
 #define TAG_STEP1_TEST_LENGTH       1002
 
@@ -120,16 +117,16 @@
 #define QUEUE_DELETE        0
 #define QUEUE_RENAME        1
 #define QUEUE_CHANGE_DESC   2
-#define QUEUE_SELECT_EXP    3
+#define QUEUE_SELECT_PROJ   3
 #define QUEUE_LOGIN         500
 
 // other character restriction text field tags
 #define TAG_QUEUE_RENAME    700
 #define TAG_QUEUE_DESC      701
-#define TAG_QUEUE_EXP       702
-#define TAG_STEPONE_EXP     703
+#define TAG_QUEUE_PROJ      702
+#define TAG_STEPONE_PROJ    703
 #define TAG_AUTO_LOGIN      704
 #define TAG_MANUAL_LOGIN    705
-#define TAG_MANUAL_EXP      706
+#define TAG_MANUAL_PROJ     706
 
 #endif

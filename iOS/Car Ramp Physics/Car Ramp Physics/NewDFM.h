@@ -17,13 +17,15 @@
     bool enabledFields[22];
 }
 
-- (NSMutableArray *) getFieldOrderOfProject:(int)projID;
+- (void) getFieldOrderOfProject:(int)projID;
 - (NSMutableDictionary *) putDataFromFields:(Fields *)f;
 - (NSMutableArray *) putDataForNoProjectIDFromFields:(Fields *)f;
 - (void) setEnabledField:(bool)value atIndex:(int)index;
 - (bool) enabledFieldAtIndex:(int)index;
 - (void) addAllFieldsToOrder;
 - (id) reOrderData:(NSMutableArray*)oldData forProjectID:(int)projID;
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
+- (void) setOrder: (NSMutableArray *) newOrder;
 
 @property (nonatomic, retain) NSMutableArray *order;
 @property (nonatomic, retain) NSMutableArray *data;
