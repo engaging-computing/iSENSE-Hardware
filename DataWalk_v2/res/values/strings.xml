@@ -3,11 +3,11 @@
 
     <string name="app_name">iSENSE Data Walk</string>
     <string name="display_name">iS Data Walk</string>
-    <string name="aboutApp">\n\nThis app enables you to record your GPS location continuously while walking outdoors and allows you to share that data online. When the app is activated, your GPS coordinates are saved once every 10 seconds and are then shared on the iSENSE web system (isenseproject.org), where they can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\nIn order to begin recording and sharing data, press and hold the button that says \"Hold to Start.\" This allows data to be recorded and saved every 10 seconds (provided that the GPS on your mobile device has a satellite fix). When you are ready to stop recording, press and hold the button that says \"Hold to Stop.\" While data is being recorded, you will not be permitted to exit the app by pressing the Back button. However, pressing the Home button will interrupt the recording. When the app resumes, a dialog box will appear indicating that data recording was halted.</string>
-    <string name="HelpText">\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Create a new project.\n\n5. Fill out the appropriate fields in Description.\n\n6. When formatting the project, the fields should be as follows: Accel-Magnitude (m/s^2), Latitude (deg), Longitude (deg), time (ms) in that order.\n\n7. Next click Create Project.\n\n8. Click on where it says here to get started. This will take you to your project and give you a QR code. Your project number will be the number at the end of the url.\n\n9. Remember to change your project code in the app to match your project number!\n</string>
+    <string name="aboutApp">\n\nThis app enables you to record your Velocity, Total Distance and GPS location while walking outdoors and allows you to share that data online. When the app is activated, your GPS coordinates are saved once every 10 seconds and are then shared on the iSENSE web system (isenseproject.org), where they can be viewed publicly. The recording interval can be changed via the menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\nIn order to begin recording and sharing data, press and hold the button that says \"Hold to Start.\" This allows data to be recorded and saved (provided that the GPS on your mobile device has a satellite fix). When you are ready to stop recording, press and hold the button that says \"Hold to Stop.\" While data is being recorded, you will not be permitted to exit the app by pressing the Back button. However, pressing the Home button will interrupt the recording. When the app resumes, a dialog box will appear indicating that data recording was halted.</string>
+    <string name="HelpText">\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows: Time (ms), Accel-Magnitude (m/s^2), Velocity (m/s), Total Distance (m), Latitude (deg) and Longitude (deg) in that order.\n\n8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n</string>
     <string name="recordingInterval">Recording Interval</string>
     <string name="user_name">Username:</string>
-    <string name="password">Password</string>
+    <string name="password">Password:</string>
     <string name="login">Login</string>
     <string name="enableGPS">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
     <string name="Rate_Is">Set Recording Interval</string>
@@ -22,7 +22,7 @@
     <string name="lastInitialLabel"> Last Initial: </string>
     <string name="startPrompt">Hold to Start</string>
     <string name="logoDescription">iSense Logo</string>
-    <string name="stopPrompt">Hold to Stop</string>
+    <string name="stopPrompt">Recording Data. Hold to Stop</string>
     <string name="timeElapsed">Time Elapsed:   seconds</string>
     <string name="noLocation0">Latitude: waiting for GPS\nLongitude: waiting for GPS</string>
     <string name="noLocation1">Latitude: waiting for GPS .\nLongitude: waiting for GPS .</string>
@@ -41,7 +41,7 @@
     <string name="NameChange">Change Name </string>
     <string name="Exp_Num_Title">Select Project</string>
     <string name="About_Title">About</string>
-    <string name="Help">\n\nThis app can record data regardless of internet or wifi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
+    <string name="Help">\n\nThis app can record data regardless of Internet or Wifi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
     <string name="ResetDefaults_Title">Reset Settings</string>
 
 </resources>
