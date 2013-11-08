@@ -19,7 +19,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -46,7 +45,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.pendulum.R;
+import edu.uml.cs.isense.credentials.Login;
 //import org.opencv.samples.colorblobdetect.ColorBlobDetectionActivity;
 // iSENSE data upload
 
@@ -482,7 +481,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				if (firstName.length() == 0 || lastInitial.length() == 0) {
 					// Boolean dontPromptMeTwice = true;
 					startActivityForResult(
-							new Intent(mContext, LoginActivity.class),
+							new Intent(mContext, Login.class),
 							ENTERNAME_REQUEST);
 				}
 				

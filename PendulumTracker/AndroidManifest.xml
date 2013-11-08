@@ -43,10 +43,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/promptForName"
-            android:theme="@android:style/Theme.Holo.Dialog" >
-        </activity>
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.LoginError"
+            android:label="@string/login_error_prompt"
+            android:theme="@style/theme_dialog_white" />
     </application>
 
     <!--
