@@ -25,8 +25,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -255,7 +255,7 @@ public class ProjectCreate extends Activity {
 	private void needLogin() {
 		w.make("Please login to iSENSE first", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 		
-		Intent iLogin = new Intent(mContext, LoginActivity.class);
+		Intent iLogin = new Intent(mContext, Login.class);
 		startActivityForResult(iLogin, LOGIN_REQUESTED);
 	}
 	
@@ -417,7 +417,7 @@ public class ProjectCreate extends Activity {
 
 				} else if (returnCode.equals("Failed")) {
 
-					Intent i = new Intent(mContext, LoginActivity.class);
+					Intent i = new Intent(mContext, Login.class);
 					startActivityForResult(i, LOGIN_REQUESTED);
 				} else {
 					// should never get here

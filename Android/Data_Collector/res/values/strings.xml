@@ -9,8 +9,6 @@
     <string name="back">Back</string>
     <string name="upload">Upload</string>
     <string name="media_desc">Select one of the following options:</string>
-    <string name="username">Username:&#160;&#160;</string>
-    <string name="password">Password:&#160;&#160;&#160;</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gpsString">Enabling GPS satellite communication is recommended for this application.  Would you like to enable GPS?</string>
@@ -24,7 +22,6 @@
     <string name="retry">Try Again</string>
     <string name="sample_interval">Sample Interval (ms)</string>
     <string name="sample_default">Default Value = 50 ms</string>
-    <string name="login">Login</string>
     <string name="menu_login">Login</string>
     <string name="menu_media">Media</string>
     <string name="menu_sync">Sync Time</string>

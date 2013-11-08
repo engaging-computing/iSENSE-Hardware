@@ -3,7 +3,6 @@
 
     <string name="app_name">iSENSE Car Ramp Physics</string>
     <string name="display_name">iS Car Ramp Physics</string>
-    <string name="promptForName">Please Enter Your Name</string>
     <string name="about_app">
         Enter your first name and last initial so that you can later identify your data set on iSENSE.
         
