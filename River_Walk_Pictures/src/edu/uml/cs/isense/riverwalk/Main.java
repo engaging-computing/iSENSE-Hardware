@@ -2,8 +2,6 @@ package edu.uml.cs.isense.riverwalk;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Timer;
@@ -22,7 +20,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.PorterDuff;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -70,7 +67,6 @@ public class Main extends Activity implements LocationListener {
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int CONTINUOUS_REQUESTED = 107;
 	
-	
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
 	private boolean recording = false;
@@ -114,6 +110,7 @@ public class Main extends Activity implements LocationListener {
 	private Fields f;
 	
 	public static final int MEDIA_TYPE_IMAGE = 1;
+	private Camera mCamera;
 	
 	
 	@Override
@@ -153,8 +150,6 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		takePicture = (Button) findViewById(R.id.takePicture);
-		takePicture.getBackground().setColorFilter(0xFF99CCFF,
-				PorterDuff.Mode.MULTIPLY);
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -202,12 +197,11 @@ public class Main extends Activity implements LocationListener {
 				} else if( continuous == true) { //if continuous == true
 					if (recording == false){
 						takePicture.setBackgroundColor(0xFF00FF00);
-						takePicture.setText("Recording Push to Stop");
+						takePicture.setTextColor(0xFF000000);
+						takePicture.setText("Recording Press to Stop");
 						recording = true;
 						new continuouslytakephotos().execute();
 					} else {
-						Main.takePicture.setText(R.string.takePicContinuous);
-						Main.takePicture.setBackgroundColor(R.drawable.button_rsense);
 						recording = false;
 					}
 				}
@@ -225,7 +219,7 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
         super.onPreExecute();
 
         //this method will be running on UI thread
-        
+        OrientationManager.disableRotation(Main.this);	
     }
     @Override
     protected Void doInBackground(Void... params) {
@@ -237,12 +231,17 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 			String state = Environment.getExternalStorageState();
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
 				
-			Camera mCamera = null;	
-		    try {
-		        mCamera = Camera.open(); // attempt to get a Camera instance
-		    }
-		    catch (Exception e){
-		        // Camera is not available (in use or does not exist)
+			int cameraId = 0;	
+				
+			mCamera = null;	
+//		    try {
+//		    	mCamera = Camera.open(cameraId); // attempt to get a Camera instance
+//		    }
+//		    catch (Exception e){
+//		        // Camera is not available (in use or does not exist)
+//		    	e.printStackTrace();
+			if (false == safeCameraOpen(cameraId)){ //run function to open camera 
+		    	return null;						//if function does not open camera return null
 		    }
 		    
 	    	ContentValues values = new ContentValues();
@@ -251,14 +250,15 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 					values);
 			
-			OrientationManager.disableRotation(Main.this);	   
+			   
 		    mCamera.takePicture(null, null, mPicture);	//takes a picture
 
-			mCamera.release();	//release camera so other applications can use it
+		    mCamera.release();	//release camera so other applications can use it
 			
 			} else {
-				w.make("Cannot write to external storage.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+//				w.make("Cannot write to external storage.",
+//						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				//TODO
 				return null;
 			}
 
@@ -275,11 +275,37 @@ private class continuouslytakephotos extends AsyncTask<Void, Void, Void>
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-
+        		Main.takePicture.setText(R.string.takePicContinuous);
+        		Main.takePicture.setTextColor(0xFF0066FF);
+				Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
+				
+				recording = false;
+				OrientationManager.enableRotation(Main.this);	
         //this method will be running on UI thread
 
     }
 }
+
+private boolean safeCameraOpen(int id) {
+    boolean qOpened = false;
+  
+    try {
+    	if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
+    	
+        mCamera = Camera.open(id);
+        qOpened = (mCamera != null);
+    } catch (Exception e) {
+        Log.e(getString(R.string.app_name), "failed to open Camera");
+        e.printStackTrace();
+    }
+
+    return qOpened;    
+}
+
+
 
 private PictureCallback mPicture = new PictureCallback() {
 
@@ -297,7 +323,38 @@ private PictureCallback mPicture = new PictureCallback() {
     }
 };
 
+/** Create a File for saving an image or video */
+private static File getOutputMediaFile(int type){
+    // To be safe, you should check that the SDCard is mounted
+    // using Environment.getExternalStorageState() before doing this.
 
+    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+              Environment.DIRECTORY_PICTURES), "MyCameraApp");
+    // This location works best if you want the created images to be shared
+    // between applications and persist after your app has been uninstalled.
+
+    // Create the storage directory if it does not exist
+    if (! mediaStorageDir.exists()){
+        if (! mediaStorageDir.mkdirs()){
+            Log.d("MyCameraApp", "failed to create directory");
+            return null;
+        }
+    }
+    
+    // Create a media file name
+    File mediaFile;
+    if (type == MEDIA_TYPE_IMAGE){
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+        "IMG_"+ ".jpg");
+//    } else if(type == MEDIA_TYPE_VIDEO) {
+//        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+//        "VID_"+ timeStamp + ".mp4");
+    } else {
+        return null;
+    }
+
+    return mediaFile;
+}
     
 	// double tap back button to exit
 	@Override
@@ -723,7 +780,7 @@ private PictureCallback mPicture = new PictureCallback() {
 	@Override
 	protected void onStop() {
 		super.onStop();
-
+		
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
 
