@@ -14,6 +14,7 @@
 
 @interface WelcomeViewController : UIViewController <UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
     API *api;
+    int projNum;
 }
 
 // button click methods

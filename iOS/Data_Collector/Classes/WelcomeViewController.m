@@ -59,6 +59,27 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    
+    NSLog(@"P: %d", projNum);
+
+    if (projNum > 0) {
+        SelectModeViewController *smvc = [[SelectModeViewController alloc] init];
+        smvc.title = @"Select Mode";
+
+        NSMutableArray *controllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+        [controllers addObject:smvc];
+            
+        [self.navigationController setViewControllers:controllers animated:YES];
+            
+    }
+
+    projNum = 0;
+    
+}
+
 - (void)didReceiveMemoryWarning {
     
     [super didReceiveMemoryWarning];
@@ -86,7 +107,7 @@
 }
 
 - (IBAction) selectProjLaterOnClick:(UIButton *)sender {
-    [self setGlobalProjAndEnableManual:-1 andEnable:FALSE];
+    [self setGlobalProjAndEnableManual:-1 andEnable:FALSE isFromBrowse:FALSE];
 }
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -112,6 +133,7 @@
             ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
             browseView.title = @"Browse Projects";
             browseView.delegate = self;
+            
             [self.navigationController pushViewController:browseView animated:YES];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
@@ -146,12 +168,12 @@
         
         if (buttonIndex != OPTION_CANCELED) {
             
-            NSString *projNum = [[actionSheet textFieldAtIndex:0] text];
+            NSString *projID = [[actionSheet textFieldAtIndex:0] text];
             
-            if ([projNum intValue] <= 0) {
+            if ([projID intValue] <= 0) {
                 [self.view makeWaffle:@"Invalid project #" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
             } else {
-                [self setGlobalProjAndEnableManual:[projNum intValue] andEnable:TRUE];
+                [self setGlobalProjAndEnableManual:[projID intValue] andEnable:TRUE isFromBrowse:FALSE];
             }
             
         }
@@ -160,16 +182,19 @@
 }
 
 - (void) projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+    
+    NSLog(@"returning from browse");
 
     if ([project intValue] <= 0) {
         [self.view makeWaffle:@"Invalid project #" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
     } else {
-        [self setGlobalProjAndEnableManual:[project intValue] andEnable:TRUE];
+        [self setGlobalProjAndEnableManual:[project intValue] andEnable:TRUE isFromBrowse:TRUE];
+        projNum = [project intValue];
     }
 
 }
 
-- (void) setGlobalProjAndEnableManual:(int)projID andEnable:(BOOL)enable {
+- (void) setGlobalProjAndEnableManual:(int)projID andEnable:(BOOL)enable isFromBrowse:(BOOL)ifb {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
@@ -181,10 +206,11 @@
     
     [prefs setBool:enable forKey:kENABLE_MANUAL];
     
-    SelectModeViewController *smvc = [[SelectModeViewController alloc] init];
-    smvc.title = @"Select Mode";
-    [self.navigationController pushViewController:smvc animated:YES];
-    
+    if (!ifb) {
+        SelectModeViewController *smvc = [[SelectModeViewController alloc] init];
+        smvc.title = @"Select Mode";
+        [self.navigationController pushViewController:smvc animated:YES];
+    }
 }
 
 

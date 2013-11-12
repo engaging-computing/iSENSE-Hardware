@@ -64,6 +64,12 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    
+}
+
 - (void)didReceiveMemoryWarning {
     
     [super didReceiveMemoryWarning];
