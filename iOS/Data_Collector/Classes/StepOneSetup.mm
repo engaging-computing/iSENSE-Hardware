@@ -243,7 +243,7 @@
                                          message:nil
                                         delegate:self
                                cancelButtonTitle:@"Cancel"
-                               otherButtonTitles:@"Enter Experiment #", @"Browse", @"Scan QR Code", nil];
+                               otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
     message.tag = MENU_PROJECT;
     [message show];
 }

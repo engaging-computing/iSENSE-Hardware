@@ -54,7 +54,14 @@
     [manualEntry.titleLabel setTextAlignment:UITextAlignmentCenter];
     
     // Do any additional setup after loading the view from its nib.
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
+    BOOL enableManual = [prefs boolForKey:kENABLE_MANUAL];
+    if (!enableManual) {
+        [manualEntry setEnabled:FALSE];
+        [manualEntry setAlpha:0.5f];
+    }
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -65,11 +72,15 @@
 }
 
 - (IBAction) dataCollectorOnClick:(UIButton *)sender {
-    
+    AutomaticViewController *autoView = [[AutomaticViewController alloc] init];
+    autoView.title = @"Automatic";
+    [self.navigationController pushViewController:autoView animated:YES];
 }
 
 - (IBAction) manualEntryOnClick:(UIButton *)sender {
-    
+    ManualViewController *manualViewController = [[ManualViewController alloc] init];
+	manualViewController.title = @"Manual";
+	[self.navigationController pushViewController:manualViewController animated:YES];
 }
 
 @end
