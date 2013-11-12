@@ -35,7 +35,7 @@ public class SelectMode extends Activity {
 	private static Context mContext;
 	private Waffle w;
 	private API api;
-	
+
 	private String tempFilepath = "";
 
 	public static final String ENABLE_MANUAL_AND_CSV = "enable_manual_and_csv";
@@ -90,8 +90,9 @@ public class SelectMode extends Activity {
 				startActivity(iME);
 			}
 		});
-		String manualEntryText = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
-				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires project)" + "</font>";
+		String manualEntryText = "<font COLOR=\"#0066FF\">"
+				+ "Manually Enter Data" + "</font>" + "<br/>"
+				+ "<font COLOR=\"#D9A414\">" + "(requires project)" + "</font>";
 		manualEntry.setText(Html.fromHtml(manualEntryText));
 
 		final Button csvUploader = (Button) findViewById(R.id.select_mode_csv_uploader);
@@ -102,8 +103,10 @@ public class SelectMode extends Activity {
 				startActivityForResult(iFileBrowse, UPLOAD_CSV_REQUESTED);
 			}
 		});
-		String csvUploaderText = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
-				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires project and Internet)" + "</font>";
+		String csvUploaderText = "<font COLOR=\"#0066FF\">"
+				+ "Upload a .csv File From My Device" + "</font>" + "<br/>"
+				+ "<font COLOR=\"#D9A414\">"
+				+ "(requires project and Internet)" + "</font>";
 		csvUploader.setText(Html.fromHtml(csvUploaderText));
 
 		// Determine if we should disable manual entry and .csv uploader
@@ -112,13 +115,16 @@ public class SelectMode extends Activity {
 			boolean en = extras.getBoolean(ENABLE_MANUAL_AND_CSV);
 			if (!en) {
 				manualEntry.setEnabled(false);
-				String m = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
-						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project)" + "</font>";
+				String m = "<font COLOR=\"#0066FF\">" + "Manually Enter Data"
+						+ "</font>" + "<br/>" + "<font COLOR=\"#B88804\">"
+						+ "(requires project)" + "</font>";
 				manualEntry.setText(Html.fromHtml(m));
-				
+
 				csvUploader.setEnabled(false);
-				String c = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
-						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project and Internet)" + "</font>";
+				String c = "<font COLOR=\"#0066FF\">"
+						+ "Upload a .csv File From My Device" + "</font>"
+						+ "<br/>" + "<font COLOR=\"#B88804\">"
+						+ "(requires project and Internet)" + "</font>";
 				csvUploader.setText(Html.fromHtml(c));
 			}
 		}
@@ -158,23 +164,17 @@ public class SelectMode extends Activity {
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				if (resultCode == RESULT_OK) {
-					String returnCode = data.getStringExtra("returnCode");
 
-					if (returnCode.equals("Success")) {
+				w.make("Login successful", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 
-						w.make("Login successful", Waffle.LENGTH_LONG,
-								Waffle.IMAGE_CHECK);
-
-						new UploadCSVTask().execute(tempFilepath);
-
-					} else if (returnCode.equals("Failed")) {
-						
-						Intent i = new Intent(mContext, Login.class);
-						startActivityForResult(i, LOGIN_REQUESTED);
-						
-					}
-				}
+				new UploadCSVTask().execute(tempFilepath);
+				
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+				
 			}
 		}
 	}
@@ -203,11 +203,17 @@ public class SelectMode extends Activity {
 
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					SelectMode.mContext,
-					SelectMode.mContext.getSharedPreferences("USER_INFO",
+					SelectMode.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			api.createSession(mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
+			api.createSession(
+					mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+							""),
+					mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							""));
 
 			publishProgress(100);
 			return null;
@@ -223,7 +229,7 @@ public class SelectMode extends Activity {
 			if (api.getCurrentUser() == null) {
 				tempFilepath = filepath;
 				w.make("Please log in", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
-				
+
 				Intent i = new Intent(mContext, Login.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
 			} else {

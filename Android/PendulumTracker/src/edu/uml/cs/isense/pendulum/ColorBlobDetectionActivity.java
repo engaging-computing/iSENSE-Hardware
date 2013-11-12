@@ -19,7 +19,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -46,7 +45,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
-//import org.opencv.example.colorblobdetect.R;
+import edu.uml.cs.isense.credentials.Login;
 //import org.opencv.samples.colorblobdetect.ColorBlobDetectionActivity;
 // iSENSE data upload
 
@@ -114,6 +113,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 	private CameraBridgeViewBase mOpenCvCameraView;
 	static boolean mDataCollectionEnabled = false;
+	static boolean mSessionCreated = false;
 	private boolean mDisplayStatus = false;
 
 	// start / stop icons
@@ -167,8 +167,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		mOpenCvCameraView.enableFpsMeter();
 		// mOpenCvCameraView.setMaxFrameSize(1280,720);
-		mOpenCvCameraView.setMaxFrameSize(640, 480);
-		//mOpenCvCameraView.setMaxFrameSize(320, 240);
+		//mOpenCvCameraView.setMaxFrameSize(640, 480); // debug!
+		mOpenCvCameraView.setMaxFrameSize(320, 240);
 		
 		// iSENSE network connectivity stuff
 		api = API.getInstance(mContext);
@@ -184,8 +184,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		
 		//Menu menu = (Menu) findViewById(R.layout.menu);
 		//menu.getItem(R.id.menu_start).setIcon(startIcon);
-
-		
+	
 		// Event handler
 		 mHandler = new Handler();
 		
@@ -303,9 +302,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 	// invoked when camera frame delivered
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) { // processFrame(VideoCapture
 																// vc)
-		boolean useGrey = false;
-		
-		boolean debug = true;
+		boolean useGrey = true; // debug = false;
+		boolean debug = false; // debug = true;
 		int contourSize = -1;
 		
 		if(useGrey)
@@ -477,6 +475,30 @@ public class ColorBlobDetectionActivity extends Activity implements
 */
 			// START experiment and data collection
 		case R.id.menu_start:
+			
+			if(this.mSessionCreated == false)
+			{
+				if (firstName.length() == 0 || lastInitial.length() == 0) {
+					// Boolean dontPromptMeTwice = true;
+					startActivityForResult(
+							new Intent(mContext, Login.class),
+							ENTERNAME_REQUEST);
+				}
+				
+				
+				// Need to create a Task for this!
+				//if(this.mSessionCreated == true)
+				//{	
+					// set STOP button and text
+					item.setIcon(startIcon);
+					item.setTitle(R.string.startCollection);
+				//}
+					
+				Toast.makeText(ColorBlobDetectionActivity.this,
+						"Remember to press 'Start Data Collection' to begin!", Toast.LENGTH_SHORT).show();
+					
+				return true;
+			}
 				
 			// START data collction
 			if(this.mDataCollectionEnabled == false)
@@ -484,13 +506,14 @@ public class ColorBlobDetectionActivity extends Activity implements
 				
 				// create session name with user first name and last initial
 				// if we are logged in
-				if (firstName.length() == 0 || lastInitial.length() == 0) {
+	/*			if (firstName.length() == 0 || lastInitial.length() == 0) {
 					// Boolean dontPromptMeTwice = true;
 					startActivityForResult(
 							new Intent(mContext, LoginActivity.class),
 							ENTERNAME_REQUEST);
 				}
 				
+	*/
 				// disable data collection before uploading data to iSENSE
 				this.mDataCollectionEnabled = true;
 				// set STOP button and text

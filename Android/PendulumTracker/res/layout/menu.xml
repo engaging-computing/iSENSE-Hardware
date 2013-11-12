@@ -6,8 +6,8 @@
          android:showAsAction="ifRoom|withText"/>
      <item 
          android:id="@+id/menu_start"
-         android:title="@string/startCollection" 
-         android:icon="@drawable/start_icon"
+         android:title="@string/startHere" 
+         android:icon="@drawable/smile_start_icon"
          android:showAsAction="ifRoom|withText"/>
      <!-- item 
          android:id="@+id/menu_upload"

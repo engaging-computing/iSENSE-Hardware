@@ -399,10 +399,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
+				DataCollector.mContext.getSharedPreferences(
+						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
-		if (!(mPrefs.getString("username", "").equals("")) && !inPausedState)
+		if (!(mPrefs.getString(
+				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				.equals(""))
+				&& !inPausedState)
 			login();
 
 		inPausedState = false;
@@ -635,24 +639,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String returnCode = data.getStringExtra("returnCode");
 
-				if (returnCode.equals("Success")) {
+				w.make("Login successful", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 
-					w.make("Login successful", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
-
-					if (manageUploadQueueAfterLogin) {
-						manageUploadQueueAfterLogin = false;
-						manageUploadQueue();
-					}
-
-				} else if (returnCode.equals("Failed")) {
-
-					Intent i = new Intent(mContext, Login.class);
-					startActivityForResult(i, LOGIN_REQUESTED);
-				} else {
-					// should never get here
+				if (manageUploadQueueAfterLogin) {
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
 				}
 
 			} else if (resultCode == RESULT_CANCELED) {
@@ -660,6 +653,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 					manageUploadQueueAfterLogin = false;
 					manageUploadQueue();
 				}
+			} else if (resultCode == Login.RESULT_ERROR) {
+
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+
 			}
 
 		} else if (requestCode == GPS_REQUESTED) {
@@ -863,12 +861,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected Boolean doInBackground(Void... params) {
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					DataCollector.mContext,
-					DataCollector.mContext.getSharedPreferences("USER_INFO",
+					DataCollector.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			boolean success = api.createSession(
-					mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
+			boolean success = api
+					.createSession(
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+									""),
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+									""));
 			return success;
 		}
 
@@ -1256,10 +1260,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Set all the login info
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
+				DataCollector.mContext.getSharedPreferences(
+						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
-		if (!(mPrefs.getString("username", "").equals("")))
+		if (!(mPrefs.getString(
+				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				.equals("")))
 			login();
 
 		// Add listener
@@ -1572,11 +1579,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 			public void onClick(View v) {
 
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						DataCollector.mContext, DataCollector.mContext
-								.getSharedPreferences("USER_INFO",
-										Context.MODE_PRIVATE));
+						DataCollector.mContext,
+						DataCollector.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+								Context.MODE_PRIVATE));
 
-				if ((mPrefs.getString("username", "").equals(""))) {
+				if ((mPrefs.getString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						"").equals(""))) {
 					if (api.hasConnectivity()) {
 						manageUploadQueueAfterLogin = true;
 						Intent iCanLogin = new Intent(mContext, CanLogin.class);

@@ -195,6 +195,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			}
 
 		} else {
+			SharedPreferences.Editor pEdit = projPrefs.edit();
+			pEdit.putString(PREFERENCES_PROJ_ID, projID).commit();
 			loadProjectData(projID);
 		}
 
@@ -579,27 +581,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-
+		
 		if (!uq.emptyQueue()) {
-			if (!api.hasConnectivity()) {
-				w.make("No internet connectivity found - can not upload data yet",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			} else {
-				if (api.getCurrentUser() == null) {
-					boolean success = false;
-					if (loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "").equals(""))
-						success = false;
-					else
-						success = api.createSession(
-								loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""),
-								loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, ""));
-
-					if (!success)
-						w.make("Can not find login credentials - please login again before uploading",
-								Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-				}
-			}
-
 			throughUploadButton = false;
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
 			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
@@ -607,7 +590,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else {
 			if (throughUploadButton) {
 				throughUploadButton = false;
-				w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+				w.make("There is no data to upload", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}

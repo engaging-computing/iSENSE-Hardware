@@ -36,29 +36,29 @@ public class ProjectCreate extends Activity {
 
 	public static Context mContext;
 	public static Waffle w;
-	
+
 	private API api;
-	
+
 	private Spinner fieldSpin;
 	private LinearLayout fieldScroll;
 	private ScrollView fieldScrollHolder;
 	private EditText projectName;
-	
+
 	private ArrayList<RProjectField> fields;
-	
+
 	private int newProjID;
 	public static final String NEW_PROJECT_ID = "new_proj_id";
-	
-	private static final int FIELD_TYPE_TIMESTAMP 		= 0;
-	private static final int FIELD_TYPE_NUMBER	  		= 1;
-	private static final int FIELD_TYPE_TEXT			= 2;
-	private static final int FIELD_TYPE_LOCATION		= 3;
-	
+
+	private static final int FIELD_TYPE_TIMESTAMP = 0;
+	private static final int FIELD_TYPE_NUMBER = 1;
+	private static final int FIELD_TYPE_TEXT = 2;
+	private static final int FIELD_TYPE_LOCATION = 3;
+
 	private static final int LOGIN_REQUESTED = 100;
 	private ProgressDialog dia;
-	
-	private int locationCount   = 0;
-	
+
+	private int locationCount = 0;
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +67,10 @@ public class ProjectCreate extends Activity {
 
 		mContext = this;
 		w = new Waffle(mContext);
-		
+
 		api = API.getInstance(mContext);
 		api.useDev(Welcome.useDev);
-		
+
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			ActionBar bar = getActionBar();
@@ -89,7 +89,7 @@ public class ProjectCreate extends Activity {
 				}
 			}
 		}
-		
+
 		projectName = (EditText) findViewById(R.id.project_create_name);
 
 		// Set listeners for the buttons
@@ -107,42 +107,48 @@ public class ProjectCreate extends Activity {
 			public void onClick(View v) {
 				// check to see if the project has a name
 				if (projectName.getText().toString().length() == 0) {
-					w.make("Please enter a new project name", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+					w.make("Please enter a new project name",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					projectName.setError("Enter a new project name");
 					return;
 				} else
 					projectName.setError(null);
-				
+
 				// check to see if the project has fields
 				if (fieldScroll.getChildCount() == 0) {
-					w.make("Enter some fields for your project", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+					w.make("Enter some fields for your project",
+							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				} else {
 					for (int i = 0; i < fieldScroll.getChildCount(); i++) {
 						View cell = fieldScroll.getChildAt(i);
-						EditText fieldName = (EditText) cell.findViewById(R.id.project_field_name);
+						EditText fieldName = (EditText) cell
+								.findViewById(R.id.project_field_name);
 						if (fieldName.getText().toString().length() == 0) {
-							w.make("Please a name for field #" + i + 1, Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+							int fieldNum = i + 1;
+							w.make("Please a name for field #" + fieldNum,
+									Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 							fieldName.setError("Enter a field name");
 							return;
 						} else
 							fieldName.setError(null);
-						
+
 					}
 				}
-				
-				// project and all fields have names - create the project after checking login status
+
+				// project and all fields have names - create the project after
+				// checking login status
 				createProjectAfterCheckingLogin();
 			}
 		});
-		
+
 		final Button addField = (Button) findViewById(R.id.project_create_add_field_button);
 		addField.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				int position = fieldSpin.getSelectedItemPosition();
-				
+
 				if (position == FIELD_TYPE_LOCATION)
 					if (locationCount == 0)
 						locationCount++;
@@ -151,59 +157,59 @@ public class ProjectCreate extends Activity {
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 						return;
 					}
-			
+
 				addFieldType(position);
 			}
-			
+
 		});
-		
-		fieldScrollHolder 	= (ScrollView) 		findViewById(R.id.project_create_fields_scroll);
-		fieldSpin 			= (Spinner) 		findViewById(R.id.project_create_fields_spinner);
-		fieldScroll 		= (LinearLayout) 	findViewById(R.id.project_create_fields_view);
+
+		fieldScrollHolder = (ScrollView) findViewById(R.id.project_create_fields_scroll);
+		fieldSpin = (Spinner) findViewById(R.id.project_create_fields_spinner);
+		fieldScroll = (LinearLayout) findViewById(R.id.project_create_fields_view);
 
 	}
-	
+
 	private void addFieldType(int tag) {
-		
-	    final View v = (tag == FIELD_TYPE_LOCATION) 
-	    		? View.inflate(mContext, R.layout.project_field_location, null) 
-	    		: View.inflate(mContext, R.layout.project_field, null);
-		
+
+		final View v = (tag == FIELD_TYPE_LOCATION) ? View.inflate(mContext,
+				R.layout.project_field_location, null) : View.inflate(mContext,
+				R.layout.project_field, null);
+
 		v.setTag(tag);
-		
+
 		EditText fieldName = (EditText) v.findViewById(R.id.project_field_name);
-		EditText units	   = (EditText) v.findViewById(R.id.project_field_units);
-		
+		EditText units = (EditText) v.findViewById(R.id.project_field_units);
+
 		if (tag != FIELD_TYPE_LOCATION) {
 			fieldName.setImeOptions(EditorInfo.IME_ACTION_DONE);
 			fieldName.setSingleLine(true);
 			units.setImeOptions(EditorInfo.IME_ACTION_DONE);
 			units.setSingleLine(true);
 		}
-		
-		switch(tag) {
+
+		switch (tag) {
 		case FIELD_TYPE_TIMESTAMP:
 			fieldName.setText("Timestamp");
 			units.setVisibility(View.INVISIBLE);
 			break;
-			
+
 		case FIELD_TYPE_NUMBER:
 			fieldName.setHint("number");
 			break;
-			
+
 		case FIELD_TYPE_TEXT:
 			fieldName.setHint("text");
 			units.setVisibility(View.INVISIBLE);
 			break;
-			
+
 		case FIELD_TYPE_LOCATION:
 			break;
-			
+
 		default:
 			break;
-		
+
 		}
-		
+
 		ImageView x = (ImageView) v.findViewById(R.id.project_field_x);
 		x.setOnClickListener(new OnClickListener() {
 			@Override
@@ -214,110 +220,114 @@ public class ProjectCreate extends Activity {
 				}
 			}
 		});
-		
+
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-			     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
 
 		layoutParams.setMargins(1, 1, 1, 1);
-		
+
 		fieldScroll.addView(v, layoutParams);
 		scrollDown();
 	}
-	
+
 	private void scrollDown() {
-	    Thread scrollThread = new Thread(){
-	        public void run(){
-	            try {
-	                sleep(200);
-	                ProjectCreate.this.runOnUiThread(new Runnable() {
-	                    public void run() {
-	                        fieldScrollHolder.fullScroll(View.FOCUS_DOWN);
-	                    }    
-	                });
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    };
-	    scrollThread.start();
+		Thread scrollThread = new Thread() {
+			public void run() {
+				try {
+					sleep(200);
+					ProjectCreate.this.runOnUiThread(new Runnable() {
+						public void run() {
+							fieldScrollHolder.fullScroll(View.FOCUS_DOWN);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		scrollThread.start();
 	}
-	
+
 	private void createProjectAfterCheckingLogin() {
-		
+
 		if (api.getCurrentUser() == null) {
 			new CheckLoginTask().execute();
 		} else {
 			createProject();
 		}
-		
+
 	}
-	
+
 	private void needLogin() {
-		w.make("Please login to iSENSE first", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
-		
+		w.make("Please login to iSENSE first", Waffle.LENGTH_SHORT,
+				Waffle.IMAGE_WARN);
+
 		Intent iLogin = new Intent(mContext, Login.class);
 		startActivityForResult(iLogin, LOGIN_REQUESTED);
 	}
-	
+
 	private void createProject() {
 		fields = new ArrayList<RProjectField>();
-		
+
 		for (int i = 0; i < fieldScroll.getChildCount(); i++) {
 			View child = fieldScroll.getChildAt(i);
 			RProjectField field = new RProjectField();
-			
-			EditText fieldName = (EditText) child.findViewById(R.id.project_field_name);
-			EditText units	   = (EditText) child.findViewById(R.id.project_field_units);
-			
+
+			EditText fieldName = (EditText) child
+					.findViewById(R.id.project_field_name);
+			EditText units = (EditText) child
+					.findViewById(R.id.project_field_units);
+
 			switch ((Integer) child.getTag()) {
 			case FIELD_TYPE_TIMESTAMP:
 				field.name = fieldName.getText().toString();
 				field.type = RProjectField.TYPE_TIMESTAMP;
 				fields.add(field);
-				
+
 				break;
-				
+
 			case FIELD_TYPE_NUMBER:
 				field.name = fieldName.getText().toString();
 				field.type = RProjectField.TYPE_NUMBER;
 				field.unit = units.getText().toString();
 				fields.add(field);
-				
+
 				break;
-				
+
 			case FIELD_TYPE_TEXT:
 				field.name = fieldName.getText().toString();
 				field.type = RProjectField.TYPE_TEXT;
 				fields.add(field);
-				
+
 				break;
-				
+
 			case FIELD_TYPE_LOCATION:
 				field.name = "Latitude";
 				field.type = RProjectField.TYPE_LAT;
 				field.unit = "deg";
 				fields.add(field);
-				
+
 				field = new RProjectField();
 				field.name = "Longitude";
 				field.type = RProjectField.TYPE_LON;
 				field.unit = "deg";
 				fields.add(field);
-				
+
 				break;
-				
+
 			default:
 				break;
 			}
 		}
-		
+
 		new CreateProjectTask().execute();
 	}
-	
+
 	private class CheckLoginTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean success = false;
-		
+
 		@Override
 		protected void onPreExecute() {
 
@@ -329,40 +339,47 @@ public class ProjectCreate extends Activity {
 			dia.setCancelable(false);
 			dia.show();
 		}
-		
+
 		@Override
 		protected Void doInBackground(Void... params) {
-			
+
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					ProjectCreate.mContext,
-					ProjectCreate.mContext.getSharedPreferences("USER_INFO",
+					ProjectCreate.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
-
-			success = api.createSession(
-					mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
 			
+			success = api
+					.createSession(
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+									""),
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+									""));
+
 			publishProgress(100);
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
-			
-			if (dia != null) dia.cancel();
+
+			if (dia != null)
+				dia.cancel();
 			OrientationManager.enableRotation(ProjectCreate.this);
-		
+
 			if (success) {
 				createProject();
 			} else {
 				needLogin();
 			}
-		
+
 		}
 	}
-	
+
 	private class CreateProjectTask extends AsyncTask<Void, Integer, Void> {
-		
+
 		@Override
 		protected void onPreExecute() {
 
@@ -374,56 +391,54 @@ public class ProjectCreate extends Activity {
 			dia.setCancelable(false);
 			dia.show();
 		}
-		
+
 		@Override
 		protected Void doInBackground(Void... params) {
-			newProjID = api.createProject(projectName.getText().toString(), fields); 
-			
+			newProjID = api.createProject(projectName.getText().toString(),
+					fields);
+
 			publishProgress(100);
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
-			if (dia != null) dia.cancel();
+			if (dia != null)
+				dia.cancel();
 			OrientationManager.enableRotation(ProjectCreate.this);
-			
+
 			if (newProjID != 0) {
-				
+
 				Intent iRet = new Intent();
 				iRet.putExtra(NEW_PROJECT_ID, newProjID);
 				setResult(RESULT_OK, iRet);
 				finish();
-				
+
 			} else
-				w.make("Project failed to create - please try again", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
-			
+				w.make("Project failed to create - please try again",
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String returnCode = data.getStringExtra("returnCode");
-				if (returnCode.equals("Success")) {
 
-					w.make("Login successful", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
+				w.make("Login successful", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 
-					createProject();
+				createProject();
 
-				} else if (returnCode.equals("Failed")) {
-
-					Intent i = new Intent(mContext, Login.class);
-					startActivityForResult(i, LOGIN_REQUESTED);
-				} else {
-					// should never get here
-				}
-
-			} 
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+				
+			}
 		}
 	}
 

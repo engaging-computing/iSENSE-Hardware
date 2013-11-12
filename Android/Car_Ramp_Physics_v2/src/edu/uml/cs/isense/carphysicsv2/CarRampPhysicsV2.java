@@ -58,15 +58,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.EnterName;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
-import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
@@ -108,7 +110,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	static String firstName = "";
 	static String lastInitial = "";
 
-	public static final int resultGotName = 1098;
+	public static final int RESULT_GOT_NAME = 1098;
 	public static final int UPLOAD_OK_REQUESTED = 90000;
 	public static final int LOGIN_STATUS_REQUESTED = 6005;
 	public static final int RECORDING_LENGTH_REQUESTED = 4009;
@@ -211,12 +213,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		// Save the default login info
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				CarRampPhysicsV2.mContext,
-				CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+				CarRampPhysicsV2.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
-		if (mPrefs.getString("username", "").equals("")) {
+		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "").equals("")) {
 			SharedPreferences.Editor mEdit = mPrefs.edit();
-			mEdit.putString("username", DEFAULT_USER).commit();
-			mEdit.putString("password", DEFAULT_USER).commit();
+			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USER).commit();
+			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_USER).commit();
 		}
 
 		dateString = "";
@@ -235,7 +237,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (!dontPromptMeTwice) {
 					startActivityForResult(
 							new Intent(mContext, EnterName.class),
-							resultGotName);
+							RESULT_GOT_NAME);
 				}
 			}
 		}
@@ -250,7 +252,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 		if (api.getCurrentUser() != null) {
 			loggedInAs.setText(getResources().getString(R.string.logged_in_as)
-					+ " " + mPrefs.getString("username", "") + ", Name: "
+					+ " " + mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "") + ", Name: "
 					+ firstName + " " + lastInitial);
 		} else {
 			loggedInAs.setText(getResources().getString(R.string.not_logged_in)
@@ -776,7 +778,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			return true;
 		case R.id.login:
 			startActivityForResult(
-					new Intent(this, CarRampLoginActivity.class),
+					new Intent(this, Login.class),
 					LOGIN_STATUS_REQUESTED);
 			return true;
 		case R.id.experiment_select:
@@ -792,7 +794,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			return true;
 		case R.id.changename:
 			startActivityForResult(new Intent(this, EnterName.class),
-					resultGotName);
+					RESULT_GOT_NAME);
 			return true;
 		case R.id.reset:
 			startActivityForResult(new Intent(this, ResetToDefaults.class),
@@ -991,13 +993,21 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		} else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+				
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						mContext,
+						mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+								Context.MODE_PRIVATE));
+				String loginName = mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						"");
+				
 				if (loggedInAs == null)
 					loggedInAs = (TextView) findViewById(R.id.loginStatus);
 				if (api.getCurrentUser() != null) {
 					loggedInAs.setText(getResources().getString(
 							R.string.logged_in_as)
 							+ " "
-							+ data.getStringExtra("username")
+							+ loginName
 							+ ", Name: " + firstName + " " + lastInitial);
 				} else {
 					loggedInAs.setText(getResources().getString(
@@ -1054,6 +1064,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
+				
+				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				startActivityForResult(new Intent(mContext, Login.class), LOGIN_STATUS_REQUESTED);
+				
 			}
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1072,25 +1089,41 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				editor.putInt("Interval", INTERVAL);
 				editor.commit();
 			}
-		} else if (reqCode == resultGotName) {
+		} else if (reqCode == RESULT_GOT_NAME) {
 			if (resultCode == RESULT_OK) {
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						CarRampPhysicsV2.mContext,
-						CarRampPhysicsV2.mContext.getSharedPreferences(
-								"USER_INFO", Context.MODE_PRIVATE));
+				
 				if (!inApp)
 					inApp = true;
-				if (api.getCurrentUser() != null) {
+
+				SharedPreferences namePrefs = getSharedPreferences(EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+				SharedPreferences loginPrefs = new ObscuredSharedPreferences(
+						CarRampPhysicsV2.mContext,
+						CarRampPhysicsV2.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
+				
+				if (namePrefs.getBoolean(EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME, true)) {
+					RPerson user = api.getCurrentUser();
+					
+					firstName = user.name;
+					lastInitial = "";
+					
 					loggedInAs.setText(getResources().getString(
 							R.string.logged_in_as)
 							+ " "
-							+ mPrefs.getString("username", "")
-							+ ", Name: " + firstName + " " + lastInitial);
+							+ loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+							+ ", Name: " + firstName);
+					
 				} else {
+					firstName = namePrefs.getString(EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME, "");
+					lastInitial = namePrefs.getString(EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL, "");
+					
 					loggedInAs.setText(getResources().getString(
-							R.string.not_logged_in)
+							R.string.logged_in_as)
+							+ " "
+							+ loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
 							+ ", Name: " + firstName + " " + lastInitial);
 				}
+				
 			} else {
 				if (!inApp)
 					finish();
@@ -1103,17 +1136,17 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						CarRampPhysicsV2.mContext,
 						CarRampPhysicsV2.mContext.getSharedPreferences(
-								"USER_INFO", Context.MODE_PRIVATE));
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
 				SharedPreferences.Editor mOSPEdit = mPrefs.edit();
-				mOSPEdit.putString("username", DEFAULT_USER).commit();
-				mOSPEdit.putString("password", DEFAULT_USER).commit();
+				mOSPEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USER).commit();
+				mOSPEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_USER).commit();
 
 				new OnCreateLoginTask().execute();
 				if (api.getCurrentUser() != null) {
 					loggedInAs.setText(getResources().getString(
 							R.string.logged_in_as)
 							+ " "
-							+ mPrefs.getString("username", "")
+							+ mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
 							+ ", Name: " + firstName + " " + lastInitial);
 				} else {
 					loggedInAs.setText(getResources().getString(
@@ -1570,10 +1603,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		protected Void doInBackground(Void... arg0) {
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					CarRampPhysicsV2.mContext,
-					CarRampPhysicsV2.mContext.getSharedPreferences("USER_INFO",
+					CarRampPhysicsV2.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
-			success = api.createSession(mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
+			success = api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""),
+					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, ""));
 
 			return null;
 		}
@@ -1600,9 +1633,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						CarRampPhysicsV2.mContext,
 						CarRampPhysicsV2.mContext.getSharedPreferences(
-								"USER_INFO", Context.MODE_PRIVATE));
-				api.createSession(mPrefs.getString("username", ""),
-						mPrefs.getString("password", ""));
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
+				api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""),
+						mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, ""));
 			}
 			return null;
 		}
