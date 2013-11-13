@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.riverwalk;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -241,38 +242,54 @@ public class Main extends Activity implements LocationListener {
 
 					mCamera = null;
 					final int cameraId = 0;
-					if (false == safeCameraOpen(cameraId)) {
+					if (safeCameraOpen(cameraId) == false) {
 						Log.d("CameraMain", "Failed to open camera.");
 						Boolean failed = false;
 						return failed;
 					}// Open
 
+					Log.d("CameraMain", "Successfully opened camera.");
+					
 					runOnUiThread(new Runnable() {
 
 						@Override
 						public void run() {
 							SurfaceView dummy = new SurfaceView(mContext);
 							try {
-								mCamera.setPreviewDisplay(dummy.getHolder());
+							Holder mHolder 
+							mCamera.setPreviewDisplay(dummy.getHolder());
+							mCamera.startPreview();
+							
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							Log.d("CameraMain", "About to try to take a picture.");
+							mCamera.takePicture(null, null, mPicture); // takes a picture
+							Log.d("CameraMain", "Successfully captured picture.");
+							
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							mCamera.startPreview();
+							
+														
+							
+							Log.d("CameraMain", "Unlocking camera");
+							
+							mCamera.stopPreview();
+							mCamera.release(); // release camera so other
+												// applications can use it
+							
+							if (mCamera == null)
+								Log.d("CameraMain", "Already null");
 
 						}
 
 					});
-
-					mCamera.takePicture(null, null, mPicture); // takes
-																// a
-																// picture
-					Log.d("CameraMain", "Unlocking camera");
-					mCamera.release(); // release camera so other
-										// applications can use it
-					if (mCamera == null)
-						Log.d("CameraMain", "Already null");
-
+				
 				} else {
 					// TODO
 					return null;
@@ -287,6 +304,7 @@ public class Main extends Activity implements LocationListener {
 				}
 			}
 			if (mCamera != null)
+				mCamera.stopPreview();
 				mCamera.release();
 
 			return null;
@@ -310,11 +328,12 @@ public class Main extends Activity implements LocationListener {
 		boolean qOpened = false;
 		// TODO
 		try {
-			// if (mCamera != null) {
-			// mCamera.unlock();
-			// mCamera.release();
-			// mCamera = null;
-			// }
+			if (mCamera != null) {
+				mCamera.stopPreview();
+		        mCamera.release();
+		        mCamera = null;
+		    }
+			
 			Log.d("CameraMain",
 					"Number of cameras " + Camera.getNumberOfCameras());
 			Camera.CameraInfo c = new Camera.CameraInfo();
@@ -336,17 +355,21 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 
-			mCamera.release();
 			Log.d("CameraMain", "Do something");
+			FileOutputStream fos;
+            try {
+              fos = new FileOutputStream("test.jpeg");
+              fos.write(data);
+              fos.close();
+            }  catch (IOException e) {
+              //do something about it
+            }
 
-			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-
-			if (picture == null) {
-				// Log.d(TAG,
-				// "Error creating media file, check storage permissions: " +
-				// e.getMessage());
-				return;
-			}
+//			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+//
+//			if (picture == null) {
+//				return;
+//			}
 		}
 	};
 
@@ -826,6 +849,10 @@ public class Main extends Activity implements LocationListener {
 	protected void onStop() {
 		super.onStop();
 
+		if (mCamera != null)
+			mCamera.stopPreview();
+			mCamera.release();
+			
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
 
