@@ -198,11 +198,12 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    if (projID > 0) {
-        [prefs setInteger:projID forKey:kPROJECT_ID];
-        [prefs setInteger:projID forKey:kPROJECT_ID_DC];
-        [prefs setInteger:projID forKey:kPROJECT_ID_MANUAL];
-    }
+    if (projID <= 0)
+        projID = -1;
+        
+    [prefs setInteger:projID forKey:kPROJECT_ID];
+    [prefs setInteger:projID forKey:kPROJECT_ID_DC];
+    [prefs setInteger:projID forKey:kPROJECT_ID_MANUAL];
     
     [prefs setBool:enable forKey:kENABLE_MANUAL];
     
