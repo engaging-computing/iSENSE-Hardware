@@ -111,26 +111,42 @@
         rememberMe.on = false;
     }
     
-    NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
-    if ([defaultExp length] != 0) {
-        if ([defaultExp isEqualToString:@"-1"]) {
-            selectLater.on = true;
-            selectProj.enabled = NO;
-            selectProj.alpha = 0.5;
-        } else {
-            NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
-            [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
-            selectLater.on = false;
-        }
+    
+    int projID = [prefs integerForKey:kPROJECT_ID_DC];
+    if (projID > 0) {
+        // use global proj and set it to local
+        NSString *newProjLabel = [NSString stringWithFormat:@" (currently %d)", projID];
+        [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
+        selectLater.on = false;
+        [prefs setValue:[NSString stringWithFormat:@"%d", projID] forKey:[StringGrabber grabString:@"key_proj_automatic"]];
+    } else if (projID == -1) {
+        // global proj was "select a project later" from the Welcome screen
+        selectLater.on = true;
+        selectProj.enabled = NO;
+        selectProj.alpha = 0.5;
     } else {
-        if (defaultExp == NULL) {
-            selectLater.on = false;
-            selectProj.enabled = YES;
-            selectProj.alpha = 1.0;
+        // search for local proj
+        NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        if ([defaultExp length] != 0) {
+            if ([defaultExp isEqualToString:@"-1"]) {
+                selectLater.on = true;
+                selectProj.enabled = NO;
+                selectProj.alpha = 0.5;
+            } else {
+                NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
+                [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
+                selectLater.on = false;
+            }
         } else {
-            selectLater.on = true;
-            selectProj.enabled = NO;
-            selectProj.alpha = 0.5;
+            if (defaultExp == NULL) {
+                selectLater.on = false;
+                selectProj.enabled = YES;
+                selectProj.alpha = 1.0;
+            } else {
+                selectLater.on = true;
+                selectProj.enabled = NO;
+                selectProj.alpha = 0.5;
+            }
         }
     }
     
@@ -295,6 +311,7 @@
             browseView.title = @"Browse Projects";
             browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
+            
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
             if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
                 
@@ -335,6 +352,7 @@
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:projNum forKey:[StringGrabber grabString:@"key_proj_automatic"]];
+            [prefs setInteger:0 forKey:kPROJECT_ID_DC]; // reset the global proj
             
             [self rememberPrefs];
             
@@ -521,6 +539,7 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         NSString *projNumString = [NSString stringWithFormat:@"%d", projNumInteger];
         [prefs setValue:projNumString forKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        [prefs setInteger:0 forKey:kPROJECT_ID_DC]; // reset global proj
         
         displaySensorSelectFromBrowse = true;
     }
