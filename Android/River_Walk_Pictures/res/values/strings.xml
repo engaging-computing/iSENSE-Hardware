@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">River Walk</string>
+    <string name="app_name">iS River Walk</string>
     <string name="experiments_no_items">No projects were found.</string>
     <string name="app_name_experiments">Projects</string>
     <string name="prompt">Would you like to try uploading any of the following?</string>

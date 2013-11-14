@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
-    android:versionCode="15"
-    android:versionName="2.2" >
+    android:versionCode="16"
+    android:versionName="2.3" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -53,18 +53,8 @@
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
-            android:name=".EnterNameActivity"
-            android:label="Please Enter Your Name"
-            android:theme="@style/theme_dialog_white" >
-        </activity>
-        <activity
             android:name=".About"
             android:label="About"
-            android:theme="@style/theme_dialog_white" >
-        </activity>
-        <activity
-            android:name=".LoginIsense"
-            android:label="iSENSE Login"
             android:theme="@style/theme_dialog_white" >
         </activity>
         <activity
@@ -123,6 +113,21 @@
         <activity
             android:name="edu.uml.cs.isense.queue.NoInitialProject"
             android:label="No Associated Projects"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.EnterName"
+            android:label="@string/enter_name_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.LoginError"
+            android:label="@string/login_error_prompt"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
     </application>
