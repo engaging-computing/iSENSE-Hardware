@@ -57,6 +57,7 @@ import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
+//import android.app.ProgressDialog;
 
 //import android.app.ProgressDialog;
 
@@ -68,7 +69,7 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int CONTINUOUS_REQUESTED = 107;
-	
+
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
 	private boolean recording = false;
@@ -186,8 +187,9 @@ public class Main extends Activity implements LocationListener {
 						imageUri = getContentResolver().insert(
 								MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 								values);
-	
-						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+						Intent intent = new Intent(
+								MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
@@ -426,6 +428,34 @@ public class Main extends Activity implements LocationListener {
 	// menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+<<<<<<< HEAD
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.MENU_ITEM_UPLOAD:
+			manageUploadQueue();
+			return true;
+
+		case R.id.MENU_ITEM_BROWSE:
+			Intent iExperiment = new Intent(getApplicationContext(),
+					Setup.class);
+			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+			return true;
+
+		case R.id.MENU_ITEM_LOGIN:
+			startActivityForResult(new Intent(getApplicationContext(),
+					LoginActivity.class), LOGIN_REQUESTED);
+			return true;
+
+		case R.id.MENU_ITEM_CONTINUOUS:
+			Intent continuous = new Intent(getApplicationContext(),
+					Continuous.class);
+			startActivity(continuous);
+			return true;
+
+		default:
+			return false;
+		}
+=======
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.MENU_ITEM_UPLOAD:
@@ -452,6 +482,7 @@ public class Main extends Activity implements LocationListener {
 	        default:
 	            return false;
 	    }
+>>>>>>> upstream/master
 	}
 
 	@Override
