@@ -51,7 +51,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Session Name</string>
+						<string key="IBUIText">Data Set Name</string>
 						<object class="NSColor" key="IBUITextColor" id="903271561">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MCAwIDAAA</bytes>
