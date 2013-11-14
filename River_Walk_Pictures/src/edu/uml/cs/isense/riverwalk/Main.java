@@ -37,11 +37,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.Login;
@@ -51,6 +53,7 @@ import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.riverwalk.dialogs.CameraPreview;
 import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
@@ -113,6 +116,9 @@ public class Main extends Activity implements LocationListener {
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static Camera mCamera;
+	private SurfaceHolder mHolder;
+    private CameraPreview mPreview;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -253,11 +259,27 @@ public class Main extends Activity implements LocationListener {
 
 						@Override
 						public void run() {
-							SurfaceView dummy = new SurfaceView(mContext);
-							try {
-							Holder mHolder 
-							mCamera.setPreviewDisplay(dummy.getHolder());
-							mCamera.startPreview();
+//							SurfaceView dummy = new SurfaceView(mContext);
+//							
+//							try {
+//							mCamera.setPreviewDisplay(dummy.getHolder());
+//							mCamera.startPreview();
+//							} catch (IOException e) {
+//								// TODO Auto-generated catch block
+//								Log.d("CameraMain", "Error setting camera preview: " + e.getMessage());
+//							}
+//							
+//							if (dummy.getHolder() == null){
+//						          // preview surface does not exist
+//								Log.d("CameraMain", "dummy.getSurface() == null");
+//						          return;
+//						        }
+							
+							
+							mPreview = new CameraPreview(mContext, mCamera);
+					        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+					        preview.addView(mPreview);
+							
 							
 							try {
 								Thread.sleep(2000);
@@ -266,13 +288,16 @@ public class Main extends Activity implements LocationListener {
 								e.printStackTrace();
 							}
 							Log.d("CameraMain", "About to try to take a picture.");
-							mCamera.takePicture(null, null, mPicture); // takes a picture
-							Log.d("CameraMain", "Successfully captured picture.");
 							
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
+							try {
+							mCamera.takePicture(null, null, mPicture); // takes a picture
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
+
+							Log.d("CameraMain", "Successfully captured picture.");
+							
+							
 							
 														
 							
