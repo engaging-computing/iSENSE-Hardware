@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iSENSE_API/ProjectBrowseViewController.h>
 
-@interface WelcomeViewController : UIViewController {
-    
+#import "Constants.h"
+#import "SelectModeViewController.h"
+
+@interface WelcomeViewController : UIViewController <UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
+    API *api;
+    int projNum;
 }
 
 // button click methods
