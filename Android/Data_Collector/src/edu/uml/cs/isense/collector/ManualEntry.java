@@ -57,11 +57,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -126,10 +126,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 		setContentView(R.layout.manual_concept);
 
 		mContext = this;
-		
+
 		api = API.getInstance(mContext);
 		api.useDev(Welcome.useDev);
-		
+
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
 			ActionBar bar = getActionBar();
@@ -147,22 +147,22 @@ public class ManualEntry extends Activity implements OnClickListener,
 					title.setTextSize(24.0f);
 				}
 			}
-			
+
 			manualLogo = (ImageView) findViewById(R.id.manual_logo);
 			manualLogo.setVisibility(View.GONE);
 		}
-		
+
 		initLocations();
 
-		loginPrefs = new ObscuredSharedPreferences(Welcome.mContext,
-				Welcome.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
+		loginPrefs = new ObscuredSharedPreferences(getBaseContext(),
+				getBaseContext().getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+						MODE_PRIVATE));
 
 		projPrefs = getSharedPreferences("PROJID_MANUAL", 0);
 
 		loginLabel = (TextView) findViewById(R.id.loginLabel);
 		loginLabel.setText(getResources().getString(R.string.loggedInAs)
-				+ loginPrefs.getString("username", ""));
+				+ loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""));
 
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
 
@@ -181,7 +181,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		dataFieldEntryList = (LinearLayout) findViewById(R.id.field_view);
 
-		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+		SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ",
+				0);
 		String projID = globalProjPrefs.getString("project_id_manual", "");
 		if (projID.equals("")) {
 			projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
@@ -192,8 +193,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 				iProject.putExtra("from_where", "manual");
 				startActivityForResult(iProject, PROJECT_REQUESTED);
 			}
-			
+
 		} else {
+			SharedPreferences.Editor pEdit = projPrefs.edit();
+			pEdit.putString(PREFERENCES_PROJ_ID, projID).commit();
 			loadProjectData(projID);
 		}
 
@@ -208,12 +211,14 @@ public class ManualEntry extends Activity implements OnClickListener,
 		case R.id.manual_save:
 			String projID = projPrefs.getString(PREFERENCES_PROJ_ID, "");
 
-			// Clear the setError if the user has finally entered a data set name
+			// Clear the setError if the user has finally entered a data set
+			// name
 			if (dataSetName.getText().toString().length() != 0)
 				dataSetName.setError(null);
 
 			if (projID.equals("")) {
-				w.make("Invalid or no selected project.", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+				w.make("Invalid or no selected project.", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_X);
 			} else if (dataSetName.getText().toString().length() == 0) {
 				dataSetName.setError("Enter a data set name");
 			} else {
@@ -238,33 +243,31 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String returnCode = data.getStringExtra("returnCode");
 
-				if (returnCode.equals("Success")) {
-
-					String loginName = loginPrefs.getString("username", "");
-					if (loginName.length() >= 18)
-						loginName = loginName.substring(0, 18) + "...";
-					loginLabel.setText(getResources().getString(
-							R.string.loggedInAs)
-							+ loginName);
-					w.make("Login successful", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
-				} else if (returnCode.equals("Failed")) {
-					Intent i = new Intent(mContext, LoginActivity.class);
-					startActivityForResult(i, LOGIN_REQUESTED);
-				} else {
-					// should never get here
-				}
+				String loginName = loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "");
+				if (loginName.length() >= 18)
+					loginName = loginName.substring(0, 18) + "...";
+				loginLabel.setText(getResources()
+						.getString(R.string.loggedInAs) + loginName);
+				w.make("Login successful", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
+			} else if (resultCode == Login.RESULT_ERROR) {
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+			} else {
+				// do nothing (result was canceled)
 			}
+
 		} else if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				SharedPreferences mPrefs = getSharedPreferences("PROJID_MANUAL", 0);
+				SharedPreferences mPrefs = getSharedPreferences(
+						"PROJID_MANUAL", 0);
 				String projID = mPrefs.getString(PREFERENCES_PROJ_ID, "");
 				loadProjectData(projID);
-				
+
 				// set the new global to the new project
-				SharedPreferences globalProjPrefs = getSharedPreferences("GLOBAL_PROJ", 0);
+				SharedPreferences globalProjPrefs = getSharedPreferences(
+						"GLOBAL_PROJ", 0);
 				SharedPreferences.Editor gppe = globalProjPrefs.edit();
 				gppe.putString("project_id_manual", projID).commit();
 			} else {
@@ -299,55 +302,56 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private void fillDataFieldEntryList(int projID) {
-		
+
 		if (fieldOrder.size() == 0) {
 			if (api.hasConnectivity()) {
-				w.make("Project not found or has no fields", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				w.make("Project not found or has no fields",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Cannot retrieve project fields with no internet connection", Waffle.LENGTH_LONG, Waffle.IMAGE_X);	
+				w.make("Cannot retrieve project fields with no internet connection",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 			return;
 		}
-		
+
 		if (dataFieldEntryList != null)
 			dataFieldEntryList.removeAllViews();
 		else
 			return;
-		
-		projectLabel.setText(getResources().getString(
-				R.string.usingProject)
+
+		projectLabel.setText(getResources().getString(R.string.usingProject)
 				+ projID);
 
 		int tagIndex = 0;
-		
+
 		for (RProjectField projField : fieldOrder) {
-			
+
 			switch (projField.type) {
-			
+
 			case RProjectField.TYPE_LAT:
 				addDataField(projField, TYPE_LATITUDE, tagIndex);
 				break;
-				
+
 			case RProjectField.TYPE_LON:
 				addDataField(projField, TYPE_LONGITUDE, tagIndex);
 				break;
-				
+
 			case RProjectField.TYPE_TIMESTAMP:
 				addDataField(projField, TYPE_TIME, tagIndex);
 				break;
-				
+
 			case RProjectField.TYPE_TEXT:
 				addDataField(projField, TYPE_TEXT_FIELD, tagIndex);
 				break;
-				
+
 			default:
 				addDataField(projField, TYPE_NUMBER_FIELD, tagIndex);
 				break;
-			
+
 			}
-			
+
 			tagIndex++;
-			
+
 		}
 
 		checkLastImeOptions();
@@ -366,7 +370,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		fieldContents.setSingleLine(true);
 		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		fieldContents.setTag(tagIndex);
-		
+
 		if (type != TYPE_NUMBER_FIELD && type != TYPE_TEXT_FIELD) {
 			fieldContents.setText("Auto");
 			fieldContents.setEnabled(false);
@@ -377,7 +381,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			fieldContents.setFocusableInTouchMode(false);
 			fieldContents.setTextColor(Color.GRAY);
 		}
-		
+
 		if (type == TYPE_TEXT_FIELD) {
 			// keyboard to text
 			fieldContents.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -471,7 +475,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			return true;
 
 		case R.id.menu_item_manual_login:
-			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			Intent iLogin = new Intent(mContext, Login.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 
 			return true;
@@ -505,44 +509,45 @@ public class ManualEntry extends Activity implements OnClickListener,
 					.getChildAt(i).findViewById(R.id.manual_dataFieldName);
 			String contents = dataFieldContents.getText().toString()
 					.toLowerCase(Locale.US);
-			String name = dataFieldName.getText().toString().toLowerCase(Locale.US);
+			String name = dataFieldName.getText().toString()
+					.toLowerCase(Locale.US);
 			String id = "" + dataFieldContents.getTag();
-			
+
 			try {
-			
-			if (contents.contains("auto")) {
-				// Need to auto-fill the data
-				if (name.contains("latitude")) {
-					//row.put("" + loc.getLatitude());
-					row.put(id, "" + loc.getLatitude());
-				} else if (name.contains("longitude")) {
-					//row.put("" + loc.getLongitude());
-					row.put(id, "" + loc.getLongitude());
-				} else if (name.contains("time")) {
-					//row.put("" + System.currentTimeMillis());
-					row.put(id, "u " + System.currentTimeMillis());
+
+				if (contents.contains("auto")) {
+					// Need to auto-fill the data
+					if (name.contains("latitude")) {
+						// row.put("" + loc.getLatitude());
+						row.put(id, "" + loc.getLatitude());
+					} else if (name.contains("longitude")) {
+						// row.put("" + loc.getLongitude());
+						row.put(id, "" + loc.getLongitude());
+					} else if (name.contains("time")) {
+						// row.put("" + System.currentTimeMillis());
+						row.put(id, "u " + System.currentTimeMillis());
+					}
+					// } else {
+					// // Shouldn't have gotten here... we'll insert -1 as a
+					// // default
+					// row.put("-1");
+					// }
+				} else {
+					if (dataFieldContents.getText().toString().length() != 0)
+						// row.put(dataFieldContents.getText().toString());
+						row.put(id, dataFieldContents.getText().toString());
+					else
+						// put a space as a placeholder
+						// row.put(" ");
+						row.put(id, " ");
+
 				}
-//				} else {
-//					// Shouldn't have gotten here... we'll insert -1 as a
-//					// default
-//					row.put("-1");
-//				}
-			} else {
-				if (dataFieldContents.getText().toString().length() != 0)
-					//row.put(dataFieldContents.getText().toString());
-					row.put(id, dataFieldContents.getText().toString());
-				else
-					// put a space as a placeholder
-					//row.put(" ");
-					row.put(id, " ");
-						
-			}
-			
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		JSONArray data = new JSONArray();
 		data.put(row);
 
@@ -576,24 +581,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 	// Prompts the user to upload the rest of their content
 	// upon successful upload of data
 	private void manageUploadQueue() {
-
+		
 		if (!uq.emptyQueue()) {
-			if (!api.hasConnectivity())  {
-				w.make("No internet connectivity found - can not upload data yet", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			} else {
-				if (api.getCurrentUser() == null) {
-					boolean success = false;
-					if (loginPrefs.getString("username", "").equals(""))
-						success = false;
-					else
-						success = api.createSession(loginPrefs.getString("username", ""),
-								loginPrefs.getString("password", ""));
-
-					if (!success)
-						w.make("Can not find login credentials - please login again before uploading", Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-				} 
-			}
-			
 			throughUploadButton = false;
 			Intent i = new Intent().setClass(mContext, QueueLayout.class);
 			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
@@ -601,7 +590,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else {
 			if (throughUploadButton) {
 				throughUploadButton = false;
-				w.make("There is no data to upload.", Waffle.LENGTH_LONG,
+				w.make("There is no data to upload", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}
@@ -634,7 +623,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			SharedPreferences sp = getSharedPreferences("to_post_execute", 0);
 			SharedPreferences.Editor spe = sp.edit();
 			spe.putString("project_id", params[0]).commit();
-			
+
 			if (projID != -1) {
 				fieldOrder = api.getProjectFields(projID);
 			} else {
@@ -648,7 +637,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		protected void onPostExecute(Void result) {
 
 			if (!error) {
-				SharedPreferences sp = getSharedPreferences("to_post_execute", 0);
+				SharedPreferences sp = getSharedPreferences("to_post_execute",
+						0);
 				String projID = sp.getString("project_id", "-1");
 
 				try {
@@ -748,7 +738,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 	}
 
 	private String makeThisDatePretty(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy", Locale.US);
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS, MM/dd/yy",
+				Locale.US);
 		return sdf.format(time);
 	}
 
@@ -771,7 +762,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		@Override
 		protected Void doInBackground(Void... params) {
-	
+
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 			String name = (dataSetName.getText().toString().equals("")) ? "(No name provided)"
 					: dataSetName.getText().toString();
@@ -797,5 +788,5 @@ public class ManualEntry extends Activity implements OnClickListener,
 			super.onPostExecute(result);
 		}
 	}
-	
+
 }

@@ -121,34 +121,50 @@
         if (browsing == YES) {
             browsing = NO;
             [self cleanRDSData];
-            [self fillDataFieldEntryList:projNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:FALSE];
         } else {
             if (rds != nil && [rds doesHaveData])
-                [self fillDataFieldEntryList:projNum withData:[rds data]];
+                [self fillDataFieldEntryList:projNum withData:[rds data] andResetGlobal:FALSE];
             else
-                [self fillDataFieldEntryList:projNum withData:nil];
+                [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:FALSE];
         }
     } else {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int proj = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
+        int proj = [prefs integerForKey:kPROJECT_ID_MANUAL];
         if (proj > 0) {
+            // we have a global proj to use
             projNum = proj;
             projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
                                                                     with:[NSString stringWithFormat:@"%d", projNum]];
             if (rds != nil) rds.doesHaveData = true;
-            [self fillDataFieldEntryList:projNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:FALSE];
+        
         } else {
-            if (!initialProjDialogOpen) {
-                initialProjDialogOpen = true;
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose a project:"
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
-                message.tag = MANUAL_MENU_PROJECT;
-                [message show];
+        
+            proj = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
+            
+            if (proj > 0) {
+                // reset the global proj since we have a local one to use now
+                projNum = proj;
+                projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num"
+                                                                         with:[NSString stringWithFormat:@"%d", projNum]];
+                if (rds != nil) rds.doesHaveData = true;
+                [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
                 
-                projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:@"_"];
+            } else {
+                // no local or global proj found
+                if (!initialProjDialogOpen) {
+                    initialProjDialogOpen = true;
+                    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Choose a project:"
+                                                                      message:nil
+                                                                     delegate:self
+                                                            cancelButtonTitle:@"Cancel"
+                                                            otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                    message.tag = MANUAL_MENU_PROJECT;
+                    [message show];
+                    
+                    projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:@"_"];
+                }
             }
         }
     }
@@ -593,7 +609,7 @@
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setValue:projNumString forKey:[StringGrabber grabString:@"key_proj_manual"]];
             
-            [self fillDataFieldEntryList:projNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
         }
         
     } else if (actionSheet.tag == CLEAR_FIELDS_DIALOG) {
@@ -741,7 +757,10 @@
     
 }
 
-- (void) fillDataFieldEntryList:(int)eid withData:(NSMutableArray *)data {
+- (void) fillDataFieldEntryList:(int)projID withData:(NSMutableArray *)data andResetGlobal:(BOOL)reset {
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    if (reset) [prefs setInteger:-1 forKey:kPROJECT_ID_MANUAL];
     
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -751,7 +770,7 @@
     dispatch_queue_t queue = dispatch_queue_create("manual_upload_from_upload_function", NULL);
     dispatch_async(queue, ^{
         
-        NSArray *fieldOrder = [api getProjectFieldsWithId:eid];
+        NSArray *fieldOrder = [api getProjectFieldsWithId:projID];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -1015,12 +1034,12 @@
     if (browsing == YES) {
         browsing = NO;
         [self cleanRDSData];
-        [self fillDataFieldEntryList:projNum withData:nil];
+        [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
     } else {
         if (rds != nil && rds.doesHaveData)
-            [self fillDataFieldEntryList:projNum withData:[rds data]];
+            [self fillDataFieldEntryList:projNum withData:[rds data] andResetGlobal:TRUE];
         else
-            [self fillDataFieldEntryList:projNum withData:nil];
+            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
     }
     
     return YES;
@@ -1165,7 +1184,7 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setValue:[NSString stringWithFormat:@"%d", project.intValue] forKey:[StringGrabber grabString:@"key_proj_manual"]];
     
-    [self fillDataFieldEntryList:projNum withData:nil];
+    [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
 }
 
 @end

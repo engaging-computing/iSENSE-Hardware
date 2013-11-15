@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "Constants.h"
+#import "AutomaticViewController.h"
+#import "ManualViewController.h"
+
 @interface SelectModeViewController : UIViewController {
     
 }

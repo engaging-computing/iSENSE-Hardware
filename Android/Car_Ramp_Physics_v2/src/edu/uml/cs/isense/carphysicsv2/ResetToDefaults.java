@@ -14,7 +14,7 @@ public class ResetToDefaults extends Activity {
 		super.onCreate(b);
 		this.setContentView(R.layout.reset);
 		
-		setTitle("Are You Sure ?");
+		setTitle("Are You Sure?");
 		
 		reset = (Button) findViewById(R.id.reset);
 		noreset = (Button) findViewById(R.id.noreset);

@@ -44,7 +44,7 @@
 - (BOOL) containsAcceptedCharacters:(NSString *)mString;
 - (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
-- (void)   fillDataFieldEntryList:(int)eid withData:(NSMutableArray *) data;
+- (void)   fillDataFieldEntryList:(int)projID withData:(NSMutableArray *) data andResetGlobal:(BOOL)reset;
 - (int)    addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
 - (void)   hideKeyboard;
 - (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;

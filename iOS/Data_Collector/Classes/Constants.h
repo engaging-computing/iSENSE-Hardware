@@ -129,4 +129,10 @@
 #define TAG_MANUAL_LOGIN    705
 #define TAG_MANUAL_PROJ     706
 
+// global proj prefs
+#define kPROJECT_ID @"project_id"
+#define kPROJECT_ID_DC @"project_id_dc"
+#define kPROJECT_ID_MANUAL @"project_id_manual"
+#define kENABLE_MANUAL @"enable_manual"
+
 #endif

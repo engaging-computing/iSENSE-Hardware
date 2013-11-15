@@ -428,6 +428,34 @@ public class Main extends Activity implements LocationListener {
 	// menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+<<<<<<< HEAD
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.MENU_ITEM_UPLOAD:
+			manageUploadQueue();
+			return true;
+
+		case R.id.MENU_ITEM_BROWSE:
+			Intent iExperiment = new Intent(getApplicationContext(),
+					Setup.class);
+			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+			return true;
+
+		case R.id.MENU_ITEM_LOGIN:
+			startActivityForResult(new Intent(getApplicationContext(),
+					LoginActivity.class), LOGIN_REQUESTED);
+			return true;
+
+		case R.id.MENU_ITEM_CONTINUOUS:
+			Intent continuous = new Intent(getApplicationContext(),
+					Continuous.class);
+			startActivity(continuous);
+			return true;
+
+		default:
+			return false;
+		}
+=======
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.MENU_ITEM_UPLOAD:
@@ -454,6 +482,7 @@ public class Main extends Activity implements LocationListener {
 	        default:
 	            return false;
 	    }
+>>>>>>> upstream/master
 	}
 
 	@Override

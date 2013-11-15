@@ -44,7 +44,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
@@ -53,11 +52,11 @@ import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
+import edu.uml.cs.isense.riverwalk.dialogs.LoginActivity;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
-//import android.app.ProgressDialog;
 
 //import android.app.ProgressDialog;
 
@@ -428,32 +427,32 @@ public class Main extends Activity implements LocationListener {
 	// menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	        case R.id.MENU_ITEM_UPLOAD:
-	        	manageUploadQueue();
-	            return true;
-	            
-	        case R.id.MENU_ITEM_BROWSE:
-	        	Intent iExperiment = new Intent(getApplicationContext(),
-						Setup.class);
-				startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
-	            return true;
-	            
-	        case R.id.MENU_ITEM_LOGIN:
-	        	startActivityForResult(new Intent(getApplicationContext(),
-						Login.class), LOGIN_REQUESTED);
-	            return true;
-	            
-	        case R.id.MENU_ITEM_CONTINUOUS:
-	        	Intent continuous = new Intent(getApplicationContext(),
-						Continuous.class);
-				startActivity(continuous);
-	            return true;    
-	            
-	        default:
-	            return false;
-	    }
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.MENU_ITEM_UPLOAD:
+			manageUploadQueue();
+			return true;
+
+		case R.id.MENU_ITEM_BROWSE:
+			Intent iExperiment = new Intent(getApplicationContext(),
+					Setup.class);
+			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+			return true;
+
+		case R.id.MENU_ITEM_LOGIN:
+			startActivityForResult(new Intent(getApplicationContext(),
+					LoginActivity.class), LOGIN_REQUESTED);
+			return true;
+
+		case R.id.MENU_ITEM_CONTINUOUS:
+			Intent continuous = new Intent(getApplicationContext(),
+					Continuous.class);
+			startActivity(continuous);
+			return true;
+
+		default:
+			return false;
+		}
 	}
 
 	@Override
@@ -707,13 +706,10 @@ public class Main extends Activity implements LocationListener {
 			}
 		} else if (requestCode == LOGIN_REQUESTED) { // shows dialog to login
 			if (resultCode == Activity.RESULT_OK) {
-				
-				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-				
-			} else if (resultCode == Login.RESULT_ERROR) {
-				
-				startActivityForResult(new Intent(mContext, Login.class), LOGIN_REQUESTED);
-
+				SharedPreferences mPrefs = getSharedPreferences("LOGIN", 0);
+				SharedPreferences.Editor mEditor = mPrefs.edit();
+				mEditor.putBoolean("logged_in", true);
+				mEditor.commit();
 			}
 		} else if (requestCode == NO_GPS_REQUESTED) { // asks the user if they
 														// would like to enable
@@ -807,11 +803,11 @@ public class Main extends Activity implements LocationListener {
 	private void attemptLogin() {
 
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				mContext, getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+				mContext, getSharedPreferences("USER_INFO",
 						Context.MODE_PRIVATE));
 
-		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "").equals("")
-				&& mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, "").equals("")) {
+		if (mPrefs.getString("username", "").equals("")
+				&& mPrefs.getString("password", "").equals("")) {
 			return;
 		}
 
@@ -923,12 +919,12 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+					mContext, mContext.getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
 
 			boolean success = api.createSession(
-					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""),
-					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, ""));
+					mPrefs.getString("username", ""),
+					mPrefs.getString("password", ""));
 			return success;
 		}
 
