@@ -14,7 +14,7 @@
 
 @implementation Data_CollectorAppDelegate
 
-@synthesize window, navControl, about, guide, managedObjectContext, managedObjectModel, persistentStoreCoordinator, dataSaver;
+@synthesize window, navControl, managedObjectContext, managedObjectModel, persistentStoreCoordinator, dataSaver;
 
 
 #pragma mark -
@@ -164,22 +164,9 @@
 #pragma mark -
 #pragma mark Custom Functions
 
-- (IBAction) showAbout:(id)sender {
-	AboutView *aboutView = [[AboutView alloc] init];
-	aboutView.title = @"About";
-	[self.navControl pushViewController:aboutView animated:YES];
-}
-
-- (IBAction) showGuide:(id)sender {
-	GuideView *guideView = [[GuideView alloc] init];
-	guideView.title = @"Guide";
-	[self.navControl pushViewController:guideView animated:YES];
-}
-
 // Get the dataSets from the queue :D
 - (void) fetchDataSets {
     
-   
     // Fetch the old DataSets
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *dataSetEntity = [NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext];
