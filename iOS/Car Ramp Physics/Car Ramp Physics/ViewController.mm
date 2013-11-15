@@ -144,7 +144,7 @@
     timeOver = NO;
     setupDone = NO;
     
-    dfm = [[NewDFM alloc] init];
+    dfm = [[DataFieldManager alloc] init];
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
@@ -273,7 +273,7 @@
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
         [last setSecureTextEntry:NO];
-        [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        [change_name  textFieldAtIndex:0].placeholder = @"First Name";
         UITextField *first = [change_name textFieldAtIndex:0];
         first.delegate = self;
         first.tag = FIRST_NAME_FIELD;
@@ -290,8 +290,8 @@
             [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         }
         
-        recordLength = 10;
-        countdown = 10;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        recordLength = countdown = [defaults integerForKey:@"recordLength"];
         
         [self saveModeDialog];
         
@@ -480,8 +480,8 @@
             });
         }
     });
-    
-    [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
+    [dfm setFields:fieldsRow];
+    [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
     [menuButton setEnabled:NO];
         
     
@@ -629,7 +629,6 @@
     ProjectBrowseViewController *browse;
     browse = [[ProjectBrowseViewController alloc] init];
     browse.title = @"Browse for Projects";
-    browse.chosenProject = &expNum;
     [self.navigationController pushViewController:browse animated:YES];
     
 }
@@ -875,6 +874,9 @@
             recordLength = countdown = [lolcats[0] intValue];
             NSLog(@"Length is %d", recordLength);
             
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setInteger:12 forKey:@"recordLength"];
+            
         }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
@@ -885,24 +887,24 @@
         } else {
             UIAlertView *gettingFields = [self getDispatchDialogWithMessage:@"Preparing data for upload..."];
             [gettingFields show];
-            if ([API hasConnectivity]){
-                /** REORDER DATA HERE **/
-                [self CRPorderSetup];
-                dataToBeJSONed = [dfm reOrderData:dataToBeOrdered forProjectID:expNum];
-                NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
-            }
+            [dfm getProjectFieldOrder];
+            dataToBeJSONed = [DataFieldManager reOrderData:dataToBeOrdered forProjectID:expNum API:api andFieldOrder:[dfm getOrderList]];
             [gettingFields dismissWithClickedButtonIndex:nil animated:YES];
+            
+                        
             UIAlertView *dis = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
             [dis show];
-            dispatch_queue_t queue = dispatch_queue_create("upload", NULL);
-            dispatch_async(queue, ^{
-                [self uploadData: @""];
-            });
+                
+            NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
+            [self uploadData: @""];
             [dis dismissWithClickedButtonIndex:nil animated:YES];
+            
             if (!saveModeEnabled){
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
-                [alert show];
+                dispatch_async(dispatch_get_main_queue(), ^{ [alert show]; });
+                
             }
+             
         }
     } else if ([alertView.title isEqualToString:@"View data on iSENSE?"]) {
         
@@ -993,16 +995,6 @@
     }
 }
 
-- (void) CRPorderSetup {
-    NSMutableArray *order = [dfm order];
-    [order addObject:[FieldGrabber grabField:@"time"]];
-    [order addObject:[FieldGrabber grabField:@"accel_x"]];
-    [order addObject:[FieldGrabber grabField:@"accel_y"]];
-    [order addObject:[FieldGrabber grabField:@"accel_z"]];
-    [order addObject:[FieldGrabber grabField:@"accel_total"]];
-    [dfm setOrder:order];
-}
-
 - (void) changeName {
     
     [change_name dismissWithClickedButtonIndex:0 animated:YES];
@@ -1087,8 +1079,9 @@
     return message;
 }
 
-
-
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+    expNum = project.intValue;
+}
 
 
 @end
