@@ -25,27 +25,18 @@ below.
 
                         .APK FILES TO TEST
 
-beta_Uploader_v3_5.apk
+
 
 ---------------------------------------------------------------------
 
 			 WHAT TO LOOK FOR
 
-beta_Uploader_v3_5.apk:
-
-- added .csv file uploading ability
-- added ability to create a project
-- added field matching to Data Collector
-- redesigned whole Splash/intro UI
+Generic tests for all apps.  Try new logins and changing name.
 
 ---------------------------------------------------------------------
 
                              COMMENTS
 
-beta_Uploader_v3_5.apk:
 
-Mike S: everything looks fine for now.  Did a lot of extensive tests
-regarding logged in/not logged in, with/without internet, etc.  App
-seems to handle all cases correctly.
 
 ---------------------------------------------------------------------

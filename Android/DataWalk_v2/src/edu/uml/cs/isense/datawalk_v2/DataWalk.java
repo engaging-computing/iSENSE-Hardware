@@ -42,12 +42,14 @@ import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.EnterName;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
+import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -66,9 +68,6 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener, Listener {
 
-	/* Booleans */
-	private Boolean canChangeProjectNum; 
-	
 	/* UI Related Globals */
 	private TextView loggedInAs;
 	private TextView nameTxtBox;
@@ -78,7 +77,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView rateBox;
 	private TextView latLong;
 	private Button startStop;
-	
+
 	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
 	private Vibrator vibrator;
@@ -87,10 +86,9 @@ public class DataWalk extends Activity implements LocationListener,
 	private UploadQueue uq;
 	private SensorManager mSensorManager;
 	private Location loc;
-	//Rajia: Added Previous Location and Location Times
+	// Rajia: Added Previous Location and fistLoc
 	private Location prevLoc;
-	long locTime=0;
-	long prevLocTime=0;
+	private Location firstLoc;
 	private Timer recordTimer;
 	private Timer gpsTimer;
 	private Waffle w;
@@ -98,32 +96,28 @@ public class DataWalk extends Activity implements LocationListener,
 	/* iSENSE API Globals and Constants */
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String DEFAULT_PROJECT = "79";
-	public static final String USERNAME_KEY = "username";
-	public static final String PASSWORD_KEY = "password";
+	private final String DEFAULT_PROJECT = "156";
 
 	private String loginName = "";
 	private String loginPass = "";
-	private String projectID = "79";
+	private String projectID = "156";
 	private String projectURL = "";
 	private String dataSetName = "";
 	private String baseprojectURL = "http://isenseproject.org/projects/";
 	private int dataSetID = -1;
-	private String emptyProjectId = "79";
-	
+	private String emptyProjectId = "156";
 
 	/* Manage Work Flow Between Activities */
 	public static Context mContext;
 	public static String firstName = "";
 	public static String lastInitial = "";
-	
-	public static final String USER_PREFS_KEY = "USERID";
+
 	public static final String INTERVAL_PREFS_KEY = "INTERVALID";
 	public static final String INTERVAL_VALUE_KEY = "interval_val";
 
 	/* Manage Work Flow Within DataWalk.java */
 	private boolean running = false;
-	private boolean gpsWorking = false;
+	private boolean gpsWorking = true;
 	private boolean useMenu = true;
 
 	/* Recording Globals */
@@ -148,16 +142,17 @@ public class DataWalk extends Activity implements LocationListener,
 	private int dataPointCount = 0;
 	private int timerTick = 0;
 	private int waitingCounter = 0;
-	
-	//Rajia: 
-	float distance=0;
-	float velocity=0;
+
+	// Rajia:
+	float distance = 0;
+	float velocity = 0;
 	float deltaTime = 0;
 	boolean bFirstPoint = true;
-	
+	float totalDistance = 0;
+	float relDistance = 0;
+
 	/* Menu Items */
 
-	
 	@SuppressLint("NewApi")
 	/**
 	 * Called when the application is created for the first time.
@@ -175,21 +170,18 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Gets first name and last initial the first time
 		if (firstName.equals("") || lastInitial.equals("")) {
-			startActivityForResult(
-					new Intent(mContext, EnterNameActivity.class),
+			startActivityForResult(new Intent(mContext, EnterName.class),
 					NAME_REQUESTED);
 		}
 
 		// Set the initial default projectID in preferences
-		SharedPreferences mPrefs = getSharedPreferences(Setup.PREFS_ID,
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
 				Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
 
-		
 		// Initialize main UI elements
 		initialize();
-		
 
 		// Attempt to login with saved credentials, otherwise try default
 		// credentials
@@ -233,8 +225,9 @@ public class DataWalk extends Activity implements LocationListener,
 					// Get user's project #, or the default if there is none
 					// saved
 					SharedPreferences prefs = getSharedPreferences(
-							Setup.PREFS_ID, Context.MODE_PRIVATE);
-					projectID = prefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+							Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
+					projectID = prefs.getString(Setup.PROJECT_ID,
+							DEFAULT_PROJECT);
 
 					// Set the project URL for view data
 					projectURL = baseprojectURL + projectID + "/data_sets/";
@@ -249,12 +242,11 @@ public class DataWalk extends Activity implements LocationListener,
 						// Tell the user recording has stopped
 						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-						
-						
+
 					} else {
 						w.make("Data not saved because no points were recorded.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-						
+
 					}
 
 					// Re-enable rotation in the main activity
@@ -263,24 +255,26 @@ public class DataWalk extends Activity implements LocationListener,
 					// Handles when you press the button to START recording
 				} else {
 
-					 
 					// Recording so set menu flag to disabled
 					useMenu = false;
 					if (android.os.Build.VERSION.SDK_INT >= 11)
 						invalidateOptionsMenu();
 					running = true;
-					
-					
 
+					// TODO THE NAME AND LOGIN KEEP DISAPPEARING!!!!!!!!
 					// Reset the main UI text boxes
+					nameTxtBox
+							.setText("Name: " + firstName + " " + lastInitial);
 					pointsUploadedBox.setText("Points Recorded: " + "0");
 					timeElapsedBox.setText("Time Elapsed:" + " 0 seconds");
-
+					loggedInAs.setText(getResources().getString(
+							R.string.logged_in_as)
+							+ " " + loginName);
 					// Reset the number of data points and the current dataSet
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-					//TODO KEEP SCREEN ON
+					// TODO KEEP SCREEN ON
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -298,10 +292,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 			}
 
-			
-
 		});
-		
 
 	}// ends onCreate
 
@@ -315,7 +306,7 @@ public class DataWalk extends Activity implements LocationListener,
 		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
 		rateBox = (TextView) findViewById(R.id.RateBx);
 		latLong = (TextView) findViewById(R.id.myLocation);
-		
+
 		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
 		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
 	}
@@ -367,29 +358,28 @@ public class DataWalk extends Activity implements LocationListener,
 	public void onResume() {
 		super.onResume();
 
-			// We are going to do a series of tasks depending on whether or not we have connectivity
-				// if we have connectivity: user can change ProjectNumber, set it originally to the user's last choice, and automatically login
-				if (api.hasConnectivity()){
-					//Give the boolean canChangeProjectNum a value of either true or false depending on whether or not we are connected to the Internet
-					canChangeProjectNum = true;
-					if (android.os.Build.VERSION.SDK_INT >= 11)
-						invalidateOptionsMenu();
-					setProjectIdtoUsersChoice();
-					AutoLogin();
-					//projectID = projectId;
-					//loginNow = false; 
-				}else{
-					//TODO UNComment
-					canChangeProjectNum = false;
-					if (android.os.Build.VERSION.SDK_INT >= 11)
-						invalidateOptionsMenu();
-					//loginNow = true; 
-					setProjectIdEmpty();
-				}
-		
+		// We are going to do a series of tasks depending on whether or not we
+		// have connectivity
+		// if we have connectivity: user can change ProjectNumber, set it
+		// originally to the user's last choice, and automatically login
+		if (api.hasConnectivity()) {
+			if (android.os.Build.VERSION.SDK_INT >= 11)
+				invalidateOptionsMenu();
+			setProjectIdtoUsersChoice();
+			AutoLogin();
+			// projectID = projectId;
+			// loginNow = false;
+		} else {
+			if (android.os.Build.VERSION.SDK_INT >= 11)
+				invalidateOptionsMenu();
+			// loginNow = true;
+			setProjectIdEmpty();
+		}
+
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
-				Context.MODE_PRIVATE).getString(INTERVAL_VALUE_KEY, DEFAULT_INTERVAL + ""));
+				Context.MODE_PRIVATE).getString(INTERVAL_VALUE_KEY,
+				DEFAULT_INTERVAL + ""));
 
 		// Rebuild the upload queue
 		if (uq != null)
@@ -408,10 +398,12 @@ public class DataWalk extends Activity implements LocationListener,
 			waitingForGPS();
 
 		// Update the text in the text boxes on the main UI
-		if (projectID == "-1"){
-		expNumBox.setText("Project number cannot be choose until you are connected to the intenet." + projectID);
-		}else{
-		expNumBox.setText("Project Number: " + projectID);
+		if (projectID == "-1") {
+			expNumBox
+					.setText("Project number cannot be choose until you are connected to the intenet."
+							+ projectID);
+		} else {
+			expNumBox.setText("Project Number: " + projectID);
 		}
 		if (mInterval == 1000) {
 			rateBox.setText("Data Recorded Every: 1 second");
@@ -422,38 +414,41 @@ public class DataWalk extends Activity implements LocationListener,
 					+ " seconds");
 		}
 
-		
-				
 	}// ends onResume
+
 	/**
-	 * Logs the user in automatically 
+	 * Logs the user in automatically
 	 */
 	private void AutoLogin() {
 		// TODO Auto-generated method stub
-		
-	}
-	/**
-	 * Sets the project Id to the one the user specified. 
-	 */
-	private void setProjectIdtoUsersChoice() {
-		SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
-		projectID = prefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-		
+
 	}
 
 	/**
-	 * Handles Setting the Experiment number equal to -1 when you are not connected to the internet. 
+	 * Sets the project Id to the one the user specified.
 	 */
-	
+	private void setProjectIdtoUsersChoice() {
+		SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
+				Context.MODE_PRIVATE);
+		projectID = prefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+
+	}
+
+	/**
+	 * Handles Setting the Experiment number equal to -1 when you are not
+	 * connected to the internet.
+	 */
+
 	private void setProjectIdEmpty() {
 		// Auto-generated method stub
 		projectID = emptyProjectId;
 		// Set the project ID in preferences back to -1
-		SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
+		SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
+				Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = prefs.edit();
 		mEdit.putString(Setup.PROJECT_ID, emptyProjectId);
 		mEdit.commit();
-		
+
 	}
 
 	/**
@@ -479,7 +474,7 @@ public class DataWalk extends Activity implements LocationListener,
 			loc = location;
 			gpsWorking = true;
 		} else {
-			//Rajia will that fix the random velocity problem
+			// Rajia will that fix the random velocity problem
 			prevLoc.set(loc);
 			gpsWorking = false;
 		}
@@ -516,7 +511,7 @@ public class DataWalk extends Activity implements LocationListener,
 	public static int getApiLevel() {
 		return android.os.Build.VERSION.SDK_INT;
 	}
-	
+
 	/**
 	 * Called to create the menu from your menu.xml file.
 	 */
@@ -528,6 +523,7 @@ public class DataWalk extends Activity implements LocationListener,
 		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
+
 	/**
 	 * Turns the action bar menu on and off.
 	 * 
@@ -535,8 +531,7 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		
-		
+
 		if (!useMenu) {
 			menu.getItem(0).setEnabled(false);
 			menu.getItem(1).setEnabled(false);
@@ -546,10 +541,11 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(5).setEnabled(false);
 			menu.getItem(6).setEnabled(false);
 			menu.getItem(7).setEnabled(false);
-		} /*else if (canChangeProjectNum == false){
-			menu.getItem(3).setEnabled(false);
-			menu.getItem(4).setEnabled(false);
-		}*/
+		} /*
+		 * else if (canChangeProjectNum == false){
+		 * menu.getItem(3).setEnabled(false); menu.getItem(4).setEnabled(false);
+		 * }
+		 */
 		//
 		else {
 			menu.getItem(0).setEnabled(true);
@@ -560,7 +556,7 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(5).setEnabled(true);
 			menu.getItem(6).setEnabled(true);
 			menu.getItem(7).setEnabled(true);
-			
+
 		}
 		return true;
 	}
@@ -600,19 +596,19 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Check if GPS is enabled. If not, direct user to their settings.
 		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-					mLocationManager.requestLocationUpdates(
+			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(criteria, true), 0, 0,
 					DataWalk.this);
-		}
-		else {
+		} else {
 			Intent i = new Intent(DataWalk.this, NoGps.class);
 			startActivityForResult(i, DIALOG_NO_GPS);
 		}
 
 		// Save new GPS points in our loc variable
 		loc = new Location(mLocationManager.getBestProvider(criteria, true));
-		//Rajia 
+		// Rajia
 		prevLoc = loc;
+		firstLoc = loc;
 	}
 
 	/**
@@ -684,7 +680,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// GPS
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	
+
 		initLocationManager();
 		waitingForGPS();
 
@@ -715,30 +711,32 @@ public class DataWalk extends Activity implements LocationListener,
 			// If a new project has been selected, check to see if it is
 			// actually valid.
 		} else if (requestCode == PROJECT_REQUESTED) {
-			
-			
-			if (api.hasConnectivity()){
-			if (resultCode == RESULT_OK) {
-				setProjectIdtoUsersChoice();
 
-				if (api.hasConnectivity()) {
-					new GetProjectTask().execute();
+			if (api.hasConnectivity()) {
+				if (resultCode == RESULT_OK) {
+					setProjectIdtoUsersChoice();
+
+					if (api.hasConnectivity()) {
+						new GetProjectTask().execute();
+					}
+				} else if (resultCode == RESULT_CANCELED) {
+					// This is called when they hit cancel.
+					// In this situation, we want the UI to display the last
+					// project number the user entered.
+					projectID = DEFAULT_PROJECT;
+					// Set the project ID in preferences back to its default
+					// value
+					SharedPreferences prefs = getSharedPreferences(
+							Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
+					SharedPreferences.Editor mEdit = prefs.edit();
+					mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+					mEdit.commit();
 				}
-			}else if (resultCode == RESULT_CANCELED){
-				//This is called when they hit cancel. 
-				//In this situation, we want the UI to display the last project number the user entered. 
-				projectID = DEFAULT_PROJECT;
-				// Set the project ID in preferences back to its default value
-				SharedPreferences prefs = getSharedPreferences(Setup.PREFS_ID, Context.MODE_PRIVATE);
-				SharedPreferences.Editor mEdit = prefs.edit();
-				mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-				mEdit.commit();
-			}
 			} else {
-				//There is no Internet so menu is disabled, thus the user will never reach this point. 
-				
+				// There is no Internet so menu is disabled, thus the user will
+				// never reach this point.
+
 			}
-		
 
 			// If the user hit yes, bring them to GPS settings.
 		} else if (requestCode == DIALOG_NO_GPS) {
@@ -771,15 +769,40 @@ public class DataWalk extends Activity implements LocationListener,
 			// Return of EnterNameActivity
 		} else if (requestCode == NAME_REQUESTED) {
 
-			// the user entered a valid name so update the main UI
 			if (resultCode == RESULT_OK) {
-				nameTxtBox.setText("Name: " + firstName + " " + lastInitial);
+				SharedPreferences namePrefs = getSharedPreferences(
+						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+
+				if (namePrefs
+						.getBoolean(
+								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
+								true)) {
+					RPerson user = api.getCurrentUser();
+
+					firstName = user.name;
+					lastInitial = "";
+
+					nameTxtBox.setText(getResources().getString(R.string.name)
+							+ ": " + firstName);
+
+				} else {
+					firstName = namePrefs.getString(
+							EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME,
+							"");
+					lastInitial = namePrefs
+							.getString(
+									EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
+									"");
+
+					nameTxtBox.setText(getResources().getString(R.string.name)
+							+ ": " + firstName + " " + lastInitial);
+				}
+
 			} else {
-				// Calls the enter name activity if a name has not yet been
-				// entered.
 				if (firstName.equals("") || lastInitial.equals("")) {
-					startActivityForResult(new Intent(mContext,
-							EnterNameActivity.class), NAME_REQUESTED);
+					startActivityForResult(
+							new Intent(mContext, EnterName.class),
+							NAME_REQUESTED);
 					w.make("You must enter your name before starting to record data.",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 				}
@@ -800,7 +823,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Set the project ID in preferences back to its default value
 				SharedPreferences prefs = getSharedPreferences(
-						Setup.PREFS_ID, Context.MODE_PRIVATE);
+						Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
 				SharedPreferences.Editor mEdit = prefs.edit();
 				mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
 				mEdit.commit();
@@ -809,11 +832,16 @@ public class DataWalk extends Activity implements LocationListener,
 				// their default value
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						DataWalk.mContext,
-						DataWalk.mContext.getSharedPreferences(USER_PREFS_KEY,
+						DataWalk.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 								Context.MODE_PRIVATE));
 				SharedPreferences.Editor mEditor = mPrefs.edit();
-				mEditor.putString(DataWalk.USERNAME_KEY, loginName);
-				mEditor.putString(DataWalk.PASSWORD_KEY, loginPass);
+				mEditor.putString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						loginName);
+				mEditor.putString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+						loginPass);
 				mEditor.commit();
 
 				// Tell the user his settings are back to default
@@ -821,8 +849,8 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_SHORT);
 
 				// Launch the EnterNameActivity
-				startActivityForResult(new Intent(mContext,
-						EnterNameActivity.class), NAME_REQUESTED);
+				startActivityForResult(new Intent(mContext, EnterName.class),
+						NAME_REQUESTED);
 
 			}
 
@@ -833,25 +861,45 @@ public class DataWalk extends Activity implements LocationListener,
 				// Get the new login information from preferences
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						DataWalk.mContext,
-						DataWalk.mContext.getSharedPreferences(USER_PREFS_KEY,
+						DataWalk.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 								Context.MODE_PRIVATE));
-				loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
+				loginName = mPrefs.getString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 						DEFAULT_USERNAME);
-				loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
+				loginPass = mPrefs.getString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 						DEFAULT_USERNAME);
 
 				// Set the UI to the new login name
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as)
 						+ " " + loginName);
-			} else {
-				//A lo 
-				// Set the UI to say you aren't logged in 
-				//TODO What if you are still logged in as default?
-				//loggedInAs.setText(getResources().getString(R.string.logged_in_as + ""+ loginName));
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " " + loginName);
+
+				SharedPreferences namePrefs = getSharedPreferences(
+						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+
+				if (namePrefs
+						.getBoolean(
+								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
+								true)) {
+					RPerson user = api.getCurrentUser();
+
+					firstName = user.name;
+					lastInitial = "";
+
+					nameTxtBox.setText(getResources().getString(R.string.name)
+							+ ": " + firstName);
+
+				}
+
+				w.make("Login successful", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
+			} else if (resultCode == Login.RESULT_ERROR) {
+
+				startActivityForResult(new Intent(mContext, Login.class),
+						LOGIN_ISENSE_REQUESTED);
+
 			}
 		}
 
@@ -884,8 +932,6 @@ public class DataWalk extends Activity implements LocationListener,
 		}
 	}
 
-	
-
 	/**
 	 * Performs the code for whenever a menu button is clicked.
 	 */
@@ -907,14 +953,14 @@ public class DataWalk extends Activity implements LocationListener,
 
 		case R.id.login:
 			// Launch the dialog that allows users to login to iSENSE
-			startActivityForResult(new Intent(this, LoginIsense.class),
+			startActivityForResult(new Intent(this, Login.class),
 					LOGIN_ISENSE_REQUESTED);
 			return true;
 
 		case R.id.NameChange:
 			// Launch the dialog that allows users to enter his/her firstname
 			// and last initial
-			startActivityForResult(new Intent(this, EnterNameActivity.class),
+			startActivityForResult(new Intent(this, EnterName.class),
 					NAME_REQUESTED);
 			return true;
 
@@ -966,10 +1012,13 @@ public class DataWalk extends Activity implements LocationListener,
 			// Retrieve user credentials from shared preferences
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					DataWalk.mContext, DataWalk.mContext.getSharedPreferences(
-							USER_PREFS_KEY, Context.MODE_PRIVATE));
-			loginName = mPrefs.getString(DataWalk.USERNAME_KEY,
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+			loginName = mPrefs.getString(
+					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 					DEFAULT_USERNAME);
-			loginPass = mPrefs.getString(DataWalk.PASSWORD_KEY,
+			loginPass = mPrefs.getString(
+					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 					DEFAULT_PASSWORD);
 
 		}
@@ -996,8 +1045,7 @@ public class DataWalk extends Activity implements LocationListener,
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
-			
+
 			if (connect) {
 				if (success) {
 
@@ -1005,10 +1053,15 @@ public class DataWalk extends Activity implements LocationListener,
 					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 							DataWalk.mContext,
 							DataWalk.mContext.getSharedPreferences(
-									USER_PREFS_KEY, Context.MODE_PRIVATE));
+									Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+									Context.MODE_PRIVATE));
 					SharedPreferences.Editor mEditor = mPrefs.edit();
-					mEditor.putString(DataWalk.USERNAME_KEY, loginName);
-					mEditor.putString(DataWalk.PASSWORD_KEY, loginName);
+					mEditor.putString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+							loginName);
+					mEditor.putString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							loginName);
 					mEditor.commit();
 
 					// Update the UI with the new logged in username
@@ -1020,8 +1073,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 					// Failed to login with these credentials, so try again
 					if (loginName.length() == 0 || loginPass.length() == 0) {
-						startActivityForResult(new Intent(mContext,
-								LoginIsense.class), LOGIN_ISENSE_REQUESTED);
+						startActivityForResult(
+								new Intent(mContext, Login.class),
+								LOGIN_ISENSE_REQUESTED);
 
 						// Tell the user his/her credentials are wrong
 						w.make("Invalid username or password.",
@@ -1105,15 +1159,20 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// If there are 3 or fewer satellites that we are connected, we've
 		// probably lost GPS a lock
-	    if (count < 4) {
+		if (count < 4) {
+			if (gpsWorking == true) {
+				w.make("Weak GPS signal.", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_WARN);
+			}
 			gpsWorking = false;
-			//Rajia Will that fix the random velocity problem
+			// Rajia Will that fix the random velocity problem
 			prevLoc.set(loc);
-			//Rajia: Toasting number of GPS Sattelites - Tablet is driving me crazy
-			Toast.makeText(getApplicationContext(),"Fewer than 4 Sats", Toast.LENGTH_SHORT).show();
+			// Rajia: Waffeling number of GPS Sattelites
+			// w.make("Weak GPS signal.",Waffle.LENGTH_SHORT,
+			// Waffle.IMAGE_WARN);
 		}
-	} 
-	
+	}
+
 	/**
 	 * Runs the main timer that records data and updates the main UI every
 	 * second.
@@ -1131,50 +1190,67 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Reset timer variables
 		final long startTime = System.currentTimeMillis();
-		
+
 		elapsedMillis = 0;
 		timerTick = 0;
-		
-		//Rajia Set First Point to false hopefully this will fix the big velocity issue
+
+		// Rajia Set First Point to false hopefully this will fix the big
+		// velocity issue
 		bFirstPoint = true;
+
+		// Initialize Total Distance
+		totalDistance = 0;
+
+		// Initialize Relative Distance
+		relDistance = 0;
 
 		// Creates a new timer that runs every second
 		recordTimer = new Timer();
 		recordTimer.scheduleAtFixedRate(new TimerTask() {
 
 			public void run() {
-				
+
 				// Increase the timerTick count
 				timerTick++;
 
-				//Rajia: Begin Distance and Velocity Calculation
-				//     : Only if GPS is working
-				
-				//Convert Interval to Seconds
-				int nSeconds = mInterval/1000;
-				
-				if (gpsWorking){
-					if (timerTick % nSeconds == 0 ) {
-						
-						//For first point we do not have a previous location yet 
-						//   This will happen only once
+				// Rajia: Begin Distance and Velocity Calculation
+				// : Only if GPS is working
+
+				// Convert Interval to Seconds
+				int nSeconds = mInterval / 1000;
+
+				if (gpsWorking) {
+					if (timerTick % nSeconds == 0) {
+
+						// For first point we do not have a previous location
+						// yet
+						// This will happen only once
 						if (bFirstPoint) {
 							prevLoc.set(loc);
-							bFirstPoint=false;
+							bFirstPoint = false;
+							// Also Try this for total distance
+							firstLoc.set(loc);
 						}
 						distance = loc.distanceTo(prevLoc);
-			
-						//Calculate Velocity
-						velocity = distance/nSeconds;
-						
-						//Rajia: Now this location will be the previous one the next time we get here
-						prevLoc.set(loc);
-					}
-				
-				}
-				//Rajia: End Velocity Calculation
 
-				
+						// Calculate Velocity
+						velocity = distance / nSeconds;
+
+						// Rajia: Now this location will be the previous one the
+						// next time we get here
+						prevLoc.set(loc);
+
+						// Rajia Accumlate total distance
+						totalDistance += distance;
+
+						// Total Distance Computed Differently relative to first
+						// location
+						// relDistance = loc.distanceTo(firstLoc);
+					}
+
+				}
+				// Rajia: End Velocity Calculation
+
 				// Update the main UI with the correct number of seconds
 				runOnUiThread(new Runnable() {
 
@@ -1187,43 +1263,51 @@ public class DataWalk extends Activity implements LocationListener,
 							timeElapsedBox.setText("Time Elapsed: " + timerTick
 									+ " seconds");
 						}
-						
-						//Rajia Stealing these Text Boxes for now
-						loggedInAs.setText("Distance: " + roundTwoDecimals(distance)+ " Meters");
-						rateBox.setText("Velocity: " + roundTwoDecimals(velocity *2.23694) + " MPH " + roundTwoDecimals(velocity)+ " M/Sec    ");
-					
+
+						// Rajia Stealing these Text Boxes for now
+						loggedInAs.setText("Distance: "
+								+ roundTwoDecimals(totalDistance * 0.000621371)
+								+ " Miles " + roundTwoDecimals(totalDistance)
+								+ " Meters");
+						// + " Relative: "+
+						// roundTwoDecimals(relDistance*0.000621371)+" Miles " +
+						// roundTwoDecimals(relDistance)+ " Meters" );
+
+						rateBox.setText("Velocity: "
+								+ roundTwoDecimals(velocity * 2.23694)
+								+ " MPH " + roundTwoDecimals(velocity)
+								+ " M/Sec    ");
+
 					}
 				});
 
-				
 				// Every n seconds which is determined by interval
 				// (not including time 0)
 				if ((timerTick % (mInterval / 1000)) == 0 && timerTick != 0) {
 
 					// Prepare a new row of data
 					JSONObject dataJSON = new JSONObject();
-					
+
 					// Determine how long you've been recording for
 					elapsedMillis += mInterval;
 					long time = startTime + elapsedMillis;
-					
 
 					try {
 
 						// Store new values into JSON Object
 						dataJSON.put("0", "u " + time);
 						dataJSON.put("1", accel[3]);
-						//Rajia Store new Velocity values into JSON object
+						// Rajia Store new Velocity values into JSON object
 						dataJSON.put("2", velocity);
-						dataJSON.put("3", loc.getLatitude());
-						dataJSON.put("4", loc.getLongitude());
-						
-				
+						dataJSON.put("3", totalDistance);
+						dataJSON.put("4", loc.getLatitude());
+						dataJSON.put("5", loc.getLongitude());
+
 						// Save this data point if GPS says it has a lock
 						if (gpsWorking) {
-					
+
 							dataSet.put(dataJSON);
-						
+
 							// Updated the number of points recorded here and on
 							// the main UI
 							dataPointCount++;
@@ -1231,7 +1315,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 								@Override
 								public void run() {
-									pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
+									pointsUploadedBox
+											.setText("Points Recorded: "
+													+ dataPointCount);
 								}
 
 							});
@@ -1246,14 +1332,13 @@ public class DataWalk extends Activity implements LocationListener,
 		}, 0, TIMER_LOOP);
 
 	}
-	
-	//Rajia Added this to format numbers 
-	//  code example lifted from 
-	//      http://www.java-forums.org/advanced-java/4130-rounding-double-two-decimal-places.htm
-	double roundTwoDecimals(double d)
-	{
-	    DecimalFormat twoDForm = new DecimalFormat("#.##");
-	    return Double.valueOf(twoDForm.format(d));
+
+	// Rajia Added this to format numbers
+	// code example lifted from
+	// http://www.java-forums.org/advanced-java/4130-rounding-double-two-decimal-places.htm
+	double roundTwoDecimals(double d) {
+		DecimalFormat twoDForm = new DecimalFormat("#.##");
+		return Double.valueOf(twoDForm.format(d));
 	}
 
 }
