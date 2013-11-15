@@ -97,10 +97,6 @@
                                         options:nil];
             [self viewDidLoad];
         } else {
-            
-            NSString *name = [[NSBundle mainBundle] resourcePath];
-            NSLog(@"HONKYFROG: %@", name);
-            
             [isenseBundle loadNibNamed:@"queue_layout~iphone"
                                           owner:self
                                         options:nil];
