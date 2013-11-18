@@ -115,7 +115,6 @@ public class Main extends Activity implements LocationListener {
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static Camera mCamera;
-	private SurfaceHolder mHolder;
     private CameraPreview mPreview;
 
 
@@ -249,6 +248,7 @@ public class Main extends Activity implements LocationListener {
 					if (safeCameraOpen(cameraId) == false) {
 						Log.d("CameraMain", "Failed to open camera.");
 						Boolean failed = false;
+						recording = false;
 						return failed;
 					}// Open
 
@@ -258,27 +258,10 @@ public class Main extends Activity implements LocationListener {
 
 						@Override
 						public void run() {
-//							SurfaceView dummy = new SurfaceView(mContext);
-//							
-//							try {
-//							mCamera.setPreviewDisplay(dummy.getHolder());
-//							mCamera.startPreview();
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								Log.d("CameraMain", "Error setting camera preview: " + e.getMessage());
-//							}
-//							
-//							if (dummy.getHolder() == null){
-//						          // preview surface does not exist
-//								Log.d("CameraMain", "dummy.getSurface() == null");
-//						          return;
-//						        }
-							
 							
 							mPreview = new CameraPreview(mContext, mCamera);
 					        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 					        preview.addView(mPreview);
-							
 							
 							try {
 								Thread.sleep(2000);
@@ -294,23 +277,21 @@ public class Main extends Activity implements LocationListener {
 								e.printStackTrace();
 							}
 
-							Log.d("CameraMain", "Successfully captured picture.");
-							
-							
-							
-														
+							Log.d("CameraMain", "Successfully captured picture.");						
 							
 							Log.d("CameraMain", "Unlocking camera");
-							
+											
 							mCamera.stopPreview();
 							mCamera.release(); // release camera so other
 												// applications can use it
 							
-							if (mCamera == null)
-								Log.d("CameraMain", "Already null");
+							if (mCamera == null){
+								Log.d("CameraMain", "camera release() sets camera to null");
+							} else {
+								Log.d("CameraMain", "camera release() does not set camera to null");
+							}
 
-						}
-
+						}						
 					});
 				
 				} else {
@@ -326,10 +307,12 @@ public class Main extends Activity implements LocationListener {
 					e.printStackTrace();
 				}
 			}
-			if (mCamera != null)
+			
+			if (mCamera != null){
 				mCamera.stopPreview();
 				mCamera.release();
-
+			}
+			
 			return null;
 		}
 
@@ -372,13 +355,14 @@ public class Main extends Activity implements LocationListener {
 
 		return qOpened;
 	}
-
-	private PictureCallback mPicture = new PictureCallback() {
+	
+	//called automatically after picture is taken to save picture data
+	private PictureCallback mPicture = new PictureCallback() { 
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 
-			Log.d("CameraMain", "Do something");
+			Log.d("CameraMain", "PictureCallback");
 			FileOutputStream fos;
             try {
               fos = new FileOutputStream("test.jpeg");
@@ -391,6 +375,7 @@ public class Main extends Activity implements LocationListener {
 //			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
 //
 //			if (picture == null) {
+//            	Log.d("CameraMain", "picture is null"));
 //				return;
 //			}
 		}
