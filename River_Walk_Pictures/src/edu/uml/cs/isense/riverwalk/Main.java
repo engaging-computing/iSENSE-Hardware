@@ -239,11 +239,10 @@ public class Main extends Activity implements LocationListener {
 			// do your long running http tasks here,you dont want to pass
 			// argument and u can access the parent class' variable url over
 			// here
-			while (recording) {
+			//while (recording) {
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
 
-					mCamera = null;
 					final int cameraId = 0;
 					if (safeCameraOpen(cameraId) == false) {
 						Log.d("CameraMain", "Failed to open camera.");
@@ -258,11 +257,12 @@ public class Main extends Activity implements LocationListener {
 
 						@Override
 						public void run() {
+							Log.d("CameraMain", "Camera is: " + mCamera.toString());
 							
 							mPreview = new CameraPreview(mContext, mCamera);
 					        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 					        preview.addView(mPreview);
-							
+					        
 							try {
 								Thread.sleep(2000);
 							} catch (InterruptedException e) {
@@ -271,26 +271,27 @@ public class Main extends Activity implements LocationListener {
 							}
 							Log.d("CameraMain", "About to try to take a picture.");
 							
+							
 							try {
 							mCamera.takePicture(null, null, mPicture); // takes a picture
 							} catch (Exception e) {
+								Log.d("CameraMain", "Failed taking picture");
 								e.printStackTrace();
+								
 							}
-
-							Log.d("CameraMain", "Successfully captured picture.");						
 							
-							Log.d("CameraMain", "Unlocking camera");
-											
-							mCamera.stopPreview();
-							mCamera.release(); // release camera so other
-												// applications can use it
-							
-							if (mCamera == null){
-								Log.d("CameraMain", "camera release() sets camera to null");
-							} else {
-								Log.d("CameraMain", "camera release() does not set camera to null");
+							if (picture != null) {
+								Log.d("CameraMain", "Successfully captured picture.");						
 							}
-
+							
+							Log.d("CameraMain", "Releasing camera");
+							
+							if (mCamera != null) {
+								mCamera.stopPreview();
+								mCamera.release(); 
+								mCamera = null;
+							}
+							
 						}						
 					});
 				
@@ -306,11 +307,12 @@ public class Main extends Activity implements LocationListener {
 							"failed to sleep while continuously taking pictures");
 					e.printStackTrace();
 				}
-			}
+			//}
 			
 			if (mCamera != null){
 				mCamera.stopPreview();
 				mCamera.release();
+				mCamera = null;
 			}
 			
 			return null;
@@ -346,6 +348,7 @@ public class Main extends Activity implements LocationListener {
 
 			Log.d("CameraMain", "Camera info cameras " + c.toString());
 			mCamera = Camera.open(0);
+			mCamera.unlock();
 			Log.d("CameraMain", "Camera is: " + mCamera.toString());
 			qOpened = (mCamera != null);
 		} catch (Exception e) {
@@ -372,12 +375,13 @@ public class Main extends Activity implements LocationListener {
               //do something about it
             }
 
-//			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-//
-//			if (picture == null) {
-//            	Log.d("CameraMain", "picture is null"));
-//				return;
-//			}
+			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+
+			if (picture == null) {
+            	Log.d("CameraMain", "picture is null");
+				return;
+			}
+			
 		}
 	};
 
@@ -863,6 +867,8 @@ public class Main extends Activity implements LocationListener {
 		if (mCamera != null)
 			mCamera.stopPreview();
 			mCamera.release();
+			mCamera = null;
+
 			
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
