@@ -154,12 +154,6 @@ public class Main extends Activity implements LocationListener {
 		latLong = (TextView) findViewById(R.id.myLocation);
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
-		safeCameraOpen(0);
-		
-		mPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
-        
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
 
@@ -215,6 +209,13 @@ public class Main extends Activity implements LocationListener {
 						takePicture.setTextColor(0xFF000000);
 						takePicture.setText("Recording Press to Stop");
 						recording = true;
+						safeCameraOpen(0);
+						
+						mPreview = new CameraPreview(mContext, mCamera);
+				        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+				        preview.addView(mPreview);
+				        preview.setVisibility(View.INVISIBLE);
+				        				        		        
 						new continuouslytakephotos().execute();
 
 						// Stop continuously taking pictures
@@ -245,17 +246,17 @@ public class Main extends Activity implements LocationListener {
 			// do your long running http tasks here,you dont want to pass
 			// argument and u can access the parent class' variable url over
 			// here
-			//while (recording) {
+			while (recording) {
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
 
-					final int cameraId = 0;
-					if (safeCameraOpen(cameraId) == false) {
-						Log.d("CameraMain", "Failed to open camera.");
-						Boolean failed = false;
-						recording = false;
-						return failed;
-					}// Open
+//					final int cameraId = 0;
+//					if (safeCameraOpen(cameraId) == false) {
+//						Log.d("CameraMain", "Failed to open camera.");
+//						Boolean failed = false;
+//						recording = false;
+//						return failed;
+//					}// Open
 
 					Log.d("CameraMain", "Successfully opened camera.");
 					
@@ -265,14 +266,8 @@ public class Main extends Activity implements LocationListener {
 						public void run() {
 							Log.d("CameraMain", "Camera is: " + mCamera.toString());
 
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							Log.d("CameraMain", "About to try to take a picture.");
 							
+							Log.d("CameraMain", "About to try to take a picture.");
 							
 							try {
 							    mCamera.takePicture(null, null, mPicture); // takes a picture
@@ -285,8 +280,6 @@ public class Main extends Activity implements LocationListener {
 							if (picture != null) {
 								Log.d("CameraMain", "Successfully captured picture.");						
 							}
-							
-							Log.d("CameraMain", "Releasing camera");
 						
 						}						
 					});
@@ -303,7 +296,7 @@ public class Main extends Activity implements LocationListener {
 							"failed to sleep while continuously taking pictures");
 					e.printStackTrace();
 				}
-			//}
+			}
 			
 //			if (mCamera != null){
 //				mCamera.stopPreview();
@@ -859,12 +852,6 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	protected void onStop() {
 		super.onStop();
-
-		if (mCamera != null)
-			mCamera.stopPreview();
-			mCamera.release();
-			mCamera = null;
-
 			
 		if (mLocationManager != null)
 			mLocationManager.removeUpdates(Main.this);
