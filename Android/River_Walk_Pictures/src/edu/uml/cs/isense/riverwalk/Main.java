@@ -154,6 +154,12 @@ public class Main extends Activity implements LocationListener {
 		latLong = (TextView) findViewById(R.id.myLocation);
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
+		safeCameraOpen(0);
+		
+		mPreview = new CameraPreview(this, mCamera);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+        preview.addView(mPreview);
+        
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
 
@@ -258,11 +264,7 @@ public class Main extends Activity implements LocationListener {
 						@Override
 						public void run() {
 							Log.d("CameraMain", "Camera is: " + mCamera.toString());
-							
-							mPreview = new CameraPreview(mContext, mCamera);
-					        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-					        preview.addView(mPreview);
-					        
+
 							try {
 								Thread.sleep(2000);
 							} catch (InterruptedException e) {
@@ -273,7 +275,7 @@ public class Main extends Activity implements LocationListener {
 							
 							
 							try {
-							mCamera.takePicture(null, null, mPicture); // takes a picture
+							    mCamera.takePicture(null, null, mPicture); // takes a picture
 							} catch (Exception e) {
 								Log.d("CameraMain", "Failed taking picture");
 								e.printStackTrace();
@@ -285,13 +287,7 @@ public class Main extends Activity implements LocationListener {
 							}
 							
 							Log.d("CameraMain", "Releasing camera");
-							
-							if (mCamera != null) {
-								mCamera.stopPreview();
-								mCamera.release(); 
-								mCamera = null;
-							}
-							
+						
 						}						
 					});
 				
@@ -309,11 +305,11 @@ public class Main extends Activity implements LocationListener {
 				}
 			//}
 			
-			if (mCamera != null){
-				mCamera.stopPreview();
-				mCamera.release();
-				mCamera = null;
-			}
+//			if (mCamera != null){
+//				mCamera.stopPreview();
+//				mCamera.release();
+//				mCamera = null;
+//			}
 			
 			return null;
 		}
