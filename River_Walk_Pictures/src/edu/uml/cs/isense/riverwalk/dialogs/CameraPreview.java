@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.riverwalk.dialogs;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -31,7 +32,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
-            Log.d("CameraPreiview", "Error setting camera preview: " + e.getMessage());
+            Log.d("CameraPreiview", "Error setting camera preview in surfaceCreated: " + e.getMessage());
         }
     }
 
@@ -56,7 +57,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e){
           // ignore: tried to stop a non-existent preview
         }
-
+        Log.d("CameraPreview", "Camera is:" + mCamera.toString());
+        Camera.Parameters parameters = mCamera.getParameters();
+        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+        int height = sizeList.get(0).height;
+        int width = sizeList.get(0).width;
+        parameters.setPreviewSize(width, height);
+        mCamera.setParameters(parameters);
         // set preview size and make any resize, rotate or
         // reformatting changes here
 
@@ -68,5 +75,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e){
             Log.d("CameraPreview", "Error starting camera preview: " + e.getMessage());
         }
+
+    	
     }
 }
