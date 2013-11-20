@@ -156,9 +156,6 @@ dataToBeOrdered, backFromQueue, f;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    // Reinitialize setup and queue to false TODO - really? shouldn't these be at the bottom?
-//    backFromSetup = false;
-    
     // If true, then we're coming back from another ViewController
     if (self.isMovingToParentViewController == NO) {
         

@@ -11,7 +11,7 @@
 #import "FieldEntry.h"
 #import "Fields.h"
 
-@interface FieldMatchingViewController : UIViewController <UIPickerViewDelegate> {
+@interface FieldMatchingViewController : UIViewController <UIPickerViewDelegate, UIAlertViewDelegate> {
     // bundle for resource files in the iSENSE_API_Bundle
     NSBundle *isenseBundle;
     
@@ -22,6 +22,8 @@
     BOOL isShowingPickerView;
     UIPickerView *fieldPickerView;
     int fieldTag;
+    NSString *fieldName;
+    UITextField *alertText;
 }
 
 - (id) initWithUserFields:(NSMutableArray *)uf andProjectFields:(NSMutableArray *)pf;

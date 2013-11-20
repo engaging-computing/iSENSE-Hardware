@@ -93,6 +93,10 @@
 
     mTableView.backgroundColor = [UIColor clearColor];
     mTableView.backgroundView = nil;
+    
+    fieldPickerView = [[UIPickerView alloc] init];
+    fieldPickerView.delegate = self;
+    fieldPickerView.showsSelectionIndicator = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -227,36 +231,45 @@
         
     } else {
         
-        // Display the recording interval selector
-        int x = 0;
-        int y = 0;
-        
-        fieldPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(x, y, 320, 200)];
-        fieldPickerView.delegate = self;
-        fieldPickerView.showsSelectionIndicator = YES;
-        
-        UIToolbar *accessoryView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 180, 320, 54)];
-        accessoryView.barStyle = UIBarStyleBlackTranslucent;
-        
-        UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        
-        UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneTapped:)]; // need selector TODO
-        
-        accessoryView.items = [NSArray arrayWithObjects:space, done, nil];
-        
-        [fieldPickerView addSubview:accessoryView];
-        
-        [self.view addSubview:fieldPickerView];
-        isShowingPickerView = YES;
-        
+        fieldTag = i;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                        message:nil
+                                                       delegate:self
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"Done", nil];
+        [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        alertText = [alert textFieldAtIndex:0];
+        alertText.inputView = fieldPickerView;
+        [alert show];
     }
+}
+
+- (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [self setNewProjectForCellAtIndex:fieldTag];
+    // update the arrays of data and re-draw the scrollview, then field matching is done!! TODO TODO TODO TODO
+}
+
+- (void) setNewProjectForCellAtIndex:(int)i {
+    
+    NSLog(@"Index %d gets %@", i, fieldName);
 }
 
 // Called every time the recording interval selector stops on a new row
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
     // Handle the selection
-    if (row != 0)
-        fieldTag = row;
+    NSString *title = @"";
+    switch (row) {
+        case 0:title = @""; break;              case 1:title = sACCEL_X; break;         case 2:title = sACCEL_Y; break;
+        case 3:title = sACCEL_Z; break;         case 4:title = sACCEL_TOTAL; break;     case 5:title = sTEMPERATURE_C; break;
+        case 6:title = sTEMPERATURE_F; break;   case 7:title = sTEMPERATURE_K; break;   case 8:title = sTIME_MILLIS; break;
+        case 9:title = sLUX; break;             case 10:title = sANGLE_DEG; break;      case 11:title = sANGLE_RAD; break;
+        case 12:title = sLATITUDE; break;       case 13:title = sLONGITUDE; break;      case 14:title = sMAG_X; break;
+        case 15:title = sMAG_Y; break;          case 16:title = sMAG_Z; break;          case 17:title = sMAG_TOTAL; break;
+        case 18:title = sALTITUDE; break;       case 19:title = sPRESSURE; break;       case 20:title = sGYRO_X; break;
+        case 21:title = sGYRO_Y; break;         case 22:title = sGYRO_Z; break;
+    }
+    [alertText setText:title];
+    fieldName = title;
 }
 
 // Tells the picker how many rows are available for a given component - we have 7 recording interval options
