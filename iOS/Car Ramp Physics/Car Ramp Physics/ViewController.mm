@@ -370,6 +370,7 @@
     // New JSON array to hold data
     dataToBeJSONed = [[NSMutableArray alloc] init];
     dataToBeOrdered = [[NSMutableArray alloc] init];
+    [dfm enableAllFields];
     
     // Start the new timers TODO - put them on dispatch?
     recordDataTimer = [NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES];
@@ -481,6 +482,7 @@
         }
     });
     [dfm setFields:fieldsRow];
+    
     [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
     [menuButton setEnabled:NO];
         
