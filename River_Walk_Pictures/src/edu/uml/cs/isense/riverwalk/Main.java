@@ -213,9 +213,8 @@ public class Main extends Activity implements LocationListener {
 						
 						mPreview = new CameraPreview(mContext, mCamera);
 				        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-				        preview.addView(mPreview);
-				        preview.setVisibility(View.INVISIBLE);
-				        				        		        
+				        preview.addView(mPreview);        
+				        
 						new continuouslytakephotos().execute();
 
 						// Stop continuously taking pictures
