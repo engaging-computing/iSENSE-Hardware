@@ -11,6 +11,7 @@
 #import <iSENSE_API/SensorCompatibility.h>
 #import <iSENSE_API/SensorEnums.h>
 #import "SensorSelection.h"
+#import <iSENSE_API/FieldMatchingViewController.h>
 #import <iSENSE_API/ProjectBrowseViewController.h>
 
 #import "Data_CollectorAppDelegate.h"

@@ -356,13 +356,47 @@
             
             [self rememberPrefs];
             
-            // launch the sensor selection dialog
-            SensorSelection *ssView = [[SensorSelection alloc] init];
-            ssView.title = @"Sensor Selection";
-            [self.navigationController pushViewController:ssView animated:YES];
+            // get the fields to field match
+            DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projNumInteger API:api andFields:nil];
+            [dfm getOrder];
+            
+//            NSMutableArray *garbage = [[NSMutableArray alloc] init];
+//            [garbage addObject:@"one"];
+//            [garbage addObject:@"two"];
+//            [garbage addObject:@"three"];
+//            [garbage addObject:@"four"];
+//            [garbage addObject:@"five"];
+//            [garbage addObject:@"six"];
+//            [garbage addObject:@"seven"];
+//            [garbage addObject:@"eight"];
+//            [garbage addObject:@"nine"];
+//            [garbage addObject:@"ten"];
+//            [garbage addObject:@"eleven"];
+//            [garbage addObject:@"twelve"];
+//            [garbage addObject:@"thirteen"];
+//            [garbage addObject:@"fourteen"];
+//            [garbage addObject:@"fifteen"];
+            
+            // set an observer for the field matched array caught from FieldMatching
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
+            
+            // launch the field matching dialog
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+            fmvc.title = @"Field Matching";
+            [self.navigationController pushViewController:fmvc animated:YES];
+        
         }
         
     } 
+}
+
+- (void) retrieveFieldMatchedArray:(NSNotification *)obj {
+    NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
+    if (fieldMatch != nil) {
+        // user pressed okay button
+        NSLog(@"Obj at index 0 = %@", [fieldMatch objectAtIndex:0]);
+    }
+    // else user canceled
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -400,10 +434,10 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
         
-        // launch the sensor selection dialog
-        SensorSelection *ssView = [[SensorSelection alloc] init];
-        ssView.title = @"Sensor Selection";
-        [self.navigationController pushViewController:ssView animated:YES];
+        // launch the field matching dialog
+        FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:nil andProjectFields:nil];
+        fmvc.title = @"Field Matching";
+        [self.navigationController pushViewController:fmvc animated:YES];
     }
 }
 
@@ -483,23 +517,23 @@
 
 - (BOOL) handleNewQRCode:(NSURL *)url {
     
-    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-    NSString *exp = arr[2];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_automatic"]];
-
-    projNumInteger = [exp integerValue];
-    
-    NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
-    [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
-    
-    [self rememberPrefs];
-    
-    // launch the sensor selection dialog
-    SensorSelection *ssView = [[SensorSelection alloc] init];
-    ssView.title = @"Sensor Selection";
-    [self.navigationController pushViewController:ssView animated:YES];
+//    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
+//    NSString *exp = arr[2];
+//    
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_automatic"]];
+//
+//    projNumInteger = [exp integerValue];
+//    
+//    NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
+//    [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
+//    
+//    [self rememberPrefs];
+//    
+//    // launch the sensor selection dialog
+//    SensorSelection *ssView = [[SensorSelection alloc] init];
+//    ssView.title = @"Sensor Selection";
+//    [self.navigationController pushViewController:ssView animated:YES];
     
     return YES;
 }
