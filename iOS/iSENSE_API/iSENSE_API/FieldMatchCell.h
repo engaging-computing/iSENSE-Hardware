@@ -17,6 +17,6 @@
 - (NSString *) getMatch;
 
 @property (nonatomic, assign) IBOutlet UILabel  *fieldName;
-@property (nonatomic, assign) IBOutlet UIButton *fieldMatch;
+@property (nonatomic, assign) IBOutlet UILabel  *fieldMatch;
 
 @end

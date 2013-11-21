@@ -13,7 +13,7 @@
 
 @implementation WelcomeViewController
 
-@synthesize continueWithProj, createNewProj, selectProjLater;
+@synthesize continueWithProj, selectProjLater;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -67,7 +67,6 @@
     
     // align text to center of buttons
     [continueWithProj.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [createNewProj.titleLabel setTextAlignment:UITextAlignmentCenter];
     [selectProjLater.titleLabel setTextAlignment:UITextAlignmentCenter];
     
     // Do any additional setup after loading the view from its nib.
@@ -115,11 +114,6 @@
         message.tag = MENU_PROJECT;
         [message show];
     }
-}
-
-- (IBAction) createNewProjOnClick:(UIButton *)sender {
-    // TODO
-    [self.view makeWaffle:@"To be implemented in a future release" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
 }
 
 - (IBAction) selectProjLaterOnClick:(UIButton *)sender {

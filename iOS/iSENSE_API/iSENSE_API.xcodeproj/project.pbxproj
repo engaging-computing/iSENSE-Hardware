@@ -39,6 +39,7 @@
 		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
 		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
 		B712DE241796D17000A30CAC /* QDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* QDataSet.h */; };
+		B727479A183682A400893A13 /* FieldMatching~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B76026D4183532D8003FAFF9 /* FieldMatching~iphone.xib */; };
 		B72AED81181948A1008FE242 /* ISenseSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = B72AED7F181948A1008FE242 /* ISenseSearch.h */; };
 		B72AED82181948A1008FE242 /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = B72AED80181948A1008FE242 /* ISenseSearch.m */; };
 		B72AED85181948A8008FE242 /* ProjectBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = B72AED83181948A8008FE242 /* ProjectBlock.m */; };
@@ -76,6 +77,8 @@
 		B7BEBCCA17C4FDAC005C08C0 /* RProjectField.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */; };
 		B7BEBCD117C4FDDA005C08C0 /* RProject.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCCF17C4FDD9005C08C0 /* RProject.h */; };
 		B7BEBCD517C4FDEC005C08C0 /* RTutorial.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */; };
+		B7D0813E183BC88C003A4218 /* FieldEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = B7D0813C183BC88C003A4218 /* FieldEntry.h */; };
+		B7D0813F183BC88C003A4218 /* FieldEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D0813D183BC88C003A4218 /* FieldEntry.m */; };
 		B7E5674E17C63DCE00C2DF46 /* RDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674917C63DCE00C2DF46 /* RDataSet.m */; };
 		B7E5674F17C63DCE00C2DF46 /* RPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674A17C63DCE00C2DF46 /* RPerson.m */; };
 		B7E5675017C63DCE00C2DF46 /* RProject.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E5674B17C63DCE00C2DF46 /* RProject.m */; };
@@ -182,6 +185,8 @@
 		B7BEBCC817C4FDAC005C08C0 /* RProjectField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RProjectField.h; sourceTree = "<group>"; };
 		B7BEBCCF17C4FDD9005C08C0 /* RProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RProject.h; sourceTree = "<group>"; };
 		B7BEBCD317C4FDEC005C08C0 /* RTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTutorial.h; sourceTree = "<group>"; };
+		B7D0813C183BC88C003A4218 /* FieldEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldEntry.h; sourceTree = "<group>"; };
+		B7D0813D183BC88C003A4218 /* FieldEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldEntry.m; sourceTree = "<group>"; };
 		B7E5674917C63DCE00C2DF46 /* RDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RDataSet.m; path = src/Objects/RDataSet.m; sourceTree = "<group>"; };
 		B7E5674A17C63DCE00C2DF46 /* RPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RPerson.m; path = src/Objects/RPerson.m; sourceTree = "<group>"; };
 		B7E5674B17C63DCE00C2DF46 /* RProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RProject.m; path = src/Objects/RProject.m; sourceTree = "<group>"; };
@@ -354,10 +359,10 @@
 		39FF25E516DFA28A0062C3DC /* iSENSE_API */ = {
 			isa = PBXGroup;
 			children = (
+				3989BECB17C5552C009C5F21 /* isense_api */,
 				B7EC668A18199A1B007B5B48 /* queue_saving */,
 				B72AED9318194ED7008FE242 /* isense_constants */,
 				B72AED7D1819484B008FE242 /* browse_projects */,
-				3989BECB17C5552C009C5F21 /* isense_api */,
 				B7EBFDB817A01419006B90A8 /* reachability */,
 				B73CFDAE179D8CD700B891B0 /* data_field_manager */,
 				B76026D118353267003FAFF9 /* field_matching */,
@@ -488,6 +493,8 @@
 				B76026D3183532D8003FAFF9 /* FieldMatchingViewController.m */,
 				B76026DD183536EE003FAFF9 /* FieldMatchCell.h */,
 				B76026DE183536EE003FAFF9 /* FieldMatchCell.m */,
+				B7D0813C183BC88C003A4218 /* FieldEntry.h */,
+				B7D0813D183BC88C003A4218 /* FieldEntry.m */,
 			);
 			name = field_matching;
 			sourceTree = "<group>";
@@ -602,6 +609,7 @@
 				B7EC669518199A70007B5B48 /* QueueUploaderView.h in Headers */,
 				B76026D5183532D8003FAFF9 /* FieldMatchingViewController.h in Headers */,
 				B76026DF183536EE003FAFF9 /* FieldMatchCell.h in Headers */,
+				B7D0813E183BC88C003A4218 /* FieldEntry.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +696,7 @@
 				B73CFDBC179D8DE800B891B0 /* Fields.strings in Resources */,
 				B72AED8E181949C4008FE242 /* projectblock_clean.png in Resources */,
 				B72AED8F181949C4008FE242 /* projectblock_dark.png in Resources */,
+				B727479A183682A400893A13 /* FieldMatching~iphone.xib in Resources */,
 				B76026D81835331D003FAFF9 /* FieldMatching-landscape~iphone.xib in Resources */,
 				B76026DA1835332E003FAFF9 /* FieldMatching~ipad.xib in Resources */,
 				B76026DC18353343003FAFF9 /* FieldMatching-landscape~ipad.xib in Resources */,
@@ -742,6 +751,7 @@
 				B73091CB18228FE0009EC24C /* DataSaver.m in Sources */,
 				B76026D6183532D8003FAFF9 /* FieldMatchingViewController.m in Sources */,
 				B76026E0183536EE003FAFF9 /* FieldMatchCell.m in Sources */,
+				B7D0813F183BC88C003A4218 /* FieldEntry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

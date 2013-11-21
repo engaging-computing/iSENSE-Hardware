@@ -14,9 +14,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
-    if (self) {
-        //self.contentView.backgroundColor = [UIColor clearColor];
-    }
+    if (self) {}
     return self;
 }
 
@@ -26,8 +24,8 @@
 
 - (FieldMatchCell *)setupCellWithName:(NSString *)name andMatch:(NSString *)match {
     
-    [self.fieldName setText:name];
-    [self.fieldMatch.titleLabel setText:match];
+    [self.fieldName  setText:name];
+    [self.fieldMatch setText:match];
     
     return self;
 }
@@ -37,7 +35,7 @@
 }
 
 - (void) setMatch:(NSString *)match {
-    [fieldMatch.titleLabel setText:match];
+    [fieldMatch setText:match];
 }
 
 - (NSString *) getName {
@@ -45,7 +43,7 @@
 }
 
 - (NSString *) getMatch {
-    return fieldMatch.titleLabel.text;
+    return fieldMatch.text;
 }
 
 @end

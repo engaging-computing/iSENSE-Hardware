@@ -136,13 +136,13 @@
                 
                 // Magnetic
                 else if ([field.name.lowercaseString rangeOfString:@"magnetic"].location != NSNotFound) {
-                    if ([field.unit.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
+                    if ([field.name.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
                         [order addObject:sMAG_X];
                         enabledFields[fMAG_X] = true;
-                    } else if ([field.unit.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
+                    } else if ([field.name.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
                         [order addObject:sMAG_Y];
                         enabledFields[fMAG_Y] = true;
-                    } else if ([field.unit.lowercaseString rangeOfString:@"z"].location != NSNotFound) {
+                    } else if ([field.name.lowercaseString rangeOfString:@"z"].location != NSNotFound) {
                         [order addObject:sMAG_Z];
                         enabledFields[fMAG_Z] = true;
                     } else {
@@ -154,13 +154,13 @@
                 
                 // Acceleration
                 else if ([field.name.lowercaseString rangeOfString:@"accel"].location != NSNotFound) {
-                    if ([field.unit.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
+                    if ([field.name.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
                         [order addObject:sACCEL_X];
                         enabledFields[fACCEL_X] = true;
-                    } else if ([field.unit.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
+                    } else if ([field.name.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
                         [order addObject:sACCEL_Y];
                         enabledFields[fACCEL_Y] = true;
-                    } else if ([field.unit.lowercaseString rangeOfString:@"z"].location != NSNotFound) {
+                    } else if ([field.name.lowercaseString rangeOfString:@"z"].location != NSNotFound) {
                         [order addObject:sACCEL_Z];
                         enabledFields[fACCEL_Z] = true;
                     } else {
@@ -179,10 +179,10 @@
                 
                 // Gyroscope
                 else if ([field.name.lowercaseString rangeOfString:@"gyro"].location != NSNotFound) {
-                    if ([field.unit.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
+                    if ([field.name.lowercaseString rangeOfString:@"x"].location != NSNotFound) {
                         [order addObject:sGYRO_X];
                         enabledFields[fGYRO_X] = true;
-                    } else if ([field.unit.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
+                    } else if ([field.name.lowercaseString rangeOfString:@"y"].location != NSNotFound) {
                         [order addObject:sGYRO_Y];
                         enabledFields[fGYRO_Y] = true;
                     } else {
@@ -242,6 +242,10 @@
 
 - (NSMutableArray *) getOrderList {
     return order;
+}
+
+- (NSMutableArray *) getRealOrder {
+    return realOrder;
 }
 
 - (Fields *) getFields {
