@@ -723,7 +723,7 @@
         NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
         [data setObject:dataToBeJSONed forKey:@"data"];
-        [api rowsToCols:data];
+        data = [[api rowsToCols:data] mutableCopy];
         
         bool success = [api uploadDataSetWithId:expNum withData:data andName:sessionName];
         if (!success) {
@@ -898,7 +898,7 @@
             NSLog(@"Length is %d", recordLength);
             
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setInteger:12 forKey:@"recordLength"];
+            [defaults setInteger:recordLength forKey:@"recordLength"];
             
         }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
@@ -927,10 +927,14 @@
             NSLog(@"%@",session_num);
             NSLog(@"\n%@", [NSString stringWithFormat:@"%d", [session_num intValue]]);
             if (useDev) {
-                url = [DEV_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+                url = [DEV_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", expNum]];
             } else {
-                url = [PROD_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+                url = [PROD_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", expNum]];
             }
+            
+            [url stringByAppendingString:@"/data_sets/"];
+            [url stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+                
             NSLog(@"%@",url);
             UIApplication *mySafari = [UIApplication sharedApplication];
             NSURL *myURL = [[NSURL alloc]initWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
