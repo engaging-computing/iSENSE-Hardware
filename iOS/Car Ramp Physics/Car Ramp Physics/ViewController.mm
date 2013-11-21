@@ -144,7 +144,7 @@
     timeOver = NO;
     setupDone = NO;
     
-    dfm = [[NewDFM alloc] init];
+    dfm = [[DataFieldManager alloc] init];
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
@@ -273,7 +273,7 @@
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
         [last setSecureTextEntry:NO];
-        [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        [change_name  textFieldAtIndex:0].placeholder = @"First Name";
         UITextField *first = [change_name textFieldAtIndex:0];
         first.delegate = self;
         first.tag = FIRST_NAME_FIELD;
@@ -290,8 +290,8 @@
             [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
         }
         
-        recordLength = 10;
-        countdown = 10;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        recordLength = countdown = [defaults integerForKey:@"recordLength"];
         
         [self saveModeDialog];
         
@@ -370,6 +370,7 @@
     // New JSON array to hold data
     dataToBeJSONed = [[NSMutableArray alloc] init];
     dataToBeOrdered = [[NSMutableArray alloc] init];
+    [dfm enableAllFields];
     
     // Start the new timers TODO - put them on dispatch?
     recordDataTimer = [NSTimer scheduledTimerWithTimeInterval:rate target:self selector:@selector(buildRowOfData) userInfo:nil repeats:YES];
@@ -421,70 +422,90 @@
 }
 
 
-// Fill dataToBeJSONed with a row of data
+// Fill dataToBeOrdered with a row of data
 - (void) buildRowOfData {
-    Fields *fieldsRow = [[Fields alloc] init];
     
-    // Fill a new row of data starting with time
-    double time = [[NSDate date] timeIntervalSince1970];
-    fieldsRow.time_millis = [[NSNumber alloc] initWithDouble:time * 1000];
-    NSLog(@"Current time is: %@.", fieldsRow.time_millis);
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setMaximumFractionDigits:1];
-    [formatter setMinimumFractionDigits:0];
-    
-    dispatch_queue_t queue = dispatch_queue_create("record_data", NULL);
-    dispatch_async(queue, ^{
-        // acceleration in meters per second squared
+    if (!running || recordDataTimer == nil) {
         
-        fieldsRow.accel_x = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
-        NSLog(@"Current accel x is: %@.", fieldsRow.accel_x);
-        if ([dfm enabledFieldAtIndex:fACCEL_X]){
-            dispatch_async(dispatch_get_main_queue(), ^{
+        [recordDataTimer invalidate];
+        recordDataTimer = nil;
+        
+    } else {
+        
+        dispatch_queue_t queue = dispatch_queue_create("automatic_record_data", NULL);
+        dispatch_async(queue, ^{
+            
+            Fields *fieldsRow = [[Fields alloc] init];
+            
+            // Fill a new row of data starting with time
+            double time = [[NSDate date] timeIntervalSince1970];
+            if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
+                fieldsRow.time_millis = [NSNumber numberWithDouble:time * 1000];
+            
+            
+            // acceleration in meters per second squared
+            if ([dfm enabledFieldAtIndex:fACCEL_X])
+                fieldsRow.accel_x = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
+            if ([dfm enabledFieldAtIndex:fACCEL_Y])
+                fieldsRow.accel_y = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
+            if ([dfm enabledFieldAtIndex:fACCEL_Z])
+                fieldsRow.accel_z = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
+            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
+                fieldsRow.accel_total = [NSNumber numberWithDouble:
+                                         sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
+                                              + pow(fieldsRow.accel_y.doubleValue, 2)
+                                              + pow(fieldsRow.accel_z.doubleValue, 2))];
+            
+            // latitude and longitude coordinates
+            CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
+            double latitude  = lc2d.latitude;
+            double longitude = lc2d.longitude;
+            if ([dfm enabledFieldAtIndex:fLATITUDE])
+                fieldsRow.latitude = [NSNumber numberWithDouble:latitude];
+            if ([dfm enabledFieldAtIndex:fLONGITUDE])
+                fieldsRow.longitude = [NSNumber numberWithDouble:longitude];
+            
+            // magnetic field in microTesla
+            if ([dfm enabledFieldAtIndex:fMAG_X])
+                fieldsRow.mag_x = [NSNumber numberWithDouble:[motionmanager.magnetometerData magneticField].x];
+            if ([dfm enabledFieldAtIndex:fMAG_Y])
+                fieldsRow.mag_y = [NSNumber numberWithDouble:[motionmanager.magnetometerData magneticField].y];
+            if ([dfm enabledFieldAtIndex:fMAG_Z])
+                fieldsRow.mag_z = [NSNumber numberWithDouble:[motionmanager.magnetometerData magneticField].z];
+            if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
+                fieldsRow.mag_total = [NSNumber numberWithDouble:
+                                       sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
+                                            + pow(fieldsRow.mag_y.doubleValue, 2)
+                                            + pow(fieldsRow.mag_z.doubleValue, 2))];
+            
+            // rotation rate in radians per second
+            if (motionmanager.gyroAvailable) {
+                if ([dfm enabledFieldAtIndex:fGYRO_X])
+                    fieldsRow.gyro_x = [NSNumber numberWithDouble:[motionmanager.gyroData rotationRate].x];
+                if ([dfm enabledFieldAtIndex:fGYRO_Y])
+                    fieldsRow.gyro_y = [NSNumber numberWithDouble:[motionmanager.gyroData rotationRate].y];
+                if ([dfm enabledFieldAtIndex:fGYRO_Z])
+                    fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionmanager.gyroData rotationRate].z];
+            }
+            
+            // TODO there's more fields, right...?
+            
+            
+            // update data object
+            if (dataToBeOrdered == nil)
+                dataToBeOrdered = [[NSMutableArray alloc] init];
+            
+            //[dataToBeOrdered addObject:fieldsRow];
+            
+            if (dataToBeOrdered != nil) {
+                [dfm setFields:fieldsRow];
                 
-                vector_status.text = [@"X: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_x]];
-            });
-        }
-        
-        fieldsRow.accel_y = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
-        if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([dfm enabledFieldAtIndex:fACCEL_X])
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Y: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]]];
-                else
-                    vector_status.text = [@"Y: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]];
-            });
-        }
-        NSLog(@"Current accel y is: %@.", fieldsRow.accel_y);
-        fieldsRow.accel_z = [[NSNumber alloc] initWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
-        NSLog(@"Current accel z is: %@.", fieldsRow.accel_z);
-        if ([dfm enabledFieldAtIndex:fACCEL_Z]){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([dfm enabledFieldAtIndex:fACCEL_X] || [dfm enabledFieldAtIndex:fACCEL_Y]) {
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Z: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]]];
-                } else
-                    vector_status.text = [@"Z: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]];
-            });
-        }
-        fieldsRow.accel_total = [[NSNumber alloc] initWithDouble:
-                                 sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
-                                      + pow(fieldsRow.accel_y.doubleValue, 2)
-                                      + pow(fieldsRow.accel_z.doubleValue, 2))];
-        NSLog(@"Current accel total is: %@.", fieldsRow.accel_total);
-        if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([dfm enabledFieldAtIndex:fACCEL_X] || [dfm enabledFieldAtIndex:fACCEL_Y] || [dfm enabledFieldAtIndex:fACCEL_Z])
-                    vector_status.text = [vector_status.text stringByAppendingString:[@", Magnitude: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]]];
-                else
-                    vector_status.text = [@"Magnitude: " stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]];
-            });
-        }
-    });
-    
-    [dataToBeOrdered addObject:[dfm putDataForNoProjectIDFromFields:fieldsRow]];
-    [menuButton setEnabled:NO];
-        
-    
+            [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
+                
+            }
+            
+        });
+    }
     
 }
 
@@ -629,7 +650,6 @@
     ProjectBrowseViewController *browse;
     browse = [[ProjectBrowseViewController alloc] init];
     browse.title = @"Browse for Projects";
-    browse.chosenProject = &expNum;
     [self.navigationController pushViewController:browse animated:YES];
     
 }
@@ -699,9 +719,11 @@
             
         }
         
+        dataToBeJSONed = [DataFieldManager reOrderData:dataToBeOrdered forProjectID:expNum API:api andFieldOrder:[dfm getOrderList]];
+        NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
         [data setObject:dataToBeJSONed forKey:@"data"];
-        [api rowsToCols:data];
+        data = [[api rowsToCols:data] mutableCopy];
         
         bool success = [api uploadDataSetWithId:expNum withData:data andName:sessionName];
         if (!success) {
@@ -875,6 +897,9 @@
             recordLength = countdown = [lolcats[0] intValue];
             NSLog(@"Length is %d", recordLength);
             
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setInteger:recordLength forKey:@"recordLength"];
+            
         }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
@@ -883,26 +908,17 @@
         if ([title isEqualToString:@"Discard"]) {
             [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
-            UIAlertView *gettingFields = [self getDispatchDialogWithMessage:@"Preparing data for upload..."];
-            [gettingFields show];
-            if ([API hasConnectivity]){
-                /** REORDER DATA HERE **/
-                [self CRPorderSetup];
-                dataToBeJSONed = [dfm reOrderData:dataToBeOrdered forProjectID:expNum];
-                NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
-            }
-            [gettingFields dismissWithClickedButtonIndex:nil animated:YES];
             UIAlertView *dis = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
             [dis show];
-            dispatch_queue_t queue = dispatch_queue_create("upload", NULL);
-            dispatch_async(queue, ^{
-                [self uploadData: @""];
-            });
+            [self uploadData: @""];
             [dis dismissWithClickedButtonIndex:nil animated:YES];
+            
             if (!saveModeEnabled){
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
-                [alert show];
+                dispatch_async(dispatch_get_main_queue(), ^{ [alert show]; });
+                
             }
+             
         }
     } else if ([alertView.title isEqualToString:@"View data on iSENSE?"]) {
         
@@ -911,10 +927,14 @@
             NSLog(@"%@",session_num);
             NSLog(@"\n%@", [NSString stringWithFormat:@"%d", [session_num intValue]]);
             if (useDev) {
-                url = [DEV_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+                url = [DEV_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", expNum]];
             } else {
-                url = [PROD_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+                url = [PROD_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", expNum]];
             }
+            
+            [url stringByAppendingString:@"/data_sets/"];
+            [url stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
+                
             NSLog(@"%@",url);
             UIApplication *mySafari = [UIApplication sharedApplication];
             NSURL *myURL = [[NSURL alloc]initWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -991,16 +1011,6 @@
             [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
         }
     }
-}
-
-- (void) CRPorderSetup {
-    NSMutableArray *order = [dfm order];
-    [order addObject:[FieldGrabber grabField:@"time"]];
-    [order addObject:[FieldGrabber grabField:@"accel_x"]];
-    [order addObject:[FieldGrabber grabField:@"accel_y"]];
-    [order addObject:[FieldGrabber grabField:@"accel_z"]];
-    [order addObject:[FieldGrabber grabField:@"accel_total"]];
-    [dfm setOrder:order];
 }
 
 - (void) changeName {
@@ -1087,8 +1097,9 @@
     return message;
 }
 
-
-
+-(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+    expNum = project.intValue;
+}
 
 
 @end
