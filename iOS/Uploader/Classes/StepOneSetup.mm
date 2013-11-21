@@ -356,28 +356,32 @@
             
             [self rememberPrefs];
             
-            NSMutableArray *garbage = [[NSMutableArray alloc] init];
-            [garbage addObject:@"one"];
-            [garbage addObject:@"two"];
-            [garbage addObject:@"three"];
-            [garbage addObject:@"four"];
-            [garbage addObject:@"five"];
-            [garbage addObject:@"six"];
-            [garbage addObject:@"seven"];
-            [garbage addObject:@"eight"];
-            [garbage addObject:@"nine"];
-            [garbage addObject:@"ten"];
-            [garbage addObject:@"eleven"];
-            [garbage addObject:@"twelve"];
-            [garbage addObject:@"thirteen"];
-            [garbage addObject:@"fourteen"];
-            [garbage addObject:@"fifteen"];
+            // get the fields to field match
+            DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projNumInteger API:api andFields:nil];
+            [dfm getOrder];
+            
+//            NSMutableArray *garbage = [[NSMutableArray alloc] init];
+//            [garbage addObject:@"one"];
+//            [garbage addObject:@"two"];
+//            [garbage addObject:@"three"];
+//            [garbage addObject:@"four"];
+//            [garbage addObject:@"five"];
+//            [garbage addObject:@"six"];
+//            [garbage addObject:@"seven"];
+//            [garbage addObject:@"eight"];
+//            [garbage addObject:@"nine"];
+//            [garbage addObject:@"ten"];
+//            [garbage addObject:@"eleven"];
+//            [garbage addObject:@"twelve"];
+//            [garbage addObject:@"thirteen"];
+//            [garbage addObject:@"fourteen"];
+//            [garbage addObject:@"fifteen"];
             
             // set an observer for the field matched array caught from FieldMatching
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
             
             // launch the field matching dialog
-            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:garbage andProjectFields:garbage];
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
             fmvc.title = @"Field Matching";
             [self.navigationController pushViewController:fmvc animated:YES];
         

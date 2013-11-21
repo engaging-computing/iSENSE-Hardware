@@ -30,6 +30,7 @@
 - (void) setProjID:(int)projectID;
 - (NSMutableArray *) getProjectFields;
 - (NSMutableArray *) getOrderList;
+- (NSMutableArray *) getRealOrder;
 - (Fields *) getFields;
 - (void) setFields:(Fields *)fields;
 - (void) enableAllFields;
