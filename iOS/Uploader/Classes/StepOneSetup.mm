@@ -373,6 +373,9 @@
             [garbage addObject:@"fourteen"];
             [garbage addObject:@"fifteen"];
             
+            // set an observer for the field matched array caught from FieldMatching
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
+            
             // launch the field matching dialog
             FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:garbage andProjectFields:garbage];
             fmvc.title = @"Field Matching";
@@ -381,6 +384,15 @@
         }
         
     } 
+}
+
+- (void) retrieveFieldMatchedArray:(NSNotification *)obj {
+    NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
+    if (fieldMatch != nil) {
+        // user pressed okay button
+        NSLog(@"Obj at index 0 = %@", [fieldMatch objectAtIndex:0]);
+    }
+    // else user canceled
 }
 
 - (void)viewWillAppear:(BOOL)animated {

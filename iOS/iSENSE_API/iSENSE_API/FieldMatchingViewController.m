@@ -97,6 +97,8 @@
     fieldPickerView = [[UIPickerView alloc] init];
     fieldPickerView.delegate = self;
     fieldPickerView.showsSelectionIndicator = YES;
+    
+    [self.navigationItem setHidesBackButton:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -105,11 +107,19 @@
 }
 
 - (IBAction) backOnClick:(id)sender {
-    
+    // send back nil to show that the user cancelled
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFIELD_MATCHED_ARRAY object:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction) okOnClick:(id)sender {
+    // send back the field matched array
+    NSMutableArray *fieldMatch = [[NSMutableArray alloc] init];
+    for (FieldEntry *fe in entries)
+        [fieldMatch addObject:fe->mField];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFIELD_MATCHED_ARRAY object:fieldMatch];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 // There is a single column in this table
@@ -138,10 +148,11 @@
     return cell;
 }
 
-// If a table cell is clicked (probably want this method to be blank to emphasize the cells themselves should not be clickable)
+// If a table cell is clicked
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView reloadData];
     FieldMatchCell *cell = (FieldMatchCell *)[tableView cellForRowAtIndexPath:indexPath];
+    lastClickedCellIndex = [indexPath copy];
     
     [NSThread sleepForTimeInterval:0.05];
     [cell setBackgroundColor:[UIColor clearColor]];
@@ -245,28 +256,30 @@
 }
 
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [self setNewProjectForCellAtIndex:fieldTag];
-    // update the arrays of data and re-draw the scrollview, then field matching is done!! TODO TODO TODO TODO
+    // update the arrays of data and re-draw the scrollview, then field matching is done
+    FieldEntry *fe = [entries objectAtIndex:fieldTag];
+    fe->mField = fieldName;
+    [entries setObject:fe atIndexedSubscript:fieldTag];
+    
+    // re-draw the field cell
+    FieldMatchCell *cell = (FieldMatchCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+    [cell setMatch:fieldName];
 }
 
-- (void) setNewProjectForCellAtIndex:(int)i {
-    
-    NSLog(@"Index %d gets %@", i, fieldName);
-}
 
 // Called every time the recording interval selector stops on a new row
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
     // Handle the selection
     NSString *title = @"";
     switch (row) {
-        case 0:title = @""; break;              case 1:title = sACCEL_X; break;         case 2:title = sACCEL_Y; break;
-        case 3:title = sACCEL_Z; break;         case 4:title = sACCEL_TOTAL; break;     case 5:title = sTEMPERATURE_C; break;
-        case 6:title = sTEMPERATURE_F; break;   case 7:title = sTEMPERATURE_K; break;   case 8:title = sTIME_MILLIS; break;
-        case 9:title = sLUX; break;             case 10:title = sANGLE_DEG; break;      case 11:title = sANGLE_RAD; break;
-        case 12:title = sLATITUDE; break;       case 13:title = sLONGITUDE; break;      case 14:title = sMAG_X; break;
-        case 15:title = sMAG_Y; break;          case 16:title = sMAG_Z; break;          case 17:title = sMAG_TOTAL; break;
-        case 18:title = sALTITUDE; break;       case 19:title = sPRESSURE; break;       case 20:title = sGYRO_X; break;
-        case 21:title = sGYRO_Y; break;         case 22:title = sGYRO_Z; break;
+        case 0:title  = @"";            break;  case 1:title  = sACCEL_X;       break;  case 2:title  = sACCEL_Y; break;
+        case 3:title  = sACCEL_Z;       break;  case 4:title  = sACCEL_TOTAL;   break;  case 5:title  = sTEMPERATURE_C; break;
+        case 6:title  = sTEMPERATURE_F; break;  case 7:title  = sTEMPERATURE_K; break;  case 8:title  = sTIME_MILLIS; break;
+        case 9:title  = sLUX;           break;  case 10:title = sANGLE_DEG;     break;  case 11:title = sANGLE_RAD; break;
+        case 12:title = sLATITUDE;      break;  case 13:title = sLONGITUDE;     break;  case 14:title = sMAG_X; break;
+        case 15:title = sMAG_Y;         break;  case 16:title = sMAG_Z;         break;  case 17:title = sMAG_TOTAL; break;
+        case 18:title = sALTITUDE;      break;  case 19:title = sPRESSURE;      break;  case 20:title = sGYRO_X; break;
+        case 21:title = sGYRO_Y;        break;  case 22:title = sGYRO_Z;        break;
     }
     [alertText setText:title];
     fieldName = title;

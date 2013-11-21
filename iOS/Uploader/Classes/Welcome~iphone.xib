@@ -73,10 +73,10 @@
 					<object class="IBUIButton" id="341236903">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 80}, {280, 101}}</string>
+						<string key="NSFrame">{{20, 80}, {280, 151}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="1016784044"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -111,7 +111,7 @@
 					<object class="IBUIButton" id="994710723">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 296}, {280, 101}}</string>
+						<string key="NSFrame">{{20, 238}, {280, 151}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -121,29 +121,6 @@
 						<int key="IBUIButtonType">1</int>
 						<int key="IBUILineBreakMode">0</int>
 						<string key="IBUINormalTitle">Select a Project Later</string>
-						<reference key="IBUIHighlightedTitleColor" ref="778679982"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4yODk0MjkyODEzIDAuNDY2NTI5NzAwNiAwLjc4NzM2NDEzMDQAA</bytes>
-						</object>
-						<reference key="IBUINormalTitleShadowColor" ref="880097673"/>
-						<reference key="IBUIFontDescription" ref="744696104"/>
-						<reference key="IBUIFont" ref="423625142"/>
-					</object>
-					<object class="IBUIButton" id="1016784044">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 188}, {280, 101}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="994710723"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<int key="IBUIContentHorizontalAlignment">0</int>
-						<int key="IBUIContentVerticalAlignment">0</int>
-						<int key="IBUIButtonType">1</int>
-						<int key="IBUILineBreakMode">0</int>
-						<string key="IBUINormalTitle">Create a new Project (requires Internet)</string>
 						<reference key="IBUIHighlightedTitleColor" ref="778679982"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -189,14 +166,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">createNewProj</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="1016784044"/>
-					</object>
-					<int key="connectionID">54</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">selectProjLater</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="994710723"/>
@@ -221,15 +190,6 @@
 					</object>
 					<int key="connectionID">58</int>
 				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">createNewProjOnClick:</string>
-						<reference key="source" ref="1016784044"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">57</int>
-				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -244,9 +204,8 @@
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="122795220"/>
-							<reference ref="994710723"/>
-							<reference ref="1016784044"/>
 							<reference ref="341236903"/>
+							<reference ref="994710723"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -279,12 +238,6 @@
 						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">32</int>
-						<reference key="object" ref="1016784044"/>
-						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -295,7 +248,6 @@
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="32.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
@@ -311,16 +263,11 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="continueWithProjOnClick:">UIButton</string>
-						<string key="createNewProjOnClick:">UIButton</string>
 						<string key="selectProjLaterOnClick:">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="continueWithProjOnClick:">
 							<string key="name">continueWithProjOnClick:</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBActionInfo" key="createNewProjOnClick:">
-							<string key="name">createNewProjOnClick:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="selectProjLaterOnClick:">
@@ -330,16 +277,11 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="continueWithProj">UIButton</string>
-						<string key="createNewProj">UIButton</string>
 						<string key="selectProjLater">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="continueWithProj">
 							<string key="name">continueWithProj</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="createNewProj">
-							<string key="name">createNewProj</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="selectProjLater">

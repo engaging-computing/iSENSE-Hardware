@@ -11,12 +11,17 @@
 #import "FieldEntry.h"
 #import "Fields.h"
 
+#define kFIELD_MATCHED_ARRAY @"field_matched_array"
+
 @interface FieldMatchingViewController : UIViewController <UIPickerViewDelegate, UIAlertViewDelegate> {
     // bundle for resource files in the iSENSE_API_Bundle
     NSBundle *isenseBundle;
     
     // to hold FieldEntry objects
     NSMutableArray *entries;
+    
+    // last clicked cell
+    NSIndexPath *lastClickedCellIndex;
     
     // pickerview for changing fields
     BOOL isShowingPickerView;
