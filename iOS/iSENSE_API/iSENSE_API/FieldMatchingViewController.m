@@ -138,17 +138,16 @@
 
 // Initialize a single object in the table
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"makin cells");
     static NSString *cellIndetifier = @"FieldMatchCellIdentifier";
+    
     FieldMatchCell *cell = (FieldMatchCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
         UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"FieldMatchCell" bundle:isenseBundle];
         cell = (FieldMatchCell *) tmpVC.view;
     }
-    NSLog(@"      in prep...");
+    
     FieldEntry *entry = [entries objectAtIndex:indexPath.row];
     [cell setupCellWithName:entry->uField andMatch:entry->mField];
-    NSLog(@"      prepped!");
     return cell;
 }
 
