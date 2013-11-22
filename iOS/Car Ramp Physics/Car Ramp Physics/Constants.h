@@ -59,10 +59,10 @@
 #define TAG_MANUAL_LOGIN    705
 #define TAG_MANUAL_EXP      706
 
-#define DEV_VIS_URL @"http://isensedev.cs.uml.edu/highvis.php?sessions="
-#define PROD_VIS_URL @"http://isenseproject.org/highvis.php?sessions="
+#define DEV_VIS_URL @"http://rsense-dev.cs.uml.edu/projects/"
+#define PROD_VIS_URL @"http://isenseproject.org/projects/"
 
-#define DEV_DEFAULT_EXP 32
+#define DEV_DEFAULT_EXP 3
 #define PROD_DEFAULT_EXP 12
 
 #define FIRST_NAME_FIELD 9001
