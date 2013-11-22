@@ -356,29 +356,52 @@
             
             [self rememberPrefs];
             
-            // get the fields to field match
-            DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projNumInteger API:api andFields:nil];
-            UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading fields..."];
-            [message show];
-            
-            dispatch_queue_t queue = dispatch_queue_create("step_1_setup_loading_project_fields", NULL);
-            dispatch_async(queue, ^{
-                [dfm getOrder];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // set an observer for the field matched array caught from FieldMatching
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
-                    
-                    // launch the field matching dialog
-                    FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
-                    fmvc.title = @"Field Matching";
-                    [self.navigationController pushViewController:fmvc animated:YES];
-                    [message dismissWithClickedButtonIndex:nil animated:YES];
-                });
-            });
-            
+            [self launchFieldMatchingViewControllerFromBrowse:FALSE];
         }
         
     } 
+}
+
+- (void) launchFieldMatchingViewControllerFromBrowse:(bool) fromBrowse {
+    // get the fields to field match
+    DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projNumInteger API:api andFields:nil];
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading fields..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("step_1_setup_loading_project_fields", NULL);
+    dispatch_async(queue, ^{
+        [dfm getOrder];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // set an observer for the field matched array caught from FieldMatching
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
+            
+            // launch the field matching dialog
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+            fmvc.title = @"Field Matching";
+        
+            if (fromBrowse) {
+                //[self performSelector:@selector(presentFieldMatchingViewControllerAfterDelay:) withObject:fmvc afterDelay:1.0];
+                double delayInSeconds = 0.1;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self.navigationController pushViewController:fmvc animated:YES];
+                });
+            } else
+                [self.navigationController pushViewController:fmvc animated:YES];
+            
+            if (fromBrowse) [NSThread sleepForTimeInterval:1.0];
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+        });
+    });
+}
+
+- (void) presentFieldMatchingViewControllerAfterDelay:(id)sender {
+    FieldMatchingViewController *fmvc = (FieldMatchingViewController *) sender;
+    NSMutableArray *controllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [controllers addObject:fmvc];
+    [self.navigationController setViewControllers:controllers animated:YES];
+    
 }
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
@@ -437,11 +460,6 @@
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
-        
-        // launch the field matching dialog TODO
-        FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:nil andProjectFields:nil];
-        fmvc.title = @"Field Matching";
-        [self.navigationController pushViewController:fmvc animated:YES];
     }
 }
 
@@ -580,6 +598,8 @@
         [prefs setInteger:0 forKey:kPROJECT_ID_DC]; // reset global proj
         
         displaySensorSelectFromBrowse = true;
+        
+        [self launchFieldMatchingViewControllerFromBrowse:TRUE];
     }
 }
 

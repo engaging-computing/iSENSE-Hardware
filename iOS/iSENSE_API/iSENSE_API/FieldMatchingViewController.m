@@ -78,7 +78,10 @@
         
         for (int i = 0; i < [mf count]; i++) {
             FieldEntry *fe = [[FieldEntry alloc] init];
-            fe->matchedField = [mf objectAtIndex:i];
+            if ([((NSString *)[mf objectAtIndex:i]) isEqualToString:sNULL_STRING])
+                fe->matchedField = @"";
+            else
+                fe->matchedField = [mf objectAtIndex:i];
             fe->projectField = [pf objectAtIndex:i];
             [entries addObject:fe];
         }

@@ -111,7 +111,7 @@ dataToBeOrdered, backFromQueue, f;
     dfm = [[DataFieldManager alloc] init];
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
     
-    // Initialize buttons
+    // Initialize buttons TODO - should be in a notification back from Step1Setup, and get the fields back
     bool step2Enabled = [prefs boolForKey:[StringGrabber grabString:@"key_step_2_enabled"]];
     
     [self setEnabled:true forButton:step1];
