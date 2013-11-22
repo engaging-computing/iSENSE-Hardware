@@ -369,7 +369,7 @@
                     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
                     
                     // launch the field matching dialog
-                    FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+                    FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
                     fmvc.title = @"Field Matching";
                     [self.navigationController pushViewController:fmvc animated:YES];
                     [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -438,8 +438,8 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
         
-        // launch the field matching dialog
-        FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:nil andProjectFields:nil];
+        // launch the field matching dialog TODO
+        FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:nil andProjectFields:nil];
         fmvc.title = @"Field Matching";
         [self.navigationController pushViewController:fmvc animated:YES];
     }

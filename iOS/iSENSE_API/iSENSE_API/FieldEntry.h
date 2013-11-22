@@ -10,7 +10,7 @@
 
 @interface FieldEntry : NSObject {
 @public
-    NSString *uField; // user's field
-    NSString *mField; // matched field
+    NSString *projectField;
+    NSString *matchedField;
 }
 @end

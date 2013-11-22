@@ -10,7 +10,7 @@
 
 @implementation FieldMatchCell
 
-@synthesize fieldName, fieldMatch;
+@synthesize fieldProj, fieldMatch;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -22,27 +22,27 @@
     [super setSelected:selected animated:animated];
 }
 
-- (FieldMatchCell *)setupCellWithName:(NSString *)name andMatch:(NSString *)match {
+- (FieldMatchCell *)setupCellWithProjField:(NSString *)proj andMatchField:(NSString *)match{
     
-    [self.fieldName  setText:name];
+    [self.fieldProj  setText:proj];
     [self.fieldMatch setText:match];
     
     return self;
 }
 
-- (void) setName:(NSString *)name {
-    [fieldName setText:name];
+- (void) setProjField:(NSString *)proj {
+    [fieldProj setText:proj];
 }
 
-- (void) setMatch:(NSString *)match {
+- (void) setMatchField:(NSString *)match {
     [fieldMatch setText:match];
 }
 
-- (NSString *) getName {
-    return fieldName.text;
+- (NSString *) getProjField {
+    return fieldProj.text;
 }
 
-- (NSString *) getMatch {
+- (NSString *) getMatchField {
     return fieldMatch.text;
 }
 
