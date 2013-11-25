@@ -208,6 +208,9 @@
     
     [picker setShowsSelectionIndicator:YES];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    recordLength = countdown = [defaults integerForKey:@"recordLength"];    
+    
     [self setPickerDefault];
     
     
@@ -437,6 +440,8 @@
             
             Fields *fieldsRow = [[Fields alloc] init];
             
+            NSString *vector = @"";
+            
             // Fill a new row of data starting with time
             double time = [[NSDate date] timeIntervalSince1970];
             if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
@@ -444,51 +449,44 @@
             
             
             // acceleration in meters per second squared
-            if ([dfm enabledFieldAtIndex:fACCEL_X])
+            if ([dfm enabledFieldAtIndex:fACCEL_X]) {
                 fieldsRow.accel_x = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
-            if ([dfm enabledFieldAtIndex:fACCEL_Y])
+                [vector stringByAppendingString:@"X: "];
+                [vector stringByAppendingString:[fieldsRow.accel_x stringValue]];
+            } if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
                 fieldsRow.accel_y = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
-            if ([dfm enabledFieldAtIndex:fACCEL_Z])
+                if ([vector length] == 0) {
+                    [vector stringByAppendingString:@"Y: "];
+                } else {
+                    [vector stringByAppendingString:@", Y: "];
+                }
+                [vector stringByAppendingString:[fieldsRow.accel_y stringValue]];
+            } if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
                 fieldsRow.accel_z = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
-            if ([dfm enabledFieldAtIndex:fACCEL_TOTAL])
+                if ([vector length] == 0) {
+                    [vector stringByAppendingString:@"Z: "];
+                } else {
+                    [vector stringByAppendingString:@", Z: "];
+                }
+                [vector stringByAppendingString:[fieldsRow.accel_z stringValue]];
+            } if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
                 fieldsRow.accel_total = [NSNumber numberWithDouble:
                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
                                               + pow(fieldsRow.accel_y.doubleValue, 2)
                                               + pow(fieldsRow.accel_z.doubleValue, 2))];
             
-            // latitude and longitude coordinates
-            CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
-            double latitude  = lc2d.latitude;
-            double longitude = lc2d.longitude;
-            if ([dfm enabledFieldAtIndex:fLATITUDE])
-                fieldsRow.latitude = [NSNumber numberWithDouble:latitude];
-            if ([dfm enabledFieldAtIndex:fLONGITUDE])
-                fieldsRow.longitude = [NSNumber numberWithDouble:longitude];
+                if ([vector length] == 0) {
+                    [vector stringByAppendingString:@"Magnitude: "];
+                } else {
+                    [vector stringByAppendingString:@", Magnitude: "];
+                }
+                [vector stringByAppendingString:[fieldsRow.accel_total stringValue]];
             
-            // magnetic field in microTesla
-            if ([dfm enabledFieldAtIndex:fMAG_X])
-                fieldsRow.mag_x = [NSNumber numberWithDouble:[motionmanager.magnetometerData magneticField].x];
-            if ([dfm enabledFieldAtIndex:fMAG_Y])
-                fieldsRow.mag_y = [NSNumber numberWithDouble:[motionmanager.magnetometerData magneticField].y];
-            if ([dfm enabledFieldAtIndex:fMAG_Z])
-                fieldsRow.mag_z = [NSNumber numberWithDouble:[motionmanager.magnetometerData magneticField].z];
-            if ([dfm enabledFieldAtIndex:fMAG_TOTAL])
-                fieldsRow.mag_total = [NSNumber numberWithDouble:
-                                       sqrt(pow(fieldsRow.mag_x.doubleValue, 2)
-                                            + pow(fieldsRow.mag_y.doubleValue, 2)
-                                            + pow(fieldsRow.mag_z.doubleValue, 2))];
-            
-            // rotation rate in radians per second
-            if (motionmanager.gyroAvailable) {
-                if ([dfm enabledFieldAtIndex:fGYRO_X])
-                    fieldsRow.gyro_x = [NSNumber numberWithDouble:[motionmanager.gyroData rotationRate].x];
-                if ([dfm enabledFieldAtIndex:fGYRO_Y])
-                    fieldsRow.gyro_y = [NSNumber numberWithDouble:[motionmanager.gyroData rotationRate].y];
-                if ([dfm enabledFieldAtIndex:fGYRO_Z])
-                    fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionmanager.gyroData rotationRate].z];
             }
             
-            // TODO there's more fields, right...?
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [vector_status setText:vector];
+            });
             
             
             // update data object
