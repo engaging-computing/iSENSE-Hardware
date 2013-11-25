@@ -29,7 +29,7 @@ public class Welcome extends Activity {
 	public API api;
 	
 	private int actionBarTapCount = 0;
-	public static boolean useDev = true;
+	public static boolean useDev = false;
 	
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
 	private static final int PROJECT_CREATE_REQUESTED    = 101;
