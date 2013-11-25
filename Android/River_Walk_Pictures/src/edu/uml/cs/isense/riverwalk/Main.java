@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -211,8 +212,19 @@ public class Main extends Activity implements LocationListener {
 						recording = true;
 						safeCameraOpen(0);
 						
+//						Log.d("CameraPreview", "Camera is:" + mCamera.toString());
+//				    	
+//				   	    Camera.Parameters parameters = mCamera.getParameters();
+//				        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+//				        int height = sizeList.get(0).height;
+//				        int width = sizeList.get(0).width;
+//				        parameters.setPreviewSize(width, height);
+//				        mCamera.setParameters(parameters);
+						
 						mPreview = new CameraPreview(mContext, mCamera);
 				        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+				        if (mPreview.getHolder() != null)
+				        Log.d("Main","mPreview is " + mPreview.getHolder());
 				        preview.addView(mPreview);        
 				        
 						new continuouslytakephotos().execute();
@@ -335,7 +347,8 @@ public class Main extends Activity implements LocationListener {
 			Camera.CameraInfo c = new Camera.CameraInfo();
 
 			Log.d("CameraMain", "Camera info cameras " + c.toString());
-			mCamera = Camera.open(0);
+			mCamera = Camera.open(id);
+			
 			mCamera.unlock();
 			Log.d("CameraMain", "Camera is: " + mCamera.toString());
 			qOpened = (mCamera != null);
