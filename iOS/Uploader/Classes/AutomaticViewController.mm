@@ -14,7 +14,7 @@
 
 @synthesize isRecording, motionManager, dataToBeJSONed, projNum, timer, recordDataTimer, elapsedTime, locationManager, dfm, testLength, dataSetName,
 sampleInterval, geoCoder, city, address, country, dataSaver, managedObjectContext, api, longClickRecognizer, backFromSetup, recordingRate,
-dataToBeOrdered, backFromQueue, f;
+dataToBeOrdered, backFromQueue, f, fields;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -111,7 +111,7 @@ dataToBeOrdered, backFromQueue, f;
     dfm = [[DataFieldManager alloc] init];
     sampleInterval = DEFAULT_SAMPLE_INTERVAL;
     
-    // Initialize buttons
+    // Initialize buttons TODO - should be in a notification back from Step1Setup, and get the fields back
     bool step2Enabled = [prefs boolForKey:[StringGrabber grabString:@"key_step_2_enabled"]];
     
     [self setEnabled:true forButton:step1];
@@ -175,6 +175,7 @@ dataToBeOrdered, backFromQueue, f;
             dataSetName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
             
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
+            fields = [prefs objectForKey:[NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]];
             
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
@@ -212,16 +213,19 @@ dataToBeOrdered, backFromQueue, f;
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
+    NSLog(@"should autorotate to interface orientation");
     return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
+    NSLog(@"should autorotate");
     return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
+    NSLog(@"supported interface orientations");
     if (isRecording) {
         if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
             return UIInterfaceOrientationMaskPortrait;
@@ -281,11 +285,18 @@ dataToBeOrdered, backFromQueue, f;
 
             // Get Field Order
             //[dfm getOrder];
-            //[dfm getFieldOrderOfExperiment:projNum]; TODO
+            //[dfm getFieldOrderOfExperiment:projNum];
             //[self getEnabledFields];
             f = [[Fields alloc] init];
+            
+            
+            /****  TODO - ensure that this is how we properly get fields to record for the proj ***/
+            
             dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:f];
             [dfm getOrder];
+            [dfm setEnabledFields:fields];
+            
+            /*******/
             
 //            if (projNum == -1) {
 //                [dfm getOrder];
@@ -726,144 +737,144 @@ dataToBeOrdered, backFromQueue, f;
     }
 }
 
-- (void) setupDFMWithAllFields {
-    
-    for (int i = 0; i < [[dfm order] count]; i++) {
-        [dfm setEnabledField:true atIndex:i];
-    }
-}
+//- (void) setupDFMWithAllFields {
+//    
+//    for (int i = 0; i < [[dfm order] count]; i++) {
+//        [dfm setEnabledField:true atIndex:i];
+//    }
+//}
 
 // Enabled fields check
-- (void) getEnabledFields {
-    
-    if (projNum == -1) {
-        [self setupDFMWithAllFields];
-    } else {
-        int i = 0;
-        
-        // get the sensorCompatability array first
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
-        
-        for (NSString *s in [dfm order]) {
-            if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fACCEL_X];
-                    
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fACCEL_Y];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fACCEL_Z];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fACCEL_TOTAL];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fTIME_MILLIS];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fLATITUDE];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fLONGITUDE];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fMAG_X];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fMAG_Y];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fMAG_Z];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fMAG_TOTAL];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fANGLE_DEG];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fANGLE_RAD];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fTEMPERATURE_C];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fTEMPERATURE_F];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fTEMPERATURE_K];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fPRESSURE];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fALTITUDE];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fLUX];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fGYRO_X];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fGYRO_Y];
-                }
-            }
-            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
-                if ([selectedCells[i] integerValue] == 1) {
-                    [dfm setEnabledField:true atIndex:fGYRO_Z];
-                }
-            }
-            
-            ++i;
-        }
-  
-    }
-        
-}
+//- (void) getEnabledFields {
+//    
+//    if (projNum == -1) {
+//        [self setupDFMWithAllFields];
+//    } else {
+//        int i = 0;
+//        
+//        // get the sensorCompatability array first
+//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
+//        
+//        for (NSString *s in [dfm order]) {
+//            if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fACCEL_X];
+//                    
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fACCEL_Y];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fACCEL_Z];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fACCEL_TOTAL];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fTIME_MILLIS];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fLATITUDE];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fLONGITUDE];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fMAG_X];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fMAG_Y];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fMAG_Z];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fMAG_TOTAL];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fANGLE_DEG];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fANGLE_RAD];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_C];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_F];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_K];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fPRESSURE];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fALTITUDE];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fLUX];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fGYRO_X];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fGYRO_Y];
+//                }
+//            }
+//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
+//                if ([selectedCells[i] integerValue] == 1) {
+//                    [dfm setEnabledField:true atIndex:fGYRO_Z];
+//                }
+//            }
+//            
+//            ++i;
+//        }
+//  
+//    }
+//        
+//}
 
 - (void) setRecordingLayout {
     

@@ -24,6 +24,7 @@
     int projNumInteger;
     bool sensorsSelected;
     bool displaySensorSelectFromBrowse;
+    NSMutableArray *returnFields;
     
 }
 

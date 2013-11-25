@@ -14,7 +14,7 @@
 
 @implementation FieldMatchingViewController
 
-@synthesize userFields, projFields, mTableView;
+@synthesize matchFields, projFields, mTableView;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -68,21 +68,23 @@
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
 }
 
-- (id) initWithUserFields:(NSMutableArray *)uf andProjectFields:(NSMutableArray *)pf {
+- (id) initWithMatchedFields:(NSMutableArray *)mf andProjectFields:(NSMutableArray *)pf {
     self = [super init];
     if (self) {
-        userFields = uf;
+        matchFields = mf;
         projFields = pf;
         isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
         entries = [[NSMutableArray alloc] init];
         
-        for (int i = 0; i < [uf count]; i++) {
+        for (int i = 0; i < [mf count]; i++) {
             FieldEntry *fe = [[FieldEntry alloc] init];
-            fe->uField = [uf objectAtIndex:i];
-            fe->mField = [pf objectAtIndex:i];
+            if ([((NSString *)[mf objectAtIndex:i]) isEqualToString:sNULL_STRING])
+                fe->matchedField = @"";
+            else
+                fe->matchedField = [mf objectAtIndex:i];
+            fe->projectField = [pf objectAtIndex:i];
             [entries addObject:fe];
         }
-        NSLog(@"initialized");
     }
     return self;
 
@@ -98,8 +100,6 @@
     fieldPickerView = [[UIPickerView alloc] init];
     fieldPickerView.delegate = self;
     fieldPickerView.showsSelectionIndicator = YES;
-    
-    NSLog(@"loaded");
     
     [self.navigationItem setHidesBackButton:YES];
 }
@@ -119,7 +119,7 @@
     // send back the field matched array
     NSMutableArray *fieldMatch = [[NSMutableArray alloc] init];
     for (FieldEntry *fe in entries)
-        [fieldMatch addObject:fe->mField];
+        [fieldMatch addObject:fe->matchedField];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kFIELD_MATCHED_ARRAY object:fieldMatch];
     [self.navigationController popViewControllerAnimated:YES];
@@ -132,23 +132,21 @@
 
 // How many rows in this table view (the length of the array of fields)
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"FieldMatch: %d fields", [userFields count]);
-    return [userFields count];
+    return [matchFields count];
 }
 
 // Initialize a single object in the table
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"makin cells");
     static NSString *cellIndetifier = @"FieldMatchCellIdentifier";
+    
     FieldMatchCell *cell = (FieldMatchCell *)[tableView dequeueReusableCellWithIdentifier:cellIndetifier];
     if (cell == nil) {
         UIViewController *tmpVC = [[UIViewController alloc] initWithNibName:@"FieldMatchCell" bundle:isenseBundle];
         cell = (FieldMatchCell *) tmpVC.view;
     }
-    NSLog(@"      in prep...");
+    
     FieldEntry *entry = [entries objectAtIndex:indexPath.row];
-    [cell setupCellWithName:entry->uField andMatch:entry->mField];
-    NSLog(@"      prepped!");
+    [cell setupCellWithProjField:entry->projectField andMatchField:entry->matchedField];
     return cell;
 }
 
@@ -262,12 +260,12 @@
 - (void) alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // update the arrays of data and re-draw the scrollview, then field matching is done
     FieldEntry *fe = [entries objectAtIndex:fieldTag];
-    fe->mField = fieldName;
+    fe->matchedField = fieldName;
     [entries setObject:fe atIndexedSubscript:fieldTag];
     
     // re-draw the field cell
     FieldMatchCell *cell = (FieldMatchCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-    [cell setMatch:fieldName];
+    [cell setMatchField:fieldName];
 }
 
 

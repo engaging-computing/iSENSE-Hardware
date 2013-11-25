@@ -31,7 +31,7 @@
     UITextField *alertText;
 }
 
-- (id) initWithUserFields:(NSMutableArray *)uf andProjectFields:(NSMutableArray *)pf;
+- (id) initWithMatchedFields:(NSMutableArray *)mf andProjectFields:(NSMutableArray *)pf;
 
 - (IBAction) backOnClick:(id)sender;
 - (IBAction) okOnClick:(id)sender;
@@ -39,7 +39,7 @@
 @property (nonatomic, assign) IBOutlet UITableView *mTableView;
 @property (nonatomic, assign) IBOutlet UIButton *back;
 @property (nonatomic, assign) IBOutlet UIButton *ok;
-@property (nonatomic, strong) NSMutableArray *userFields;
+@property (nonatomic, strong) NSMutableArray *matchFields;
 @property (nonatomic, strong) NSMutableArray *projFields;
 
 @end
