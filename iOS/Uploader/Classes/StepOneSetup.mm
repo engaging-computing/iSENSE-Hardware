@@ -126,19 +126,19 @@
         selectProj.alpha = 0.5;
     } else {
         // search for local proj
-        NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
-        if ([defaultExp length] != 0) {
-            if ([defaultExp isEqualToString:@"-1"]) {
+        NSString *defaultProj = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        if ([defaultProj length] != 0) {
+            if ([defaultProj isEqualToString:@"-1"]) {
                 selectLater.on = true;
                 selectProj.enabled = NO;
                 selectProj.alpha = 0.5;
             } else {
-                NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
+                NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultProj];
                 [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
                 selectLater.on = false;
             }
         } else {
-            if (defaultExp == NULL) {
+            if (defaultProj == NULL) {
                 selectLater.on = false;
                 selectProj.enabled = YES;
                 selectProj.alpha = 1.0;
@@ -147,6 +147,15 @@
                 selectProj.enabled = NO;
                 selectProj.alpha = 0.5;
             }
+        }
+    }
+    
+    returnFields = [[NSMutableArray alloc] init];
+    NSString *proj = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+    if ([proj intValue] > 0) {
+        NSMutableArray *fields = [self getFieldsFromPrefsForProj:[proj intValue]];
+        if (fields != nil && [fields count] != 0) {
+            [returnFields addObjectsFromArray:fields];
         }
     }
     
@@ -162,7 +171,7 @@
     bool ready = true;
     
     if ([[sessionName text] length] == 0) {
-        [self.view makeWaffle:@"Please enter a session name first"
+        [self.view makeWaffle:@"Please enter a data set name first"
                     duration:WAFFLE_LENGTH_LONG
                     position:WAFFLE_BOTTOM
                        image:WAFFLE_WARNING];
@@ -202,26 +211,29 @@
     }
     
     if (!selectLater.on) {
-        NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        NSString *projID = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]]; // TODO or check global proj?
         
-        if (eid == NULL || [eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
+        if (projID == NULL || [projID isEqualToString:@""] || [projID isEqualToString:@"-1"]) {
             if (ready == true)
-                [self.view makeWaffle:@"Please select an experiment"
+                [self.view makeWaffle:@"Please select a project"
                             duration:WAFFLE_LENGTH_LONG
                             position:WAFFLE_BOTTOM
                                image:WAFFLE_WARNING];
             ready = false;
-        }
-        
-        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
-        if ([selectedCells count] == 0) {
-            if (ready == true)
-                [self.view makeWaffle:@"Please re-select an experiment and fields to record data for"
+        } else if ([returnFields count] == 0) {
+            if (ready == true) {
+                [self.view makeWaffle:@"Please select fields for this project"
                              duration:WAFFLE_LENGTH_LONG
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_WARNING];
-            ready = false;
+                
+                projNumInteger = [projID intValue];
+                [self launchFieldMatchingViewControllerFromBrowse:FALSE];
+                
+                return;
+            }
         }
+        
     }
     
     if (ready) {
@@ -421,9 +433,32 @@
     NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
     if (fieldMatch != nil) {
         // user pressed okay button
-        NSLog(@"Obj at index 0 = %@", [fieldMatch objectAtIndex:0]);
+        returnFields = [[NSMutableArray alloc] init];
+        [returnFields addObjectsFromArray:fieldMatch];
+        [self writeFieldsToPrefsForProj:projNumInteger];
     }
     // else user canceled
+}
+
+- (void) writeFieldsToPrefsForProj:(int)projID {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *prefKey = [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projID];
+    NSLog(@"WRITING %@", prefKey);
+    if (returnFields == nil || [returnFields count] == 0)
+        return;
+    
+    [prefs setObject:returnFields forKey:prefKey];
+}
+
+- (NSMutableArray *) getFieldsFromPrefsForProj:(int)projID {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *prefKey = [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projID];
+    NSLog(@"READING %@", prefKey);
+    NSMutableArray *fields = [prefs objectForKey:prefKey];
+    if (fields == nil || [fields count] == 0)
+        return nil;
+    
+    return fields;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

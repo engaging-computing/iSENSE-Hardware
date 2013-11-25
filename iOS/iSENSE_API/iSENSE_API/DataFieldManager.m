@@ -270,6 +270,7 @@
 
 - (void) setEnabledFields:(NSMutableArray *)acceptedFields {
     for (NSString *s in acceptedFields) {
+        NSLog(@"STRING IN ACCEPTEDFIELDS: %@", s);
         if ([s isEqualToString:sACCEL_X])
             enabledFields[fACCEL_X] = true;
         else if ([s isEqualToString:sACCEL_Y])
@@ -376,7 +377,7 @@
         }
         if ([s isEqualToString:sTIME_MILLIS]) {
             if (enabledFields[fTIME_MILLIS])
-                [dataJSON setObject:f.time_millis forKey:[NSString stringWithFormat:@"%d", i]];
+                [dataJSON setObject:[NSString stringWithFormat:@"u %@", f.time_millis] forKey:[NSString stringWithFormat:@"%d", i]];
             else
                 [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
             continue;
