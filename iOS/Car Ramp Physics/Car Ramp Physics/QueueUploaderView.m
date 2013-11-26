@@ -343,10 +343,8 @@
             
         } else if (buttonIndex == OPTION_BROWSE_EXPERIMENTS) {
             
-            int expNum;
             ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
             browseView.title = @"Browse for Projects";
-            browseView.chosenProject = &expNum;
             [self.navigationController pushViewController:browseView animated:YES];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {

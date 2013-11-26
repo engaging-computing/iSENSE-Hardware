@@ -135,4 +135,7 @@
 #define kPROJECT_ID_MANUAL @"project_id_manual"
 #define kENABLE_MANUAL @"enable_manual"
 
+// to get matched fields
+#define kFIELD_PREF_STRING @"field_prefs_for_proj_"
+
 #endif
