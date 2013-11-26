@@ -223,8 +223,11 @@ public class Main extends Activity implements LocationListener {
 						
 						mPreview = new CameraPreview(mContext, mCamera);
 				        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-				        if (mPreview.getHolder() != null)
-				        Log.d("Main","mPreview is " + mPreview.getHolder());
+				        
+				        if (mPreview.getHolder() != null) {
+				        	Log.d("Main","mPreview is " + mPreview.getHolder());
+				        }
+				        
 				        preview.addView(mPreview);        
 				        
 						new continuouslytakephotos().execute();
@@ -349,7 +352,6 @@ public class Main extends Activity implements LocationListener {
 			Log.d("CameraMain", "Camera info cameras " + c.toString());
 			mCamera = Camera.open(id);
 			
-			mCamera.unlock();
 			Log.d("CameraMain", "Camera is: " + mCamera.toString());
 			qOpened = (mCamera != null);
 		} catch (Exception e) {
