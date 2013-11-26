@@ -39,7 +39,7 @@ typedef struct _RotationDataSaver{
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowseViewControllerDelegate>
 {
     
     RotationDataSaver *saver;
@@ -60,7 +60,7 @@ typedef struct _RotationDataSaver{
 @property(nonatomic, retain) UIAlertView *loginalert;
 @property(nonatomic, retain) UIAlertView *saveMode;
 @property(nonatomic, retain) API *api;
-@property NewDFM *dfm;
+@property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, strong) NSMutableArray *dataToBeOrdered;

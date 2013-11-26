@@ -7,15 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 760D197517958A4300C123D6 /* QueueUploaderView.m */; };
 		760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */; };
 		760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197E17958AF600C123D6 /* queue_layout~iphone.xib */; };
 		760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */; };
 		760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198217958AFF00C123D6 /* queue_layout~ipad.xib */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
-		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
-		7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7636B54E179EC3BC00DE6C7C /* QueueCell.m */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099C2178DD92D00425A27 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BB178DD92D00425A27 /* button_dark.png */; };
 		765099C5178DD92D00425A27 /* button_light_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BE178DD92D00425A27 /* button_light_long.png */; };
@@ -68,15 +65,12 @@
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
 		76C54CF41799704100B93A67 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76C54CF31799704100B93A67 /* button-37.wav */; };
 		76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C54CF81799754300B93A67 /* AudioToolbox.framework */; };
-		76DF6A7C17E3A81B00CF5DDD /* ProjectBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */; };
-		76DF6A7D17E3A81B00CF5DDD /* ProjectBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */; };
 		76DF6A8017E4FD2100CF5DDD /* projectblock_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */; };
 		76DF6A8117E4FD2100CF5DDD /* projectblock_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */; };
 		76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */; };
 		76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */; };
 		76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */; };
 		76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */; };
-		76DF6A8C17E778F500CF5DDD /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
 		76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E91F8617945E2E001749FC /* VariablesViewController.m */; };
 		76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */; };
@@ -116,18 +110,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		760D197517958A4300C123D6 /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
 		760D197917958A4C00C123D6 /* QueueUploaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
 		760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
 		760D197E17958AF600C123D6 /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
 		760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
 		760D198217958AFF00C123D6 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
-		761D275D1795C1960056FA8C /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
 		761D27601795C1A30056FA8C /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		7636B54D179EC3BC00DE6C7C /* QueueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
-		7636B54E179EC3BC00DE6C7C /* QueueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueCell.m; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -191,18 +182,12 @@
 		76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
 		76C54CF31799704100B93A67 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		76C54CF81799754300B93A67 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		76DF6A7517E3A81B00CF5DDD /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
-		76DF6A7717E3A81B00CF5DDD /* ProjectBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBlock.h; sourceTree = "<group>"; };
-		76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBlock.m; sourceTree = "<group>"; };
-		76DF6A7917E3A81B00CF5DDD /* ProjectBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowseViewController.h; sourceTree = "<group>"; };
-		76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowseViewController.m; sourceTree = "<group>"; };
 		76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_clean.png; sourceTree = "<group>"; };
 		76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_dark.png; sourceTree = "<group>"; };
 		76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo57x57.png; path = ../CarRampPhysicsLogo57x57.png; sourceTree = "<group>"; };
 		76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo114x114.png; path = ../CarRampPhysicsLogo114x114.png; sourceTree = "<group>"; };
 		76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo72x72.png; path = ../CarRampPhysicsLogo72x72.png; sourceTree = "<group>"; };
 		76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo144x144.png; path = ../CarRampPhysicsLogo144x144.png; sourceTree = "<group>"; };
-		76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		76E91F8517945E2E001749FC /* VariablesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariablesViewController.h; sourceTree = "<group>"; };
 		76E91F8617945E2E001749FC /* VariablesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariablesViewController.m; sourceTree = "<group>"; };
@@ -356,9 +341,6 @@
 		76E91F91179478B7001749FC /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				76DF6A7517E3A81B00CF5DDD /* ISenseSearch.h */,
-				76DF6A7717E3A81B00CF5DDD /* ProjectBlock.h */,
-				76DF6A7917E3A81B00CF5DDD /* ProjectBrowseViewController.h */,
 				76A5159417E239AE0044F668 /* NewDFM.h */,
 				7636B54D179EC3BC00DE6C7C /* QueueCell.h */,
 				761D27601795C1A30056FA8C /* Queue.h */,
@@ -380,12 +362,6 @@
 		76E91F92179478DF001749FC /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */,
-				76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */,
-				76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */,
-				761D275D1795C1960056FA8C /* Queue.m */,
-				760D197517958A4300C123D6 /* QueueUploaderView.m */,
-				7636B54E179EC3BC00DE6C7C /* QueueCell.m */,
 				76785B90179332A0001D6E3A /* MarqueeLabel.m */,
 				76E91F8617945E2E001749FC /* VariablesViewController.m */,
 				76785B781791E07B001D6E3A /* CRTableViewCell.m */,
@@ -582,13 +558,7 @@
 				76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */,
 				76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */,
 				76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */,
-				760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */,
-				761D275E1795C1960056FA8C /* Queue.m in Sources */,
-				7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */,
 				76A5159617E239AE0044F668 /* NewDFM.m in Sources */,
-				76DF6A7C17E3A81B00CF5DDD /* ProjectBlock.m in Sources */,
-				76DF6A7D17E3A81B00CF5DDD /* ProjectBrowseViewController.m in Sources */,
-				76DF6A8C17E778F500CF5DDD /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
