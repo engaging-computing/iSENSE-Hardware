@@ -274,10 +274,10 @@ public class Main extends Activity implements LocationListener {
 
 					Log.d("CameraMain", "Successfully opened camera.");
 					
-					runOnUiThread(new Runnable() {
-
-						@Override
-						public void run() {
+//					runOnUiThread(new Runnable() {
+//
+//						@Override
+//						public void run() {
 							Log.d("CameraMain", "Camera is: " + mCamera.toString());
 
 							
@@ -295,8 +295,8 @@ public class Main extends Activity implements LocationListener {
 								Log.d("CameraMain", "Successfully captured picture.");						
 							}
 						
-						}						
-					});
+//						}						
+//					});
 				
 				} else {
 					// TODO
