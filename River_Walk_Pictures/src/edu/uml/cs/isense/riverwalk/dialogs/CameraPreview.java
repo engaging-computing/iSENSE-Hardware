@@ -32,9 +32,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // The Surface has been created, now tell the camera where to draw the preview.
     	 
     	
-    	if (holder == null);
-    	Log.d("surfaceCreated", "holder is null");
-        try {
+    	if (holder == null){
+    		Log.d("surfaceCreated", "holder is null");
+    	}
+    	try {
             if (mCamera != null) {
                 mCamera.setPreviewDisplay(holder);
                 mCamera.startPreview();
@@ -42,6 +43,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (IOException exception) {
             Log.e("surfaceCreated in CameraPreview", "IOException caused by setPreviewDisplay() or startPreview()" + exception.getMessage());
         }
+        
 
     }
 
@@ -57,6 +59,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // If your preview can change or rotate, take care of those events here.
         // Make sure to stop the preview before resizing or reformatting it.
 
+    	
+    	
         if (mHolder.getSurface() == null){
           // preview surface does not exist
           return;
