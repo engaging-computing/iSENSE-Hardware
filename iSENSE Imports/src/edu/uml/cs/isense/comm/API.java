@@ -82,7 +82,7 @@ public class API {
 	}
 
 	/**
-	 * Log in to iSENSE. After calling this function, authenticated API functions will work properly
+	 * Log in to iSENSE. After calling this function, authenticated API functions will work properly.
 	 * 
 	 * @param username The username of the user to log in as
 	 * @param password The password of the user to log in as
@@ -93,14 +93,12 @@ public class API {
 			String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
+			
 			authToken = j.getString("authenticity_token");
-			if( j.getString("status").equals("success")) {
-				currentUser = getUser(username);
-				return true;
-			} else {
-				return false;
-			}
+			currentUser = getUser(username);
+	    return true;
 		} catch (Exception e) {
+			// Didn't get an authenticity token.
 			e.printStackTrace();
 		}
 		return false;
@@ -119,13 +117,13 @@ public class API {
 	}
 
 	/**
-	 * 	Retrieves multiple projects off of iSENSE
+	 * Retrieves multiple projects off of iSENSE.
 	 * 
-	 *@param page Which page of results to start from. 1-indexed
-	 *@param perPage How many results to display per page
-	 *@param descending Whether to display the results in descending order (true) or ascending order (false) 
-	 *@param search A string to search all projects for
-	 *@return An ArrayList of Project objects
+	 * @param page Which page of results to start from. 1-indexed
+	 * @param perPage How many results to display per page
+	 * @param descending Whether to display the results in descending order (true) or ascending order (false) 
+	 * @param search A string to search all projects for
+	 * @return An ArrayList of Project objects
 	 */
 	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, int sortOn, String search) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
