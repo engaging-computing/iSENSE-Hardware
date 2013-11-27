@@ -56,6 +56,7 @@
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, strong) NSMutableArray *dataToBeOrdered;
 @property (nonatomic, assign) int projNum;
+@property (nonatomic, strong) NSMutableArray *fields;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) DataFieldManager *dfm;
 @property (nonatomic, strong) Fields *f;

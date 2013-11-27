@@ -5,7 +5,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="19" />
 
     <activity
         android:name="edu.uml.cs.isense.queue.QueueLayout"

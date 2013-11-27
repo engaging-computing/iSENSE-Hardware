@@ -10,13 +10,13 @@
 
 @interface FieldMatchCell : UITableViewCell
 
-- (FieldMatchCell *)setupCellWithName:(NSString *)name andMatch:(NSString *)match;
-- (void) setName:(NSString *)name;
-- (void) setMatch:(NSString *)match;
-- (NSString *) getName;
-- (NSString *) getMatch;
+- (FieldMatchCell *)setupCellWithProjField:(NSString *)proj andMatchField:(NSString *)match;
+- (void) setProjField:(NSString *)proj;
+- (void) setMatchField:(NSString *)match;
+- (NSString *) getProjField;
+- (NSString *) getMatchField;
 
-@property (nonatomic, assign) IBOutlet UILabel  *fieldName;
-@property (nonatomic, assign) IBOutlet UIButton *fieldMatch;
+@property (nonatomic, assign) IBOutlet UILabel  *fieldProj;
+@property (nonatomic, assign) IBOutlet UILabel  *fieldMatch;
 
 @end
