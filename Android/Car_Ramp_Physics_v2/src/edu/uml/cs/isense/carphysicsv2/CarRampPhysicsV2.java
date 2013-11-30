@@ -76,9 +76,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static String experimentNumber = "12";
 	public static final String DEFAULT_PROJ_PROD = "12";
-	public static final String DEFAULT_PROJ_DEV = "32";
+	public static final String DEFAULT_PROJ_DEV = "3";
 	private static final String DEFAULT_USER = "mobile";
-	public static boolean useDev = false;
+	public static boolean useDev = true;
 
 	public static final String VIS_URL_PROD = "http://isenseproject.org/projects/";
 	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
@@ -209,6 +209,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		uq.buildQueueFromFile();
 
 		w = new Waffle(mContext);
+		
+		new OnCreateLoginTask().execute();
 
 		// Save the default login info
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -246,8 +248,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
 					SAVE_MODE_REQUESTED);
 		}
-
-		new OnCreateLoginTask().execute();
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 		if (api.getCurrentUser() != null) {
@@ -499,8 +499,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}, 0, INTERVAL);
 
 				}
-
-				CarRampPhysicsV2.this.invalidateOptionsMenu();
+				
+				if (android.os.Build.VERSION.SDK_INT >= 11) {
+					CarRampPhysicsV2.this.invalidateOptionsMenu();
+				}
 
 				return running;
 
@@ -767,7 +769,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		CarRampPhysicsV2.menu = menu;
 		menu.setGroupEnabled(0, useMenu);
-		return true;
+		return useMenu;
 	}
 
 	@Override
@@ -1370,7 +1372,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		// switch (type) {
 		// case DATA:
 
-		// TODO - check for closed experiment
+		// check for closed experiment
 		// if (sid == -1) {
 		//
 		// if (addr.equals("")) {
@@ -1422,7 +1424,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		}
 		// }
 		// break;
-		// TODO - pictures and stuff
+		// pictures and stuff
 		// case PIC:
 		// if (sid == -1) sid = QueueLayout.lastSID;
 		// if (name.equals("")) {
