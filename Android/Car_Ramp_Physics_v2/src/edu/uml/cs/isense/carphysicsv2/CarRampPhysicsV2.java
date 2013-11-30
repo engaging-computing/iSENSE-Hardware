@@ -61,6 +61,7 @@ import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.proj.Setup;
@@ -119,6 +120,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final int RESET_REQUESTED = 6003;
 	public static final int SAVE_MODE_REQUESTED = 10005;
 	public static final String ACCEL_SETTINGS = "ACCEL_SETTINGS";
+	private static final int FIELD_MATCHING_REQUESTED = 7498;
+	private static final int ALTER_DATA_PROJ_REQUESTED = 6698;
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
@@ -927,6 +930,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				dfm = new DataFieldManager(Integer.parseInt(experimentNumber),
 						api, mContext, f);
 				dfm.getOrder();
+				
 				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
 				if (dfm.getOrderList().contains(
 						mContext.getString(R.string.accel_x))) {
@@ -974,7 +978,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
+				/*
+				Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
+
+				String[] dfmOrderList = dfm.convertOrderToStringArray();
+
+				iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST, dfmOrderList);
+				iFieldMatch.putExtra(FieldMatching.SHOULD_BUILD_PREFS_STRING, false);
+				startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
+				*/
 			}
+			
+			
 		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
 
@@ -1220,6 +1235,28 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 				Log.d("fantastag", "resetti");
 
+			}
+		} else if (reqCode == FIELD_MATCHING_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (FieldMatching.acceptedFields.isEmpty()) {
+					Intent iProj = new Intent(mContext, Setup.class);
+					iProj.putExtra("from_where", "main");
+					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+				} else if (!FieldMatching.compatible) {
+					Intent iProj = new Intent(mContext, Setup.class);
+					iProj.putExtra("from_where", "main");
+					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+				} else {
+					SharedPreferences mPrefs = getSharedPreferences(
+							"PROJID", 0);
+					String projectInput = mPrefs.getString("project_id",
+							"No Proj.");
+
+				}
+			} else if (resultCode == RESULT_CANCELED) {
+				Intent iProj = new Intent(mContext, Setup.class);
+				iProj.putExtra("from_where", "main");
+				startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
 			}
 		} else if (reqCode == SAVE_MODE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
