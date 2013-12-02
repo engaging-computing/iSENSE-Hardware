@@ -561,6 +561,9 @@ static RPerson *currentUser;
  * @return The ID of the data set created on iSENSE
  */-(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
     
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
+     
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 
@@ -627,6 +630,9 @@ static RPerson *currentUser;
  * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+    
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
        
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -694,6 +700,9 @@ static RPerson *currentUser;
  * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+    
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
     
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
