@@ -212,7 +212,10 @@ public class Main extends Activity implements LocationListener {
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setTextColor(0xFF000000);
 						takePicture.setText("Recording Press to Stop");
+						
+						
 						recording = true;
+					
 						safeCameraOpen(0);
 						
 //						Log.d("CameraPreview", "Camera is:" + mCamera.toString());
@@ -466,7 +469,7 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptions(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
 		return true;
