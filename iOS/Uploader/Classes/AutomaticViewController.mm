@@ -406,7 +406,7 @@ dataToBeOrdered, backFromQueue, f, fields;
             // Fill a new row of data starting with time
             double time = [[NSDate date] timeIntervalSince1970];
             if ([dfm enabledFieldAtIndex:fTIME_MILLIS])
-                fieldsRow.time_millis = [NSNumber numberWithDouble:time * 1000];
+                fieldsRow.time_millis = [NSNumber numberWithLongLong:time * 1000];
             
             
             // acceleration in meters per second squared
