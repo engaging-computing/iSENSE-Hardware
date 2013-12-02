@@ -98,6 +98,7 @@ static RPerson *currentUser;
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
 
     authenticityToken = [result objectForKey:@"authenticity_token"];
+    NSLog(@"API: Auth token from login: %@", authenticityToken);
     
     if (authenticityToken) {
         currentUser = [self getUserWithUsername:username];
@@ -503,6 +504,9 @@ static RPerson *currentUser;
  */
 -(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
     
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
+    
     NSArray *fields = [self getProjectFieldsWithId:projectId];
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
@@ -809,6 +813,9 @@ static RPerson *currentUser;
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request setValue:[NSString stringWithFormat:@"%d", postData.length] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:postData];
+        
+        NSString *LOG_STR = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+        NSLog(@"API: posting data:\n%@", LOG_STR);
     }
     
     NSError *requestError;
@@ -884,6 +891,22 @@ static RPerson *currentUser;
     news.content = [results objectForKey:@"content"];
     
     return news;
+}
+
+/**
+ * Creates a unique date and timestamp used to append to data sets uploaded to the iSENSE
+ * website to ensure every data set has a unique identifier.
+ *
+ * @return A pretty formatted date and timestamp
+ */
+-(NSString *)appendedTimeStamp {
+    NSDate *now = [NSDate date];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    
+    return [formatter stringFromDate:now];
 }
 
 @end
