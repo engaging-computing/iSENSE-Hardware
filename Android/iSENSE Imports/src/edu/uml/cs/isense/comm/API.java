@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -15,8 +16,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -509,6 +513,9 @@ public class API {
 	 * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
 	 */
 	public int uploadDataSet(int projectId, JSONObject data, String datasetName) {
+		// append timestamp to the data set name to ensure uniqueness
+		datasetName += appendedTimeStamp();
+		
 		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
 		ArrayList<String> headers = new ArrayList<String>();
@@ -573,6 +580,9 @@ public class API {
 	 * @return The ID of the data set created on iSENSE 
 	 */ 
 	public int uploadCSV(int projectId, File csvToUpload, String datasetName) {
+		// append timestamp to the data set name to ensure uniqueness
+		datasetName += appendedTimeStamp();
+		
 		try {
 			URL url = new URL(baseURL+"/projects/"+projectId+"/CSVUpload?authenticity_token="+URLEncoder.encode(authToken, "UTF-8"));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -777,7 +787,7 @@ public class API {
 				out.close();
 			}
 
-			mstat = urlConnection.getResponseCode(); // TODO - add a try/catch for a java.net.ConnectException here.  We can get a connection failed here (ENETUNREACH) if the network is unreachable
+			mstat = urlConnection.getResponseCode();
 			InputStream in;
 			if(mstat>=200 && mstat < 300) {
 				in = new BufferedInputStream(urlConnection.getInputStream());
@@ -798,6 +808,9 @@ public class API {
 			finally {
 				in.close();
 			}
+		} catch (ConnectException ce) {
+			System.err.println("Connection failed: ENETUNREACH (network not reachable)");
+			ce.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -864,6 +877,20 @@ public class API {
 			e.printStackTrace();
 		}
 		return reformatted;
+	}
+	
+	/**
+	 * Creates a unique date and timestamp used to append to data sets uploaded to the iSENSE
+	 * website to ensure every data set has a unique identifier.
+	 *
+	 * @return A pretty formatted date and timestamp
+	 */
+	public String appendedTimeStamp() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+	            "MM/dd/yy, HH:mm:ss", Locale.US);
+	    Calendar cal = Calendar.getInstance();
+		
+		return " - " + dateFormat.format(cal.getTime());
 	}
 
 }

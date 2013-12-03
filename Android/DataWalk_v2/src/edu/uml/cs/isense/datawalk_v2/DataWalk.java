@@ -1,10 +1,7 @@
 package edu.uml.cs.isense.datawalk_v2;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -213,14 +210,8 @@ public class DataWalk extends Activity implements LocationListener,
 					// Cancel the recording timer
 					recordTimer.cancel();
 
-					// Create the name of the session using the entered name and
-					// the current time
-					SimpleDateFormat sdf = new SimpleDateFormat(
-							"MM/dd/yyyy, HH:mm:ss", Locale.US);
-					Date dt = new Date();
-					String dateString = sdf.format(dt);
-					dataSetName = firstName + " " + lastInitial + ". - "
-							+ dateString;
+					// Create the name of the session using the entered name
+					dataSetName = firstName + " " + lastInitial;
 
 					// Get user's project #, or the default if there is none
 					// saved
