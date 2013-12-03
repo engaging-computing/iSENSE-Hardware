@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -19,7 +20,7 @@ import edu.uml.cs.isense.waffle.Waffle;
  * student will have a unique identity. The Login activity should be called
  * before this activity.
  * 
- * @author jpoulin
+ * @author iSENSE Android Dev Team
  */
 public class EnterName extends Activity {
 
@@ -32,7 +33,12 @@ public class EnterName extends Activity {
 	 * should use the current account credentials instead of the saved values.
 	 */
 	public static final String PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME = "USE_ACCOUNT_NAME";
-
+	/*
+	 * This flag indicates whether or not to use classroom mode.  What this means is whether or not
+	 * a checkbox preference for using your account name shows up.
+	 */
+	public static final String PREFERENCES_CLASSROOM_MODE = "ENTER_CLASSROOM_MODE";
+	
 	private Waffle w;
 	private Context baseContext;
 	private static final String blankFields = "Do not leave any fields blank.  Please enter your first name and last initial.";
@@ -45,6 +51,12 @@ public class EnterName extends Activity {
 		baseContext = getBaseContext();
 		w = new Waffle(baseContext);
 		API api = API.getInstance(baseContext);
+		
+		/* Determine if we are running in classroom mode or not */
+		boolean classroomMode = true;
+		Bundle extras = getIntent().getExtras();
+		if (extras != null)
+			classroomMode = extras.getBoolean(PREFERENCES_CLASSROOM_MODE, true);
 
 		/* Get current user credentials if it exists. */
 		String[] isenseAccountName = null;
@@ -56,10 +68,10 @@ public class EnterName extends Activity {
 		 * Set the default user credentials to the current account credentials
 		 * or the default account.
 		 */
-		final String accountFirstName = (isenseAccountName != null) ? isenseAccountName[0]
-				: "Mobile";
-		final String accountLastInitial = (isenseAccountName != null) ? isenseAccountName[1]
-				: "U.";
+		final String accountFirstName = (isenseAccountName != null && !classroomMode) ? isenseAccountName[0]
+				: "";
+		final String accountLastInitial = (isenseAccountName != null && !classroomMode) ? isenseAccountName[1]
+				: "";
 
 		/*
 		 * Get the current state of affairs from preferences.
@@ -77,8 +89,14 @@ public class EnterName extends Activity {
 		final EditText lastInitialInput = (EditText) findViewById(R.id.edittext_initial);
 		final Button okButton = (Button) findViewById(R.id.button_ok);
 		final CheckBox useIsenseName = (CheckBox) findViewById(R.id.checkbox_use_isense_name);
-
-		if (useAccountName) {
+		final TextView useIsenseNameLabel = (TextView) findViewById(R.id.textview_use_isense_name);
+		
+		if (classroomMode) {
+			useIsenseName.setVisibility(View.GONE);
+			useIsenseNameLabel.setVisibility(View.GONE);
+		}
+		
+		if (useAccountName && !classroomMode) {
 			/* Initialize the EditText To Account Credentials */
 			firstNameInput.setText(accountFirstName);
 			lastInitialInput.setText(accountLastInitial);

@@ -108,5 +108,8 @@
     <string name="enter_name_prompt">Please Enter Your Name</string>
     <string name="login_error_prompt">Login Failed</string>
     <string name="login_prompt">Login to iSENSE</string>
-
+    
+    <string name="always_prompt_first_name">Always prompt for first name and last initial</string>
+	<string name="classroom_mode">Classroom Mode</string>
+    
 </resources>

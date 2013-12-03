@@ -66,5 +66,9 @@
         android:name="edu.uml.cs.isense.credentials.LoginError"
         android:label="@string/login_error_prompt"
         android:theme="@style/theme_dialog_white" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.ClassroomMode"
+        android:label="@string/classroom_mode"
+        android:theme="@style/theme_dialog_white" />
 
 </manifest>
