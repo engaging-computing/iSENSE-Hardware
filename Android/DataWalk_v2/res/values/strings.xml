@@ -15,6 +15,7 @@
     <string name="logged_in_as">Logged in As: </string>
     <string name="Upload">Upload</string>
     <string name="help">Help</string>
+    <string name="classroom">Classroom</string>
     <string name="iSenseQuestion">Would you like to view your data on the iSENSE website?</string>
     <string name="NoGpsMsg">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
     <string name="ExitMsg">You exited the app while data was still being recorded.  Data has stopped recording.</string>

@@ -1311,7 +1311,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				Locale.US);
 		Date dt = new Date();
 		dateString = sdf.format(dt);
-		dataSetName += " - " + dateString;
+		//dataSetName += " - " + dateString;
 
 		// absolutely ensure the timer resets to 0
 		setTime(0);
