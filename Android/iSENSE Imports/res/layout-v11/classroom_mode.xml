@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<CheckedTextView
+	    android:id="@+id/classroom_mode_checkbox"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="10dp"
+	    android:layout_marginTop="20dp"
+	    android:layout_marginBottom="20dp"
+	    android:text="@string/always_prompt_first_name"
+	    android:checked="true"
+	    android:clickable="true"
+	    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+	    android:gravity="center_vertical"
+	    />
+	
+	<View
+        android:id="@+id/buttondivider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="?android:attr/dividerVertical" />
+	
+	<Button
+	    android:id="@+id/classroom_mode_ok"
+	    style="?android:attr/buttonBarButtonStyle"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@android:string/ok" 
+	    />
+    
+
+</LinearLayout>
