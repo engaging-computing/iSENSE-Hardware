@@ -115,57 +115,67 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class UsersTask extends AsyncTask<Void, Void, ArrayList<RPerson>> {
+	private class UsersTask extends AsyncTask<Void, Void, RPerson> {
 		@Override
-		protected ArrayList<RPerson> doInBackground(Void... params) {
-			return api.getUsers(1, 10, true, "");
+		protected RPerson doInBackground(Void... params) {
+			return api.getUser("NickAVV");
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<RPerson> people) {
-			status.append("GetUsers test:\n");
-			for(RPerson p : people) {
-				status.append(" - " + p.name + "\n");
-			}
+		protected void onPostExecute(RPerson p) {
+			status.append(Html.fromHtml("<font color=\"#00aa00\">Get user "+p.name+" successful.</font><br>"));
+			new ProjectsTask().execute();
 		}
 	}
 	
 	private class NewsTask extends AsyncTask<Void, Void, ArrayList<RNews>> {
 		@Override
 		protected ArrayList<RNews> doInBackground(Void... params) {
-				return api.getNewsEntries(1, 10, true, "");
+				return api.getNewsEntries(1, 2, true, "");
 			
 		}
 
 		@Override
 		protected void onPostExecute(ArrayList<RNews> blogs) {
-			status.setText("News:\n");
 			for(RNews p : blogs) {
 				status.append(p.name + "\n");
+			}
+			if(blogs.size() <= 2) {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Get (at most) 2 news items successful.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Get (at most) 2 news items fail. Got "+blogs.size()+".</font><br>"));
 			}
 		}
 	}
 
 	private class ProjectsTask extends AsyncTask<Void, Void, ArrayList<RProject>> {
-		ArrayList<RProjectField> rpfs = new ArrayList<RProjectField>();
+		ArrayList<ArrayList<RProjectField>> rpfs = new ArrayList<ArrayList<RProjectField>>();
 
 		@Override
 		protected ArrayList<RProject> doInBackground(Void... params) {
-				return api.getProjects(1, 10, true, API.CREATED_AT, "");
-			
+				ArrayList<RProject> rps = api.getProjects(1, 2, true, API.CREATED_AT, "");
+				for(RProject rp : rps) {
+					rpfs.add(api.getProjectFields(rp.project_id));
+				}
+				return rps;
 		}
 
 		@Override
 		protected void onPostExecute(ArrayList<RProject> projects) {
-			status.setText("Projects:\n");
 			for(RProject p : projects) {
 				status.append(p.name + "\n");
+				
 				if(rpfs.size() > 0) {
-					status.append("\nFields:\n");
-					for(RProjectField rp : rpfs) {
-						status.append(rp.name+"\n");
+					for(RProjectField rp : rpfs.remove(0)) {
+						status.append(" - "+rp.name+"\n");
 					}
 				}
+			}
+			if(projects.size() <= 2) {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Get (at most) 2 Projects successful.</font><br>"));
+				new NewsTask().execute();
+			} else {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Get (at most) 2 Projects fail. Got "+projects.size()+".</font><br>"));
 			}
 		}
 	}
