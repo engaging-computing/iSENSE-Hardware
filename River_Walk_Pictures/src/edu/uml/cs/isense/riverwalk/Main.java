@@ -117,6 +117,7 @@ public class Main extends Activity implements LocationListener {
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static Camera mCamera;
     private CameraPreview mPreview;
+    private FrameLayout preview;
 
 
 	@Override
@@ -155,6 +156,8 @@ public class Main extends Activity implements LocationListener {
 		latLong = (TextView) findViewById(R.id.myLocation);
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
+		preview = (FrameLayout) findViewById(R.id.camera_preview);
+		
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
 
@@ -209,7 +212,10 @@ public class Main extends Activity implements LocationListener {
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setTextColor(0xFF000000);
 						takePicture.setText("Recording Press to Stop");
+						
+						
 						recording = true;
+					
 						safeCameraOpen(0);
 						
 //						Log.d("CameraPreview", "Camera is:" + mCamera.toString());
@@ -221,8 +227,9 @@ public class Main extends Activity implements LocationListener {
 //				        parameters.setPreviewSize(width, height);
 //				        mCamera.setParameters(parameters);
 						
+						preview.setVisibility(View.VISIBLE);
 						mPreview = new CameraPreview(mContext, mCamera);
-				        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+				        
 				        
 				        if (mPreview.getHolder() != null) {
 				        	Log.d("Main","mPreview is " + mPreview.getHolder());
@@ -234,6 +241,9 @@ public class Main extends Activity implements LocationListener {
 
 						// Stop continuously taking pictures
 					} else {
+						Main.takePicture.setText(R.string.takePicContinuous);
+						Main.takePicture.setTextColor(0xFF0066FF);
+						Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
 						recording = false;
 					}
 				}
@@ -244,10 +254,29 @@ public class Main extends Activity implements LocationListener {
 
 	// continuously take pictures in AsyncTask (a seperate thread)
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
+		Handler mHandler;
+		Runnable updateThread;
+		int i = 0;
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
+			mHandler = new Handler(); 
+			
+			updateThread = new Runnable() {
+
+				@Override
+				public void run() {
+					curTime = System.currentTimeMillis();
+					queueCount.setText(getResources()
+							.getString(R.string.queueCount) + uq.queueSize());
+					uploader.run();
+					uq.buildQueueFromFile();
+					w.make("Picture saved!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					mCamera.startPreview();
+				}
+				
+			};
 			// this method will be running on UI thread
 			OrientationManager.disableRotation(Main.this);
 		}
@@ -260,6 +289,8 @@ public class Main extends Activity implements LocationListener {
 			// do your long running http tasks here,you dont want to pass
 			// argument and u can access the parent class' variable url over
 			// here
+			
+			
 			while (recording) {
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -294,44 +325,49 @@ public class Main extends Activity implements LocationListener {
 							if (picture != null) {
 								Log.d("CameraMain", "Successfully captured picture.");						
 							}
+
+							mHandler.post(updateThread);
 						
-//						}						
-//					});
+							
 				
 				} else {
 					// TODO
 					return null;
 				}
-
-				try {
-					Thread.sleep(1000 * continuousInterval);
-				} catch (InterruptedException e) {
-					Log.e(getString(R.string.app_name),
-							"failed to sleep while continuously taking pictures");
-					e.printStackTrace();
+				//sleep for interval as long as recording is equal to true
+				for(int i = 0; i < continuousInterval && recording == true; i++) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						Log.e(getString(R.string.app_name),
+								"failed to sleep while continuously taking pictures");
+						e.printStackTrace();
+					}
 				}
 			}
 			
-//			if (mCamera != null){
-//				mCamera.stopPreview();
-//				mCamera.release();
-//				mCamera = null;
-//			}
 			
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(Boolean result) {// this method will be running on UI thread
 			super.onPostExecute(result);
 			Main.takePicture.setText(R.string.takePicContinuous);
 			Main.takePicture.setTextColor(0xFF0066FF);
 			Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
-
-			recording = false;
+			
 			OrientationManager.enableRotation(Main.this);
-			// this method will be running on UI thread
-
+			
+			preview.removeView(mPreview);
+			preview.setVisibility(View.INVISIBLE);	
+			
+			recording = false;
+			
+			Log.d("CameraMain", "Camera in onPostExecute is:" + mCamera.toString());	
+//			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
 		}
 	}
 
@@ -433,7 +469,7 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptions(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
 		return true;
@@ -473,7 +509,17 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		
+		if(recording == true){
+			if (mCamera == null) {
+					safeCameraOpen(0);
+			}
+			preview.setVisibility(View.VISIBLE);
+			mPreview = new CameraPreview(mContext, mCamera);
+	        preview.addView(mPreview);        
+			
+		}
+		
 		if (api.getCurrentUser() == null)
 			attemptLogin();
 
@@ -689,20 +735,14 @@ public class Main extends Activity implements LocationListener {
 				uq.buildQueueFromFile();
 				queueCount.setText(getResources()
 						.getString(R.string.queueCount) + uq.queueSize());
-
-				if (continuous == false) { // if continuously recording do not
-											// ask for description
-					Intent iDesc = new Intent(Main.this, Description.class);
-					startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-				}
+				
+				Intent iDesc = new Intent(Main.this, Description.class);
+				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
+				
 
 				new UploadTask().execute();
 
 			}
-
-			// TODO
-
-		} else if (requestCode == CONTINUOUS_REQUESTED) {
 
 		} else if (requestCode == EXPERIMENT_REQUESTED) { // obtains data fields
 															// from project on
@@ -918,6 +958,11 @@ public class Main extends Activity implements LocationListener {
 
 	@Override
 	protected void onPause() {
+		if(recording == true) {
+			preview.removeView(mPreview);
+			preview.setVisibility(View.INVISIBLE);
+		}
+		
 		super.onPause();
 	}
 
