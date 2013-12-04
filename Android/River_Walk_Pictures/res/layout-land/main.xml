@@ -60,6 +60,15 @@
                     android:singleLine="true"
                     android:textColor="@android:color/black"
                     android:textCursorDrawable="@null" />
+                
+                 <FrameLayout
+			    android:id="@+id/camera_preview"
+			    android:layout_width="176dp"
+			    android:layout_height="144dp"
+			    android:layout_gravity="center"
+			    android:layout_below="@+id/name"/>   
+			    
+                 
             </RelativeLayout>
 
             <TextView
