@@ -1,10 +1,7 @@
 package edu.uml.cs.isense.datawalk_v2;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,6 +40,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.ClassroomMode;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
@@ -168,10 +166,59 @@ public class DataWalk extends Activity implements LocationListener,
 		// Initialize all the managers.
 		initManagers();
 
+		// Initialize main UI elements
+		initialize();
+
 		// Gets first name and last initial the first time
 		if (firstName.equals("") || lastInitial.equals("")) {
-			startActivityForResult(new Intent(mContext, EnterName.class),
-					NAME_REQUESTED);
+			SharedPreferences classPrefs = getSharedPreferences(
+					ClassroomMode.PREFS_KEY_CLASSROOM_MODE, MODE_PRIVATE);
+			SharedPreferences namePrefs = getSharedPreferences(
+					EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+			boolean classroomMode = classPrefs.getBoolean(
+					ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true);
+
+			if (!classroomMode) {
+				if (namePrefs
+						.getBoolean(
+								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
+								true) && api.hasConnectivity()) {
+					RPerson user = api.getCurrentUser();
+					if (user != null) {
+						firstName = user.name;
+						lastInitial = "";
+
+						nameTxtBox.setText(getResources().getString(
+								R.string.name)
+								+ ": " + firstName);
+					}
+
+				} else {
+					firstName = namePrefs.getString(
+							EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME,
+							"");
+					lastInitial = namePrefs
+							.getString(
+									EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
+									"");
+
+					if (firstName.length() == 0) {
+						Intent iEnterName = new Intent(this, EnterName.class);
+						iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+								classroomMode);
+						startActivityForResult(iEnterName, NAME_REQUESTED);
+					} else {
+						nameTxtBox.setText(getResources().getString(R.string.name)
+							+ ": " + firstName + " " + lastInitial);
+					}
+				}
+			} else {
+				Intent iEnterName = new Intent(this, EnterName.class);
+				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						classroomMode);
+				startActivityForResult(iEnterName, NAME_REQUESTED);
+			}
+
 		}
 
 		// Set the initial default projectID in preferences
@@ -179,9 +226,6 @@ public class DataWalk extends Activity implements LocationListener,
 				Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
 		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
-
-		// Initialize main UI elements
-		initialize();
 
 		// Attempt to login with saved credentials, otherwise try default
 		// credentials
@@ -213,14 +257,8 @@ public class DataWalk extends Activity implements LocationListener,
 					// Cancel the recording timer
 					recordTimer.cancel();
 
-					// Create the name of the session using the entered name and
-					// the current time
-					SimpleDateFormat sdf = new SimpleDateFormat(
-							"MM/dd/yyyy, HH:mm:ss", Locale.US);
-					Date dt = new Date();
-					String dateString = sdf.format(dt);
-					dataSetName = firstName + " " + lastInitial + ". - "
-							+ dateString;
+					// Create the name of the session using the entered name
+					dataSetName = firstName + " " + lastInitial;
 
 					// Get user's project #, or the default if there is none
 					// saved
@@ -541,6 +579,7 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(5).setEnabled(false);
 			menu.getItem(6).setEnabled(false);
 			menu.getItem(7).setEnabled(false);
+			menu.getItem(8).setEnabled(false);
 		} /*
 		 * else if (canChangeProjectNum == false){
 		 * menu.getItem(3).setEnabled(false); menu.getItem(4).setEnabled(false);
@@ -556,6 +595,7 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(5).setEnabled(true);
 			menu.getItem(6).setEnabled(true);
 			menu.getItem(7).setEnabled(true);
+			menu.getItem(8).setEnabled(true);
 
 		}
 		return true;
@@ -800,9 +840,14 @@ public class DataWalk extends Activity implements LocationListener,
 
 			} else {
 				if (firstName.equals("") || lastInitial.equals("")) {
-					startActivityForResult(
-							new Intent(mContext, EnterName.class),
-							NAME_REQUESTED);
+					Intent iEnterName = new Intent(this, EnterName.class);
+					SharedPreferences classPrefs = getSharedPreferences(
+							ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+					iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+							classPrefs.getBoolean(
+									ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE,
+									true));
+					startActivityForResult(iEnterName, NAME_REQUESTED);
 					w.make("You must enter your name before starting to record data.",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 				}
@@ -849,8 +894,14 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_SHORT);
 
 				// Launch the EnterNameActivity
-				startActivityForResult(new Intent(mContext, EnterName.class),
-						NAME_REQUESTED);
+				Intent iEnterName = new Intent(this, EnterName.class);
+				SharedPreferences classPrefs = getSharedPreferences(
+						ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						classPrefs.getBoolean(
+								ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE,
+								true));
+				startActivityForResult(iEnterName, NAME_REQUESTED);
 
 			}
 
@@ -960,8 +1011,13 @@ public class DataWalk extends Activity implements LocationListener,
 		case R.id.NameChange:
 			// Launch the dialog that allows users to enter his/her firstname
 			// and last initial
-			startActivityForResult(new Intent(this, EnterName.class),
-					NAME_REQUESTED);
+			Intent iEnterName = new Intent(this, EnterName.class);
+			SharedPreferences classPrefs = getSharedPreferences(
+					ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+			iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+					classPrefs.getBoolean(
+							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true));
+			startActivityForResult(iEnterName, NAME_REQUESTED);
 			return true;
 
 		case R.id.DataUploadRate:
@@ -984,6 +1040,10 @@ public class DataWalk extends Activity implements LocationListener,
 			// Shows the help dialog
 			startActivity(new Intent(this, Help.class));
 			return true;
+
+		case R.id.classroom:
+			// Shows the classroom settings dialog
+			startActivity(new Intent(this, ClassroomMode.class));
 		}
 
 		return false;
@@ -1068,6 +1128,29 @@ public class DataWalk extends Activity implements LocationListener,
 					loggedInAs.setText(getResources().getString(
 							R.string.logged_in_as)
 							+ " " + loginName);
+
+					// Update label if in classroom mode and using login for
+					// name
+					SharedPreferences classPrefs = getSharedPreferences(
+							ClassroomMode.PREFS_KEY_CLASSROOM_MODE,
+							MODE_PRIVATE);
+					SharedPreferences namePrefs = getSharedPreferences(
+							EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+					boolean classroomMode = classPrefs.getBoolean(
+							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true);
+					if (!classroomMode
+							&& namePrefs
+									.getBoolean(
+											EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
+											true)) {
+						RPerson user = api.getCurrentUser();
+						firstName = user.name;
+						lastInitial = "";
+
+						nameTxtBox.setText(getResources().getString(
+								R.string.name)
+								+ ": " + firstName);
+					}
 
 				} else {
 
