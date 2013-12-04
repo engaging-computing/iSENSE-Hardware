@@ -18,11 +18,8 @@
 package edu.uml.cs.isense.carphysicsv2;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -131,8 +128,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private int elapsedMillis = 0;
 
-	private String dateString;
-
 	DecimalFormat toThou = new DecimalFormat("######0.000");
 
 	ArrayList<Double> accelerX;
@@ -225,8 +220,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USER).commit();
 			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_USER).commit();
 		}
-
-		dateString = "";
 
 		mHandler = new Handler();
 
@@ -1331,12 +1324,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			int dataSetID = -1;
 
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
-					Locale.ENGLISH);
-			Date dt = new Date();
-			dateString = sdf.format(dt);
-
-			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
+			nameOfSession = firstName + " " + lastInitial;
 
 			if (api.hasConnectivity()) {
 
