@@ -67,9 +67,5 @@ public class Continuous extends Activity {
 			}
 		}
 	});	
-	
-	
-	
-	
 	}
 }
