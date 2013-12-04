@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
-    android:versionCode="16"
-    android:versionName="2.3" >
+    android:versionCode="17"
+    android:versionName="2.3.1" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,7 +15,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -128,6 +128,11 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.LoginError"
             android:label="@string/login_error_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.ClassroomMode"
+            android:label="@string/classroom_mode"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
     </application>
