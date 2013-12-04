@@ -63,8 +63,8 @@
                 
                  <FrameLayout
 			    android:id="@+id/camera_preview"
-			    android:layout_width="640dp"
-			    android:layout_height="480dp"
+			    android:layout_width="176dp"
+			    android:layout_height="144dp"
 			    android:layout_gravity="center"
 			    android:layout_below="@+id/name"/>   
 			    
