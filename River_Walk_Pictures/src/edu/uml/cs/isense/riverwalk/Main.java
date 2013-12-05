@@ -117,6 +117,7 @@ public class Main extends Activity implements LocationListener {
 	private static Camera mCamera;
     private CameraPreview mPreview;
     private FrameLayout preview;
+    
 
 
 	@Override
@@ -158,6 +159,7 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		preview = (FrameLayout) findViewById(R.id.camera_preview);
+		preview.getLayoutParams().height = 0;
 		
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
@@ -215,6 +217,11 @@ public class Main extends Activity implements LocationListener {
 						useMenu = false;
 						if (android.os.Build.VERSION.SDK_INT >= 11)
 							invalidateOptionsMenu();
+						int dps = 176;
+						
+						final float scale = getResources().getDisplayMetrics().density;
+					    int pixels = (int) (dps * scale + 0.5f);
+						preview.getLayoutParams().height = pixels;
 						
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setTextColor(0xFF000000);
@@ -362,6 +369,7 @@ public class Main extends Activity implements LocationListener {
 			
 			OrientationManager.enableRotation(Main.this);
 			
+			preview.getLayoutParams().height = 0;
 			preview.removeView(mPreview);
 			preview.setVisibility(View.INVISIBLE);	
 			
