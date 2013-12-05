@@ -145,6 +145,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				status.append(Html.fromHtml("<font color=\"#dd0000\">Get (at most) 2 news items fail. Got "+blogs.size()+".</font><br>"));
 			}
+			//TODO- move next api call to the success case, once this succeeds on dev/live
+			new CreateProjectTask().execute();
 		}
 	}
 
@@ -252,9 +254,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class CreateProjectTask extends AsyncTask<Void, Void, Void> {
+	private class CreateProjectTask extends AsyncTask<Void, Void, Integer> {
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Integer doInBackground(Void... params) {
 			ArrayList<RProjectField> fields = new ArrayList<RProjectField>();
 			
 			RProjectField time = new RProjectField();
@@ -268,13 +270,33 @@ public class MainActivity extends Activity implements OnClickListener {
 			amount.unit = "units";
 			fields.add(amount);
 			
-			api.createProject("Project from Mobile", fields);
-			return null;
+			return api.createProject("Test Project", fields);
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Integer result) {
+			if(result == -1) {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Create project fail.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Create project success.</font><br>"));
+				new DeleteProjectTask().execute(result);
+			}
+		}
+	}
+	private class DeleteProjectTask extends AsyncTask<Integer, Void, Integer> {
+		@Override
+		protected Integer doInBackground(Integer... params) {
 			
+			return api.deleteProject(params[0]);
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(result == -1) {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Delete project fail.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Delete project success.</font><br>"));
+			}
 		}
 	}
 
