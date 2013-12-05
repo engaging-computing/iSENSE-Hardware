@@ -640,7 +640,7 @@ dataToBeOrdered, backFromQueue, f, fields;
             [ds setPicturePaths:nil];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
             [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
-            
+    
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
             

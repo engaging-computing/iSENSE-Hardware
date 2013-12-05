@@ -97,4 +97,12 @@
     return [initial boolValue];
 }
 
+- (void) setFields:(NSMutableArray *)fields {
+    [dataSet setFields:fields];
+}
+
+- (NSMutableArray *) getFields {
+    return dataSet.fields;
+}
+
 @end
